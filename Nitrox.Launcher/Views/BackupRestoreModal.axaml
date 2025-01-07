@@ -1,34 +1,60 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="500" MinHeight="200"
-        x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
-        x:DataType="vm:BackupRestoreViewModel"
-        SizeToContent="WidthAndHeight"
-        Title="{Binding Title}">
+<Window
+    MaxWidth="1000"
+    MinHeight="200"
+    MinWidth="500"
+    SizeToContent="WidthAndHeight"
+    Title="{Binding Title}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
+    x:DataType="vm:BackupRestoreViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <vm:BackupRestoreViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto, *, Auto">
         <controls:CustomTitlebar CanMinimize="False" Grid.Row="0" />
 
-        <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
+        <TextBlock
+            Classes="modalHeader"
+            Grid.Row="0"
+            Margin="24,24,24,0"
+            Text="{Binding Title}" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <Panel>
-                <!-- Backups Don't Exist -->
-                <StackPanel Spacing="50" HorizontalAlignment="Center" VerticalAlignment="Center"
-                            IsVisible="{Binding !Backups.Count}">
-                    <Image Source="/Assets/Images/world-manager/server.png" Width="300" Margin="-25 0 0 0" Stretch="None" />
-                    <TextBlock Text="No backups here yet" FontSize="32" TextAlignment="Center" FontWeight="600" Margin="0 0 0 40" />
+                <!--  Backups Don't Exist  -->
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding !Backups.Count}"
+                    Spacing="50"
+                    VerticalAlignment="Center">
+                    <Image
+                        Margin="-25,0,0,0"
+                        Source="/Assets/Images/world-manager/server.png"
+                        Stretch="None"
+                        Width="300" />
+                    <TextBlock
+                        FontSize="32"
+                        FontWeight="600"
+                        Margin="0,0,0,40"
+                        Text="No backups here yet"
+                        TextAlignment="Center" />
                 </StackPanel>
 
-                <!-- Backups Exist -->
-                <ListBox Margin="24" ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup, Mode=TwoWay}" VerticalAlignment="Top"
-                         IsVisible="{Binding Backups.Count}">
+                <!--  Backups Exist  -->
+                <ListBox
+                    IsVisible="{Binding Backups.Count}"
+                    ItemsSource="{Binding Backups}"
+                    Margin="24"
+                    SelectedItem="{Binding SelectedBackup, Mode=TwoWay}"
+                    VerticalAlignment="Top">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Spacing="14" />
@@ -48,8 +74,17 @@
 
         <Border Classes="footer" Grid.Row="2">
             <Panel>
-                <Button Content="Back" Command="{Binding CloseCommand}" HotKey="Escape" FontWeight="Bold" />
-                <Button Classes="primary" Content="Restore" Command="{Binding RestoreBackupCommand}" HorizontalAlignment="Right" HotKey="Enter" />
+                <Button
+                    Command="{Binding CloseCommand}"
+                    Content="Back"
+                    FontWeight="Bold"
+                    HotKey="Escape" />
+                <Button
+                    Classes="primary"
+                    Command="{Binding RestoreBackupCommand}"
+                    Content="Restore"
+                    HorizontalAlignment="Right"
+                    HotKey="Enter" />
             </Panel>
         </Border>
     </Grid>

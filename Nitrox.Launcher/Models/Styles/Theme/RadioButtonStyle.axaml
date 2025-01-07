@@ -1,9 +1,11 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="15">
-                <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="5">
                     <ThemeVariantScope RequestedThemeVariant="Light">
                         <Border Background="White" Padding="5">
                             <StackPanel Spacing="10">
@@ -42,51 +44,56 @@
         <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
         <Setter Property="Transitions">
             <Transitions>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
-                <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                <TransformOperationsTransition Duration="0:0:.075" Property="RenderTransform" />
+                <DoubleTransition Duration="0:0:0.15" Property="Opacity" />
             </Transitions>
         </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="RadioButton">
-                <Border Name="RootBorder"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+                <Border
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    Name="RootBorder">
                     <StackPanel Orientation="Horizontal">
                         <Grid Height="32" VerticalAlignment="Top">
-                            <Ellipse Name="OuterEllipse"
-                                     Width="20"
-                                     Height="20"
-                                     Fill="White"
-                                     Stroke="{TemplateBinding Foreground}"
-                                     StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
-                                     UseLayoutRounding="False" />
-                            <Ellipse Name="CheckOuterEllipse"
-                                     Width="20"
-                                     Height="20"
-                                     Fill="{DynamicResource RadioButtonOuterEllipseCheckedFill}"
-                                     Opacity="0"
-                                     Stroke="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
-                                     StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
-                                     UseLayoutRounding="False" />
-                            <Ellipse Name="CheckGlyph"
-                                     Width="8"
-                                     Height="8"
-                                     Fill="{DynamicResource RadioButtonCheckGlyphFill}"
-                                     Opacity="0"
-                                     Stroke="{DynamicResource RadioButtonCheckGlyphStroke}"
-                                     UseLayoutRounding="False" />
+                            <Ellipse
+                                Fill="White"
+                                Height="20"
+                                Name="OuterEllipse"
+                                Stroke="{TemplateBinding Foreground}"
+                                StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
+                                UseLayoutRounding="False"
+                                Width="20" />
+                            <Ellipse
+                                Fill="{DynamicResource RadioButtonOuterEllipseCheckedFill}"
+                                Height="20"
+                                Name="CheckOuterEllipse"
+                                Opacity="0"
+                                Stroke="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
+                                StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
+                                UseLayoutRounding="False"
+                                Width="20" />
+                            <Ellipse
+                                Fill="{DynamicResource RadioButtonCheckGlyphFill}"
+                                Height="8"
+                                Name="CheckGlyph"
+                                Opacity="0"
+                                Stroke="{DynamicResource RadioButtonCheckGlyphStroke}"
+                                UseLayoutRounding="False"
+                                Width="8" />
                         </Grid>
 
-                        <ContentPresenter Name="PART_ContentPresenter"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          RecognizesAccessKey="True" />
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            Name="PART_ContentPresenter"
+                            RecognizesAccessKey="True"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </StackPanel>
                 </Border>
             </ControlTemplate>

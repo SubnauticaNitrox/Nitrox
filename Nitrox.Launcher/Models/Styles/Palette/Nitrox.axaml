@@ -1,10 +1,8 @@
-<ResourceDictionary
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.ThemeDictionaries>
-        <!-- Default/Light theme -->
+        <!--  Default/Light theme  -->
         <ResourceDictionary x:Key="Default">
-            <!-- Main colors -->
+            <!--  Main colors  -->
             <Color x:Key="BrandPrimary">#007BFF</Color>
             <Color x:Key="BrandWhite">#FFFFFF</Color>
             <Color x:Key="BrandBlack">#000000</Color>
@@ -22,7 +20,7 @@
             <Color x:Key="BrandOnColor">#38C149</Color>
             <Color x:Key="BrandOffColor">#FF5E57</Color>
 
-            <!-- Notification colors -->
+            <!--  Notification colors  -->
             <Color x:Key="BrandAbort">#FF005C</Color>
             <Color x:Key="BrandAbortBackground">#FFB3B3</Color>
             <Color x:Key="BrandError">#E60914</Color>
@@ -30,7 +28,7 @@
             <Color x:Key="BrandInformation">#007BFF</Color>
             <Color x:Key="BrandWarning">#F5A300</Color>
 
-            <!-- Misc -->
+            <!--  Misc  -->
             <x:String x:Key="BrandSvgStyle">* { fill: #000; stroke: #000; }</x:String>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">

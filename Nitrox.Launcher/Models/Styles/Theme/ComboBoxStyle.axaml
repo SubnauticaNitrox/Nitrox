@@ -1,28 +1,44 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
-            <StackPanel Margin="10" Spacing="20" Orientation="Horizontal">
+            <StackPanel
+                Margin="10"
+                Orientation="Horizontal"
+                Spacing="20">
                 <StackPanel Spacing="10">
-                    <Border Background="White" Padding="10" HorizontalAlignment="Center">
+                    <Border
+                        Background="White"
+                        HorizontalAlignment="Center"
+                        Padding="10">
                         <ThemeVariantScope RequestedThemeVariant="Light">
-                            <Border Margin="0 0 0 110">
-                                <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
-                                    <ComboBoxItem Content="Item 1"/>
-                                    <ComboBoxItem Content="Item 2"/>
-                                    <ComboBoxItem Content="Item 3"/>
+                            <Border Margin="0,0,0,110">
+                                <ComboBox
+                                    HorizontalAlignment="Stretch"
+                                    PlaceholderText="Light"
+                                    Width="200">
+                                    <ComboBoxItem Content="Item 1" />
+                                    <ComboBoxItem Content="Item 2" />
+                                    <ComboBoxItem Content="Item 3" />
                                 </ComboBox>
                             </Border>
                         </ThemeVariantScope>
                     </Border>
-                    <Border Background="Black" Padding="10" HorizontalAlignment="Center">
+                    <Border
+                        Background="Black"
+                        HorizontalAlignment="Center"
+                        Padding="10">
                         <ThemeVariantScope RequestedThemeVariant="Dark">
-                            <Border Margin="0 0 0 110">
-                                <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
-                                    <ComboBoxItem Content="Item 1"/>
-                                    <ComboBoxItem Content="Item 2"/>
-                                    <ComboBoxItem Content="Item 3"/>
+                            <Border Margin="0,0,0,110">
+                                <ComboBox
+                                    HorizontalAlignment="Stretch"
+                                    PlaceholderText="Dark"
+                                    Width="200">
+                                    <ComboBoxItem Content="Item 1" />
+                                    <ComboBoxItem Content="Item 2" />
+                                    <ComboBoxItem Content="Item 3" />
                                 </ComboBox>
                             </Border>
                         </ThemeVariantScope>
@@ -38,12 +54,12 @@
         <Setter Property="Padding" Value="14" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="true"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="true" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="MinWidth" Value="100" />
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         <Style Selector="^ /template/ ContentPresenter">
@@ -65,8 +81,8 @@
 
         <Setter Property="Transitions">
             <Transitions>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
-                <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                <TransformOperationsTransition Duration="0:0:.075" Property="RenderTransform" />
+                <DoubleTransition Duration="0:0:0.15" Property="Opacity" />
             </Transitions>
         </Setter>
 
@@ -75,64 +91,77 @@
                 <DataValidationErrors>
                     <Grid>
                         <Grid ColumnDefinitions="*,32" IsHitTestVisible="True">
-                            <Border x:Name="Background"
-                                    Grid.ColumnSpan="2"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="{TemplateBinding CornerRadius}"
-                                    MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
-                            <TextBlock Grid.Column="0" x:Name="PlaceholderTextBlock"
-                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                       Margin="{TemplateBinding Padding}"
-                                       Text="{TemplateBinding PlaceholderText}"
-                                       IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}" />
-                            <ContentControl Grid.Column="0" x:Name="ContentPresenter"
-                                            Content="{TemplateBinding SelectionBoxItem}"
-                                            ContentTemplate="{TemplateBinding ItemTemplate}"
-                                            Margin="{TemplateBinding Padding}"
-                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                            <Border x:Name="DropDownOverlay"
-                                    Grid.Column="1"
-                                    Background="Transparent"
-                                    Margin="0,1,1,1"
-                                    Width="30"
-                                    IsVisible="False"
-                                    HorizontalAlignment="Right" />
-                            <PathIcon x:Name="DropDownGlyph"
-                                      Grid.Column="1"
-                                      UseLayoutRounding="False"
-                                      IsHitTestVisible="False"
-                                      Height="12" Width="12"
-                                      Margin="0,0,10,0"
-                                      HorizontalAlignment="Right"
-                                      VerticalAlignment="Center"
-                                      Foreground="{TemplateBinding Foreground}"
-                                      Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"/>
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Grid.ColumnSpan="2"
+                                MinWidth="{DynamicResource ComboBoxThemeMinWidth}"
+                                x:Name="Background" />
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                IsVisible="{TemplateBinding SelectionBoxItem,
+                                                            Converter={x:Static ObjectConverters.IsNull}}"
+                                Margin="{TemplateBinding Padding}"
+                                Text="{TemplateBinding PlaceholderText}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                x:Name="PlaceholderTextBlock" />
+                            <ContentControl
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding ItemTemplate}"
+                                Grid.Column="0"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                x:Name="ContentPresenter" />
+                            <Border
+                                Background="Transparent"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                IsVisible="False"
+                                Margin="0,1,1,1"
+                                Width="30"
+                                x:Name="DropDownOverlay" />
+                            <PathIcon
+                                Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
+                                Foreground="{TemplateBinding Foreground}"
+                                Grid.Column="1"
+                                Height="12"
+                                HorizontalAlignment="Right"
+                                IsHitTestVisible="False"
+                                Margin="0,0,10,0"
+                                UseLayoutRounding="False"
+                                VerticalAlignment="Center"
+                                Width="12"
+                                x:Name="DropDownGlyph" />
                         </Grid>
 
-                        <Popup Grid.Column="0" Name="PART_Popup"
-                               WindowManagerAddShadowHint="False"
-                               IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
-                               MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                               MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                               PlacementTarget="Background"
-                               IsLightDismissEnabled="True"
-                               InheritsTransform="True">
-                            <Border x:Name="PopupBorder"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{DynamicResource BrandWhite}"
-                                    BorderThickness="1 0 2 2"
-                                    Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
-                                    HorizontalAlignment="Stretch"
-                                    CornerRadius="{DynamicResource OverlayCornerRadius}">
-                                <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                                              VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                                    <ItemsPresenter Name="PART_ItemsPresenter"
-                                                    Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                                                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        <Popup
+                            Grid.Column="0"
+                            InheritsTransform="True"
+                            IsLightDismissEnabled="True"
+                            IsOpen="{TemplateBinding IsDropDownOpen,
+                                                     Mode=TwoWay}"
+                            MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                            MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                            Name="PART_Popup"
+                            PlacementTarget="Background"
+                            WindowManagerAddShadowHint="False">
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{DynamicResource BrandWhite}"
+                                BorderThickness="1,0,2,2"
+                                CornerRadius="{DynamicResource OverlayCornerRadius}"
+                                HorizontalAlignment="Stretch"
+                                Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                                x:Name="PopupBorder">
+                                <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                                    <ItemsPresenter
+                                        ItemsPanel="{TemplateBinding ItemsPanel}"
+                                        Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                                        Name="PART_ItemsPresenter" />
                                 </ScrollViewer>
                             </Border>
                         </Popup>

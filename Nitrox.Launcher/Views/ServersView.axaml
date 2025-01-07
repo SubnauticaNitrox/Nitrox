@@ -1,10 +1,11 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
-             x:Class="Nitrox.Launcher.Views.ServersView"
-             x:DataType="vm:ServersViewModel">
+<UserControl
+    x:Class="Nitrox.Launcher.Views.ServersView"
+    x:DataType="vm:ServersViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <vm:ServersViewModel />
     </Design.DataContext>
@@ -16,14 +17,33 @@
             </Style>
         </Style>
     </UserControl.Styles>
-    <Panel Classes="viewPadding" Background="{DynamicResource BrandWhite}">
+    <Panel Background="{DynamicResource BrandWhite}" Classes="viewPadding">
         <Panel IsVisible="{Binding !Servers.Count}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Image Source="/Assets/Images/world-manager/server.png" Stretch="None" Margin="0 0 0 73" />
-                <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
-                <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world</TextBlock>
+                <Image
+                    Margin="0,0,0,73"
+                    Source="/Assets/Images/world-manager/server.png"
+                    Stretch="None" />
+                <TextBlock
+                    FontSize="32"
+                    FontWeight="600"
+                    TextAlignment="Center">
+                    No servers here yet
+                </TextBlock>
+                <TextBlock
+                    FontSize="16"
+                    Margin="0,10,0,0"
+                    TextAlignment="Center">
+                    Create a new server to start hosting your Subnautica Multiplayer world
+                </TextBlock>
 
-                <Button Classes="primary big" Command="{Binding CreateServerCommand}" HotKey="Enter" Width="350" Margin="0 40 0 0" HorizontalAlignment="Center">
+                <Button
+                    Classes="primary big"
+                    Command="{Binding CreateServerCommand}"
+                    HorizontalAlignment="Center"
+                    HotKey="Enter"
+                    Margin="0,40,0,0"
+                    Width="350">
                     <StackPanel>
                         <TextBlock Text="CREATE NEW SERVER" />
                         <TextBlock Text="MULTIPLAYER" />
@@ -32,47 +52,62 @@
             </StackPanel>
         </Panel>
 
-        <Grid RowDefinitions="Auto,Auto,*,Auto" IsVisible="{Binding Servers.Count}">
-            <TextBlock Grid.Row="0" Classes="header" Text="Servers" />
+        <Grid IsVisible="{Binding Servers.Count}" RowDefinitions="Auto,Auto,*,Auto">
+            <TextBlock
+                Classes="header"
+                Grid.Row="0"
+                Text="Servers" />
             <controls:RichTextBlock Grid.Row="1">Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server)</controls:RichTextBlock>
-            <ScrollViewer Grid.Row="2" Margin="0 40 0 13">
+            <ScrollViewer Grid.Row="2" Margin="0,40,0,13">
                 <ItemsControl ItemsSource="{Binding Servers}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Margin="0 -13" />
+                            <VirtualizingStackPanel Margin="0,-13" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Classes="serverEntry" Margin="0 13">
+                            <Border Classes="serverEntry" Margin="0,13">
                                 <DockPanel VerticalAlignment="Center">
-                                    <Border DockPanel.Dock="Left" CornerRadius="12" ClipToBounds="True">
+                                    <Border
+                                        ClipToBounds="True"
+                                        CornerRadius="12"
+                                        DockPanel.Dock="Left">
                                         <Grid>
-                                            <Image Source="/Assets/Images/subnautica-icon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
+                                            <Image IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" Source="/Assets/Images/subnautica-icon.png" />
                                             <Border Height="56" Width="56">
                                                 <Border.Background>
-                                                    <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon}" />
+                                                    <ImageBrush Source="{Binding ServerIcon}" Stretch="UniformToFill" />
                                                 </Border.Background>
                                             </Border>
                                             <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
                                                 <controls:GrayscaleControl.Transitions>
                                                     <Transitions>
-                                                        <DoubleTransition Property="Opacity" Duration="0:0:0.10" />
+                                                        <DoubleTransition Duration="0:0:0.10" Property="Opacity" />
                                                     </Transitions>
                                                 </controls:GrayscaleControl.Transitions>
                                             </controls:GrayscaleControl>
                                         </Grid>
                                     </Border>
-                                    <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
-                                        <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
+                                    <StackPanel
+                                        DockPanel.Dock="Left"
+                                        Margin="16,0"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="600"
+                                            Text="{Binding Name}" />
+                                        <StackPanel
+                                            Classes="description"
+                                            HorizontalAlignment="Left"
+                                            Orientation="Horizontal">
                                             <Panel>
-                                                <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
-                                                    <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOnColor}" />
+                                                <StackPanel IsVisible="{Binding IsOnline}" Orientation="Horizontal">
+                                                    <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
                                                     <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
-                                                    <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOffColor}" />
+                                                <StackPanel IsVisible="{Binding !IsOnline}" Orientation="Horizontal">
+                                                    <Ellipse Fill="{DynamicResource BrandOffColor}" Margin="0,0,6,0" />
                                                     <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
                                                 </StackPanel>
                                             </Panel>
@@ -85,11 +120,29 @@
                                             </TextBlock>
                                         </StackPanel>
                                     </StackPanel>
-                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                                        <Button Content="Open world folder" Command="{Binding OpenSaveFolderCommand}" />
-                                        <Button Classes="manage" Classes.online="{Binding IsOnline}" Classes.embedded="{Binding IsEmbedded}" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}" CommandParameter="{Binding}" />
-                                        <Button Classes="abort" IsVisible="{Binding IsOnline}" Content="Stop" Command="{Binding StopCommand}" />
-                                        <Button IsVisible="{Binding !IsOnline}" Classes="primary" Content="Start" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}" CommandParameter="{Binding}" />
+                                    <StackPanel
+                                        DockPanel.Dock="Right"
+                                        HorizontalAlignment="Right"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                        <Button Command="{Binding OpenSaveFolderCommand}" Content="Open world folder" />
+                                        <Button
+                                            Classes="manage"
+                                            Classes.embedded="{Binding IsEmbedded}"
+                                            Classes.online="{Binding IsOnline}"
+                                            Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
+                                            CommandParameter="{Binding}" />
+                                        <Button
+                                            Classes="abort"
+                                            Command="{Binding StopCommand}"
+                                            Content="Stop"
+                                            IsVisible="{Binding IsOnline}" />
+                                        <Button
+                                            Classes="primary"
+                                            Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}"
+                                            CommandParameter="{Binding}"
+                                            Content="Start"
+                                            IsVisible="{Binding !IsOnline}" />
                                     </StackPanel>
                                 </DockPanel>
                             </Border>
@@ -97,9 +150,22 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Border Grid.Row="3" CornerRadius="12" Background="{DynamicResource BrandPanelBackground}" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-                <Button x:Name="CreateServerBtn" Classes="primary big" HotKey="Enter" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Content="CREATE NEW SERVER"
-                        Command="{Binding CreateServerCommand}" />
+            <Border
+                Background="{DynamicResource BrandPanelBackground}"
+                CornerRadius="12"
+                Grid.Row="3"
+                Height="96"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom">
+                <Button
+                    Classes="primary big"
+                    Command="{Binding CreateServerCommand}"
+                    Content="CREATE NEW SERVER"
+                    HorizontalAlignment="Center"
+                    HotKey="Enter"
+                    VerticalAlignment="Center"
+                    Width="262"
+                    x:Name="CreateServerBtn" />
             </Border>
         </Grid>
     </Panel>

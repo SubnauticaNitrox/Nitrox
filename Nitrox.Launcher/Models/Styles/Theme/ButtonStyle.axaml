@@ -1,21 +1,31 @@
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue" Width="250">
             <StackPanel Margin="10" Spacing="10">
                 <ThemeVariantScope RequestedThemeVariant="Dark">
                     <StackPanel HorizontalAlignment="Center">
                         <Button Content="Normal button" HorizontalAlignment="Stretch" />
-                        <Button Classes="primary" Content="Primary button" HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="primary"
+                            Content="Primary button"
+                            HorizontalAlignment="Stretch" />
                     </StackPanel>
                 </ThemeVariantScope>
                 <ThemeVariantScope RequestedThemeVariant="Light">
                     <StackPanel HorizontalAlignment="Center">
                         <Button Content="Normal button" HorizontalAlignment="Stretch" />
-                        <Button Classes="primary" Content="Primary button" HorizontalAlignment="Stretch" />
-                        <Button Classes="abort" Content="Abort button" HorizontalAlignment="Stretch" />
-                        <Button Classes="primary big" HorizontalAlignment="Stretch" Content="Primary text" />
+                        <Button
+                            Classes="primary"
+                            Content="Primary button"
+                            HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="abort"
+                            Content="Abort button"
+                            HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="primary big"
+                            Content="Primary text"
+                            HorizontalAlignment="Stretch" />
                         <Button Classes="primary big" HorizontalAlignment="Stretch">
                             <StackPanel>
                                 <TextBlock Text="Primary Button Big" />
@@ -26,7 +36,10 @@
                 </ThemeVariantScope>
                 <StackPanel HorizontalAlignment="Center" Spacing="5">
                     <ThemeVariantScope RequestedThemeVariant="Light">
-                        <Button HorizontalAlignment="Center" Classes="icon" Background="White">
+                        <Button
+                            Background="White"
+                            Classes="icon"
+                            HorizontalAlignment="Center">
                             <StackPanel>
                                 <Image Source="/Assets/Images/world-manager/cog.png" />
                                 <TextBlock Text="Icon button" />
@@ -34,7 +47,10 @@
                         </Button>
                     </ThemeVariantScope>
                     <ThemeVariantScope RequestedThemeVariant="Dark">
-                        <Button HorizontalAlignment="Center" Classes="icon" Background="Black">
+                        <Button
+                            Background="Black"
+                            Classes="icon"
+                            HorizontalAlignment="Center">
                             <StackPanel>
                                 <Image Source="/Assets/Images/world-manager/cog.png" />
                                 <TextBlock Text="Icon button" />
@@ -54,8 +70,8 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Transitions">
             <Transitions>
-                <DoubleTransition Property="Opacity" Duration="0:0:0.075" />
-                <BrushTransition Property="Background" Duration="0:0:0.075" /> 
+                <DoubleTransition Duration="0:0:0.075" Property="Opacity" />
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
             </Transitions>
         </Setter>
 
@@ -77,11 +93,15 @@
             <Setter Property="Orientation" Value="Horizontal" />
         </Style>
 
-        <!-- TODO: Pretty animations -->
+        <!--  TODO: Pretty animations  -->
         <Style Selector="^.busy">
             <Setter Property="Opacity" Value="1" />
             <Style.Animations>
-                <Animation Duration="0:0:.75" IterationCount="INFINITE" PlaybackDirection="Alternate" Easing="SineEaseInOut">
+                <Animation
+                    Duration="0:0:.75"
+                    Easing="SineEaseInOut"
+                    IterationCount="INFINITE"
+                    PlaybackDirection="Alternate">
                     <KeyFrame Cue="0%">
                         <Setter Property="Opacity" Value="1" />
                     </KeyFrame>
@@ -144,7 +164,7 @@
             </Style>
         </Style>
 
-        <!-- Override button template to use properties from parent Button. DO NOT HARD CODE VALUES HERE. -->
+        <!--  Override button template to use properties from parent Button. DO NOT HARD CODE VALUES HERE.  -->
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Opacity" Value="{Binding $parent[Button].Opacity}" />
             <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />

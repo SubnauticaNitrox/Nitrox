@@ -1,20 +1,25 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-        xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-        xmlns:views="clr-namespace:Nitrox.Launcher.Views"
-        xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Nitrox.Launcher.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Title="Nitrox Launcher"
-        Width="1200" Height="720"
-        MinWidth="800" MinHeight="600"
-        WindowStartupLocation="CenterScreen">
+<Window
+    Height="720"
+    MinHeight="600"
+    MinWidth="800"
+    Title="Nitrox Launcher"
+    Width="1200"
+    WindowStartupLocation="CenterScreen"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.MainWindow"
+    x:DataType="vm:MainWindowViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:views="clr-namespace:Nitrox.Launcher.Views"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
@@ -39,17 +44,20 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="Padding" Value="34 10 10 10" />
-                <!-- Scale to max horizontal so user can more easily click the navigation. -->
+                <!--  Scale to max horizontal so user can more easily click the navigation.  -->
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Opacity" Value="0.7" />
                 <Setter Property="ToolTip.Placement" Value="Pointer" />
                 <Setter Property="Template">
                     <ControlTemplate>
-                        <Panel HorizontalAlignment="Stretch" Background="{TemplateBinding Background}">
-                            <StackPanel Orientation="Horizontal" Margin="{TemplateBinding Padding}" Spacing="10">
+                        <Panel Background="{TemplateBinding Background}" HorizontalAlignment="Stretch">
+                            <StackPanel
+                                Margin="{TemplateBinding Padding}"
+                                Orientation="Horizontal"
+                                Spacing="10">
                                 <Image Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}" />
-                                <TextBlock Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" />
+                                <TextBlock FontSize="{TemplateBinding FontSize}" Text="{TemplateBinding Content}" />
                             </StackPanel>
                         </Panel>
                     </ControlTemplate>
@@ -72,7 +80,7 @@
         <Style Selector=".notifications Border">
             <Setter Property="Transitions">
                 <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:.2" />
+                    <DoubleTransition Duration="0:0:.2" Property="Opacity" />
                 </Transitions>
             </Setter>
             <Style Selector="^.info">
@@ -147,34 +155,74 @@
         <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
-            <!-- Navigation (left side) -->
-            <Border Grid.Column="0" Classes="nav">
+            <!--  Navigation (left side)  -->
+            <Border Classes="nav" Grid.Column="0">
                 <Grid RowDefinitions="80,*">
                     <TextBlock Classes="header">NITROX</TextBlock>
                     <Panel Grid.Row="1">
                         <StackPanel Classes="nav">
                             <TextBlock Classes="subheader">PLAY</TextBlock>
-                            <RadioButton Content="Play game" Tag="/Assets/Images/tabs-icons/play.png" Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play game" IsChecked="True" />
-                            <RadioButton Content="Servers" Tag="/Assets/Images/tabs-icons/server.png" Command="{Binding OpenServersViewCommand}" ToolTip.Tip="Configure and start servers" />
+                            <RadioButton
+                                Command="{Binding OpenLaunchGameViewCommand}"
+                                Content="Play game"
+                                IsChecked="True"
+                                Tag="/Assets/Images/tabs-icons/play.png"
+                                ToolTip.Tip="Play game" />
+                            <RadioButton
+                                Command="{Binding OpenServersViewCommand}"
+                                Content="Servers"
+                                Tag="/Assets/Images/tabs-icons/server.png"
+                                ToolTip.Tip="Configure and start servers" />
                             <TextBlock Classes="subheader">EXPLORE</TextBlock>
-                            <RadioButton Content="Community" Tag="/Assets/Images/tabs-icons/community.png" Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join Nitrox community" />
-                            <RadioButton Content="Blog" Tag="/Assets/Images/tabs-icons/blog.png" Command="{Binding OpenBlogViewCommand}" ToolTip.Tip="Read latest news from the Dev Blog" />
+                            <RadioButton
+                                Command="{Binding OpenCommunityViewCommand}"
+                                Content="Community"
+                                Tag="/Assets/Images/tabs-icons/community.png"
+                                ToolTip.Tip="Join Nitrox community" />
+                            <RadioButton
+                                Command="{Binding OpenBlogViewCommand}"
+                                Content="Blog"
+                                Tag="/Assets/Images/tabs-icons/blog.png"
+                                ToolTip.Tip="Read latest news from the Dev Blog" />
                         </StackPanel>
-                        <StackPanel Classes="nav" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                            <RadioButton Content="Updates" Tag="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}" Command="{Binding OpenUpdatesViewCommand}" ToolTip.Tip="Check latest updates from Nitrox" />
-                            <RadioButton Content="Options" Tag="/Assets/Images/tabs-icons/options.png" Command="{Binding OpenOptionsViewCommand}" ToolTip.Tip="Configure your Nitrox setup" />
+                        <StackPanel
+                            Classes="nav"
+                            Margin="0,0,0,20"
+                            VerticalAlignment="Bottom">
+                            <RadioButton
+                                Command="{Binding OpenUpdatesViewCommand}"
+                                Content="Updates"
+                                Tag="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}"
+                                ToolTip.Tip="Check latest updates from Nitrox" />
+                            <RadioButton
+                                Command="{Binding OpenOptionsViewCommand}"
+                                Content="Options"
+                                Tag="/Assets/Images/tabs-icons/options.png"
+                                ToolTip.Tip="Configure your Nitrox setup" />
                         </StackPanel>
                     </Panel>
                 </Grid>
             </Border>
 
-            <!-- Navigated content (right side) -->
-            <ContentControl Grid.Column="1" Classes="content" Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}">
+            <!--  Navigated content (right side)  -->
+            <ContentControl
+                Classes="content"
+                Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}"
+                Grid.Column="1">
                 <ContentControl.ContentTemplate>
                     <design:MultiDataTemplate>
-                        <!-- Null view (which will be a string, see TargetNullValue) -->
+                        <!--  Null view (which will be a string, see TargetNullValue)  -->
                         <DataTemplate x:DataType="system:String">
-                            <TextBox Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" IsReadOnly="True" IsHitTestVisible="False" Focusable="False" />
+                            <TextBox
+                                Focusable="False"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                IsHitTestVisible="False"
+                                IsReadOnly="True"
+                                Text="{Binding}"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center" />
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:LaunchGameViewModel">
                             <views:LaunchGameView />
@@ -200,7 +248,7 @@
                         <DataTemplate x:DataType="vm:OptionsViewModel">
                             <views:OptionsView />
                         </DataTemplate>
-                        <!-- Fallback view. This DataTemplate must be kept at the bottom. -->
+                        <!--  Fallback view. This DataTemplate must be kept at the bottom.  -->
                         <DataTemplate x:DataType="system:Object">
                             <TextBlock>
                                 <Run Text="No view for" />
@@ -212,22 +260,48 @@
             </ContentControl>
         </Grid>
 
-        <!-- Notifications -->
-        <Grid ColumnDefinitions="*,280" Classes="notifications">
-            <ItemsControl Grid.Column="1" Margin="0 10 10 10" ItemsSource="{Binding Notifications}" VerticalAlignment="Bottom" Opacity="0.95">
+        <!--  Notifications  -->
+        <Grid Classes="notifications" ColumnDefinitions="*,280">
+            <ItemsControl
+                Grid.Column="1"
+                ItemsSource="{Binding Notifications}"
+                Margin="0,10,10,10"
+                Opacity="0.95"
+                VerticalAlignment="Bottom">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Classes.dismiss="{Binding Dismissed}"
-                                Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
-                                Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"
-                                Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Warning}}"
-                                Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
-                                Margin="5" Padding="5 10 10 10" MinHeight="60" CornerRadius="5">
+                        <Border
+                            Classes.dismiss="{Binding Dismissed}"
+                            Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
+                            Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
+                            Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"
+                            Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Warning}}"
+                            CornerRadius="5"
+                            Margin="5"
+                            MinHeight="60"
+                            Padding="5,10,10,10">
                             <Grid ColumnDefinitions="50,*,20">
-                                <Svg Grid.Column="0" Classes="theme icon" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" />
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
-                                <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
-                                    <Svg Width="10" Classes="theme" VerticalAlignment="Top" Path="/Assets/Icons/close.svg" />
+                                <Svg
+                                    Classes="theme icon"
+                                    Grid.Column="0"
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    Width="25" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding Message}"
+                                    VerticalAlignment="Center" />
+                                <Button
+                                    Classes="anycontent"
+                                    Command="{Binding CloseCommand}"
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top">
+                                    <Svg
+                                        Classes="theme"
+                                        Path="/Assets/Icons/close.svg"
+                                        VerticalAlignment="Top"
+                                        Width="10" />
                                 </Button>
                             </Grid>
                         </Border>

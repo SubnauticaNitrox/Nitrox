@@ -1,12 +1,11 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Design.PreviewWith>
         <StackPanel Spacing="10">
             <TextBlock Text="I'm a textblock ! 0123456789" />
-            <TextBlock Text="I'm a textblock ! 0123456789" Classes="link" />
-            <TextBlock Text="I'm a textblock ! 0123456789" Classes="header" />
-            <TextBlock Text="I'm a textblock ! 0123456789" Classes="modalHeader" />
+            <TextBlock Classes="link" Text="I'm a textblock ! 0123456789" />
+            <TextBlock Classes="header" Text="I'm a textblock ! 0123456789" />
+            <TextBlock Classes="modalHeader" Text="I'm a textblock ! 0123456789" />
         </StackPanel>
     </Design.PreviewWith>
 

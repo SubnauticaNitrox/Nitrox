@@ -1,20 +1,20 @@
-<Styles xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls">
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <ThemeVariantScope RequestedThemeVariant="Dark">
-                    <Border Padding="10" Background="#000000">
+                    <Border Background="#000000" Padding="10">
                         <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
                     </Border>
                 </ThemeVariantScope>
                 <ThemeVariantScope RequestedThemeVariant="Light">
-                    <Border Padding="10" Background="#FFFFFF" >
+                    <Border Background="#FFFFFF" Padding="10">
                         <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
                     </Border>
                 </ThemeVariantScope>
@@ -22,30 +22,31 @@
         </Panel>
     </Design.PreviewWith>
 
-    <!-- Base style without palette-->
+    <!--  Base style without palette  -->
     <Style Selector="ItemsControl.radioGroup">
         <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
         <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <StackPanel Spacing="8" Orientation="Horizontal" />
+                <StackPanel Orientation="Horizontal" Spacing="8" />
             </ItemsPanelTemplate>
         </Setter>
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <Button Name="ItemContainer"
-                            Background="Transparent"
-                            CornerRadius="8"
-                            BorderThickness="2"
-                            BorderBrush="{DynamicResource BrandBorder}"
-                            Padding="14 16"
-                            Tag="{Binding}"
-                            Command="{Binding $parent[controls:RadioButtonGroup].ItemClickCommand}"
-                            CommandParameter="{Binding $self}">
+                    <Button
+                        Background="Transparent"
+                        BorderBrush="{DynamicResource BrandBorder}"
+                        BorderThickness="2"
+                        Command="{Binding $parent[controls:RadioButtonGroup].ItemClickCommand}"
+                        CommandParameter="{Binding $self}"
+                        CornerRadius="8"
+                        Name="ItemContainer"
+                        Padding="14,16"
+                        Tag="{Binding}">
                         <design:NitroxAttached.Selected>
                             <MultiBinding Converter="{converters:EqualityConverter}">
-                                <Binding/>
+                                <Binding />
                                 <Binding Path="$parent[controls:RadioButtonGroup].SelectedItem" />
                             </MultiBinding>
                         </design:NitroxAttached.Selected>
@@ -61,7 +62,7 @@
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer">
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <BrushTransition Duration="0:0:0.15" Property="BorderBrush" />
             </Transitions>
         </Setter>
     </Style>
@@ -72,7 +73,7 @@
         </Style>
     </Style>
 
-    <!-- Events -->
+    <!--  Events  -->
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
         <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimary}" />
     </Style>

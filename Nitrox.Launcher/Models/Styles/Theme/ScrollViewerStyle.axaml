@@ -1,14 +1,15 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="20">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <ThemeVariantScope RequestedThemeVariant="Light">
-                        <Border Background="White" Padding="10 10 0 10">
-                            <ScrollViewer Width="200" Height="200">
+                        <Border Background="White" Padding="10,10,0,10">
+                            <ScrollViewer Height="200" Width="200">
                                 <StackPanel Spacing="20">
                                     <TextBlock Foreground="Black">Item 1</TextBlock>
                                     <TextBlock Foreground="Black">Item 2</TextBlock>
@@ -24,8 +25,8 @@
                         </Border>
                     </ThemeVariantScope>
                     <ThemeVariantScope RequestedThemeVariant="Dark">
-                        <Border Background="Black" Padding="10 10 0 10">
-                            <ScrollViewer Width="200" Height="200">
+                        <Border Background="Black" Padding="10,10,0,10">
+                            <ScrollViewer Height="200" Width="200">
                                 <StackPanel Spacing="20">
                                     <TextBlock>Item 1</TextBlock>
                                     <TextBlock>Item 2</TextBlock>
@@ -43,8 +44,12 @@
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <ThemeVariantScope RequestedThemeVariant="Light">
-                        <Border Background="White" Padding="10 10 10 0">
-                            <ScrollViewer Width="410" HorizontalAlignment="Left" HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
+                        <Border Background="White" Padding="10,10,10,0">
+                            <ScrollViewer
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Left"
+                                HorizontalScrollBarVisibility="Visible"
+                                Width="410">
                                 <StackPanel Orientation="Horizontal" Spacing="20">
                                     <TextBlock Foreground="Black">Item 1</TextBlock>
                                     <TextBlock Foreground="Black">Item 2</TextBlock>
@@ -60,8 +65,12 @@
                         </Border>
                     </ThemeVariantScope>
                     <ThemeVariantScope RequestedThemeVariant="Dark">
-                        <Border Background="Black" Padding="10 10 10 0">
-                            <ScrollViewer Width="410" HorizontalAlignment="Left" HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
+                        <Border Background="Black" Padding="10,10,10,0">
+                            <ScrollViewer
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Left"
+                                HorizontalScrollBarVisibility="Visible"
+                                Width="410">
                                 <StackPanel Orientation="Horizontal" Spacing="20">
                                     <TextBlock>Item 1</TextBlock>
                                     <TextBlock>Item 2</TextBlock>
@@ -80,133 +89,151 @@
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
-    
+
     <Style Selector="ScrollViewer">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="AllowAutoHide" Value="False"/>
-        <Setter Property="behaviors:SmoothScrollBehavior.SmoothScroll" Value="True"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="AllowAutoHide" Value="False" />
+        <Setter Property="behaviors:SmoothScrollBehavior.SmoothScroll" Value="True" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
-                    <ScrollContentPresenter Name="PART_ContentPresenter"
-                                            Background="{TemplateBinding Background}"
-                                            HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
-                                            VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
-                                            HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
-                                            VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
-                                            Padding="{TemplateBinding Padding}"
-                                            ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                    <ScrollContentPresenter
+                        Background="{TemplateBinding Background}"
+                        HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+                        HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+                        Name="PART_ContentPresenter"
+                        Padding="{TemplateBinding Padding}"
+                        ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}"
+                        VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+                        VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}">
                         <ScrollContentPresenter.GestureRecognizers>
-                             <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
-                                                      CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
-                                                      IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
+                            <ScrollGestureRecognizer
+                                CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}" />
                         </ScrollContentPresenter.GestureRecognizers>
                     </ScrollContentPresenter>
-                    <ScrollBar Grid.Column="0" Name="PART_HorizontalScrollBar"
-                               Orientation="Horizontal" Margin="0 5 0 0"
-                               Grid.Row="1" />
-                    <ScrollBar Grid.Row="0" Name="PART_VerticalScrollBar"
-                               Orientation="Vertical" Margin="5 0 0 0"
-                               Grid.Column="1" />
+                    <ScrollBar
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Margin="0,5,0,0"
+                        Name="PART_HorizontalScrollBar"
+                        Orientation="Horizontal" />
+                    <ScrollBar
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="5,0,0,0"
+                        Name="PART_VerticalScrollBar"
+                        Orientation="Vertical" />
                 </Grid>
             </ControlTemplate>
         </Setter>
-        
+
         <Style Selector="^.main">
-            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <Grid>
-                        <ScrollContentPresenter Name="PART_ContentPresenter"
-                                                Background="{TemplateBinding Background}"
-                                                HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
-                                                VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
-                                                HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
-                                                VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
-                                                Padding="{TemplateBinding Padding}"
-                                                ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                        <ScrollContentPresenter
+                            Background="{TemplateBinding Background}"
+                            HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+                            HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+                            Name="PART_ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}"
+                            VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+                            VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}">
                             <ScrollContentPresenter.GestureRecognizers>
-                                <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
-                                                         CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
-                                                         IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
+                                <ScrollGestureRecognizer
+                                    CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                    CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                    IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}" />
                             </ScrollContentPresenter.GestureRecognizers>
                         </ScrollContentPresenter>
-                        <ScrollBar Name="PART_VerticalScrollBar" HorizontalAlignment="Right" Orientation="Vertical" Margin="0 0 0 6" />
+                        <ScrollBar
+                            HorizontalAlignment="Right"
+                            Margin="0,0,0,6"
+                            Name="PART_VerticalScrollBar"
+                            Orientation="Vertical" />
                     </Grid>
                 </ControlTemplate>
             </Setter>
         </Style>
     </Style>
-    
+
     <Style Selector="Window[(design|NitroxAttached.UseCustomTitleBar)=True] ScrollViewer.main /template/ ScrollBar#PART_VerticalScrollBar">
         <Setter Property="Margin" Value="0 30 0 6" />
     </Style>
-    
+
     <Style Selector="ScrollBar">
         <Setter Property="MinWidth" Value="{DynamicResource ScrollBarSize}" />
         <Setter Property="MinHeight" Value="{DynamicResource ScrollBarSize}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="AllowAutoHide" Value="False"/>
-    
+        <Setter Property="AllowAutoHide" Value="False" />
+
         <Style Selector="^:vertical">
             <Setter Property="Template">
                 <ControlTemplate>
                     <Grid x:Name="Root">
-                        <Border x:Name="VerticalRoot"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}">
-                            <Track Minimum="{TemplateBinding Minimum}"
-                                   Maximum="{TemplateBinding Maximum}"
-                                   Value="{TemplateBinding Value, Mode=TwoWay}"
-                                   ViewportSize="{TemplateBinding ViewportSize}"
-                                   Orientation="{TemplateBinding Orientation}"
-                                   IsDirectionReversed="True">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            x:Name="VerticalRoot">
+                            <Track
+                                IsDirectionReversed="True"
+                                Maximum="{TemplateBinding Maximum}"
+                                Minimum="{TemplateBinding Minimum}"
+                                Orientation="{TemplateBinding Orientation}"
+                                Value="{TemplateBinding Value,
+                                                        Mode=TwoWay}"
+                                ViewportSize="{TemplateBinding ViewportSize}">
                                 <Track.DecreaseButton>
-                                    <RepeatButton Name="PART_PageUpButton"
-                                                  Focusable="False" />
+                                    <RepeatButton Focusable="False" Name="PART_PageUpButton" />
                                 </Track.DecreaseButton>
                                 <Track.IncreaseButton>
-                                    <RepeatButton Name="PART_PageDownButton"
-                                                  Focusable="False" />
+                                    <RepeatButton Focusable="False" Name="PART_PageDownButton" />
                                 </Track.IncreaseButton>
-                                <Thumb Width="8"
-                                       MinHeight="8"
-                                       RenderTransform="{DynamicResource VerticalSmallScrollThumbScaleTransform}"
-                                       RenderTransformOrigin="100%,50%" />
+                                <Thumb
+                                    MinHeight="8"
+                                    RenderTransform="{DynamicResource VerticalSmallScrollThumbScaleTransform}"
+                                    RenderTransformOrigin="100%,50%"
+                                    Width="8" />
                             </Track>
                         </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter>
         </Style>
-    
+
         <Style Selector="^:horizontal">
             <Setter Property="Template">
                 <ControlTemplate>
                     <Grid x:Name="Root">
-                        <Border x:Name="HorizontalRoot"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}">
-                            <Track Minimum="{TemplateBinding Minimum}"
-                                   Maximum="{TemplateBinding Maximum}"
-                                   Value="{TemplateBinding Value, Mode=TwoWay}"
-                                   ViewportSize="{TemplateBinding ViewportSize}"
-                                   Orientation="{TemplateBinding Orientation}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            x:Name="HorizontalRoot">
+                            <Track
+                                Maximum="{TemplateBinding Maximum}"
+                                Minimum="{TemplateBinding Minimum}"
+                                Orientation="{TemplateBinding Orientation}"
+                                Value="{TemplateBinding Value,
+                                                        Mode=TwoWay}"
+                                ViewportSize="{TemplateBinding ViewportSize}">
                                 <Track.DecreaseButton>
-                                    <RepeatButton Name="PART_PageUpButton"
-                                                  Focusable="False" />
+                                    <RepeatButton Focusable="False" Name="PART_PageUpButton" />
                                 </Track.DecreaseButton>
                                 <Track.IncreaseButton>
-                                    <RepeatButton Name="PART_PageDownButton"
-                                                  Focusable="False" />
+                                    <RepeatButton Focusable="False" Name="PART_PageDownButton" />
                                 </Track.IncreaseButton>
-                                <Thumb Height="8"
-                                       MinWidth="8"
-                                       RenderTransform="{DynamicResource HorizontalSmallScrollThumbScaleTransform}"
-                                       RenderTransformOrigin="50%,100%" />
+                                <Thumb
+                                    Height="8"
+                                    MinWidth="8"
+                                    RenderTransform="{DynamicResource HorizontalSmallScrollThumbScaleTransform}"
+                                    RenderTransformOrigin="50%,100%" />
                             </Track>
                         </Border>
                     </Grid>
@@ -214,13 +241,12 @@
             </Setter>
         </Style>
     </Style>
-    
+
     <Style Selector="Thumb">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border Background="{DynamicResource BrandScrollThumb}"
-                            CornerRadius="4"/>
+                    <Border Background="{DynamicResource BrandScrollThumb}" CornerRadius="4" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -228,7 +254,7 @@
         <Style Selector="^ /template/ Border">
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.10" />
+                    <BrushTransition Duration="0:0:0.10" Property="Background" />
                 </Transitions>
             </Setter>
             <Style Selector="^:pointerover">
@@ -238,10 +264,10 @@
         <Style Selector="^:pressed /template/ Border">
             <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPressed}" />
         </Style>
-        
+
         <!--<Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
         </Style>
-    
+
         <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
             <Setter Property="Template">
                 <Setter.Value>
@@ -271,5 +297,5 @@
             </ControlTemplate>
         </Setter>
     </Style>
-    
+
 </Styles>

@@ -1,32 +1,61 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="700"
-             x:Class="Nitrox.Launcher.Views.EmbeddedServerView"
-             x:DataType="vm:EmbeddedServerViewModel">
+<UserControl
+    d:DesignWidth="700"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.EmbeddedServerView"
+    x:DataType="vm:EmbeddedServerViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <vm:EmbeddedServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
-        <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" CommandParameter="{Binding #ServerCommandTextBox}" />
-        <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" CommandParameter="{Binding #ServerCommandTextBox}" />
-        <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" CommandParameter="{Binding #ServerCommandTextBox}" />
+        <KeyBinding
+            Command="{Binding ClearInputCommand}"
+            CommandParameter="{Binding #ServerCommandTextBox}"
+            Gesture="Escape" />
+        <KeyBinding
+            Command="{Binding CommandHistoryGoForwardCommand}"
+            CommandParameter="{Binding #ServerCommandTextBox}"
+            Gesture="Down" />
+        <KeyBinding
+            Command="{Binding CommandHistoryGoBackCommand}"
+            CommandParameter="{Binding #ServerCommandTextBox}"
+            Gesture="Up" />
     </UserControl.KeyBindings>
     <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto">
         <Grid Grid.Row="0">
-            <Button HorizontalAlignment="Left" Background="Transparent" Command="{Binding BackCommand}" Cursor="Hand">
-                <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back.png" Width="24" Height="24" />
+            <Button
+                Background="Transparent"
+                Command="{Binding BackCommand}"
+                Cursor="Hand"
+                HorizontalAlignment="Left">
+                <Image
+                    Height="24"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Images/world-manager/back.png"
+                    Width="24" />
             </Button>
-            <TextBlock Classes="header" Text="{Binding ServerEntry.Name}" HorizontalAlignment="Center"/>
-            <CheckBox Content="Auto scroll" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding ShouldAutoScroll}" />
+            <TextBlock
+                Classes="header"
+                HorizontalAlignment="Center"
+                Text="{Binding ServerEntry.Name}" />
+            <CheckBox
+                Content="Auto scroll"
+                HorizontalAlignment="Right"
+                IsChecked="{Binding ShouldAutoScroll}"
+                VerticalAlignment="Center" />
         </Grid>
-        <ScrollViewer x:Name="ScrollViewer" Grid.Row="1" Margin="0 20 0 20">
-            <!-- Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something) -->
-            <ItemsControl ItemsSource="{Binding ServerOutput}" Background="Transparent">
+        <ScrollViewer
+            Grid.Row="1"
+            Margin="0,20,0,20"
+            x:Name="ScrollViewer">
+            <!--  Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something)  -->
+            <ItemsControl Background="Transparent" ItemsSource="{Binding ServerOutput}">
                 <Interaction.Behaviors>
                     <BehaviorCollection>
                         <EventTriggerBehavior EventName="SizeChanged">
@@ -41,27 +70,52 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="system:String">
-                        <SelectableTextBlock Text="{Binding}" /> <!-- TODO: Maybe make this a rich textblock and add bold text to timestamps, maybe also red font color to errors. ALSO: Fix highlighting only happening one line at a time -->
+                        <SelectableTextBlock Text="{Binding}" />
+                        <!--  TODO: Maybe make this a rich textblock and add bold text to timestamps, maybe also red font color to errors. ALSO: Fix highlighting only happening one line at a time  -->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
-            <TextBox x:Name="ServerCommandTextBox" Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12 0 0 0" Spacing="12">
+        <Grid ColumnDefinitions="*,Auto" Grid.Row="2">
+            <TextBox
+                Grid.Column="0"
+                Text="{Binding ServerCommand}"
+                Watermark="A server command here"
+                design:NitroxAttached.Focus=""
+                x:Name="ServerCommandTextBox" />
+            <StackPanel
+                Grid.Column="1"
+                Margin="12,0,0,0"
+                Orientation="Horizontal"
+                Spacing="12">
                 <StackPanel.Styles>
                     <Style Selector="Button">
                         <Setter Property="Width" Value="60" />
                         <Setter Property="VerticalAlignment" Value="Stretch" />
                     </Style>
                 </StackPanel.Styles>
-                <Button Classes="primary" Command="{Binding SendServerCommand}" CommandParameter="{Binding #ServerCommandTextBox}"
-                        HotKey="Enter" Cursor="Hand" ToolTip.Tip="Send command">
-                    <Svg Height="20" Classes="theme" Path="/Assets/Icons/send.svg" />
+                <Button
+                    Classes="primary"
+                    Command="{Binding SendServerCommand}"
+                    CommandParameter="{Binding #ServerCommandTextBox}"
+                    Cursor="Hand"
+                    HotKey="Enter"
+                    ToolTip.Tip="Send command">
+                    <Svg
+                        Classes="theme"
+                        Height="20"
+                        Path="/Assets/Icons/send.svg" />
                 </Button>
-                <Button Classes="abort" Command="{Binding StopServerCommand}" CommandParameter="{Binding #ServerCommandTextBox}"
-                        Cursor="Hand" ToolTip.Tip="Stop the server">
-                    <Rectangle Fill="White" Width="20" Height="20" />
+                <Button
+                    Classes="abort"
+                    Command="{Binding StopServerCommand}"
+                    CommandParameter="{Binding #ServerCommandTextBox}"
+                    Cursor="Hand"
+                    ToolTip.Tip="Stop the server">
+                    <Rectangle
+                        Fill="White"
+                        Height="20"
+                        Width="20" />
                 </Button>
             </StackPanel>
         </Grid>

@@ -1,37 +1,60 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
-             xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="700"
-             x:Class="Nitrox.Launcher.Views.ManageServerView"
-             x:DataType="vm:ManageServerViewModel">
+<UserControl
+    d:DesignWidth="700"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.ManageServerView"
+    x:DataType="vm:ManageServerViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <vm:ManageServerViewModel ServerName="My fun server" />
     </Design.DataContext>
     <UserControl.KeyBindings>
-        <KeyBinding Gesture="Shift+Delete" Command="{Binding ForceDeleteServerCommand}" />
+        <KeyBinding Command="{Binding ForceDeleteServerCommand}" Gesture="Shift+Delete" />
     </UserControl.KeyBindings>
-    <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhite}">
+    <Grid
+        Background="{DynamicResource BrandWhite}"
+        Classes="viewPadding"
+        RowDefinitions="Auto,*,Auto">
         <StackPanel>
-            <Button Margin="0 0 0 26" Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
-                <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back.png" Width="24" Height="24" />
+            <Button
+                Background="Transparent"
+                Command="{Binding BackCommand}"
+                Cursor="Hand"
+                HotKey="Escape"
+                Margin="0,0,0,26">
+                <Image
+                    Height="24"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Images/world-manager/back.png"
+                    Width="24" />
             </Button>
             <Grid ColumnDefinitions="Auto,*">
-                <StackPanel Margin="0 0 20 0">
-                    <Border CornerRadius="12" ClipToBounds="True" Height="72">
+                <StackPanel Margin="0,0,20,0">
+                    <Border
+                        ClipToBounds="True"
+                        CornerRadius="12"
+                        Height="72">
                         <Grid>
-                            <Button Classes="anycontent" Command="{Binding ChangeServerIconCommand}"
-                                    IsHitTestVisible="{Binding !ServerIsOnline}" ToolTip.Tip="Set a custom server icon">
+                            <Button
+                                Classes="anycontent"
+                                Command="{Binding ChangeServerIconCommand}"
+                                IsHitTestVisible="{Binding !ServerIsOnline}"
+                                ToolTip.Tip="Set a custom server icon">
                                 <Grid>
-                                    <Image Source="/Assets/Images/subnautica-icon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
-                                    <Border Height="70" Width="70" CornerRadius="12">
+                                    <Image IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" Source="/Assets/Images/subnautica-icon.png" />
+                                    <Border
+                                        CornerRadius="12"
+                                        Height="70"
+                                        Width="70">
                                         <Border.Background>
-                                            <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon}" />
+                                            <ImageBrush Source="{Binding ServerIcon}" Stretch="UniformToFill" />
                                         </Border.Background>
                                     </Border>
                                 </Grid>
@@ -41,21 +64,30 @@
                                     </Style>
                                 </Button.Styles>
                             </Button>
-                            <controls:GrayscaleControl Opacity="{Binding !ServerIsOnline}" IsHitTestVisible="False">
+                            <controls:GrayscaleControl IsHitTestVisible="False" Opacity="{Binding !ServerIsOnline}">
                                 <controls:GrayscaleControl.Transitions>
                                     <Transitions>
-                                        <DoubleTransition Property="Opacity" Duration="0:0:0.10" />
+                                        <DoubleTransition Duration="0:0:0.10" Property="Opacity" />
                                     </Transitions>
                                 </controls:GrayscaleControl.Transitions>
                             </controls:GrayscaleControl>
                         </Grid>
                     </Border>
-                    <TextBlock Text="Click to change icon" Foreground="{DynamicResource BrandSubText}" FontSize="7.5" HorizontalAlignment="Center" />
+                    <TextBlock
+                        FontSize="7.5"
+                        Foreground="{DynamicResource BrandSubText}"
+                        HorizontalAlignment="Center"
+                        Text="Click to change icon" />
                 </StackPanel>
 
 
                 <StackPanel Grid.Column="1">
-                    <StackPanel Width="223" Orientation="Horizontal" HorizontalAlignment="Left" Classes="description" Margin="0 0 0 10">
+                    <StackPanel
+                        Classes="description"
+                        HorizontalAlignment="Left"
+                        Margin="0,0,0,10"
+                        Orientation="Horizontal"
+                        Width="223">
                         <StackPanel.Styles>
                             <Style Selector="StackPanel.description > :is(Control)">
                                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -76,12 +108,12 @@
                             </Style>
                         </StackPanel.Styles>
                         <Panel>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerIsOnline}">
-                                <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOnColor}" />
+                            <StackPanel IsVisible="{Binding ServerIsOnline}" Orientation="Horizontal">
+                                <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
                                 <TextBlock IsVisible="{Binding ServerIsOnline}" Text="Online" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding !ServerIsOnline}">
-                                <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOffColor}" />
+                            <StackPanel IsVisible="{Binding !ServerIsOnline}" Orientation="Horizontal">
+                                <Ellipse Fill="{DynamicResource BrandOffColor}" Margin="0,0,6,0" />
                                 <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
                             </StackPanel>
                         </Panel>
@@ -90,26 +122,52 @@
                             <TextBlock Text="{Binding ServerPlayers}" />
                             <TextBlock Text="/" />
                             <TextBlock Text="{Binding ServerMaxPlayers}" />
-                            <TextBlock Margin="6 0 0 0" Text="playing" />
+                            <TextBlock Margin="6,0,0,0" Text="playing" />
                         </StackPanel>
                     </StackPanel>
 
                     <Grid ColumnDefinitions="*,200">
-                        <ScrollViewer Grid.Column="0" Margin="0 0 10 0" design:NitroxAttached.PrimaryScrollWheelDirection="Horizontal">
-                            <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
+                        <ScrollViewer
+                            Grid.Column="0"
+                            Margin="0,0,10,0"
+                            design:NitroxAttached.PrimaryScrollWheelDirection="Horizontal">
+                            <TextBlock
+                                Classes="header"
+                                Foreground="White"
+                                Text="{Binding ServerName}" />
                         </ScrollViewer>
 
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Height="40" Spacing="5" HorizontalAlignment="Right">
-                            <Button Classes="abort" HorizontalAlignment="Stretch" Content="UNDO" Command="{Binding UndoCommand}" HotKey="Ctrl+Alt+Z" />
-                            <Button Classes="primary" Margin="5 0 0 0" HorizontalAlignment="Stretch" Content="SAVE" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
+                        <StackPanel
+                            Grid.Column="1"
+                            Height="40"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            Spacing="5">
+                            <Button
+                                Classes="abort"
+                                Command="{Binding UndoCommand}"
+                                Content="UNDO"
+                                HorizontalAlignment="Stretch"
+                                HotKey="Ctrl+Alt+Z" />
+                            <Button
+                                Classes="primary"
+                                Command="{Binding SaveCommand}"
+                                Content="SAVE"
+                                HorizontalAlignment="Stretch"
+                                HotKey="Ctrl+S"
+                                Margin="5,0,0,0" />
                         </StackPanel>
                     </Grid>
                 </StackPanel>
             </Grid>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="0 26" design:NitroxAttached.AutoScrollToHome="True">
-            <StackPanel VerticalAlignment="Stretch" Spacing="42">
+        <ScrollViewer
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            Margin="0,26"
+            design:NitroxAttached.AutoScrollToHome="True">
+            <StackPanel Spacing="42" VerticalAlignment="Stretch">
                 <StackPanel.Styles>
                     <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
                         <Setter Property="Margin" Value="0 0 0 11" />
@@ -118,31 +176,58 @@
 
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
-                        <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName, Converter={converters:TrimConverter}}"
-                                 IsEnabled="{Binding !ServerIsOnline}" />
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="SERVER NAME" />
+                        <TextBox
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            Text="{Binding ServerName, Converter={converters:TrimConverter}}"
+                            Watermark="My server"
+                            design:NitroxAttached.Focus="" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Classes="revealPasswordButton" Watermark="Server password" Text="{Binding ServerPassword, Converter={converters:TrimConverter}}"
-                                 IsEnabled="{Binding !ServerIsOnline}" />
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="PASSWORD" />
+                        <TextBox
+                            Classes="revealPasswordButton"
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            Text="{Binding ServerPassword, Converter={converters:TrimConverter}}"
+                            Watermark="Server password" />
                     </StackPanel>
                 </Grid>
 
                 <StackPanel>
-                    <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}"
-                                               SelectedItem="{Binding ServerGameMode, Mode=TwoWay}"
-                                               IsEnabled="{Binding !ServerIsOnline}" />
+                    <TextBlock
+                        FontSize="10"
+                        FontWeight="700"
+                        Opacity=".5"
+                        Text="GAMEMODE" />
+                    <controls:RadioButtonGroup
+                        Classes="radioGroup"
+                        Enum="{x:Type server:NitroxGameMode}"
+                        IsEnabled="{Binding !ServerIsOnline}"
+                        SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
                 </StackPanel>
 
                 <Grid ColumnDefinitions="*,30,*,30,*">
                     <StackPanel>
-                        <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server seed" Text="{Binding ServerSeed, Converter={converters:ToStringConverter}, ConverterParameter=upper}"
-                                 MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"
-                                 IsReadOnly="{Binding !Server.IsNewServer}">
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="SEED" />
+                        <TextBox
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            IsReadOnly="{Binding !Server.IsNewServer}"
+                            MaxLength="10"
+                            Text="{Binding ServerSeed, Converter={converters:ToStringConverter}, ConverterParameter=upper}"
+                            Watermark="Server seed">
                             <TextBox.Styles>
                                 <Style Selector="TextBox[IsReadOnly=False]">
                                     <Setter Property="ToolTip.Tip" Value="Leave blank to automatically generate one" />
@@ -155,11 +240,18 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
-                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
-                                  ItemsSource="{Binding PlayerPerms}"
-                                  SelectedValue="{Binding ServerDefaultPlayerPerm}"
-                                  IsEnabled="{Binding !ServerIsOnline}">
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="DEFAULT PERMISSIONS" />
+                        <ComboBox
+                            FontSize="13"
+                            HorizontalAlignment="Stretch"
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            ItemsSource="{Binding PlayerPerms}"
+                            PlaceholderText="Default Perm"
+                            SelectedValue="{Binding ServerDefaultPlayerPerm}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Converter={converters:ToStringConverter}}" />
@@ -169,30 +261,60 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="4">
-                        <TextBlock Text="AUTO SAVE INTERVAL (s)" FontSize="10" Opacity=".5" FontWeight="700" />
-                        <TextBox design:NitroxAttached.IsNumericInput="True" Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
-                                 Text="{Binding ServerAutoSaveInterval, Converter={converters:IntToStringConverter}}"
-                                 IsEnabled="{Binding !ServerIsOnline}" MaxLength="9" />
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="AUTO SAVE INTERVAL (s)" />
+                        <TextBox
+                            FontSize="13"
+                            HorizontalAlignment="Stretch"
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            MaxLength="9"
+                            Text="{Binding ServerAutoSaveInterval, Converter={converters:IntToStringConverter}}"
+                            Watermark="Autosave interval"
+                            design:NitroxAttached.IsNumericInput="True" />
                     </StackPanel>
                 </Grid>
 
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
-                        <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox design:NitroxAttached.IsNumericInput="True" Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, Converter={converters:IntToStringConverter}}"
-                                 IsEnabled="{Binding !ServerIsOnline}" MaxLength="9" />
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="PLAYER LIMIT" />
+                        <TextBox
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            MaxLength="9"
+                            Text="{Binding ServerMaxPlayers, Converter={converters:IntToStringConverter}}"
+                            Watermark="Enter a player limit"
+                            design:NitroxAttached.IsNumericInput="True" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox design:NitroxAttached.IsNumericInput="True" Watermark="Enter a port number" Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
-                                 IsEnabled="{Binding !ServerIsOnline}" MaxLength="5" />
+                        <TextBlock
+                            FontSize="10"
+                            FontWeight="700"
+                            Opacity=".5"
+                            Text="SERVER PORT" />
+                        <TextBox
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            MaxLength="5"
+                            Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
+                            Watermark="Enter a port number"
+                            design:NitroxAttached.IsNumericInput="True" />
                     </StackPanel>
                 </Grid>
 
                 <StackPanel>
-                    <TextBlock Text="OPTIONS" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 15" />
-                    <StackPanel Spacing="20" IsEnabled="{Binding !ServerIsOnline}">
+                    <TextBlock
+                        FontSize="10"
+                        FontWeight="700"
+                        Margin="0,0,0,15"
+                        Opacity=".5"
+                        Text="OPTIONS" />
+                    <StackPanel IsEnabled="{Binding !ServerIsOnline}" Spacing="20">
                         <StackPanel.Styles>
                             <Style Selector="Grid > TextBlock">
                                 <Setter Property="FontSize" Value="16" />
@@ -202,21 +324,35 @@
                         </StackPanel.Styles>
                         <Grid>
                             <TextBlock Text="Enable auto port forwarding" />
-                            <CheckBox Classes="switch" IsChecked="{Binding ServerAutoPortForward}" HorizontalAlignment="Right" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAutoPortForward}" />
                         </Grid>
                         <Grid>
                             <TextBlock Text="Allow LAN Discovery" />
-                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowLanDiscovery}" HorizontalAlignment="Right" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAllowLanDiscovery}" />
                         </Grid>
                         <Grid>
                             <TextBlock Text="Enable Commands" />
-                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowCommands}" HorizontalAlignment="Right" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAllowCommands}" />
                         </Grid>
                     </StackPanel>
                 </StackPanel>
 
                 <StackPanel>
-                    <TextBlock Text="ADVANCED" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 20" />
+                    <TextBlock
+                        FontSize="10"
+                        FontWeight="700"
+                        Margin="0,0,0,20"
+                        Opacity=".5"
+                        Text="ADVANCED" />
                     <StackPanel Spacing="20">
                         <StackPanel.Styles>
                             <Style Selector="Button">
@@ -225,25 +361,29 @@
                             </Style>
                         </StackPanel.Styles>
 
-                        <Button Command="{Binding ShowAdvancedSettingsCommand}" Classes="icon">
+                        <Button Classes="icon" Command="{Binding ShowAdvancedSettingsCommand}">
                             <StackPanel>
                                 <Image Source="/Assets/Images/world-manager/cog.png" />
                                 <TextBlock Text="Advanced settings" />
                             </StackPanel>
                         </Button>
-                        <Button Command="{Binding OpenWorldFolderCommand}" Classes="icon">
+                        <Button Classes="icon" Command="{Binding OpenWorldFolderCommand}">
                             <StackPanel>
                                 <Image Source="/Assets/Images/world-manager/window.png" />
                                 <TextBlock Text="Open world folder" />
                             </StackPanel>
                         </Button>
-                        <Button Command="{Binding RestoreBackupCommand}" Classes="icon">
+                        <Button Classes="icon" Command="{Binding RestoreBackupCommand}">
                             <StackPanel>
                                 <Image Source="/Assets/Images/world-manager/export.png" />
                                 <TextBlock Text="Restore a backup" />
                             </StackPanel>
                         </Button>
-                        <Button Command="{Binding DeleteServerCommand}" HotKey="Delete" Classes="icon" Foreground="#ec1c24">
+                        <Button
+                            Classes="icon"
+                            Command="{Binding DeleteServerCommand}"
+                            Foreground="#ec1c24"
+                            HotKey="Delete">
                             <StackPanel>
                                 <Image Source="/Assets/Images/world-manager/delete.png" />
                                 <TextBlock Text="Delete server" />
@@ -255,16 +395,47 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Row="2" Background="{DynamicResource BrandPanelBackground}" CornerRadius="12" Padding="25 17">
-            <Grid ColumnDefinitions="*,1*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel Grid.Column="0" Background="Transparent" IsEnabled="{OnPlatform {Binding !ServerIsOnline}, macOS={x:False}}" ToolTip.ShowOnDisabled="True" ToolTip.Tip="{OnPlatform {x:Null}, macOS='External server console is not available for MacOS'}">
-                    <RadioButton Content="External" IsChecked="{Binding !ServerEmbedded}" ToolTip.ShowOnDisabled="False" ToolTip.Tip="Run server in external mode as a separate command line window" />
-                    <RadioButton Content="Embedded" IsChecked="{Binding ServerEmbedded}" ToolTip.ShowOnDisabled="False" ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+        <Border
+            Background="{DynamicResource BrandPanelBackground}"
+            CornerRadius="12"
+            Grid.Row="2"
+            Padding="25,17">
+            <Grid
+                ColumnDefinitions="*,1*"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <StackPanel
+                    Background="Transparent"
+                    Grid.Column="0"
+                    IsEnabled="{OnPlatform {Binding !ServerIsOnline},
+                                           macOS={x:False}}"
+                    ToolTip.ShowOnDisabled="True"
+                    ToolTip.Tip="{OnPlatform {x:Null},
+                                             macOS='External server console is not available for MacOS'}">
+                    <RadioButton
+                        Content="External"
+                        IsChecked="{Binding !ServerEmbedded}"
+                        ToolTip.ShowOnDisabled="False"
+                        ToolTip.Tip="Run server in external mode as a separate command line window" />
+                    <RadioButton
+                        Content="Embedded"
+                        IsChecked="{Binding ServerEmbedded}"
+                        ToolTip.ShowOnDisabled="False"
+                        ToolTip.Tip="Run server in embedded mode within the launcher UI" />
                 </StackPanel>
 
                 <Panel Grid.Column="1" HorizontalAlignment="Stretch">
-                    <Button Classes="abort big" IsVisible="{Binding ServerIsOnline}" Content="STOP SERVER" Command="{Binding StopServerCommand}" HorizontalAlignment="Stretch" />
-                    <Button Classes="primary big" IsVisible="{Binding !ServerIsOnline}" Command="{Binding StartServerCommand}" HorizontalAlignment="Stretch">
+                    <Button
+                        Classes="abort big"
+                        Command="{Binding StopServerCommand}"
+                        Content="STOP SERVER"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding ServerIsOnline}" />
+                    <Button
+                        Classes="primary big"
+                        Command="{Binding StartServerCommand}"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding !ServerIsOnline}">
                         <StackPanel>
                             <TextBlock Text="START SERVER" />
                             <TextBlock Text="MULTIPLAYER" />
