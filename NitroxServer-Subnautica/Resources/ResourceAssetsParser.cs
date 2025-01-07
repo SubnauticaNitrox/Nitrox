@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers;
 
@@ -22,7 +22,8 @@ public static class ResourceAssetsParser
                 WorldEntitiesByClassId = new WorldEntityInfoParser().ParseFile(),
                 LootDistributionsJson = new EntityDistributionsParser().ParseFile(),
                 PrefabPlaceholdersGroupsByGroupClassId = prefabPlaceholderGroupsParser.ParseFile(),
-                NitroxRandom = new RandomStartParser().ParseFile()
+                NitroxRandom = new RandomStartParser().ParseFile(),
+                RandomPossibilitiesByClassId = new(prefabPlaceholderGroupsParser.RandomPossibilitiesByClassId)
             };
         }
         AssetParser.Dispose();
