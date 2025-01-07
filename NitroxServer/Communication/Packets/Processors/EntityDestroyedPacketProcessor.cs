@@ -1,4 +1,5 @@
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -26,6 +27,11 @@ public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<Entit
 
         if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity entity))
         {
+            if (entity is VehicleWorldEntity vehicleWorldEntity)
+            {
+                worldEntityManager.MovePlayerChildrenToRoot(vehicleWorldEntity);
+            }
+
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != destroyingPlayer;

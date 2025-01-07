@@ -21,7 +21,7 @@ public static class NitroxGUILayout
 
     public static void Separator()
     {
-        GUILayout.Box(GUIContent.none, separatorStyle, GUILayout.Height(1));
+        GUILayout.Box(GUIContent.none, separatorStyle, GUILayout.Height(5));
     }
 
     public static int IntField(int value, float valueWidth = VALUE_WIDTH) => ConvertibleField(value, valueWidth).ToInt32(CultureInfo.CurrentCulture);
@@ -154,7 +154,7 @@ public static class NitroxGUILayout
     /// <returns>The newly selected enum value.</returns>
     public static Enum EnumPopup(Enum selected, float buttonWidth = VALUE_WIDTH)
     {
-        return EnumPopupInternal(selected, buttonWidth);        
+        return EnumPopupInternal(selected, buttonWidth);
     }
 
     public static T EnumPopup<T>(T selected, float buttonWidth = VALUE_WIDTH) where T : Enum
@@ -183,7 +183,7 @@ public static class NitroxGUILayout
                 return (lValue & lFlag) != 0;
             };
 
-            T SetFlags<T>(T value, T flags, bool toggle)
+            object SetFlags(Type type, object value, object flags, bool toggle)
             {
                 long lValue = Convert.ToInt64(value);
                 long lFlag = Convert.ToInt64(flags);
@@ -201,7 +201,7 @@ public static class NitroxGUILayout
                     lValue = 0;
                 }
 
-                return (T)Enum.ToObject(typeof(T), lValue);
+                return Enum.ToObject(type, lValue);
             };
 
             Enum[] enumValues = Enum.GetValues(enumType).Cast<Enum>().ToArray();
@@ -215,7 +215,7 @@ public static class NitroxGUILayout
 
                     bool isFlagSet = IsFlagSet(selected, enumValue);
 
-                    selected = SetFlags(selected, enumValue, GUILayout.Toggle(isFlagSet, enumName, "Button", GUILayout.Width(buttonWidth)));
+                    selected = (Enum) SetFlags(enumType, selected, enumValue, GUILayout.Toggle(isFlagSet, enumName, "Button", GUILayout.Width(buttonWidth)));
                 }
             }
 

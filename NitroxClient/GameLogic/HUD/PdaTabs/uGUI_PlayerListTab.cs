@@ -97,14 +97,14 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     public new void OnEnable()
     {
         // Enter events for player join and disconnect
-        playerManager.onCreate += OnAdd;
-        playerManager.onRemove += OnRemove;
+        playerManager.OnCreate += OnAdd;
+        playerManager.OnRemove += OnRemove;
     }
 
     public new void OnDestroy()
     {
-        playerManager.onCreate -= OnAdd;
-        playerManager.onRemove -= OnRemove;
+        playerManager.OnCreate -= OnAdd;
+        playerManager.OnRemove -= OnRemove;
     }
 
     public override void OnLanguageChanged()
@@ -224,19 +224,20 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Add(playerId, entry);
     }
 
-    private void OnAdd(string playerId, RemotePlayer remotePlayer)
+    private void OnAdd(ushort playerId, RemotePlayer remotePlayer)
     {
         _isDirty = true;
     }
 
-    private void OnRemove(string playerId, RemotePlayer remotePlayers)
+    private void OnRemove(ushort playerId, RemotePlayer remotePlayers)
     {
-        if (!entries.ContainsKey(playerId))
+        string playerIdString = playerId.ToString();
+        if (!entries.ContainsKey(playerIdString))
         {
             return;
         }
-        uGUI_PlayerPingEntry entry = entries[playerId];
-        entries.Remove(playerId);
+        uGUI_PlayerPingEntry entry = entries[playerIdString];
+        entries.Remove(playerIdString);
         pool.Release(entry);
         _isDirty = true;
     }

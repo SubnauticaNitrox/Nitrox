@@ -2,29 +2,34 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Persistent;
 
 /// <summary>
 ///     Patch to disable any analytics uploads to UWE servers. Since game is modded it's not useful for UWE and it's less
-///     code to run for us.
+///     code to run for us
 /// </summary>
-internal class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
+public sealed class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
 {
     /// <summary>
-    ///     Disables analytics uploads.
+    ///     Disables analytics uploads
     /// </summary>
     private static readonly MethodInfo TARGET_METHOD_SDK = Reflect.Method((SentrySdk t) => t.Start());
 
     /// <summary>
-    ///     Skip manager create as well to remove NRE in Player.log on exit (OnDestroy will try access null SentrySdk
-    ///     instance).
+    ///     Skip manager create as well to remove NRE in Player.log on exit (OnDestroy will try access null SentrySdk instance)
     /// </summary>
     private static readonly MethodInfo TARGET_METHOD_MANAGER = Reflect.Method((SentrySdkManager t) => t.Awake());
     private static readonly MethodInfo TARGET_METHOD_MANAGER_ONENABLE = Reflect.Method((SentrySdkManager t) => t.OnEnable());
 
+    /// <summary>
+    ///     Skip controller create as well to remove NRE in Player.log
+    /// </summary>
+    private static readonly MethodInfo TARGET_METHOD_CONTROLLER = Reflect.Method((AnalyticsController t) => t.Awake());
+    private static readonly MethodInfo TARGET_METHOD_CONTROLLER_ONENABLE = Reflect.Method((AnalyticsController t) => t.OnEnable());
+
     private static readonly MethodInfo TARGET_METHOD_TELEMETRY = Reflect.Method((Telemetry t) => t.Awake());
+    private static readonly MethodInfo TARGET_METHOD_TELEMETRY_ONENABLE = Reflect.Method((Telemetry t) => t.OnEnable());
     private static readonly MethodInfo TARGET_METHOD_TELEMETRY_QUIT = Reflect.Method(() => Telemetry.SendGameQuit(default));
     private static readonly MethodInfo TARGET_METHOD_GAMEANALYTICS_SEND_EVENT = Reflect.Method(() => GameAnalytics.Send(default(GameAnalytics.Event), default(bool), default(string)));
     private static readonly MethodInfo TARGET_METHOD_GAMEANALYTICS_SEND_EVENTINFO = Reflect.Method(() => GameAnalytics.Send(default(GameAnalytics.EventInfo), default(bool), default(string)));
@@ -43,6 +48,12 @@ internal class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
         return false;
     }
 
+    public static bool Prefix(AnalyticsController __instance)
+    {
+        UnityEngine.Object.Destroy(__instance);
+        return false;
+    }
+
     public static bool Prefix(Telemetry __instance)
     {
         UnityEngine.Object.Destroy(__instance);
@@ -57,9 +68,12 @@ internal class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
     public override void Patch(Harmony harmony)
     {
         PatchPrefix(harmony, TARGET_METHOD_SDK, ((Func<SentrySdk, bool>)Prefix).Method);
+        PatchPrefix(harmony, TARGET_METHOD_CONTROLLER, ((Func<AnalyticsController, bool>)Prefix).Method);
+        PatchPrefix(harmony, TARGET_METHOD_CONTROLLER_ONENABLE, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_MANAGER, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_MANAGER_ONENABLE, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_TELEMETRY, ((Func<Telemetry, bool>)Prefix).Method);
+        PatchPrefix(harmony, TARGET_METHOD_TELEMETRY_ONENABLE, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_TELEMETRY_QUIT, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_GAMEANALYTICS_SEND_EVENT, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_GAMEANALYTICS_SEND_EVENTINFO, ((Func<bool>)Prefix).Method);

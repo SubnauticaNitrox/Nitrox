@@ -19,6 +19,12 @@ namespace NitroxClient.GameLogic;
 
 public class RemotePlayer : INitroxPlayer
 {
+    /// <summary>
+    /// Marks <see cref="Player.mainObject"/> and every <see cref="Body"/> so they can be precisely queried (e.g. by sea dragons).
+    /// The value (5050) is determined arbitrarily and should not be used already.
+    /// </summary>
+    public const EcoTargetType PLAYER_ECO_TARGET_TYPE = (EcoTargetType)5050;
+
     private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
     private readonly PlayerModelManager playerModelManager;
@@ -44,6 +50,8 @@ public class RemotePlayer : INitroxPlayer
     public SubRoot SubRoot { get; private set; }
     public EscapePod EscapePod { get; private set; }
     public PilotingChair PilotingChair { get; private set; }
+    public InfectedMixin InfectedMixin { get; private set; }
+    public LiveMixin LiveMixin { get; private set; }
 
     public readonly Event<RemotePlayer> PlayerDeathEvent = new();
 
@@ -94,6 +102,7 @@ public class RemotePlayer : INitroxPlayer
         SetupBody();
         SetupSkyAppliers();
         SetupPlayerSounds();
+        SetupMixins();
 
         vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
@@ -364,6 +373,9 @@ public class RemotePlayer : INitroxPlayer
                 AnimationController["bench_sit"] = state == AnimChangeState.ON;
                 AnimationController["bench_stand_up"] = state == AnimChangeState.OFF;
                 break;
+            case AnimChangeType.INFECTION_REVEAL:
+                AnimationController["player_infected"] = state != AnimChangeState.UNSET;
+                break;
         }
 
         // Rough estimation for different collider boxes in different animation stages
@@ -385,10 +397,20 @@ public class RemotePlayer : INitroxPlayer
     }
 
     /// <summary>
-    /// Makes the RemotePlayer recognizable as an obstacle for buildings.
+    /// Makes the RemotePlayer recognizable as an obstacle for buildings, and as a target for creatures
     /// </summary>
     private void SetupBody()
     {
+        // set as a target for reapers
+        EcoTarget sharkEcoTarget = Body.AddComponent<EcoTarget>();
+        sharkEcoTarget.SetTargetType(EcoTargetType.Shark);
+
+        EcoTarget playerEcoTarget = Body.AddComponent<EcoTarget>();
+        playerEcoTarget.SetTargetType(PLAYER_ECO_TARGET_TYPE);
+
+        TechTag techTag = Body.AddComponent<TechTag>();
+        techTag.type = TechType.Player;
+
         RemotePlayerIdentifier identifier = Body.AddComponent<RemotePlayerIdentifier>();
         identifier.RemotePlayer = this;
 
@@ -484,6 +506,41 @@ public class RemotePlayer : INitroxPlayer
         }
     }
 
+    /// <summary>
+    /// An InfectedMixin is required for behaviours like <see cref="AggressiveWhenSeeTarget"/> which look for this on the target they find
+    /// </summary>
+    private void SetupMixins()
+    {
+        InfectedMixin = Body.AddComponent<InfectedMixin>();
+        InfectedMixin.shaderKeyWord = InfectedMixin.uwe_playerinfection;
+        Renderer renderer = PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_hands_geo").GetComponent<Renderer>();
+        InfectedMixin.renderers = [renderer];
+
+        LiveMixin = Body.AddComponent<LiveMixin>();
+        LiveMixin.data = new()
+        {
+            maxHealth = 100,
+            broadcastKillOnDeath = false
+        };
+        LiveMixin.health = 100;
+        // We set the remote player to invincible because we only want this component to be detectable but not to work
+        LiveMixin.invincible = true;
+    }
+
+    public void UpdateHealthAndInfection(float health, float infection)
+    {
+        if (LiveMixin)
+        {
+            LiveMixin.health = health;
+        }
+
+        if (InfectedMixin)
+        {
+            InfectedMixin.infectedAmount = infection;
+            InfectedMixin.UpdateInfectionShading();
+        }
+    }
+
     public void SetGameMode(NitroxGameMode gameMode)
     {
         PlayerContext.GameMode = gameMode;
@@ -494,7 +551,17 @@ public class RemotePlayer : INitroxPlayer
     {
         if (vitals)
         {
-            vitals.gameObject.SetActive(PlayerContext.GameMode != NitroxGameMode.CREATIVE);
+            bool visible = PlayerContext.GameMode != NitroxGameMode.CREATIVE;
+            vitals.SetStatsVisible(visible);
         }
+    }
+
+    /// <summary>
+    /// Adaptation of <see cref="Player.CanBeAttacked"/> for remote players.
+    /// NB: This doesn't check for other player's use of 'invisible' command
+    /// </summary>
+    public bool CanBeAttacked()
+    {
+        return !SubRoot && !EscapePod && PlayerContext.GameMode != NitroxGameMode.CREATIVE;
     }
 }

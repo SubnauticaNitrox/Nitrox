@@ -123,6 +123,21 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        public void DropSimulationFrom(NitroxId entityId)
+        {
+            StopSimulatingEntity(entityId);
+            EntityPositionBroadcaster.StopWatchingEntity(entityId);
+            if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject))
+            {
+                return;
+            }
+
+            if (gameObject.TryGetComponent(out RemotelyControlled remotelyControlled))
+            {
+                Object.Destroy(remotelyControlled);
+            }
+        }
+
         public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
         {
             return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);

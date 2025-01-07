@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             // TODO: When we want to implement multiple escape pods, instantiate the prefab. Backlog task: #1945
             //       This will require some work as instantiating the prefab as-is will not make it visible.
             //GameObject escapePod = Object.Instantiate(EscapePod.main.gameObject);
-            
+
             GameObject escapePod = EscapePod.main.gameObject;
             UnityEngine.Component.DestroyImmediate(escapePod.GetComponent<NitroxEntity>()); // if template has a pre-existing NitroxEntity, remove.
             NitroxEntity.SetNewId(escapePod, escapePodEntity.Id);
@@ -69,13 +69,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
 
             FixStartMethods(escapePod);
 
-            // Start() isn't executed for the EscapePod, why? Idk, maybe because it's a scene...
-            MultiplayerCinematicReference reference = escapePod.AddComponent<MultiplayerCinematicReference>();
-            foreach (PlayerCinematicController controller in escapePod.GetComponentsInChildren<PlayerCinematicController>())
-            {
-                reference.AddController(controller);
-            }
-
             return escapePod;
         }
 
@@ -84,14 +77,20 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
         /// </summary>
         private static void FixStartMethods(GameObject escapePod)
         {
-            foreach (FMOD_CustomEmitter customEmitter in escapePod.GetComponentsInChildren<FMOD_CustomEmitter>())
+            foreach (FMOD_CustomEmitter customEmitter in escapePod.GetComponentsInChildren<FMOD_CustomEmitter>(true))
             {
                 customEmitter.Start();
             }
 
-            foreach (FMOD_StudioEventEmitter studioEventEmitter in escapePod.GetComponentsInChildren<FMOD_StudioEventEmitter>())
+            foreach (FMOD_StudioEventEmitter studioEventEmitter in escapePod.GetComponentsInChildren<FMOD_StudioEventEmitter>(true))
             {
                 studioEventEmitter.Start();
+            }
+
+            MultiplayerCinematicReference reference = escapePod.AddComponent<MultiplayerCinematicReference>();
+            foreach (PlayerCinematicController controller in escapePod.GetComponentsInChildren<PlayerCinematicController>(true))
+            {
+                reference.AddController(controller);
             }
         }
 

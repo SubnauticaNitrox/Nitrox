@@ -7,7 +7,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
+public sealed class QuickSlotInitialSyncProcessor : InitialSyncProcessor
 {
     public QuickSlotInitialSyncProcessor()
     {

@@ -27,6 +27,9 @@ namespace NitroxServer.Serialization
 
         public int ServerPort { get; set; } = ServerList.DEFAULT_PORT;
 
+        [PropertyDescription("Prevents players from losing items on death")]
+        public bool KeepInventoryOnDeath { get; set; } = false;
+
         [PropertyDescription("Measured in milliseconds")]
         public int SaveInterval
         {
@@ -117,5 +120,8 @@ namespace NitroxServer.Serialization
 
         [PropertyDescription("When true, will reject any build actions detected as desynced")]
         public bool SafeBuilding { get; set; } = true;
+
+        [PropertyDescription("Activates/Deactivates Player versus Player damage/interactions")]
+        public bool PvPEnabled { get; set; } = true;
     }
 }

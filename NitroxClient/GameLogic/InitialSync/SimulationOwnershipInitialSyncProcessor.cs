@@ -5,7 +5,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
+public sealed class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly SimulationOwnership simulationOwnership;
 

@@ -234,7 +234,7 @@ namespace NitroxServer.Serialization.World
                 world.Seed
             );
 
-            world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
+            world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner, world.PlayerManager);
 
             world.BuildingManager = new(world.EntityRegistry, world.WorldEntityManager, config);
 

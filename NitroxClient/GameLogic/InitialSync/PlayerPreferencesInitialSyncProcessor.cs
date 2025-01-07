@@ -11,7 +11,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
+public sealed class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 {
     public PlayerPreferencesInitialSyncProcessor()
     {
@@ -23,11 +23,11 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         AddDependency<RemotePlayerInitialSyncProcessor>();
     }
 
-    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } = new()
-    {
+    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } =
+    [
         UpdatePins,
         UpdatePingInstancePreferences
-    };
+    ];
 
     private static IEnumerator UpdatePins(InitialPlayerSync packet)
     {

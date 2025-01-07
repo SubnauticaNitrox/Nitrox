@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///     This allows the player to:<br/>
 ///      - use equipment
 /// </remarks>
-public class PlayerInitialSyncProcessor : InitialSyncProcessor
+public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Items item;
     private readonly ItemContainers itemContainers;
@@ -28,10 +28,12 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         this.localPlayer = localPlayer;
 
         AddStep(sync => SetPlayerPermissions(sync.Permissions));
+        AddStep(sync => SetPlayerIntroCinematicMode(sync.IntroCinematicMode));
         AddStep(sync => SetPlayerGameObjectId(sync.PlayerGameObjectId));
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
+        AddStep(sync => SetPlayerKeepInventoryOnDeath(sync.KeepInventoryOnDeath));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -39,8 +41,20 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         localPlayer.Permissions = permissions;
     }
 
-    private void SetPlayerGameObjectId(NitroxId id)
+    private void SetPlayerIntroCinematicMode(IntroCinematicMode introCinematicMode)
     {
+        if (localPlayer.IntroCinematicMode < introCinematicMode)
+        {
+            localPlayer.IntroCinematicMode = introCinematicMode;
+            Log.Info($"Received initial sync player IntroCinematicMode: {introCinematicMode}");
+        }
+    }
+
+    private static void SetPlayerGameObjectId(NitroxId id)
+    {
+        EcoTarget playerEcoTarget = Player.mainObject.AddComponent<EcoTarget>();
+        playerEcoTarget.SetTargetType(RemotePlayer.PLAYER_ECO_TARGET_TYPE);
+
         NitroxEntity.SetNewId(Player.mainObject, id);
         Log.Info($"Received initial sync player GameObject Id: {id}");
     }
@@ -68,12 +82,13 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         }
     }
 
-    private void SetPlayerStats(PlayerStatsData statsData)
+    private static void SetPlayerStats(PlayerStatsData statsData)
     {
         if (statsData != null)
         {
             Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
-            Player.main.liveMixin.health = statsData.Health;
+            // Spawning a player with 0 health makes them invincible so we'd rather set it to 1 HP
+            Player.main.liveMixin.health = Mathf.Max(1f, statsData.Health);
             Survival survivalComponent = Player.main.GetComponent<Survival>();
             survivalComponent.food = statsData.Food;
             survivalComponent.water = statsData.Water;
@@ -96,9 +111,14 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         Player.main.GetPDA().Close();
     }
 
-    private void SetPlayerGameMode(NitroxGameMode gameMode)
+    private static void SetPlayerGameMode(NitroxGameMode gameMode)
     {
         Log.Info($"Received initial sync packet with gamemode {gameMode}");
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
+    }
+
+    private void SetPlayerKeepInventoryOnDeath(bool keepInventoryOnDeath)
+    {
+        localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
     }
 }
