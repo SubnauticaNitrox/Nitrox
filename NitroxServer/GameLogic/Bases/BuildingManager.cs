@@ -102,10 +102,24 @@ public class BuildingManager
             Log.Error($"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
             return false;
         }
+        // Certain entities are just "regular" WorldEntities and for simplicity we'll just ignore the 
         if (entity is not GhostEntity && entity is not ModuleEntity)
         {
-            Log.Error($"Trying to modify the constructed amount of an entity that is not a ghost (Id: {modifyConstructedAmount.GhostId})");
-            return false;
+            // In case the entity was fully deconstructed
+            if (modifyConstructedAmount.ConstructedAmount == 0f)
+            {
+                if (entity is GlobalRootEntity)
+                {
+                    worldEntityManager.RemoveGlobalRootEntity(entity.Id);
+                }
+                else
+                {
+                    entityRegistry.RemoveEntity(entity.Id);
+                }
+            }
+
+            // In any case we'll broadcast the packet
+            return true;
         }
         if (modifyConstructedAmount.ConstructedAmount == 0f)
         {
