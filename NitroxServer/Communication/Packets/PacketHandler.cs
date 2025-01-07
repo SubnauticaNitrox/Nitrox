@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -13,13 +13,15 @@ namespace NitroxServer.Communication.Packets
     public class PacketHandler
     {
         private readonly PlayerManager playerManager;
+        private readonly JoiningManager joiningManager;
         private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;
         private readonly Dictionary<Type, PacketProcessor> packetProcessorAuthCache = new();
         private readonly Dictionary<Type, PacketProcessor> packetProcessorUnauthCache = new();
 
-        public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
+        public PacketHandler(PlayerManager playerManager, JoiningManager joiningManager, DefaultServerPacketProcessor packetProcessor)
         {
             this.playerManager = playerManager;
+            this.joiningManager = joiningManager;
             defaultServerPacketProcessor = packetProcessor;
         }
 
@@ -30,7 +32,7 @@ namespace NitroxServer.Communication.Packets
             {
                 ProcessAuthenticated(packet, player);
             }
-            else if (!playerManager.GetQueuedPlayers().Contains(connection))
+            else if (!joiningManager.GetQueuedPlayers().Contains(connection))
             {
                 ProcessUnauthenticated(packet, connection);
             }

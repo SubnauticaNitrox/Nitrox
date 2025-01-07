@@ -6,16 +6,16 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
     {
-        private readonly PlayerManager playerManager;
+        private readonly JoiningManager joiningManager;
 
-        public PlayerJoiningMultiplayerSessionProcessor(PlayerManager playerManager)
+        public PlayerJoiningMultiplayerSessionProcessor(JoiningManager joiningManager)
         {
-            this.playerManager = playerManager;
+            this.joiningManager = joiningManager;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
-            playerManager.AddToJoinQueue(connection, packet.ReservationKey);
+            joiningManager.AddToJoinQueue(connection, packet.ReservationKey);
         }
     }
 }
