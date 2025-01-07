@@ -33,7 +33,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
-        AddStep(sync => SetPlayerKeepInventory(sync.KeepInventoryOnDeath));
+        AddStep(sync => SetPlayerKeepInventoryOnDeath(sync.KeepInventoryOnDeath));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -117,7 +117,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
     }
 
-    private void SetPlayerKeepInventory(bool keepInventoryOnDeath)
+    private void SetPlayerKeepInventoryOnDeath(bool keepInventoryOnDeath)
     {
         localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
     }
