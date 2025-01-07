@@ -10,19 +10,16 @@ public sealed partial class Player_ResetPlayerOnDeath_Patch : NitroxPatch, IDyna
 {
     private static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Player t) => t.ResetPlayerOnDeath(default)));
 
+    /*
+    * REPLACE:
+    * bool lostStuff = Inventory.main.LoseItems();
+    * ......
+    * ErrorMessage.AddWarning((!lostStuff) ? Language.main.Get("YouDied") : Language.main.Get("YouDiedLostStuff"));
+    * BY:
+    * LoseItemsIfKeepInventoryDisabled()
+    */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        /*
-From:
-    bool lostStuff = Inventory.main.LoseItems();
-    ........
-    ErrorMessage.AddWarning((!lostStuff) ? Language.main.Get("YouDied") : Language.main.Get("YouDiedLostStuff"));
-To:
-    //bool lostStuff = Inventory.main.LoseItems(); [REPLACED]
-    LoseItemsIfKeepInventoryDisabled() [NEW]
-    ........
-    //ErrorMessage.AddWarning((!lostStuff) ? Language.main.Get("YouDied") : Language.main.Get("YouDiedLostStuff")); [REMOVED]
- */
         return new CodeMatcher(instructions).MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldsfld),
