@@ -1,5 +1,6 @@
 using System.IO;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
@@ -21,17 +22,19 @@ internal class SetKeepInventoryCommand : Command
 
     protected override void Execute(CallArgs args)
     {
-        SendMessageToAllPlayers($"KeepInventoryOnDeath has been updated to {args.Get<bool>(0)}");
-        if (args.Get<bool>(0) == serverConfig.KeepInventoryOnDeath)
+        bool newKeepInventoryState = args.Get<bool>(0);
+        using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
         {
-            return;
-        }
-        serverConfig.KeepInventoryOnDeath = args.Get<bool>(0);
-        serverConfig.Serialize(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)); // Saves the server config edit to disk
-        KeepInventoryChanged packet = new KeepInventoryChanged(args.Get<bool>(0));
-        foreach (Player player in playerManager.GetConnectedPlayers())
-        {
-            player.SendPacket(packet);
+            if (serverConfig.KeepInventoryOnDeath != newKeepInventoryState)
+            {
+                serverConfig.KeepInventoryOnDeath = newKeepInventoryState;
+                playerManager.SendPacketToAllPlayers(new KeepInventoryChanged(newKeepInventoryState));
+                SendMessageToAllPlayers($"KeepInventoryOnDeath changed to \"{newKeepInventoryState}\" by {args.SenderName}");
+            }
+            else
+            {
+                SendMessage(args.Sender, $"KeepInventoryOnDeath already set to {newKeepInventoryState}");
+            }
         }
     }
 }
