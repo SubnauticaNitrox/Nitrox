@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
-
+using NitroxModel.Packets;
+using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
@@ -12,6 +18,16 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.OnKill(default(DamageType)));
 
     private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeUtils.IsPermadeath());
+
+    public static bool Prefix(Player __instance)
+    {
+        if (Resolve<LocalPlayer>().MarkDeathPointsWithBeacon)
+        {
+            Resolve<IPacketSender>().Send(new SpawnDeathMarker(new NitroxVector3(__instance.lastPosition.x, __instance.lastPosition.y, __instance.lastPosition.z)));
+        }
+        return true;
+    }
+
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> instructionList = instructions.ToList();
