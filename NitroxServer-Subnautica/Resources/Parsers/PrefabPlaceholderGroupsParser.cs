@@ -10,6 +10,7 @@ using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Resources;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
@@ -59,11 +60,8 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         // Loading all prefabs by their classId and file paths (first the path to the prefab then the dependencies)
         LoadAddressableCatalog(prefabDatabase);
 
-        string nitroxCachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "Cache");
-        if (!Directory.Exists(nitroxCachePath))
-        {
-            Directory.CreateDirectory(nitroxCachePath);
-        }
+        string nitroxCachePath = Path.Combine(NitroxUser.AppDataPath, "Cache");
+        Directory.CreateDirectory(nitroxCachePath);
 
         Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupPaths = null;
         string prefabPlaceholdersGroupAssetCachePath = Path.Combine(nitroxCachePath, "PrefabPlaceholdersGroupAssetsCache.json");
@@ -93,24 +91,25 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         return prefabPlaceholdersGroupPaths;
     }
 
-    private Dictionary<string, PrefabPlaceholdersGroupAsset> MakeAndSerializeCache(string path)
+    private Dictionary<string, PrefabPlaceholdersGroupAsset> MakeAndSerializeCache(string filePath)
     {
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
         Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupAssets = new(GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths));
-        using StreamWriter stream = File.CreateText(path);
+        using StreamWriter stream = File.CreateText(filePath);
         serializer.Serialize(stream, new Cache(prefabPlaceholdersGroupAssets, RandomPossibilitiesByClassId));
 
         return prefabPlaceholdersGroupAssets;
     }
 
-    private Cache? DeserializeCache(string path)
+    private Cache? DeserializeCache(string filePath)
     {
         try
         {
-            using StreamReader reader = File.OpenText(path);
+            using StreamReader reader = File.OpenText(filePath);
 
             return (Cache)serializer.Deserialize(reader, typeof(Cache));
-        } catch (Exception exception)
+        }
+        catch (Exception exception)
         {
             Log.Error(exception, "An error occurred while deserializing the game Cache. Re-creating it.");
         }
@@ -143,7 +142,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
     {
         ContentCatalogData ccd = AddressablesJsonParser.FromString(File.ReadAllText(Path.Combine(aaRootPath, "catalog.json")));
         Dictionary<string, string> classIdByPath = prefabDatabase.ToDictionary(m => m.Value, m => m.Key);
-        
+
         foreach (KeyValuePair<object, List<ResourceLocation>> entry in ccd.Resources)
         {
             if (entry.Key is string primaryKey && primaryKey.Length == 32 &&
@@ -230,19 +229,25 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             AssetsBundleManager bundleManagerInst = am.Clone();
             AssetsFileInstance assetFileInstance = bundleManagerInst.LoadBundleWithDependencies(assetPaths);
 
-            if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash)))
+            foreach (TypeTreeType typeTreeType in assetFileInstance.file.Metadata.TypeTreeTypes)
             {
-                prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
-            }
-            else if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(spawnRandomHash)))
-            {
-                AssetsFileInstance assetFileInst = am.LoadBundleWithDependencies(assetPaths);
-
-                GetPrefabGameObjectInfoFromBundle(am, assetFileInst, out AssetFileInfo prefabGameObjectInfo);
-
-                AssetFileInfo spawnRandomInfo = am.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
-                if (spawnRandomInfo != null)
+                if (typeTreeType.TypeId != (int)AssetClassID.MonoBehaviour)
                 {
+                    continue;
+                }
+
+                if (typeTreeType.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash))
+                {
+                    prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
+                    break;
+                }
+                else if (typeTreeType.TypeHash.data.SequenceEqual(spawnRandomHash))
+                {
+                    AssetsFileInstance assetFileInst = am.LoadBundleWithDependencies(assetPaths);
+
+                    GetPrefabGameObjectInfoFromBundle(am, assetFileInst, out AssetFileInfo prefabGameObjectInfo);
+
+                    AssetFileInfo spawnRandomInfo = am.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
                     // See SpawnRandom.Start
                     AssetTypeValueField spawnRandom = am.GetBaseField(assetFileInst, spawnRandomInfo);
                     List<string> classIds = [];
@@ -252,6 +257,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
                     }
 
                     RandomPossibilitiesByClassId.TryAdd(keyValuePair.Key, [.. classIds]);
+                    break;
                 }
             }
 
@@ -380,7 +386,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             {
                 classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
             }
-            
+
             return new PrefabPlaceholderRandomAsset(classIds);
         }
 
