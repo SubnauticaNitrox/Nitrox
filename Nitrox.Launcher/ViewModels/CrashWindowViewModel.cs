@@ -73,21 +73,18 @@ public partial class CrashWindowViewModel : ViewModelBase
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task CopyToClipboard(ContentControl commandControl)
     {
-        IClipboard clipboard = commandControl.GetWindow().Clipboard;
+        IClipboard clipboard = commandControl?.GetWindow().Clipboard;
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(Message);
 
-            if (commandControl != null)
+            object previousContent = commandControl.Content;
+            commandControl.Content = "Copied!";
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                object previousContent = commandControl.Content;
-                commandControl.Content = "Copied!";
-                await Dispatcher.UIThread.InvokeAsync(async () =>
-                {
-                    await Task.Delay(3000);
-                    commandControl.Content = previousContent;
-                });
-            }
+                await Task.Delay(3000);
+                commandControl.Content = previousContent;
+            });
         }
     }
 
