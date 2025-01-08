@@ -139,7 +139,7 @@
                     <!--  Active contributors which have higher role than junior.  -->
                     <TextBlock Text="CONTRIBUTORS" />
                     <TextBlock>
-                        Tornac, iCleeem, Jannify, _HeN_, TwinBuilderOne, Meas, NinjaPedroX,
+                        Tornac, iCleeem, Jannify, _HeN_, TwinBuilderOne, Ohm, NinjaPedroX, Meas,
                         <TextBlock
                             Classes="link"
                             Tag="{Binding ContributionsOfYearUrl}"
