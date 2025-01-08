@@ -8,17 +8,13 @@ public class RepairedComponentMetadataProcessor : EntityMetadataProcessor<Repair
 {
     public override void ProcessMetadata(GameObject gameObject, RepairedComponentMetadata metadata)
     {
-        Radio radio = gameObject.GetComponent<Radio>();
-
-        if (radio)
+        if (gameObject.TryGetComponent(out Radio radio))
         {
             radio.liveMixin.health = radio.liveMixin.maxHealth;
             radio.repairNotification.Play();
         }
 
-        EscapePod pod = gameObject.GetComponent<EscapePod>();
-
-        if (pod)
+        if (gameObject.TryGetComponent(out EscapePod pod))
         {
             pod.liveMixin.health = pod.liveMixin.maxHealth;
             pod.animator.SetFloat("lifepod_damage", 1.0f);
