@@ -22,15 +22,14 @@ public class EscapePodWorldEntity : GlobalRootEntity
 
     public EscapePodWorldEntity(NitroxVector3 position, NitroxId id, EntityMetadata metadata)
     {
+        Transform = new NitroxTransform(position, NitroxQuaternion.Identity, NitroxVector3.One);
         Id = id;
         Metadata = metadata;
-        Transform = new NitroxTransform(position, NitroxQuaternion.Identity, NitroxVector3.Zero);
-        Players = new List<ushort>();
+        Players = [];
         Level = 0;
         TechType = new NitroxTechType("EscapePod");
         SpawnedByServer = true;
-
-        ChildEntities = new List<Entity>();
+        ChildEntities = [];
     }
 
     /// <remarks>Used for deserialization</remarks>
