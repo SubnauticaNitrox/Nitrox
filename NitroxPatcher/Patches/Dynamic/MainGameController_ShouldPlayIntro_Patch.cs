@@ -1,11 +1,10 @@
 #if DEBUG
 using System.Reflection;
 using NitroxModel.Helper;
-using NitroxPatcher.Patches.Dynamic;
 
-namespace NitroxPatcher.Patches.Persistent;
+namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPersistentPatch
+public sealed partial class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => MainGameController.ShouldPlayIntro());
 
