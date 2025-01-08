@@ -42,34 +42,35 @@
             </viewModels:CrashWindowViewModel.Message>
         </viewModels:CrashWindowViewModel>
     </Design.DataContext>
-    <Grid RowDefinitions="*,Auto">
-        <StackPanel Grid.Row="0">
-            <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" ShowTitle="True" />
-            <!--  TODO: Nice color highlighting (with option to click on line to open the source file?)  -->
-            <SelectableTextBlock
-                FontSize="14"
-                Foreground="#FF4444"
-                Padding="10"
-                Text="{Binding Message}" />
-        </StackPanel>
-        <Border
-            Background="{DynamicResource BrandPanelBackground}"
-            Grid.Row="1"
-            Padding="10"
-            VerticalAlignment="Bottom">
-            <StackPanel
-                HorizontalAlignment="Right"
-                Orientation="Horizontal"
-                Spacing="10">
-                <Button
-                    Background="Transparent"
-                    Command="{Binding CopyToClipboardCommand}"
-                    CommandParameter="{Binding $self}"
-                    Content="Copy to clipboard"
-                    HotKey="Ctrl+Shift+C" />
-                <Button Command="{Binding ReportCommand}" Content="Report on GitHub" />
-                <Button Command="{Binding RestartCommand}" Content="Restart Nitrox" />
-            </StackPanel>
-        </Border>
-    </Grid>
+    <DockPanel LastChildFill="True">
+        <controls:CustomTitlebar DockPanel.Dock="Top" IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" ShowTitle="True" />
+        <Grid RowDefinitions="*,Auto">
+            <ScrollViewer>
+                <!--  TODO: Nice color highlighting (with option to click on line to open the source file?)  -->
+                <SelectableTextBlock
+                    FontSize="14"
+                    Foreground="#FF4444"
+                    Padding="10"
+                    Text="{Binding Message}" />
+            </ScrollViewer>
+            <Border
+                Grid.Row="1"
+                Background="{DynamicResource BrandPanelBackground}"
+                Padding="10">
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <Button
+                        Background="Transparent"
+                        Command="{Binding CopyToClipboardCommand}"
+                        CommandParameter="{Binding $self}"
+                        Content="Copy to clipboard"
+                        HotKey="Ctrl+Shift+C" />
+                    <Button Command="{Binding ReportCommand}" Content="Report on GitHub" />
+                    <Button Command="{Binding RestartCommand}" Content="Restart Nitrox" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
 </Window>
