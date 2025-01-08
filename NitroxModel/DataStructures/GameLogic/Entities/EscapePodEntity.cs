@@ -12,9 +12,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 public class EscapePodWorldEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public bool Damaged { get; set; }
-
-    [DataMember(Order = 2)]
     public List<ushort> Players { get; set; }
 
     [IgnoreConstructor]
@@ -31,22 +28,20 @@ public class EscapePodWorldEntity : GlobalRootEntity
         Players = new List<ushort>();
         Level = 0;
         TechType = new NitroxTechType("EscapePod");
-        Damaged = true;
         SpawnedByServer = true;
 
         ChildEntities = new List<Entity>();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public EscapePodWorldEntity(bool damaged, List<ushort> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public EscapePodWorldEntity(List<ushort> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
-        Damaged = damaged;
         Players = players;
     }
 
     public override string ToString()
     {
-        return $"[EscapePodWorldEntity Damaged: {Damaged} {base.ToString()}]";
+        return $"[EscapePodWorldEntity Players: [{string.Join(", ", Players)}] {base.ToString()}]";
     }
 }
