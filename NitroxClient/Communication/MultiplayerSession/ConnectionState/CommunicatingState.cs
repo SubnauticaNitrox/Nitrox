@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
@@ -12,6 +13,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public virtual void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
+            DeathBeacon.DespawnAllDeathBeacons();
             sessionConnectionContext.ClearSessionState();
             sessionConnectionContext.Client.Stop();
 

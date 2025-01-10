@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -33,20 +34,26 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         player.PlayerDeathEvent.Trigger(player);
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
     }
+}
+public class DeathBeacon : MonoBehaviour
+{
+    private static List<GameObject> activeDeathBeacons = new();
+    private static readonly float despawnDistance = 20f;
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
     {
         TaskResult<GameObject> result = new TaskResult<GameObject>();
         yield return CraftData.InstantiateFromPrefabAsync(TechType.Beacon, result, false);
         GameObject beacon = result.Get();
-        if(beacon != null)
+        if (beacon != null)
         {
             CrafterLogic.NotifyCraftEnd(beacon, TechType.Beacon);
             Pickupable item = beacon.GetComponent<Pickupable>();
-            if(item != null)
+            if (item != null)
             {
-                item.Drop(location.ToUnity(), new Vector3(0,0,0), false);
+                item.Drop(location.ToUnity(), new Vector3(0, 0, 0), false);
                 beacon.GetComponent<Beacon>().label = $"{playerName}'s death";
-                CoroutineHost.StartCoroutine(TimedDestroyGameObject(beacon, 900));
+                beacon.AddComponent<DeathBeacon>();
+                activeDeathBeacons.Add(beacon);
             }
             else
             {
@@ -59,10 +66,20 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         }
         yield break;
     }
-    private static IEnumerator TimedDestroyGameObject(GameObject gameObj, float durationS)
+    private void Update()
     {
-        yield return new WaitForSeconds(durationS);
-        GameObject.Destroy(gameObj);
-        yield break;
+        if(Vector3.Distance(Player.main.transform.position, transform.position) <= despawnDistance)
+        {
+            Destroy(gameObject);
+            activeDeathBeacons.Remove(gameObject);
+        }
+    }
+    public static void DespawnAllDeathBeacons()
+    {
+        foreach (GameObject beacon in activeDeathBeacons)
+        {
+            Destroy(beacon);
+        }
+        activeDeathBeacons.Clear();
     }
 }
