@@ -19,15 +19,6 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
 
     private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeUtils.IsPermadeath());
 
-    public static bool Prefix(Player __instance)
-    {
-        if (Resolve<LocalPlayer>().MarkDeathPointsWithBeacon)
-        {
-            Resolve<IPacketSender>().Send(new SpawnDeathMarker(new NitroxVector3(__instance.lastPosition.x, __instance.lastPosition.y, __instance.lastPosition.z)));
-        }
-        return true;
-    }
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> instructionList = instructions.ToList();

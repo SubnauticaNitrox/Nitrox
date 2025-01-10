@@ -1,5 +1,6 @@
 using System;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -12,6 +13,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UWE;
 using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic;
@@ -89,6 +91,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         if (PlayerId.HasValue)
         {
             packetSender.Send(new PlayerDeathEvent(PlayerId.Value, deathPosition.ToDto()));
+            CoroutineHost.StartCoroutine(PlayerDeathProcessor.SpawnDeathBeacon(deathPosition.ToDto(), PlayerName));
         }
     }
 
