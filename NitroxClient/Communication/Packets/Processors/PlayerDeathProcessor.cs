@@ -31,10 +31,6 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         Log.InGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
         Log.InGame($"player died at {playerDeath.DeathPosition.X}, {playerDeath.DeathPosition.Y}, {playerDeath.DeathPosition.Z}");
         player.PlayerDeathEvent.Trigger(player);
-        if (localPlayer.MarkDeathPointsWithBeacon)
-        {
-            CoroutineHost.StartCoroutine(SpawnDeathBeacon(playerDeath.DeathPosition, player.PlayerName));
-        }
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
     }
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
