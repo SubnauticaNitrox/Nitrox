@@ -158,7 +158,7 @@ public abstract class Modal
         yesButton.onClick = new Button.ButtonClickedEvent();
         yesButton.onClick.AddListener(ClickYes);
         buttonYesObject.GetComponentInChildren<TextMeshProUGUI>().text = YesButtonText;
-        buttonYesObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f -Height);
+        buttonYesObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f - Height);
 
         if (HideNoButton)
         {
@@ -173,7 +173,7 @@ public abstract class Modal
             noButton.onClick = new Button.ButtonClickedEvent();
             noButton.onClick.AddListener(() => { ClickNo(); });
             buttonNoObject.GetComponentInChildren<TextMeshProUGUI>().text = NoButtonText;
-            buttonNoObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -Height + 50f);
+            buttonNoObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f - Height);
         }
     }
 

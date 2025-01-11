@@ -22,6 +22,8 @@ public class LiteNetLibClient : IClient
     private readonly NetDataWriter dataWriter = new();
     private readonly INetworkDebugger networkDebugger;
     private readonly PacketReceiver packetReceiver;
+    private readonly FieldInfo manualModeFieldInfo = typeof(NetManager).GetField("_manualMode", BindingFlags.Instance | BindingFlags.NonPublic);
+
     public bool IsConnected { get; private set; }
     public int PingInterval
     {
@@ -129,17 +131,15 @@ public class LiteNetLibClient : IClient
         Log.Info("Disconnected from server");
     }
 
-    private readonly FieldInfo fieldInfo = typeof(NetManager).GetField("_manualMode", BindingFlags.Instance | BindingFlags.NonPublic);
-    
     internal void ForceUpdate()
     {
         int pingInterval = PingInterval;
         // Set PingInterval to 0 so another ping is sent immediately
         PingInterval = 0;
         // ManualUpdate requires the client to have _manualMode set to true so we temporarily do so
-        fieldInfo.SetValue(client, true);
+        manualModeFieldInfo.SetValue(client, true);
         client.ManualUpdate(0);
-        fieldInfo.SetValue(client, false);
+        manualModeFieldInfo.SetValue(client, false);
         // We set it back to its high value so another ping isn't sent while we're waiting for the previous one
         PingInterval = pingInterval;
     }

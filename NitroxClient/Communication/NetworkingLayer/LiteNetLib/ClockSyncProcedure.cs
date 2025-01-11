@@ -13,7 +13,7 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
     public static ClockSyncProcedure Start(LiteNetLibClient liteNetLibClient, int procedureDuration)
     {
         ClockSyncProcedure clockSyncProcedure = new(liteNetLibClient);
-        liteNetLibClient.PingInterval = procedureDuration * 1000;
+        liteNetLibClient.PingInterval = (int)TimeSpan.FromSeconds(procedureDuration).TotalMilliseconds;
         liteNetLibClient.LatencyUpdateCallback += clockSyncProcedure.LatencyUpdate;
         liteNetLibClient.ForceUpdate();
         return clockSyncProcedure;
@@ -21,7 +21,6 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
 
     public void LatencyUpdate(long remoteTimeDelta)
     {
-        Log.Debug($"rtd: {remoteTimeDelta}");
         deltas.Add(remoteTimeDelta);
         liteNetLibClient.ForceUpdate();
     }
@@ -37,24 +36,10 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
             average = 0;
             return false; // abnormal situation
         }
-
-        average = (long)deltas.Average();
-        Log.Debug($"average 1: {average}");
-
-        // manual calculation of standard deviation
-        long standardDeviation = 0;
-
-        // sum of the squares of the values
-        foreach (long delta in deltas)
-        {
-            standardDeviation += delta * delta;
-        }
-        standardDeviation /= deltas.Count; // divide by n
-
-        standardDeviation -= average * average; // remove the average's square
-
-        standardDeviation = (long)Math.Sqrt(standardDeviation);
-        Log.Debug($"std: {standardDeviation}");
+        
+        double avg = deltas.Average();
+        average = (long)avg; // Need to assign from another variable since you can't give a ref to the below lambda
+        long standardDeviation = (long)Math.Sqrt(deltas.Average(v => Math.Pow(v - avg, 2)));
 
         List<long> validValues = [];
         foreach (long delta in deltas)

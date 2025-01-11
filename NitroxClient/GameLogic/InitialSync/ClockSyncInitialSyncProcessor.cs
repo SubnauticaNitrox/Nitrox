@@ -40,7 +40,7 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
             // If server AND client are in online mode, we have everything we need
             if (timeData.OnlineMode)
             {
-                // TODO: when the thing is ready, write instead: yield break;
+                yield break;
             }
         }
 
@@ -54,7 +54,6 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
     /// </summary>
     private IEnumerator GetAveragePing()
     {
-        Log.Debug("GetAveragePing()");
         int procedureDuration = (int)NitroxPrefs.OfflineClockSyncDuration.Value; // seconds
         using ClockSyncProcedure clockSyncProcedure = ClockSyncProcedure.Start(liteNetLibClient, procedureDuration);
         yield return new WaitForSecondsRealtime(procedureDuration);

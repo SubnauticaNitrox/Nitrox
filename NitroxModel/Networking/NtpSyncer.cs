@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Timers;
 using LiteNetLib;
+using LiteNetLib.Utils;
 
 namespace NitroxModel.Networking;
 
@@ -37,35 +38,10 @@ public class NtpSyncer
     {
         ntpServicesToTest = new(NTP_SERVICES);
         this.verbose = verbose;
-        if (finishCallback != null)
-        {
-            FinishCallback = finishCallback;
-        }
+        FinishCallback = finishCallback;
 
         EventBasedNetListener listener = new();
-        listener.NtpResponseEvent += ntpPacket =>
-        {
-            timer.Stop();
-
-            if (ntpPacket != null)
-            {
-                OnlineMode = true;
-                CorrectionOffset = ntpPacket.CorrectionOffset;
-                Dispose();
-                if (verbose)
-                {
-                    Log.Debug($"[{nameof(NtpSyncer)}] NTP time test offset: {ntpPacket.CorrectionOffset}");
-                }
-            }
-            else
-            {
-                if (verbose)
-                {
-                    Log.Error($"[{nameof(NtpSyncer)}] NTP request error at {latestUsedService}, retrying with another service...");
-                }
-                RequestNtpService();
-            }
-        };
+        listener.NtpResponseEvent += TreatPacket;
 
         netManager = new(listener);
         netManager.Start();
@@ -109,6 +85,30 @@ public class NtpSyncer
                 Log.Error($"[{nameof(NtpSyncer)}] An error occurred during NTP sync sequence with {ntpService}, retrying with another one... ({ex.GetType()}: {ex.Message})");
             }
             timer.Stop();
+            RequestNtpService();
+        }
+    }
+
+    private void TreatPacket(NtpPacket ntpPacket)
+    {
+        timer.Stop();
+
+        if (ntpPacket != null)
+        {
+            OnlineMode = true;
+            CorrectionOffset = ntpPacket.CorrectionOffset;
+            Dispose();
+            if (verbose)
+            {
+                Log.Info($"[{nameof(NtpSyncer)}] NTP time correction offset: {ntpPacket.CorrectionOffset}");
+            }
+        }
+        else
+        {
+            if (verbose)
+            {
+                Log.Error($"[{nameof(NtpSyncer)}] NTP request error at {latestUsedService}, retrying with another service...");
+            }
             RequestNtpService();
         }
     }
