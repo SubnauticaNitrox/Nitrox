@@ -17,6 +17,7 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private readonly HashSet<NitroxInt3> emptyBatches = new();
     private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId;
+    private readonly RandomSpawnSpoofer randomSpawnSpoofer;
     private readonly IUwePrefabFactory prefabFactory;
     private readonly IEntityBootstrapperManager entityBootstrapperManager;
     private readonly PDAStateData pdaStateData;
@@ -60,7 +61,7 @@ public class BatchEntitySpawner : IEntitySpawner
     private static readonly NitroxQuaternion prefabZUpRotation = NitroxQuaternion.FromEuler(new(-90f, 0f, 0f));
 
     public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, IUweWorldEntityFactory worldEntityFactory, IUwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
-                              IEntityBootstrapperManager entityBootstrapperManager, Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId, PDAStateData pdaStateData, string seed)
+                              IEntityBootstrapperManager entityBootstrapperManager, Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId, PDAStateData pdaStateData, RandomSpawnSpoofer randomSpawnSpoofer, string seed)
     {
         parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
         this.worldEntityFactory = worldEntityFactory;
@@ -69,6 +70,7 @@ public class BatchEntitySpawner : IEntitySpawner
         this.placeholdersGroupsByClassId = placeholdersGroupsByClassId;
         this.pdaStateData = pdaStateData;
         batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
+        this.randomSpawnSpoofer = randomSpawnSpoofer;
         this.seed = seed;
     }
 
@@ -279,6 +281,7 @@ public class BatchEntitySpawner : IEntitySpawner
         }
         else
         {
+            randomSpawnSpoofer.PickRandomClassIdIfRequired(ref classId);
             spawnedEntity = new WorldEntity(position,
                                             rotation,
                                             localScale,
@@ -379,9 +382,9 @@ public class BatchEntitySpawner : IEntitySpawner
             IPrefabAsset prefabAsset = groupAsset.PrefabAssets[i];
 
             // Two cases, either the PrefabPlaceholder holds a visible GameObject or an EntitySlot (a MB which has a chance of spawning a prefab)
-            if (prefabAsset is PrefabPlaceholderAsset placeholderAsset && placeholderAsset.EntitySlot != null)
+            if (prefabAsset is PrefabPlaceholderAsset placeholderAsset && placeholderAsset.EntitySlot.HasValue)
             {
-                WorldEntity spawnedEntity = SpawnPrefabAssetInEntitySlot(placeholderAsset.Transform, placeholderAsset.EntitySlot, deterministicBatchGenerator, entity.AbsoluteEntityCell, entity);
+                WorldEntity spawnedEntity = SpawnPrefabAssetInEntitySlot(placeholderAsset.Transform, placeholderAsset.EntitySlot.Value, deterministicBatchGenerator, entity.AbsoluteEntityCell, entity);
 
                 if (spawnedEntity != null)
                 {

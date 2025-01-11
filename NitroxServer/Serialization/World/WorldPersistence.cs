@@ -33,8 +33,9 @@ namespace NitroxServer.Serialization.World
         private readonly RandomStartGenerator randomStart;
         private readonly IWorldModifier worldModifier;
         private readonly SaveDataUpgrade[] upgrades;
+        private readonly RandomSpawnSpoofer randomSpawnSpoofer;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades, RandomSpawnSpoofer randomSpawnSpoofer)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
@@ -42,6 +43,7 @@ namespace NitroxServer.Serialization.World
             this.randomStart = randomStart;
             this.worldModifier = worldModifier;
             this.upgrades = upgrades;
+            this.randomSpawnSpoofer = randomSpawnSpoofer;
 
             UpdateSerializer(config.SerializerMode);
         }
@@ -231,6 +233,7 @@ namespace NitroxServer.Serialization.World
                 NitroxServiceLocator.LocateService<IEntityBootstrapperManager>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
                 pWorldData.WorldData.GameData.PDAState,
+                randomSpawnSpoofer,
                 world.Seed
             );
 
