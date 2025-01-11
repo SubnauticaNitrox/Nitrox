@@ -16,12 +16,20 @@ public class TimeChange : Packet
     /// <summary>
     /// Real time elapsed in seconds
     /// </summary>
-    public double RealTimeElapsed;
+    public double RealTimeElapsed { get; }
 
-    public TimeChange(double currentTime, long updateTime, double realTimeElapsed)
+    public bool OnlineMode { get; }
+    /// <summary>
+    /// UTC offset correction with global NTP servers
+    /// </summary>
+    public long UtcCorrectionTicks { get; }
+
+    public TimeChange(double currentTime, long updateTime, double realTimeElapsed, bool onlineMode, long utcCorrectionTicks)
     {
         CurrentTime = currentTime;
         UpdateTime = updateTime;
         RealTimeElapsed = realTimeElapsed;
+        OnlineMode = onlineMode;
+        UtcCorrectionTicks = utcCorrectionTicks;
     }
 }
