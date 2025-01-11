@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<IInitialSyncProcessor> processors;
-        private readonly HashSet<Type> alreadyRan = new();
+        private readonly HashSet<Type> alreadyRan = [];
         private InitialPlayerSync packet;
 
         private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
@@ -31,7 +31,10 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             this.packet = packet;
+
             loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
+            Log.InGame(Language.main.Get("Nitrox_SyncingWorld"));
+
             cumulativeProcessorsRan = 0;
             Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
         }
