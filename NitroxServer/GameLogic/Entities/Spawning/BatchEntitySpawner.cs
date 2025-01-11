@@ -382,9 +382,9 @@ public class BatchEntitySpawner : IEntitySpawner
             IPrefabAsset prefabAsset = groupAsset.PrefabAssets[i];
 
             // Two cases, either the PrefabPlaceholder holds a visible GameObject or an EntitySlot (a MB which has a chance of spawning a prefab)
-            if (prefabAsset is PrefabPlaceholderAsset placeholderAsset && placeholderAsset.EntitySlot != null)
+            if (prefabAsset is PrefabPlaceholderAsset placeholderAsset && placeholderAsset.EntitySlot.HasValue)
             {
-                WorldEntity spawnedEntity = SpawnPrefabAssetInEntitySlot(placeholderAsset.Transform, placeholderAsset.EntitySlot, deterministicBatchGenerator, entity.AbsoluteEntityCell, entity);
+                WorldEntity spawnedEntity = SpawnPrefabAssetInEntitySlot(placeholderAsset.Transform, placeholderAsset.EntitySlot.Value, deterministicBatchGenerator, entity.AbsoluteEntityCell, entity);
 
                 if (spawnedEntity != null)
                 {

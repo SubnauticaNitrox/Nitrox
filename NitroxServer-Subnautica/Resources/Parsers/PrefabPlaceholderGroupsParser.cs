@@ -243,13 +243,13 @@ public class PrefabPlaceholderGroupsParser : IDisposable
                 }
                 else if (typeTreeType.TypeHash.data.SequenceEqual(spawnRandomHash))
                 {
-                    AssetsFileInstance assetFileInst = am.LoadBundleWithDependencies(assetPaths);
+                    AssetsFileInstance assetFileInst = bundleManagerInst.LoadBundleWithDependencies(assetPaths);
 
-                    GetPrefabGameObjectInfoFromBundle(am, assetFileInst, out AssetFileInfo prefabGameObjectInfo);
+                    GetPrefabGameObjectInfoFromBundle(bundleManagerInst, assetFileInst, out AssetFileInfo prefabGameObjectInfo);
 
-                    AssetFileInfo spawnRandomInfo = am.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
+                    AssetFileInfo spawnRandomInfo = bundleManagerInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
                     // See SpawnRandom.Start
-                    AssetTypeValueField spawnRandom = am.GetBaseField(assetFileInst, spawnRandomInfo);
+                    AssetTypeValueField spawnRandom = bundleManagerInst.GetBaseField(assetFileInst, spawnRandomInfo);
                     List<string> classIds = [];
                     foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
                     {
@@ -405,19 +405,19 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         }
 
         AssetFileInfo entitySlotInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "EntitySlot");
-        NitroxEntitySlot nitroxEntitySlot = null;
+        NitroxEntitySlot? nitroxEntitySlot = null;
         if (entitySlotInfo != null)
         {
             AssetTypeValueField entitySlot = amInst.GetBaseField(assetFileInst, entitySlotInfo);
             string biomeType = ((BiomeType)entitySlot["biomeType"].AsInt).ToString();
 
-            List<string> allowedTypes = new();
+            List<string> allowedTypes = [];
             foreach (AssetTypeValueField allowedType in entitySlot["allowedTypes"])
             {
                 allowedTypes.Add(((EntitySlot.Type)allowedType.AsInt).ToString());
             }
 
-            nitroxEntitySlot = new NitroxEntitySlot(biomeType, allowedTypes.ToArray());
+            nitroxEntitySlot = new NitroxEntitySlot(biomeType, allowedTypes);
         }
 
         PrefabPlaceholderAsset prefabPlaceholderAsset = new(classId, nitroxEntitySlot);
