@@ -1,4 +1,5 @@
 namespace NitroxModel.Packets;
+
 public class DeathMarkersChanged : Packet
 {
     public bool MarkDeathPointsWithBeacon { get; }
