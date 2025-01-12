@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -8,22 +8,31 @@ public sealed partial class Stalker_CheckLoseTooth_Patch : NitroxPatch, IDynamic
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Stalker t) => t.CheckLoseTooth(default(GameObject)));
 
-    //GetComponent<HardnessMixin> was returning null for everything instead of a HardnessMixin with a hardness value. Since this component
-    //isn't used for anything else than the stalker teeth drop, we hard-code the values and bingo.
+    // HardnessMixin seems to be a bit buggy (ie: undefined values for some scraps, which is a vanilla bug), so we'll just hard-code the values for now.
+    // Note that HardnessMixin is only used by Stalkers
     public static bool Prefix(Stalker __instance, GameObject target)
     {
-        float dropProbability = 0f;
         TechType techType = CraftData.GetTechType(target);
 
-        if (techType == TechType.ScrapMetal)
+        float dropProbability = techType switch
         {
-            dropProbability = 0.15f; // 15% probability
+            TechType.ScrapMetal => 0.25f, // https://subnautica.fandom.com/wiki/Metal_Salvage_(Subnautica)
+            TechType.MapRoomCamera => 0.25f,
+            TechType.Titanium or TechType.Silver or TechType.Gold or TechType.Kyanite or TechType.Copper or TechType.Nickel => 0.15f,
+            _ => 0f,
+        };
+
+        if (dropProbability == 0)
+        {
+            return false;
         }
 
+        // Random.value returns a random float within[0.0..1.0] (range is inclusive)
         if (UnityEngine.Random.value < dropProbability)
         {
             __instance.LoseTooth();
         }
+
         return false;
     }
 }
