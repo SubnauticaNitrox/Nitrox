@@ -10,16 +10,20 @@ public sealed partial class Player_WarpForward_Patch : NitroxPatch, IDynamicPatc
 
     public static bool Prefix(Player __instance, NotificationCenter.Notification n)
     {
-        float num;
-        DevConsole.ParseFloat(n, 0, out num, 3f);
-        Vector3 newPosition = __instance.transform.position + (__instance.camRoot.GetAimingTransform().forward * num);
-
-        if (!__instance.currentMountedVehicle)
+        Vehicle currentMountedVehicle = __instance.currentMountedVehicle;
+        if (!currentMountedVehicle)
         {
             return true;
         }
-        __instance.currentMountedVehicle.TeleportVehicle(newPosition, __instance.currentMountedVehicle.transform.rotation);
-        __instance.OnPlayerPositionCheat();
+
+        // Code from the original method
+        DevConsole.ParseFloat(n, 0, out var value, 3f);
+        Transform aimingTransform = __instance.camRoot.GetAimingTransform();
+        Vector3 targetPosition = __instance.transform.position + aimingTransform.forward * value;
+        
+        currentMountedVehicle.TeleportVehicle(targetPosition, currentMountedVehicle.transform.rotation);
+        __instance.WaitForTeleportation();
+
         return false;
     }
 
