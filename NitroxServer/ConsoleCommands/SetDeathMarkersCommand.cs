@@ -17,7 +17,7 @@ internal class SetDeathMarkersCommand : Command
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
-        AddParameter(new TypeBoolean("state", true, "the on/off state to set death markers to"));
+        AddParameter(new TypeBoolean("state", true, "the on/off state of if a death marker is spawned on death"));
     }
 
     protected override void Execute(CallArgs args)
