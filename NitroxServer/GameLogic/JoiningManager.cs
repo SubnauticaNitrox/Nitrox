@@ -25,7 +25,7 @@ public sealed class JoiningManager
     private readonly ServerConfig serverConfig;
     private readonly World world;
 
-    private ThreadSafeQueue<(INitroxConnection, string)> JoinQueue { get; set; } = new();
+    private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
     private bool queueIdle;
     public Action SyncFinishedCallback { get; private set; }
 
@@ -46,7 +46,7 @@ public sealed class JoiningManager
         {
             try
             {
-                while (JoinQueue.Count == 0)
+                while (joinQueue.Count == 0)
                 {
                     queueIdle = true;
                     await Task.Delay(REFRESH_DELAY);
@@ -54,17 +54,15 @@ public sealed class JoiningManager
 
                 queueIdle = false;
 
-                (INitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
+                (INitroxConnection connection, string reservationKey) = joinQueue.Dequeue();
                 string name = playerManager.GetPlayerContext(reservationKey).PlayerName;
 
                 // Do this after dequeueing because everyone's position shifts forward
+                (INitroxConnection, string)[] array = [.. joinQueue];
+                for (int i = 0; i < array.Length; i++)
                 {
-                    (INitroxConnection, string)[] array = [.. JoinQueue];
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        (INitroxConnection c, _) = array[i];
-                        c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout, false));
-                    }
+                    (INitroxConnection c, _) = array[i];
+                    c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout, false));
                 }
 
                 Log.Info($"Starting sync for player {name}");
@@ -123,7 +121,7 @@ public sealed class JoiningManager
                     }
                     else
                     {
-                        Log.Info($"Player {name} joined successfully. Remaining requests: {JoinQueue.Count}");
+                        Log.Info($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
                         BroadcastPlayerJoined(playerManager.GetPlayer(connection));
                     }
                 });
@@ -139,16 +137,16 @@ public sealed class JoiningManager
     {
         if (!queueIdle)
         {
-            connection.SendPacket(new JoinQueueInfo(JoinQueue.Count + 1, serverConfig.InitialSyncTimeout, true));
+            connection.SendPacket(new JoinQueueInfo(joinQueue.Count + 1, serverConfig.InitialSyncTimeout, true));
         }
 
         Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
-        JoinQueue.Enqueue((connection, reservationKey));
+        joinQueue.Enqueue((connection, reservationKey));
     }
 
     public IEnumerable<INitroxConnection> GetQueuedPlayers()
     {
-        return JoinQueue.Select(tuple => tuple.Item1);
+        return joinQueue.Select(tuple => tuple.Item1);
     }
 
 
@@ -234,7 +232,7 @@ public sealed class JoiningManager
     public void JoiningPlayerDisconnected(INitroxConnection connection)
     {
         // They may have been queued, so just erase their entry
-        JoinQueue.Filter(tuple => !Equals(tuple.Item1, connection));
+        joinQueue.Filter(tuple => !Equals(tuple.Item1, connection));
     }
 
     public void BroadcastPlayerJoined(Player player)

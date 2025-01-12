@@ -133,13 +133,11 @@ namespace NitroxClient.MonoBehaviours
 
             IEnumerator TimeOutRoutine()
             {
-                int timer = 5;
-
-                while (timer > 0)
+                // TODO: replace with modal
+                for (int timer = 5; timer > 0; timer--)
                 {
                     Log.InGame($"Initial sync timed out. Quitting game in {timer} second{(timer > 1 ? "s" : "")}…");
                     yield return new WaitForSecondsRealtime(1);
-                    timer--;
                 }
 
                 IngameMenu.main.QuitGame(false);
