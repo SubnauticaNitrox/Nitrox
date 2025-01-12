@@ -37,17 +37,17 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         }
         Player.main.SetPosition(position, rotation);
 
-        // Player.Update is setting SubRootID to null after Player position is set
+        // Player.ValidateEscapePod is setting currentEscapePod to null if player is not inside EscapePod
         using (PacketSuppressor<EscapePodChanged>.Suppress())
         {
             Player.main.ValidateEscapePod();
         }
 
-        // Player position is relative to a subroot if in a subroot
         Optional<NitroxId> subRootId = packet.PlayerSubRootId;
         if (!subRootId.HasValue)
         {
             yield return Terrain.WaitForWorldLoad();
+            Player.main.cinematicModeActive = false;
             yield break;
         }
 
@@ -56,20 +56,25 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         {
             Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
             yield return Terrain.WaitForWorldLoad();
+            Player.main.cinematicModeActive = false;
             yield break;
         }
 
-        if (!sub.Value.TryGetComponent(out SubRoot subRoot))
+        if (sub.Value.TryGetComponent(out SubRoot subRoot))
         {
-            Log.Debug("SubRootId-GameObject has no SubRoot component, so it's assumed to be the EscapePod");
-            yield return Terrain.WaitForWorldLoad();
-            yield break;
+            Player.main.SetCurrentSub(subRoot, true);
+            if (subRoot.TryGetComponent(out Base @base))
+            {
+                SetupPlayerIfInWaterPark(@base);
+            }
         }
-
-        Player.main.SetCurrentSub(subRoot, true);
-        if (subRoot.TryGetComponent(out Base @base))
+        else if (sub.Value.GetComponent<EscapePod>())
         {
-            SetupPlayerIfInWaterPark(@base);
+            Player.main.escapePod.Update(true);
+        }
+        else
+        {
+            Log.Error("SubRootId-GameObject has no SubRoot or EscapePod component");
         }
 
         // If the player's in a base/cyclops we don't need to wait for the world to load
