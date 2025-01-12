@@ -126,7 +126,7 @@ public partial class RichTextBlock : TextBlock
         {
             switch (pair.Key)
             {
-                case ['[', '#', ..]:
+                case ['#', ..]:
                     // Optimization: only the last color needs to be applied for the current run, ignore all others.
                     lastColorTag = pair;
                     break;
