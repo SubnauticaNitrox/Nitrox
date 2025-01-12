@@ -90,6 +90,8 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
         }
         else
         {
+            ModuleEntitySpawner.MoveToGlobalRoot(ghostObject);
+            
             ModuleEntity module = ModuleEntitySpawner.From(constructable);
             module.Id = ghostId;
             module.ParentId = parentId;
