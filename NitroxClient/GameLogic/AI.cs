@@ -12,7 +12,7 @@ using static Nitrox.Model.Subnautica.Packets.RangedAttackLastTargetUpdate;
 
 namespace NitroxClient.GameLogic;
 
-public class AI
+public sealed class AI
 {
     private readonly IPacketSender packetSender;
     private readonly Dictionary<Creature, CreatureAction> actions = [];
@@ -24,7 +24,10 @@ public class AI
     /// </summary>
     private readonly HashSet<Type> creatureActionWhitelist =
     [
-        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops), typeof(Poop)
+        typeof(AttackCyclops),
+        typeof(AttackLastTarget),
+        typeof(Poop),
+        typeof(RangedAttackLastTarget)
     ];
 
     /// <summary>
@@ -33,7 +36,11 @@ public class AI
     /// </summary>
     private readonly HashSet<Type> syncedCreatureWhitelist =
     [
-        typeof(ReaperLeviathan), typeof(SeaDragon), typeof(SeaTreader), typeof(GhostLeviathan)
+        typeof(GhostLeviathan),
+        typeof(ReaperLeviathan),
+        typeof(SeaDragon),
+        typeof(SeaTreader),
+        typeof(Stalker)
     ];
 
     public AI(IPacketSender packetSender)
