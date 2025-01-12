@@ -120,10 +120,22 @@ public partial class RichTextBlock : TextBlock
     private Run CreateRunWithTags(string text, Dictionary<string, Action<Run, string>> tags)
     {
         Run run = new(text);
-        foreach (KeyValuePair<string, Action<Run, string>> tag in tags)
+        KeyValuePair<string, Action<Run, string>>? lastColorTag = null;
+        foreach (KeyValuePair<string, Action<Run, string>> pair in tags)
         {
-            tag.Value(run, tag.Key);
+            switch (pair.Key)
+            {
+                case ['[', '#', ..]:
+                    // Optimization: only the last color needs to be applied for the current run, ignore all others.
+                    lastColorTag = pair;
+                    break;
+                default:
+                    pair.Value(run, pair.Key);
+                    break;
+            }
         }
+
+        lastColorTag?.Value(run, lastColorTag.Value.Key);
         return run;
     }
 
