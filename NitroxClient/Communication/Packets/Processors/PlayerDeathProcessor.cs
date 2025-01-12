@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
-using NitroxModel.DataStructures;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using UWE;
-using static HandReticle;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -42,15 +40,18 @@ public class DeathBeacon : MonoBehaviour
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
     {
         TaskResult<GameObject> result = new TaskResult<GameObject>();
-        yield return CraftData.InstantiateFromPrefabAsync(TechType.Beacon, result, false);
-        GameObject beacon = result.Get();
-        if (beacon != null)
+        yield return DefaultWorldEntitySpawner.RequestPrefab(TechType.Beacon, result);
+        GameObject beaconPrefab = result.Get();
+        if(beaconPrefab != null)
         {
-            CrafterLogic.NotifyCraftEnd(beacon, TechType.Beacon);
+            GameObject beacon = Instantiate(beaconPrefab);
             Pickupable item = beacon.GetComponent<Pickupable>();
             if (item != null)
             {
-                item.Drop(location.ToUnity(), new Vector3(0, 0, 0), false);
+                using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
+                {
+                    item.Drop(location.ToUnity(), new Vector3(0, 0, 0), false);
+                }
                 beacon.GetComponent<Beacon>().label = $"{playerName}'s death";
                 beacon.AddComponent<DeathBeacon>();
                 activeDeathBeacons.Add(beacon);
@@ -62,7 +63,7 @@ public class DeathBeacon : MonoBehaviour
         }
         else
         {
-            Log.Error("!!! something went wrong during beacon initialization");
+            Log.Error("Something went wrong in getting the prefab");
         }
         yield break;
     }
