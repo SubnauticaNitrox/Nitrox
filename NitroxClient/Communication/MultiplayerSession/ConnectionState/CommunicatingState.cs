@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
