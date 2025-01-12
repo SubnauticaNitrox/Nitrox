@@ -13,7 +13,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public virtual void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DeathBeacon.DespawnAllDeathBeacons();
             sessionConnectionContext.ClearSessionState();
             sessionConnectionContext.Client.Stop();
 

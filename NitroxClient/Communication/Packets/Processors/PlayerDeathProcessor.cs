@@ -32,10 +32,12 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
     }
 }
+
 public class DeathBeacon : MonoBehaviour
 {
     private static List<GameObject> activeDeathBeacons = new();
     private static readonly float despawnDistance = 20f;
+
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
     {
         TaskResult<GameObject> result = new TaskResult<GameObject>();
@@ -58,6 +60,7 @@ public class DeathBeacon : MonoBehaviour
         }
         yield break;
     }
+
     private void Update()
     {
         if(Vector3.Distance(Player.main.transform.position, transform.position) <= despawnDistance)
@@ -65,13 +68,5 @@ public class DeathBeacon : MonoBehaviour
             Destroy(gameObject);
             activeDeathBeacons.Remove(gameObject);
         }
-    }
-    public static void DespawnAllDeathBeacons()
-    {
-        foreach (GameObject beacon in activeDeathBeacons)
-        {
-            Destroy(beacon);
-        }
-        activeDeathBeacons.Clear();
     }
 }

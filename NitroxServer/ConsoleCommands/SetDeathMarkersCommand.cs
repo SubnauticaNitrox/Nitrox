@@ -7,12 +7,13 @@ using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands;
+
 internal class SetDeathMarkersCommand : Command
 {
     private readonly PlayerManager playerManager;
     private readonly ServerConfig serverConfig;
 
-    public SetDeathMarkersCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("setdeathmarkers", NitroxModel.DataStructures.GameLogic.Perms.ADMIN, "Sets \"keep inventory\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
+    public SetDeathMarkersCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("setdeathmarkers", NitroxModel.DataStructures.GameLogic.Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
