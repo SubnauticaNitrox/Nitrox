@@ -1,4 +1,5 @@
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel
@@ -12,6 +13,7 @@
                             HorizontalAlignment="Center"
                             Padding="10">
                             <StackPanel Spacing="10" Width="200">
+                                <TextBox HorizontalAlignment="Stretch" Watermark="Watermark" />
                                 <TextBox HorizontalAlignment="Stretch" Text="Light" />
                                 <TextBox
                                     Classes="revealPasswordButton"
@@ -26,6 +28,7 @@
                             HorizontalAlignment="Center"
                             Padding="10">
                             <StackPanel Spacing="10" Width="200">
+                                <TextBox HorizontalAlignment="Stretch" Watermark="Watermark" />
                                 <TextBox HorizontalAlignment="Stretch" Text="Dark" />
                                 <TextBox
                                     Classes="revealPasswordButton"
@@ -46,6 +49,7 @@
         <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="CaretBrush" Value="{DynamicResource BrandCaret}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
 
         <Style Selector="^ /template/ Border">
             <Setter Property="Background" Value="{TemplateBinding Background}" />
@@ -71,6 +75,20 @@
         <Style Selector="^ /template/ Border#PART_BorderElement">
             <Setter Property="Opacity" Value="0" />
         </Style>
+        
+        <!--  Fix cursor selection of textbox (weird issue with DockPanel#PART_InnerDockPanel still keeping margin) -->
+        <Style Selector="^ /template/ Panel > Border > Grid"> <!-- Most senior grid with negative margin to counteract InnerDockPanel -->
+            <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}, ConverterParameter=True}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Watermark"> <!-- Watermark text -->
+            <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}}" />
+        </Style>
+        <Style Selector="^ /template/ TextPresenter#PART_TextPresenter"> <!-- Text -->
+            <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}}" />
+        </Style>
+        <Style Selector="^ /template/ Border > Grid > ContentPresenter:nth-child(3)"> <!-- Reveal Password Button -->
+            <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}}" />
+        </Style>
 
         <!--  Watermark foreground dimming  -->
         <Style Selector="^ /template/ TextBlock#PART_Watermark">
@@ -95,7 +113,7 @@
             <Setter Property="InnerRightContent">
                 <Template>
                     <ToggleButton
-                        Focusable="False"
+                        Focusable="True"
                         IsChecked="{Binding $parent[TextBox].RevealPassword, Mode=TwoWay}"
                         Width="35">
                         <Grid>
