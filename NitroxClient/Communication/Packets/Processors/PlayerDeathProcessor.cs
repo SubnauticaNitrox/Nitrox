@@ -35,7 +35,6 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
 
 public class DeathBeacon : MonoBehaviour
 {
-    private static List<GameObject> activeDeathBeacons = new();
     private static readonly float despawnDistance = 20f;
 
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
@@ -54,9 +53,9 @@ public class DeathBeacon : MonoBehaviour
                     item.Drop(location.ToUnity(), new Vector3(0, 0, 0), false);
                 }
                 beacon.GetComponent<Beacon>().label = $"{playerName}'s death";
-                beacon.AddComponent<DeathBeacon>();
-                activeDeathBeacons.Add(beacon);
-            }
+                beacon.GetComponent<WorldForces>().aboveWaterGravity = 0;
+                beacon.GetComponent<WorldForces>().aboveWaterDrag = 10; // Object has a miniscule velocity in a random error from floating point error, need to add drag or object will drift
+                beacon.AddComponent<DeathBeacon>();            }
         }
         yield break;
     }
@@ -66,7 +65,6 @@ public class DeathBeacon : MonoBehaviour
         if(Vector3.Distance(Player.main.transform.position, transform.position) <= despawnDistance)
         {
             Destroy(gameObject);
-            activeDeathBeacons.Remove(gameObject);
         }
     }
 }
