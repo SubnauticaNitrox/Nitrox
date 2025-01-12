@@ -1,4 +1,6 @@
 using System.Reflection;
+using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -12,6 +14,16 @@ public sealed partial class Stalker_CheckLoseTooth_Patch : NitroxPatch, IDynamic
     // Note that HardnessMixin is only used by Stalkers
     public static bool Prefix(Stalker __instance, GameObject target)
     {
+        if (!__instance.TryGetNitroxId(out NitroxId creatureId))
+        {
+            return false;
+        }
+
+        if (!Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+        {
+            return false;
+        }
+
         TechType techType = CraftData.GetTechType(target);
 
         float dropProbability = techType switch
@@ -28,9 +40,26 @@ public sealed partial class Stalker_CheckLoseTooth_Patch : NitroxPatch, IDynamic
         }
 
         // Random.value returns a random float within[0.0..1.0] (range is inclusive)
-        if (UnityEngine.Random.value < dropProbability)
+        if (UnityEngine.Random.value < dropProbability && UnityEngine.Random.value < 0.5f)
         {
-            __instance.LoseTooth();
+            // Code from Stalker.LoseTooth()
+
+            GameObject toothGameObject = Object.Instantiate<GameObject>(__instance.toothPrefab);
+            toothGameObject.transform.position = __instance.loseToothDropLocation.transform.position;
+            toothGameObject.transform.rotation = __instance.loseToothDropLocation.transform.rotation;
+
+            if (toothGameObject.activeSelf && __instance.isActiveAndEnabled)
+            {
+                Collider[] componentsInChildren = toothGameObject.GetComponentsInChildren<Collider>();
+                for (int i = 0; i < componentsInChildren.Length; i++)
+                {
+                    Physics.IgnoreCollision(__instance.stalkerBodyCollider, componentsInChildren[i]);
+                }
+            }
+
+            Utils.PlayFMODAsset(__instance.loseToothSound, toothGameObject.transform, 20f);
+            LargeWorldEntity.Register(toothGameObject);
+            Resolve<Items>().Dropped(toothGameObject);
         }
 
         return false;
