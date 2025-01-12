@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 
 namespace Nitrox.Launcher.Models.Controls;
 
@@ -58,16 +56,9 @@ public partial class RichTextBlock : TextBlock
             Inlines.Add(new Run(text.ToString()));
             return;
         }
-        
-        List<SolidColorBrush> colorStack = [];
-        if (Foreground is ImmutableSolidColorBrush initialImmutableBrush) // TODO: Fix this not returning the actual foreground value (it just returns black when the foreground is inherited from the theme - meant to be white)
-        {
-            SolidColorBrush initialBrush = new(initialImmutableBrush.Color);
-            colorStack.Add(initialBrush);
-        }
 
         ValueMatch lastRange = default;
-        Dictionary<string, Action<Run>> activeTags = new(4);
+        Dictionary<string, Action<Run, string>> activeTags = new(4);
         do
         {
             ValueMatch range = matchEnumerator.Current;
@@ -84,49 +75,16 @@ public partial class RichTextBlock : TextBlock
             switch (match)
             {
                 case ['[', '/', ..]:
-                    string closingTag = match[2..^1].ToString();
-                    if (closingTag.StartsWith('#') && closingTag.Length == 7)
-                    {
-                        if (activeTags.TryGetValue("color", out Action<Run> _))
-                        {
-                            SolidColorBrush currentBrush = colorStack.LastOrDefault();
-                            SolidColorBrush closingBrush = new(Color.Parse(closingTag));
-                            if (currentBrush != null && currentBrush.Color == closingBrush.Color)
-                            {
-                                activeTags.Remove("color");
-                                colorStack.RemoveAt(colorStack.Count - 1);
-                                if (colorStack.Count > 0)
-                                {
-                                    IBrush previousColor = colorStack[^1];
-                                    activeTags["color"] = run => run.Foreground = previousColor;
-                                }
-                            }
-                            else
-                            {
-                                for (int i = colorStack.Count - 1; i >= 0; i--)
-                                {
-                                    if (colorStack[i].Color == closingBrush.Color)
-                                    {
-                                        colorStack.RemoveAt(i);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        activeTags.Remove(closingTag);
-                    }
+                    activeTags.Remove(match[2..^1].ToString());
                     break;
                 case "[b]":
-                    activeTags["b"] = static run => run.FontWeight = FontWeight.Bold;
+                    activeTags["b"] = static (run, _) => run.FontWeight = FontWeight.Bold;
                     break;
                 case "[u]":
-                    activeTags["u"] = static run => run.TextDecorations = underlineTextDecoration;
+                    activeTags["u"] = static (run, _) => run.TextDecorations = underlineTextDecoration;
                     break;
                 case "[i]":
-                    activeTags["i"] = static run => run.FontStyle = FontStyle.Italic;
+                    activeTags["i"] = static (run, _) => run.FontStyle = FontStyle.Italic;
                     break;
                 case ['[', ..] when match.IndexOf("](", StringComparison.OrdinalIgnoreCase) > -1:
                     TextBlock textBlock = new();
@@ -135,13 +93,11 @@ public partial class RichTextBlock : TextBlock
                     textBlock.Tag = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
                     Inlines.Add(textBlock);
                     break;
-                case ['[', '#', ..] when match.Length == 9:
-                    string colorCode = match[1..match.IndexOfAny("]")].ToString();
-                    if (Color.TryParse(colorCode, out Color color))
+                case ['[', '#', ..]:
+                    ReadOnlySpan<char> colorCode = match[1..match.IndexOfAny("]")];
+                    if (Color.TryParse(colorCode, out Color _))
                     {
-                        SolidColorBrush color1 = new(color);
-                        colorStack.Add(color1);
-                        activeTags["color"] = run => run.Foreground = color1;
+                        activeTags[colorCode.ToString()] = static (run, tag) => run.Foreground = new SolidColorBrush(Color.Parse(tag));
                     }
                     break;
                 default:
@@ -161,12 +117,12 @@ public partial class RichTextBlock : TextBlock
         }
     }
 
-    private Run CreateRunWithTags(string text, Dictionary<string, Action<Run>> tags)
+    private Run CreateRunWithTags(string text, Dictionary<string, Action<Run, string>> tags)
     {
         Run run = new(text);
-        foreach (KeyValuePair<string, Action<Run>> tag in tags)
+        foreach (KeyValuePair<string, Action<Run, string>> tag in tags)
         {
-            tag.Value(run);
+            tag.Value(run, tag.Key);
         }
         return run;
     }
