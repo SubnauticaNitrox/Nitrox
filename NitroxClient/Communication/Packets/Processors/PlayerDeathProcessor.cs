@@ -28,7 +28,6 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.PlayerId));
         Log.Debug($"{player.PlayerName} died");
         Log.InGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
-        Log.InGame($"player died at {playerDeath.DeathPosition.X}, {playerDeath.DeathPosition.Y}, {playerDeath.DeathPosition.Z}");
         player.PlayerDeathEvent.Trigger(player);
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
     }
@@ -42,13 +41,13 @@ public class DeathBeacon : MonoBehaviour
         TaskResult<GameObject> result = new TaskResult<GameObject>();
         yield return DefaultWorldEntitySpawner.RequestPrefab(TechType.Beacon, result);
         GameObject beaconPrefab = result.Get();
-        if(beaconPrefab != null)
+        if (beaconPrefab != null)
         {
             GameObject beacon = Instantiate(beaconPrefab);
             Pickupable item = beacon.GetComponent<Pickupable>();
             if (item != null)
             {
-                using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
+                using (PacketSuppressor<EntitySpawnedByClient>.Suppress()) // Prevent the beacon from syncing to other players or the server so it will disappear on disconnect
                 {
                     item.Drop(location.ToUnity(), new Vector3(0, 0, 0), false);
                 }
@@ -56,14 +55,6 @@ public class DeathBeacon : MonoBehaviour
                 beacon.AddComponent<DeathBeacon>();
                 activeDeathBeacons.Add(beacon);
             }
-            else
-            {
-                Log.Error("Something went wrong in using the pickupable!");
-            }
-        }
-        else
-        {
-            Log.Error("Something went wrong in getting the prefab");
         }
         yield break;
     }
