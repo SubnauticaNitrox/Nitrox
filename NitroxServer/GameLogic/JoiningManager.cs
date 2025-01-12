@@ -234,7 +234,7 @@ public sealed class JoiningManager
     public void JoiningPlayerDisconnected(INitroxConnection connection)
     {
         // They may have been queued, so just erase their entry
-        JoinQueue = new ThreadSafeQueue<(INitroxConnection, string)>(JoinQueue.Where(tuple => !Equals(tuple.Item1, connection)));
+        JoinQueue.Filter(tuple => !Equals(tuple.Item1, connection));
     }
 
     public void BroadcastPlayerJoined(Player player)
