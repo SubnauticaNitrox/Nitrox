@@ -95,10 +95,11 @@ public partial class RichTextBlock : TextBlock
                     break;
                 case ['[', '#', ..]:
                     ReadOnlySpan<char> colorCode = match[1..match.IndexOfAny("]")];
-                    if (Color.TryParse(colorCode, out Color _))
+                    if (!Color.TryParse(colorCode, out Color _))
                     {
-                        activeTags[colorCode.ToString()] = static (run, tag) => run.Foreground = new SolidColorBrush(Color.Parse(tag));
+                        goto default;
                     }
+                    activeTags[colorCode.ToString()] = static (run, tag) => run.Foreground = new SolidColorBrush(Color.Parse(tag));
                     break;
                 default:
                     // Unknown tag, let's handle as normal text (issue is likely due to input text not knowing about this RichTextBox format)
