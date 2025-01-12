@@ -40,9 +40,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [ObservableProperty]
     private string platformToolTip;
 
-    [ObservableProperty]
-    private string contributionsOfYearUrl = $"github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):yyyy/M/d}")}";
-
     public Bitmap[] GalleryImageSources { get; } = [
         BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-1.png"),
         BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-2.png"),
@@ -189,6 +186,12 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             Log.Error(ex, "Error while starting game in multiplayer mode:");
             await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode"));
         }
+    }
+    
+    [RelayCommand]
+    private void OpenContributionsOfYear()
+    {
+        Process.Start(new ProcessStartInfo($"https://github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):yyyy/M/d}")}") { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
 
     /// <summary>
