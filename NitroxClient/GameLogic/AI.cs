@@ -27,7 +27,9 @@ public sealed class AI
         typeof(AttackCyclops),
         typeof(AttackLastTarget),
         typeof(Poop),
-        typeof(RangedAttackLastTarget)
+        typeof(RangedAttackLastTarget),
+        typeof(SwimToHeroPeeper),
+        typeof(SwimToMeat)
     ];
 
     /// <summary>
