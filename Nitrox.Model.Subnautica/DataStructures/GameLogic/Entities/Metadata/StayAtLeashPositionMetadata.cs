@@ -5,7 +5,8 @@ using Nitrox.Model.DataStructures.Unity;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 
-[Serializable, DataContract]
+[DataContract]
+[Serializable]
 public class StayAtLeashPositionMetadata : EntityMetadata
 {
     [DataMember(Order = 1)]
