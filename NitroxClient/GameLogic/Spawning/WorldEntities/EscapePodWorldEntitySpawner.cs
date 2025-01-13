@@ -1,8 +1,9 @@
 using System.Collections;
-using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Processor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -11,13 +12,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
 {
-    private readonly EntityMetadataManager entityMetadataManager;
-
-    public EscapePodWorldEntitySpawner(EntityMetadataManager entityMetadataManager)
-    {
-        this.entityMetadataManager = entityMetadataManager;
-    }
-
     /*
      * When creating additional escape pods (multiple users with multiple pods)
      * we want to suppress the escape pod's awake method so it doesn't override
@@ -49,11 +43,10 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
         //       This will require some work as instantiating the prefab as-is will not make it visible.
         //GameObject escapePod = Object.Instantiate(EscapePod.main.gameObject);
         GameObject escapePod = EscapePod.main.gameObject;
+        EscapePod pod = escapePod.GetComponent<EscapePod>();
 
         Object.DestroyImmediate(escapePod.GetComponent<NitroxEntity>()); // if template has a pre-existing NitroxEntity, remove.
         NitroxEntity.SetNewId(escapePod, escapePodEntity.Id);
-
-        entityMetadataManager.ApplyMetadata(escapePod, escapePodEntity.Metadata);
 
         if (escapePod.TryGetComponent(out Rigidbody rigidbody))
         {
@@ -65,6 +58,19 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
         }
 
         escapePod.transform.position = escapePodEntity.Transform.Position.ToUnity();
+
+        pod.ForceSkyApplier();
+        pod.escapePodCinematicControl.StopAll();
+
+        if (escapePodEntity.Metadata is EscapePodMetadata metadata)
+        {
+            Radio radio = pod.radioSpawner.spawnedObj.GetComponent<Radio>();
+            EscapePodMetadataProcessor.ProcessInitialSyncMetadata(pod, radio, metadata);
+        }
+        else
+        {
+            Log.Error($"[{nameof(EscapePodWorldEntitySpawner)}] Metadata was not of type {nameof(EscapePodMetadata)}.");
+        }
 
         FixStartMethods(escapePod);
 
