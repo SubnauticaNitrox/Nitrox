@@ -46,11 +46,9 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
             pod.liveMixin.health = pod.liveMixin.maxHealth;
             pod.healthScalar = 1;
             pod.damageEffectsShowing = true;
-
-            using (FMODSystem.SuppressSubnauticaSounds())
-            {
                 pod.UpdateDamagedEffects();
-            }
+            pod.vfxSpawner.SpawnManual(); // Spawn vfx to instantly disable it so no smoke is fading after player has joined
+            pod.vfxSpawner.spawnedObj.SetActive(false);
             pod.lightingController.SnapToState(0);
         }
         else
