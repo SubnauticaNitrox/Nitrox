@@ -32,9 +32,12 @@ public class LiveMixinManager
     
     public bool ShouldBroadcastDeath(LiveMixin liveMixin)
     {
-        return liveMixin.TryGetComponent(out UniqueIdentifier uniqueIdentifier) &&
-               !string.IsNullOrEmpty(uniqueIdentifier.classId) &&
-               broadcastDeathClassIdWhitelist.Contains(uniqueIdentifier.classId);
+        if (liveMixin.TryGetComponent(out UniqueIdentifier uniqueIdentifier) && !string.IsNullOrEmpty(uniqueIdentifier.classId))
+        {
+            return broadcastDeathClassIdWhitelist.Contains(uniqueIdentifier.classId);
+        }
+        
+        return true;
     }
 
     public bool ShouldApplyNextHealthUpdate(LiveMixin receiver, GameObject dealer = null)
