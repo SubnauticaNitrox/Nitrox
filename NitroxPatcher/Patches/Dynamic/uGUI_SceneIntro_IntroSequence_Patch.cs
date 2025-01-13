@@ -112,9 +112,11 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             return true;
         }
 
-        if (GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
+        // Skipping intro if creative like in normal SN or in debug configuration
+        if (!NitroxEnvironment.IsReleaseMode ||
+            GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
         {
-            SkipLocalCinematic(uGuiSceneIntro); // Skipping intro if Creative like in normal SN
+            SkipLocalCinematic(uGuiSceneIntro);
             return false;
         }
 
@@ -206,7 +208,10 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         uGuiSceneIntro.Stop(true);
 
         radioLiveMixin.health = radioHealthBefore;
-        Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
+        if (radioLiveMixin.IsFullHealth())
+        {
+            Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
+        }
 
         Transform introFireHolder = EscapePod.main.transform.Find("Intro");
         if (introFireHolder) // Can be null if called very early

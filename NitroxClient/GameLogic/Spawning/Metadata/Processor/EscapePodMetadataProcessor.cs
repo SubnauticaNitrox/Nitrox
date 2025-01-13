@@ -6,6 +6,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetadata>
 {
+    // For metadata changes outside initial sync we only care about broken -> repaired
     public override void ProcessMetadata(GameObject gameObject, EscapePodMetadata metadata)
     {
         if (!gameObject.TryGetComponent(out EscapePod pod))
@@ -14,31 +15,30 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
             return;
         }
 
+        if (!pod.liveMixin.IsFullHealth() && metadata.PodRepaired)
+        {
+            pod.liveMixin.health = pod.liveMixin.maxHealth;
+            pod.healthScalar = 1;
+            pod.damageEffectsShowing = true;
+            pod.UpdateDamagedEffects();
+            pod.OnRepair();
+        }
+
         if (!pod.radioSpawner.spawnedObj.TryGetComponent(out Radio radio))
         {
             Log.Error($"[{nameof(EscapePodMetadataProcessor)}] Could not get Radio from EscapePod.");
             return;
         }
 
-        bool repairedSomething = false;
-        if (!pod.liveMixin.IsFullHealth() && metadata.PodRepaired)
-        {
-            pod.OnRepair(); // Only plays visuals and sounds
-            repairedSomething = true;
-        }
-
         if (!radio.liveMixin.IsFullHealth() && metadata.RadioRepaired)
         {
-            radio.OnRepair(); // Only plays visuals and sounds
-            repairedSomething = true;
-        }
-
-        if (repairedSomething)
-        {
-            ProcessInitialSyncMetadata(pod, radio, metadata);
+            radio.liveMixin.AddHealth(radio.liveMixin.maxHealth);
         }
     }
 
+    /// <summary>
+    /// Applies repaired state without animations and minimal audio playback
+    /// </summary>
     public static void ProcessInitialSyncMetadata(EscapePod pod, Radio radio, EscapePodMetadata metadata)
     {
         if (metadata.PodRepaired)
