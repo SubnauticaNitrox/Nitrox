@@ -17,6 +17,7 @@ public class PatchesTranspilerTest
         [typeof(AggressiveWhenSeeTarget_ScanForAggressionTarget_Patch), 3],
         [typeof(AttackCyclops_OnCollisionEnter_Patch), -17],
         [typeof(AttackCyclops_UpdateAggression_Patch), -23],
+        [typeof(AvoidEscapePod_StopPerform_Patch), 2],
         [typeof(Bullet_Update_Patch), 3],
         [typeof(BaseDeconstructable_Deconstruct_Patch), BaseDeconstructable_Deconstruct_Patch.InstructionsToAdd(true).Count() * 2],
         [typeof(BaseHullStrength_CrushDamageUpdate_Patch), 3],
