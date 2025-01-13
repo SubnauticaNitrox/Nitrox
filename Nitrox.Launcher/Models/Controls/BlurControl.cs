@@ -82,12 +82,10 @@ public sealed class BlurControl : Decorator
             using SKImage backgroundSnapshot = skia.SkSurface.Snapshot();
             using SKShader backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, currentInvertedTransform);
             using SKImageFilter blurFilter = SKImageFilter.CreateBlur(strength, strength);
-            using SKPaint paint = new()
-            {
-                Shader = backdropShader,
-                ImageFilter = blurFilter,
-                Color = new SKColor(0, 0, 0, opacity)
-            };
+            using SKPaint paint = new();
+            paint.Shader = backdropShader;
+            paint.ImageFilter = blurFilter;
+            paint.Color = new SKColor(0, 0, 0, opacity);
             skia.SkCanvas.DrawRect(0, 0, (float)bounds.Width, (float)bounds.Height, paint);
         }
 

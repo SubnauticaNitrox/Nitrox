@@ -9,7 +9,7 @@ using Avalonia.Media;
 namespace Nitrox.Launcher.Models.Controls;
 
 /// <summary>
-///     A basic Rich Textbox. Supports bold, italic, underline and hyperlinks.
+///     A basic Rich Textbox. Supports bold, italic, underline, colors and hyperlinks.
 /// </summary>
 /// <remarks>
 ///     Tag legend:<br />

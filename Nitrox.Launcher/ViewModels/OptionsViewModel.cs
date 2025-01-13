@@ -68,7 +68,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             await LaunchGameViewModel.LastFindSubnauticaTask;
         }
 
-        LaunchGameViewModel.LastFindSubnauticaTask = Task.Factory.StartNew(() =>
+        LaunchGameViewModel.LastFindSubnauticaTask = Task.Run(() =>
         {
             PirateDetection.TriggerOnDirectory(path);
 
@@ -90,7 +90,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             }
 
             return path;
-        }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+        });
 
         await LaunchGameViewModel.LastFindSubnauticaTask;
     }
