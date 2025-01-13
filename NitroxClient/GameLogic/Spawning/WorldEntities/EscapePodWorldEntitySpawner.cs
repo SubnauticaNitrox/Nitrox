@@ -1,4 +1,6 @@
 using System.Collections;
+using NitroxClient.Communication;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
@@ -6,6 +8,8 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -18,6 +22,14 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
      * EscapePod.main to the new escape pod.
      */
     public static bool SuppressEscapePodAwakeMethod;
+
+    private readonly LocalPlayer localPlayer;
+
+    public EscapePodWorldEntitySpawner(LocalPlayer localPlayer)
+    {
+        this.localPlayer = localPlayer;
+    }
+
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
@@ -62,14 +74,14 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
         pod.ForceSkyApplier();
         pod.escapePodCinematicControl.StopAll();
 
-        if (escapePodEntity.Metadata is EscapePodMetadata metadata)
+        // Player is not new and has completed the intro cinematic. If not EscapePod repair status is handled by the intro cinematic.
+        if (escapePodEntity.Metadata is EscapePodMetadata metadata && localPlayer.IntroCinematicMode == IntroCinematicMode.COMPLETED)
         {
+            using FMODSoundSuppressor soundSuppressor = FMODSystem.SuppressSubnauticaSounds();
+            using PacketSuppressor<EntityMetadataUpdate> packetSuppressor = PacketSuppressor<EntityMetadataUpdate>.Suppress();
+
             Radio radio = pod.radioSpawner.spawnedObj.GetComponent<Radio>();
             EscapePodMetadataProcessor.ProcessInitialSyncMetadata(pod, radio, metadata);
-        }
-        else
-        {
-            Log.Error($"[{nameof(EscapePodWorldEntitySpawner)}] Metadata was not of type {nameof(EscapePodMetadata)}.");
         }
 
         FixStartMethods(escapePod);

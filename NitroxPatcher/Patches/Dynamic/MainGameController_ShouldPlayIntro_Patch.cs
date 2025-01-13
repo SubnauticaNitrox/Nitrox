@@ -11,6 +11,7 @@ public sealed partial class MainGameController_ShouldPlayIntro_Patch : NitroxPat
     public static void Postfix(ref bool __result)
     {
         __result = false;
+        EscapePod.main.DamageRadio(); // For explanation see similar code in uGUI_SceneIntro_HandleInput_Patch.
         uGUI_SceneIntro_IntroSequence_Patch.SkipLocalCinematic(uGUI.main.intro);
     }
 }

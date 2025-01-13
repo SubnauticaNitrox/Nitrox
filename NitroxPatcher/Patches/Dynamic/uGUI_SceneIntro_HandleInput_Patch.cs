@@ -52,6 +52,7 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
         if (!uGUI_SceneIntro_IntroSequence_Patch.IsWaitingForPartner &&
             Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.SINGLEPLAYER) // Skipping intro alone
         {
+            EscapePod.main.DamageRadio(); // This is a special edge case where neither our EscapePodMetadataProcessor nor the intro is damaging the radio. Therefore we do it manually.
             uGUI_SceneIntro_IntroSequence_Patch.SkipLocalCinematic(instance);
             return false;
         }
