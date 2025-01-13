@@ -199,7 +199,14 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro)
     {
+        // EscapePod.DamageRadio() is called by GuiSceneIntro.Stop(true) but is undesired. We revert it here
+        LiveMixin radioLiveMixin = EscapePod.main.radioSpawner.spawnedObj.GetComponent<Radio>().liveMixin;
+        float radioHealthBefore = radioLiveMixin.health;
+
         uGuiSceneIntro.Stop(true);
+
+        radioLiveMixin.health = radioHealthBefore;
+        Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
 
         Transform introFireHolder = EscapePod.main.transform.Find("Intro");
         if (introFireHolder) // Can be null if called very early

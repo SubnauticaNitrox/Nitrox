@@ -1,8 +1,5 @@
-using NitroxClient.Communication;
-using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
@@ -23,30 +20,33 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
             return;
         }
 
+        bool repairedSomething = false;
         if (!pod.liveMixin.IsFullHealth() && metadata.PodRepaired)
         {
-            pod.OnRepair();
+            pod.OnRepair(); // Only plays visuals and sounds
+            repairedSomething = true;
         }
 
         if (!radio.liveMixin.IsFullHealth() && metadata.RadioRepaired)
         {
-            radio.OnRepair();
+            radio.OnRepair(); // Only plays visuals and sounds
+            repairedSomething = true;
         }
 
-        ProcessInitialSyncMetadata(pod, radio, metadata);
+        if (repairedSomething)
+        {
+            ProcessInitialSyncMetadata(pod, radio, metadata);
+        }
     }
 
     public static void ProcessInitialSyncMetadata(EscapePod pod, Radio radio, EscapePodMetadata metadata)
     {
-        using FMODSoundSuppressor soundSuppressor = FMODSystem.SuppressSubnauticaSounds();
-        using PacketSuppressor<EntityMetadataUpdate> packetSuppressor = PacketSuppressor<EntityMetadataUpdate>.Suppress();
-
         if (metadata.PodRepaired)
         {
             pod.liveMixin.health = pod.liveMixin.maxHealth;
             pod.healthScalar = 1;
             pod.damageEffectsShowing = true;
-                pod.UpdateDamagedEffects();
+            pod.UpdateDamagedEffects();
             pod.vfxSpawner.SpawnManual(); // Spawn vfx to instantly disable it so no smoke is fading after player has joined
             pod.vfxSpawner.spawnedObj.SetActive(false);
             pod.lightingController.SnapToState(0);
@@ -62,7 +62,10 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
         if (metadata.RadioRepaired)
         {
             radio.liveMixin.health = radio.liveMixin.maxHealth;
-            Object.Destroy(radio.liveMixin.loopingDamageEffectObj);
+            if (radio.liveMixin.loopingDamageEffectObj)
+            {
+                Object.Destroy(radio.liveMixin.loopingDamageEffectObj);
+            }
         }
         else
         {
