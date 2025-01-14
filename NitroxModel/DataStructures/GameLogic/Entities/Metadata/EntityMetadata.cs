@@ -20,7 +20,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(60, typeof(ConstructorMetadata))]
     [ProtoInclude(61, typeof(FlashlightMetadata))]
     [ProtoInclude(62, typeof(BatteryMetadata))]
-    [ProtoInclude(63, typeof(RepairedComponentMetadata))]
+    [ProtoInclude(63, typeof(EscapePodMetadata))]
     [ProtoInclude(64, typeof(CrafterMetadata))]
     [ProtoInclude(65, typeof(PlantableMetadata))]
     [ProtoInclude(66, typeof(CyclopsMetadata))]

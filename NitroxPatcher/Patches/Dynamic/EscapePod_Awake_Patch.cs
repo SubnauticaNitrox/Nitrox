@@ -10,6 +10,6 @@ public sealed partial class EscapePod_Awake_Patch : NitroxPatch, IDynamicPatch
 
     public static bool Prefix(EscapePod __instance)
     {
-        return !EscapePodWorldEntitySpawner.SURPRESS_ESCAPE_POD_AWAKE_METHOD;
+        return !EscapePodWorldEntitySpawner.SuppressEscapePodAwakeMethod;
     }
 }
