@@ -217,7 +217,8 @@ public class WorldEntityManager
     {            
         IMap map = NitroxServiceLocator.LocateService<IMap>();
 
-        int totalEntites = 0;
+        int totalBatches = map.DimensionsInBatches.X * map.DimensionsInBatches.Y * map.DimensionsInBatches.Z;
+        int batchesLoaded = 0;
 
         for (int x = 0; x < map.DimensionsInBatches.X; x++)
         {
@@ -230,13 +231,13 @@ public class WorldEntityManager
 
                     Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
-                    totalEntites += spawned;
+                    batchesLoaded++;
                 }
             }
 
-            if (totalEntites > 0)
+            if (batchesLoaded > 0)
             {
-                Log.Info($"Loading : {(int)((totalEntites/ 709531) * 100)}%");
+                Log.Info($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
             }
         }
     }

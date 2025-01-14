@@ -19,6 +19,10 @@ namespace NitroxClient.GameLogic.Settings
         /// In milliseconds. <see cref="MonoBehaviours.Vehicles.MovementReplicator"/>
         /// </summary>
         public static readonly NitroxPref<float> SafetyLatencyMargin = new("Nitrox.safetyLatencyMargin", 0.05f);
+        /// <summary>
+        /// In seconds.
+        /// </summary>
+        public static readonly NitroxPref<float> OfflineClockSyncDuration = new("Nitrox.offlineClockSyncDuration", 5);
     }
 
     public abstract class NitroxPref { }

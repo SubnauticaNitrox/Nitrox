@@ -8,7 +8,9 @@ using AddressablesTools;
 using AddressablesTools.Catalog;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
+using Newtonsoft.Json;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Resources;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
@@ -21,11 +23,13 @@ public class PrefabPlaceholderGroupsParser : IDisposable
     private readonly string aaRootPath;
     private readonly AssetsBundleManager am;
     private readonly ThreadSafeMonoCecilTempGenerator monoGen;
+    private readonly JsonSerializer serializer;
 
     private readonly ConcurrentDictionary<string, string> classIdByRuntimeKey = new();
     private readonly ConcurrentDictionary<string, string[]> addressableCatalog = new();
     private readonly ConcurrentDictionary<string, PrefabPlaceholderAsset> placeholdersByClassId = new();
     private readonly ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> groupsByClassId = new();
+    public ConcurrentDictionary<string, string[]> RandomPossibilitiesByClassId = [];
 
     public PrefabPlaceholderGroupsParser()
     {
@@ -41,6 +45,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         am.LoadClassPackage(Path.Combine("Resources", "classdata.tpk"));
         am.LoadClassDatabaseFromPackage("2019.4.36f1");
         am.SetMonoTempGenerator(monoGen = new(managedPath));
+
+        serializer = new()
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
     }
 
     public Dictionary<string, PrefabPlaceholdersGroupAsset> ParseFile()
@@ -51,13 +60,60 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         // Loading all prefabs by their classId and file paths (first the path to the prefab then the dependencies)
         LoadAddressableCatalog(prefabDatabase);
 
+        string nitroxCachePath = Path.Combine(NitroxUser.AppDataPath, "Cache");
+        Directory.CreateDirectory(nitroxCachePath);
+
+        Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupPaths = null;
+        string prefabPlaceholdersGroupAssetCachePath = Path.Combine(nitroxCachePath, "PrefabPlaceholdersGroupAssetsCache.json");
+        if (File.Exists(prefabPlaceholdersGroupAssetCachePath))
+        {
+            Cache? cache = DeserializeCache(prefabPlaceholdersGroupAssetCachePath);
+            if (cache.HasValue)
+            {
+                prefabPlaceholdersGroupPaths = cache.Value.PrefabPlaceholdersGroupPaths;
+                RandomPossibilitiesByClassId = cache.Value.RandomPossibilitiesByClassId;
+                Log.Info($"Successfully loaded cache with {prefabPlaceholdersGroupPaths.Count} prefab placeholder groups and {RandomPossibilitiesByClassId.Count} random spawn behaviours.");
+            }
+        }
+        
+        // Fallback solution
+        if (prefabPlaceholdersGroupPaths == null)
+        {
+            prefabPlaceholdersGroupPaths = MakeAndSerializeCache(prefabPlaceholdersGroupAssetCachePath);
+            Log.Info($"Successfully built cache with {prefabPlaceholdersGroupPaths.Count} prefab placeholder groups and {RandomPossibilitiesByClassId.Count} random spawn behaviours. Future server starts will take less time.");
+        }
+
         // Select only prefabs with a PrefabPlaceholdersGroups component in the root ans link them with their dependencyPaths
-        ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
         // Do not remove: the internal cache list is slowing down the process more than loading a few assets again. There maybe is a better way in the new AssetToolsNetVersion but we need a byte to texture library bc ATNs sub-package is only for netstandard.
         am.UnloadAll();
 
         // Get all needed data for the filtered PrefabPlaceholdersGroups to construct PrefabPlaceholdersGroupAssets and add them to the dictionary by classId
-        return new Dictionary<string, PrefabPlaceholdersGroupAsset>(GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths));
+        return prefabPlaceholdersGroupPaths;
+    }
+
+    private Dictionary<string, PrefabPlaceholdersGroupAsset> MakeAndSerializeCache(string filePath)
+    {
+        ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+        Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupAssets = new(GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths));
+        using StreamWriter stream = File.CreateText(filePath);
+        serializer.Serialize(stream, new Cache(prefabPlaceholdersGroupAssets, RandomPossibilitiesByClassId));
+
+        return prefabPlaceholdersGroupAssets;
+    }
+
+    private Cache? DeserializeCache(string filePath)
+    {
+        try
+        {
+            using StreamReader reader = File.OpenText(filePath);
+
+            return (Cache)serializer.Deserialize(reader, typeof(Cache));
+        }
+        catch (Exception exception)
+        {
+            Log.Error(exception, "An error occurred while deserializing the game Cache. Re-creating it.");
+        }
+        return null;
     }
 
     private static Dictionary<string, string> LoadPrefabDatabase(string fullFilename)
@@ -116,13 +172,20 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gathers bundle paths by class id for prefab placeholder groups.
+    /// Also fills <see cref="RandomPossibilitiesByClassId"/>
+    /// </summary>
     private ConcurrentDictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
     {
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
-        byte[] prefabPlaceholdersGroupHash = Array.Empty<byte>();
 
-        int aaIndex;
-        for (aaIndex = 0; aaIndex < addressableCatalog.Count; aaIndex++)
+        // First step is to find out about the hash of the types PrefabPlaceholdersGroup and SpawnRandom
+        // to be able to recognize them easily later on
+        byte[] prefabPlaceholdersGroupHash = [];
+        byte[] spawnRandomHash = [];
+        
+        for (int aaIndex = 0; aaIndex < addressableCatalog.Count; aaIndex++)
         {
             KeyValuePair<string, string[]> keyValuePair = addressableCatalog.ElementAt(aaIndex);
             BundleFileInstance bundleFile = am.LoadBundleFile(am.CleanBundlePath(keyValuePair.Value[0]));
@@ -132,35 +195,70 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             {
                 AssetTypeValueField monoScript = am.GetBaseField(assetFileInstance, monoScriptInfo);
 
-                if (monoScript["m_Name"].AsString != "PrefabPlaceholdersGroup")
+                switch (monoScript["m_Name"].AsString)
                 {
-                    continue;
+                    case "SpawnRandom":
+                        spawnRandomHash = new byte[16];
+                        for (int i = 0; i < 16; i++)
+                        {
+                            spawnRandomHash[i] = monoScript["m_PropertiesHash"][i].AsByte;
+                        }
+                        break;
+                    case "PrefabPlaceholdersGroup":
+                        prefabPlaceholdersGroupHash = new byte[16];
+                        for (int i = 0; i < 16; i++)
+                        {
+                            prefabPlaceholdersGroupHash[i] = monoScript["m_PropertiesHash"][i].AsByte;
+                        }
+                        break;
                 }
-
-                prefabPlaceholdersGroupHash = new byte[16];
-                for (int i = 0; i < 16; i++)
-                {
-                    prefabPlaceholdersGroupHash[i] = monoScript["m_PropertiesHash"][i].AsByte;
-                }
-
-                break;
             }
 
-            if (prefabPlaceholdersGroupHash.Length != 0)
+            if (prefabPlaceholdersGroupHash.Length > 0 && spawnRandomHash.Length > 0)
             {
                 break;
             }
         }
 
-        Parallel.ForEach(addressableCatalog.Skip(aaIndex), (keyValuePair) =>
+        // Now use the bundle paths and the hashes to find out which items from the catalog are important
+        // We fill prefabPlaceholdersGroupPaths and RandomPossibilitiesByClassId when we find objects with a SpawnRandom
+        Parallel.ForEach(addressableCatalog, (keyValuePair) =>
         {
+            string[] assetPaths = keyValuePair.Value;
+            
             AssetsBundleManager bundleManagerInst = am.Clone();
-            BundleFileInstance bundleFile = bundleManagerInst.LoadBundleFile(bundleManagerInst.CleanBundlePath(keyValuePair.Value[0]));
-            AssetsFileInstance assetFileInstance = bundleManagerInst.LoadAssetsFileFromBundle(bundleFile, 0);
+            AssetsFileInstance assetFileInstance = bundleManagerInst.LoadBundleWithDependencies(assetPaths);
 
-            if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash)))
+            foreach (TypeTreeType typeTreeType in assetFileInstance.file.Metadata.TypeTreeTypes)
             {
-                prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
+                if (typeTreeType.TypeId != (int)AssetClassID.MonoBehaviour)
+                {
+                    continue;
+                }
+
+                if (typeTreeType.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash))
+                {
+                    prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
+                    break;
+                }
+                else if (typeTreeType.TypeHash.data.SequenceEqual(spawnRandomHash))
+                {
+                    AssetsFileInstance assetFileInst = bundleManagerInst.LoadBundleWithDependencies(assetPaths);
+
+                    GetPrefabGameObjectInfoFromBundle(bundleManagerInst, assetFileInst, out AssetFileInfo prefabGameObjectInfo);
+
+                    AssetFileInfo spawnRandomInfo = bundleManagerInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
+                    // See SpawnRandom.Start
+                    AssetTypeValueField spawnRandom = bundleManagerInst.GetBaseField(assetFileInst, spawnRandomInfo);
+                    List<string> classIds = [];
+                    foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
+                    {
+                        classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
+                    }
+
+                    RandomPossibilitiesByClassId.TryAdd(keyValuePair.Key, [.. classIds]);
+                    break;
+                }
             }
 
             bundleManagerInst.UnloadAll();
@@ -307,19 +405,19 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         }
 
         AssetFileInfo entitySlotInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "EntitySlot");
-        NitroxEntitySlot nitroxEntitySlot = null;
+        NitroxEntitySlot? nitroxEntitySlot = null;
         if (entitySlotInfo != null)
         {
             AssetTypeValueField entitySlot = amInst.GetBaseField(assetFileInst, entitySlotInfo);
             string biomeType = ((BiomeType)entitySlot["biomeType"].AsInt).ToString();
 
-            List<string> allowedTypes = new();
+            List<string> allowedTypes = [];
             foreach (AssetTypeValueField allowedType in entitySlot["allowedTypes"])
             {
                 allowedTypes.Add(((EntitySlot.Type)allowedType.AsInt).ToString());
             }
 
-            nitroxEntitySlot = new NitroxEntitySlot(biomeType, allowedTypes.ToArray());
+            nitroxEntitySlot = new NitroxEntitySlot(biomeType, allowedTypes);
         }
 
         PrefabPlaceholderAsset prefabPlaceholderAsset = new(classId, nitroxEntitySlot);
@@ -332,4 +430,6 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         monoGen.Dispose();
         am.UnloadAll(true);
     }
+
+    record struct Cache(Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholdersGroupPaths, ConcurrentDictionary<string, string[]> RandomPossibilitiesByClassId);
 }

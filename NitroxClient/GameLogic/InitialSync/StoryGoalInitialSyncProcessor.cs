@@ -129,6 +129,7 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         auroraWarnings.OnProtoDeserialize(null);
 
         CrashedShipExploder.main.version = 2;
+        CrashedShipExploder.main.initialized = true;
         StoryManager.UpdateAuroraData(timeData.AuroraEventData);
         CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
