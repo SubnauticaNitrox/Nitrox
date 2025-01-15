@@ -109,6 +109,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }).DisposeWith(disposables);
         });
 
+        ActiveViewModel = this.launchGameViewModel;
         _ = RoutingScreen.ShowAsync(launchGameViewModel).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
