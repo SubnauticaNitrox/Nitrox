@@ -224,6 +224,31 @@
                                 TextWrapping="Wrap"
                                 VerticalAlignment="Center" />
                         </DataTemplate>
+                        <!-- Loading view -->
+                        <DataTemplate x:DataType="system:Uri">
+                            <Svg Path="{Binding AbsolutePath}" Classes="theme" Height="50"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Svg.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform/>
+                                    </TransformGroup>
+                                </Svg.RenderTransform>
+                                <Svg.Styles>
+                                    <Style Selector="Svg">
+                                        <Style.Animations>
+                                            <Animation Duration="0:0:.5" IterationCount="INFINITE">
+                                                <KeyFrame Cue="0%">
+                                                    <Setter Property="RotateTransform.Angle" Value="0" />
+                                                </KeyFrame>
+                                                <KeyFrame Cue="100%">
+                                                    <Setter Property="RotateTransform.Angle" Value="360" />
+                                                </KeyFrame>
+                                            </Animation>
+                                        </Style.Animations>
+                                    </Style>
+                                </Svg.Styles>
+                            </Svg>
+                        </DataTemplate>
                         <DataTemplate x:DataType="vm:LaunchGameViewModel">
                             <views:LaunchGameView />
                         </DataTemplate>

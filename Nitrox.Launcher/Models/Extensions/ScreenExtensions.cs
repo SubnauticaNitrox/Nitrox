@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Design;
-using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Models.Extensions;
 
 public static class ScreenExtensions
 {
-    private static readonly List<RoutableViewModelBase> navigationStack = new();
+    private static readonly List<RoutableViewModelBase> navigationStack = [];
+    
+    private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
+    private static readonly Uri loadingSvgUri = new($"avares://{assemblyName}/Assets/Icons/loading.svg");
 
     /// <summary>
     ///     Navigates to a view assigned to the given ViewModel.
@@ -39,7 +42,7 @@ public static class ScreenExtensions
             await Task.Delay(50);
             if (!contentLoadTask.IsCompleted)
             {
-                screen.ActiveViewModel = "Content is loading.. please wait";
+                screen.ActiveViewModel = loadingSvgUri;
                 await Task.Delay((int)Math.Max(0, 500 - sw.Elapsed.TotalMilliseconds));
             }
         }
