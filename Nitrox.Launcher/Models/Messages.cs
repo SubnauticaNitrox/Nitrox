@@ -1,4 +1,5 @@
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Models;
 
@@ -10,3 +11,5 @@ public record SaveDeletedMessage(string SaveName);
 public record NotificationAddMessage(NotificationItem Item);
 
 public record NotificationCloseMessage(NotificationItem Item);
+
+public record ViewShownMessage(RoutableViewModelBase ViewModel);

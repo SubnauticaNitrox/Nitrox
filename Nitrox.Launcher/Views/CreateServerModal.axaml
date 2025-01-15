@@ -11,11 +11,11 @@
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
     <Design.DataContext>
         <vm:CreateServerViewModel Name="My Server Name" SelectedGameMode="CREATIVE" />
     </Design.DataContext>
@@ -30,8 +30,11 @@
                         MaxLength="120"
                         MaxWidth="400"
                         Text="{Binding Name, Converter={converters:TrimConverter}}"
-                        Watermark="My server"
-                        design:NitroxAttached.Focus="" />
+                        Watermark="My server">
+                        <Interaction.Behaviors>
+                            <behaviors:SetFocusedOnViewShowBehavior />
+                        </Interaction.Behaviors>
+                    </TextBox>
                 </StackPanel>
                 <StackPanel Classes="form">
                     <TextBlock Text="GAMEMODE" />

@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Threading;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -33,34 +32,6 @@ public class NitroxAttached : AvaloniaObject
             {
                 SetHasUserInteracted(element, true);
             }
-        }
-    }
-
-    /// <summary>
-    ///     Sets the focus to this control when view is loaded.
-    /// </summary>
-    public static void SetFocus(AvaloniaObject obj, object value)
-    {
-        static void VisualOnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
-        {
-            if (sender is Visual visual)
-            {
-                visual.AttachedToVisualTree -= VisualOnAttachedToVisualTree;
-            }
-            if (sender is IInputElement element)
-            {
-                element.Focus();
-            }
-        }
-
-        switch (obj)
-        {
-            case Visual visual when visual is IInputElement:
-                Dispatcher.UIThread.Post(() => (visual as IInputElement)?.Focus());
-                visual.AttachedToVisualTree += VisualOnAttachedToVisualTree;
-                break;
-            default:
-                throw new NotSupportedException($@"Element {obj} must be an {nameof(IInputElement)} to support ""{nameof(SetFocus)}""");
         }
     }
 

@@ -5,9 +5,9 @@
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
     d:DesignWidth="1000"
     x:DataType="vm:LaunchGameViewModel"
     mc:Ignorable="d">
@@ -69,10 +69,12 @@
                                     </Grid>
                                     <Button
                                         HorizontalAlignment="Stretch"
-                                        design:NitroxAttached.Focus=""
                                         Classes="big primary"
                                         Command="{Binding StartMultiplayerCommand}"
                                         ToolTip.Tip="Launch Subnautica with multiplayer enabled">
+                                        <Interaction.Behaviors>
+                                            <behaviors:SetFocusedOnViewShowBehavior />
+                                        </Interaction.Behaviors>
                                         <StackPanel>
                                             <TextBlock Text="PLAY" />
                                             <TextBlock Text="MULTIPLAYER" />

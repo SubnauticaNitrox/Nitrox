@@ -5,11 +5,11 @@
     x:DataType="vm:EmbeddedServerViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
     <Design.DataContext>
         <vm:EmbeddedServerViewModel />
     </Design.DataContext>
@@ -81,8 +81,11 @@
                 Grid.Column="0"
                 Text="{Binding ServerCommand}"
                 Watermark="A server command here"
-                design:NitroxAttached.Focus=""
-                x:Name="ServerCommandTextBox" />
+                x:Name="ServerCommandTextBox">
+                <Interaction.Behaviors>
+                    <behaviors:SetFocusedOnViewShowBehavior />
+                </Interaction.Behaviors>
+            </TextBox>
             <StackPanel
                 Grid.Column="1"
                 Margin="12,0,0,0"

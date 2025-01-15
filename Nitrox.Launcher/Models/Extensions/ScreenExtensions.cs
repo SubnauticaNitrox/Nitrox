@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -45,6 +46,7 @@ public static class ScreenExtensions
         }
         await contentLoadTask;
         screen.ActiveViewModel = routableViewModel;
+        WeakReferenceMessenger.Default.Send(new ViewShownMessage(routableViewModel));
     }
 
     public static async Task<bool> BackAsync(this IRoutingScreen screen)
