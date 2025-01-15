@@ -33,12 +33,15 @@ public static class ScreenExtensions
         }
         Stopwatch sw = Stopwatch.StartNew();
         Task contentLoadTask = routableViewModel.ViewContentLoadAsync();
-        // Only show loading screen if page isn't loading super quickly.
-        await Task.Delay(50);
-        if (!contentLoadTask.IsCompleted)
+        if (screen.ActiveViewModel != null)
         {
-            screen.ActiveViewModel = "Content is loading.. please wait";
-            await Task.Delay((int)Math.Max(0, 500 - sw.Elapsed.TotalMilliseconds));
+            // Only show loading screen if page isn't loading super quickly.
+            await Task.Delay(50);
+            if (!contentLoadTask.IsCompleted)
+            {
+                screen.ActiveViewModel = "Content is loading.. please wait";
+                await Task.Delay((int)Math.Max(0, 500 - sw.Elapsed.TotalMilliseconds));
+            }
         }
         await contentLoadTask;
         screen.ActiveViewModel = routableViewModel;
