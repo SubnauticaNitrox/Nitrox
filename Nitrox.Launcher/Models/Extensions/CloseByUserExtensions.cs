@@ -48,11 +48,15 @@ public static class CloseByUserExtensions
         window.Close();
     }
 
-    public static bool IsClosingByUser(this Window closingWindow)
+    public static bool IsClosingByUser(this Window closingWindow, WindowClosingEventArgs closingArgs = null)
     {
         if (closingWindow is not null && isClosingByUser.TryGetValue(closingWindow, out bool isByUser))
         {
             return isByUser;
+        }
+        if (closingArgs is { IsProgrammatic: false })
+        {
+            return true;
         }
         return false;
     }
