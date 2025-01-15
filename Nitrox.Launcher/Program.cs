@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -47,6 +48,7 @@ internal static class Program
     private static class AssemblyResolver
     {
         private static string currentExecutableDirectory;
+        private static readonly Dictionary<string, Assembly> cache = [];
 
         public static Assembly Handler(object sender, ResolveEventArgs args)
         {
@@ -81,10 +83,13 @@ internal static class Program
                 }
             }
 
-            Assembly assembly = ResolveFromLib(args.Name);
-            if (assembly == null && !args.Name.Contains(".resources"))
+            if (!cache.TryGetValue(args.Name, out Assembly assembly))
             {
-                assembly = Assembly.Load(args.Name);
+                cache[args.Name] = assembly = ResolveFromLib(args.Name);
+                if (assembly == null && !args.Name.Contains(".resources"))
+                {
+                    cache[args.Name] = assembly = Assembly.Load(args.Name);
+                }
             }
 
             return assembly;
