@@ -157,13 +157,13 @@ public sealed class Steam : IGamePlatform
                 Path.GetDirectoryName(pathToGameExe),
                 launchArguments
             );
-#endif
-
+#else
             return new ProcessEx(Process.Start(new ProcessStartInfo
             {
                 FileName = GetExeFile(),
                 Arguments = $"""-applaunch {steamAppId} -nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
             }));
+#endif
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

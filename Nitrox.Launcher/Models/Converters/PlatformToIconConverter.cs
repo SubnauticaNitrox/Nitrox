@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using Avalonia.Media.Imaging;
+using Nitrox.Launcher.Models.Utils;
 using NitroxModel.Discovery.Models;
 
 namespace Nitrox.Launcher.Models.Converters;
@@ -8,7 +10,7 @@ public class PlatformToIconConverter : Converter<PlatformToIconConverter>
 {
     public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return BitmapAssetValueConverter.GetBitmapFromPath(GetIconPathForPlatform(value as Platform?));
+        return AssetHelper.GetAssetFromStream(GetIconPathForPlatform(value as Platform?), static stream => new Bitmap(stream));
     }
 
     private static string GetIconPathForPlatform(Platform? platform) => platform switch

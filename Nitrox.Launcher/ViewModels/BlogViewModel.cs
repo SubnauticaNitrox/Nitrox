@@ -6,7 +6,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models.Converters;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -16,7 +15,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class BlogViewModel : RoutableViewModelBase
 {
-    public static Bitmap FallbackImage { get; } = BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/blog/vines.png");
+    public static Bitmap FallbackImage { get; } = AssetHelper.GetAssetFromStream("/Assets/Images/blog/vines.png", static stream => new Bitmap(stream));
 
     [ObservableProperty]
     private AvaloniaList<NitroxBlog> nitroxBlogs = [];

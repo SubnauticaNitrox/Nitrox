@@ -41,10 +41,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     private string platformToolTip;
 
     public Bitmap[] GalleryImageSources { get; } = [
-        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-1.png"),
-        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-2.png"),
-        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-3.png"),
-        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-4.png")
+        AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-1.png", static stream => new Bitmap(stream)),
+        AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-2.png", static stream => new Bitmap(stream)),
+        AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-3.png", static stream => new Bitmap(stream)),
+        AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-4.png", static stream => new Bitmap(stream))
     ];
 
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";

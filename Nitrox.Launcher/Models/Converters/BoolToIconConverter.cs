@@ -2,6 +2,8 @@ using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
+using Nitrox.Launcher.Models.Utils;
 
 namespace Nitrox.Launcher.Models.Converters;
 
@@ -34,7 +36,7 @@ public sealed class BoolToIconConverter : MarkupExtension, IValueConverter
             @bool = !@bool;
         }
 
-        return BitmapAssetValueConverter.GetBitmapFromPath(@bool ? True : False);
+        return AssetHelper.GetAssetFromStream(@bool ? True : False, static stream => new Bitmap(stream));;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
