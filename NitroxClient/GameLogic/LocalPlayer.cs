@@ -90,7 +90,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         if (PlayerId.HasValue)
         {
             packetSender.Send(new PlayerDeathEvent(PlayerId.Value, deathPosition.ToDto()));
-            CoroutineHost.StartCoroutine(DeathBeacon.SpawnDeathBeacon(deathPosition.ToDto(), PlayerName));
+            DeathBeacon.SpawnDeathBeacon(deathPosition.ToDto(), PlayerName);
         }
     }
 
