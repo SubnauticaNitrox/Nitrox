@@ -3,14 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Spawning.WorldEntities;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
-using UnityEngine;
+
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
