@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class DeathBeacon : MonoBehaviour
 {
-    private static readonly float despawnDistance = 20f;
+    private const float despawnDistance = 20f;
 
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
     {
-        GameObject beacon = new();
+        GameObject beacon = new($"{playerName}DeathBeacon");
         PingInstance signal = beacon.AddComponent<PingInstance>();
         signal.pingType = PingType.Signal;
         signal.displayPingInManager = true;
