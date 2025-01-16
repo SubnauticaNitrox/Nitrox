@@ -8,12 +8,10 @@ namespace NitroxClient.Communication.Packets.Processors;
 public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
 {
     private readonly PlayerManager playerManager;
-    private readonly LocalPlayer localPlayer;
 
-    public PlayerDeathProcessor(PlayerManager playerManager, LocalPlayer localPlayer)
+    public PlayerDeathProcessor(PlayerManager playerManager)
     {
         this.playerManager = playerManager;
-        this.localPlayer = localPlayer;
     }
 
     public override void Process(PlayerDeathEvent playerDeath)
