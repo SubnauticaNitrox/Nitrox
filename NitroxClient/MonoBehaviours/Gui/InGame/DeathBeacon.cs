@@ -5,31 +5,30 @@ using UnityEngine;
 
 public class DeathBeacon : MonoBehaviour
 {
-    private const float despawnDistance = 20f;
-    private const float despawnDistanceSquared = despawnDistance * despawnDistance;
-    private const float checkRate = 10f; // in seconds
+    private const float DESPAWN_DISTANCE = 20f;
+    private const float DESPAWN_DISTANCE_SQUARED = DESPAWN_DISTANCE * DESPAWN_DISTANCE;
+    private const float CHECK_RATE = 1.5f; // in seconds
 
-    public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
+    public static void SpawnDeathBeacon(NitroxVector3 location, string playerName)
     {
         GameObject beacon = new($"{playerName}DeathBeacon");
+        beacon.transform.position = location.ToUnity();
         PingInstance signal = beacon.AddComponent<PingInstance>();
         signal.pingType = PingType.Signal;
-        signal.displayPingInManager = true;
         signal.origin = beacon.transform;
         signal._label = Language.main.Get("Nitrox_PlayerDeathBeaconLabel").Replace("{PLAYER}", playerName);
-        beacon.transform.position = location.ToUnity();
         beacon.AddComponent<DeathBeacon>();
+        signal.displayPingInManager = true;
         signal.Initialize();
-        yield break;
     }
 
     private void Start()
     {
-        InvokeRepeating("CheckPlayerDistance", 0, checkRate);
+        InvokeRepeating(nameof(CheckPlayerDistance), 0, CHECK_RATE);
     }
     private void CheckPlayerDistance()
     {
-        if ((Player.main.transform.position - transform.position).sqrMagnitude <= despawnDistanceSquared)
+        if ((Player.main.transform.position - transform.position).sqrMagnitude <= DESPAWN_DISTANCE_SQUARED)
         {
             Destroy(gameObject);
         }
