@@ -6,6 +6,8 @@ using UnityEngine;
 public class DeathBeacon : MonoBehaviour
 {
     private const float despawnDistance = 20f;
+    private const float despawnDistanceSquared = despawnDistance * despawnDistance;
+    private const float checkRate = 10f; // in seconds
 
     public static IEnumerator SpawnDeathBeacon(NitroxVector3 location, string playerName)
     {
@@ -21,9 +23,13 @@ public class DeathBeacon : MonoBehaviour
         yield break;
     }
 
-    private void Update()
+    private void Start()
     {
-        if (Vector3.Distance(Player.main.transform.position, transform.position) <= despawnDistance)
+        InvokeRepeating("CheckPlayerDistance", 0, checkRate);
+    }
+    private void CheckPlayerDistance()
+    {
+        if ((Player.main.transform.position - transform.position).sqrMagnitude <= despawnDistanceSquared)
         {
             Destroy(gameObject);
         }
