@@ -1,22 +1,19 @@
-using System.Collections.Generic;
 using Autofac;
 using NitroxModel;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.Resources;
 using NitroxServer.Serialization;
 using NitroxServer_Subnautica.GameLogic;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
-using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
 using NitroxServer_Subnautica.Resources;
 using NitroxServer_Subnautica.Serialization;
 
@@ -62,6 +59,9 @@ namespace NitroxServer_Subnautica
             containerBuilder.RegisterType<EntityRegistry>().AsSelf().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SubnauticaWorldModifier>().As<IWorldModifier>().InstancePerLifetimeScope();
             containerBuilder.Register(c => FMODWhitelist.Load(GameInfo.Subnautica)).InstancePerLifetimeScope();
+
+            containerBuilder.Register(_ => new RandomSpawnSpoofer(resourceAssets.RandomPossibilitiesByClassId))
+                            .SingleInstance();
         }
     }
 }

@@ -103,10 +103,26 @@ public class BuildingManager
             Log.Error($"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
             return false;
         }
+
+        // Certain entities with a Constructable are just "regular" WorldEntities (e.g. starship boxes) and for simplicity we'll just not persist their progress
+        // since their only use is to be deconstructed to give materials to players
         if (entity is not GhostEntity && entity is not ModuleEntity)
         {
-            Log.Error($"Trying to modify the constructed amount of an entity that is not a ghost (Id: {modifyConstructedAmount.GhostId})");
-            return false;
+            // In case the entity was fully deconstructed
+            if (modifyConstructedAmount.ConstructedAmount == 0f)
+            {
+                if (entity is GlobalRootEntity)
+                {
+                    worldEntityManager.RemoveGlobalRootEntity(entity.Id);
+                }
+                else
+                {
+                    entityRegistry.RemoveEntity(entity.Id);
+                }
+            }
+
+            // In any case we'll broadcast the packet
+            return true;
         }
         if (modifyConstructedAmount.ConstructedAmount == 0f)
         {
@@ -262,7 +278,7 @@ public class BuildingManager
 
         removedEntity = worldEntityManager.RemoveGlobalRootEntity(pieceDeconstructed.PieceId).Value;
         GhostEntity ghostEntity = pieceDeconstructed.ReplacerGhost;
-        
+
         worldEntityManager.AddOrUpdateGlobalRootEntity(ghostEntity);
         buildEntity.BaseData = pieceDeconstructed.BaseData;
         buildEntity.OperationId++;

@@ -7,6 +7,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Networking;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -25,19 +26,19 @@ namespace NitroxServer.Serialization.World;
 public class WorldPersistence
 {
     public const string BACKUP_DATE_TIME_FORMAT = "yyyy-MM-dd HH.mm.ss";
-    private readonly SubnauticaServerConfig config;
-    private readonly ServerJsonSerializer jsonSerializer;
-
-    private readonly ServerProtoBufSerializer protoBufSerializer;
-    private readonly RandomStartGenerator randomStart;
-    private readonly SaveDataUpgrade[] upgrades;
-    private readonly IWorldModifier worldModifier;
-
     public IServerSerializer Serializer { get; private set; }
-
     private string FileEnding => Serializer?.FileEnding ?? "";
 
-    public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
+    private readonly ServerProtoBufSerializer protoBufSerializer;
+    private readonly ServerJsonSerializer jsonSerializer;
+    private readonly SubnauticaServerConfig config;
+    private readonly RandomStartGenerator randomStart;
+    private readonly IWorldModifier worldModifier;
+    private readonly SaveDataUpgrade[] upgrades;
+    private readonly RandomSpawnSpoofer randomSpawnSpoofer;
+    private readonly NtpSyncer ntpSyncer;
+
+    public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades, RandomSpawnSpoofer randomSpawnSpoofer, NtpSyncer ntpSyncer)
     {
         this.protoBufSerializer = protoBufSerializer;
         this.jsonSerializer = jsonSerializer;
@@ -45,6 +46,8 @@ public class WorldPersistence
         this.randomStart = randomStart;
         this.worldModifier = worldModifier;
         this.upgrades = upgrades;
+        this.randomSpawnSpoofer = randomSpawnSpoofer;
+        this.ntpSyncer = ntpSyncer;
 
         UpdateSerializer(config.SerializerMode);
     }
@@ -147,7 +150,7 @@ public class WorldPersistence
             Seed = seed
         };
 
-        world.TimeKeeper = new TimeKeeper(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
+        world.TimeKeeper = new(world.PlayerManager, ntpSyncer, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
         world.StoryManager = new StoryManager(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime,
                                               pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime, pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime);
         world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
@@ -161,6 +164,7 @@ public class WorldPersistence
             NitroxServiceLocator.LocateService<IEntityBootstrapperManager>(),
             NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
             pWorldData.WorldData.GameData.PDAState,
+            randomSpawnSpoofer,
             world.Seed
         );
 

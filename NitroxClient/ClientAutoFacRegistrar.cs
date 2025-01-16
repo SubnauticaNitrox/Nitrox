@@ -27,6 +27,7 @@ using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
+using NitroxModel.Networking;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient
@@ -122,6 +123,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BulletManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<NtpSyncer>().InstancePerLifetimeScope();
         }
 
         private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)

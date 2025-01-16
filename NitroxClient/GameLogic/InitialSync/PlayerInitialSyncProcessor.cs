@@ -27,12 +27,14 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         this.itemContainers = itemContainers;
         this.localPlayer = localPlayer;
 
+        AddStep(sync => SetupEscapePod(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerPermissions(sync.Permissions));
         AddStep(sync => SetPlayerIntroCinematicMode(sync.IntroCinematicMode));
         AddStep(sync => SetPlayerGameObjectId(sync.PlayerGameObjectId));
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
+        AddStep(sync => SetPlayerKeepInventoryOnDeath(sync.KeepInventoryOnDeath));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -56,6 +58,25 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
 
         NitroxEntity.SetNewId(Player.mainObject, id);
         Log.Info($"Received initial sync player GameObject Id: {id}");
+    }
+
+    private void SetupEscapePod(bool firstTimeConnecting)
+    {
+        EscapePod escapePod = EscapePod.main;
+        if (escapePod)
+        {
+            Log.Info($"Setting up escape pod, FirstTimeConnecting: {firstTimeConnecting}");
+
+            escapePod.bottomHatchUsed = !firstTimeConnecting;
+            escapePod.topHatchUsed = !firstTimeConnecting;
+
+            // Call code we suppressed inside EscapePodFirstUseCinematicsController_OnSceneObjectsLoaded_Patch
+            EscapePodFirstUseCinematicsController cinematicController = escapePod.GetComponentInChildren<EscapePodFirstUseCinematicsController>(true);
+            if (cinematicController)
+            {
+                cinematicController.Initialize();
+            }
+        }
     }
 
     private IEnumerator AddStartingItemsToPlayer(bool firstTimeConnecting)
@@ -114,5 +135,10 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
         Log.Info($"Received initial sync packet with gamemode {gameMode}");
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
+    }
+
+    private void SetPlayerKeepInventoryOnDeath(bool keepInventoryOnDeath)
+    {
+        localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
     }
 }
