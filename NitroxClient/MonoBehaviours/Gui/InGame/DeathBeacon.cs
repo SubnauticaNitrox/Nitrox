@@ -16,6 +16,7 @@ public class DeathBeacon : MonoBehaviour
         PingInstance signal = beacon.AddComponent<PingInstance>();
         signal.pingType = PingType.Signal;
         signal.origin = beacon.transform;
+        signal.minDist = DESPAWN_DISTANCE + 15f;
         signal._label = Language.main.Get("Nitrox_PlayerDeathBeaconLabel").Replace("{PLAYER}", playerName);
         beacon.AddComponent<DeathBeacon>();
         signal.displayPingInManager = true;
