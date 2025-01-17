@@ -37,7 +37,7 @@ public partial class RichTextBlock : TextBlock
         if (change.Property == TextProperty)
         {
             Inlines?.Clear();
-            Inlines = ParseTextAndAddInlines(Text ?? "", Inlines);
+            ParseTextAndAddInlines(Text ?? "", Inlines);
             // If all text was just tags, set Text to empty. Otherwise, it will be displayed as fallback by Avalonia.
             if (Inlines?.Count < 1)
             {
@@ -49,17 +49,16 @@ public partial class RichTextBlock : TextBlock
     [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
     private static partial Regex TagParserRegex { get; }
 
-    public static InlineCollection ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection inlines)
+    public static void ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection inlines)
     {
         if (inlines == null)
         {
-            return null;
+            return;
         }
         Regex.ValueMatchEnumerator matchEnumerator = TagParserRegex.EnumerateMatches(text);
         if (!matchEnumerator.MoveNext())
         {
             inlines.Add(new Run(text.ToString()));
-            return inlines;
         }
 
         ValueMatch lastRange = default;
@@ -121,8 +120,6 @@ public partial class RichTextBlock : TextBlock
         {
             inlines.Add(CreateRunWithTags(lastPart.ToString(), activeTags));
         }
-
-        return inlines;
     }
 
     private static Run CreateRunWithTags(string text, Dictionary<string, Action<Run, string>> tags)
