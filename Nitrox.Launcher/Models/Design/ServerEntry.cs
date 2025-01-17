@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
@@ -214,7 +214,7 @@ public partial class ServerEntry : ObservableObject
         private NamedPipeClientStream commandStream;
         private Process serverProcess;
         public bool IsRunning => !serverProcess?.HasExited ?? false;
-        public AvaloniaList<string> Output { get; } = new();
+        public AvaloniaList<OutputLine> Output { get; } = [];
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
@@ -242,7 +242,32 @@ public partial class ServerEntry : ObservableObject
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
                 if (isEmbeddedMode)
                 {
-                    serverProcess.OutputDataReceived += (sender, args) => Output.Add(args.Data ?? "");
+                    serverProcess.OutputDataReceived += (_, args) =>
+                    {
+                        if (args.Data == null)
+                        {
+                            return;
+                        }
+                        
+                        Match match = Regex.Match(args.Data, @"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\](?<logText>.*)?$");
+                        if (match.Success)
+                        {
+                            OutputLine outputLine = new() 
+                            { 
+                                Timestamp = $"[{match.Groups["timestamp"].Value}]",
+                                LogText = match.Groups["logText"].Value.Trim()
+                            };
+                            Output.Add(outputLine);
+                        }
+                        else
+                        {
+                            Output.Add(new OutputLine
+                            {
+                                Timestamp = string.Empty,
+                                LogText = args.Data
+                            });
+                        }
+                    };
                     serverProcess.BeginOutputReadLine();
                 }
                 serverProcess.Exited += (_, _) =>
@@ -331,5 +356,11 @@ public partial class ServerEntry : ObservableObject
             serverProcess?.Dispose();
             serverProcess = null;
         }
+    }
+
+    public class OutputLine
+    {
+        public string Timestamp { get; set; }
+        public string LogText { get; set;  }
     }
 }

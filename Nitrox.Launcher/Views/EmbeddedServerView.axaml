@@ -6,10 +6,11 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:system="clr-namespace:System;assembly=System.Runtime"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
     <Design.DataContext>
         <vm:EmbeddedServerViewModel />
     </Design.DataContext>
@@ -51,7 +52,7 @@
                 VerticalAlignment="Center" />
         </Grid>
         <ScrollViewer
-            Grid.Row="1"
+            Grid.Row="1" BringIntoViewOnFocusChange="False"
             Margin="0,20,0,20"
             x:Name="ScrollViewer">
             <!--  Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something)  -->
@@ -69,9 +70,12 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="system:String">
-                        <SelectableTextBlock Text="{Binding}" />
-                        <!--  TODO: Maybe make this a rich textblock and add bold text to timestamps, maybe also red font color to errors. ALSO: Fix highlighting only happening one line at a time  -->
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="90,*">
+                            <TextBlock Grid.Column="0" Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
+                            <controls:SelectableRichTextBlock Grid.Column="1" Text="{Binding LogText}" Margin="10 0 0 0" />
+                        </Grid>
+                        <!--  TODO: Fix highlighting only happening one line at a time  -->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
