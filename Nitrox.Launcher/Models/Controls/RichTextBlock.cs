@@ -37,7 +37,7 @@ public partial class RichTextBlock : TextBlock
         if (change.Property == TextProperty)
         {
             Inlines?.Clear();
-            ParseTextAndAddInlines(Text ?? "");
+            Inlines = ParseTextAndAddInlines(Text ?? "", Inlines);
             // If all text was just tags, set Text to empty. Otherwise, it will be displayed as fallback by Avalonia.
             if (Inlines?.Count < 1)
             {
@@ -49,17 +49,17 @@ public partial class RichTextBlock : TextBlock
     [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
     private static partial Regex TagParserRegex { get; }
 
-    private void ParseTextAndAddInlines(ReadOnlySpan<char> text)
+    public static InlineCollection ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection inlines)
     {
-        if (Inlines == null)
+        if (inlines == null)
         {
-            return;
+            return null;
         }
         Regex.ValueMatchEnumerator matchEnumerator = TagParserRegex.EnumerateMatches(text);
         if (!matchEnumerator.MoveNext())
         {
-            Inlines.Add(new Run(text.ToString()));
-            return;
+            inlines.Add(new Run(text.ToString()));
+            return inlines;
         }
 
         ValueMatch lastRange = default;
@@ -72,7 +72,7 @@ public partial class RichTextBlock : TextBlock
             ReadOnlySpan<char> textPart = text[(lastRange.Index + lastRange.Length)..range.Index];
             if (!textPart.IsEmpty)
             {
-                Inlines.Add(CreateRunWithTags(textPart.ToString(), activeTags));
+                inlines.Add(CreateRunWithTags(textPart.ToString(), activeTags));
             }
 
             // Handle current tag (this tracks state of active tags at current text position)
@@ -96,7 +96,7 @@ public partial class RichTextBlock : TextBlock
                     textBlock.Classes.Add("link");
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
                     textBlock.Tag = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
-                    Inlines.Add(textBlock);
+                    inlines.Add(textBlock);
                     break;
                 case ['[', '#', ..]:
                     ReadOnlySpan<char> colorCode = match[1..match.IndexOfAny("]")];
@@ -108,7 +108,7 @@ public partial class RichTextBlock : TextBlock
                     break;
                 default:
                     // Unknown tag, let's handle as normal text (issue is likely due to input text not knowing about this RichTextBox format)
-                    Inlines.Add(CreateRunWithTags(match.ToString(), activeTags));
+                    inlines.Add(CreateRunWithTags(match.ToString(), activeTags));
                     break;
             }
 
@@ -119,11 +119,13 @@ public partial class RichTextBlock : TextBlock
         ReadOnlySpan<char> lastPart = text[(lastRange.Index + lastRange.Length)..];
         if (!lastPart.IsEmpty)
         {
-            Inlines.Add(CreateRunWithTags(lastPart.ToString(), activeTags));
+            inlines.Add(CreateRunWithTags(lastPart.ToString(), activeTags));
         }
+
+        return inlines;
     }
 
-    private Run CreateRunWithTags(string text, Dictionary<string, Action<Run, string>> tags)
+    private static Run CreateRunWithTags(string text, Dictionary<string, Action<Run, string>> tags)
     {
         Run run = new(text);
         KeyValuePair<string, Action<Run, string>>? lastColorTag = null;
