@@ -38,6 +38,11 @@ public partial class RichTextBlock : TextBlock
         {
             Inlines?.Clear();
             ParseTextAndAddInlines(Text ?? "");
+            // If all text was just tags, set Text to empty. Otherwise, it will be displayed as fallback by Avalonia.
+            if (Inlines?.Count < 1)
+            {
+                Text = "";
+            }
         }
     }
 
