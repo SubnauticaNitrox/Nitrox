@@ -1,4 +1,3 @@
-using System.Collections;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -27,6 +26,7 @@ public class DeathBeacon : MonoBehaviour
     {
         InvokeRepeating(nameof(CheckPlayerDistance), 0, CHECK_RATE);
     }
+
     private void CheckPlayerDistance()
     {
         if ((Player.main.transform.position - transform.position).sqrMagnitude <= DESPAWN_DISTANCE_SQUARED)
