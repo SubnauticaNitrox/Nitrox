@@ -90,6 +90,8 @@ public class PatchesTranspilerTest
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
         [typeof(Welder_Weld_Patch), 1],
         [typeof(Poop_Perform_Patch), 1],
+        [typeof(PrisonPredatorSwimToPlayer_Evaluate_Patch), -52, true],
+        [typeof(PrisonPredatorSwimToPlayer_Perform_Patch), -26, true],
         [typeof(SeaDragonMeleeAttack_OnTouchFront_Patch), 9],
         [typeof(SeaDragonMeleeAttack_SwatAttack_Patch), 4],
         [typeof(SeaTreaderSounds_SpawnChunks_Patch), 3],
