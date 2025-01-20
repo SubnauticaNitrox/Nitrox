@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 
@@ -16,9 +17,9 @@ public class BuildingManager
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
-    private readonly ServerConfig config;
+    private readonly SubnauticaServerConfig config;
 
-    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, ServerConfig config)
+    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SubnauticaServerConfig config)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;

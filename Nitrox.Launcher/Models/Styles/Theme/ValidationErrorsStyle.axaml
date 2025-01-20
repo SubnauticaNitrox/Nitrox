@@ -1,0 +1,63 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Code from: https://docs.avaloniaui.net/docs/data-binding/data-validation (except for colors)  -->
+    <Style Selector="DataValidationErrors">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel LastChildFill="True">
+                    <ContentControl
+                        Content="{Binding (DataValidationErrors.Errors)}"
+                        ContentTemplate="{TemplateBinding ErrorTemplate}"
+                        DataContext="{TemplateBinding Owner}"
+                        DockPanel.Dock="Right">
+                        <!--  Don't show error on fields immediately on load, wait for user input (e.g. user is trying to skip a field with invalid value)  -->
+                        <ContentControl.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="(DataValidationErrors.HasErrors)" />
+                                <Binding Path="(design:NitroxAttached.HasUserInteracted)" />
+                            </MultiBinding>
+                        </ContentControl.IsVisible>
+                    </ContentControl>
+                    <ContentPresenter
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Name="PART_ContentPresenter"
+                        Padding="{TemplateBinding Padding}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ErrorTemplate">
+            <DataTemplate x:DataType="{x:Type x:Object}">
+                <Canvas
+                    Background="Transparent"
+                    Height="14"
+                    Margin="4,0"
+                    Width="14">
+                    <Canvas.Styles>
+                        <Style Selector="ToolTip">
+                            <Setter Property="Background" Value="{DynamicResource BrandAbortBackground}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource BrandAbort}" />
+
+                            <Style Selector="^ TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource BrandWhite}" />
+                            </Style>
+                        </Style>
+                    </Canvas.Styles>
+                    <ToolTip.Tip>
+                        <ItemsControl ItemsSource="{Binding}" />
+                    </ToolTip.Tip>
+                    <Path
+                        Data="M14,7 A7,7 0 0,0 0,7 M0,7 A7,7 0 1,0 14,7 M7,3l0,5 M7,9l0,2"
+                        Stroke="{DynamicResource BrandAbort}"
+                        StrokeThickness="2" />
+                </Canvas>
+            </DataTemplate>
+        </Setter>
+    </Style>
+</Styles>

@@ -1,0 +1,148 @@
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Panel Background="CornflowerBlue">
+            <StackPanel Margin="10" Spacing="15">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="5">
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="5">
+                            <CheckBox>Light</CheckBox>
+                        </Border>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="5">
+                            <CheckBox Foreground="White" IsChecked="True">Dark</CheckBox>
+                        </Border>
+                    </ThemeVariantScope>
+                </StackPanel>
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="5">
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <StackPanel Background="White" Spacing="5">
+                            <Border>
+                                <CheckBox Classes="switch" />
+                            </Border>
+                            <Border>
+                                <CheckBox Classes="switch" IsChecked="True" />
+                            </Border>
+                        </StackPanel>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <StackPanel Background="Black" Spacing="5">
+                            <Border>
+                                <CheckBox Classes="switch" />
+                            </Border>
+                            <Border>
+                                <CheckBox Classes="switch" IsChecked="True" />
+                            </Border>
+                        </StackPanel>
+                    </ThemeVariantScope>
+                </StackPanel>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <Style Selector="CheckBox.switch">
+        <Setter Property="Background" Value="{DynamicResource BrandCheckboxBackground}" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Width" Value="54" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Duration="0:0:.075" Property="RenderTransform" />
+                <DoubleTransition Duration="0:0:0.15" Property="Opacity" />
+                <ThicknessTransition Duration="0:0:0.1" Property="Margin" />
+            </Transitions>
+        </Setter>
+
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid x:Name="RootGrid">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="4"
+                        x:Name="PART_Border">
+                        <Viewbox HorizontalAlignment="Left" x:Name="SlidingIconViewbox">
+                            <Border
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="15"
+                                Height="24"
+                                Width="24"
+                                x:Name="SlidingIcon">
+                                <Border.Styles>
+                                    <Style Selector="Border">
+                                        <Setter Property="Transitions">
+                                            <Transitions>
+                                                <TransformOperationsTransition Duration="0:0:.075" Property="RenderTransform" />
+                                                <ThicknessTransition Duration="0:0:0.1" Property="Margin" />
+                                            </Transitions>
+                                        </Setter>
+                                    </Style>
+                                </Border.Styles>
+                            </Border>
+                        </Viewbox>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <!--  Unchecked PointerOver State  -->
+        <Style Selector="^:pointerover">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Opacity" Value=".75" />
+
+            <Style Selector="^ /template/ Border#PART_Border">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+            </Style>
+        </Style>
+
+        <!--  Unchecked Pressed State  -->
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+
+            <Style Selector="^ /template/ Border#PART_Border">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+            </Style>
+        </Style>
+
+        <!--  Disabled State  -->
+        <Style Selector="^:disabled /template/ Border#PART_Border">
+            <Setter Property="Background" Value="{TemplateBinding Background}" />
+        </Style>
+
+        <Style Selector="^:checked">
+            <!--  Checked Normal State  -->
+            <Setter Property="Background" Value="{DynamicResource BrandCheckboxBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandControlBackground}" />
+
+            <Style Selector="^ /template/ Border#SlidingIcon">
+                <Setter Property="Background" Value="{DynamicResource BrandPrimary}" />
+                <Setter Property="Margin" Value="22 0 0 0" />
+            </Style>
+
+            <!--  Checked PointerOver State  -->
+            <Style Selector="^:pointerover">
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Opacity" Value=".75" />
+
+                <Style Selector="^ /template/ Border#PART_Border">
+                    <Setter Property="Background" Value="{TemplateBinding Background}" />
+                </Style>
+            </Style>
+
+            <!--  Checked Pressed State  -->
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.95)" />
+
+                <Style Selector="^ /template/ Border#PART_Border">
+                    <Setter Property="Background" Value="{TemplateBinding Background}" />
+                </Style>
+            </Style>
+        </Style>
+    </Style>
+</Styles>

@@ -1,4 +1,5 @@
 global using NitroxModel.Logger;
+using System;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
@@ -27,7 +28,8 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => Server.ServerStartHandler()).SingleInstance();
+            // TODO: Remove this once .NET Generic Host is implemented
+            containerBuilder.Register(c => Server.CreateOrLoadConfig()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketHandler>().InstancePerLifetimeScope();
@@ -44,7 +46,8 @@ namespace NitroxServer
         {
             containerBuilder.RegisterType<WorldPersistence>().SingleInstance();
 
-            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load()).SingleInstance();
+            // TODO: Remove this once .NET Generic Host is implemented
+            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load(Server.GetSaveName(Environment.GetCommandLineArgs(), "My World"))).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BuildingManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();

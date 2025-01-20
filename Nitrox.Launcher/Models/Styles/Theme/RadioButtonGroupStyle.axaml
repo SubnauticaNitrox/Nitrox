@@ -1,0 +1,83 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Panel Background="Cornflowerblue">
+            <StackPanel Margin="10" Spacing="10">
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <Border Background="#000000" Padding="10">
+                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
+                    </Border>
+                </ThemeVariantScope>
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <Border Background="#FFFFFF" Padding="10">
+                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
+                    </Border>
+                </ThemeVariantScope>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <!--  Base style without palette  -->
+    <Style Selector="ItemsControl.radioGroup">
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="8" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Button
+                        Background="Transparent"
+                        BorderBrush="{DynamicResource BrandBorder}"
+                        BorderThickness="2"
+                        Command="{Binding $parent[controls:RadioButtonGroup].ItemClickCommand}"
+                        CommandParameter="{Binding $self}"
+                        CornerRadius="8"
+                        Name="ItemContainer"
+                        Padding="14,16"
+                        Tag="{Binding}">
+                        <design:NitroxAttached.Selected>
+                            <MultiBinding Converter="{converters:EqualityConverter}">
+                                <Binding />
+                                <Binding Path="$parent[controls:RadioButtonGroup].SelectedItem" />
+                            </MultiBinding>
+                        </design:NitroxAttached.Selected>
+                        <TextBlock Name="Text" Text="{Binding Converter={converters:ToStringConverter}}" />
+                    </Button>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
+        <Setter Property="BorderBrush" Value="{Binding $parent[Button].BorderBrush}" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.15" Property="BorderBrush" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="ItemsControl.radioGroup:disabled">
+        <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+        <Style Selector="^ Button#ItemContainer /template/ ContentPresenter">
+            <Setter Property="BorderBrush" Value="{Binding $parent[Button].BorderBrush}" />
+        </Style>
+    </Style>
+
+    <!--  Events  -->
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimary}" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer[(design|NitroxAttached.Selected)=true]">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimary}" />
+    </Style>
+</Styles>

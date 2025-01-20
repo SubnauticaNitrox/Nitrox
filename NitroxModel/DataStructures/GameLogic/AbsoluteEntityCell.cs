@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.Core;
@@ -96,7 +96,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -115,8 +115,8 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             unchecked
             {
-                int hash = BatchId != null ? BatchId.GetHashCode() : 0;
-                hash = (hash * 397) ^ (CellId != null ? CellId.GetHashCode() : 0);
+                int hash = BatchId != default ? BatchId.GetHashCode() : 0;
+                hash = (hash * 397) ^ (CellId != default ? CellId.GetHashCode() : 0);
                 hash = (hash * 397) ^ Level;
                 return hash;
             }

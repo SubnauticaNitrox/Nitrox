@@ -1,0 +1,29 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <StackPanel Spacing="20">
+                <ToolTip Opacity="1">Text Content</ToolTip>
+                <ToolTip Opacity="1">Very long text content which should exceed the maximum with of the tooltip and wrap.</ToolTip>
+                <ToolTip Opacity="1">
+                    <StackPanel>
+                        <TextBlock>Multi-line</TextBlock>
+                        <TextBlock>Control Content</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="ToolTip">
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Style Selector="^ Border">
+            <Setter Property="Opacity" Value="0.9" />
+        </Style>
+
+        <Style Selector="^ TextBlock">
+            <Setter Property="FontWeight" Value="600" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
+        </Style>
+    </Style>
+</Styles>

@@ -1,0 +1,76 @@
+<Window
+    MinHeight="100"
+    MinWidth="800"
+    SizeToContent="WidthAndHeight"
+    Title="{Binding Title, TargetNullValue='Crash Report'}"
+    Width="1200"
+    WindowStartupLocation="CenterScreen"
+    d:DesignHeight="400"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.CrashWindow"
+    x:DataType="viewModels:CrashWindowViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <viewModels:CrashWindowViewModel>
+            <!--  TODO: Why isn't displayed as multi-line?  -->
+            <viewModels:CrashWindowViewModel.Message>
+                <![CDATA[System.Exception: oops
+                at Nitrox.Launcher.ViewModels.MainWindowViewModel.OpenOptionsViewAsync() in Nitrox.Launcher/ViewModels/MainWindowViewModel.cs:line 152
+                at CommunityToolkit.Mvvm.Input.AsyncRelayCommand.AwaitAndThrowIfFailed(Task executionTask)
+                at System.Threading.Tasks.Task.<>c.<ThrowAsync>b__128_0(Object state)
+                    at Avalonia.Threading.SendOrPostCallbackDispatcherOperation.InvokeCore()
+                    at Avalonia.Threading.DispatcherOperation.Execute()
+                    at Avalonia.Threading.Dispatcher.ExecuteJob(DispatcherOperation job)
+                    at Avalonia.Threading.Dispatcher.ExecuteJobsCore(Boolean fromExplicitBackgroundProcessingCallback)
+                    at Avalonia.Threading.Dispatcher.Signaled()
+                    at Avalonia.X11.X11PlatformThreading.CheckSignaled()
+                    at Avalonia.X11.X11PlatformThreading.RunLoop(CancellationToken cancellationToken)
+                    at Avalonia.Threading.DispatcherFrame.Run(IControlledDispatcherImpl impl)
+                    at Avalonia.Threading.Dispatcher.PushFrame(DispatcherFrame frame)
+                    at Avalonia.Threading.Dispatcher.MainLoop(CancellationToken cancellationToken)
+                    at Avalonia.Controls.ApplicationLifetimes.ClassicDesktopStyleApplicationLifetime.Start(String[] args)
+                    at Avalonia.ClassicDesktopStyleApplicationLifetimeExtensions.StartWithClassicDesktopLifetime(AppBuilder builder, String[] args, Action`1 lifetimeBuilder)
+                    at Nitrox.Launcher.Program.LoadAvalonia(String[] args) in Nitrox.Launcher/Program.cs:line 117
+                ]]>
+            </viewModels:CrashWindowViewModel.Message>
+        </viewModels:CrashWindowViewModel>
+    </Design.DataContext>
+    <DockPanel LastChildFill="True">
+        <controls:CustomTitlebar DockPanel.Dock="Top" IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" ShowTitle="True" />
+        <Grid RowDefinitions="*,Auto">
+            <ScrollViewer>
+                <!--  TODO: Nice color highlighting (with option to click on line to open the source file?)  -->
+                <SelectableTextBlock
+                    FontSize="14"
+                    Foreground="#FF4444"
+                    Padding="10"
+                    Text="{Binding Message}" />
+            </ScrollViewer>
+            <Border
+                Grid.Row="1"
+                Background="{DynamicResource BrandPanelBackground}"
+                Padding="10">
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <Button
+                        Background="Transparent"
+                        Command="{Binding CopyToClipboardCommand}"
+                        CommandParameter="{Binding $self}"
+                        Content="Copy to clipboard"
+                        HotKey="Ctrl+Shift+C" />
+                    <Button Command="{Binding ReportCommand}" Content="Report on GitHub" />
+                    <Button Command="{Binding RestartCommand}" Content="Restart Nitrox" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

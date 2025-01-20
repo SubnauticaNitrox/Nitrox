@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
-using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 using ProtoBufNet;
@@ -56,7 +55,7 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "Build18");
+            string path = Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "Build18");
             string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
             if (!File.Exists(fileName))
@@ -70,32 +69,31 @@ namespace NitroxServer.Serialization
         /**
          * It is suspected that 'cache' is a misnomer carried over from when UWE was actually doing procedurally
          * generated worlds.  In the final release, this 'cache' has simply been baked into a final version that
-         * we can parse. 
+         * we can parse.
          */
         private void ParseCacheCells(NitroxInt3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
         {
-            using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            CellsFileHeader cellsFileHeader = serializer.Deserialize<CellsFileHeader>(stream);
+
+            for (int cellCounter = 0; cellCounter < cellsFileHeader.NumCells; cellCounter++)
             {
-                CellsFileHeader cellsFileHeader = serializer.Deserialize<CellsFileHeader>(stream);
+                CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
-                for (int cellCounter = 0; cellCounter < cellsFileHeader.NumCells; cellCounter++)
+                byte[] serialData = new byte[cellHeader.DataLength];
+                stream.ReadStreamExactly(serialData, serialData.Length);
+                ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
+
+                if (!wasLegacy)
                 {
-                    CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
+                    byte[] legacyData = new byte[cellHeader.LegacyDataLength];
+                    stream.ReadStreamExactly(legacyData, legacyData.Length);
+                    ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out _);
 
-                    byte[] serialData = new byte[cellHeader.DataLength];
-                    stream.Read(serialData, 0, cellHeader.DataLength);
-                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
-
-                    if (!wasLegacy)
-                    {
-                        byte[] legacyData = new byte[cellHeader.LegacyDataLength];
-                        stream.Read(legacyData, 0, cellHeader.LegacyDataLength);
-                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out _);
-
-                        byte[] waiterData = new byte[cellHeader.WaiterDataLength];
-                        stream.Read(waiterData, 0, cellHeader.WaiterDataLength);
-                        ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.CellId, cellHeader.Level, spawnPoints);
-                    }
+                    byte[] waiterData = new byte[cellHeader.WaiterDataLength];
+                    stream.ReadStreamExactly(waiterData, waiterData.Length);
+                    ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.CellId, cellHeader.Level, spawnPoints);
                 }
             }
         }
@@ -109,8 +107,7 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            Stream stream = new MemoryStream(data);
-
+            using Stream stream = new MemoryStream(data);
             StreamHeader header = serializer.Deserialize<StreamHeader>(stream);
 
             if (ReferenceEquals(header, null))
@@ -120,9 +117,7 @@ namespace NitroxServer.Serialization
 
             ParseGameObjectsFromStream(stream, batchId, cellId, level, spawnPoints);
 
-            wasLegacy = (header.Version < 9);
-
-            return;
+            wasLegacy = header.Version < 9;
         }
 
         private void ParseGameObjectsFromStream(Stream stream, NitroxInt3 batchId, NitroxInt3 cellId, int level, List<EntitySpawnPoint> spawnPoints)
@@ -167,7 +162,12 @@ namespace NitroxServer.Serialization
 
                 Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
 
-                object component = FormatterServices.GetUninitializedObject(type);
+#if NET5_0_OR_GREATER
+                object component = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
+#else
+                object component = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
+#endif
+
                 long startPosition = stream.Position;
                 serializer.Deserialize(stream, component, type);
 
@@ -175,10 +175,9 @@ namespace NitroxServer.Serialization
                 // SerializedComponents only matter if this is an "Empty" GameObject
                 if (gameObject.CreateEmptyObject && !type.Name.Equals(nameof(NitroxTransform)) && !type.Name.Equals("LargeWorldEntity"))
                 {
-                    int length = (int)(stream.Position - startPosition);
-                    byte[] data = new byte[length];
+                    byte[] data = new byte[(int)(stream.Position - startPosition)];
                     stream.Position = startPosition;
-                    stream.Read(data, 0, length);
+                    stream.ReadStreamExactly(data, data.Length);
                     SerializedComponent serializedComponent = new(componentHeader.TypeName, componentHeader.IsEnabled, data);
                     gameObject.SerializedComponents.Add(serializedComponent);
                 }

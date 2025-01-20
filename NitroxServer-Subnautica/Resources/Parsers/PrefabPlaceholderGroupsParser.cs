@@ -11,9 +11,9 @@ using AssetsTools.NET.Extra;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
+using NitroxServer_Subnautica.Resources.Parsers.Helper;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Resources;
-using NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
@@ -41,8 +41,9 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         aaRootPath = Path.Combine(streamingAssetsPath, "aa");
 
         am = new AssetsBundleManager(aaRootPath);
-        // ReSharper disable once StringLiteralTypo
-        am.LoadClassPackage(Path.Combine("Resources", "classdata.tpk"));
+
+        // ReSharper disable once StringLiteralTypo)
+        am.LoadClassPackage(Path.Combine(NitroxUser.AssetsPath, "Resources", "classdata.tpk"));
         am.LoadClassDatabaseFromPackage("2019.4.36f1");
         am.SetMonoTempGenerator(monoGen = new(managedPath));
 
@@ -75,7 +76,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
                 Log.Info($"Successfully loaded cache with {prefabPlaceholdersGroupPaths.Count} prefab placeholder groups and {RandomPossibilitiesByClassId.Count} random spawn behaviours.");
             }
         }
-        
+
         // Fallback solution
         if (prefabPlaceholdersGroupPaths == null)
         {
@@ -184,7 +185,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         // to be able to recognize them easily later on
         byte[] prefabPlaceholdersGroupHash = [];
         byte[] spawnRandomHash = [];
-        
+
         for (int aaIndex = 0; aaIndex < addressableCatalog.Count; aaIndex++)
         {
             KeyValuePair<string, string[]> keyValuePair = addressableCatalog.ElementAt(aaIndex);
@@ -225,7 +226,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         Parallel.ForEach(addressableCatalog, (keyValuePair) =>
         {
             string[] assetPaths = keyValuePair.Value;
-            
+
             AssetsBundleManager bundleManagerInst = am.Clone();
             AssetsFileInstance assetFileInstance = bundleManagerInst.LoadBundleWithDependencies(assetPaths);
 
@@ -321,7 +322,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         List<AssetTypeValueField> prefabPlaceholdersOnGroup = prefabPlaceholdersGroupScript["prefabPlaceholders"].Children;
 
         IPrefabAsset[] prefabPlaceholders = new IPrefabAsset[prefabPlaceholdersOnGroup.Count];
-        
+
         for (int index = 0; index < prefabPlaceholdersOnGroup.Count; index++)
         {
             AssetTypeValueField prefabPlaceholderPtr = prefabPlaceholdersOnGroup[index];

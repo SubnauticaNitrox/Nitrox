@@ -1,67 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using NitroxModel.DataStructures.Unity;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+public class RandomStartGenerator
 {
-    public class RandomStartGenerator
+    private readonly IPixelProvider pixelProvider;
+
+    public RandomStartGenerator(IPixelProvider pixelProvider)
     {
-        private readonly Bitmap randomStartTexture;
+        this.pixelProvider = pixelProvider;
+    }
 
-        public RandomStartGenerator(Bitmap randomStartTexture)
+    public NitroxVector3 GenerateRandomStartPosition(Random rnd)
+    {
+        for (int i = 0; i < 1000; i++)
         {
-            this.randomStartTexture = randomStartTexture;
-        }
+            float normalizedX = (float)rnd.NextDouble();
+            float normalizedZ = (float)rnd.NextDouble();
 
-        public NitroxVector3 GenerateRandomStartPosition(Random rnd)
-        {
-            for (int i = 0; i < 1000; i++)
+            if (IsStartPointValid(normalizedX, normalizedZ))
             {
-                float normalizedX = (float)rnd.NextDouble();
-                float normalizedZ = (float)rnd.NextDouble();
-
-                if (IsStartPointValid(normalizedX, normalizedZ))
-                {
-                    float x = 4096f * normalizedX - 2048f; // normalizedX = (x + 2048) / 4096
-                    float z = 4096f * normalizedZ - 2048f;
-                    return new NitroxVector3(x, 0, z);
-                }
+                float x = 4096f * normalizedX - 2048f; // normalizedX = (x + 2048) / 4096
+                float z = 4096f * normalizedZ - 2048f;
+                return new NitroxVector3(x, 0, z);
             }
-
-            return NitroxVector3.Zero;
         }
 
-        public List<NitroxVector3> GenerateRandomStartPositions(string seed)
+        return NitroxVector3.Zero;
+    }
+
+    public List<NitroxVector3> GenerateRandomStartPositions(string seed)
+    {
+        Random rnd = new(seed.GetHashCode());
+        List<NitroxVector3> list = new();
+
+        for (int i = 0; i < 1000; i++)
         {
+            float normalizedX = (float)rnd.NextDouble();
+            float normalizedZ = (float)rnd.NextDouble();
 
-            Random rnd = new Random(seed.GetHashCode());
-            List<NitroxVector3> list = new List<NitroxVector3>();
-
-            for (int i = 0; i < 1000; i++)
+            if (IsStartPointValid(normalizedX, normalizedZ))
             {
-                float normalizedX = (float)rnd.NextDouble();
-                float normalizedZ = (float)rnd.NextDouble();
-
-                if (IsStartPointValid(normalizedX, normalizedZ))
-                {
-                    float x = 4096f * normalizedX - 2048f; // normalizedX = (x + 2048) / 4096
-                    float z = 4096f * normalizedZ - 2048f;
-                    list.Add(new NitroxVector3(x, 0, z));
-                }
+                float x = 4096f * normalizedX - 2048f; // normalizedX = (x + 2048) / 4096
+                float z = 4096f * normalizedZ - 2048f;
+                list.Add(new NitroxVector3(x, 0, z));
             }
-
-            return list;
         }
 
-        private bool IsStartPointValid(float normalizedX, float normalizedZ)
-        {
-            int textureX = (int)(normalizedX * (float)512);
-            int textureZ = (int)(normalizedZ * (float)512);
+        return list;
+    }
 
-            Color pixelColor = randomStartTexture.GetPixel(textureX, textureZ);
+    private bool IsStartPointValid(float normalizedX, float normalizedZ)
+    {
+        int textureX = (int)(normalizedX * 512);
+        int textureZ = (int)(normalizedZ * 512);
 
-            return pixelColor.G > 127;
-        }
+        return pixelProvider.GetGreen(textureX, textureZ) > 127;
+    }
+
+    /// <summary>
+    ///     API for getting pixels from an underlying texture.
+    /// </summary>
+    public interface IPixelProvider
+    {
+        byte GetRed(int x, int y);
+        byte GetGreen(int x, int y);
+        byte GetBlue(int x, int y);
     }
 }

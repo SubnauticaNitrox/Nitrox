@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 63.3 63.5">
+    <circle stroke="black" cx="31.6" cy="48" r="4.3" />
+    <path stroke="black" d="M31.6 25.8v14.4z" style="stroke-width:7"/>
+    <path stroke="black" d="M85.3 66H18.5l16.7-29L52 8.1l16.7 29Z" style="fill:none;stroke-width:5;stroke-linejoin:round" transform="matrix(.88 0 0 1 -14 -5.5)"/>
+</svg>

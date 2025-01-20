@@ -1,0 +1,152 @@
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Panel Background="CornflowerBlue">
+            <StackPanel Margin="10" Spacing="20">
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <Border Background="White" Padding="10">
+                        <StackPanel Spacing="10">
+                            <Expander
+                                ExpandDirection="Up"
+                                Header="Expand Up"
+                                HorizontalAlignment="Center">
+                                <StackPanel>
+                                    <TextBlock>Expanded content</TextBlock>
+                                </StackPanel>
+                            </Expander>
+                            <Expander
+                                Classes="changelog"
+                                Header="Changelog Expander"
+                                HorizontalAlignment="Center">
+                                <TextBlock>Expanded content</TextBlock>
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <Border Background="Black" Padding="10">
+                        <StackPanel Spacing="10">
+                            <Expander
+                                ExpandDirection="Up"
+                                Header="Expand Up"
+                                HorizontalAlignment="Center">
+                                <StackPanel>
+                                    <TextBlock>Expanded content</TextBlock>
+                                </StackPanel>
+                            </Expander>
+                            <Expander
+                                Classes="changelog"
+                                Header="Changelog Expander"
+                                HorizontalAlignment="Center">
+                                <TextBlock>Expanded content</TextBlock>
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <!--  TODO: Create a clean Nitrox Expander+ToggleButton style  -->
+
+    <Style Selector="ToggleButton.changelog">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Content}" />
+                        <Path
+                            Data="M0.530273 1.46973L5.53027 6.46973M4.46961 6.46973L9.46961 1.46973"
+                            HorizontalAlignment="Center"
+                            RenderTransformOrigin="50%,50%"
+                            Stretch="None"
+                            Stroke="{TemplateBinding Foreground}"
+                            StrokeThickness="1.5"
+                            VerticalAlignment="Center">
+                            <Path.RenderTransform>
+                                <RotateTransform />
+                            </Path.RenderTransform>
+                        </Path>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Cursor" Value="Hand" />
+            <Style Selector="^ /template/ TextBlock">
+                <Setter Property="Background" Value="{Binding $parent[ToggleButton].Background}" />
+                <Setter Property="TextDecorations" Value="Underline" />
+            </Style>
+        </Style>
+
+        <!--  Arrow Animation  -->
+        <Style Selector="^[Tag=expanded] /template/ Path">
+            <Style.Animations>
+                <Animation Duration="0:0:0.0625" FillMode="Both">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="RotateTransform.Angle" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="RotateTransform.Angle" Value="180" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="^[Tag=collapsed] /template/ Path">
+            <Style.Animations>
+                <Animation Duration="0:0:0.0625" FillMode="Both">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="RotateTransform.Angle" Value="180" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="RotateTransform.Angle" Value="0" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </Style>
+
+    <Style Selector="Expander.changelog">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel>
+                    <ToggleButton
+                        Background="{TemplateBinding Background}"
+                        Classes="changelog"
+                        Content="{TemplateBinding Header}"
+                        Foreground="{TemplateBinding Foreground}"
+                        IsChecked="{TemplateBinding IsExpanded,
+                                                    Mode=TwoWay}"
+                        IsEnabled="{TemplateBinding IsEnabled}" />
+                    <Border
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{TemplateBinding IsExpanded,
+                                                    Mode=TwoWay}"
+                        Padding="{TemplateBinding Padding}"
+                        VerticalAlignment="Stretch">
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:expanded /template/ ToggleButton">
+            <Setter Property="Tag" Value="expanded" />
+        </Style>
+        <Style Selector="^:not(:expanded) /template/ ToggleButton">
+            <Setter Property="Tag" Value="collapsed" />
+        </Style>
+    </Style>
+</Styles>

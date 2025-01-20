@@ -1,0 +1,127 @@
+<Window
+    MaxWidth="1000"
+    MinHeight="200"
+    MinWidth="700"
+    SizeToContent="Width"
+    Title="{Binding Title}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
+    x:DataType="vm:ObjectPropertyEditorViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:serialization="clr-namespace:NitroxModel.Serialization;assembly=NitroxModel"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <vm:ObjectPropertyEditorViewModel>
+            <vm:ObjectPropertyEditorViewModel.OwnerObject>
+                <serialization:SubnauticaServerConfig />
+            </vm:ObjectPropertyEditorViewModel.OwnerObject>
+        </vm:ObjectPropertyEditorViewModel>
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto, *, Auto">
+        <controls:CustomTitlebar
+            CanMinimize="False"
+            Grid.Row="0"
+            Grid.RowSpan="2" />
+
+        <TextBlock
+            Classes="modalHeader"
+            Grid.Row="0"
+            Margin="24,24,24,0"
+            Text="{Binding Title}" />
+
+        <!--  Content  -->
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Classes="form" Margin="24">
+
+                <ItemsControl ItemsSource="{Binding EditorFields}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="14" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentPresenter Content="{Binding Value}">
+                                <ContentPresenter.DataTemplates>
+                                    <DataTemplate DataType="{x:Type system:String}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <TextBlock Text="{Binding Description}" />
+                                            <TextBox Text="{Binding Value, Mode=TwoWay}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Boolean}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <TextBlock Text="{Binding Description}" />
+                                            <CheckBox
+                                                Classes="switch"
+                                                HorizontalAlignment="Left"
+                                                IsChecked="{Binding Value}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Int32}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <TextBlock Text="{Binding Description}" />
+                                            <NumericUpDown Value="{Binding Value, Mode=TwoWay}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Single}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <TextBlock Text="{Binding Description}" />
+                                            <NumericUpDown Value="{Binding Value, Mode=TwoWay}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Object}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <TextBlock Text="{Binding Description}" />
+                                            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedValue="{Binding Value}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={converters:ToStringConverter}}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ContentPresenter.DataTemplates>
+                            </ContentPresenter>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Classes="footer" Grid.Row="2">
+            <Panel>
+                <Button
+                    Command="{Binding CloseCommand}"
+                    Content="Back"
+                    FontWeight="Bold"
+                    HotKey="Escape" />
+                <Button
+                    Classes="primary"
+                    Command="{Binding SaveCommand}"
+                    Content="Save"
+                    HorizontalAlignment="Right"
+                    HotKey="Enter" />
+            </Panel>
+        </Border>
+
+    </Grid>
+
+</Window>

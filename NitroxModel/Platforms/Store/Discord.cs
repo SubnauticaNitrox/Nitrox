@@ -10,9 +10,6 @@ namespace NitroxModel.Platforms.Store
 {
     public sealed class Discord : IGamePlatform
     {
-        private static Discord instance;
-        public static Discord Instance => instance ??= new Discord();
-
         public string Name => nameof(Discord);
         public Platform Platform => Platform.DISCORD;
 
@@ -37,7 +34,7 @@ namespace NitroxModel.Platforms.Store
             return await Task.FromResult(
                 ProcessEx.Start(
                     pathToGameExe,
-                    new[] { (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                    [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                     Path.GetDirectoryName(pathToGameExe),
                     launchArguments
                 )
