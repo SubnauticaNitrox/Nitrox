@@ -33,7 +33,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<ServerEntry.OutputLine> ServerOutput => ServerEntry.Process.Output;
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process.Output;
 
     public EmbeddedServerViewModel()
     {
@@ -64,11 +64,11 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         if (commandHistory.Count < 1 || commandHistory[commandHistory.LastChangedIndex] != ServerCommand)
         {
             commandHistory.Add(ServerCommand);
-            Application.Current.Resources.TryGetResource("BrandPrimary", Application.Current.RequestedThemeVariant, out var PrimaryBrush);
-            ServerOutput.Add(new ServerEntry.OutputLine()
+            ServerOutput.Add(new OutputLine
             {
+                Type = OutputLineType.COMMAND,
                 Timestamp = $@"[{TimeSpan.FromTicks(DateTime.Now.Ticks):hh\:mm\:ss\.fff}]",
-                LogText = $"[b]> [{PrimaryBrush}]{ServerCommand}[/{PrimaryBrush}][/b]"
+                LogText = $"> {ServerCommand}"
             });
         }
         await ServerEntry.Process.SendCommandAsync(ServerCommand);

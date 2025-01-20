@@ -7,7 +7,6 @@ namespace Nitrox.Launcher.Models.Controls;
 /// <inheritdoc cref="RichTextBlock"/>
 public class SelectableRichTextBlock : SelectableTextBlock
 {
-
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);

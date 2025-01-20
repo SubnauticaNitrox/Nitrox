@@ -10,6 +10,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
     <Design.DataContext>
         <vm:EmbeddedServerViewModel />
@@ -57,6 +58,12 @@
             x:Name="ScrollViewer">
             <!--  Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something)  -->
             <ItemsControl Background="Transparent" ItemsSource="{Binding ServerOutput}">
+                <ItemsControl.Styles>
+                    <Style Selector="Run.command">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                </ItemsControl.Styles>
                 <Interaction.Behaviors>
                     <BehaviorCollection>
                         <EventTriggerBehavior EventName="SizeChanged">
@@ -70,12 +77,12 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="90,*">
-                            <TextBlock Grid.Column="0" Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
-                            <controls:SelectableRichTextBlock Grid.Column="1" Text="{Binding LogText}" Margin="10 0 0 0" />
-                        </Grid>
-                        <!--  TODO: Fix highlighting only happening one line at a time  -->
+                    <!--  TODO: Fix highlighting only happening one line at a time  -->
+                    <DataTemplate x:DataType="design:OutputLine">
+                        <SelectableTextBlock>
+                            <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
+                            <Run Text="{Binding LogText}" Classes.command="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.COMMAND}}" />
+                        </SelectableTextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

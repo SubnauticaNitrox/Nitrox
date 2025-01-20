@@ -252,18 +252,17 @@ public partial class ServerEntry : ObservableObject
                         Match match = Regex.Match(args.Data, @"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\](?<logText>.*)?$");
                         if (match.Success)
                         {
-                            OutputLine outputLine = new() 
-                            { 
+                            Output.Add(new()
+                            {
                                 Timestamp = $"[{match.Groups["timestamp"].Value}]",
                                 LogText = match.Groups["logText"].Value.Trim()
-                            };
-                            Output.Add(outputLine);
+                            });
                         }
                         else
                         {
                             Output.Add(new OutputLine
                             {
-                                Timestamp = string.Empty,
+                                Timestamp = "",
                                 LogText = args.Data
                             });
                         }
@@ -356,11 +355,5 @@ public partial class ServerEntry : ObservableObject
             serverProcess?.Dispose();
             serverProcess = null;
         }
-    }
-
-    public class OutputLine
-    {
-        public string Timestamp { get; set; }
-        public string LogText { get; set;  }
     }
 }

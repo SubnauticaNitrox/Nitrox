@@ -59,6 +59,7 @@ public partial class RichTextBlock : TextBlock
         if (!matchEnumerator.MoveNext())
         {
             inlines.Add(new Run(text.ToString()));
+            return;
         }
 
         ValueMatch lastRange = default;
