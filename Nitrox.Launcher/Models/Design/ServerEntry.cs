@@ -46,6 +46,9 @@ public partial class ServerEntry : ObservableObject
     private NitroxGameMode gameMode = serverDefaults.GameMode;
 
     [ObservableProperty]
+    private bool isEmbedded;
+
+    [ObservableProperty]
     private bool isNewServer = true;
 
     [ObservableProperty]
@@ -79,12 +82,9 @@ public partial class ServerEntry : ObservableObject
     private Bitmap serverIcon;
 
     [ObservableProperty]
-    private bool isEmbedded;
+    private Version version = NitroxEnvironment.Version;
 
     internal ServerProcess Process { get; private set; }
-
-    [ObservableProperty]
-    private Version version = NitroxEnvironment.Version;
 
     public static ServerEntry FromDirectory(string saveDir)
     {
@@ -209,13 +209,17 @@ public partial class ServerEntry : ObservableObject
         })?.Dispose();
     }
 
-    internal class ServerProcess : IDisposable
+    internal partial class ServerProcess : IDisposable
     {
         private NamedPipeClientStream commandStream;
+        private OutputLineType lastOutputType;
         private Process serverProcess;
+
+        [GeneratedRegex(@"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$")]
+        private static partial Regex OutputLineRegex { get; }
+
         public bool IsRunning => !serverProcess?.HasExited ?? false;
         public AvaloniaList<OutputLine> Output { get; } = [];
-        private OutputLineType lastOutputType;
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
@@ -228,7 +232,11 @@ public partial class ServerEntry : ObservableObject
             ProcessStartInfo startInfo = new(serverFile)
             {
                 WorkingDirectory = NitroxUser.ExecutableRootPath,
-                ArgumentList = { "--save", Path.GetFileName(saveDir)},
+                ArgumentList =
+                {
+                    "--save",
+                    Path.GetFileName(saveDir)
+                },
                 RedirectStandardOutput = isEmbeddedMode,
                 RedirectStandardError = isEmbeddedMode,
                 RedirectStandardInput = isEmbeddedMode,
@@ -253,8 +261,8 @@ public partial class ServerEntry : ObservableObject
                         {
                             return;
                         }
-                        
-                        Match match = Regex.Match(args.Data, @"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$");
+
+                        Match match = OutputLineRegex.Match(args.Data);
                         if (match.Success)
                         {
                             OutputLine outputLine = new()
