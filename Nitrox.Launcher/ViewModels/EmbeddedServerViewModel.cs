@@ -61,6 +61,10 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         {
             return;
         }
+        if (string.IsNullOrWhiteSpace(ServerCommand))
+        {
+            return;
+        }
         if (commandHistory.Count < 1 || commandHistory[commandHistory.LastChangedIndex] != ServerCommand)
         {
             commandHistory.Add(ServerCommand);

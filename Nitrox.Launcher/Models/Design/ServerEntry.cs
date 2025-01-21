@@ -215,6 +215,7 @@ public partial class ServerEntry : ObservableObject
         private Process serverProcess;
         public bool IsRunning => !serverProcess?.HasExited ?? false;
         public AvaloniaList<OutputLine> Output { get; } = [];
+        private OutputLineType lastOutputType;
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
@@ -227,13 +228,17 @@ public partial class ServerEntry : ObservableObject
             ProcessStartInfo startInfo = new(serverFile)
             {
                 WorkingDirectory = NitroxUser.ExecutableRootPath,
-                ArgumentList = { "--save", Path.GetFileName(saveDir) },
+                ArgumentList = { "--save", Path.GetFileName(saveDir)},
                 RedirectStandardOutput = isEmbeddedMode,
                 RedirectStandardError = isEmbeddedMode,
                 RedirectStandardInput = isEmbeddedMode,
                 WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                 CreateNoWindow = isEmbeddedMode
             };
+            if (isEmbeddedMode)
+            {
+                startInfo.ArgumentList.Add("--embedded");
+            }
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
             serverProcess = System.Diagnostics.Process.Start(startInfo);
@@ -249,21 +254,31 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
                         
-                        Match match = Regex.Match(args.Data, @"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\](?<logText>.*)?$");
+                        Match match = Regex.Match(args.Data, @"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$");
                         if (match.Success)
                         {
-                            Output.Add(new()
+                            OutputLine outputLine = new()
                             {
-                                Timestamp = $"[{match.Groups["timestamp"].Value}]",
-                                LogText = match.Groups["logText"].Value.Trim()
-                            });
+                                Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
+                                LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
+                                Type = match.Groups["level"].ValueSpan switch
+                                {
+                                    "DBG" => OutputLineType.DEBUG_LOG,
+                                    "WRN" => OutputLineType.WARNING_LOG,
+                                    "ERR" => OutputLineType.ERROR_LOG,
+                                    _ => OutputLineType.INFO_LOG
+                                }
+                            };
+                            lastOutputType = outputLine.Type;
+                            Output.Add(outputLine);
                         }
                         else
                         {
                             Output.Add(new OutputLine
                             {
                                 Timestamp = "",
-                                LogText = args.Data
+                                LogText = args.Data,
+                                Type = lastOutputType
                             });
                         }
                     };

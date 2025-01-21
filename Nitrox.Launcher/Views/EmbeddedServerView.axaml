@@ -63,6 +63,15 @@
                         <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
                         <Setter Property="FontWeight" Value="Bold" />
                     </Style>
+                    <Style Selector="Run.debug">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandSubText}" />
+                    </Style>
+                    <Style Selector="Run.warning">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandWarning}" />
+                    </Style>
+                    <Style Selector="Run.error">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandError}" />
+                    </Style>
                 </ItemsControl.Styles>
                 <Interaction.Behaviors>
                     <BehaviorCollection>
@@ -81,7 +90,12 @@
                     <DataTemplate x:DataType="design:OutputLine">
                         <SelectableTextBlock>
                             <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
-                            <Run Text="{Binding LogText}" Classes.command="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.COMMAND}}" />
+                            <Run Text="{Binding LogText}"
+                                 Classes.command="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.COMMAND}}"
+                                 Classes.debug="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.DEBUG_LOG}}"
+                                 Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.WARNING_LOG}}"
+                                 Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.ERROR_LOG}}"
+                                 />
                         </SelectableTextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

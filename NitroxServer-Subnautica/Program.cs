@@ -52,25 +52,8 @@ public class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static async Task StartServer(string[] args)
     {
-        Action<string> ConsoleCommandHandler()
-        {
-            ConsoleCommandProcessor commandProcessor = null;
-            return submit =>
-            {
-                try
-                {
-                    commandProcessor ??= NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-                commandProcessor?.ProcessCommand(submit, Optional.Empty, Perms.CONSOLE);
-            };
-        }
-
         // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
-        Log.Setup(true, isConsoleApp: true);
+        Log.Setup(true, isConsoleApp: !args.Contains("--embedded", StringComparer.OrdinalIgnoreCase));
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         PosixSignalRegistration.Create(PosixSignal.SIGTERM, CloseWindowHandler);
         PosixSignalRegistration.Create(PosixSignal.SIGQUIT, CloseWindowHandler);
@@ -159,6 +142,23 @@ public class Program
         catch
         {
             // ignored
+        }
+
+        Action<string> ConsoleCommandHandler()
+        {
+            ConsoleCommandProcessor commandProcessor = null;
+            return submit =>
+            {
+                try
+                {
+                    commandProcessor ??= NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+                commandProcessor?.ProcessCommand(submit, Optional.Empty, Perms.CONSOLE);
+            };
         }
     }
 
