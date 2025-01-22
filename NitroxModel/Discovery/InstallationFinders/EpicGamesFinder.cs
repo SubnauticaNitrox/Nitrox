@@ -23,8 +23,7 @@ public sealed class EpicGamesFinder : IGameFinder
             return Error("Epic games manifest directory does not exist. Verify that Epic Games Store has been installed");
         }
 
-        string[] files = Directory.GetFiles(epicGamesManifestsDir, "*.item");
-        foreach (string file in files)
+        foreach (string file in Directory.EnumerateFiles(epicGamesManifestsDir, "*.item"))
         {
             string fileText = File.ReadAllText(file);
             Match match = installLocationRegex.Match(fileText);
