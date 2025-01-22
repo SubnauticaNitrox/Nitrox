@@ -90,6 +90,7 @@
                     <DataTemplate x:DataType="design:OutputLine">
                         <SelectableTextBlock>
                             <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
+                            <Run Text="" />
                             <Run Text="{Binding LogText}"
                                  Classes.command="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.COMMAND}}"
                                  Classes.debug="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.DEBUG_LOG}}"
