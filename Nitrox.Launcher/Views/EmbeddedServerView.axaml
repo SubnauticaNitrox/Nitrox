@@ -88,7 +88,7 @@
                 <ItemsControl.ItemTemplate>
                     <!--  TODO: Fix highlighting only happening one line at a time  -->
                     <DataTemplate x:DataType="design:OutputLine">
-                        <SelectableTextBlock>
+                        <SelectableTextBlock Focusable="False">
                             <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
                             <Run Text="" />
                             <Run Text="{Binding LogText}"
