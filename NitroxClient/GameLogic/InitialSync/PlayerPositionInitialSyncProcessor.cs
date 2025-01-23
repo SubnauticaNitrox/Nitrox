@@ -25,6 +25,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
     public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
     {
         // We freeze the player so that he doesn't fall before the cells around him have loaded
+        // Is disabled manually or in Terrain.WaitForWorldLoad()
         Player.main.cinematicModeActive = true;
 
         AttachPlayerToEscapePod(packet.AssignedEscapePodId);
@@ -47,7 +48,6 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         if (!subRootId.HasValue)
         {
             yield return Terrain.WaitForWorldLoad();
-            Player.main.cinematicModeActive = false;
             yield break;
         }
 
@@ -56,7 +56,6 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         {
             Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
             yield return Terrain.WaitForWorldLoad();
-            Player.main.cinematicModeActive = false;
             yield break;
         }
 

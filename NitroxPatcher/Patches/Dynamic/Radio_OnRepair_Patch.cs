@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -14,9 +15,10 @@ public sealed partial class Radio_OnRepair_Patch : NitroxPatch, IDynamicPatch
     public static void Prefix(Radio __instance)
     {
         if (__instance.TryGetComponentInParent(out EscapePod pod) &&
-            pod.TryGetIdOrWarn(out NitroxId id))
+            pod.TryGetIdOrWarn(out NitroxId id) &&
+            Resolve<EntityMetadataManager>().TryExtract(pod, out EntityMetadata metadata))
         {
-            Resolve<Entities>().BroadcastMetadataUpdate(id, new EscapePodMetadata(pod.liveMixin.IsFullHealth(), true));
+            Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);
         }
     }
 }
