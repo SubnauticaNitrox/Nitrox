@@ -45,7 +45,7 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
         {
             pod.liveMixin.health = pod.liveMixin.maxHealth;
             pod.healthScalar = 1;
-            pod.damageEffectsShowing = true;
+            pod.damageEffectsShowing = true; // Needs to be set to true for UpdateDamagedEffects() to function
             pod.UpdateDamagedEffects();
             pod.vfxSpawner.SpawnManual(); // Spawn vfx to instantly disable it so no smoke is fading after player has joined
             pod.vfxSpawner.spawnedObj.SetActive(false);

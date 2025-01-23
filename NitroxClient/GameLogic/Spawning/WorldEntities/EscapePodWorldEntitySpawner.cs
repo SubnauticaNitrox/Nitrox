@@ -30,7 +30,6 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
         this.localPlayer = localPlayer;
     }
 
-
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
         if (entity is not EscapePodWorldEntity escapePodEntity)
@@ -69,7 +68,7 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
             Log.Error("Escape pod did not have a rigid body!");
         }
 
-        escapePod.transform.position = escapePodEntity.Transform.Position.ToUnity();
+        pod.anchorPosition = escapePod.transform.position = escapePodEntity.Transform.Position.ToUnity();
 
         pod.ForceSkyApplier();
         pod.escapePodCinematicControl.StopAll();
