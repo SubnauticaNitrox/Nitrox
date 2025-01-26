@@ -1,0 +1,94 @@
+﻿<UserControl
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.BlogView"
+    x:DataType="vm:BlogViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.DataContext>
+        <vm:BlogViewModel>
+            <vm:BlogViewModel.NitroxBlogs>
+                <design:NitroxBlog
+                    Date="1996-05-01"
+                    Title="Example"
+                    Url="example.com" />
+                <design:NitroxBlog
+                    Date="2020-01-10"
+                    Title="Nitrox Website"
+                    Url="nitrox.rux.gg" />
+            </vm:BlogViewModel.NitroxBlogs>
+        </vm:BlogViewModel>
+    </Design.DataContext>
+    <ScrollViewer Classes="main">
+        <StackPanel
+            Background="{DynamicResource BrandWhite}"
+            Classes="viewPadding"
+            Spacing="20">
+
+            <StackPanel Spacing="15">
+                <TextBlock Classes="header" Text="Blog" />
+                <controls:RichTextBlock>
+                    Read the latest news from the Nitrox team ! You can view all our blogs [here](nitroxblog.rux.gg)
+                </controls:RichTextBlock>
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding NitroxBlogs, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="340" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="design:NitroxBlog">
+                        <Button
+                            Classes="anycontent"
+                            Command="{Binding $parent[ItemsControl].((vm:BlogViewModel)DataContext).BlogEntryClickCommand}"
+                            CommandParameter="{Binding Url, Mode=OneTime}"
+                            Margin="0,0,15,15"
+                            VerticalAlignment="Top">
+                            <StackPanel Orientation="Vertical" Spacing="5">
+                                <Border ClipToBounds="True" CornerRadius="12">
+                                    <Viewbox>
+                                        <Panel
+                                            Height="9"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Width="16">
+                                            <Image
+                                                IsVisible="{Binding Image, Converter={converters:EqualityConverter}}"
+                                                Source="{Binding $parent[ItemsControl].((vm:BlogViewModel)DataContext).FallbackImage}"
+                                                Stretch="UniformToFill" />
+                                            <Image Source="{Binding Image}" Stretch="UniformToFill" />
+                                        </Panel>
+                                    </Viewbox>
+                                </Border>
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    HorizontalAlignment="Left"
+                                    Text="{Binding Title, TargetNullValue='No title'}" />
+
+                                <TextBlock
+                                    FontSize="10"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource BrandSubText}"
+                                    HorizontalAlignment="Left"
+                                    Text="{Binding Date, StringFormat='{}{0:D}', TargetNullValue=''}"
+                                    ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

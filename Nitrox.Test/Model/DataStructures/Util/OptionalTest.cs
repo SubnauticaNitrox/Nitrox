@@ -1,4 +1,4 @@
-namespace NitroxModel.DataStructures.Util;
+﻿namespace NitroxModel.DataStructures.Util;
 
 [TestClass]
 public class OptionalTest
@@ -88,6 +88,7 @@ public class OptionalTest
         aAsBase.Value.Threshold.Should().Be(200);
 
         // Optional<object> should always do all checks because anything can be in it.
+        // Note: This test can fail if Optional.ApplyHasValueCondition isn't called early enough. Run this test method directly and it should work.
         Optional<object> bAsObj = Optional<object>.Of(new B());
         bAsObj.HasValue.Should().BeFalse();
 
@@ -96,6 +97,7 @@ public class OptionalTest
         cAsObj.HasValue.Should().BeTrue();
         ((C)cAsObj.Value).Threshold.Should().Be(203);
     }
+
     [TestMethod]
     public void OptionalEqualsCheck()
     {

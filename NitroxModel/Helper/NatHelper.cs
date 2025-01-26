@@ -23,7 +23,7 @@ public static class NatHelper
         }
     }).ConfigureAwait(false);
 
-    public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol)
+    public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
     {
         return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
         {
@@ -35,10 +35,10 @@ public static class NatHelper
             {
                 return false;
             }
-        }, new Mapping(protocol, port, port)).ConfigureAwait(false);
+        }, new Mapping(protocol, port, port), ct).ConfigureAwait(false);
     }
 
-    public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol)
+    public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
     {
         return await MonoNatHelper.GetFirstAsync(static async (device, protocolAndPort) =>
         {
@@ -50,10 +50,10 @@ public static class NatHelper
             {
                 return null;
             }
-        }, (port, protocol)).ConfigureAwait(false);
+        }, (port, protocol), ct).ConfigureAwait(false);
     }
 
-    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol)
+    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
     {
         Mapping mapping = new(protocol, port, port);
         return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
@@ -66,7 +66,7 @@ public static class NatHelper
             {
                 return ExceptionToCode(ex);
             }
-        }, mapping).ConfigureAwait(false);
+        }, mapping, ct).ConfigureAwait(false);
     }
 
     public enum ResultCodes
@@ -147,8 +147,13 @@ public static class NatHelper
 
         public static async Task<TResult> GetFirstAsync<TResult>(Func<INatDevice, Task<TResult>> predicate) => await GetFirstAsync(static (device, p) => p(device), predicate);
 
-        public static async Task<TResult> GetFirstAsync<TResult, TExtraParam>(Func<INatDevice, TExtraParam, Task<TResult>> predicate, TExtraParam parameter)
+        public static async Task<TResult> GetFirstAsync<TResult, TExtraParam>(Func<INatDevice, TExtraParam, Task<TResult>> predicate, TExtraParam parameter, CancellationToken ct = default)
         {
+            if (ct.IsCancellationRequested)
+            {
+                return default;
+            }
+
             // Start NAT discovery (if it hasn't started yet).
             Task<IEnumerable<INatDevice>> discoverTask = DiscoverAsync();
             if (discoverTask.IsCompleted && discoveredDevices.IsEmpty)
@@ -163,12 +168,23 @@ public static class NatHelper
                 IEnumerable<KeyValuePair<EndPoint, INatDevice>> unhandledDevices = discoveredDevices.Except(handledDevices).ToArray();
                 if (!unhandledDevices.Any())
                 {
-                    await Task.Delay(10).ConfigureAwait(false);
+                    try
+                    {
+                        await Task.Delay(10, ct);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // ignored
+                    }
                     continue;
                 }
 
                 foreach (KeyValuePair<EndPoint, INatDevice> pair in unhandledDevices)
                 {
+                    if (ct.IsCancellationRequested)
+                    {
+                        return default;
+                    }
                     if (handledDevices.TryAdd(pair.Key, pair.Value))
                     {
                         TResult result = await predicate(pair.Value, parameter);
@@ -178,7 +194,7 @@ public static class NatHelper
                         }
                     }
                 }
-            } while (!discoverTask.IsCompleted);
+            } while (!ct.IsCancellationRequested && !discoverTask.IsCompleted);
 
             return default;
         }

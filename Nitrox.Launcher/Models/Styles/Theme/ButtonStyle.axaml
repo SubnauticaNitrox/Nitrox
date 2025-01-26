@@ -1,0 +1,191 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Panel Background="CornflowerBlue" Width="250">
+            <StackPanel Margin="10" Spacing="10">
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Content="Normal button" HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="primary"
+                            Content="Primary button"
+                            HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                </ThemeVariantScope>
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Content="Normal button" HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="primary"
+                            Content="Primary button"
+                            HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="abort"
+                            Content="Abort button"
+                            HorizontalAlignment="Stretch" />
+                        <Button
+                            Classes="primary big"
+                            Content="Primary text"
+                            HorizontalAlignment="Stretch" />
+                        <Button Classes="primary big" HorizontalAlignment="Stretch">
+                            <StackPanel>
+                                <TextBlock Text="Primary Button Big" />
+                                <TextBlock Text="Some sub text" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ThemeVariantScope>
+                <StackPanel HorizontalAlignment="Center" Spacing="5">
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Button
+                            Background="White"
+                            Classes="icon"
+                            HorizontalAlignment="Center">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/cog.png" />
+                                <TextBlock Text="Icon button" />
+                            </StackPanel>
+                        </Button>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Button
+                            Background="Black"
+                            Classes="icon"
+                            HorizontalAlignment="Center">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/cog.png" />
+                                <TextBlock Text="Icon button" />
+                            </StackPanel>
+                        </Button>
+                    </ThemeVariantScope>
+                </StackPanel>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{DynamicResource BrandBorderBackground}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="16 8.73" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Duration="0:0:0.075" Property="Opacity" />
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
+            </Transitions>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Opacity" Value="0.7" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <Style Selector="^ TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="^ TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style Selector="^ StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+
+        <!--  TODO: Pretty animations  -->
+        <Style Selector="^.busy">
+            <Setter Property="Opacity" Value="1" />
+            <Style.Animations>
+                <Animation
+                    Duration="0:0:.75"
+                    Easing="SineEaseInOut"
+                    IterationCount="INFINITE"
+                    PlaybackDirection="Alternate">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="1" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0.3" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <Style Selector="^.primary">
+            <Setter Property="Background" Value="{DynamicResource BrandPrimary}" />
+            <Setter Property="Foreground" Value="#ffffff" />
+        </Style>
+
+        <Style Selector="^.abort">
+            <Setter Property="Background" Value="{DynamicResource BrandAbort}" />
+            <Setter Property="Foreground" Value="#ffffff" />
+        </Style>
+
+        <Style Selector="^.big">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="MinHeight" Value="62" />
+            <Style Selector="^ StackPanel">
+                <Setter Property="Orientation" Value="Vertical" />
+            </Style>
+            <Style Selector="^ ContentPresenter /template/ TextBlock">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            <Style Selector="^ TextBlock:not(:nth-child(1))">
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+        </Style>
+
+        <Style Selector="^.anycontent">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style Selector="^.icon">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="4" />
+
+            <Style Selector="^ StackPanel">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style Selector="^ Image">
+                <Setter Property="Width" Value="18" />
+                <Setter Property="Height" Value="18" />
+            </Style>
+
+            <Style Selector="^:pointerover">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+            </Style>
+        </Style>
+
+        <!--  Override button template to use properties from parent Button. DO NOT HARD CODE VALUES HERE.  -->
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Opacity" Value="{Binding $parent[Button].Opacity}" />
+            <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
+            <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+            <Setter Property="CornerRadius" Value="{Binding $parent[Button].CornerRadius}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Opacity" Value="{Binding $parent[Button].Opacity}" />
+                <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
+                <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+                <Setter Property="Cursor" Value="{Binding $parent[Button].Cursor}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.25" />
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
+                <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+                <Setter Property="Cursor" Value="{Binding $parent[Button].Cursor}" />
+            </Style>
+        </Style>
+    </Style>
+</Styles>

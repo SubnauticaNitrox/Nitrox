@@ -119,7 +119,6 @@ namespace NitroxModel.DataStructures.Util
             Value = (T)info.GetValue("value", typeof(T));
         }
 
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("value", Value);

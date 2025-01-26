@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
@@ -19,23 +18,13 @@ public sealed class DiscordFinder : IGameFinder
         string path = Path.Combine(localAppdataDirectory, "DiscordGames", gameInfo.Name, "content");
         if (GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
-            return Ok(new GameInstallation
-            {
-                Path = path,
-                GameInfo = gameInfo,
-                Origin = GameLibraries.DISCORD
-            });
+            return Ok(path);
         }
 
         path = Path.Combine("C:", "Games", gameInfo.Name, "content");
         if (GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
-            return Ok(new GameInstallation
-            {
-                Path = path,
-                GameInfo = gameInfo,
-                Origin = GameLibraries.DISCORD
-            });
+            return Ok(path);
         }
 
         return NotFound();

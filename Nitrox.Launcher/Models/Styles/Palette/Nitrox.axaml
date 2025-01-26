@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <!--  Default/Light theme  -->
+        <ResourceDictionary x:Key="Default">
+            <!--  Main colors  -->
+            <Color x:Key="BrandPrimary">#007BFF</Color>
+            <Color x:Key="BrandWhite">#FFFFFF</Color>
+            <Color x:Key="BrandBlack">#000000</Color>
+            <Color x:Key="BrandBorder">#D1D1D1</Color>
+            <Color x:Key="BrandControlBackground">#ECECEC</Color>
+            <Color x:Key="BrandCheckboxBackground">#D9D9D9</Color>
+            <Color x:Key="BrandPanelBackground">#EAEAE9</Color>
+            <Color x:Key="BrandBorderBackground">#b8b8b8</Color>
+            <Color x:Key="BrandCaret">#000000</Color>
+            <Color x:Key="BrandFocusBorder">#40000000</Color>
+            <Color x:Key="BrandSubText">#7F000000</Color>
+            <Color x:Key="BrandScrollThumb">#CCCCCC</Color>
+            <Color x:Key="BrandScrollThumbPointerOver">#8F8F8F</Color>
+            <Color x:Key="BrandScrollThumbPressed">#3F3F3F</Color>
+            <Color x:Key="BrandOnColor">#38C149</Color>
+            <Color x:Key="BrandOffColor">#FF5E57</Color>
+
+            <!--  Notification colors  -->
+            <Color x:Key="BrandAbort">#FF005C</Color>
+            <Color x:Key="BrandAbortBackground">#FFB3B3</Color>
+            <Color x:Key="BrandError">#E60914</Color>
+            <Color x:Key="BrandSuccess">#11AD45</Color>
+            <Color x:Key="BrandInformation">#007BFF</Color>
+            <Color x:Key="BrandWarning">#F5A300</Color>
+
+            <!--  Misc  -->
+            <x:String x:Key="BrandSvgStyle">* { fill: #000; stroke: #000; }</x:String>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="BrandWhite">#000000</Color>
+            <Color x:Key="BrandBlack">#FFFFFF</Color>
+            <Color x:Key="BrandBorder">#323232</Color>
+            <Color x:Key="BrandControlBackground">#1D1D1D</Color>
+            <Color x:Key="BrandCheckboxBackground">#333333</Color>
+            <Color x:Key="BrandPanelBackground">#151516</Color>
+            <Color x:Key="BrandBorderBackground">#474747</Color>
+            <Color x:Key="BrandCaret">#FFFFFF</Color>
+            <Color x:Key="BrandFocusBorder">#40FFFFFF</Color>
+            <Color x:Key="BrandSubText">#7FFFFFFF</Color>
+            <Color x:Key="BrandScrollThumb">#262626</Color>
+            <Color x:Key="BrandScrollThumbPointerOver">#3F3F3F</Color>
+            <Color x:Key="BrandScrollThumbPressed">#8F8F8F</Color>
+            <x:String x:Key="BrandSvgStyle">* { fill: #fff; stroke: #fff; }</x:String>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

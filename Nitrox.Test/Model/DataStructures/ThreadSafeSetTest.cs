@@ -77,22 +77,21 @@ namespace NitroxModel.DataStructures
         {
             int iterations = 500000;
 
-            ThreadSafeSet<string> comeGetMe = new();
+            ThreadSafeSet<int> comeGetMe = new();
             long addCount = 0;
             long iterationsReadMany = 0;
 
-            Random r = new Random();
+            Random r = new();
             DoReaderWriter(() =>
                 {
-                    foreach (string item in comeGetMe)
+                    foreach (int item in comeGetMe)
                     {
-                        item.Length.Should().BeGreaterThan(0);
                         Interlocked.Increment(ref iterationsReadMany);
                     }
                 },
                 i =>
                 {
-                    comeGetMe.Add(new string(Enumerable.Repeat(' ', 10).Select(c => (char)r.Next('A', 'Z')).ToArray()));
+                    comeGetMe.Add(r.Next());
                     Interlocked.Increment(ref addCount);
                 },
                 iterations);
@@ -123,10 +122,10 @@ namespace NitroxModel.DataStructures
 
         private void DoReaderWriter(Action reader, Action<int> writer, int iterators)
         {
-            ManualResetEvent barrier = new(false);
+            ManualResetEventSlim barrier = new(false);
             Thread readerThread = new(() =>
             {
-                while (!barrier.SafeWaitHandle.IsClosed)
+                while (!barrier.IsSet)
                 {
                     reader();
                     Thread.Yield();
@@ -141,12 +140,12 @@ namespace NitroxModel.DataStructures
                 {
                     writer(i);
                 }
-                barrier.Set(); // Signal done
+                barrier.Set();
             });
 
             readerThread.Start();
             writerThread.Start();
-            barrier.WaitOne(); // Wait for signal
+            barrier.Wait();
         }
     }
 }

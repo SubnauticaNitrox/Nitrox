@@ -9,6 +9,7 @@ using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
@@ -25,10 +26,10 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
         private readonly NtpSyncer ntpSyncer;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, ServerConfig serverConfig, NtpSyncer ntpSyncer)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, SubnauticaServerConfig serverConfig, NtpSyncer ntpSyncer)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.storyManager = storyManager;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace NitroxModel.Packets.Exceptions
@@ -21,12 +21,6 @@ namespace NitroxModel.Packets.Exceptions
         }
 
         public UncorrelatedPacketException(string message, Exception innerException, CorrelatedPacket invalidPacket, string expectedCorrelationId) : base(message, innerException)
-        {
-            InvalidPacket = invalidPacket;
-            ExpectedCorrelationId = expectedCorrelationId;
-        }
-
-        protected UncorrelatedPacketException(SerializationInfo info, StreamingContext context, CorrelatedPacket invalidPacket, string expectedCorrelationId) : base(info, context)
         {
             InvalidPacket = invalidPacket;
             ExpectedCorrelationId = expectedCorrelationId;

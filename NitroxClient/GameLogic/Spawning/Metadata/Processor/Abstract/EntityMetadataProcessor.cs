@@ -13,8 +13,8 @@ public abstract class EntityMetadataProcessor<TMetadata> : IEntityMetadataProces
         ProcessMetadata(gameObject, (TMetadata)metadata);
     }
 
-    protected T Resolve<T>() where T : class
+    protected TService Resolve<TService>() where TService : class
     {
-        return NitroxServiceLocator.Cache<T>.Value;
+        return NitroxServiceLocator.Cache<TService>.Value;
     }
 }

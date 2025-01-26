@@ -1,0 +1,165 @@
+﻿<UserControl
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.CommunityView"
+    x:DataType="vm:CommunityViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <vm:CommunityViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="controls|FittingWrapPanel">
+            <Setter Property="Margin" Value="-4 0" />
+            <Style Selector="^ >  Border">
+                <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="22" />
+                <Setter Property="Margin" Value="8" />
+                <Style Selector="^ >  StackPanel">
+                    <Setter Property="Spacing" Value="10" />
+                    <Style Selector="^ TextBlock:nth-child(2)">
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                </Style>
+                <Style Selector="^ Button">
+                    <Setter Property="Height" Value="56" />
+                </Style>
+                <Style Selector="^ Button.anycontent > Border">
+                    <Setter Property="Padding" Value="13" />
+                    <Setter Property="CornerRadius" Value="10" />
+                    <Style Selector="^ >  Svg">
+                        <Setter Property="Width" Value="30" />
+                        <Setter Property="Height" Value="30" />
+                    </Style>
+                </Style>
+                <Style Selector="^ Button:nth-child(2)">
+                    <Setter Property="HorizontalAlignment" Value="Right" />
+                </Style>
+            </Style>
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer Classes="main">
+        <StackPanel
+            Background="{DynamicResource BrandWhite}"
+            Classes="viewPadding"
+            Spacing="23">
+            <TextBlock Classes="header" Text="Community" />
+            <Image MaxWidth="1580" Source="/Assets/Images/banners/community.png" />
+            <controls:FittingWrapPanel
+                Margin="-8,0"
+                MaxWidth="2500"
+                MinItemWidth="280">
+                <Border>
+                    <StackPanel>
+                        <Panel>
+                            <Button
+                                Classes="anycontent"
+                                Command="{Binding DiscordLinkCommand}"
+                                ToolTip.Tip="Join Discord Server">
+                                <Border Background="#5865F2">
+                                    <Svg Path="/Assets/Icons/brand/discord.svg" />
+                                </Border>
+                            </Button>
+                            <Button
+                                Command="{Binding DiscordLinkCommand}"
+                                Content="Join Discord"
+                                ToolTip.Tip="Join Discord Server" />
+                        </Panel>
+                        <TextBlock Text="Discord" />
+                        <TextBlock Text="Join our active Discord server to find servers to play on, get help from the support team and much more." />
+                    </StackPanel>
+                </Border>
+                <Border>
+                    <StackPanel>
+                        <Grid>
+                            <Button
+                                Classes="anycontent"
+                                Command="{Binding TwitterLinkCommand}"
+                                ToolTip.Tip="Follow on Twitter">
+                                <Border Background="#00AAEC">
+                                    <Svg Path="/Assets/Icons/brand/twitter.svg" />
+                                </Border>
+                            </Button>
+
+                            <Button
+                                Command="{Binding TwitterLinkCommand}"
+                                Content="Follow"
+                                ToolTip.Tip="Follow on Twitter" />
+                        </Grid>
+                        <TextBlock Text="Twitter" />
+                        <TextBlock Text="Follow the Nitrox Twitter account to always be up to date on latest developments, events, and releases." />
+                    </StackPanel>
+                </Border>
+                <Border>
+                    <StackPanel>
+                        <Grid>
+                            <Button
+                                Classes="anycontent"
+                                Command="{Binding BlueskyLinkCommand}"
+                                ToolTip.Tip="Follow on Bluesky">
+                                <Border Background="#1185fe">
+                                    <Svg Path="/Assets/Icons/brand/bluesky.svg" />
+                                </Border>
+                            </Button>
+
+                            <Button
+                                Command="{Binding BlueskyLinkCommand}"
+                                Content="Follow"
+                                ToolTip.Tip="Follow on Bluesky" />
+                        </Grid>
+                        <TextBlock Text="Bluesky" />
+                        <TextBlock Text="Follow the Nitrox Bluesky account to always be up to date on latest developments, events, and releases." />
+                    </StackPanel>
+                </Border>
+                <Border>
+                    <StackPanel>
+                        <Grid>
+                            <Button
+                                Classes="anycontent"
+                                Command="{Binding RedditLinkCommand}"
+                                ToolTip.Tip="Join Nitrox Subreddit">
+                                <Border Background="#FF4500">
+                                    <Svg Path="/Assets/Icons/brand/reddit.svg" />
+                                </Border>
+                            </Button>
+
+                            <Button
+                                Command="{Binding RedditLinkCommand}"
+                                Content="Join Subreddit"
+                                ToolTip.Tip="Join Nitrox Subreddit" />
+                        </Grid>
+                        <TextBlock Text="Reddit" />
+                        <TextBlock Text="Join the Nitrox Subreddit to stay informed about latest releases and post your own Nitrox content." />
+                    </StackPanel>
+                </Border>
+                <Border>
+                    <StackPanel>
+                        <Grid>
+                            <Button
+                                Classes="anycontent"
+                                Command="{Binding GithubLinkCommand}"
+                                ToolTip.Tip="Contribute on GitHub">
+                                <Border Background="#000000">
+                                    <Svg Path="/Assets/Icons/brand/github.svg" />
+                                </Border>
+                            </Button>
+                            <Button
+                                Command="{Binding GithubLinkCommand}"
+                                Content="Contribute"
+                                ToolTip.Tip="Contribute on GitHub" />
+                        </Grid>
+                        <TextBlock Text="GitHub" />
+                        <TextBlock Text="Want to be part of the team? Contribute from code to translations to the Nitrox project on GitHub." />
+                    </StackPanel>
+                </Border>
+            </controls:FittingWrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -7,277 +7,419 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NitroxModel;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
+using NitroxModel.Serialization;
+using NitroxModel.Server;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
 
-namespace NitroxServer
+namespace NitroxServer;
+
+public class Server
 {
-    public class Server
+    private readonly Communication.NitroxServer server;
+    private readonly WorldPersistence worldPersistence;
+    private readonly SubnauticaServerConfig serverConfig;
+    private readonly Timer saveTimer;
+    private readonly World world;
+    private readonly WorldEntityManager worldEntityManager;
+    private readonly EntityRegistry entityRegistry;
+
+    private CancellationTokenSource serverCancelSource;
+
+    public static Server Instance { get; private set; }
+
+    public bool IsRunning { get; private set; }
+
+    public bool IsSaving { get; private set; }
+
+    public string Name { get; private set; } = "My World";
+    public int Port => serverConfig?.ServerPort ?? -1;
+
+    public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
     {
-        private readonly Communication.NitroxServer server;
-        private readonly WorldPersistence worldPersistence;
-        private readonly ServerConfig serverConfig;
-        private readonly Timer saveTimer;
-        private readonly World world;
-        private readonly WorldEntityManager worldEntityManager;
-        private readonly EntityRegistry entityRegistry;
+        this.worldPersistence = worldPersistence;
+        this.serverConfig = serverConfig;
+        this.server = server;
+        this.world = world;
+        this.worldEntityManager = worldEntityManager;
+        this.entityRegistry = entityRegistry;
 
-        private CancellationTokenSource serverCancelSource;
+        Instance = this;
 
-        public static Server Instance { get; private set; }
-
-        public bool IsRunning => serverCancelSource?.IsCancellationRequested == false;
-        public bool IsSaving { get; private set; }
-
-        public int Port => serverConfig?.ServerPort ?? -1;
-
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
+        saveTimer = new Timer();
+        saveTimer.Interval = serverConfig.SaveInterval;
+        saveTimer.AutoReset = true;
+        saveTimer.Elapsed += delegate
         {
-            this.worldPersistence = worldPersistence;
-            this.serverConfig = serverConfig;
-            this.server = server;
-            this.world = world;
-            this.worldEntityManager = worldEntityManager;
-            this.entityRegistry = entityRegistry;
-
-            Instance = this;
-
-            saveTimer = new Timer();
-            saveTimer.Interval = serverConfig.SaveInterval;
-            saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate
+            if (!serverConfig.DisableAutoBackup && serverConfig.MaxBackups != 0)
+            {
+                BackUp();
+            }
+            else
             {
                 Save();
-            };
-        }
-
-        public string GetSaveSummary(Perms viewerPerms = Perms.CONSOLE)
-        {
-            // TODO: Extend summary with more useful save file data
-            // Note for later additions: order these lines by their length
-            StringBuilder builder = new("\n");
-            if (viewerPerms is Perms.CONSOLE)
-            {
-                builder.AppendLine($" - Save location: {Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)}");
             }
-            builder.AppendLine($"""
-             - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
-             - Current time: day {world.TimeKeeper.Day} ({Math.Floor(world.TimeKeeper.ElapsedSeconds)}s)
-             - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}
-             - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
-             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
-             - World gamemode: {serverConfig.GameMode}
-             - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
-             - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
-            """);
+        };
+    }
 
-            return builder.ToString();
+    public string GetSaveSummary(Perms viewerPerms = Perms.CONSOLE)
+    {
+        // TODO: Extend summary with more useful save file data
+        // Note for later additions: order these lines by their length
+        StringBuilder builder = new("\n");
+        if (viewerPerms is Perms.CONSOLE)
+        {
+            builder.AppendLine($" - Save location: {Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name)}");
+        }
+        builder.AppendLine($"""
+         - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
+         - Current time: day {world.TimeKeeper.Day} ({Math.Floor(world.TimeKeeper.ElapsedSeconds)}s)
+         - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}
+         - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
+         - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+         - World gamemode: {serverConfig.GameMode}
+         - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
+         - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
+        """);
+
+        return builder.ToString();
+    }
+
+    // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
+    public static SubnauticaServerConfig CreateOrLoadConfig()
+    {
+        string saveDir = null;
+        if (GetSaveName(Environment.GetCommandLineArgs()) is { } saveName)
+        {
+            saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName);
+        }
+        if (Directory.Exists(saveDir))
+        {
+            return SubnauticaServerConfig.Load(saveDir);
         }
 
-        public static ServerConfig ServerStartHandler()
+        // Check if there are any save files
+        List<ServerListing> saves = GetSaves();
+        if (saves.Any())
         {
-            string saveDir = null;
-            foreach (string arg in Environment.GetCommandLineArgs())
+            // Get last save file used
+            string lastSaveAccessed = saves[0].SaveDir;
+            if (saves.Count > 1)
             {
-                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                for (int i = 1; i < saves.Count; i++)
                 {
-                    saveDir = arg;
-                    break;
+                    if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
+                    {
+                        lastSaveAccessed = saves[i].SaveDir;
+                    }
                 }
             }
-            if (saveDir == null)
+            saveDir = lastSaveAccessed;
+        }
+        else
+        {
+            // Create new save file
+            Log.Debug("No save file was found, creating a new one...");
+            saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), "My World");
+            Directory.CreateDirectory(saveDir);
+        }
+
+        return SubnauticaServerConfig.Load(saveDir);
+    }
+
+    public void Save()
+    {
+        if (IsSaving)
+        {
+            return;
+        }
+
+        IsSaving = true;
+
+        bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name));
+        if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
+        {
+            try
             {
-                // Check if there are any save files
-                WorldManager.Listing[] worldList = WorldManager.GetSaves().ToArray();
-                if (worldList.Any())
+                // Call external tool for backups, etc
+                if (File.Exists(serverConfig.PostSaveCommandPath))
                 {
-                    // Get last save file used
-                    string lastSaveAccessed = worldList[0].WorldSaveDir;
-                    if (worldList.Length > 1)
-                    {
-                        for (int i = 1; i < worldList.Length; i++)
-                        {
-                            if (File.GetLastWriteTime(Path.Combine(worldList[i].WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
-                            {
-                                lastSaveAccessed = worldList[i].WorldSaveDir;
-                            }
-                        }
-                    }
-                    saveDir = lastSaveAccessed;
+                    using Process process = Process.Start(serverConfig.PostSaveCommandPath);
+                    Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
                 }
                 else
                 {
-                    // Create new save file
-                    saveDir = Path.Combine(WorldManager.SavesFolderDir, "My World");
-                    Directory.CreateDirectory(saveDir);
-                    ServerConfig serverConfig = ServerConfig.Load(saveDir);
-                    Log.Debug($"No save file was found, creating a new one...");
+                    Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
                 }
-
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Post-save command failed");
+            }
+        }
+        IsSaving = false;
+    }
 
-            return ServerConfig.Load(saveDir);
+    public bool Start(string saveName, CancellationTokenSource ct)
+    {
+        Debug.Assert(serverCancelSource == null);
+
+        Validate.NotNull(ct);
+        if (ct.IsCancellationRequested)
+        {
+            return false;
+        }
+        if (!server.Start(ct.Token))
+        {
+            return false;
+        }
+        Name = saveName;
+        serverCancelSource = ct;
+        IsRunning = true;
+
+        if (!serverConfig.DisableAutoBackup)
+        {
+            worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName));
         }
 
-        public void Save()
+        try
         {
-            if (IsSaving)
+            if (serverConfig.CreateFullEntityCache)
             {
-                return;
+                Log.Info("Starting to load all batches up front.");
+                Log.Info("This can take up to several minutes and you can't join until it's completed.");
+                Log.Info($"{entityRegistry.GetAllEntities().Count} entities already cached");
+                if (entityRegistry.GetAllEntities().Count < 504732)
+                {
+                    worldEntityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
+
+                    Log.Info("Saving newly cached entities.");
+                    Save();
+                }
+                Log.Info("All batches have now been loaded.");
             }
+        }
+        catch (OperationCanceledException ex)
+        {
+            Log.Warn($"Server start was cancelled by user:{Environment.NewLine}{ex.Message}");
+            return false;
+        }
 
-            IsSaving = true;
+        LogHowToConnectAsync().ContinueWithHandleError(ex => Log.Warn($"Failed to show how to connect: {ex.GetFirstNonAggregateMessage()}"));
+        Log.Info($"Server is listening on port {Port} UDP");
+        Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
+        Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
+        Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
+        Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
+        Log.Info($"Autobackup: {(serverConfig.DisableAutoBackup || serverConfig.MaxBackups == 0 ? "DISABLED" : "ENABLED")} (Max Backups: {serverConfig.MaxBackups})");
+        Log.Info($"Loaded save\n{GetSaveSummary()}");
 
-            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName));
-            if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
+        PauseServer();
+
+        return true;
+    }
+
+    public void Stop(bool shouldSave = true)
+    {
+        if (!IsRunning)
+        {
+            return;
+        }
+        IsRunning = false;
+
+        try
+        {
+            serverCancelSource.Cancel();
+        }
+        catch
+        {
+            // ignored
+        }
+
+        Log.Info("Nitrox Server Stopping...");
+        DisablePeriodicSaving();
+
+        if (shouldSave)
+        {
+            Save();
+        }
+
+        server.Stop();
+        Log.Info("Nitrox Server Stopped");
+    }
+
+    public void BackUp()
+    {
+        if (!IsRunning)
+        {
+            return;
+        }
+
+        Save();
+
+        worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name));
+    }
+
+    private async Task LogHowToConnectAsync()
+    {
+        Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
+        Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
+        Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
+
+        List<string> options = ["127.0.0.1 - You (Local)"];
+        if (await wanIp != null)
+        {
+            options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
+        }
+        if (await hamachiIp != null)
+        {
+            options.Add($"{hamachiIp.Result} - Friends using Hamachi (VPN)");
+        }
+        // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
+        if (await localIp != null)
+        {
+            options.Add($"{localIp.Result} - Friends on same internet network (LAN)");
+        }
+
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanIp.Result);
+    }
+
+    public void StopAndWait(bool shouldSave = true)
+    {
+        Stop(shouldSave);
+        Log.Info("Press enter to continue");
+        Console.Read();
+    }
+
+    public void EnablePeriodicSaving()
+    {
+        saveTimer.Start();
+    }
+
+    public void DisablePeriodicSaving()
+    {
+        saveTimer.Stop();
+    }
+
+    public void PauseServer()
+    {
+        DisablePeriodicSaving();
+        world.TimeKeeper.StopCounting();
+        Log.Info("Server has paused, waiting for players to connect");
+    }
+
+    public void ResumeServer()
+    {
+        if (!serverConfig.DisableAutoSave)
+        {
+            EnablePeriodicSaving();
+        }
+        world.TimeKeeper.StartCounting();
+        Log.Info("Server has resumed");
+    }
+
+    private static List<ServerListing> GetSaves()
+    {
+        try
+        {
+            Directory.CreateDirectory(KeyValueStore.Instance.GetSavesFolderDir());
+
+            List<ServerListing> saves = [];
+            foreach (string saveDir in Directory.EnumerateDirectories(KeyValueStore.Instance.GetSavesFolderDir()))
             {
                 try
                 {
-                    // Call external tool for backups, etc
-                    if (File.Exists(serverConfig.PostSaveCommandPath))
+                    ServerListing entryFromDir = ServerListing.Validate(saveDir);
+                    if (entryFromDir != null)
                     {
-                        using Process process = Process.Start(serverConfig.PostSaveCommandPath);
-                        Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
-                    }
-                    else
-                    {
-                        Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
+                        saves.Add(entryFromDir);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Log.Error(ex, "Post-save command failed");
+                    // ignored
                 }
             }
-            IsSaving = false;
-        }
 
-        public bool Start(CancellationTokenSource cancellationToken)
+            return [.. saves.OrderByDescending(entry => entry.LastAccessedTime)];
+        }
+        catch (Exception ex)
         {
-            serverCancelSource = cancellationToken;
-            if (!server.Start())
-            {
-                return false;
-            }
-
-            try
-            {
-                if (serverConfig.CreateFullEntityCache)
-                {
-                    Log.Info("Starting to load all batches up front.");
-                    Log.Info("This can take up to several minutes and you can't join until it's completed.");
-                    Log.Info($"{entityRegistry.GetAllEntities().Count} entities already cached");
-                    if (entityRegistry.GetAllEntities().Count < 504732)
-                    {
-                        worldEntityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
-
-                        Log.Info("Saving newly cached entities.");
-                        Save();
-                    }
-                    Log.Info("All batches have now been loaded.");
-                }
-            }
-            catch (OperationCanceledException ex)
-            {
-                Log.Warn($"Server start was cancelled by user:{Environment.NewLine}{ex.Message}");
-                return false;
-            }
-
-            LogHowToConnectAsync().ContinueWithHandleError(ex => Log.Warn($"Failed to show how to connect: {ex.GetFirstNonAggregateMessage()}"));
-            Log.Info($"Server is listening on port {Port} UDP");
-            Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
-            Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
-            Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
-            Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
-            Log.Info($"Loaded save\n{GetSaveSummary()}");
-
-            PauseServer();
-
-            return true;
+            Log.Error(ex, "Error while getting saves");
         }
+        return [];
+    }
 
-        public void Stop(bool shouldSave = true)
+    /// <summary>
+    ///     Parses the save name from the given command line arguments or defaults to the standard save name.
+    /// </summary>
+    // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
+    public static string GetSaveName(string[] args, string defaultValue = null)
+    {
+        string result = args.GetCommandArgs("--save").FirstOrDefault() ?? args.GetCommandArgs("--name").FirstOrDefault();
+        return IsValidSaveName(result) ? result : defaultValue;
+    }
+
+    private static bool IsValidSaveName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
         {
-            if (!IsRunning)
-            {
-                return;
-            }
-
-            serverCancelSource.Cancel();
-            Log.Info("Nitrox Server Stopping...");
-            DisablePeriodicSaving();
-
-            if (shouldSave)
-            {
-                Save();
-            }
-
-            server.Stop();
-            Log.Info("Nitrox Server Stopped");
+            return false;
         }
-
-        private async Task LogHowToConnectAsync()
+        if (name.StartsWith("--"))
         {
-            Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
-            Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
-            Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
-
-            List<string> options = new();
-            options.Add("127.0.0.1 - You (Local)");
-            if (await wanIp != null)
-            {
-                options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
-            }
-            if (await hamachiIp != null)
-            {
-                options.Add($"{hamachiIp.Result} - Friends using Hamachi (VPN)");
-            }
-            // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
-            if (await localIp != null)
-            {
-                options.Add($"{localIp.Result} - Friends on same internet network (LAN)");
-            }
-
-            Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanIp.Result);
+            return false;
         }
-
-        public void StopAndWait(bool shouldSave = true)
+        if (name.EndsWith("."))
         {
-            Stop(shouldSave);
-            Log.Info("Press enter to continue");
-            Console.Read();
+            return false;
+        }
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars().ToArray()) > -1)
+        {
+            return false;
+        }
+        return true;
+    }
+}
+
+internal class ServerListing
+{
+    public string SaveDir { get; set; }
+    public Version SaveVersion { get; set; }
+    public DateTime LastAccessedTime { get; set; }
+
+    internal static ServerListing Validate(string saveDir)
+    {
+        ServerListing serverListing = new();
+        if (!File.Exists(Path.Combine(saveDir, "server.cfg")) || !File.Exists(Path.Combine(saveDir, "Version.json")))
+        {
+            return null;
         }
 
-        public void EnablePeriodicSaving()
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        string fileEnding = "json";
+        if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
+        { fileEnding = "nitrox"; }
+
+        Version version;
+        using (FileStream stream = new(Path.Combine(saveDir, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            saveTimer.Start();
+            version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
         }
 
-        public void DisablePeriodicSaving()
-        {
-            saveTimer.Stop();
-        }
+        serverListing.SaveDir = saveDir;
+        serverListing.SaveVersion = version;
+        serverListing.LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}"))
+                                                                   ?
+                                                                   // This file is affected by server saving
+                                                                   Path.Combine(saveDir, $"WorldData.{fileEnding}")
+                                                                   :
+                                                                   // If the above file doesn't exist (server was never ran), use the Version file instead
+                                                                   Path.Combine(saveDir, $"Version.{fileEnding}"));
 
-        public void PauseServer()
-        {
-            DisablePeriodicSaving();
-            world.TimeKeeper.StopCounting();
-            Log.Info("Server has paused, waiting for players to connect");
-        }
-
-        public void ResumeServer()
-        {
-            if (!serverConfig.DisableAutoSave)
-            {
-                EnablePeriodicSaving();
-            }
-            world.TimeKeeper.StartCounting();
-            Log.Info("Server has resumed");
-        }
+        return serverListing;
     }
 }
