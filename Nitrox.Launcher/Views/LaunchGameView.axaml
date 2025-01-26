@@ -141,7 +141,7 @@
                     <!--  Active contributors which have higher role than junior.  -->
                     <TextBlock Text="CONTRIBUTORS" />
                     <WrapPanel>
-                        <TextBlock Margin="0 0 12 0" VerticalAlignment="Center" Text="Tornac, iCleeem, Jannify, _HeN_, TwinBuilderOne, Ohm, NinjaPedroX, Meas" />
+                        <TextBlock Margin="0 0 12 0" VerticalAlignment="Center" Text="Tornac, iCleeem, Jannify, _HeN_, spacemonkeyy, Ohm, NinjaPedroX, Meas" />
                         <Button Padding="5 2" Content="See contributions made in the last year" Command="{Binding OpenContributionsOfYearCommand}" />
                     </WrapPanel>
                     <TextBlock Text="STAFF" />
