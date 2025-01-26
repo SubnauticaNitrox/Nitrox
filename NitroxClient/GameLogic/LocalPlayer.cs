@@ -38,9 +38,9 @@ public class LocalPlayer : ILocalNitroxPlayer
     public ushort? PlayerId => multiplayerSession?.Reservation?.PlayerId;
     public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
-    public Perms Permissions;
-    public IntroCinematicMode IntroCinematicMode;
-    public bool KeepInventoryOnDeath;
+    public Perms Permissions { get; set; }
+    public IntroCinematicMode IntroCinematicMode { get; set; }
+    public bool KeepInventoryOnDeath { get; set; }
 
     public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
     {

@@ -6,7 +6,7 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_ShouldDoNothingWhenEmptyList()
     {
-        object[] list = Array.Empty<object>();
+        object[] list = [];
         list.Should().BeEmpty();
         list.RemoveAllFast((object)null, static (_, _) => true);
         list.Should().BeEmpty();
@@ -15,7 +15,7 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
     {
-        List<string> list = new() { "one", "two", "three", "four" };
+        List<string> list = ["one", "two", "three", "four"];
         list.RemoveAllFast((object)null, static (_, _) => false);
         list.Should().BeEquivalentTo("one", "two", "three", "four");
     }
@@ -23,14 +23,14 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_ThrowsErrorIfFixedSizeList()
     {
-        string[] list = { "one", "two", "three" };
+        string[] list = ["one", "two", "three"];
         Assert.ThrowsException<NotSupportedException>(() => list.RemoveAllFast((object)null, static (item, _) => item == "one"));
     }
 
     [TestMethod]
     public void RemoveAllFast_CanRemoveFirstItem()
     {
-        List<string> list = new() { "one", "two", "three" };
+        List<string> list = ["one", "two", "three"];
         list.RemoveAllFast((object)null, static (item, _) => item == "one");
         list.Should().BeEquivalentTo("two", "three");
     }
@@ -38,7 +38,7 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_CanRemoveMidItems()
     {
-        List<string> list = new() { "one", "two", "three", "four" };
+        List<string> list = ["one", "two", "three", "four"];
         list.RemoveAllFast((object)null, static (item, _) => item == "two" || item == "three");
         list.Should().BeEquivalentTo("one", "four");
     }
@@ -46,7 +46,7 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_CanRemoveEndItem()
     {
-        List<string> list = new() { "one", "two", "three", "four" };
+        List<string> list = ["one", "two", "three", "four"];
         list.RemoveAllFast((object)null, static (item, _) => item == "four");
         list.Should().BeEquivalentTo("one", "two", "three");
     }
@@ -54,7 +54,7 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_CanRemoveAllItems()
     {
-        List<string> list = new() { "one", "two", "three", "four" };
+        List<string> list = ["one", "two", "three", "four"];
         list.RemoveAllFast((object)null, static (_, _) => true);
         list.Should().BeEmpty();
     }
@@ -62,7 +62,7 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate()
     {
-        List<string> list = new() { "one", "two", "three", "four" };
+        List<string> list = ["one", "two", "three", "four"];
         list.RemoveAllFast(3, static (item, length) => item.Length == length);
         list.Should().BeEquivalentTo("three", "four");
     }
@@ -80,6 +80,19 @@ public class ExtensionsTest
     public void GetUniqueNonCombinatorFlags_ShouldReturnAllUniquesWhenAllBitsSet()
     {
         ((TestEnumFlags)int.MaxValue).GetUniqueNonCombinatoryFlags().Should().BeEquivalentTo([TestEnumFlags.A, TestEnumFlags.B, TestEnumFlags.C, TestEnumFlags.D, TestEnumFlags.E, TestEnumFlags.F]);
+    }
+
+    [TestMethod]
+    public void GetCommandArgs()
+    {
+        Array.Empty<string>().GetCommandArgs("").Should().BeEmpty();
+        Array.Empty<string>().GetCommandArgs("--something").Should().BeEmpty();
+        new[] { "/bin/nitrox.dll", "--save", "My World" }.GetCommandArgs("--save").Should().BeEquivalentTo("My World");
+        new[] { "--nitrox", @"C:\a\path" }.GetCommandArgs("--nitrox").Should().BeEquivalentTo(@"C:\a\path");
+        new[] { "blabla", "--other=test", "--nitrox", @"C:\a\path" }.GetCommandArgs("--nitrox").Should().BeEquivalentTo(@"C:\a\path");
+        new[] { "blabla", "--other=test", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test");
+        new[] { "blabla", "--other=test", "other2", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test");
+        new[] { "blabla", "--other", "test", "other2", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test", "other2");
     }
 
     [Flags]

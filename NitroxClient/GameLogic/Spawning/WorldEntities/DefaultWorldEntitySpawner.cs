@@ -12,9 +12,10 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
 {
-    private static Dictionary<TechType, GameObject> prefabCacheByTechType = new();
-    private static Dictionary<string, GameObject> prefabCacheByClassId = new();
-    private static HashSet<(string, TechType)> prefabNotFound = new();
+    private static readonly Dictionary<TechType, GameObject> prefabCacheByTechType = [];
+    private static readonly Dictionary<string, GameObject> prefabCacheByClassId = [];
+    private static readonly HashSet<(string, TechType)> prefabNotFound = [];
+    private static readonly HashSet<string> classIdsWithoutPrefab = [];
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
@@ -72,13 +73,20 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
     public static bool TryGetCachedPrefab(out GameObject prefab, TechType techType = TechType.None, string classId = null)
     {
-        if ((classId != null && prefabCacheByClassId.TryGetValue(classId, out prefab)) ||
-            (techType != TechType.None && prefabCacheByTechType.TryGetValue(techType, out prefab)))
+        if (classId != null && prefabCacheByClassId.TryGetValue(classId, out prefab))
         {
             return true;
         }
-        prefab = null;
-        return false;
+
+        // If we've never even once issued a request prefab for the class id we need to do it because multiple prefabs
+        // can have the same TechType so it's not good enough to find the right prefab
+        if (!classIdsWithoutPrefab.Contains(classId) || techType == TechType.None)
+        {
+            prefab = null;
+            return false;
+        }
+        
+        return prefabCacheByTechType.TryGetValue(techType, out prefab);
     }
 
     /// <summary>
@@ -129,6 +137,7 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
         }
         else
         {
+            classIdsWithoutPrefab.Add(classId);
             CoroutineTask<GameObject> techPrefabCoroutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
             yield return techPrefabCoroutine;
             prefab = techPrefabCoroutine.GetResult();
@@ -169,7 +178,7 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
     public bool SpawnSync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
         TechType techType = entity.TechType.ToUnity();
-        
+
         if (TryCreateGameObjectSync(techType, entity.ClassId, entity.Id, out GameObject gameObject))
         {
             SetupObject(entity, parent, gameObject, cellRoot, techType);

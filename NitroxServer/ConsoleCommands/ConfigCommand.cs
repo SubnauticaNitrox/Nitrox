@@ -5,19 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ConfigCommand : Command
     {
         private readonly SemaphoreSlim configOpenLock = new(1);
-        private readonly ServerConfig serverConfig;
+        private readonly Server server;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public ConfigCommand(ServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
+        public ConfigCommand(Server server, SubnauticaServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
         {
+            this.server = server;
             this.serverConfig = serverConfig;
         }
 
@@ -30,18 +31,18 @@ namespace NitroxServer.ConsoleCommands
             }
 
             // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName);
+            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name);
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                serverConfig.Serialize(configFile);
+                serverConfig.Serialize(saveDir);
             }
 
             Task.Run(async () =>
                 {
                     try
                     {
-                        await StartWithDefaultProgram(configFile);
+                        await StartWithDefaultProgramAsync(configFile);
                     }
                     finally
                     {
@@ -61,10 +62,10 @@ namespace NitroxServer.ConsoleCommands
                 });
         }
 
-        private async Task StartWithDefaultProgram(string fileToOpen)
+        private async Task StartWithDefaultProgramAsync(string fileToOpen)
         {
             using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
-            process.WaitForExit();
+            await process.WaitForExitAsync();
             try
             {
                 while (!process.HasExited)

@@ -9,15 +9,16 @@ namespace NitroxModel.Discovery.InstallationFinders.Core;
 
 public sealed record GameFinderResult
 {
-    public GameInstallation Installation { get; init; }
     public string ErrorMessage { get; init; }
+    public GameLibraries Origin { get; init; }
+    public string Path { get; init; }
 
     /// <summary>
     ///     Gets the name of type that made the result.
     /// </summary>
     public string FinderName { get; init; } = "";
 
-    public bool IsOk => string.IsNullOrWhiteSpace(ErrorMessage) && Installation != null;
+    public bool IsOk => string.IsNullOrWhiteSpace(ErrorMessage) && !string.IsNullOrWhiteSpace(Path);
 
     private GameFinderResult()
     {
@@ -43,13 +44,13 @@ public sealed record GameFinderResult
         };
     }
 
-    public static GameFinderResult Ok([NotNull] GameInstallation installation, [CallerFilePath] string callerCodeFile = "")
+    public static GameFinderResult Ok([NotNull] string path, [CallerFilePath] string callerCodeFile = "")
     {
-        Validate.NotNull(installation);
+        Validate.NotNull(path);
         return new GameFinderResult
         {
             FinderName = callerCodeFile[(callerCodeFile.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^3],
-            Installation = installation
+            Path = path
         };
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -88,7 +88,6 @@ internal static class Win32Native
     }
 
     [DllImport("kernel32.dll", SetLastError = true)]
-    [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
     [SuppressUnmanagedCodeSecurity]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool CloseHandle(IntPtr hObject);
@@ -338,7 +337,7 @@ internal static class Win32Native
     internal static extern int SetWindowLong32(HandleRef hWnd, int nIndex, int dwNewLong);
 
     [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
-    internal static extern IntPtr SetWindowLongPtr64(HandleRef hWnd, int nIndex, IntPtr dwNewLong);
+    internal static extern IntPtr SetWindowLongPtr64(HandleRef hWnd, int nIndex, long dwNewLong);
 
     [Flags]
     public enum WS : long

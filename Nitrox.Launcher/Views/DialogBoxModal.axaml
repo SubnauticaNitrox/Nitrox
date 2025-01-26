@@ -1,0 +1,107 @@
+<Window
+    CanResize="False"
+    MaxWidth="1000"
+    MinWidth="400"
+    SizeToContent="WidthAndHeight"
+    Title="{Binding WindowTitle, TargetNullValue='Dialog Window'}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.DialogBoxModal"
+    x:DataType="vm:DialogBoxViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <vm:DialogBoxViewModel Description="Description Text" Title="Title Text" />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto,*,Auto">
+        <controls:CustomTitlebar
+            CanMinimize="False"
+            Grid.RowSpan="2"
+            ShowTitle="False" />
+        <TextBlock
+            FontSize="{Binding TitleFontSize}"
+            FontWeight="{Binding TitleFontWeight}"
+            Grid.Row="0"
+            IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+            Margin="24,20,24,-10"
+            Text="{Binding Title}"
+            TextWrapping="Wrap" />
+
+        <ScrollViewer
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            Margin="24,20,10,20">
+            <SelectableTextBlock
+                FontSize="{Binding DescriptionFontSize}"
+                FontWeight="{Binding DescriptionFontWeight}"
+                IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                Margin="0,0,14,0"
+                Text="{Binding Description, FallbackValue=Dialog Description}" />
+        </ScrollViewer>
+
+        <Border Classes="footer" Grid.Row="2">
+            <Panel>
+                <!--  Ok Button Option  -->
+                <Button
+                    Classes="primary"
+                    Command="{Binding CloseCommand}"
+                    Content="OK"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Right"
+                    HorizontalContentAlignment="Center"
+                    HotKey="{Binding OkHotkey}"
+                    IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}"
+                    IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}"
+                    Width="80" />
+
+                <!--  OkClipboard Button Option  -->
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
+                    IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Button
+                        Command="{Binding CopyToClipboardCommand}"
+                        CommandParameter="{Binding $self}"
+                        Content="Copy to clipboard"
+                        HotKey="{Binding CopyToClipboardHotkey}" />
+                    <Button
+                        Classes="primary"
+                        Command="{Binding CloseCommand}"
+                        CommandParameter="{x:Static vm:ButtonOptions.Ok}"
+                        Content="OK"
+                        HotKey="{Binding OkHotkey}" />
+                </StackPanel>
+
+                <!--  YesNo Button Option  -->
+                <Panel IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}" IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}">
+                    <!--  The yes button doesn't have a hotkey to prevent accidental confirmation.  -->
+                    <Button
+                        Command="{Binding CloseCommand}"
+                        CommandParameter="{x:Static vm:ButtonOptions.Yes}"
+                        Content="Yes"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Left"
+                        HorizontalContentAlignment="Center"
+                        Width="80" />
+                    <Button
+                        Classes="primary"
+                        Command="{Binding CloseCommand}"
+                        CommandParameter="{x:Static vm:ButtonOptions.No}"
+                        Content="No"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Center"
+                        HotKey="{Binding NoHotkey}"
+                        Width="80" />
+                </Panel>
+            </Panel>
+        </Border>
+    </Grid>
+</Window>

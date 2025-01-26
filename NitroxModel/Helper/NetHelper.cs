@@ -37,8 +37,10 @@ namespace NitroxModel.Helper
         public static IEnumerable<NetworkInterface> GetInternetInterfaces()
         {
             return NetworkInterface.GetAllNetworkInterfaces()
-                                   .Where(n => n.Name is "Ethernet" or "Wi-Fi" && n.OperationalStatus is OperationalStatus.Up && n.NetworkInterfaceType is NetworkInterfaceType.Wireless80211 or NetworkInterfaceType.Ethernet)
-                                   .OrderBy(n => n.Name == "Ethernet" ? 1 : 0)
+                                   .Where(n => n.OperationalStatus is OperationalStatus.Up
+                                            && n.NetworkInterfaceType is not (NetworkInterfaceType.Tunnel or NetworkInterfaceType.Loopback)
+                                            && n.NetworkInterfaceType is (NetworkInterfaceType.Wireless80211 or NetworkInterfaceType.Ethernet))
+                                   .OrderBy(n => n.NetworkInterfaceType is NetworkInterfaceType.Ethernet ? 1 : 0)
                                    .ThenBy(n => n.Name);
         }
 
@@ -65,6 +67,7 @@ namespace NitroxModel.Helper
                     }
                 }
             }
+
             return null;
         }
 
@@ -136,6 +139,17 @@ namespace NitroxModel.Helper
             return null;
         }
 
+        public static async Task<bool> HasInternetConnectivityAsync()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                return false;
+            }
+            using Ping ping = new();
+            PingReply reply = await ping.SendPingAsync(new IPAddress([8, 8, 8, 8]),2000);
+            return reply.Status == IPStatus.Success;
+        }
+
         /// <summary>
         ///     Returns true if the given IP address is reserved for private networks.
         /// </summary>
@@ -175,6 +189,7 @@ namespace NitroxModel.Helper
             {
                 return true;
             }
+
             foreach (NetworkInterface ni in GetInternetInterfaces())
             {
                 foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)

@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Nitrox.Launcher": {
+      "commandName": "Project"
+    },
+    "Crash Report": {
+      "commandName": "Project",
+      "commandLineArgs": "--crash-report"
+    },
+    "Instant launch \"world\"": {
+      "commandName": "Project",
+      "commandLineArgs": "instantlaunch --save \"world\" --players \"Player1\""
+    }
+  }
+}

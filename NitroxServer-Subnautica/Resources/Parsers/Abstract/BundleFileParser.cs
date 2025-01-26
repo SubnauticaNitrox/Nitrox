@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 
@@ -11,7 +12,12 @@ public abstract class BundleFileParser<T> : AssetParser
 
     protected BundleFileParser(string bundleName, int index)
     {
-        string bundlePath = Path.Combine(ResourceAssetsParser.FindDirectoryContainingResourceAssets(), "StreamingAssets", "aa", "StandaloneWindows64", bundleName);
+        string standaloneFolderName = "StandaloneWindows64";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            standaloneFolderName = "StandaloneOSX";
+        }
+        string bundlePath = Path.Combine(ResourceAssetsParser.FindDirectoryContainingResourceAssets(), "StreamingAssets", "aa", standaloneFolderName, bundleName);
         BundleFileInstance bundleFileInst = assetsManager.LoadBundleFile(bundlePath);
         assetFileInst = assetsManager.LoadAssetsFileFromBundle(bundleFileInst, index, true);
         bundleFile = assetFileInst.file;

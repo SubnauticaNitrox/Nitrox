@@ -1,0 +1,183 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.PreviewWith>
+        <Panel Background="Cornflowerblue">
+            <StackPanel Margin="10" Spacing="10">
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <ContentControl Padding="10" Background="#FFFFFF">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                            <TextBlock>Light</TextBlock>
+                            <TextBox Watermark="Enter something here.." />
+                        </StackPanel>
+                    </ContentControl>
+                </ThemeVariantScope>
+
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <ContentControl Padding="10" Background="#000000">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                            <TextBlock>Dark</TextBlock>
+                            <TextBox Watermark="Enter something here.." />
+                        </StackPanel>
+                    </ContentControl>
+                </ThemeVariantScope>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <Style Selector="Window">
+        <Setter Property="Icon" Value="/Assets/Images/nitrox-icon.ico" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+        <Setter Property="FontFamily" Value="/Assets/Fonts/Inter-Black.ttf" />
+        <!--  Disables window border but allow resizing  -->
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
+        <Setter Property="SystemDecorations">
+            <Setter.Value>
+                <OnPlatform>
+                    <OnPlatform.Default>
+                        <SystemDecorations>None</SystemDecorations>
+                    </OnPlatform.Default>
+                    <On Options="Windows">
+                        <SystemDecorations>Full</SystemDecorations>
+                    </On>
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+        <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
+        <Setter Property="Padding" Value="{Binding $self.OffScreenMargin}" />
+    </Style>
+
+    <Style Selector="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackground}" />
+    </Style>
+
+    <Style Selector="SelectableTextBlock">
+        <!--  Background should be transparent so text and be selected anywhere inside of control.  -->
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="controls|CustomTitlebar">
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
+    </Style>
+
+    <Style Selector="Svg.theme">
+        <Setter Property="Css" Value="{DynamicResource BrandSvgStyle}" />
+    </Style>
+
+    <Style Selector=":is(Border).footer">
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
+        <Setter Property="Padding" Value="24 20" />
+        <Setter Property="BorderThickness" Value="0 2 0 0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandWhite}" />
+    </Style>
+
+    <Style Selector=":is(Control)">
+        <Setter Property="Opacity" Value="1" />
+
+        <Style Selector="^ /template/ ContentPresenter">
+            <Setter Property="Opacity" Value="{TemplateBinding Opacity}" />
+        </Style>
+
+        <!--  TODO: a good-looking focus overlay, compatible with all controls  -->
+        <Setter Property="FocusAdorner">
+            <Setter.Value>
+                <FocusAdornerTemplate>
+                    <Border
+                        Name="FocusBorder"
+                        BorderBrush="{DynamicResource BrandFocusBorder}"
+                        BorderThickness="2" />
+                </FocusAdornerTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value=".85" />
+        </Style>
+    </Style>
+
+    <Style Selector=".form">
+        <Style Selector="^ >  :is(Layoutable):not(:nth-last-child(1))">
+            <Setter Property="Margin" Value="0 0 0 26" />
+        </Style>
+        <Style Selector="^ StackPanel.form >  TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="Margin" Value="0 0 0 11" />
+        </Style>
+        <Style Selector="^ StackPanel.form >  TextBlock:nth-child(2)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="500" />
+            <Setter Property="Margin" Value="0 -11 0 11" />
+            <Setter Property="IsVisible" Value="{Binding !$self.Text, Converter={converters:EqualityConverter}}" />
+        </Style>
+    </Style>
+
+    <Style Selector="Image.header">
+        <Setter Property="Width" Value="108" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
+
+    <Style Selector=":is(ContentControl).content">
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+
+    <Style Selector=":is(Layoutable).viewPadding">
+        <Setter Property="Margin" Value="34 45" />
+    </Style>
+
+    <Style Selector="Border.serverEntry">
+        <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="22 20" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="96" />
+
+        <Style Selector="^ StackPanel.description">
+            <Style Selector="^ >  :is(Control)">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="6 0" />
+            </Style>
+            <Style Selector="^ >  :is(Control):nth-child(1)">
+                <Setter Property="Margin" Value="0 0 6 0" />
+            </Style>
+            <Style Selector="^ >  :is(Control):nth-last-child(1)">
+                <Setter Property="Margin" Value="6 0 0 0" />
+            </Style>
+            <Style Selector="^ Ellipse">
+                <Setter Property="Height" Value="6" />
+                <Setter Property="Width" Value="6" />
+            </Style>
+            <Style Selector="^ TextBlock">
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+        </Style>
+    </Style>
+
+    <StyleInclude Source="/Models/Styles/Theme/ValidationErrorsStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/TextBoxStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/TextBlockStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ToolTipStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ButtonStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ComboBoxStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/CheckBoxStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/RadioButtonGroupStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/RadioButtonStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ScrollViewerStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ExpanderStyle.axaml" />
+</Styles>

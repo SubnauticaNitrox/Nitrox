@@ -1,15 +1,7 @@
-﻿namespace NitroxServer.GameLogic.Entities
-{
-    public class NitroxEntitySlot
-    {
-        public string[] AllowedTypes;
+using System;
+using System.Collections.Generic;
 
-        public string BiomeType;
+namespace NitroxServer.GameLogic.Entities;
 
-        public NitroxEntitySlot(string biomeType, string[] allowedTypes)
-        {
-            BiomeType = biomeType;
-            AllowedTypes = allowedTypes;
-        }
-    }
-}
+[Serializable]
+public record struct NitroxEntitySlot(string BiomeType, List<string> AllowedTypes);

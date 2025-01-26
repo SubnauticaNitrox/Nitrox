@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
@@ -24,8 +23,7 @@ public sealed class EpicGamesFinder : IGameFinder
             return Error("Epic games manifest directory does not exist. Verify that Epic Games Store has been installed");
         }
 
-        string[] files = Directory.GetFiles(epicGamesManifestsDir, "*.item");
-        foreach (string file in files)
+        foreach (string file in Directory.EnumerateFiles(epicGamesManifestsDir, "*.item"))
         {
             string fileText = File.ReadAllText(file);
             Match match = installLocationRegex.Match(fileText);
@@ -38,12 +36,7 @@ public sealed class EpicGamesFinder : IGameFinder
                     continue;
                 }
 
-                return Ok(new GameInstallation
-                {
-                    Path = matchedPath,
-                    GameInfo = gameInfo,
-                    Origin = GameLibraries.EPIC
-                });
+                return Ok(matchedPath);
             }
         }
 

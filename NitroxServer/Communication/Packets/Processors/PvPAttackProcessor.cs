@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization;
@@ -8,7 +9,7 @@ namespace NitroxServer.Communication.Packets.Processors;
 
 public class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttack>
 {
-    private readonly ServerConfig serverConfig;
+    private readonly SubnauticaServerConfig serverConfig;
     private readonly PlayerManager playerManager;
 
     // TODO: In the future, do a whole config for damage sources
@@ -18,7 +19,7 @@ public class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttack>
         { PvPAttack.AttackType.HeatbladeHit, 1f }
     };
 
-    public PvPAttackProcessor(ServerConfig serverConfig, PlayerManager playerManager)
+    public PvPAttackProcessor(SubnauticaServerConfig serverConfig, PlayerManager playerManager)
     {
         this.serverConfig = serverConfig;
         this.playerManager = playerManager;

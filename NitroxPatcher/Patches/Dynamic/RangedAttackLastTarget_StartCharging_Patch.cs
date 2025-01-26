@@ -1,6 +1,7 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -51,4 +52,3 @@ public sealed partial class RangedAttackLastTarget_StartCharging_Patch : NitroxP
         Resolve<IPacketSender>().Send(new RangedAttackLastTargetUpdate(creatureId, targetId, attackTypeIndex, actionState));
     }
 }
-

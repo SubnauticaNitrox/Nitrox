@@ -27,6 +27,7 @@ using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
+using NitroxModel.Networking;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient
@@ -114,7 +115,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
-            containerBuilder.Register(_ => new FMODWhitelist(GameInfo.Subnautica)).InstancePerLifetimeScope();
+            containerBuilder.Register(_ => FMODWhitelist.Load(GameInfo.Subnautica)).InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();
@@ -122,6 +123,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BulletManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<NtpSyncer>().InstancePerLifetimeScope();
         }
 
         private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)

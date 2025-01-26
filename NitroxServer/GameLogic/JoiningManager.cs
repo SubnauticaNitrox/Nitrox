@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication;
 using NitroxServer.GameLogic.Bases;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.GameLogic;
@@ -22,14 +20,14 @@ namespace NitroxServer.GameLogic;
 public sealed class JoiningManager
 {
     private readonly PlayerManager playerManager;
-    private readonly ServerConfig serverConfig;
+    private readonly SubnauticaServerConfig serverConfig;
     private readonly World world;
 
     private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
     private bool queueIdle;
     public Action SyncFinishedCallback { get; private set; }
 
-    public JoiningManager(PlayerManager playerManager, ServerConfig serverConfig, World world)
+    public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world)
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
@@ -95,7 +93,7 @@ public sealed class JoiningManager
                     return false;
                 })
                 // We use ContinueWith to avoid having to try/catch a TaskCanceledException
-                .ContinueWith(task =>
+                .ContinueWith((Task<bool> task) =>
                 {
                     if (task.IsFaulted)
                     {

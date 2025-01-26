@@ -42,10 +42,12 @@ public abstract class Modal
 
     public float Transparency { get; init; }
 
+    public float Height { get; init; }
+
     // Is useful for calling IngameMenu::OnDeselect() from a modal class (in Hide() for example)
     public bool IsAvoidableBypass = false;
 
-    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false, float transparency = 0.392f)
+    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false, float transparency = 0.392f, float height = 195f)
     {
         Type type = GetType();
         if (Modals.ContainsKey(type))
@@ -61,6 +63,7 @@ public abstract class Modal
         IsAvoidable = isAvoidable;
         FreezeGame = freezeGame;
         Transparency = transparency; // 0.392 is the default transparency for Subnautica's modal
+        Height = height;
 
         Log.Debug($"Registered Modal {SubWindowName} of type {type}");
         Modals.Add(type, this);
@@ -71,9 +74,14 @@ public abstract class Modal
     /// </summary>
     public void Show()
     {
+        CoroutineHost.StartCoroutine(ShowAsync());
+    }
+
+    public IEnumerator ShowAsync()
+    {
         CurrentModal?.Hide();
         CurrentModal = this;
-        CoroutineHost.StartCoroutine(ShowImplementation());
+        yield return ShowImplementation();
     }
 
     /// <summary>
@@ -121,10 +129,11 @@ public abstract class Modal
 
             // Styling.
             RectTransform main = modalSubWindow.GetComponent<RectTransform>();
-            main.sizeDelta = new Vector2(700, 195);
+            main.sizeDelta = new Vector2(700, Height);
 
             RectTransform messageTransform = modalSubWindow.FindChild("Header").GetComponent<RectTransform>();
-            messageTransform.sizeDelta = new Vector2(700, 195);
+            messageTransform.sizeDelta = new Vector2(700, Height);
+            messageTransform.anchoredPosition = new Vector2(0, 50 - Height / 2);
         }
 
         modalSubWindow.GetComponent<Image>().color = Color.white.WithAlpha(Transparency);
@@ -147,8 +156,9 @@ public abstract class Modal
 
         // We need to reinitialize onClick to avoid keeping Persisted Events (which are set manually inside Unity's Editor)
         yesButton.onClick = new Button.ButtonClickedEvent();
-        yesButton.onClick.AddListener(() => { ClickYes(); });
+        yesButton.onClick.AddListener(ClickYes);
         buttonYesObject.GetComponentInChildren<TextMeshProUGUI>().text = YesButtonText;
+        buttonYesObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f - Height);
 
         if (HideNoButton)
         {
@@ -163,6 +173,7 @@ public abstract class Modal
             noButton.onClick = new Button.ButtonClickedEvent();
             noButton.onClick.AddListener(() => { ClickNo(); });
             buttonNoObject.GetComponentInChildren<TextMeshProUGUI>().text = NoButtonText;
+            buttonNoObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f - Height);
         }
     }
 
@@ -174,7 +185,9 @@ public abstract class Modal
         // Execute frame-by-frame to allow UI scripts to initialize.
         InitSubWindow();
         yield return new WaitForEndOfFrame();
-        IngameMenu.main.Open();
+        // Equivalent of IngameMenu.main.Open() but without minding for the freeze
+        IngameMenu.main.gameObject.SetActive(true);
+        IngameMenu.main.Select();
         yield return new WaitForEndOfFrame();
         IngameMenu.main.ChangeSubscreen(SubWindowName);
         yield return new WaitForEndOfFrame();

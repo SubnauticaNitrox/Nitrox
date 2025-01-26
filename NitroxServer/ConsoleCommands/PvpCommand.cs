@@ -1,5 +1,6 @@
 using System.IO;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
@@ -9,13 +10,15 @@ namespace NitroxServer.ConsoleCommands;
 
 public class PvpCommand : Command
 {
-    private readonly ServerConfig serverConfig;
+    private readonly SubnauticaServerConfig serverConfig;
+    private readonly Server server;
 
-    public PvpCommand(ServerConfig serverConfig) : base("pvp", Perms.ADMIN, "Enables/Disables PvP")
+    public PvpCommand(SubnauticaServerConfig serverConfig, Server server) : base("pvp", Perms.ADMIN, "Enables/Disables PvP")
     {
         AddParameter(new TypeString("state", true, "on/off"));
 
         this.serverConfig = serverConfig;
+        this.server = server;
     }
 
     protected override void Execute(CallArgs args)
@@ -36,7 +39,7 @@ public class PvpCommand : Command
         }
 
 
-        using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
+        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
         {
             if (serverConfig.PvPEnabled == pvpEnabled)
             {

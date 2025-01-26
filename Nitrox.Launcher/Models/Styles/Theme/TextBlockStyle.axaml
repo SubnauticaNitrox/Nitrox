@@ -1,0 +1,38 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+        <StackPanel Spacing="10">
+            <TextBlock Text="I'm a textblock ! 0123456789" />
+            <TextBlock Classes="link" Text="I'm a textblock ! 0123456789" />
+            <TextBlock Classes="header" Text="I'm a textblock ! 0123456789" />
+            <TextBlock Classes="modalHeader" Text="I'm a textblock ! 0123456789" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <Style Selector="TextBlock">
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="SelectableTextBlock">
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="TextBlock.link">
+        <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Style Selector="^:pointerover">
+            <Setter Property="TextDecorations" Value="Underline" />
+        </Style>
+    </Style>
+
+    <Style Selector="TextBlock.header">
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontWeight" Value="700" />
+    </Style>
+
+    <Style Selector="TextBlock.modalHeader">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="700" />
+    </Style>
+</Styles>
