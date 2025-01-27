@@ -161,7 +161,7 @@ public sealed class Steam : IGamePlatform
             return new ProcessEx(Process.Start(new ProcessStartInfo
             {
                 FileName = GetExeFile(),
-                Arguments = $"""-applaunch {steamAppId} -nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
+                Arguments = $"""-applaunch {steamAppId} --nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
             }));
 #endif
         }
