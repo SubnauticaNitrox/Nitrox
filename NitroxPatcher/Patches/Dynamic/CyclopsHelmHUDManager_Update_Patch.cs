@@ -19,16 +19,13 @@ public sealed partial class CyclopsHelmHUDManager_Update_Patch : NitroxPatch, ID
         {
             __instance.hudActive = true;
         }
-        if (__instance.subLiveMixin.IsAlive() && !(__instance.engineToggleAnimator.GetCurrentAnimatorStateInfo(0).IsName("StartEngine") || __instance.engineToggleAnimator.GetCurrentAnimatorStateInfo(0).IsName("StopEngine")))
+        if (__instance.motorMode.engineOn)
         {
-            if (__instance.motorMode.engineOn)
-            {
-                __instance.engineToggleAnimator.SetTrigger("EngineOn");
-            }
-            else
-            {
-                __instance.engineToggleAnimator.SetTrigger("EngineOff");
-            }
+            __instance.engineToggleAnimator.SetTrigger("EngineOn");
+        }
+        else
+        {
+            __instance.engineToggleAnimator.SetTrigger("EngineOff");
         }
     }
 }
