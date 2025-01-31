@@ -11,6 +11,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
+using NitroxPatcher.PatternMatching.Ops;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
@@ -20,50 +21,39 @@ namespace NitroxPatcher.Patches.Dynamic;
 public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
-
-    private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
     private static BuildPieceIdentifier cachedPieceIdentifier;
 
-    public static readonly InstructionsPattern BaseDeconstructInstructionPattern1 = new()
-    {
-        Callvirt,
-        Call,
-        Ldloc_3,
-        { new() { OpCode = Callvirt, Operand = new(nameof(BaseGhost), nameof(BaseGhost.ClearTargetBase)) }, "Insert1" }
-    };
-    public static readonly InstructionsPattern BaseDeconstructInstructionPattern2 = new()
-    {
-        Ldloc_0,
-        new() { OpCode = Callvirt, Operand = new(nameof(Base), nameof(Base.FixCorridorLinks)) },
-        Ldloc_0,
-        { new() { OpCode = Callvirt, Operand = new(nameof(Base), nameof(Base.RebuildGeometry)) }, "Insert2" },
-    };
-
-    public static IEnumerable<CodeInstruction> InstructionsToAdd(bool destroyed)
-    {
-        yield return new(Ldarg_0);
-        yield return new(Ldloc_2);
-        yield return new(Ldloc_0);
-        yield return new(destroyed ? Ldc_I4_1 : Ldc_I4_0);
-        yield return new(Call, Reflect.Method(() => PieceDeconstructed(default, default, default, default)));
-    }
+    private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
-        instructions.Transform(BaseDeconstructInstructionPattern1, (label, instruction) =>
-        {
-            if (label.Equals("Insert1"))
-            {
-                return InstructionsToAdd(true);
-            }
-            return null;
-        }).Transform(BaseDeconstructInstructionPattern2, (label, instruction) =>
-        {
-            if (label.Equals("Insert2"))
-            {
-                return InstructionsToAdd(false);
-            }
-            return null;
-        });
+        instructions.RewriteOnPattern(
+                    [
+                        Callvirt,
+                        Call,
+                        Ldloc_3,
+                        Reflect.Method((BaseGhost b) => b.ClearTargetBase()),
+                        [
+                            Ldarg_0,
+                            Ldloc_2,
+                            Ldloc_0,
+                            Ldc_I4_1,
+                            Reflect.Method(() => PieceDeconstructed(default, default, default, default))
+                        ],
+                    ])
+                    .RewriteOnPattern(
+                    [
+                        Ldloc_0,
+                        Reflect.Method((Base b) => b.FixCorridorLinks()),
+                        Ldloc_0,
+                        Reflect.Method((Base b) => b.RebuildGeometry()),
+                        [
+                            Ldarg_0,
+                            Ldloc_2,
+                            Ldloc_0,
+                            Ldc_I4_0,
+                            Reflect.Method(() => PieceDeconstructed(default, default, default, default))
+                        ],
+                    ]);
 
     public static void Prefix(BaseDeconstructable __instance)
     {
@@ -180,9 +170,9 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
         BuildingHandler.Main.EnsureTracker(baseId).LocalOperations++;
         int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(baseId);
 
-        PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
-            new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), operationId) :
-            new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
+        PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null
+            ? new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), operationId)
+            : new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
         Log.Verbose($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
