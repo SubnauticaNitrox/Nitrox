@@ -113,14 +113,35 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen.Remove(worldSettleItem);
 
-            WaitScreen.ManualWaitItem item = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
+            WaitScreen.ManualWaitItem joiningItem = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
             yield return Main.StartCoroutine(Main.StartSession());
-            WaitScreen.Remove(item);
+            WaitScreen.Remove(joiningItem);
 
+            WaitScreen.ManualWaitItem waitingItem = WaitScreen.Add(Language.main.Get("Nitrox_Waiting"));
+            Log.InGame(Language.main.Get("Nitrox_Waiting"));
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
+            WaitScreen.Remove(waitingItem);
 
             SetLoadingComplete();
             OnLoadingComplete?.Invoke();
+        }
+
+        public void TimeOut()
+        {
+            multiplayerSession.Disconnect();
+            StartCoroutine(TimeOutRoutine());
+
+            IEnumerator TimeOutRoutine()
+            {
+                // TODO: replace with modal
+                for (int timer = 5; timer > 0; timer--)
+                {
+                    Log.InGame($"Initial sync timed out. Quitting game in {timer} second{(timer > 1 ? "s" : "")}…");
+                    yield return new WaitForSecondsRealtime(1);
+                }
+
+                IngameMenu.main.QuitGame(false);
+            }
         }
 
         public void ProcessPackets()
