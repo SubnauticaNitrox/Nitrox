@@ -62,7 +62,14 @@ public class EntityPositionBroadcaster : MonoBehaviour
         {
             if (gameObjectWithId.Value)
             {
-                updates.Add(new RawTransformUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position.ToDto(), gameObjectWithId.Value.transform.rotation.ToDto()));
+                if (ShouldBroadcastLocalPosition(gameObjectWithId.Value))
+                {
+                    updates.Add(new RawTransformUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.localPosition.ToDto(), gameObjectWithId.Value.transform.localRotation.ToDto()));
+                }
+                else
+                {
+                    updates.Add(new RawTransformUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position.ToDto(), gameObjectWithId.Value.transform.rotation.ToDto()));
+                }
             }
         }
 
@@ -99,7 +106,14 @@ public class EntityPositionBroadcaster : MonoBehaviour
     {
         if (watchingEntityIds.Contains(id))
         {
-            splineUpdatesById[id] = new(id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), targetPos.ToDto(), targetDir.ToDto(), velocity);
+            if (ShouldBroadcastLocalPosition(gameObject))
+            {
+                splineUpdatesById[id] = new(id, gameObject.transform.localPosition.ToDto(), gameObject.transform.localRotation.ToDto(), targetPos.ToDto(), targetDir.ToDto(), velocity);
+            }
+            else
+            {
+                splineUpdatesById[id] = new(id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), targetPos.ToDto(), targetDir.ToDto(), velocity);
+            }
         }
     }
 
@@ -110,5 +124,12 @@ public class EntityPositionBroadcaster : MonoBehaviour
             Destroy(remotelyControlled);
         }
         StopWatchingEntity(entityId);
+    }
+
+    private static bool ShouldBroadcastLocalPosition(GameObject gameObject)
+    {
+        // Fishes in WaterParks are located under WaterPark/items_root
+        Transform parent = gameObject.transform.parent;
+        return parent && parent.name.Equals("items_root");
     }
 }

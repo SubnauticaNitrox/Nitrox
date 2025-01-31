@@ -205,5 +205,10 @@ namespace NitroxClient.GameLogic
         {
             newerSimulationById.Clear();
         }
+
+        public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
+        {
+            return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
+        }
     }
 }
