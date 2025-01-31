@@ -146,7 +146,7 @@
                     </WrapPanel>
                     <TextBlock Text="STAFF" />
                     <TextBlock>
-                        Werewolfs, Shalix, CriticalCookie, SavageJay, and a big thanks to the discord support team (Arctic-Peepers, Peepers)
+                        Werewolfs, Shalix, SavageJay, and a big thanks to the discord support team (Arctic-Peepers, Peepers)
                     </TextBlock>
                     <TextBlock Text="DESIGN" />
                     <controls:RichTextBlock>
