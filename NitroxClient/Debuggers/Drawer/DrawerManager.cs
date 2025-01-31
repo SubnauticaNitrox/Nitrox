@@ -41,6 +41,8 @@ public class DrawerManager
         AddDrawer<NitroxEntityDrawer, NitroxEntity>(nitroxEntityDrawer);
         AddDrawer<NitroxEntityDrawer, NitroxId>(nitroxEntityDrawer);
         AddDrawer<FMODAssetDrawer, FMODAsset>();
+        AddDrawer<UWEEventDrawer, UWE.Event<float>>();
+        AddDrawer<UWEEventDrawer, UWE.Event<PowerRelay>>();
         AddDrawer<AspectRatioFitterDrawer, AspectRatioFitter>();
         AddDrawer<ButtonDrawer, Button>(new(selectableDrawer, unityEventDrawer));
         AddDrawer<CanvasDrawer, Canvas>(new(sceneDebugger));
