@@ -28,7 +28,7 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             yield break;
         }
 
-        SetupObject(entity, result.value.Value);
+        SetupObject(entity, result.value.Value, placeholder.transform.parent.gameObject);
     }
 
     public bool SpawnsOwnChildren() => false;
@@ -45,7 +45,7 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             return false;
         }
         
-        SetupObject(entity, result.value.Value);
+        SetupObject(entity, result.value.Value, placeholder.transform.parent.gameObject);
         return true;
     }
 
@@ -58,15 +58,27 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             return true;
         }
 
-        Log.Error($"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
+        Log.Error($"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent: {parent}\n for: {entity}");
         placeholder = null;
         return false;
     }
 
-    private void SetupObject(WorldEntity entity, GameObject gameObject)
+    private void SetupObject(WorldEntity entity, GameObject gameObject, GameObject parent)
     {
-        gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
-        gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
-        gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
+        if (parent)
+        {
+            gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
+            gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
+            gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
+            gameObject.transform.SetParent(parent.transform, false);
+        }
+
+        if (entity is PrefabPlaceholderEntity pEntity && pEntity.IsEntitySlotEntity && gameObject.TryGetComponent(out LargeWorldEntity lwe))
+        {
+            lwe.cellLevel = (LargeWorldEntity.CellLevel)pEntity.Level;
+            bool enabled = LargeWorld.main.streamer.cellManager.RegisterEntity(lwe);
+
+            gameObject.SetActive(enabled);
+        }
     }
 }
