@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
@@ -27,9 +28,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
     private readonly IDialogService dialogService;
-
-    [ObservableProperty]
-    private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max.png";
 
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
@@ -152,23 +150,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public async Task ClosingAsync(WindowClosingEventArgs args)
     {
-        ServerEntry[] onlineServers = serversViewModel?.Servers.Where(s => s.IsOnline).ToArray() ?? [];
-        if (onlineServers.Length > 0)
+        ServerEntry[] embeddedServers = serversViewModel?.Servers.Where(s => s.IsOnline && s.IsEmbedded).ToArray() ?? [];
+        if (embeddedServers.Length > 0)
         {
-            DialogBoxViewModel result = await ShowDialogAsync(dialogService, args, "Do you want to stop all online servers?");
-            if (result)
+            DialogBoxViewModel result = await ShowDialogAsync(dialogService, args, $"{embeddedServers.Length} embedded server(s) will stop, continue?");
+            if (!result)
             {
-                // Closing servers can take a while: hide the main window.
-                MainWindow.Hide();
-                try
-                {
-                    await Task.WhenAll(onlineServers.Select(s => s.StopAsync()));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                }
+                args.Cancel = true;
+                return;
             }
+
+            await HideWindowAndStopServersAsync(MainWindow, embeddedServers);
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
@@ -193,6 +185,20 @@ public partial class MainWindowViewModel : ViewModelBase
             finally
             {
                 args.Cancel = prevCancelFlag;
+            }
+        }
+
+        static async Task HideWindowAndStopServersAsync(Window mainWindow, IEnumerable<ServerEntry> servers)
+        {
+            // Closing servers can take a while: hide the main window.
+            mainWindow.Hide();
+            try
+            {
+                await Task.WhenAll(servers.Select(s => s.StopAsync()));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
             }
         }
     }
