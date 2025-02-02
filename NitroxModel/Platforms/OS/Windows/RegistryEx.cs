@@ -217,12 +217,12 @@ public static class RegistryEx
         }
         path = path.Trim();
 
-        // Parse path to get the registry key instance and the name of the .
+        // Parse path to get the registry key instance.
         Span<string> parts = path.Split(Path.DirectorySeparatorChar);
         Span<string> partsWithoutHive;
         RegistryHive hive = RegistryHive.CurrentUser;
         string regPathWithoutHiveOrKey;
-        if (path.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) < 0)
+        if (!parts[0].Equals("Computer", StringComparison.OrdinalIgnoreCase))
         {
             partsWithoutHive = parts[..^1];
             regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive.ToArray());

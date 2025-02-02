@@ -251,9 +251,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         // Start game & gaming platform if needed.
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId, subnauticaLaunchArguments),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe),
+            Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game platform is unsupported by Nitrox.")
         };
 
