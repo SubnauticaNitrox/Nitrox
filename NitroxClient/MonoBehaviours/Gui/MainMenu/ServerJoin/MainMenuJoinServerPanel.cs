@@ -66,6 +66,8 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         playerNameInputField.textComponent.GetComponent<RectTransform>().sizeDelta = new Vector2(-20, 42);
         playerNameInputField.characterLimit = 25; // See this.OnJoinClick()
         playerNameInputField.onFocusSelectAll = false;
+        playerNameInputField.onSubmit.AddListener(_ => OnJoinClick());
+        playerNameInputField.onSubmit.AddListener(_ => DeselectAllItems());
         playerNameInputField.ActivateInputField();
 
         //Prepares player color picker
