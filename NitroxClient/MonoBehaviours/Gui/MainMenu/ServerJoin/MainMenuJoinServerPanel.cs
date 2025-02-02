@@ -134,7 +134,14 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         colorPicker.SetHSB(hsb);
     }
 
-    public void OnOpened() => SelectFirstItem();
+    public void OnOpened() => StartCoroutine(OpenedRoutine());
+
+    public IEnumerator OpenedRoutine()
+    {
+        SelectFirstItem();
+        yield return new WaitForEndOfFrame();
+        playerNameInputField.MoveToEndOfLine(false, true);
+    }
 
     public bool OnButtonDown(GameInput.Button button)
     {
