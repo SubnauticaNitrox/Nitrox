@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_WarpForward_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.OnConsoleCommand_warpforward(default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.OnConsoleCommand_warpforward(default));
 
     public static bool Prefix(Player __instance, NotificationCenter.Notification n)
     {
@@ -26,5 +26,4 @@ public sealed partial class Player_WarpForward_Patch : NitroxPatch, IDynamicPatc
 
         return false;
     }
-
 }
