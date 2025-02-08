@@ -19,6 +19,7 @@ public class EggMetadata : EntityMetadata
     {
         //Constructor for serialization. Has to be "protected" for json serialization.
     }
+
     public EggMetadata(float timeStartHatching, float progress)
     {
         TimeStartHatching = timeStartHatching;
@@ -27,6 +28,6 @@ public class EggMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[EggMetadata TimeStartHatching: {TimeStartHatching}, Progress: {Progress}]";
+        return $"[{nameof(EggMetadata)} TimeStartHatching: {TimeStartHatching}, Progress: {Progress}]";
     }
 }

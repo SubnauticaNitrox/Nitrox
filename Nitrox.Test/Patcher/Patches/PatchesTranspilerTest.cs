@@ -85,6 +85,8 @@ public class PatchesTranspilerTest
         [typeof(SeaTreader_UpdateTurning_Patch), 0],
         [typeof(SeaTreader_Update_Patch), 0],
         [typeof(StasisSphere_LateUpdate_Patch), 0],
+        [typeof(WaterParkCreature_BornAsync_Patch), 6],
+        [typeof(WaterParkCreature_ManagedUpdate_Patch), 2],
     ];
 
     [TestMethod]
