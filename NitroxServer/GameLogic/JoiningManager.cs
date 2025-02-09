@@ -60,7 +60,7 @@ public sealed class JoiningManager
                 for (int i = 0; i < array.Length; i++)
                 {
                     (INitroxConnection c, _) = array[i];
-                    c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout, false));
+                    c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout));
                 }
 
                 Log.Info($"Starting sync for player {name}");
@@ -135,7 +135,7 @@ public sealed class JoiningManager
     {
         if (!queueIdle)
         {
-            connection.SendPacket(new JoinQueueInfo(joinQueue.Count + 1, serverConfig.InitialSyncTimeout, true));
+            connection.SendPacket(new JoinQueueInfo(joinQueue.Count + 1, serverConfig.InitialSyncTimeout));
         }
 
         Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");

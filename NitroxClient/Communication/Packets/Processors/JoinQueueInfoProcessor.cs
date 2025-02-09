@@ -8,17 +8,8 @@ public class JoinQueueInfoProcessor : ClientPacketProcessor<JoinQueueInfo>
 {
     public override void Process(JoinQueueInfo packet)
     {
-        Log.InGame($"You are at position #{packet.Position} in the queue.");
-
-        if (packet.ShowMaximumWait)
-        {
-            Log.InGame($"The maximum wait time per person is {MillisToMinutes(packet.Timeout)} minutes.");
-        }
-    }
-
-    private static string MillisToMinutes(int milliseconds)
-    {
-        double minutes = milliseconds / 60000.0;
-        return Math.Round(minutes, 1).ToString();
+        Log.InGame(Language.main.Get("Nitrox_QueueInfo")
+            .Replace("{POSITION}", packet.Position.ToString())
+            .Replace("{TIME}", TimeSpan.FromMilliseconds(packet.Timeout * packet.Position).ToString(@"mm\:ss")));
     }
 }

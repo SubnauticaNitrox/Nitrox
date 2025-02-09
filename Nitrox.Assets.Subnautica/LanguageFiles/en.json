@@ -64,6 +64,7 @@
     "Nitrox_PlayerKicked": "You've been kicked from the server",
     "Nitrox_PlayerLeft": "{PLAYER} left the game.",
     "Nitrox_PlayerListTabName": "Player List",
+    "Nitrox_QueueInfo": "You are at position #{POSITION} in the join queue. Maximum possible wait: {TIME}",
     "Nitrox_RejectedSessionPolicy": "Reservation rejected…",
     "Nitrox_RemotePlayerObstacle": "Another player's either inside or too close to the deconstructable target.",
     "Nitrox_RequestingSessionPolicy": "Requesting session policy info…",

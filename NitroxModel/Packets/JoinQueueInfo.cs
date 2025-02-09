@@ -7,12 +7,10 @@ public class JoinQueueInfo : Packet
 {
     public int Position { get; }
     public int Timeout { get; }
-    public bool ShowMaximumWait { get; }
 
-    public JoinQueueInfo(int position, int timeout, bool showMaximumWait)
+    public JoinQueueInfo(int position, int timeout)
     {
         Position = position;
         Timeout = timeout;
-        ShowMaximumWait = showMaximumWait;
     }
 }
