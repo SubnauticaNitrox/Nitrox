@@ -208,7 +208,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerEmbedded != Server.IsEmbedded;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    private async Task BackAsync() => await HostScreen.BackAsync();
+    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
 
     private bool CanGoBackAndStartServer() => !HasChanges();
 

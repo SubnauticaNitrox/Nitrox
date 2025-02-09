@@ -52,7 +52,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     }
     
     [RelayCommand]
-    private async Task BackAsync() => await HostScreen.BackAsync<ServersViewModel>();
+    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
