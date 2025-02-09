@@ -22,21 +22,24 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
         foreach (EntityTransformUpdate update in packet.Updates)
         {
             // We will cancel any position update attempt at one of our locked entities
-            if (!NitroxEntity.TryGetObjectFrom(update.Id, out GameObject gameObject) ||
+            if (!NitroxEntity.TryGetComponentFrom(update.Id, out Transform transform) ||
                 simulationOwnership.HasAnyLockType(update.Id))
             {
                 continue;
             }
 
-            RemotelyControlled remotelyControlled = gameObject.EnsureComponent<RemotelyControlled>();
+            RemotelyControlled remotelyControlled = transform.gameObject.EnsureComponent<RemotelyControlled>();
+
+            Vector3 position = update.Position.ToUnity();
+            Quaternion rotation = update.Rotation.ToUnity();
 
             if (update is SplineTransformUpdate splineUpdate)
             {
-                remotelyControlled.UpdateKnownSplineUser(splineUpdate.Position.ToUnity(), splineUpdate.Rotation.ToUnity(), splineUpdate.DestinationPosition.ToUnity(), splineUpdate.DestinationDirection.ToUnity(), splineUpdate.Velocity);
+                remotelyControlled.UpdateKnownSplineUser(position, rotation, splineUpdate.DestinationPosition.ToUnity(), splineUpdate.DestinationDirection.ToUnity(), splineUpdate.Velocity);
             }
             else
             {
-                remotelyControlled.UpdateOrientation(update.Position.ToUnity(), update.Rotation.ToUnity());
+                remotelyControlled.UpdateOrientation(position, rotation);
             }
         }
     }

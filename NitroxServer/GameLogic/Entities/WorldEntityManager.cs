@@ -99,7 +99,7 @@ public class WorldEntityManager
         return [];
     }
 
-    public bool UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell newCell, out WorldEntity worldEntity)
+    public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell newCell, out WorldEntity worldEntity)
     {
         lock (worldEntitiesLock)
         {
