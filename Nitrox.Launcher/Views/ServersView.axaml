@@ -9,14 +9,6 @@
     <Design.DataContext>
         <vm:ServersViewModel />
     </Design.DataContext>
-    <UserControl.Styles>
-        <Style Selector="Button.manage">
-            <Setter Property="Content" Value="Manage" />
-            <Style Selector="^.online.embedded">
-                <Setter Property="Content" Value="Console" />
-            </Style>
-        </Style>
-    </UserControl.Styles>
     <Panel Background="{DynamicResource BrandWhite}" Classes="viewPadding">
         <Panel IsVisible="{Binding !Servers.Count}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -127,11 +119,22 @@
                                         Spacing="8">
                                         <Button Command="{Binding OpenSaveFolderCommand}" Content="Open world folder" />
                                         <Button
-                                            Classes="manage"
-                                            Classes.embedded="{Binding IsEmbedded}"
-                                            Classes.online="{Binding IsOnline}"
+                                            Content="Manage"
                                             Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
-                                            CommandParameter="{Binding}" />
+                                            CommandParameter="{Binding}"
+                                            IsVisible="{Binding !IsOnline}" />
+                                        <Button
+                                            Classes="primary"
+                                            Content="Console"
+                                            Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
+                                            CommandParameter="{Binding}">
+                                            <Button.IsVisible>
+                                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                    <Binding Path="IsOnline" />
+                                                    <Binding Path="IsEmbedded" />
+                                                </MultiBinding>
+                                            </Button.IsVisible>
+                                        </Button>
                                         <Button
                                             Classes="abort"
                                             Command="{Binding StopCommand}"
