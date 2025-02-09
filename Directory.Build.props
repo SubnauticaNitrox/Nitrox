@@ -15,6 +15,7 @@
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     </PropertyGroup>
 
     <!-- Nitrox specific properties -->
