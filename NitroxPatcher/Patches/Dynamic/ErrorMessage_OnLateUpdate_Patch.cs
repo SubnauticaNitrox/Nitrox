@@ -46,7 +46,6 @@ public sealed partial class ErrorMessage_OnLateUpdate_Patch : NitroxPatch, IDyna
     {
         MethodInfo transpilerInfo = Reflect.Method(() => Transpiler(default));
 
-        // TODO: modify sanity checks to support transpilers with multiple target methods
         PatchTranspiler(harmony, TARGET_METHOD_ON_LATE_UPDATE, transpilerInfo);
         PatchTranspiler(harmony, TARGET_METHOD_ADD_MESSAGE, transpilerInfo);
     }
