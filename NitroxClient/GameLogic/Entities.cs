@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
         private readonly List<SimulatedEntity> pendingSimulatedEntities = new();
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
@@ -218,7 +218,7 @@ namespace NitroxClient.GameLogic
                 MarkAsSpawned(entity);
 
                 // Finding out about all children (can be hidden in the object's hierarchy or in a pending list)
-                
+
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
                     batch.AddRange(entity.ChildEntities);
@@ -231,7 +231,7 @@ namespace NitroxClient.GameLogic
                         pendingParentEntitiesByParentId.Remove(entity.Id);
                     }
                 }
-                
+
                 // Skip a frame to maintain FPS
                 if (Time.realtimeSinceStartup >= timeLimit && skipFrames)
                 {
