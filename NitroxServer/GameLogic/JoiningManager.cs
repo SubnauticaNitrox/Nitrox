@@ -24,7 +24,7 @@ public sealed class JoiningManager
     private readonly World world;
 
     private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
-    private bool queueIdle;
+    private bool queueActive;
     public Action SyncFinishedCallback { get; private set; }
 
     public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world)
@@ -32,26 +32,18 @@ public sealed class JoiningManager
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
         this.world = world;
-
-        Task.Run(JoinQueueLoop).ContinueWithHandleError();
     }
 
     private async Task JoinQueueLoop()
     {
+        queueActive = true;
+
         const int REFRESH_DELAY = 10;
 
-        while (true)
+        while (joinQueue.Count > 0)
         {
             try
             {
-                while (joinQueue.Count == 0)
-                {
-                    queueIdle = true;
-                    await Task.Delay(REFRESH_DELAY);
-                }
-
-                queueIdle = false;
-
                 (INitroxConnection connection, string reservationKey) = joinQueue.Dequeue();
                 string name = playerManager.GetPlayerContext(reservationKey).PlayerName;
 
@@ -129,17 +121,31 @@ public sealed class JoiningManager
                 Log.Error($"Unexpected error during player connection: {e}");
             }
         }
+
+        queueActive = false;
+
+        // Prevents race condition where someone is enqueued after the loop terminates
+        // but before queueActive is set to false
+        if (joinQueue.Count > 0)
+        {
+            await JoinQueueLoop();
+        }
     }
 
     public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
     {
-        if (!queueIdle)
+        if (queueActive)
         {
             connection.SendPacket(new JoinQueueInfo(joinQueue.Count + 1, serverConfig.InitialSyncTimeout));
         }
 
         Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
         joinQueue.Enqueue((connection, reservationKey));
+
+        if (!queueActive)
+        {
+            Task.Run(JoinQueueLoop).ContinueWithHandleError();
+        }
     }
 
     public IEnumerable<INitroxConnection> GetQueuedPlayers()
