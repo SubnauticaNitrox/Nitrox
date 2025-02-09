@@ -126,24 +126,6 @@ namespace NitroxClient.MonoBehaviours
             OnLoadingComplete?.Invoke();
         }
 
-        public void TimeOut()
-        {
-            multiplayerSession.Disconnect();
-            StartCoroutine(TimeOutRoutine());
-
-            IEnumerator TimeOutRoutine()
-            {
-                // TODO: replace with modal
-                for (int timer = 5; timer > 0; timer--)
-                {
-                    Log.InGame($"Initial sync timed out. Quitting game in {timer} second{(timer > 1 ? "s" : "")}…");
-                    yield return new WaitForSecondsRealtime(1);
-                }
-
-                IngameMenu.main.QuitGame(false);
-            }
-        }
-
         public void ProcessPackets()
         {
             static PacketProcessor ResolveProcessor(Packet packet, Dictionary<Type, PacketProcessor> processorCache)

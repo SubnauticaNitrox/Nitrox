@@ -113,7 +113,7 @@ public sealed class JoiningManager
 
                         if (connection.State == NitroxConnectionState.Connected)
                         {
-                            connection.SendPacket(new PlayerSyncTimeout());
+                            connection.SendPacket(new PlayerKicked("Initial sync took too long and timed out"));
                         }
                         playerManager.PlayerDisconnected(connection);
                     }
