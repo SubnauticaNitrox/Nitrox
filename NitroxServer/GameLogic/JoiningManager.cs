@@ -134,15 +134,14 @@ public sealed class JoiningManager
 
     public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
     {
+        Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
+        joinQueue.Enqueue((connection, reservationKey));
+
         if (queueActive)
         {
             connection.SendPacket(new JoinQueueInfo(joinQueue.Count + 1, serverConfig.InitialSyncTimeout));
         }
-
-        Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
-        joinQueue.Enqueue((connection, reservationKey));
-
-        if (!queueActive)
+        else
         {
             Task.Run(JoinQueueLoop).ContinueWithHandleError();
         }
