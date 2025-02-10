@@ -35,7 +35,7 @@
                     Grid.Column="0"
                     Margin="0,0,20,0"
                     FontSize="14"
-                    Text="Start your Subnautica adventure in multiplayer mode together with your friends, powered by the Nitrox mod: An open-source, modification for the game Subnautica. The project is maintained by the community with regular support and updates from its contributors." />
+                    Text="Start your Subnautica adventure in multiplayer mode together with your friends, powered by the Nitrox mod: An open-source modification for the game Subnautica. The project is maintained by the community with regular support and updates from its contributors." />
                 <!--  Play buttons - Negative offset to add some overlap with the background image  -->
                 <StackPanel Grid.Column="1" Margin="0,-110,0,0">
                     <Border ClipToBounds="True" CornerRadius="10">
