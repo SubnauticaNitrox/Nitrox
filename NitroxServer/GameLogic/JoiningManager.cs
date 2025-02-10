@@ -41,8 +41,6 @@ public sealed class JoiningManager
         // but the ContinueWithHandleError callback might cause issues
         queueActive = true;
 
-        const int REFRESH_DELAY = 10;
-
         while (true)
         {
             lock (queueLocker)
@@ -72,61 +70,44 @@ public sealed class JoiningManager
 
                 CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
                 bool syncFinished = false;
-                bool disconnected = false;
 
                 SyncFinishedCallback = () => { syncFinished = true; };
 
                 await Task.Run(() =>
                 {
-                    while (!source.IsCancellationRequested)
+                    while (true)
                     {
-                        if (syncFinished)
+                        if (syncFinished ||
+                            connection.State == NitroxConnectionState.Disconnected ||
+                            source.IsCancellationRequested)
                         {
-                            return true;
+                            return;
                         }
 
-                        if (connection.State == NitroxConnectionState.Disconnected)
-                        {
-                            disconnected = true;
-                            return false;
-                        }
-
-                        Task.Delay(REFRESH_DELAY).Wait();
-                    }
-
-                    return false;
-                })
-                // We use ContinueWith to avoid having to try/catch a TaskCanceledException
-                .ContinueWith((Task<bool> task) =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        throw task.Exception;
-                    }
-
-                    if (disconnected)
-                    {
-                        Log.Info($"Player {name} disconnected while syncing");
-                        return;
-                    }
-
-                    if (task.IsCanceled || !task.Result)
-                    {
-                        Log.Info($"Initial sync timed out for player {name}");
-                        SyncFinishedCallback = null;
-
-                        if (connection.State == NitroxConnectionState.Connected)
-                        {
-                            connection.SendPacket(new PlayerKicked("Initial sync took too long and timed out"));
-                        }
-                        playerManager.PlayerDisconnected(connection);
-                    }
-                    else
-                    {
-                        Log.Info($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
-                        BroadcastPlayerJoined(playerManager.GetPlayer(connection));
+                        Task.Delay(10).Wait();
                     }
                 });
+
+                if (connection.State == NitroxConnectionState.Disconnected)
+                {
+                    Log.Info($"Player {name} disconnected while syncing");
+                }
+                else if (source.IsCancellationRequested)
+                {
+                    Log.Info($"Initial sync timed out for player {name}");
+                    SyncFinishedCallback = null;
+
+                    if (connection.State == NitroxConnectionState.Connected)
+                    {
+                        connection.SendPacket(new PlayerKicked("Initial sync took too long and timed out"));
+                    }
+                    playerManager.PlayerDisconnected(connection);
+                }
+                else
+                {
+                    Log.Info($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
+                    BroadcastPlayerJoined(playerManager.GetPlayer(connection));
+                }
             }
             catch (Exception e)
             {
