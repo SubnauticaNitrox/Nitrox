@@ -12,15 +12,13 @@ namespace NitroxServer.Communication.Packets
     public class PacketHandler
     {
         private readonly PlayerManager playerManager;
-        private readonly JoiningManager joiningManager;
         private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;
         private readonly Dictionary<Type, PacketProcessor> packetProcessorAuthCache = new();
         private readonly Dictionary<Type, PacketProcessor> packetProcessorUnauthCache = new();
 
-        public PacketHandler(PlayerManager playerManager, JoiningManager joiningManager, DefaultServerPacketProcessor packetProcessor)
+        public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
         {
             this.playerManager = playerManager;
-            this.joiningManager = joiningManager;
             defaultServerPacketProcessor = packetProcessor;
         }
 
