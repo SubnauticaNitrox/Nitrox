@@ -133,7 +133,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId, string launchArguments)
+    public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId)
     {
         try
         {
@@ -161,7 +161,7 @@ public sealed class Steam : IGamePlatform
             return new ProcessEx(Process.Start(new ProcessStartInfo
             {
                 FileName = GetExeFile(),
-                Arguments = $"""-applaunch {steamAppId} -nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
+                Arguments = $"""-applaunch {steamAppId} --nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
             }));
 #endif
         }

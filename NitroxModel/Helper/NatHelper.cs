@@ -25,17 +25,31 @@ public static class NatHelper
 
     public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
     {
-        return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
+        int tries = 3;
+        while (tries-- >= 0)
         {
-            try
+            if (await TryRemoveAsync(port, protocol, ct))
             {
-                return await device.DeletePortMapAsync(mapping).ConfigureAwait(false) != null;
+                return true;
             }
-            catch (MappingException)
+            await Task.Delay(250, ct);
+        }
+        return false;
+
+        static async Task<bool> TryRemoveAsync(ushort port, Protocol protocol, CancellationToken ct)
+        {
+            return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
             {
-                return false;
-            }
-        }, new Mapping(protocol, port, port), ct).ConfigureAwait(false);
+                try
+                {
+                    return await device.DeletePortMapAsync(mapping).ConfigureAwait(false) != null;
+                }
+                catch (MappingException)
+                {
+                    return false;
+                }
+            }, new Mapping(protocol, port, port), ct).ConfigureAwait(false);
+        }
     }
 
     public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)

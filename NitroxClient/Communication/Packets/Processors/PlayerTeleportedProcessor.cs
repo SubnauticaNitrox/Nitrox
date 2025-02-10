@@ -14,6 +14,14 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
     {
         Player.main.OnPlayerPositionCheat();
 
+        Vehicle currentVehicle = Player.main.currentMountedVehicle;
+        if (currentVehicle)
+        {
+            currentVehicle.TeleportVehicle(packet.DestinationTo.ToUnity(), currentVehicle.transform.rotation);
+            Player.main.WaitForTeleportation();
+            return;
+        }
+
         Player.main.SetPosition(packet.DestinationTo.ToUnity());
         
         if (packet.SubRootID.HasValue && NitroxEntity.TryGetComponentFrom(packet.SubRootID.Value, out SubRoot subRoot))
@@ -22,8 +30,9 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
             return;
         }
         
-        // Freeze the player while he's loading its new position
+        // Freeze the player while it's loading its new position
         Player.main.cinematicModeActive = true;
+        Player.main.WaitForTeleportation();
 
         CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad().OnYieldError(e =>
         {

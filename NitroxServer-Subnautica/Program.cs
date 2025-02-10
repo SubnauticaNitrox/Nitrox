@@ -455,7 +455,7 @@ public class Program
                     first = false;
                     PrintPortWarn(timeout);
                 }
-                else if (Environment.UserInteractive)
+                else if (Environment.UserInteractive && !Console.IsInputRedirected && Console.In != StreamReader.Null)
                 {
                     // If not first time, move cursor up the number of lines it takes up to overwrite previous message
                     int numberOfLines = (int)Math.Ceiling( ((double)messageLength + 15) / Console.BufferWidth );
