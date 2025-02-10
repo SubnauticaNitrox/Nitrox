@@ -24,6 +24,7 @@ public sealed class JoiningManager
     private readonly World world;
 
     private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
+    private readonly Lock queueLocker = new();
     private bool queueActive;
     public Action SyncFinishedCallback { get; private set; }
 
@@ -36,12 +37,23 @@ public sealed class JoiningManager
 
     private async Task JoinQueueLoop()
     {
+        // It may be possible to use the task's status itself for this,
+        // but the ContinueWithHandleError callback might cause issues
         queueActive = true;
 
         const int REFRESH_DELAY = 10;
 
-        while (joinQueue.Count > 0)
+        while (true)
         {
+            lock (queueLocker)
+            {
+                if (joinQueue.Count == 0)
+                {
+                    queueActive = false;
+                    return;
+                }
+            }
+
             try
             {
                 (INitroxConnection connection, string reservationKey) = joinQueue.Dequeue();
@@ -121,29 +133,24 @@ public sealed class JoiningManager
                 Log.Error($"Unexpected error during player connection: {e}");
             }
         }
-
-        queueActive = false;
-
-        // Prevents race condition where someone is enqueued after the loop terminates
-        // but before queueActive is set to false
-        if (joinQueue.Count > 0)
-        {
-            await JoinQueueLoop();
-        }
     }
 
     public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
     {
-        Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
-        joinQueue.Enqueue((connection, reservationKey));
+        // Necessary to avoid race conditions between this method and the queue count check
+        lock (queueLocker)
+        {
+            Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
+            joinQueue.Enqueue((connection, reservationKey));
 
-        if (queueActive)
-        {
-            connection.SendPacket(new JoinQueueInfo(joinQueue.Count + 1, serverConfig.InitialSyncTimeout));
-        }
-        else
-        {
-            Task.Run(JoinQueueLoop).ContinueWithHandleError();
+            if (queueActive)
+            {
+                connection.SendPacket(new JoinQueueInfo(joinQueue.Count, serverConfig.InitialSyncTimeout));
+            }
+            else
+            {
+                Task.Run(JoinQueueLoop).ContinueWithHandleError();
+            }
         }
     }
 
