@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -28,13 +27,13 @@ namespace NitroxServer.Communication.Packets
         public void Process(Packet packet, INitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
-            if (player != null)
-            {
-                ProcessAuthenticated(packet, player);
-            }
-            else if (!joiningManager.GetQueuedPlayers().Contains(connection))
+            if (player == null)
             {
                 ProcessUnauthenticated(packet, connection);
+            }
+            else
+            {
+                ProcessAuthenticated(packet, player);
             }
         }
 
