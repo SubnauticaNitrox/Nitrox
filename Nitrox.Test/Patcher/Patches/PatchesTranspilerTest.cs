@@ -43,7 +43,7 @@ public class PatchesTranspilerTest
         [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(EntityCell_SleepAsync_Patch), 2],
         [typeof(Equipment_RemoveItem_Patch), 7],
-        [typeof(ErrorMessage_OnLateUpdate_Patch), new[] {0, 0}],
+        [typeof(ErrorMessage_OnLateUpdate_Patch), 0],
         [typeof(EscapePod_Start_Patch), 43],
         [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],
         [typeof(FireExtinguisherHolder_TryStoreTank_Patch), 3],
@@ -104,7 +104,7 @@ public class PatchesTranspilerTest
 
     [TestMethod]
     [DynamicData(nameof(TranspilerPatchClasses))]
-    public void AllPatchesTranspilerSanity(Type patchClassType, object ilDifference, bool logInstructions = false)
+    public void AllPatchesTranspilerSanity(Type patchClassType, int ilDifference, bool logInstructions = false)
     {
         MethodInfo transpilerMethod = patchClassType.GetMethod("Transpiler");
         if (transpilerMethod == null)
@@ -112,31 +112,20 @@ public class PatchesTranspilerTest
             Assert.Fail($"Could not find a \"Transpiler\" method inside {patchClassType.Name}");
         }
 
-        FieldInfo targetMethodInfo = patchClassType.GetRuntimeFields().FirstOrDefault(x => string.Equals(x.Name.Replace("_", ""), "targetMethod", StringComparison.OrdinalIgnoreCase));
-        if (targetMethodInfo != null)
+        FieldInfo[] targetMethodInfos = patchClassType.GetRuntimeFields()
+                                                      .Where(x => x.Name.Replace("_", "").StartsWith("targetMethod", StringComparison.OrdinalIgnoreCase))
+                                                      .OrderBy(fieldInfo => fieldInfo.Name)
+                                                      .ToArray();
+
+        if (targetMethodInfos.Length == 0)
         {
-            MethodInfo targetMethod = targetMethodInfo.GetValue(null) as MethodInfo;
-            TestTranspilerMethod(patchClassType, targetMethod, transpilerMethod, (int)ilDifference, logInstructions);
+            Assert.Fail($"Could not find a \"TARGET_METHOD\" or \"targetMethod\" field inside {patchClassType.Name}");
         }
-        else
+
+        foreach (FieldInfo field in targetMethodInfos)
         {
-            FieldInfo[] targetMethodInfos = patchClassType.GetRuntimeFields()
-                                                          .Where(x => x.Name.Replace("_", "").StartsWith("targetMethod", StringComparison.OrdinalIgnoreCase))
-                                                          .OrderBy(fieldInfo => fieldInfo.Name)
-                                                          .ToArray();
-            if (targetMethodInfos.Length == 0)
-            {
-                Assert.Fail($"Could not find a \"TARGET_METHOD\" or \"targetMethod\" field inside {patchClassType.Name}");
-            }
-
-            // Should be put in alphabetical order of the corresponding "TARGET_METHOD" field name
-            int[] ilDifferences = (int[])ilDifference;
-
-            for (int i = 0; i < targetMethodInfos.Length; i++)
-            {
-                MethodInfo targetMethod = targetMethodInfos[i].GetValue(null) as MethodInfo;
-                TestTranspilerMethod(patchClassType, targetMethod, transpilerMethod, ilDifferences[i], logInstructions);
-            }
+            MethodInfo targetMethod = field.GetValue(null) as MethodInfo;
+            TestTranspilerMethod(patchClassType, targetMethod, transpilerMethod, ilDifference, logInstructions);
         }
     }
 
