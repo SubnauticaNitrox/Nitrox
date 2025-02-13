@@ -24,7 +24,7 @@ public sealed class JoiningManager
     private readonly World world;
 
     private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
-    private readonly Lock queueLocker = new();
+    private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
     public Action SyncFinishedCallback { get; private set; }
 
@@ -43,7 +43,6 @@ public sealed class JoiningManager
 
         while (true)
         {
-            // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
             lock (queueLocker)
             {
                 if (joinQueue.Count == 0)
