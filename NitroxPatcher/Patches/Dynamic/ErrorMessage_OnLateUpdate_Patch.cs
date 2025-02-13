@@ -25,21 +25,13 @@ public sealed partial class ErrorMessage_OnLateUpdate_Patch : NitroxPatch, IDyna
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        CodeMatcher matcher = new CodeMatcher(instructions);
-
-        while (matcher.MatchStartForward(new CodeMatch(OpCodes.Call, TARGET_OPERAND_TIME)).IsValid)
-        {
-            matcher.SetOperandAndAdvance(INJECTION_OPERAND_UNSCALED_TIME);
-        }
-
-        matcher.Start();
-
-        while (matcher.MatchStartForward(new CodeMatch(OpCodes.Call, TARGET_OPERAND_DELTA_TIME)).IsValid)
-        {
-            matcher.SetOperandAndAdvance(INJECTION_OPERAND_UNSCALED_DELTA_TIME);
-        }
-
-        return matcher.InstructionEnumeration();
+        return new CodeMatcher(instructions)
+               .MatchStartForward(new CodeMatch(OpCodes.Call, TARGET_OPERAND_TIME))
+               .Repeat(matcher => matcher.SetOperandAndAdvance(INJECTION_OPERAND_UNSCALED_TIME))
+               .Start()
+               .MatchStartForward(new CodeMatch(OpCodes.Call, TARGET_OPERAND_DELTA_TIME))
+               .Repeat(matcher => matcher.SetOperandAndAdvance(INJECTION_OPERAND_UNSCALED_DELTA_TIME))
+               .InstructionEnumeration();
     }
 
     public override void Patch(Harmony harmony)
