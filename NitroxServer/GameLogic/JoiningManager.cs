@@ -43,6 +43,7 @@ public sealed class JoiningManager
 
         while (true)
         {
+            // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
             lock (queueLocker)
             {
                 if (joinQueue.Count == 0)
@@ -75,15 +76,10 @@ public sealed class JoiningManager
 
                 await Task.Run(() =>
                 {
-                    while (true)
+                    while (!syncFinished &&
+                           connection.State != NitroxConnectionState.Disconnected &&
+                           !source.IsCancellationRequested)
                     {
-                        if (syncFinished ||
-                            connection.State == NitroxConnectionState.Disconnected ||
-                            source.IsCancellationRequested)
-                        {
-                            return;
-                        }
-
                         Task.Delay(10).Wait();
                     }
                 });
@@ -111,14 +107,14 @@ public sealed class JoiningManager
             }
             catch (Exception e)
             {
-                Log.Error($"Unexpected error during player connection: {e}");
+                Log.Error($"Unexpected error during player connection inside the join queue: {e}");
             }
         }
     }
 
     public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
     {
-        // Necessary to avoid race conditions between this method and the queue count check
+        // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
         lock (queueLocker)
         {
             Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
@@ -145,11 +141,10 @@ public sealed class JoiningManager
     {
         IEnumerable<PlayerContext> GetOtherPlayers(Player player)
         {
-            return playerManager.GetConnectedPlayers().Where(p => p != player)
-                                        .Select(p => p.PlayerContext);
+            return playerManager.GetConnectedPlayers().Where(p => p != player).Select(p => p.PlayerContext);
         }
 
-        PlayerWorldEntity SetupPlayerEntity(Player player)
+        PlayerWorldEntity SetupNewPlayerEntity(Player player)
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
@@ -166,7 +161,7 @@ public sealed class JoiningManager
                 return playerWorldEntity;
             }
             Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
-            return SetupPlayerEntity(player);
+            return SetupNewPlayerEntity(player);
         }
 
         Player player = playerManager.PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
@@ -187,7 +182,7 @@ public sealed class JoiningManager
 
         List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
-        player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
+        player.Entity = wasBrandNewPlayer ? SetupNewPlayerEntity(player) : RespawnExistingEntity(player);
 
         List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
         bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
