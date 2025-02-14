@@ -3,13 +3,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxModel.Helper;
-using NitroxPatcher.Patches;
 using UnityEngine;
+
+namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// Ensures the in-game log is animated smoothly regardless of the time scale.
 /// </summary>
-public sealed partial class ErrorMessage_OnLateUpdate_Patch : NitroxPatch, IDynamicPatch
+public sealed class ErrorMessage_OnLateUpdate_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD_ON_LATE_UPDATE = Reflect.Method((ErrorMessage t) => t.OnLateUpdate());
     private static readonly MethodInfo TARGET_METHOD_ADD_MESSAGE = Reflect.Method((ErrorMessage t) => t._AddMessage(default));
