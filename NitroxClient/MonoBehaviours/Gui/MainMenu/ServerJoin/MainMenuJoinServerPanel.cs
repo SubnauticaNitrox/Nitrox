@@ -138,7 +138,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
     public void OnOpened() => StartCoroutine(OpenedRoutine());
 
-    public IEnumerator OpenedRoutine()
+    private IEnumerator OpenedRoutine()
     {
         SelectFirstItem();
         yield return new WaitForEndOfFrame();
