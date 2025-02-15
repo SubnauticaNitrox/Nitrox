@@ -34,8 +34,7 @@ namespace NitroxPatcher.Patches.Dynamic
         private static void PDAUpdate()
         {
             PDA.UpdateTime(false);
-            FieldInfo initializedField = Player.main.playerAnimator.GetType().GetField("updateMode", BindingFlags.NonPublic | BindingFlags.Instance);
-            initializedField.SetValue(Player.main.playerAnimator, AnimatorUpdateMode.Normal);
+            Player.main.playerAnimator.updateMode = AnimatorUpdateMode.Normal;
         }
 
 
