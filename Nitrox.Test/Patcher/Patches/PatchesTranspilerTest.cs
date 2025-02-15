@@ -60,7 +60,7 @@ public class PatchesTranspilerTest
         [typeof(LeakingRadiation_Update_Patch), 0],
         [typeof(MainGameController_StartGame_Patch), 1],
         [typeof(MeleeAttack_CanDealDamageTo_Patch), 4],
-        [typeof(PDA_ManagedUpdate_Patch), -45],
+        [typeof(PDA_ManagedUpdate_Patch), -44],
         [typeof(PDAScanner_Scan_Patch), 3],
         [typeof(Player_OnKill_Patch), 0],
         [typeof(Respawn_Start_Patch), 3],
