@@ -35,6 +35,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
         AddStep(sync => SetPlayerKeepInventoryOnDeath(sync.KeepInventoryOnDeath));
+        AddStep(sync => SetPlayerMarkDeathPointsWithBeacon(sync.MarkDeathPointsWithBeacon));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -140,5 +141,10 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
     private void SetPlayerKeepInventoryOnDeath(bool keepInventoryOnDeath)
     {
         localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
+    }
+
+    private void SetPlayerMarkDeathPointsWithBeacon(bool markDeathPointsWithBeacon)
+    {
+        localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
     }
 }
