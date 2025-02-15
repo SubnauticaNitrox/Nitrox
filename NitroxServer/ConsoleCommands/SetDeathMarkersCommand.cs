@@ -1,30 +1,31 @@
 using System.IO;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands;
 
 internal class SetDeathMarkersCommand : Command
 {
     private readonly PlayerManager playerManager;
-    private readonly ServerConfig serverConfig;
+    private readonly SubnauticaServerConfig serverConfig;
+    private readonly Server server;
 
-    public SetDeathMarkersCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("setdeathmarkers", Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
+    public SetDeathMarkersCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("setdeathmarkers", Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
+        this.server = server;
         AddParameter(new TypeBoolean("state", true, "the on/off state of if a death marker is spawned on death"));
     }
 
     protected override void Execute(CallArgs args)
     {
         bool newDeathMarkersState = args.Get<bool>(0);
-        using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
+        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
         {
             if (serverConfig.MarkDeathPointsWithBeacon != newDeathMarkersState)
             {
