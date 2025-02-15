@@ -23,13 +23,16 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PDA t) => t.ManagedUpdate());
 
+        public static bool Prefix(PDA __instance)
+        {
+            FieldInfo initializedField = Player.main.playerAnimator.GetType().GetField("updateMode", BindingFlags.NonPublic | BindingFlags.Instance);
+            initializedField.SetValue(__instance, AnimatorUpdateMode.Normal);
+            return true;
+        }
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            return new CodeMatcher(instructions).RemoveInstructions(45).Insert(
-                new CodeInstruction(OpCodes.Call, Reflect.Method(() => PDA.UpdateTime(false))),
-                new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Player.main)),
-                new CodeInstruction(OpCodes.Ldfld, Reflect.Field((Player t) => t.playerAnimator)),
-                new CodeInstruction(OpCodes.Call, Reflect.Method((Animator j) => Reflect.Property((Animator t) => t.updateMode).SetValue(j, AnimatorUpdateMode.Normal)))
+            return new CodeMatcher(instructions).MatchStartForward().RemoveInstructions(45).Insert(
+                new CodeInstruction(OpCodes.Call, Reflect.Method(() => PDA.UpdateTime(false)))
                 ).InstructionEnumeration();
         }
     }
