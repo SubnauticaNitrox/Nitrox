@@ -2,6 +2,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
+namespace NitroxClient.MonoBehaviours.Gui.InGame;
 public class DeathBeacon : MonoBehaviour
 {
     private const float DESPAWN_DISTANCE = 20f;
