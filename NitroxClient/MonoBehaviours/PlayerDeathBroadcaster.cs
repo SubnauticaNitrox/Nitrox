@@ -1,4 +1,6 @@
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -16,6 +18,10 @@ public class PlayerDeathBroadcaster : MonoBehaviour
 
     private void PlayerDeath(Player player)
     {
+        if (localPlayer.MarkDeathPointsWithBeacon)
+        {
+            DeathBeacon.SpawnDeathBeacon(player.transform.position.ToDto(), localPlayer.PlayerName);
+        }
         localPlayer.BroadcastDeath(player.transform.position);
     }
 
