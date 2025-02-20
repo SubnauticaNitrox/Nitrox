@@ -68,7 +68,7 @@ public static class ScreenExtensions
     ///     True if ViewModel was found in the routing navigation stack. False when the ViewModel wasn't found and routing
     ///     failed.
     /// </returns>
-    public static async Task<bool> BackAsync<T>(this IRoutingScreen screen) where T : RoutableViewModelBase
+    public static async Task<bool> BackToAsync<T>(this IRoutingScreen screen) where T : RoutableViewModelBase
     {
         for (int i = navigationStack.Count - 1; i >= 0; i--)
         {

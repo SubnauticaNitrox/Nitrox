@@ -10,8 +10,8 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
-using Nitrox.Launcher.Models.Converters;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery.Models;
@@ -20,7 +20,6 @@ using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
-using NitroxModel.Server;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -30,7 +29,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     private static bool hasInstantLaunched;
 
     private readonly OptionsViewModel optionsViewModel;
-    private readonly ServersViewModel serversViewModel;
+    private readonly ServerService serverService;
     private readonly IKeyValueStore keyValueStore;
     private readonly IDialogService dialogService;
 
@@ -54,10 +53,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
     }
 
-    public LaunchGameViewModel(IDialogService dialogService, ServersViewModel serversViewModel, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
+    public LaunchGameViewModel(IDialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
     {
         this.dialogService = dialogService;
-        this.serversViewModel = serversViewModel;
+        this.serverService = serverService;
         this.optionsViewModel = optionsViewModel;
         this.keyValueStore = keyValueStore;
     }
@@ -212,10 +211,9 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         Task.Run(async () =>
         {
             // Start the server
-            string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), App.InstantLaunch.SaveName);
-            ServerEntry server = ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
+            ServerEntry server = await serverService.GetOrCreateServerAsync(App.InstantLaunch.SaveName);
             server.Name = App.InstantLaunch.SaveName;
-            Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serversViewModel.StartServerAsync(server)).ContinueWithHandleError();
+            Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serverService.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player
             foreach (string playerName in App.InstantLaunch.PlayerNames)
             {
@@ -251,9 +249,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         // Start game & gaming platform if needed.
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId, subnauticaLaunchArguments),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe),
+            Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game platform is unsupported by Nitrox.")
         };
 
