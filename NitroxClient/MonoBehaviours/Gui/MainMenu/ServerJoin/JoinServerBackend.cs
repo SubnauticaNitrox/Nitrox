@@ -56,6 +56,7 @@ public static class JoinServerBackend
                     Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
                     MainMenuEnterPasswordPanel.ResetLastEnteredPassword();
                     MainMenuRightSide.main.OpenGroup(MainMenuEnterPasswordPanel.NAME);
+                    MainMenuEnterPasswordPanel.Instance.OnOpened();
                     break;
                 }
 
