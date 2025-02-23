@@ -1,9 +1,7 @@
-﻿using Avalonia.ReactiveUI;
+﻿using Avalonia.Controls;
 using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public abstract class RoutableViewBase<TViewModel> : ReactiveUserControl<TViewModel>
-    where TViewModel : RoutableViewModelBase
-{
-}
+public abstract class RoutableViewBase<TViewModel> : UserControl
+    where TViewModel : RoutableViewModelBase;

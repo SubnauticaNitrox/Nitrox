@@ -1,6 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Collections;
@@ -9,7 +9,6 @@ using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -40,28 +39,24 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     {
     }
 
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(OwnerObject))
+        {
+            EditorFields.Clear();
+            EditorFields.AddRange(OwnerObject
+                                  .GetType()
+                                  .GetProperties()
+                                  .Where(FieldAcceptFilter)
+                                  .Select(p => new EditorField(p, p.GetValue(OwnerObject), GetPossibleValues(p)))
+                                  .Where(editorField => editorField.Value is string or bool or int or float || editorField.PossibleValues != null));
+        }
+        base.OnPropertyChanged(e);
+    }
+
     public ObjectPropertyEditorViewModel(IDialogService dialogService)
     {
         this.dialogService = dialogService;
-
-        this.WhenActivated(disposables =>
-        {
-            this.WhenAnyValue(model => model.OwnerObject)
-                .Subscribe(owner =>
-                {
-                    EditorFields.Clear();
-                    if (owner != null)
-                    {
-                        EditorFields.AddRange(owner
-                                              .GetType()
-                                              .GetProperties()
-                                              .Where(FieldAcceptFilter)
-                                              .Select(p => new EditorField(p, p.GetValue(owner), GetPossibleValues(p)))
-                                              .Where(editorField => editorField.Value is string or bool or int or float || editorField.PossibleValues != null));
-                    }
-                })
-                .DisposeWith(disposables);
-        });
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]

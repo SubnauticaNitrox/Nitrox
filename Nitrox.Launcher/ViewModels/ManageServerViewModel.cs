@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -24,7 +23,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Server;
-using ReactiveUI;
 using Config = NitroxModel.Serialization.SubnauticaServerConfig;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -135,11 +133,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         this.keyValueStore = keyValueStore;
         this.serverService = serverService;
 
-        this.WhenActivated(disposables =>
+        this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {
-            this.WhenAnyValue(model => model.Server.IsOnline)
-                .Subscribe(isOnline => ServerIsOnline = isOnline)
-                .DisposeWith(disposables);
+            if (vm.server != status.Server)
+            {
+                return;
+            }
+            vm.ServerIsOnline = status.IsOnline;
         });
     }
 

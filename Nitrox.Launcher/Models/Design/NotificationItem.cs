@@ -3,7 +3,6 @@ using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Design;
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Reactive.Disposables;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -9,7 +9,6 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -34,19 +33,24 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     public KeyGesture NoHotkey { get; } = new(Key.Escape);
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);
 
-    public DialogBoxViewModel()
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        this.WhenActivated(disposables =>
+        switch (e.PropertyName)
         {
-            this.WhenAnyValue(model => model.Title, model => model.Description)
-                .Subscribe(tuple =>
+            case nameof(Title):
+            case nameof(Description):
+                if (WindowTitle is null or "")
                 {
-                    (string titleText, string descriptionText) = tuple;
-                    WindowTitle ??= string.IsNullOrEmpty(titleText) ? WindowTitle : titleText;
-                    WindowTitle ??= string.IsNullOrEmpty(descriptionText) ? WindowTitle : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}...";
-                })
-                .DisposeWith(disposables);
-        });
+                    WindowTitle = string.IsNullOrEmpty(Title) ? WindowTitle : Title;
+                }
+                if (WindowTitle is null or "" && Description is not (null or ""))
+                {
+                    WindowTitle = $"{Description[..Math.Min(30, Description.Length)]}...";
+                }
+                break;
+        }
+
+        base.OnPropertyChanged(e);
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
-using DynamicData;
 using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.Models.Utils;
@@ -47,7 +47,7 @@ public static class ProcessUtils
             executableFilePath = temp;
         }
         
-        if (arguments.IndexOf("--allow-instances") < 0)
+        if (arguments.Contains("--allow-instances"))
         {
             arguments = [..arguments, "--allow-instances"];
         }

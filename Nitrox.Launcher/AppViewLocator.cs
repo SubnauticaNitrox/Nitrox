@@ -7,11 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
-using ReactiveUI;
 
 namespace Nitrox.Launcher;
 
-public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
+public sealed class AppViewLocator : ViewLocatorBase
 {
     private static IServiceProvider serviceProvider;
 
@@ -55,6 +54,4 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
         Type newView = GetViewType(viewModel);
         return new ViewDefinition(newView, () => serviceProvider.GetRequiredService(newView));
     }
-
-    public IViewFor ResolveView<T>(T viewModel, string contract = null) => (IViewFor)Locate(viewModel).Create();
 }

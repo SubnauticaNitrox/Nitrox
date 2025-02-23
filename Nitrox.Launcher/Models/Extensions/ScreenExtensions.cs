@@ -30,6 +30,7 @@ public static class ScreenExtensions
         if (screen.ActiveViewModel is RoutableViewModelBase routableViewModelBase)
         {
             navigationStack.RemoveAllFast(screen.ActiveViewModel, (item, param) => item.GetType() == param.GetType());
+            await routableViewModelBase.ViewContentUnloadAsync();
             navigationStack.Add(routableViewModelBase);
         }
         Stopwatch sw = Stopwatch.StartNew();
