@@ -55,38 +55,7 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
             // WaterParks have a child named "items_root" where the fish are put
             if (parentTransform.TryGetComponent(out WaterPark waterPark))
             {
-                gameObject.transform.SetParent(waterPark.itemsRoot, false);
-                using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
-                {
-                    waterPark.AddItem(gameObject.EnsureComponent<Pickupable>());
-
-                    // While being fully loaded, the base is inactive so GameObject.SendMessage doesn't work and we need to execute their callbacks manually
-                    if (Multiplayer.Main && !Multiplayer.Main.InitialSyncCompleted)
-                    {
-                        // Below are distinct incompatible cases
-                        if (gameObject.TryGetComponent(out CreatureEgg creatureEgg) && !creatureEgg.insideWaterPark)
-                        {
-                            creatureEgg.OnAddToWaterPark();
-                        }
-                        else if (gameObject.TryGetComponent(out CuteFish cuteFish))
-                        {
-                            cuteFish.OnAddToWaterPark(null);
-                        }
-                        else if (gameObject.TryGetComponent(out CrabSnake crabSnake))
-                        {
-                            // This callback interacts with an animator, but this behaviour needs to be initialized (probably during Start) before it can be modified
-                            IEnumerator PostponedCallback()
-                            {
-                                yield return new WaitUntil(() => !crabSnake || crabSnake.animationController.animator.isInitialized);                                
-                                if (crabSnake)
-                                {
-                                    crabSnake.OnAddToWaterPark();
-                                }
-                            }
-                            CoroutineHost.StartCoroutine(PostponedCallback());
-                        }
-                    }
-                }
+                SetupObjectInWaterPark(gameObject, waterPark);
 
                 // TODO: When metadata is reworked (it'll be possible to give different metadatas to the same entity)
                 // this will no longer be needed because the entity metadata will set this to false accordingly
@@ -107,6 +76,44 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         if (gameObject.GetComponent<PlaceTool>())
         {
             PlacedWorldEntitySpawner.AdditionalSpawningSteps(gameObject);
+        }
+    }
+
+    public static void SetupObjectInWaterPark(GameObject gameObject, WaterPark waterPark)
+    {
+        gameObject.transform.SetParent(waterPark.itemsRoot, false);
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+        {
+            waterPark.AddItem(gameObject.EnsureComponent<Pickupable>());
+
+            // While being fully loaded, the base is inactive so GameObject.SendMessage doesn't work and we need to execute their callbacks manually
+            if (!Multiplayer.Main || Multiplayer.Main.InitialSyncCompleted)
+            {
+                return;
+            }
+
+            // Below are distinct incompatible cases
+            if (gameObject.TryGetComponent(out CreatureEgg creatureEgg) && !creatureEgg.insideWaterPark)
+            {
+                creatureEgg.OnAddToWaterPark();
+            }
+            else if (gameObject.TryGetComponent(out CuteFish cuteFish))
+            {
+                cuteFish.OnAddToWaterPark(null);
+            }
+            else if (gameObject.TryGetComponent(out CrabSnake crabSnake))
+            {
+                // This callback interacts with an animator, but this behaviour needs to be initialized (probably during Start) before it can be modified
+                IEnumerator PostponedCallback()
+                {
+                    yield return new WaitUntil(() => !crabSnake || crabSnake.animationController.animator.isInitialized);
+                    if (crabSnake)
+                    {
+                        crabSnake.OnAddToWaterPark();
+                    }
+                }
+                CoroutineHost.StartCoroutine(PostponedCallback());
+            }
         }
     }
 

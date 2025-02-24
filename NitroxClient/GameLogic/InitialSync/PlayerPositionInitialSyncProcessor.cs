@@ -70,9 +70,6 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         if (subRoot.TryGetComponent(out Base @base))
         {
             SetupPlayerIfInWaterPark(@base);
-            // If the player's in a base, we don't need to wait for the world to load
-            Player.main.cinematicModeActive = false;
-            yield break;
         }
 
         // If the player's in a base/cyclops we don't need to wait for the world to load

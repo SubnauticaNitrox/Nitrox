@@ -41,12 +41,18 @@ public sealed partial class WaterParkCreature_ManagedUpdate_Patch : NitroxPatch,
 
     public static void CreatureDestroyedCallback(WaterParkCreature waterParkCreature)
     {
-        if (!waterParkCreature.TryGetNitroxId(out NitroxId creatureId) ||
-            !Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+        // We don't manage eggs with no id here
+        if (!waterParkCreature.TryGetNitroxId(out NitroxId creatureId))
         {
             return;
         }
 
-        Resolve<IPacketSender>().Send(new EntityDestroyed(creatureId));
+        // It is VERY IMPORTANT to check for simulation ownership on the water park and not on the egg
+        // since that's the convention we chose
+        if (waterParkCreature.currentWaterPark.TryGetNitroxId(out NitroxId waterParkId) &&
+            Resolve<SimulationOwnership>().HasAnyLockType(waterParkId))
+        {
+            Resolve<IPacketSender>().Send(new EntityDestroyed(creatureId));
+        }
     }
 }

@@ -30,6 +30,8 @@ public sealed partial class WaterParkCreature_BornAsync_Patch : NitroxPatch, IDy
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
+        // The "waterPark" variable (which is a parameter of the BornAsync IEnumerator) is not accessible because IEnumerators are specials
+
         // Finds the waterPark parameter reference so that we can duplicate it
         CodeMatcher waterParkMatcher = new CodeMatcher(instructions).MatchEndForward([
             new CodeMatch(OpCodes.Ldloc_1),
@@ -73,7 +75,7 @@ public sealed partial class WaterParkCreature_BornAsync_Patch : NitroxPatch, IDy
                       .InstructionEnumeration();
     }
 
-    public static bool CanBeBorn(WaterParkCreature waterPark)
+    public static bool CanBeBorn(WaterPark waterPark)
     {
         if (waterPark.TryGetNitroxId(out NitroxId waterParkId))
         {
@@ -85,7 +87,7 @@ public sealed partial class WaterParkCreature_BornAsync_Patch : NitroxPatch, IDy
 
     private static void Callback(Pickupable pickupable)
     {
-        NitroxEntity.SetNewId(pickupable.gameObject, new());
+        NitroxEntity.GenerateNewId(pickupable.gameObject);
         Resolve<Items>().Dropped(pickupable.gameObject);
     }
 }
