@@ -311,6 +311,10 @@ public class WorldPersistenceTest
             case StayAtLeashPositionMetadata metadata when entityAfter.Metadata is StayAtLeashPositionMetadata metadataAfter:
                 Assert.AreEqual(metadata.LeashPosition, metadataAfter.LeashPosition);
                 break;
+            case EggMetadata metadata when entityAfter.Metadata is EggMetadata metadataAfter:
+                Assert.AreEqual(metadata.TimeStartHatching, metadataAfter.TimeStartHatching);
+                Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;

@@ -84,7 +84,7 @@ public class Items
 
         // If the item is dropped in a WaterPark we need to handle it differently
         NitroxId parentId = null;
-        if (IsGlobalRootObject(gameObject) || (gameObject.GetComponent<Pickupable>() && TryGetCurrentWaterParkId(out parentId)))
+        if (IsGlobalRootObject(gameObject) || (gameObject.GetComponent<Pickupable>() && TryGetParentWaterParkId(gameObject.transform.parent, out parentId)))
         {
             // We cast it to an entity type that is always seeable by clients
             // therefore, the packet will be redirected to everyone
@@ -232,13 +232,29 @@ public class Items
         UnityEngine.Object.Destroy(gameObject.GetComponent<RemotelyControlled>());
     }
 
-    private bool TryGetCurrentWaterParkId(out NitroxId waterParkId)
+    /// <param name="parent">Parent of the GameObject to check</param>
+    public static bool TryGetParentWaterPark(Transform parent, out WaterPark waterPark)
     {
-        if (Player.main && Player.main.currentWaterPark &&
-            Player.main.currentWaterPark.TryGetNitroxId(out waterParkId))
+        // NB: When dropped in a WaterPark, items are placed under WaterPark/items_root/
+        // So we need to search two steps higher to find the WaterPark
+        if (parent && parent.parent && parent.parent.TryGetComponent(out waterPark))
         {
             return true;
         }
+
+        waterPark = null;
+        return false;
+    }
+
+
+    /// <inheritdoc cref="TryGetParentWaterPark" />
+    private static bool TryGetParentWaterParkId(Transform parent, out NitroxId waterParkId)
+    {
+        if (TryGetParentWaterPark(parent, out WaterPark waterPark) && waterPark.TryGetNitroxId(out waterParkId))
+        {
+            return true;
+        }
+
         waterParkId = null;
         return false;
     }
