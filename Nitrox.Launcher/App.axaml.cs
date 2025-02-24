@@ -8,7 +8,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
@@ -101,7 +100,6 @@ public class App : Application
         AppBuilder builder = AppBuilder.Configure<App>()
                                        .UsePlatformDetect()
                                        .LogToTrace()
-                                       .UseReactiveUI()
                                        .With(new SkiaOptions { UseOpacitySaveLayer = true });
         builder = WithRenderingMode(builder, PreferredRenderingMode);
         return builder;

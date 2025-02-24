@@ -1,6 +1,4 @@
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
@@ -9,10 +7,10 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.DataStructures;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -42,12 +40,16 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
         this.serverEntry = serverEntry;
-        this.WhenActivated(disposables =>
+        this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
-            this.WhenAnyValue(model => model.ServerEntry.IsOnline)
-                .Where(isOnline => !isOnline)
-                .Subscribe(_ => HostScreen.BackAsync().ConfigureAwait(false))
-                .DisposeWith(disposables);
+            if (status.Server != model.ServerEntry)
+            {
+                return;
+            }
+            if (!status.IsOnline)
+            {
+                model.HostScreen.BackAsync().ConfigureAwait(false);
+            }
         });
     }
     

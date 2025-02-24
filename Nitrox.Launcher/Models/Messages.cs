@@ -13,3 +13,5 @@ public record NotificationAddMessage(NotificationItem Item);
 public record NotificationCloseMessage(NotificationItem Item);
 
 public record ViewShownMessage(RoutableViewModelBase ViewModel);
+
+public record ServerStatusMessage(ServerEntry Server, bool IsOnline);

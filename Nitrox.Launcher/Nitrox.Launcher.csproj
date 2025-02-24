@@ -28,7 +28,6 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.1.5" />
         <PackageReference Include="Avalonia.Desktop" Version="11.1.5" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.5" />
         <PackageReference Include="Avalonia.Svg.Skia" Version="11.1.0.1" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.5" />
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.5" />
@@ -43,7 +42,6 @@
         <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
         <PackageReference Include="LitJson" Version="0.19.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-        <PackageReference Include="ReactiveUI.Validation" Version="4.1.1" />
     </ItemGroup>
 
     <ItemGroup>

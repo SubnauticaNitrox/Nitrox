@@ -1,12 +1,11 @@
 ﻿using System;
 using Avalonia.Controls;
-using Avalonia.ReactiveUI;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public abstract class WindowEx<T> : ReactiveWindow<T> where T : ViewModelBase
+public abstract class WindowEx<T> : Window where T : ViewModelBase
 {
     protected override void OnInitialized()
     {

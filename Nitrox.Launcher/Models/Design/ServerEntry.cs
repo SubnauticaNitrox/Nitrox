@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
@@ -12,6 +13,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -90,6 +92,17 @@ public partial class ServerEntry : ObservableObject
     {
         ServerEntry result = new();
         return result.RefreshFromDirectory(saveDir) ? result : null;
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(IsOnline):
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(this, IsOnline));
+                break;
+        }
+        base.OnPropertyChanged(e);
     }
 
     public static ServerEntry CreateNew(string saveDir, NitroxGameMode saveGameMode)

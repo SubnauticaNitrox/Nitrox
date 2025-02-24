@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -16,7 +15,6 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -68,28 +66,25 @@ public partial class MainWindowViewModel : ViewModelBase
         this.dialogService = dialogService;
         this.serverService = serverService;
 
-        this.WhenActivated(disposables =>
+        this.RegisterMessageListener<ViewShownMessage, MainWindowViewModel>(static (message, vm) => vm.ActiveViewModel = message.ViewModel);
+        this.RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
         {
-            this.WhenAnyValue(model => model.RoutingScreen.ActiveViewModel)
-                .Subscribe(viewModel => ActiveViewModel = viewModel)
-                .DisposeWith(disposables);
-
-            this.RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
+            vm.Notifications.Add(message.Item);
+            await Task.Delay(7000);
+            WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
+        });
+        this.RegisterMessageListener<NotificationCloseMessage, MainWindowViewModel>(static async (message, vm) =>
+        {
+            message.Item.Dismissed = true;
+            await Task.Delay(1000); // Wait for animations
+            if (!Design.IsDesignMode) // Prevent design preview crashes
             {
-                vm.Notifications.Add(message.Item);
-                await Task.Delay(7000);
-                WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
-            });
-            this.RegisterMessageListener<NotificationCloseMessage, MainWindowViewModel>(static async (message, vm) =>
-            {
-                message.Item.Dismissed = true;
-                await Task.Delay(1000); // Wait for animations
-                if (!Design.IsDesignMode) // Prevent design preview crashes
-                {
-                    vm.Notifications.Remove(message.Item);
-                }
-            });
+                vm.Notifications.Remove(message.Item);
+            }
+        });
 
+        if (!Design.IsDesignMode)
+        {
             if (!NitroxEnvironment.IsReleaseMode)
             {
                 LauncherNotifier.Info("You're now using Nitrox DEV build");
@@ -104,12 +99,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 UpdateAvailableOrUnofficial = await updatesViewModel.IsNitroxUpdateAvailableAsync();
             });
-
-            Disposable.Create(this, vm =>
-            {
-                WeakReferenceMessenger.Default.UnregisterAll(vm);
-            }).DisposeWith(disposables);
-        });
+        }
 
         ActiveViewModel = this.launchGameViewModel;
         _ = RoutingScreen.ShowAsync(launchGameViewModel).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));

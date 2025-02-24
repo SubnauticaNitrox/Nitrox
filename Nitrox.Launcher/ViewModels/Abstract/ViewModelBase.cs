@@ -1,13 +1,16 @@
 ﻿using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class ViewModelBase : ObservableValidator, IActivatableViewModel, IMessageReceiver
+public abstract class ViewModelBase : ObservableValidator, IMessageReceiver
 {
     protected Window MainWindow => AppViewLocator.MainWindow;
-    public ViewModelActivator Activator { get; } = new();
-    public virtual void Dispose() => Activator.Dispose();
+
+    public virtual void Dispose()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+    }
 }
