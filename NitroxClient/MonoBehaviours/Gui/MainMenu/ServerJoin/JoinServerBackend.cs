@@ -56,14 +56,14 @@ public static class JoinServerBackend
                     Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
                     MainMenuEnterPasswordPanel.ResetLastEnteredPassword();
                     MainMenuRightSide.main.OpenGroup(MainMenuEnterPasswordPanel.NAME);
-                    MainMenuEnterPasswordPanel.Instance.OnOpened();
+                    MainMenuEnterPasswordPanel.Instance.FocusPasswordField();
                     break;
                 }
 
                 Log.Info("Waiting for user input");
                 Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                 MainMenuRightSide.main.OpenGroup(MainMenuJoinServerPanel.NAME);
-                MainMenuJoinServerPanel.Instance.OnOpened();
+                MainMenuJoinServerPanel.Instance.FocusNameInputField();
                 break;
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVED:

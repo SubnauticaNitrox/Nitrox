@@ -71,21 +71,24 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         legendChange.legendButtonConfiguration = confirmButtonButton.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration.Take(1).ToArray();
     }
 
-    public void OnOpened() => StartCoroutine(OpenedRoutine());
-
-    private IEnumerator OpenedRoutine()
+    public void FocusPasswordField()
     {
-        passwordInput.Select();
-        EventSystem.current.SetSelectedGameObject(passwordInput.gameObject);
-        yield return null;
-        passwordInput.MoveToEndOfLine(false, true);
+        StartCoroutine(Coroutine());
+
+        IEnumerator Coroutine()
+        {
+            passwordInput.Select();
+            EventSystem.current.SetSelectedGameObject(passwordInput.gameObject);
+            yield return null;
+            passwordInput.MoveToEndOfLine(false, true);
+        }
     }
 
     private void OnConfirmButtonClicked()
     {
         lastEnteredPassword = passwordInput.text;
         MainMenuRightSide.main.OpenGroup(MainMenuJoinServerPanel.NAME);
-        MainMenuJoinServerPanel.Instance.OnOpened();
+        MainMenuJoinServerPanel.Instance.FocusNameInputField();
     }
 
     private static void OnCancelClick()

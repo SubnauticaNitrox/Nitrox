@@ -136,13 +136,15 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         colorPicker.SetHSB(hsb);
     }
 
-    public void OnOpened() => StartCoroutine(OpenedRoutine());
-
-    private IEnumerator OpenedRoutine()
+    public void FocusNameInputField()
     {
-        SelectFirstItem();
-        yield return new WaitForEndOfFrame();
-        playerNameInputField.MoveToEndOfLine(false, true);
+        StartCoroutine(Coroutine());
+        IEnumerator Coroutine()
+        {
+            SelectFirstItem();
+            yield return new WaitForEndOfFrame();
+            playerNameInputField.MoveToEndOfLine(false, true);
+        }
     }
 
     public bool OnButtonDown(GameInput.Button button)
