@@ -65,6 +65,9 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         playerNameInputField.textComponent.fontSizeMax = 21;
         playerNameInputField.textComponent.GetComponent<RectTransform>().sizeDelta = new Vector2(-20, 42);
         playerNameInputField.characterLimit = 25; // See this.OnJoinClick()
+        playerNameInputField.onFocusSelectAll = false;
+        playerNameInputField.onSubmit.AddListener(_ => OnJoinClick());
+        playerNameInputField.onSubmit.AddListener(_ => DeselectAllItems());
         playerNameInputField.ActivateInputField();
 
         //Prepares player color picker
@@ -131,6 +134,17 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     {
         playerNameInputField.text = playerName;
         colorPicker.SetHSB(hsb);
+    }
+
+    public void FocusNameInputField()
+    {
+        StartCoroutine(Coroutine());
+        IEnumerator Coroutine()
+        {
+            SelectFirstItem();
+            yield return new WaitForEndOfFrame();
+            playerNameInputField.MoveToEndOfLine(false, true);
+        }
     }
 
     public bool OnButtonDown(GameInput.Button button)
