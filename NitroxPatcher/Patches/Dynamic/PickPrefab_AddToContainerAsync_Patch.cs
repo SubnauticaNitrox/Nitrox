@@ -12,6 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// Sync destruction of giver object when required.
+/// This code is only executed from a local input so we don't need to check for ownership.
 /// </summary>
 public sealed partial class PickPrefab_AddToContainerAsync_Patch : NitroxPatch, IDynamicPatch
 {

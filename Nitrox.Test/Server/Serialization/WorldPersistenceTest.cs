@@ -210,6 +210,7 @@ public class WorldPersistenceTest
             case PlantableMetadata metadata when entityAfter.Metadata is PlantableMetadata metadataAfter:
                 Assert.AreEqual(metadata.TimeStartGrowth, metadataAfter.TimeStartGrowth);
                 Assert.AreEqual(metadata.SlotID, metadataAfter.SlotID);
+                // FruitPlantMetadata field is not checked before it's only temporary
                 break;
             case FruitPlantMetadata metadata when entityAfter.Metadata is FruitPlantMetadata metadataAfter:
                 Assert.AreEqual(metadata.PickedStates, metadataAfter.PickedStates);

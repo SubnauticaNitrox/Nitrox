@@ -11,7 +11,7 @@ public class FruitPlantMetadataProcessor : EntityMetadataProcessor<FruitPlantMet
     public override void ProcessMetadata(GameObject gameObject, FruitPlantMetadata metadata)
     {
         // Two cases:
-        // 1. The entity with an id 
+        // 1. The entity with an id directly has a FruitPlant onto it
         if (gameObject.TryGetComponent(out FruitPlant fruitPlant))
         {
             ProcessMetadata(fruitPlant, metadata);

@@ -3,9 +3,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-/// <summary>
-/// Sync destruction of giver object when required.
-/// </summary>
+/// <inheritdoc cref="PickPrefab_AddToContainerAsync_Patch"/>
 public sealed partial class PickPrefab_SetPickedState_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PickPrefab t) => t.SetPickedState(default));

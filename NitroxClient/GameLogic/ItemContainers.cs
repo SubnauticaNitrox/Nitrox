@@ -13,86 +13,100 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic
+namespace NitroxClient.GameLogic;
+
+public class ItemContainers
 {
-    public class ItemContainers
+    private readonly IPacketSender packetSender;
+    private readonly EntityMetadataManager entityMetadataManager;
+    private readonly Items items;
+
+    public ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager, Items items)
     {
-        private readonly IPacketSender packetSender;
-        private readonly EntityMetadataManager entityMetadataManager;
+        this.packetSender = packetSender;
+        this.entityMetadataManager = entityMetadataManager;
+        this.items = items;
+    }
 
-        public ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager)
+    public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform, ItemsContainer container)
+    {
+        // We don't want to broadcast that event if it's from another player's inventory
+        if (containerTransform.GetComponentInParent<RemotePlayerIdentifier>(true))
         {
-            this.packetSender = packetSender;
-            this.entityMetadataManager = entityMetadataManager;
+            return;
         }
 
-        public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform)
+        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
         {
-            // We don't want to broadcast that event if it's from another player's inventory
-            if (containerTransform.GetComponentInParent<RemotePlayerIdentifier>(true))
-            {
-                return;
-            }
-
-            if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
-            {
-                return;
-            }
-
-            if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
-            {
-                // Error logging is done in the function
-                return;
-            }
-            
-            if (packetSender.Send(new EntityReparented(itemId, ownerId)))
-            {
-                Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
-            }
+            return;
         }
 
-        public void AddItem(GameObject item, NitroxId containerId)
+        if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
         {
-            Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
-            if (!owner.HasValue)
-            {
-                Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
-                return;
-            }
-            Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
-            if (!opContainer.HasValue)
-            {
-                Log.Error($"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
-                return;
-            }
-
-            ItemsContainer container = opContainer.Value;
-            Pickupable pickupable = item.RequireComponent<Pickupable>();
-
-            using (PacketSuppressor<EntityReparented>.Suppress())
-            {
-                container.UnsafeAdd(new InventoryItem(pickupable));
-                Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
-            }
+            // Error logging is done in the function
+            return;
         }
 
-        public void BroadcastBatteryAdd(GameObject gameObject, GameObject parent, TechType techType)
+        // For planters, we'll always forcefully recreate the entity to ensure there's no desync
+        if (container.containerType == ItemsContainerType.LandPlants || container.containerType == ItemsContainerType.WaterPlants)
         {
-            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
-            {
-                return;
-            }
-            if (!parent.TryGetIdOrWarn(out NitroxId parentId))
-            {
-                return;
-            }
-
-            Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
-
-            InstalledBatteryEntity installedBattery = new(id, techType.ToDto(), metadata.OrNull(), parentId, new());
-
-            EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(installedBattery);
-            packetSender.Send(spawnedPacket);
+            items.Planted(pickupable.gameObject, ownerId);
+            return;
         }
+
+        // Plantable pickup should not be managed by EntityReparented, but by Items.PickedUp
+        if (pickupable.GetComponent<Plantable>())
+        {
+            return;
+        }
+        
+        if (packetSender.Send(new EntityReparented(itemId, ownerId)))
+        {
+            Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
+        }
+    }
+
+    public void AddItem(GameObject item, NitroxId containerId)
+    {
+        Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
+        if (!owner.HasValue)
+        {
+            Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
+            return;
+        }
+        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
+        if (!opContainer.HasValue)
+        {
+            Log.Error($"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
+            return;
+        }
+
+        ItemsContainer container = opContainer.Value;
+        Pickupable pickupable = item.RequireComponent<Pickupable>();
+
+        using (PacketSuppressor<EntityReparented>.Suppress())
+        {
+            container.UnsafeAdd(new InventoryItem(pickupable));
+            Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
+        }
+    }
+
+    public void BroadcastBatteryAdd(GameObject gameObject, GameObject parent, TechType techType)
+    {
+        if (!gameObject.TryGetIdOrWarn(out NitroxId id))
+        {
+            return;
+        }
+        if (!parent.TryGetIdOrWarn(out NitroxId parentId))
+        {
+            return;
+        }
+
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
+
+        InstalledBatteryEntity installedBattery = new(id, techType.ToDto(), metadata.OrNull(), parentId, new());
+
+        EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(installedBattery);
+        packetSender.Send(spawnedPacket);
     }
 }

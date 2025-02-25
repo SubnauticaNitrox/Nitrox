@@ -31,39 +31,31 @@ public class Items
         this.entityMetadataManager = entityMetadataManager;
     }
 
-    public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
-    {
-        ItemPosition itemPosition = new ItemPosition(id, location.ToDto(), rotation.ToDto());
-        packetSender.Send(itemPosition);
-    }
-
     public void PickedUp(GameObject gameObject, TechType techType)
     {
         PickingUpObject = gameObject;
-        // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
-        RemoveAnyRemoteControl(gameObject);
 
-        if (!gameObject.TryGetNitroxId(out NitroxId id))
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject);
+        Log.Debug($"PickedUp item {inventoryItemEntity}");
+        if (inventoryItemEntity.TechType.ToUnity() != techType)
         {
-            Log.Debug($"Found item with ({gameObject.name}) with no id, assigning a new one");
-            id = NitroxEntity.GenerateNewId(gameObject);
+            Log.Warn($"Provided TechType: {techType} is different than the one automatically attributed to the item {inventoryItemEntity.TechType}");
         }
 
-        EntityPositionBroadcaster.StopWatchingEntity(id);
-
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
-
-        // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
-        // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
-        // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
-        // directly into the player's inventory.  These will ultimately be registered server side with the above inventoryItemEntity.
-        entities.MarkAsSpawned(inventoryItemEntity);
-
-        Log.Debug($"PickedUp {id} {techType}");
-
-        PickupItem pickupItem = new(id, inventoryItemEntity);
+        PickupItem pickupItem = new(inventoryItemEntity);
         packetSender.Send(pickupItem);
         PickingUpObject = null;
+    }
+
+    public void Planted(GameObject gameObject, NitroxId parentId)
+    {
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject);
+        inventoryItemEntity.ParentId = parentId;
+
+        if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
+        {
+            Log.Debug($"Planted item {inventoryItemEntity}");
+        }
     }
 
     /// <summary>
@@ -122,9 +114,10 @@ public class Items
             droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
         }
 
-        Log.Debug($"Dropping item: {droppedItem}");
-
-        packetSender.Send(new EntitySpawnedByClient(droppedItem, true));
+        if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true)))
+        {
+            Log.Debug($"Dropping item: {droppedItem}");
+        }
     }
 
     /// <summary>
@@ -158,9 +151,10 @@ public class Items
                 break;
         }
 
-        Log.Debug($"Placed object: {placedItem}");
-
-        packetSender.Send(new EntitySpawnedByClient(placedItem, true));
+        if (packetSender.Send(new EntitySpawnedByClient(placedItem, true)))
+        {
+            Log.Debug($"Placed object: {placedItem}");
+        }
     }
 
     public void Created(GameObject gameObject)
@@ -201,6 +195,26 @@ public class Items
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Overloads <see cref="ConvertToInventoryItemEntity"/> and removes any tracking on <paramref name="gameObject"/>
+    /// </summary>
+    private InventoryItemEntity ConvertToInventoryEntityUntracked(GameObject gameObject)
+    {
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
+
+        // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
+        // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
+        // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
+        // directly into the player's inventory.  These will ultimately be registered server side with the above inventoryItemEntity.
+        entities.MarkAsSpawned(inventoryItemEntity);
+
+        // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
+        RemoveAnyRemoteControl(gameObject);
+        EntityPositionBroadcaster.StopWatchingEntity(inventoryItemEntity.Id);
+
+        return inventoryItemEntity;
     }
 
     public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, EntityMetadataManager entityMetadataManager)

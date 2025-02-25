@@ -6,11 +6,6 @@ public class ReferenceHolder : MonoBehaviour
 {
     public object Reference;
 
-    public static ReferenceHolder EnsureReferenceAttached(Component component, object reference)
-    {
-        return EnsureReferenceAttached(component.gameObject, reference);
-    }
-
     public bool TryGetReference<T>(out T outReference)
     {
         if (Reference is T reference)
@@ -21,6 +16,11 @@ public class ReferenceHolder : MonoBehaviour
 
         outReference = default;
         return false;
+    }
+
+    public static ReferenceHolder EnsureReferenceAttached(Component component, object reference)
+    {
+        return EnsureReferenceAttached(component.gameObject, reference);
     }
 
     public static ReferenceHolder EnsureReferenceAttached(GameObject gameObject, object reference)

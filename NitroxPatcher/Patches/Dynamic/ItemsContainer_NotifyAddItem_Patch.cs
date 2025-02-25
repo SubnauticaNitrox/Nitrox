@@ -13,7 +13,7 @@ public sealed partial class ItemsContainer_NotifyAddItem_Patch : NitroxPatch, ID
     {
         if (item != null && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
         {
-            Resolve<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
+            Resolve<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr, __instance);
         }
     }
 }

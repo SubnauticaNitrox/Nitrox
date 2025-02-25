@@ -256,9 +256,28 @@ namespace NitroxClient.GameLogic
 
                 if (gameObject.HasValue)
                 {
-                    UnityEngine.Object.Destroy(gameObject.Value);
+                    DestroyObject(gameObject.Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Either perform a special operation (e.g. for plants) or a simple <see cref="UnityEngine.Object.Destroy"/>
+        /// </summary>
+        public static void DestroyObject(GameObject gameObject)
+        {
+            if (gameObject.TryGetComponent(out Plantable plantable))
+            {
+                plantable.FreeSpot();
+                return;
+            }
+            if (gameObject.TryGetComponent(out GrownPlant grownPlant))
+            {
+                grownPlant.seed.AliveOrNull()?.FreeSpot();
+                return;
+            }
+
+            UnityEngine.Object.Destroy(gameObject);
         }
 
         private void UpdateEntity(Entity entity)

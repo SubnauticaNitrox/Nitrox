@@ -110,6 +110,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
         using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+        using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
         {
             container.UnsafeAdd(inventoryItem);
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {parentObject.GetFullHierarchyPath()}");
