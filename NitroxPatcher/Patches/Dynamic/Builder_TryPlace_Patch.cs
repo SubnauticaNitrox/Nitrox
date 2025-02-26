@@ -20,52 +20,31 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
 
-    public static readonly InstructionsPattern AddInstructionPattern1 = new()
-    {
-        Ldloc_0,
-        Ldc_I4_0,
-        Ldc_I4_1,
-        new() { OpCode = Callvirt, Operand = new(nameof(Constructable), nameof(Constructable.SetState)) },
-        { Pop, "Insert1" }
-    };
-
-    public static readonly List<CodeInstruction> InstructionsToAdd1 = new()
-    {
-        new(Ldloc_0),
-        new(Call, Reflect.Method(() => GhostCreated(default)))
-    };
-
-    public static readonly InstructionsPattern AddInstructionPattern2 = new()
-    {
-        Ldloc_S,
-        Ldloc_3,
-        Ldloc_S,
-        Or,
-        { new() { OpCode = Callvirt, Operand = new(nameof(Constructable), nameof(Constructable.SetIsInside)) }, "Insert2" }
-    };
-
-    public static readonly List<CodeInstruction> InstructionsToAdd2 = new()
-    {
-        TARGET_METHOD.Ldloc<Constructable>(),
-        new(Call, Reflect.Method(() => GhostCreated(default)))
-    };
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
-        instructions.Transform(AddInstructionPattern1, (label, instruction) =>
-        {
-            if (label.Equals("Insert1"))
-            {
-                return InstructionsToAdd1;
-            }
-            return null;
-        }).Transform(AddInstructionPattern2, (label, instruction) =>
-        {
-            if (label.Equals("Insert2"))
-            {
-                return InstructionsToAdd2;
-            }
-            return null;
-        });
+        instructions.RewriteOnPattern(
+                    [
+                        Ldloc_0,
+                        Ldc_I4_0,
+                        Ldc_I4_1,
+                        Reflect.Method((Constructable c) => c.SetState(default, default)),
+                        Pop,
+                        [
+                            Ldloc_0,
+                            Reflect.Method(() => GhostCreated(default))
+                        ]
+                    ])
+                    .RewriteOnPattern(
+                    [
+                        Ldloc_S,
+                        Ldloc_3,
+                        Ldloc_S,
+                        Or,
+                        Reflect.Method((Constructable c) => c.SetIsInside(default)),
+                        [
+                            TARGET_METHOD.Ldloc<Constructable>(),
+                            Reflect.Method(() => GhostCreated(default))
+                        ]
+                    ]);
 
     public static void GhostCreated(Constructable constructable)
     {
