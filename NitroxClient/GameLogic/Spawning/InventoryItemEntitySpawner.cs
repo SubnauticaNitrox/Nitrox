@@ -130,7 +130,8 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
                     inventoryItem.isEnabled = false;
                     planter.AddItem(plantable, metadata.SlotID);
 
-                    // Reapply the plantable metadata after the GrowingPlant (or the GrownPlant) is spawned
+                    // Apply the plantable metadata after the GrowingPlant (or the GrownPlant) is spawned
+                    // this will allow the GrowingPlant to know about its progress
                     entityMetadataManager.ApplyMetadata(plantable.gameObject, metadata);
 
                     // Plant spawning occurs in multiple steps over frames:
@@ -140,6 +141,9 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
                     {
                         MetadataHolder.AddMetadata(plantable.growingPlant.gameObject, metadata.FruitPlantMetadata);
                     }
+
+                    // NB: Entities.SpawnBatchAsync (which is the function calling the current spawner)
+                    // will still apply the metadata another time but we don't care as it's not destructive
                 });
             }
         }

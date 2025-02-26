@@ -16,10 +16,12 @@ public class PlantableMetadataProcessor(FruitPlantMetadataProcessor fruitPlantMe
             return;
         }
 
+        // For Plantables which were replaced by the GrowingPlant object
         if (plantable.growingPlant)
         {
             plantable.growingPlant.timeStartGrowth = metadata.TimeStartGrowth;
         }
+        // For regular Plantables
         else if (plantable.model.TryGetComponent(out GrowingPlant growingPlant))
         {
             // Calculation from GrowingPlant.GetProgress (reversed because we're looking for "progress" while we already know timeStartGrowth)

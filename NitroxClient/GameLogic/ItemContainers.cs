@@ -54,8 +54,8 @@ public class ItemContainers
             return;
         }
 
-        // Plantable pickup should not be managed by EntityReparented, but by Items.PickedUp
-        if (pickupable.GetComponent<Plantable>())
+        // calls from Inventory.Pickup are managed by Items.PickedUp
+        if (items.InventoryPickingUp)
         {
             return;
         }

@@ -9,7 +9,8 @@ public class PlantableMetadataExtractor(FruitPlantMetadataExtractor fruitPlantMe
 
     public override PlantableMetadata Extract(Plantable plantable)
     {
-        PlantableMetadata metadata = new(plantable.growingPlant ? plantable.growingPlant.timeStartGrowth : 0, plantable.GetSlotID());
+        // Default value for no progress is -1
+        PlantableMetadata metadata = new(plantable.growingPlant ? plantable.growingPlant.timeStartGrowth : -1, plantable.GetSlotID());
 
         // TODO: Refer to the TODO in PlantableMetadata
         if (plantable.linkedGrownPlant && plantable.linkedGrownPlant.TryGetComponent(out FruitPlant fruitPlant))

@@ -24,6 +24,11 @@ public class Items
     public static GameObject PickingUpObject { get; private set; }
     private readonly EntityMetadataManager entityMetadataManager;
 
+    /// <summary>
+    /// Whether or not <see cref="Inventory.Pickup"/> is running. It's useful to discriminate between Inventory.Pickup from a regular
+    /// </summary>
+    public bool InventoryPickingUp;
+
     public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {
         this.packetSender = packetSender;
@@ -36,14 +41,18 @@ public class Items
         PickingUpObject = gameObject;
 
         InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject);
-        Log.Debug($"PickedUp item {inventoryItemEntity}");
+
         if (inventoryItemEntity.TechType.ToUnity() != techType)
         {
             Log.Warn($"Provided TechType: {techType} is different than the one automatically attributed to the item {inventoryItemEntity.TechType}");
         }
 
         PickupItem pickupItem = new(inventoryItemEntity);
-        packetSender.Send(pickupItem);
+        
+        if (packetSender.Send(pickupItem))
+        {
+            Log.Debug($"Picked up item {inventoryItemEntity}");
+        }
         PickingUpObject = null;
     }
 

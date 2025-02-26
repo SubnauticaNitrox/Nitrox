@@ -21,7 +21,7 @@ public sealed partial class LiveMixin_Kill_Patch : NitroxPatch, IDynamicPatch
 
         // We don't broadcast if we don't have objectId or if the object is whitelisted,
         // in which case kill broadcast is managed differently
-        if (!__instance.TryGetIdOrWarn(out NitroxId objectId) ||
+        if (!__instance.TryGetNitroxId(out NitroxId objectId) ||
             Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
         {
             return;

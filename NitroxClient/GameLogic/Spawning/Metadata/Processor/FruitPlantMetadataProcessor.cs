@@ -20,16 +20,26 @@ public class FruitPlantMetadataProcessor : EntityMetadataProcessor<FruitPlantMet
 
         // 2. The entity with an id has a Plantable (located in the plot's storage),
         // we want to access the FruitPlant component which is on the spawned plant object
-        if (gameObject.TryGetComponent(out Plantable plantable))
+        if (!gameObject.TryGetComponent(out Plantable plantable))
         {
-            if (plantable.linkedGrownPlant && plantable.linkedGrownPlant.TryGetComponent(out fruitPlant))
-            {
-                ProcessMetadata(fruitPlant, metadata);
-            }
+            Log.Error($"[{nameof(FruitPlantMetadataProcessor)}] Could not find {nameof(FruitPlant)} related to {gameObject.name}");
             return;
         }
 
-        Log.Error($"[{nameof(FruitPlantMetadataProcessor)}] Could not find {nameof(FruitPlant)} related to {gameObject.name}");
+        if (!plantable.linkedGrownPlant)
+        {
+            // This is an error which will happen quite often since this metadata
+            // is applied from PlantableMetadataProcessor even when linkedGrownPlant isn't available yet
+            return;
+        }
+
+        if (!plantable.linkedGrownPlant.TryGetComponent(out fruitPlant))
+        {
+            Log.Error($"[{nameof(FruitPlantMetadataProcessor)}] Could not find {nameof(FruitPlant)} on {gameObject.name}'s linkedGrownPlant {plantable.linkedGrownPlant.name}");
+            return;
+        }
+
+        ProcessMetadata(fruitPlant, metadata);
     }
 
     private static void ProcessMetadata(FruitPlant fruitPlant, FruitPlantMetadata metadata)
