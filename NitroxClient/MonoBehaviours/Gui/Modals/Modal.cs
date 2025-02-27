@@ -158,8 +158,11 @@ public abstract class Modal
         yesButton.onClick = new Button.ButtonClickedEvent();
         yesButton.onClick.AddListener(ClickYes);
         buttonYesObject.GetComponentInChildren<TextMeshProUGUI>().text = YesButtonText;
-        buttonYesObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f - Height);
+        RectTransform yesButtonTransform = buttonYesObject.GetComponent<RectTransform>();
+        yesButtonTransform.anchoredPosition = new Vector2(yesButtonTransform.anchoredPosition.x, 50f - Height);
 
+
+        // TODO: fix yes and no button positions
         if (HideNoButton)
         {
             UnityEngine.Object.Destroy(buttonNoObject);
@@ -171,9 +174,10 @@ public abstract class Modal
         {
             Button noButton = buttonNoObject.GetComponent<Button>();
             noButton.onClick = new Button.ButtonClickedEvent();
-            noButton.onClick.AddListener(() => { ClickNo(); });
+            noButton.onClick.AddListener(ClickNo);
             buttonNoObject.GetComponentInChildren<TextMeshProUGUI>().text = NoButtonText;
-            buttonNoObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 50f - Height);
+            RectTransform noButtonTransform = buttonNoObject.GetComponent<RectTransform>();
+            noButtonTransform.anchoredPosition = new Vector2(noButtonTransform.anchoredPosition.x, 50f - Height);
         }
     }
 
