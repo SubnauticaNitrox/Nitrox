@@ -14,7 +14,7 @@ internal class SetDeathMarkersCommand : Command
     private readonly SubnauticaServerConfig serverConfig;
     private readonly Server server;
 
-    public SetDeathMarkersCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("setdeathmarkers", Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
+    public SetDeathMarkersCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("deathmarkers", Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
