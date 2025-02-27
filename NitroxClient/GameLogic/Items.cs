@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
@@ -40,7 +39,15 @@ public class Items
     {
         PickingUpObject = gameObject;
 
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject);
+        // Newly created objects are always placed into the player's inventory.
+        if (!Player.main.TryGetNitroxId(out NitroxId playerId))
+        {
+            Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
+            PickingUpObject = null;
+            return;
+        }
+
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, playerId);
 
         if (inventoryItemEntity.TechType.ToUnity() != techType)
         {
@@ -58,8 +65,7 @@ public class Items
 
     public void Planted(GameObject gameObject, NitroxId parentId)
     {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject);
-        inventoryItemEntity.ParentId = parentId;
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, parentId);
 
         if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
         {
@@ -166,17 +172,6 @@ public class Items
         }
     }
 
-    public void Created(GameObject gameObject)
-    {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
-        entities.MarkAsSpawned(inventoryItemEntity);
-
-        if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
-        {
-            Log.Debug($"Creation of item {gameObject.name} into the player's inventory {inventoryItemEntity}");
-        }
-    }
-
     // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable'
     // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
     // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity.
@@ -209,9 +204,9 @@ public class Items
     /// <summary>
     /// Overloads <see cref="ConvertToInventoryItemEntity"/> and removes any tracking on <paramref name="gameObject"/>
     /// </summary>
-    private InventoryItemEntity ConvertToInventoryEntityUntracked(GameObject gameObject)
+    private InventoryItemEntity ConvertToInventoryEntityUntracked(GameObject gameObject, NitroxId parentId)
     {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, parentId, entityMetadataManager);
 
         // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
         // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
@@ -226,7 +221,7 @@ public class Items
         return inventoryItemEntity;
     }
 
-    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, EntityMetadataManager entityMetadataManager)
+    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, NitroxId parentId, EntityMetadataManager entityMetadataManager)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
@@ -234,13 +229,7 @@ public class Items
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         List<Entity> children = GetPrefabChildren(gameObject, itemId, entityMetadataManager).ToList();
 
-        // Newly created objects are always placed into the player's inventory.
-        if (!Player.main.TryGetNitroxId(out NitroxId ownerId))
-        {
-            throw new InvalidOperationException("[Items] Player has no id! Couldn't parent InventoryItem.");
-        }
-
-        InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
+        InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), parentId, children);
         BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
 
         return inventoryItemEntity;

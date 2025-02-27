@@ -24,8 +24,16 @@ public class PlantableMetadataProcessor(FruitPlantMetadataProcessor fruitPlantMe
         // For regular Plantables
         else if (plantable.model.TryGetComponent(out GrowingPlant growingPlant))
         {
-            // Calculation from GrowingPlant.GetProgress (reversed because we're looking for "progress" while we already know timeStartGrowth)
-            plantable.plantAge = Mathf.Clamp((DayNightCycle.main.timePassedAsFloat - metadata.TimeStartGrowth) / growingPlant.GetGrowthDuration(), 0f, growingPlant.maxProgress);
+            // Calculation from GrowingPlant.GetProgress
+            if (metadata.TimeStartGrowth == -1f)
+            {
+                plantable.plantAge = 0;
+            }
+            else
+            {
+                // This is the reversed calculation because we're looking for "progress" while we already know timeStartGrowth
+                plantable.plantAge = Mathf.Clamp((DayNightCycle.main.timePassedAsFloat - metadata.TimeStartGrowth) / growingPlant.GetGrowthDuration(), 0f, growingPlant.maxProgress);
+            }
         }
         
         // TODO: Refer to the TODO in PlantableMetadata

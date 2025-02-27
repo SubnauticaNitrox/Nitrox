@@ -36,11 +36,6 @@ public class ItemContainers
             return;
         }
 
-        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
-        {
-            return;
-        }
-
         if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
         {
             // Error logging is done in the function
@@ -51,6 +46,11 @@ public class ItemContainers
         if (container.containerType == ItemsContainerType.LandPlants || container.containerType == ItemsContainerType.WaterPlants)
         {
             items.Planted(pickupable.gameObject, ownerId);
+            return;
+        }
+
+        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
+        {
             return;
         }
 
