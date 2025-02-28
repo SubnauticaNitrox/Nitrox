@@ -25,6 +25,8 @@ public class NitroxBootstrapper : MonoBehaviour
         // This is very important, see Application_runInBackground_Patch.cs
         Application.runInBackground = true;
         Log.Info($"Unity run in background set to \"{Application.runInBackground}\"");
+        // Also very important for similar reasons
+        MiscSettings.pdaPause = false;
     }
 
 #if DEBUG
