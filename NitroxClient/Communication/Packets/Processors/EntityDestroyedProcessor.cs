@@ -41,7 +41,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
             }
             else
             {
-                DefaultDestroyAction(gameObject);
+                Entities.DestroyObject(gameObject);
             }
         }
     }
@@ -91,10 +91,5 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
 
             Object.Destroy(vehicle.gameObject);
         }
-    }
-
-    private void DefaultDestroyAction(GameObject gameObject)
-    {
-        Object.Destroy(gameObject);
     }
 }
