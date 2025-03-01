@@ -10,11 +10,11 @@ public sealed partial class Inventory_Pickup_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix()
     {
-        Resolve<Items>().InventoryPickingUp = true;
+        Resolve<Items>().IsInventoryPickingUp = true;
     }
 
     public static void Finalizer()
     {
-        Resolve<Items>().InventoryPickingUp = false;
+        Resolve<Items>().IsInventoryPickingUp = false;
     }
 }

@@ -55,7 +55,7 @@ public class ItemContainers
         }
 
         // calls from Inventory.Pickup are managed by Items.PickedUp
-        if (items.InventoryPickingUp)
+        if (items.IsInventoryPickingUp)
         {
             return;
         }

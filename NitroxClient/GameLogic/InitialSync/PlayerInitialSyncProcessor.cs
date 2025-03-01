@@ -157,6 +157,6 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         {
             cheatsEnabled.Append(" fastGrow");
         }
-        ErrorMessage.AddDebug(cheatsEnabled.ToString());
+        Log.InGame(cheatsEnabled.ToString());
     }
 }

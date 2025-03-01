@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
@@ -24,9 +25,10 @@ public class Items
     private readonly EntityMetadataManager entityMetadataManager;
 
     /// <summary>
-    /// Whether or not <see cref="Inventory.Pickup"/> is running. It's useful to discriminate between Inventory.Pickup from a regular
+    /// Whether or not <see cref="Inventory.Pickup"/> is running. It's useful to discriminate between Inventory.Pickup from
+    /// a regular <see cref="Pickupable.Pickup"/>
     /// </summary>
-    public bool InventoryPickingUp;
+    public bool IsInventoryPickingUp;
 
     public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {
@@ -39,26 +41,34 @@ public class Items
     {
         PickingUpObject = gameObject;
 
-        // Newly created objects are always placed into the player's inventory.
-        if (!Player.main.TryGetNitroxId(out NitroxId playerId))
+        // Try catch to avoid blocking PickingUpObject with a non null value outside of the current context
+        try
         {
-            Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
-            PickingUpObject = null;
-            return;
+            // Newly created objects are always placed into the player's inventory.
+            if (!Player.main.TryGetNitroxId(out NitroxId playerId))
+            {
+                Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
+                PickingUpObject = null;
+                return;
+            }
+
+            InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, playerId);
+
+            if (inventoryItemEntity.TechType.ToUnity() != techType)
+            {
+                Log.Warn($"Provided TechType: {techType} is different than the one automatically attributed to the item {inventoryItemEntity.TechType}");
+            }
+
+            PickupItem pickupItem = new(inventoryItemEntity);
+
+            if (packetSender.Send(pickupItem))
+            {
+                Log.Debug($"Picked up item {inventoryItemEntity}");
+            }
         }
-
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, playerId);
-
-        if (inventoryItemEntity.TechType.ToUnity() != techType)
+        catch (Exception exception)
         {
-            Log.Warn($"Provided TechType: {techType} is different than the one automatically attributed to the item {inventoryItemEntity.TechType}");
-        }
-
-        PickupItem pickupItem = new(inventoryItemEntity);
-        
-        if (packetSender.Send(pickupItem))
-        {
-            Log.Debug($"Picked up item {inventoryItemEntity}");
+            Log.Error(exception);
         }
         PickingUpObject = null;
     }

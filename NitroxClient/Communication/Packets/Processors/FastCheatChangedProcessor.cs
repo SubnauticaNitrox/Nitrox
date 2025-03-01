@@ -9,11 +9,11 @@ public class FastCheatChangedProcessor : ClientPacketProcessor<FastCheatChanged>
     {
         switch (packet.Cheat)
         {
-            case FastCheatChanged.FastCheat.FAST_HATCH:
+            case FastCheatChanged.FastCheat.HATCH:
                 NoCostConsoleCommand.main.fastHatchCheat = packet.Value;
                 break;
 
-            case FastCheatChanged.FastCheat.FAST_GROW:
+            case FastCheatChanged.FastCheat.GROW:
                 NoCostConsoleCommand.main.fastGrowCheat = packet.Value;
                 break;
         }

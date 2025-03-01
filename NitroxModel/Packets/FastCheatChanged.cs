@@ -16,7 +16,7 @@ public class FastCheatChanged : Packet
 
     public enum FastCheat : byte
     {
-        FAST_HATCH,
-        FAST_GROW
+        HATCH,
+        GROW
     }
 }

@@ -4,7 +4,8 @@ using NitroxModel.Helper;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Prevents "bobthebuilder" command from enabling "fasthatch" and "fastgrow", since both commands are managed by the server
+/// Prevents "bobthebuilder" command from enabling "fasthatch" and "fastgrow", since both commands are managed by the server.
+/// Thus, it attempts to enable the cheats that are currently disabled by sending the related command to the server.
 /// </summary>
 public sealed partial class NoCostConsoleCommand_OnConsoleCommand_bobthebuilder_Patch : NitroxPatch, IDynamicPatch
 {
@@ -13,12 +14,21 @@ public sealed partial class NoCostConsoleCommand_OnConsoleCommand_bobthebuilder_
     public static void Prefix(out (bool, bool) __state)
     {
         __state = (NoCostConsoleCommand.main.fastHatchCheat, NoCostConsoleCommand.main.fastGrowCheat);
-        ErrorMessage.AddWarning("fastHatch and fastGrow cheats weren't enabled because they're shared cheat commands. Please enable them manually with their respective commands \"fastgrow\" and \"fasthatch\"");
     }
 
-    public static void Postfix((bool, bool) __state)
+    public static void Postfix((bool, bool) __state, NotificationCenter.Notification n)
     {
         NoCostConsoleCommand.main.fastHatchCheat = __state.Item1;
         NoCostConsoleCommand.main.fastGrowCheat = __state.Item2;
+        
+        // Requesting enabling of the cheats if they're currently disabled
+        if (!__state.Item1)
+        {
+            NoCostConsoleCommand.main.OnConsoleCommand_fasthatch(n);
+        }
+        if (!__state.Item2)
+        {
+            NoCostConsoleCommand.main.OnConsoleCommand_fastgrow(n);
+        }
     }
 }

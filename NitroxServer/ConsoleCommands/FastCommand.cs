@@ -1,3 +1,4 @@
+using System;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -13,7 +14,7 @@ public class FastCommand : Command
 
     public FastCommand(PlayerManager playerManager, SessionSettings sessionSettings) : base("fast", Perms.MODERATOR, "Enables/disables a fast cheat command, whether it be \"hatch\" or \"grow\"")
     {
-        AddParameter(new TypeString("cheat", true, "The name of the fast cheat to change: \"hatch\" or \"grow\""));
+        AddParameter(new TypeEnum<FastCheatChanged.FastCheat>("cheat", true, "The name of the fast cheat to change: \"hatch\" or \"grow\""));
         AddParameter(new TypeBoolean("value", false, "Whether the cheat will be enabled or disabled. Default count as a toggle"));
         this.playerManager = playerManager;
         this.sessionSettings = sessionSettings;
@@ -21,33 +22,22 @@ public class FastCommand : Command
 
     protected override void Execute(CallArgs args)
     {
-        string cheatName = args.Get<string>(0).ToLowerInvariant();
+        FastCheatChanged.FastCheat cheat = args.Get<FastCheatChanged.FastCheat>(0);
 
-        FastCheatChanged.FastCheat cheat;
-        bool value;
-        switch (cheatName)
+        bool value = cheat switch
         {
-            case "hatch":
-                cheat = FastCheatChanged.FastCheat.FAST_HATCH;
-                value = sessionSettings.FastHatch;
-                break;
+            FastCheatChanged.FastCheat.HATCH => sessionSettings.FastHatch,
+            FastCheatChanged.FastCheat.GROW => sessionSettings.FastGrow,
+            _ => throw new ArgumentException("Must provide a valid cheat name: \"hatch\" or \"grow\""),
+        };
 
-            case "grow":
-                cheat = FastCheatChanged.FastCheat.FAST_GROW;
-                value = sessionSettings.FastGrow;
-                break;
-
-            default:
-                SendMessage(args.Sender, "Must provide a valid cheat name: \"hatch\" or \"grow\"");
-                return;
-        }
 
         if (args.IsValid(1))
         {
             bool newValue = args.Get<bool>(1);
             if (newValue == value)
             {
-                SendMessage(args.Sender, $"Fast {cheatName} already set to {newValue}");
+                SendMessage(args.Sender, $"Fast {cheat} already set to {newValue}");
                 return;
             }
             value = newValue;
@@ -60,15 +50,15 @@ public class FastCommand : Command
 
         switch (cheat)
         {
-            case FastCheatChanged.FastCheat.FAST_HATCH:
+            case FastCheatChanged.FastCheat.HATCH:
                 sessionSettings.FastHatch = value;
                 break;
-            case FastCheatChanged.FastCheat.FAST_GROW:
+            case FastCheatChanged.FastCheat.GROW:
                 sessionSettings.FastGrow = value;
                 break;
         }
 
         playerManager.SendPacketToAllPlayers(new FastCheatChanged(cheat, value));
-        SendMessageToAllPlayers($"Fast {cheatName} changed to {value} by {args.SenderName}");
+        SendMessageToAllPlayers($"Fast {cheat} changed to {value} by {args.SenderName}");
     }
 }

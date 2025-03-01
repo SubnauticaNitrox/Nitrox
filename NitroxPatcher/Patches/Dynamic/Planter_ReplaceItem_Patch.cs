@@ -19,7 +19,7 @@ public sealed partial class Planter_ReplaceItem_Patch : NitroxPatch, IDynamicPat
             return;
         }
 
-        if (seed.TryGetNitroxId(out NitroxId nitroxId))
+        if (seed.TryGetIdOrWarn(out NitroxId nitroxId))
         {
             NitroxEntity.SetNewId(plant.gameObject, nitroxId);
         }
