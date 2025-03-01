@@ -1,14 +1,16 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
 public class ReferenceHolder : MonoBehaviour
 {
-    public object Reference;
+    private readonly Dictionary<Type, object> references = [];
 
     public bool TryGetReference<T>(out T outReference)
     {
-        if (Reference is T reference)
+        if (references.TryGetValue(typeof(T), out object value) && value is T reference)
         {
             outReference = reference;
             return true;
@@ -18,15 +20,8 @@ public class ReferenceHolder : MonoBehaviour
         return false;
     }
 
-    public static ReferenceHolder EnsureReferenceAttached(Component component, object reference)
+    public void AddReference<T>(T reference)
     {
-        return EnsureReferenceAttached(component.gameObject, reference);
-    }
-
-    public static ReferenceHolder EnsureReferenceAttached(GameObject gameObject, object reference)
-    {
-        ReferenceHolder referenceHolder = gameObject.EnsureComponent<ReferenceHolder>();
-        referenceHolder.Reference = reference;
-        return referenceHolder;
+        references[typeof(T)] = reference;
     }
 }

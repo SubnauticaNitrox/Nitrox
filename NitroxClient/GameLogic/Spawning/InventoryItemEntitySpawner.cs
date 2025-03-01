@@ -139,7 +139,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
                     // therefore we give the metadata to the object so it can be used when required
                     if (metadata.FruitPlantMetadata != null && plantable.growingPlant && plantable.growingPlant.GetProgress() == 1f)
                     {
-                        MetadataHolder.AddMetadata(plantable.growingPlant.gameObject, metadata.FruitPlantMetadata);
+                        plantable.growingPlant.AddReference(metadata.FruitPlantMetadata);
                     }
 
                     // NB: Entities.SpawnBatchAsync (which is the function calling the current spawner)

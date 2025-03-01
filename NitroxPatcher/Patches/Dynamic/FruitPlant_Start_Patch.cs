@@ -1,5 +1,5 @@
 using System.Reflection;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.Helpers;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -15,7 +15,7 @@ public sealed partial class FruitPlant_Start_Patch : NitroxPatch, IDynamicPatch
     {
         foreach (PickPrefab pickPrefab in __instance.fruits)
         {
-            ReferenceHolder.EnsureReferenceAttached(pickPrefab, __instance);
+            pickPrefab.AddReference(__instance);
         }
     }
 }

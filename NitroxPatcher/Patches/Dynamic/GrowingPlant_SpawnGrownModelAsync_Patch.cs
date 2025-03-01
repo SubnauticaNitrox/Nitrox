@@ -4,7 +4,8 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.Helpers;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ public sealed partial class GrowingPlant_SpawnGrownModelAsync_Patch : NitroxPatc
 
     public static void OnGrown(GrownPlant grownPlant, GrowingPlant growingPlant)
     {
-        if (!grownPlant.TryGetComponent(out FruitPlant fruitPlant) || !growingPlant.TryGetComponent(out MetadataHolder metadataHolder))
+        if (!grownPlant.TryGetComponent(out FruitPlant fruitPlant) || !growingPlant.TryGetReference(out FruitPlantMetadata fruitPlantMetadata))
         {
             // Original call if we don't need to apply anything
             grownPlant.SendMessage("OnGrown", SendMessageOptions.DontRequireReceiver);
@@ -50,6 +51,6 @@ public sealed partial class GrowingPlant_SpawnGrownModelAsync_Patch : NitroxPatc
         // Only useful stuff from FruitPlant.OnGrown
         fruitPlant.Initialize();
         fruitPlant.fruitSpawnEnabled = true;
-        Resolve<FruitPlantMetadataProcessor>().ProcessMetadata(grownPlant.seed.gameObject, metadataHolder.Consume());
+        Resolve<FruitPlantMetadataProcessor>().ProcessMetadata(grownPlant.seed.gameObject, fruitPlantMetadata);
     }
 }

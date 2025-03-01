@@ -1,7 +1,7 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.Helpers;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -18,8 +18,7 @@ public sealed partial class PickPrefab_SetPickedUp_Patch : NitroxPatch, IDynamic
 
     public static void Postfix(PickPrefab __instance)
     {
-        if (!__instance.TryGetComponent(out ReferenceHolder referenceHolder) ||
-            !referenceHolder.TryGetReference(out FruitPlant fruitPlant))
+        if (!__instance.TryGetReference(out FruitPlant fruitPlant))
         {
             return;
         }
