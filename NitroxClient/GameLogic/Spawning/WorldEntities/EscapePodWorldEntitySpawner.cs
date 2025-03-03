@@ -81,6 +81,8 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
 
             Radio radio = pod.radioSpawner.spawnedObj.GetComponent<Radio>();
             EscapePodMetadataProcessor.ProcessInitialSyncMetadata(pod, radio, metadata);
+            // NB: Entities.SpawnBatchAsync (which is the function calling the current spawner)
+            // will still apply the metadata another time but we don't care as it's not destructive
         }
 
         FixStartMethods(escapePod);

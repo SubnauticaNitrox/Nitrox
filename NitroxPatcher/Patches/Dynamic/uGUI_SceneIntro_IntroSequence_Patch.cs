@@ -112,17 +112,17 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             return true;
         }
 
+        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
+        {
+            SkipLocalCinematic(uGuiSceneIntro, false);
+            return false;
+        }
+
         // Skipping intro if creative like in normal SN or in debug configuration
         if (!NitroxEnvironment.IsReleaseMode ||
             GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
         {
-            SkipLocalCinematic(uGuiSceneIntro);
-            return false;
-        }
-
-        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
-        {
-            SkipLocalCinematic(uGuiSceneIntro);
+            SkipLocalCinematic(uGuiSceneIntro, true);
             return false;
         }
 
@@ -199,15 +199,19 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     private static bool IsPartnerValid() => partner != null && Resolve<PlayerManager>().Find(partner.PlayerId).HasValue;
 
-    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro)
+    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro, bool wasNewPlayer)
     {
-        // EscapePod.DamageRadio() is called by GuiSceneIntro.Stop(true) but is undesired. We revert it here
         LiveMixin radioLiveMixin = EscapePod.main.radioSpawner.spawnedObj.GetComponent<Radio>().liveMixin;
         float radioHealthBefore = radioLiveMixin.health;
 
         uGuiSceneIntro.Stop(true);
 
-        radioLiveMixin.health = radioHealthBefore;
+        if (!wasNewPlayer)
+        {
+            // EscapePod.DamageRadio() is called by GuiSceneIntro.Stop(true) but is undesired. We revert it here
+            radioLiveMixin.health = radioHealthBefore;
+        }
+
         if (radioLiveMixin.IsFullHealth())
         {
             Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
