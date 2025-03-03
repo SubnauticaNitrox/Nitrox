@@ -26,11 +26,11 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                )
                .SetAndAdvance(OpCodes.Call, Reflect.Method(() => IsWorldSettledAndInitialSyncCompleted()))
                .RemoveInstruction()
-               // Replace GameInput.AnyKeyDown() check with AnyKeyDownOrModeCompleted()
+               // Replace GameInput.AnyKeyDown() check with AnyKeyDownOrSubstitute()
                .MatchEndForward(
                    new CodeMatch(OpCodes.Call, Reflect.Method(() => GameInput.AnyKeyDown()))
                )
-               .SetOperandAndAdvance(Reflect.Method(() => AnyKeyDownOrModeCompleted()))
+               .SetOperandAndAdvance(Reflect.Method(() => AnyKeyDownOrSubstitute()))
                // Insert custom check if cinematic should be started => waiting for other player & enable skip functionality
                .MatchEndForward(
                    new CodeMatch(OpCodes.Ldfld, Reflect.Field((uGUI_SceneIntro si) => si.moveNext)),
@@ -92,9 +92,11 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
-    private static bool AnyKeyDownOrModeCompleted()
+    private static bool AnyKeyDownOrSubstitute()
     {
-        return GameInput.AnyKeyDown() || Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED;
+        return GameInput.AnyKeyDown() ||
+               !NitroxEnvironment.IsReleaseMode ||
+               Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED;
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
