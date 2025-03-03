@@ -159,6 +159,10 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
                     }
                 }
                 break;
+            case WaterPark:
+                PlanterEntity planter = new(interiorPiece.Id.Increment(), interiorPiece.Id);
+                interiorPiece.ChildEntities.Add(planter);
+                break;
         }
 
         interiorPiece.BaseFace = module.moduleFace.ToDto();

@@ -152,7 +152,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 parentEntity.ChildEntities.RemoveAll(childEntity => childEntity.Id.Equals(entity.Id));
                 entity.ParentId = null;
-                if (entity is WorldEntity worldEntity)
+                if (entity is WorldEntity worldEntity && worldEntity.Transform != null)
                 {
                     worldEntity.Transform.SetParent(null, true);
                 }
@@ -192,7 +192,8 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return;
             }
-            if (entity is WorldEntity worldEntity && newParent is WorldEntity parentWorldEntity)
+            if (entity is WorldEntity worldEntity && worldEntity.Transform != null &&
+                newParent is WorldEntity parentWorldEntity && parentWorldEntity.Transform != null)
             {
                 worldEntity.Transform.SetParent(parentWorldEntity.Transform, true);
             }
@@ -217,15 +218,17 @@ namespace NitroxServer.GameLogic.Entities
 
         public void TransferChildren(Entity parent, Entity newParent, Func<Entity, bool> filter = null)
         {
-            IEnumerable<Entity> childrenToMove = filter != null ?
-                parent.ChildEntities.Where(filter) : parent.ChildEntities;
+            List<Entity> childrenToMove = filter != null ?
+                [.. parent.ChildEntities.Where(filter)] : parent.ChildEntities;
+
+            // In case parent == newParent (which is actually a case used) we need removal to happen before adding the entities back
+            parent.ChildEntities.RemoveAll(entity => filter(entity));
 
             foreach (Entity childEntity in childrenToMove)
             {
                 childEntity.ParentId = newParent.Id;
                 newParent.ChildEntities.Add(childEntity);
             }
-            parent.ChildEntities.RemoveAll(entity => filter(entity));
         }
     }
 }

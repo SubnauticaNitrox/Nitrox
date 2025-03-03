@@ -186,5 +186,7 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
         Log.Verbose($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
+
+        Temp.Dispose();
     }
 }
