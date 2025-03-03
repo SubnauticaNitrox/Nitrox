@@ -52,14 +52,19 @@
                 <Setter Property="ToolTip.Placement" Value="Pointer" />
                 <Setter Property="Template">
                     <ControlTemplate>
-                        <Panel Background="{TemplateBinding Background}" HorizontalAlignment="Stretch">
-                            <StackPanel
-                                Margin="{TemplateBinding Padding}"
-                                Orientation="Horizontal"
-                                Spacing="10">
-                                <Image Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}" />
-                                <TextBlock FontSize="{TemplateBinding FontSize}" Text="{TemplateBinding Content}" />
-                            </StackPanel>
+                        <Panel Background="{TemplateBinding Background}"
+                               HorizontalAlignment="Stretch">
+                            <Grid Margin="{TemplateBinding Padding}"
+                                  ColumnDefinitions="48,*">
+                                <Image Grid.Column="0"
+                                       Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}"
+                                       Stretch="UniformToFill" />
+                                <TextBlock Grid.Column="1"
+                                           TextAlignment="Start"
+                                           VerticalAlignment="Center"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           Text="{TemplateBinding Content}" />
+                            </Grid>
                         </Panel>
                     </ControlTemplate>
                 </Setter>

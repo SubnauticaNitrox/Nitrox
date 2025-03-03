@@ -405,27 +405,37 @@
             Grid.Row="2"
             Padding="25,17">
             <Grid
-                ColumnDefinitions="*,1*"
+                ColumnDefinitions="*,*"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-                <StackPanel
-                    Background="Transparent"
-                    Grid.Column="0"
-                    IsEnabled="{OnPlatform {Binding !ServerIsOnline},
-                                           macOS={x:False}}"
-                    ToolTip.ShowOnDisabled="True"
-                    ToolTip.Tip="{OnPlatform {x:Null},
-                                             macOS='External server console is not available for MacOS'}">
-                    <RadioButton
-                        Content="External"
-                        IsChecked="{Binding !ServerEmbedded}"
-                        ToolTip.ShowOnDisabled="False"
-                        ToolTip.Tip="Run server in external mode as a separate command line window" />
-                    <RadioButton
-                        Content="Embedded"
-                        IsChecked="{Binding ServerEmbedded}"
-                        ToolTip.ShowOnDisabled="False"
-                        ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+                <StackPanel Grid.Column="0"
+                            IsEnabled="{Binding !ServerIsOnline}"
+                            Background="Transparent">
+                    <OnPlatform>
+                        <OnPlatform.Default>
+                            <StackPanel>
+                                <RadioButton Content="External"
+                                             GroupName="Choose runtime option"
+                                             IsChecked="{Binding !ServerEmbedded}"
+                                             ToolTip.ShowOnDisabled="True"
+                                             ToolTip.Tip="Run server in external mode as a separate command line window" />
+                            
+                                <RadioButton Content="Embedded"
+                                             GroupName="Choose runtime option"
+                                             IsChecked="{Binding ServerEmbedded}"
+                                             ToolTip.ShowOnDisabled="True"
+                                             ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+                            </StackPanel>
+                        </OnPlatform.Default>
+                        
+                        <OnPlatform.macOS>
+                            <RadioButton Content="Embedded"
+                                         GroupName="Choose runtime option"
+                                         IsChecked="True"
+                                         ToolTip.ShowOnDisabled="True"
+                                         ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+                        </OnPlatform.macOS>
+                    </OnPlatform>
                 </StackPanel>
 
                 <Panel Grid.Column="1" HorizontalAlignment="Stretch">
