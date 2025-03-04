@@ -46,7 +46,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
             {
                 return;
             }
-            if (!status.IsOnline)
+            if (!status.IsOnline && model.HostScreen.ActiveViewModel is EmbeddedServerViewModel)
             {
                 model.HostScreen.BackAsync().ConfigureAwait(false);
             }
