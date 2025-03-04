@@ -109,7 +109,7 @@
                 Watermark="A server command here"
                 x:Name="ServerCommandTextBox">
                 <Interaction.Behaviors>
-                    <behaviors:SetFocusedOnViewShowBehavior />
+                    <behaviors:FocusOnViewShowBehavior />
                 </Interaction.Behaviors>
             </TextBox>
             <StackPanel

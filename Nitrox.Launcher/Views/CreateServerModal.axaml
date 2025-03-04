@@ -32,7 +32,7 @@
                         Text="{Binding Name, Converter={converters:TrimConverter}}"
                         Watermark="My server">
                         <Interaction.Behaviors>
-                            <behaviors:SetFocusedOnViewShowBehavior />
+                            <behaviors:FocusOnViewShowBehavior />
                         </Interaction.Behaviors>
                     </TextBox>
                 </StackPanel>
