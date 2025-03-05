@@ -28,7 +28,7 @@ internal class QueryCommand : Command
         if (entityRegistry.Value.TryGetEntityById(nitroxId, out Entity entity))
         {
             Log.Info(entity);
-            if (entity is WorldEntity worldEntity)
+            if (entity is WorldEntity worldEntity && worldEntity.Transform != null)
             {
                 Log.Info(worldEntity.AbsoluteEntityCell);
             }
