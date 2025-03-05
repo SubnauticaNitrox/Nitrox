@@ -92,7 +92,7 @@ public abstract class Modal
         CurrentModal = null;
         if (FreezeGame)
         {
-            FreezeTime.End(FreezeTime.Id.IngameMenu);
+            FreezeTime.End(FreezeTime.Id.Quit);
         }
         if (IsAvoidable)
         {

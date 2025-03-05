@@ -68,6 +68,7 @@ public class PatchesTranspilerTest
         [typeof(SpawnOnKill_OnKill_Patch), 3],
         [typeof(SubConsoleCommand_OnConsoleCommand_sub_Patch), 0],
         [typeof(SubRoot_OnPlayerEntered_Patch), 5],
+        [typeof(uGUI_OptionsPanel_AddAccessibilityTab_Patch), -10],
         [typeof(uGUI_PDA_Initialize_Patch), 2],
         [typeof(uGUI_PDA_SetTabs_Patch), 3],
         [typeof(uGUI_Pings_IsVisibleNow_Patch), 0],
