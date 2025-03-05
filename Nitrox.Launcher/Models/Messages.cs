@@ -1,5 +1,4 @@
 using Nitrox.Launcher.Models.Design;
-using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Models;
 
@@ -12,6 +11,6 @@ public record NotificationAddMessage(NotificationItem Item);
 
 public record NotificationCloseMessage(NotificationItem Item);
 
-public record ViewShownMessage(RoutableViewModelBase ViewModel);
+public record ViewShownMessage(object ViewModel);
 
 public record ServerStatusMessage(ServerEntry Server, bool IsOnline);

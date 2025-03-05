@@ -47,7 +47,6 @@ public static class ScreenExtensions
         }
         await contentLoadTask;
         screen.ActiveViewModel = routableViewModel;
-        WeakReferenceMessenger.Default.Send(new ViewShownMessage(routableViewModel));
     }
 
     public static async Task<bool> BackAsync(this IRoutingScreen screen)

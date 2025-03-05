@@ -7,11 +7,18 @@ namespace Nitrox.Launcher.Models.Behaviors;
 /// <summary>
 ///     Focuses the <see cref="Behavior.AssociatedObject" /> when its parent view is shown.
 /// </summary>
-public class SetFocusedOnViewShowBehavior : Behavior<Control>
+public class FocusOnViewShowBehavior : Behavior<Control>
 {
-    public SetFocusedOnViewShowBehavior()
+    protected override void OnAttached()
     {
-        WeakReferenceMessenger.Default.Register<ViewShownMessage>(this, (_, _) => Focus());
+        WeakReferenceMessenger.Default.Register<ViewShownMessage>(this, static (obj, _) => (obj as FocusOnViewShowBehavior)?.Focus());
+        base.OnAttached();
+    }
+
+    protected override void OnDetaching()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        base.OnDetaching();
     }
 
     protected override void OnAttachedToVisualTree() => Focus();
