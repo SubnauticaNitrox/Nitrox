@@ -1,6 +1,7 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -11,25 +12,28 @@ public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionP
 {
     public override void Process(ExosuitArmActionPacket packet)
     {
-        if (!NitroxEntity.TryGetObjectFrom(packet.ArmId, out GameObject gameObject))
+        if (!NitroxEntity.TryGetObjectFrom(packet.ExosuitId, out GameObject gameObject))
         {
-            Log.Error("Could not find exosuit arm");
+            Log.Error("Could not find exosuit for arm action");
             return;
         }
 
+        Exosuit exosuit = gameObject.RequireComponent<Exosuit>();
+        IExosuitArm arm = packet.ArmSide == Exosuit.Arm.Left ? exosuit.leftArm : exosuit.rightArm;
+
         switch (packet.TechType)
         {
-            case TechType.ExosuitClawArmModule:
-                ExosuitModuleEvent.UseClaw(gameObject.GetComponent<ExosuitClawArm>(), packet.ArmAction);
+            case TechType.ExosuitClawArmModule when arm is ExosuitClawArm clawArm:
+                ExosuitModuleEvent.UseClaw(clawArm, packet.ArmAction);
                 break;
-            case TechType.ExosuitDrillArmModule:
-                ExosuitModuleEvent.UseDrill(gameObject.GetComponent<ExosuitDrillArm>(), packet.ArmAction);
+            case TechType.ExosuitDrillArmModule when arm is ExosuitDrillArm drillArm:
+                ExosuitModuleEvent.UseDrill(drillArm, packet.ArmAction);
                 break;
-            case TechType.ExosuitGrapplingArmModule:
-                ExosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector?.ToUnity());
+            case TechType.ExosuitGrapplingArmModule when arm is ExosuitGrapplingArm grapplingArm:
+                ExosuitModuleEvent.UseGrappling(grapplingArm, packet.ArmAction, packet.OpVector?.ToUnity());
                 break;
             default:
-                Log.Error($"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
+                Log.Error($"Unhandled arm tech or invalid arm type: {packet.TechType} with action {packet.ArmAction} on {arm.GetGameObject().name} for exosuit {packet.ExosuitId}");
                 break;
         }
     }

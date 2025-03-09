@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxModel_Subnautica.Packets
 {
@@ -10,15 +9,17 @@ namespace NitroxModel_Subnautica.Packets
     public class ExosuitArmActionPacket : Packet
     {
         public TechType TechType { get; }
-        public NitroxId ArmId { get; }
+        public NitroxId ExosuitId { get; }
+        public Exosuit.Arm ArmSide { get; }
         public ExosuitArmAction ArmAction { get; }
         public NitroxVector3? OpVector { get; }
         public NitroxQuaternion? OpRotation { get; }
 
-        public ExosuitArmActionPacket(TechType techType, NitroxId armId, ExosuitArmAction armAction, NitroxVector3? opVector, NitroxQuaternion? opRotation)
+        public ExosuitArmActionPacket(TechType techType, NitroxId exosuitId, Exosuit.Arm armSide, ExosuitArmAction armAction, NitroxVector3? opVector, NitroxQuaternion? opRotation)
         {
             TechType = techType;
-            ArmId = armId;
+            ExosuitId = exosuitId;
+            ArmSide = armSide;
             ArmAction = armAction;
             OpVector = opVector;
             OpRotation = opRotation;
@@ -26,7 +27,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return $"[ExosuitArmAction - TechType: {TechType}, ArmId:{ArmId}, ArmAction: {ArmAction}, Vector: {OpVector}, Rotation: {OpRotation}]";
+            return $"[ExosuitArmAction - TechType: {TechType}, ExosuitId:{ExosuitId}, ArmSide: {ArmSide}, ArmAction: {ArmAction}, Vector: {OpVector}, Rotation: {OpRotation}]";
         }
     }
 

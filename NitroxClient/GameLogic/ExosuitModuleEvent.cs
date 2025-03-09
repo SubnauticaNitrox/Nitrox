@@ -1,6 +1,6 @@
 using NitroxClient.Communication.Abstract;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -18,7 +18,8 @@ public class ExosuitModuleEvent
         this.packetSender = packetSender;
     }
 
-    public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)
+
+    public void BroadcastClawUse(Exosuit exosuit, ExosuitClawArm clawArm, float cooldown)
     {
         ExosuitArmAction action;
 
@@ -37,7 +38,30 @@ public class ExosuitModuleEvent
             return;
         }
 
-        BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, null, null);
+        BroadcastArmAction(TechType.ExosuitClawArmModule, exosuit, clawArm, action, null, null);
+    }
+
+    public void BroadcastArmAction(TechType techType, Exosuit exosuit, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
+    {
+        if (exosuit.TryGetIdOrWarn(out NitroxId id))
+        {
+            ExosuitArmActionPacket packet = new(techType, id, GetArmSide(exosuitArm), armAction, opVector?.ToDto(), opRotation?.ToDto());
+            packetSender.Send(packet);
+        }
+    }
+
+    public void BroadcastArmAction(TechType techType, Exosuit exosuit, IExosuitArm exosuitArm, ExosuitArmAction armAction)
+    {
+        if (exosuit.TryGetIdOrWarn(out NitroxId id))
+        {
+            ExosuitArmActionPacket packet = new(techType, id, GetArmSide(exosuitArm), armAction, null, null);
+            packetSender.Send(packet);
+        }
+    }
+
+    private static Exosuit.Arm GetArmSide(IExosuitArm arm)
+    {
+        return arm.GetGameObject().transform.localScale.x > 0 ? Exosuit.Arm.Left : Exosuit.Arm.Right;
     }
 
     public static void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
@@ -69,24 +93,6 @@ public class ExosuitModuleEvent
             default:
                 Log.Error($"Drill arm got an arm action he should not get: {armAction}");
                 break;
-        }
-    }
-
-    public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
-    {
-        if (exosuitArm.GetGameObject().TryGetIdOrWarn(out NitroxId id))
-        {
-            ExosuitArmActionPacket packet = new(techType, id, armAction, opVector?.ToDto(), opRotation?.ToDto());
-            packetSender.Send(packet);
-        }
-    }
-
-    public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
-    {
-        if (exosuitArm.GetGameObject().TryGetIdOrWarn(out NitroxId id))
-        {
-            ExosuitArmActionPacket packet = new(techType, id, armAction, null, null);
-            packetSender.Send(packet);
         }
     }
 

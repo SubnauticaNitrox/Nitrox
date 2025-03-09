@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -13,7 +13,7 @@ public sealed partial class ExosuitClawArm_TryUse_Patch : NitroxPatch, IDynamicP
     {
         if (__result)
         {
-            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastClawUse(__instance, ___cooldownTime);
+            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastClawUse(__instance.exosuit, __instance, ___cooldownTime);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel_Subnautica.Packets;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -11,6 +11,6 @@ public sealed partial class ExosuitDrillArm_OnUseUp_Patch : NitroxPatch, IDynami
 
     public static void Prefix(ExosuitDrillArm __instance)
     {
-        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance, ExosuitArmAction.END_USE_TOOL);
+        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance.exosuit, __instance, ExosuitArmAction.END_USE_TOOL);
     }
 }
