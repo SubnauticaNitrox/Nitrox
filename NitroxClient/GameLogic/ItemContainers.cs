@@ -3,6 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -26,7 +27,7 @@ namespace NitroxClient.GameLogic
             this.entityMetadataManager = entityMetadataManager;
         }
 
-        public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform)
+        public void BroadcastItemAddAndSendMetadata(Pickupable pickupable, Transform containerTransform)
         {
             // We don't want to broadcast that event if it's from another player's inventory
             if (containerTransform.GetComponentInParent<RemotePlayerIdentifier>(true))
@@ -47,6 +48,9 @@ namespace NitroxClient.GameLogic
             
             if (packetSender.Send(new EntityReparented(itemId, ownerId)))
             {
+                var iOxygenSource = pickupable.gameObject.GetComponent<IOxygenSource>();
+                var entityMetadataUpdate = GetEntityMetadataUpdateForIOxygenMetadata(iOxygenSource, itemId);
+                if (entityMetadataUpdate != null) packetSender.Send(entityMetadataUpdate);
                 Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
         }
@@ -93,6 +97,19 @@ namespace NitroxClient.GameLogic
 
             EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(installedBattery);
             packetSender.Send(spawnedPacket);
+        }
+
+        //Function that updates metadata for IOxygen items. Null safety.
+        private EntityMetadataUpdate GetEntityMetadataUpdateForIOxygenMetadata(IOxygenSource iOxygenSource, NitroxId itemId)
+        {
+            EntityMetadataUpdate entityMetadataUpdate = null;
+            if (iOxygenSource != null)
+            {
+                IOxygenSourceMetadataExtractor iOxygenSourceMetadataExtractor = new();
+                IOxygenSourceMetadata iOxygenSourceMetadata = iOxygenSourceMetadataExtractor.Extract(iOxygenSource);
+                entityMetadataUpdate = new EntityMetadataUpdate(itemId, iOxygenSourceMetadata);
+            }
+            return entityMetadataUpdate;
         }
     }
 }
