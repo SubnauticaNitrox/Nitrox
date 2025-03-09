@@ -58,7 +58,8 @@ namespace NitroxClient.GameLogic.Helper
             // TODO: in the future maybe use a switch on the PrefabId (it's always the same structure in a prefab)
             // and then statically look for the right object because we'll know exactly which one it is
 
-            // This check must happen before the GetComponent<IBaseModule> which will be triggered (wrong result)
+            // To treat the WaterPark in parent case, we need its case to happen before the IBaseModule one because
+            // IBaseModule will get the WaterPark but not get the id on the right object like in the first case
             if (parent.TryGetComponent(out WaterPark waterPark))
             {
                 return waterPark.planter.TryGetIdOrWarn(out ownerId);

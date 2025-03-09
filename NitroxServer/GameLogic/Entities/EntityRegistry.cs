@@ -159,6 +159,18 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+
+        /// <summary>
+        /// Removes all children from <paramref name="entity"/>
+        /// </summary>
+        public void CleanChildren(Entity entity)
+        {
+            for (int i = entity.ChildEntities.Count - 1; i >= 0; i--)
+            {
+                RemoveEntity(entity.ChildEntities[i].Id);
+            }
+        }
+
         public void ReparentEntity(NitroxId entityId, NitroxId newParentId)
         {
             if (entityId == null || !TryGetEntityById(entityId, out Entity entity))

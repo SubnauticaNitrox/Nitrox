@@ -19,7 +19,7 @@ public class CreepvineEntitySpawner(DefaultWorldEntitySpawner defaultWorldEntity
 
         SetupObject(result.value.Value);
 
-        // result is already set
+        // result is already set by defaultWorldEntitySpawner.SpawnAsync
     }
 
     public bool SpawnsOwnChildren() => false;

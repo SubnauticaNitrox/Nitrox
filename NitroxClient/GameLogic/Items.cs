@@ -92,6 +92,12 @@ public class Items
         // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
 
+        // WaterParkCreatures need at least one ManagedUpdate to run so their data is correctly refreshed (isMature and timeNextBreed)
+        if (gameObject.TryGetComponent(out WaterParkCreature waterParkCreature))
+        {
+            waterParkCreature.ManagedUpdate();
+        }
+
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;

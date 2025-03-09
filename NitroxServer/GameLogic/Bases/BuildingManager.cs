@@ -257,22 +257,11 @@ public class BuildingManager
         // which avoids an o(n) search in interiorPieceEntity's children, and makes it into a o(1) get
         if (entityRegistry.TryGetEntityById(leftPlanterId, out PlanterEntity leftPlanterEntity))
         {
-            CleanChildren(leftPlanterEntity);
+            entityRegistry.CleanChildren(leftPlanterEntity);
         }
         if (entityRegistry.TryGetEntityById(rightPlanterId, out PlanterEntity rightPlanterEntity))
         {
-            CleanChildren(rightPlanterEntity);
-        }
-    }
-
-    /// <summary>
-    /// Removes all children from <paramref name="entity"/>
-    /// </summary>
-    private void CleanChildren(Entity entity)
-    {
-        for (int i = entity.ChildEntities.Count - 1; i >= 0; i--)
-        {
-            entityRegistry.RemoveEntity(entity.ChildEntities[i].Id);
+            entityRegistry.CleanChildren(rightPlanterEntity);
         }
     }
 
@@ -337,11 +326,12 @@ public class BuildingManager
         InteriorPieceEntity newPiece = waterParkDeconstructed.NewWaterPark;
         worldEntityManager.AddOrUpdateGlobalRootEntity(newPiece);
 
+        // This part doesn't need all the below register again code because in this very case
+        // (a water park split between a below and an above one) the below water park is still the same
         foreach (NitroxId childId in waterParkDeconstructed.MovedChildrenIds)
         {
             entityRegistry.ReparentEntity(childId, newPiece);
         }
-
 
         if (removedEntity != null && waterParkDeconstructed.Transfer)
         {
@@ -351,7 +341,7 @@ public class BuildingManager
 
             List<Entity> childEntities = [.. removedEntity.ChildEntities.Where(e => e is not PlanterEntity)];
 
-            foreach (Entity childEntity in childEntities.Where(e => e is not PlanterEntity))
+            foreach (Entity childEntity in childEntities)
             {
                 entityRegistry.RemoveFromParent(childEntity);
                 childEntity.ParentId = newPiece.Id;
@@ -363,6 +353,36 @@ public class BuildingManager
                 {
                     entityRegistry.AddOrUpdate(childEntity);
                 }
+            }
+        }
+
+        return true;
+    }
+
+    public bool SeparateChildrenToWaterParks(LargeWaterParkDeconstructed packet)
+    {
+        if (packet.MovedChildrenIdsByNewHostId.Count == 0)
+        {
+            return true;
+        }
+
+        if (packet.PieceId == null || !entityRegistry.TryGetEntityById(packet.PieceId, out InteriorPieceEntity deconstructedPiece))
+        {
+            Log.Error($"Could not find {nameof(InteriorPieceEntity)} with id {packet.PieceId} to be deconstructed");
+            return false;
+        }
+
+        foreach (KeyValuePair<NitroxId, List<NitroxId>> entry in packet.MovedChildrenIdsByNewHostId)
+        {
+            if (!entityRegistry.TryGetEntityById(entry.Key, out InteriorPieceEntity waterPark))
+            {
+                Log.Error($"Could not find {nameof(InteriorPieceEntity)} id {entry.Key} to move {entry.Value} entities to");
+                continue;
+            }
+
+            foreach (NitroxId entityId in entry.Value)
+            {
+                entityRegistry.ReparentEntity(entityId, waterPark);
             }
         }
 

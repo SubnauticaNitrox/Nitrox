@@ -9,7 +9,7 @@ public sealed partial class Planter_AddItem_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Planter p) => p.AddItem(default, default));
 
-    public static void Postfix(Plantable plantable, int slotID, Planter __instance)
+    public static void Postfix(Planter __instance, Plantable plantable, int slotID)
     {
         Planter.PlantSlot slotByID = __instance.GetSlotByID(slotID);
 

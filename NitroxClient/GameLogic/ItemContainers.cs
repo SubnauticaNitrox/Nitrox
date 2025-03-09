@@ -38,7 +38,7 @@ public class ItemContainers
 
         if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
         {
-            // Error logging is done in the function
+            // Error logging is done in the try function
             return;
         }
 
@@ -54,7 +54,7 @@ public class ItemContainers
             return;
         }
 
-        // calls from Inventory.Pickup are managed by Items.PickedUp
+        // Calls from Inventory.Pickup are managed by Items.PickedUp
         if (items.IsInventoryPickingUp)
         {
             return;
