@@ -17,9 +17,15 @@ public class DrillableMetadataProcessor : EntityMetadataProcessor<DrillableMetad
             return;
         }
 
-        Validate.IsTrue(drillable.health.Length == metadata.ChunkHealth.Length);
-
         drillable.timeLastDrilled = metadata.TimeLastDrilled;
+
+        if (drillable.health == null)
+        {
+            drillable.health = metadata.ChunkHealth;
+            return;
+        }
+
+        Validate.IsTrue(drillable.health.Length == metadata.ChunkHealth.Length);
 
         float totalHealth = drillable.health.Sum();
 
@@ -38,7 +44,8 @@ public class DrillableMetadataProcessor : EntityMetadataProcessor<DrillableMetad
             }
 
             float oldTotalHealth = totalHealth;
-            totalHealth -= drillable.health[i] + metadata.ChunkHealth[i];
+            totalHealth -= drillable.health[i];
+            totalHealth += metadata.ChunkHealth[i];
 
             drillable.health[i] = metadata.ChunkHealth[i];
 

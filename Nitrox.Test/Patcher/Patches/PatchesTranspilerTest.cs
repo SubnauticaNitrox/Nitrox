@@ -38,6 +38,7 @@ public class PatchesTranspilerTest
         [typeof(CyclopsSonarButton_Update_Patch), 3],
         [typeof(CyclopsSonarDisplay_NewEntityOnSonar_Patch), 3],
         [typeof(DevConsole_Update_Patch), 0],
+        [typeof(Drillable_ManagedUpdate_Patch), 3],
         [typeof(Drillable_SpawnLootAsync_Patch), 2],
         [typeof(Eatable_IterateDespawn_Patch), 2],
         [typeof(EnergyMixin_SpawnDefaultAsync_Patch), -64],
