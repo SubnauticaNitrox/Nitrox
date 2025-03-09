@@ -27,3 +27,5 @@ public class BaseDeconstructedProcessor : BuildProcessor<BaseDeconstructed> { }
 public class PieceDeconstructedProcessor : BuildProcessor<PieceDeconstructed> { }
 
 public class WaterParkDeconstructedProcessor : BuildProcessor<WaterParkDeconstructed> { }
+
+public class LargeWaterParkDeconstructedProcessor : BuildProcessor<LargeWaterParkDeconstructed> { }

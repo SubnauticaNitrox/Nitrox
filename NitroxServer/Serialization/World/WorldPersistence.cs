@@ -147,7 +147,8 @@ public class WorldPersistence
             EntityRegistry = entityRegistry,
             GameData = pWorldData.WorldData.GameData,
             GameMode = gameMode,
-            Seed = seed
+            Seed = seed,
+            SessionSettings = new()
         };
 
         world.TimeKeeper = new(world.PlayerManager, ntpSyncer, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);

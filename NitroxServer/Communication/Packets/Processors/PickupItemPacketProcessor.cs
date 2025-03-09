@@ -26,14 +26,15 @@ public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem
 
     public override void Process(PickupItem packet, Player player)
     {
-        if (simulationOwnershipData.RevokeOwnerOfId(packet.Id))
+        NitroxId id = packet.Item.Id;
+        if (simulationOwnershipData.RevokeOwnerOfId(id))
         {
             ushort serverId = ushort.MaxValue;
-            SimulationOwnershipChange simulationOwnershipChange = new(packet.Id, serverId, SimulationLockType.TRANSIENT);
+            SimulationOwnershipChange simulationOwnershipChange = new(id, serverId, SimulationLockType.TRANSIENT);
             playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
         }
 
-        StopTrackingExistingWorldEntity(packet.Id);
+        StopTrackingExistingWorldEntity(id);
 
         entityRegistry.AddOrUpdate(packet.Item);
 

@@ -1,6 +1,3 @@
-global using NitroxClient.Helpers;
-global using NitroxModel.Logger;
-global using static NitroxModel.Extensions;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
