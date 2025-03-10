@@ -3,6 +3,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
@@ -16,6 +17,9 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     private float thrustPower;
     private bool jetsActive;
     private float timeJetsActiveChanged;
+    private Vector3 leftAimTarget;
+    private Vector3 rightAimTarget;
+    private bool ikEnabled;
 
     public void Awake()
     {
@@ -75,14 +79,21 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         }
     }
 
+    public void LateUpdate()
+    {
+        exosuit.aimTargetLeft.transform.localPosition = leftAimTarget;
+        exosuit.aimTargetRight.transform.localPosition = rightAimTarget;
+        exosuit.SetIKEnabled(ikEnabled);
+    }
+
     public override void ApplyNewMovementData(MovementData newMovementData)
     {
-        if (newMovementData is not DrivenVehicleMovementData vehicleMovementData)
+        if (newMovementData is not ExosuitMovementData exosuitMovementData)
         {
             return;
         }
-        float steeringWheelYaw = vehicleMovementData.SteeringWheelYaw;
-        float steeringWheelPitch = vehicleMovementData.SteeringWheelPitch;
+        float steeringWheelYaw = exosuitMovementData.SteeringWheelYaw;
+        float steeringWheelPitch = exosuitMovementData.SteeringWheelPitch;
 
         // See Vehicle.Update (reverse operation for vehicle.steeringWheel... = ...)
         exosuit.steeringWheelYaw = steeringWheelPitch / 70f;
@@ -95,11 +106,15 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         }
 
         // See Exosuit.jetsActive setter
-        if (jetsActive != vehicleMovementData.ThrottleApplied)
+        if (jetsActive != exosuitMovementData.ThrottleApplied)
         {
-            jetsActive = vehicleMovementData.ThrottleApplied;
+            jetsActive = exosuitMovementData.ThrottleApplied;
             timeJetsActiveChanged = Time.time;
         }
+
+        leftAimTarget = exosuitMovementData.AimTargetLeft.ToUnity();
+        rightAimTarget = exosuitMovementData.AimTargetRight.ToUnity();
+        ikEnabled = exosuitMovementData.IKEnabled;
     }
 
     private void SetupSound()
