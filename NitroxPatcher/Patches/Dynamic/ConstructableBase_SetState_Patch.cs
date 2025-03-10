@@ -17,33 +17,21 @@ public sealed partial class ConstructableBase_SetState_Patch : NitroxPatch, IDyn
 
     /*
      * Make it become
-	 * if (Builder.CanDestroyObject(gameObject))
-	 * {
-	 *     ConstructableBase_SetState_Patch.BeforeDestroy(gameObject); <==========
-	 *     UnityEngine.Object.Destroy(gameObject);
-	 * }
+     * if (Builder.CanDestroyObject(gameObject))
+     * {
+     *     ConstructableBase_SetState_Patch.BeforeDestroy(gameObject); <==========
+     *     UnityEngine.Object.Destroy(gameObject);
+     * }
      */
-    public static readonly InstructionsPattern InstructionPattern = new()
-    {
-        new() { OpCode = Call, Operand = new(nameof(Builder), nameof(Builder.CanDestroyObject)) },
-        { Brfalse, "Insert" }
-    };
-
-    public static readonly List<CodeInstruction> InstructionsToAdd = new()
-    {
-        TARGET_METHOD.Ldloc<GameObject>(),
-        new(Call, Reflect.Method(() => BeforeDestroy(default)))
-    };
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
-        instructions.Transform(InstructionPattern, (label, instruction) =>
-        {
-            if (label.Equals("Insert"))
-            {
-                return InstructionsToAdd;
-            }
-            return null;
-        });
+        instructions.RewriteOnPattern([
+            Reflect.Method(() => Builder.CanDestroyObject(default)),
+            Brfalse,
+            [
+                TARGET_METHOD.Ldloc<GameObject>(),
+                Reflect.Method(() => BeforeDestroy(default))
+            ]
+        ]);
 
     public static void BeforeDestroy(GameObject gameObject)
     {
