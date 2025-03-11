@@ -29,6 +29,6 @@ public sealed partial class Drillable_ManagedUpdate_Patch : NitroxPatch, IDynami
 
     private static void Callback(Drillable drillable, Pickupable pickupable)
     {
-        Resolve<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), drillable.drillingExo.storageContainer.transform);
+        Resolve<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), drillable.drillingExo.transform);
     }
 }
