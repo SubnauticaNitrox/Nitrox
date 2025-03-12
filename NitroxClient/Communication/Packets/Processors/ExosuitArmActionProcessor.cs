@@ -2,7 +2,6 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -30,7 +29,7 @@ public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionP
                 ExosuitModuleEvent.UseDrill(drillArm, packet.ArmAction);
                 break;
             case TechType.ExosuitGrapplingArmModule when arm is ExosuitGrapplingArm grapplingArm:
-                ExosuitModuleEvent.UseGrappling(grapplingArm, packet.ArmAction, packet.OpVector?.ToUnity());
+                ExosuitModuleEvent.UseGrappling(grapplingArm, packet.ArmAction);
                 break;
             default:
                 Log.Error($"Unhandled arm tech or invalid arm type: {packet.TechType} with action {packet.ArmAction} on {arm.GetGameObject().name} for exosuit {packet.ExosuitId}");

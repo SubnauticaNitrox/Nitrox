@@ -19,7 +19,7 @@ namespace NitroxClient.Debuggers
         {
             nameof(PlayerMovement), nameof(EntityTransformUpdates), nameof(PlayerStats), nameof(SpawnEntities), nameof(VehicleMovements), nameof(PlayerCinematicControllerCall),
             nameof(FMODAssetPacket), nameof(FMODEventInstancePacket), nameof(FMODCustomEmitterPacket), nameof(FMODStudioEmitterPacket), nameof(FMODCustomLoopingEmitterPacket), 
-            nameof(SimulationOwnershipChange), nameof(CellVisibilityChanged), nameof(PlayerInCyclopsMovement), nameof(CreatureActionChanged),
+            nameof(SimulationOwnershipChange), nameof(CellVisibilityChanged), nameof(PlayerInCyclopsMovement), nameof(CreatureActionChanged), nameof(GrapplingHookMovement),
         };
         private readonly List<PacketDebugWrapper> packets = new List<PacketDebugWrapper>(PACKET_STORED_COUNT);
 

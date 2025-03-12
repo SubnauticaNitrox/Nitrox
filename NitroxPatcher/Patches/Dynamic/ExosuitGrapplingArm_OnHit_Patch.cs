@@ -28,7 +28,6 @@ public sealed partial class ExosuitGrapplingArm_OnHit_Patch : NitroxPatch, IDyna
 
     public static void Postfix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
     {
-        // We send the hook direction to the other player so he sees where the other player exosuit is heading
-        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance.exosuit, __instance, ExosuitArmAction.START_USE_TOOL, ___hook.rb.velocity, null);
+        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance.exosuit, __instance, ExosuitArmAction.START_USE_TOOL);
     }
 }
