@@ -136,4 +136,21 @@ public class ExosuitModuleEvent
                 break;
         }
     }
+
+    public static void UseTorpedo(ExosuitTorpedoArm torpedoArm, ExosuitArmAction armAction)
+    {
+        switch (armAction)
+        {
+            case ExosuitArmAction.START_USE_TOOL:
+                torpedoArm.animator.SetBool("use_tool", true);
+                break;
+            case ExosuitArmAction.END_USE_TOOL:
+                torpedoArm.animator.SetBool("use_tool", false);
+                break;
+            default:
+                Log.Error($"Torpedo arm got an arm action it should not get: {armAction}");
+                break;
+
+        }
+    }
 }
