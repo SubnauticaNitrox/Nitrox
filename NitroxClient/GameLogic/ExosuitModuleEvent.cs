@@ -83,7 +83,7 @@ public class ExosuitModuleEvent
                 drillArm.StopEffects();
                 break;
             default:
-                Log.Error($"Drill arm got an arm action he should not get: {armAction}");
+                Log.Error($"Drill arm got an arm action it should not get: {armAction}");
                 break;
         }
     }
@@ -116,7 +116,23 @@ public class ExosuitModuleEvent
                 break;
             }
             default:
-                Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
+                Log.Error($"Grappling arm got an arm action it should not get: {armAction}");
+                break;
+        }
+    }
+
+    public static void UsePropulsion(ExosuitPropulsionArm propulsionArm, ExosuitArmAction armAction)
+    {
+        switch (armAction)
+        {
+            case ExosuitArmAction.START_USE_TOOL:
+                propulsionArm.propulsionCannon.animator.SetBool("use_tool", true);
+                break;
+            case ExosuitArmAction.END_USE_TOOL:
+                propulsionArm.propulsionCannon.animator.SetBool("use_tool", false);
+                break;
+            default:
+                Log.Error($"Propulsion arm got an arm action it should not get: {armAction}");
                 break;
         }
     }

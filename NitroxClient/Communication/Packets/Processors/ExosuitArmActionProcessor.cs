@@ -31,6 +31,9 @@ public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionP
             case TechType.ExosuitGrapplingArmModule when arm is ExosuitGrapplingArm grapplingArm:
                 ExosuitModuleEvent.UseGrappling(grapplingArm, packet.ArmAction);
                 break;
+            case TechType.ExosuitPropulsionArmModule when arm is ExosuitPropulsionArm propulsionArm:
+                ExosuitModuleEvent.UsePropulsion(propulsionArm, packet.ArmAction);
+                break;
             default:
                 Log.Error($"Unhandled arm tech or invalid arm type: {packet.TechType} with action {packet.ArmAction} on {arm.GetGameObject().name} for exosuit {packet.ExosuitId}");
                 break;
