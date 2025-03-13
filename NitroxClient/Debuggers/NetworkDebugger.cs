@@ -5,6 +5,7 @@ using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxModel;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers

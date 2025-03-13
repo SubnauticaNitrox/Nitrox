@@ -315,6 +315,10 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TimeStartHatching, metadataAfter.TimeStartHatching);
                 Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
                 break;
+            case DrillableMetadata metadata when entityAfter.Metadata is DrillableMetadata metadataAfter:
+                Assert.IsTrue(metadata.ChunkHealth.SequenceEqual(metadataAfter.ChunkHealth));
+                Assert.AreEqual(metadata.TimeLastDrilled, metadataAfter.TimeLastDrilled);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
