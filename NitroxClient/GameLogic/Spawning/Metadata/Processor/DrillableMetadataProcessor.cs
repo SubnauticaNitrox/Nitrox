@@ -1,5 +1,6 @@
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -52,6 +53,12 @@ public class DrillableMetadataProcessor : EntityMetadataProcessor<DrillableMetad
             if (oldTotalHealth > 0 && totalHealth <= 0)
             {
                 drillable.SpawnFX(drillable.breakAllFX, chunkPos);
+
+                // Only use of Drillable.onDrilled, saves having to use reflection to invoke it
+                if (drillable.TryGetComponentInParent(out AnteChamber antechamber))
+                {
+                    antechamber.OnDrilled(drillable);
+                }
             }
         }
     }
