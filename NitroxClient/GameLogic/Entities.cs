@@ -256,7 +256,7 @@ namespace NitroxClient.GameLogic
 
                 if (gameObject.HasValue)
                 {
-                    UnityEngine.Object.Destroy(gameObject.Value);
+                    UnityEngine.Object.DestroyImmediate(gameObject.Value);
                 }
             }
         }

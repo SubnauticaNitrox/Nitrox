@@ -91,7 +91,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         // so that player don't risk their whole inventory if they reconnect in the water.
         pickupable.destroyOnDeath = false;
 
-        using (PacketSuppressor<EntityReparented>.Suppress())
+        using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         {
             container.UnsafeAdd(new InventoryItem(pickupable));

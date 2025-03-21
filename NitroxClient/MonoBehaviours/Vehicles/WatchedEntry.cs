@@ -61,15 +61,18 @@ public class WatchedEntry
             bool throttleApplied = false;
 
             Vector3 input = AvatarInputHandler.main.IsEnabled() ? GameInput.GetMoveDirection() : Vector3.zero;
+
             // See SeaMoth.UpdateSounds
             if (vehicle is SeaMoth)
             {
                 throttleApplied = input.magnitude > 0f;
             }
             // See Exosuit.Update
-            else if (vehicle is Exosuit)
+            else if (vehicle is Exosuit exosuit)
             {
                 throttleApplied = input.y > 0f;
+
+                return new ExosuitMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), exosuit.aimTargetLeft.transform.localPosition.ToDto(), exosuit.aimTargetRight.transform.localPosition.ToDto(), steeringWheelYaw, steeringWheelPitch, throttleApplied, exosuit.IKenabled);
             }
 
             return new DrivenVehicleMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), steeringWheelYaw, steeringWheelPitch, throttleApplied);
