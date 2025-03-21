@@ -34,21 +34,14 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
-            {
-                return;
-            }
-
             if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
             {
                 // Error logging is done in the function
                 return;
             }
-            
-            if (packetSender.Send(new EntityReparented(itemId, ownerId)))
-            {
-                Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
-            }
+
+            InventoryItemEntity entity = Items.ConvertToInventoryItemEntity(pickupable.gameObject, ownerId, entityMetadataManager);
+            packetSender.Send(new EntitySpawnedByClient(entity, true));
         }
 
         public void AddItem(GameObject item, NitroxId containerId)
@@ -69,7 +62,7 @@ namespace NitroxClient.GameLogic
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
 
-            using (PacketSuppressor<EntityReparented>.Suppress())
+            using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));
                 Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");

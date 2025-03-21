@@ -81,7 +81,6 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
         energyMixin.Initialize();
         energyMixin.RestoreBattery();
 
-        using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
         {
             energyMixin.batterySlot.AddItem(new InventoryItem(gameObject.GetComponent<Pickupable>()));
