@@ -45,6 +45,11 @@ namespace NitroxServer.Communication.Packets.Processors
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
             NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
 
+            if (wasBrandNewPlayer)
+            {
+                player.SubRootId = assignedEscapePodId;
+            }
+
             if (newlyCreatedEscapePod.HasValue)
             {
                 SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
