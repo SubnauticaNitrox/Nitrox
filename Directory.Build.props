@@ -61,6 +61,17 @@
         <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     </ItemGroup>
 
+    <Choose>
+        <When Condition="'$(TestLibrary)' == 'false'">
+            <ItemGroup>
+                <PackageReference Include="Nitrox.Analyzers" Version="*">
+                    <PrivateAssets>all</PrivateAssets>
+                    <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+                </PackageReference>
+            </ItemGroup>
+        </When>
+    </Choose>
+
     <!-- Include default project references to all other "Nitrox*" projects -->
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
@@ -72,10 +83,6 @@
                 <PackageReference Include="Nitrox.Discovery.MSBuild" Version="0.1.0">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
-                </PackageReference>
-                <PackageReference Include="Nitrox.Analyzers" Version="*">
-                    <PrivateAssets>all</PrivateAssets>
-                    <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
                 </PackageReference>
             </ItemGroup>
         </When>
