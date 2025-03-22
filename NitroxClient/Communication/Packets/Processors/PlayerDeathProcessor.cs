@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -20,7 +20,6 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         Log.Debug($"{player.PlayerName} died");
         Log.InGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
         player.PlayerDeathEvent.Trigger(player);
-
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
     }
 }
