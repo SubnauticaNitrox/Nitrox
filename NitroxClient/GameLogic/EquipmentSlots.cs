@@ -47,7 +47,11 @@ public class EquipmentSlots
             EntityMetadata metadata = entityMetadataManager.Extract(pickupable.gameObject).OrNull();
 
             InstalledModuleEntity moduleEntity = new(slot, classId, itemId, techType, metadata, ownerId, []);
-            packetSender.Send(new EntitySpawnedByClient(moduleEntity, true));
+
+            if (packetSender.Send(new EntitySpawnedByClient(moduleEntity, true)))
+            {
+                Log.Debug($"Sent: Added module {pickupable.GetTechType()} ({itemId}) to equipment {owner.GetFullHierarchyPath()} in slot {slot}");
+            }
         }
     }
 

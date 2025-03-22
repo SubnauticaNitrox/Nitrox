@@ -41,7 +41,11 @@ namespace NitroxClient.GameLogic
             }
 
             InventoryItemEntity entity = Items.ConvertToInventoryItemEntity(pickupable.gameObject, ownerId, entityMetadataManager);
-            packetSender.Send(new EntitySpawnedByClient(entity, true));
+
+            if (packetSender.Send(new EntitySpawnedByClient(entity, true)))
+            {
+                Log.Debug($"Sent: Added item {pickupable.GetTechType()} ({entity.Id}) to container {containerTransform.gameObject.GetFullHierarchyPath()}");
+            }
         }
 
         public void AddItem(GameObject item, NitroxId containerId)
