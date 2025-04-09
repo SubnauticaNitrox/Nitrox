@@ -91,5 +91,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         equipment.UpdateCount(pickupable.GetTechType(), true);
         Equipment.SendEquipmentEvent(pickupable, 0, parentObject, entity.Slot);
         equipment.NotifyEquip(entity.Slot, inventoryItem);
+
+        Log.Debug($"Received: Added module {pickupable.GetTechType()} ({entity.Id}) to equipment {parentObject.GetFullHierarchyPath()} in slot {entity.Slot}");
     }
 }

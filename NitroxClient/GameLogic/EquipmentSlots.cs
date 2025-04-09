@@ -1,6 +1,12 @@
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -9,11 +15,13 @@ public class EquipmentSlots
 {
     private readonly IPacketSender packetSender;
     private readonly Entities entities;
+    private readonly EntityMetadataManager entityMetadataManager;
 
-    public EquipmentSlots(IPacketSender packetSender, Entities entities)
+    public EquipmentSlots(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {
         this.packetSender = packetSender;
         this.entities = entities;
+        this.entityMetadataManager = entityMetadataManager;
     }
 
     public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
@@ -34,19 +42,26 @@ public class EquipmentSlots
         else
         {
             // UWE also sends module events here as they are technically equipment of the vehicles.
-            ModuleAdded moduleAdded = new(itemId, ownerId, slot);
-            packetSender.Send(moduleAdded);
+            string classId = pickupable.RequireComponent<PrefabIdentifier>().ClassId;
+            NitroxTechType techType = pickupable.GetTechType().ToDto();
+            EntityMetadata metadata = entityMetadataManager.Extract(pickupable.gameObject).OrNull();
+
+            InstalledModuleEntity moduleEntity = new(slot, classId, itemId, techType, metadata, ownerId, []);
+
+            if (packetSender.Send(new EntitySpawnedByClient(moduleEntity, true)))
+            {
+                Log.Debug($"Sent: Added module {pickupable.GetTechType()} ({itemId}) to equipment {owner.GetFullHierarchyPath()} in slot {slot}");
+            }
         }
     }
 
-    public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
+    public void BroadcastUnequip(Pickupable pickupable, GameObject owner)
     {
-        if (!owner.TryGetIdOrWarn(out NitroxId ownerId))
+        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
         {
             return;
         }
-
-        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
+        if (!owner.TryGetIdOrWarn(out NitroxId ownerId))
         {
             return;
         }
@@ -57,15 +72,8 @@ public class EquipmentSlots
         }
         else
         {
-            // Reactor rod can't be unequipped so this will only happen when a Nuclear Reactor is destroyed (in which case we don't need this code)
-            if (pickupable.GetTechType() == TechType.ReactorRod)
-            {
-                return;
-            }
-
             // UWE also sends module events here as they are technically equipment of the vehicles.
-            ModuleRemoved moduleRemoved = new(itemId, ownerId);
-            packetSender.Send(moduleRemoved);
+            packetSender.Send(new EntityDestroyed(itemId));
         }
     }
 }

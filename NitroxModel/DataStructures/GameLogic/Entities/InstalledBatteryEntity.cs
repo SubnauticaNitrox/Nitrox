@@ -1,15 +1,18 @@
 using System;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable]
 [DataContract]
 public class InstalledBatteryEntity : Entity
-{       
+{
+    [DataMember(Order = 1)]
+    public int ComponentIndex { get; set; }
+
     [IgnoreConstructor]
     protected InstalledBatteryEntity()
     {
@@ -17,8 +20,9 @@ public class InstalledBatteryEntity : Entity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InstalledBatteryEntity(NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InstalledBatteryEntity(int componentIndex, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
+        ComponentIndex = componentIndex;
         Id = id;
         TechType = techType;
         Metadata = metadata;
@@ -28,6 +32,6 @@ public class InstalledBatteryEntity : Entity
 
     public override string ToString()
     {
-        return $"[InstalledBatteryEntity {base.ToString()}]";
+        return $"[InstalledBatteryEntity ComponentIndex: {ComponentIndex} {base.ToString()}]";
     }
 }

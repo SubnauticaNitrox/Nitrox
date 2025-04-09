@@ -34,20 +34,17 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
-            {
-                return;
-            }
-
             if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
             {
                 // Error logging is done in the function
                 return;
             }
-            
-            if (packetSender.Send(new EntityReparented(itemId, ownerId)))
+
+            InventoryItemEntity entity = Items.ConvertToInventoryItemEntity(pickupable.gameObject, ownerId, entityMetadataManager);
+
+            if (packetSender.Send(new EntitySpawnedByClient(entity, true)))
             {
-                Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
+                Log.Debug($"Sent: Added item {pickupable.GetTechType()} ({entity.Id}) to container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
         }
 
@@ -69,29 +66,43 @@ namespace NitroxClient.GameLogic
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
 
-            using (PacketSuppressor<EntityReparented>.Suppress())
+            using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));
                 Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
             }
         }
 
-        public void BroadcastBatteryAdd(GameObject gameObject, GameObject parent, TechType techType)
+        public void BroadcastBatteryAdd(GameObject battery, EnergyMixin energyMixin, TechType techType)
         {
-            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
-            {
-                return;
-            }
-            if (!parent.TryGetIdOrWarn(out NitroxId parentId))
+            if (!battery.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }
 
-            Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
+            NitroxEntity parent = energyMixin.gameObject.FindAncestor<NitroxEntity>();
+            if (!parent)
+            {
+                Log.Warn($"Battery entity {id} is not attached to an entity");
+                return;
+            }
 
-            InstalledBatteryEntity installedBattery = new(id, techType.ToDto(), metadata.OrNull(), parentId, new());
+            EnergyMixin[] components = parent.gameObject.GetAllComponentsInChildren<EnergyMixin>();
+            int componentIndex = 0;
+            for (int i = 0; i < components.Length; i++)
+            {
+                if (components[i] == energyMixin)
+                {
+                    componentIndex = i;
+                    break;
+                }
+            }
 
-            EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(installedBattery);
+            Optional<EntityMetadata> metadata = entityMetadataManager.Extract(battery);
+
+            InstalledBatteryEntity installedBattery = new(componentIndex, id, techType.ToDto(), metadata.OrNull(), parent.Id, []);
+
+            EntitySpawnedByClient spawnedPacket = new(installedBattery);
             packetSender.Send(spawnedPacket);
         }
     }
