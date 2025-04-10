@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -118,6 +118,22 @@ namespace NitroxModel.DataStructures
             lock (locker)
             {
                 return CreateCopy(queue);
+            }
+        }
+
+        public void Filter(Func<T, bool> predicate)
+        {
+            lock (locker)
+            {
+                int count = queue.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    T item = queue.Dequeue();
+                    if (predicate(item))
+                    {
+                        queue.Enqueue(item);
+                    }
+                }
             }
         }
 

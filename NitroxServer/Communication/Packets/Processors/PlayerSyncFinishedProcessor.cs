@@ -7,10 +7,12 @@ namespace NitroxServer.Communication.Packets.Processors
     public class PlayerSyncFinishedProcessor : AuthenticatedPacketProcessor<PlayerSyncFinished>
     {
         private readonly PlayerManager playerManager;
+        private readonly JoiningManager joiningManager;
 
-        public PlayerSyncFinishedProcessor(PlayerManager playerManager)
+        public PlayerSyncFinishedProcessor(PlayerManager playerManager, JoiningManager joiningManager)
         {
             this.playerManager = playerManager;
+            this.joiningManager = joiningManager;
         }
 
         public override void Process(PlayerSyncFinished packet, Player player)
@@ -21,7 +23,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 Server.Instance.ResumeServer();
             }
 
-            playerManager.FinishProcessingReservation(player);
+            joiningManager.SyncFinishedCallback?.Invoke();
         }
     }
 }
