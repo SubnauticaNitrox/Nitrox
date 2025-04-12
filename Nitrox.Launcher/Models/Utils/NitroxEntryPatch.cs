@@ -43,12 +43,12 @@ public static class NitroxEntryPatch
             // Avoid the case where AssemblyCSharp.dll get wiped and the only file left is AssemblyCSharp-Nitrox.dll
             if (!File.Exists(assemblyCSharp))
             {
-                Log.Error($"Invalid state, {GAME_ASSEMBLY_NAME}.dll not found, but {GAME_ASSEMBLY_MODIFIED_NAME}.dll exists. Please verify your installation.");
+                Log.Error($"Invalid state, {GAME_ASSEMBLY_NAME} not found, but {GAME_ASSEMBLY_MODIFIED_NAME} exists. Please verify your installation.");
                 FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
             }
             else
             {
-                Log.Debug($"{GAME_ASSEMBLY_MODIFIED_NAME}.dll already exists, removing it");
+                Log.Debug($"{GAME_ASSEMBLY_MODIFIED_NAME} already exists, removing it");
                 Exception copyError = RetryWait(() => File.Delete(modifiedAssemblyCSharp), 100, 5);
                 if (copyError != null)
                 {
@@ -103,7 +103,7 @@ public static class NitroxEntryPatch
         }
 
         // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
-        Log.Debug($"Deleting {GAME_ASSEMBLY_NAME}.dll");
+        Log.Debug($"Deleting {GAME_ASSEMBLY_NAME}");
         Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
         if (error != null)
         {
