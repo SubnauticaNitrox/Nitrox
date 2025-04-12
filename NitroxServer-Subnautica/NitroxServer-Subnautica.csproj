@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -19,10 +19,6 @@
     <ItemGroup>
         <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-        </Reference>
-        <!-- TODO: This dependency is seen as Assembly-Csharp sub-dependency, which causes this DLL to not be copied to output. Find cause and fix. -->
-        <Reference Include="Serilog.Sinks.Map">
-            <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
         </Reference>
     </ItemGroup>
 
