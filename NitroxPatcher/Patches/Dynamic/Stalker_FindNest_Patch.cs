@@ -1,9 +1,8 @@
 using System.Reflection;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -32,7 +31,7 @@ public sealed partial class Stalker_FindNest_Patch : NitroxPatch, IDynamicPatch
 
         if (__instance.TryGetNitroxId(out NitroxId creatureId))
         {
-            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeastPositionMetadataExtractor>().Extract(__instance);
+            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeashPositionMetadataExtractor>().Extract(__instance);
             Resolve<Entities>().BroadcastMetadataUpdate(creatureId, metadata);
         }
     }

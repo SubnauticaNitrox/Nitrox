@@ -1,11 +1,6 @@
-using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
+using Nitrox.Model.DataStructures;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -13,8 +8,6 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// Prevents non simulating players from running locally <see cref="MeleeAttack.OnTouch(Collider)"/>.
-/// 
-/// Adds RemotePlayer support for the simulating player
 /// </summary>
 public sealed partial class MeleeAttack_OnTouch_Patch : NitroxPatch, IDynamicPatch
 {
@@ -32,5 +25,5 @@ public sealed partial class MeleeAttack_OnTouch_Patch : NitroxPatch, IDynamicPat
     }
 
     // TODO: Add transpiler to add support for held item eat from remote players, we might need to add an equivalent of Inventory.GetHeldItem()
-    // For the MeleeAttack part , it'll natively work since RemotePlayer should have a LiveMixin
+    // For the MeleeAttack part, it'll natively work since RemotePlayer should have a LiveMixin
 }
