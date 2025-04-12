@@ -13,16 +13,12 @@
 
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="[2.1.9]" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="[2.1.10]" />
     </ItemGroup>
 
     <ItemGroup>
         <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-        </Reference>
-        <!-- TODO: This dependency is seen as Assembly-Csharp sub-dependency, which causes this DLL to not be copied to output. Find cause and fix. -->
-        <Reference Include="Serilog.Sinks.Map">
-            <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
         </Reference>
     </ItemGroup>
 
