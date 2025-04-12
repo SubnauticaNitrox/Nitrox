@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -12,10 +10,14 @@ public sealed partial class PrisonPredatorSwimToPlayer_Perform_Patch : NitroxPat
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrisonPredatorSwimToPlayer t) => t.Perform(default, default, default));
 
+    /// <summary>
+    /// Replace all the method with our custom <see cref="Perform(PrisonPredatorSwimToPlayer, Creature, float)"/>
+    /// 
+    /// Original method does hardcode Player.main usage and doesn't use any "GameObject" or Target abstraction as in other <see cref="CreatureAction"/>
+    /// So we need to rewrite <see cref="PrisonPredatorSwimToPlayer.Evaluate(Creature, float)"/> to use the same logic as <see cref="PrisonPredatorSwimToPlayer.Perform(Creature, float)"/>"/>
+    /// </summary>
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        // Replace everything with
-        // return EvaluatePriority(__instance, creature, time);
         yield return new CodeInstruction(OpCodes.Ldarg_0);
         yield return new CodeInstruction(OpCodes.Ldarg_1);
         yield return new CodeInstruction(OpCodes.Ldarg_2);
@@ -28,22 +30,17 @@ public sealed partial class PrisonPredatorSwimToPlayer_Perform_Patch : NitroxPat
         LastTarget lastTarget = creature.GetComponent<LastTarget>();
         if (!lastTarget)
         {
-            Log.Error($"Creature {creature} does not have a LastTarget component.");
+            Log.Error($"[{nameof(PrisonPredatorSwimToPlayer_Perform_Patch)}]: Creature {creature} does not have a LastTarget component.");
             return;
         }
 
         Transform targetTransform = lastTarget.target ? lastTarget.target.transform : null;
-        if (!targetTransform)
+        if (targetTransform && time > instance.timeNextSwim)
         {
-            return;
-        }
-
-        if (time > instance.timeNextSwim)
-        {
+            instance.timeNextSwim = time + instance.swimInterval;
             instance.swimBehaviour.SwimTo(targetTransform.position, instance.swimVelocity);
-            creature.TryGetNitroxId(out NitroxId nitroxId);
-
-            Log.InGame($"[PrisonPredatorSwimTo Swim] {creature.name} {nitroxId?.ToString()} {lastTarget.target.name}");
         }
+
+        lastTarget.UnlockTarget();
     }
 }

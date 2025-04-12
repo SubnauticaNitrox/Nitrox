@@ -4,9 +4,8 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -36,7 +35,7 @@ public sealed partial class FleeOnDamage_StopPerform_Patch : NitroxPatch, IDynam
     {
         if (creature.TryGetNitroxId(out NitroxId creatureId))
         {
-            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeastPositionMetadataExtractor>().Extract(creature);
+            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeashPositionMetadataExtractor>().Extract(creature);
             Resolve<Entities>().BroadcastMetadataUpdate(creatureId, metadata);
         }
     }
