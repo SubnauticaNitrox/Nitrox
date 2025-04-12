@@ -1,9 +1,5 @@
-using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -32,5 +28,5 @@ public sealed partial class MeleeAttack_OnTouch_Patch : NitroxPatch, IDynamicPat
     }
 
     // TODO: Add transpiler to add support for held item eat from remote players, we might need to add an equivalent of Inventory.GetHeldItem()
-    // For the MeleeAttack part , it'll natively work since RemotePlayer should have a LiveMixin
+    // For the MeleeAttack part, it'll natively work since RemotePlayer should have a LiveMixin
 }

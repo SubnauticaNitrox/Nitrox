@@ -16,10 +16,14 @@ public sealed partial class PrisonPredatorSwimToPlayer_Evaluate_Patch : NitroxPa
 
     internal static readonly EcoRegion.TargetFilter isTargetValidFilter = new(IsTargetValid);
 
+    /// <summary>
+    /// Replace all the method with our custom <see cref="EvaluatePriority(PrisonPredatorSwimToPlayer, Creature, float)" />
+    /// 
+    /// Original method does hardcode Player.main usage and doesn't use any "GameObject" or Target abstraction as in other <see cref="CreatureAction"/>
+    /// So we need to rewrite <see cref="PrisonPredatorSwimToPlayer.Evaluate(Creature, float)"/> to use the same logic as <see cref="PrisonPredatorSwimToPlayer.Perform(Creature, float)"/>"/>
+    /// </summary>
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        // Replace everything with
-        // return EvaluatePriority(__instance, creature, time);
         yield return new CodeInstruction(OpCodes.Ldarg_0);
         yield return new CodeInstruction(OpCodes.Ldarg_1);
         yield return new CodeInstruction(OpCodes.Ldarg_2);
