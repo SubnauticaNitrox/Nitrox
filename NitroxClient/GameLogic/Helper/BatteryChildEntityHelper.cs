@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -29,7 +30,18 @@ public static class BatteryChildEntityHelper
 
     public static void PopulateInstalledBattery(EnergyMixin energyMixin, List<Entity> toPopulate, NitroxId parentId)
     {
-        InstalledBatteryEntity installedBattery = new(0, new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, new List<Entity>());
+        EnergyMixin[] components = NitroxEntity.RequireObjectFrom(parentId).GetAllComponentsInChildren<EnergyMixin>();
+        int componentIndex = 0;
+        for (int i = 0; i < components.Length; i++)
+        {
+            if (components[i] == energyMixin)
+            {
+                componentIndex = i;
+                break;
+            }
+        }
+
+        InstalledBatteryEntity installedBattery = new(componentIndex, new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, new List<Entity>());
         toPopulate.Add(installedBattery);
 
         CoroutineHost.StartCoroutine(entities.Value.SpawnEntityAsync(installedBattery));
