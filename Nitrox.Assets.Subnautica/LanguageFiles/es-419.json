@@ -1,5 +1,11 @@
 {
     "Nitrox_AddServer": "Añadir Servidor",
+    "Nitrox_AddServer_AddressPlaceholder": "Entra la IP o la dirección del servidor",
+    "Nitrox_AddServer_Confirm": "Crear servidor",
+    "Nitrox_AddServer_NameDescription": "Nombre:",
+    "Nitrox_AddServer_NamePlaceholder": "Entra un nombre para el servidor",
+    "Nitrox_AddServer_PortDescription": "Puerto:",
+    "Nitrox_AddServer_PortPlaceholder": "Entra el puerto numérico del servidor",
     "Nitrox_Cancel": "Cancelar",
     "Nitrox_CommandNotAvailable": "Este comando no esta disponible en Nitrox",
     "Nitrox_ConnectTo": "Conectarse a",
