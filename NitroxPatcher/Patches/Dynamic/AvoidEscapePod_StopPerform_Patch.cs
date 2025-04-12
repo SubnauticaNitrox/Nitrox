@@ -37,7 +37,7 @@ public sealed partial class AvoidEscapePod_StopPerform_Patch : NitroxPatch, IDyn
     {
         if (creature.TryGetNitroxId(out NitroxId creatureId))
         {
-            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeastPositionMetadataExtractor>().Extract(creature);
+            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeashPositionMetadataExtractor>().Extract(creature);
             Resolve<Entities>().BroadcastMetadataUpdate(creatureId, metadata);
         }
     }
