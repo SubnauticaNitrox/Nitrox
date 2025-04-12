@@ -32,7 +32,7 @@ public sealed partial class Stalker_FindNest_Patch : NitroxPatch, IDynamicPatch
 
         if (__instance.TryGetNitroxId(out NitroxId creatureId))
         {
-            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeastPositionMetadataExtractor>().Extract(__instance);
+            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeashPositionMetadataExtractor>().Extract(__instance);
             Resolve<Entities>().BroadcastMetadataUpdate(creatureId, metadata);
         }
     }

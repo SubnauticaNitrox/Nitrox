@@ -4,7 +4,7 @@ using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public sealed class StayAtLeastPositionMetadataExtractor : EntityMetadataExtractor<Creature, StayAtLeashPositionMetadata>
+public sealed class StayAtLeashPositionMetadataExtractor : EntityMetadataExtractor<Creature, StayAtLeashPositionMetadata>
 {
     public override StayAtLeashPositionMetadata Extract(Creature entity)
     {

@@ -36,7 +36,7 @@ public sealed partial class FleeOnDamage_StopPerform_Patch : NitroxPatch, IDynam
     {
         if (creature.TryGetNitroxId(out NitroxId creatureId))
         {
-            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeastPositionMetadataExtractor>().Extract(creature);
+            StayAtLeashPositionMetadata metadata = Resolve<StayAtLeashPositionMetadataExtractor>().Extract(creature);
             Resolve<Entities>().BroadcastMetadataUpdate(creatureId, metadata);
         }
     }
