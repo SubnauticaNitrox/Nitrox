@@ -4,14 +4,18 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
 using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class Drillable_ManagedUpdate_Patch : NitroxPatch, IDynamicPatch
+// We need to suppress the EntitySpawnedByClient packet from the UnsafeAdd call since it doesn't quite handle this case correctly
+public sealed partial class Drillable_ManagedUpdate_Patch : PacketSuppressorPatch<EntitySpawnedByClient>, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Drillable t) => t.ManagedUpdate());
+    // Additional field necessary to appease the unit tests
+    public static readonly MethodInfo targetMethod = Reflect.Method((Drillable t) => t.ManagedUpdate());
+    public override MethodInfo TARGET_METHOD => targetMethod;
 
     private static readonly InstructionsPattern Pattern = new()
     {
@@ -30,5 +34,11 @@ public sealed partial class Drillable_ManagedUpdate_Patch : NitroxPatch, IDynami
     private static void Callback(Drillable drillable, Pickupable pickupable)
     {
         Resolve<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), drillable.drillingExo.transform);
+    }
+
+    public override void Patch(Harmony harmony)
+    {
+        base.Patch(harmony);
+        PatchTranspiler(harmony, TARGET_METHOD, ((Func<IEnumerable<CodeInstruction>, IEnumerable<CodeInstruction>>)Transpiler).Method);
     }
 }
