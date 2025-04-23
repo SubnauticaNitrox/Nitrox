@@ -55,8 +55,16 @@ namespace NitroxClient.GameLogic.Helper
                 ownerId = null;
                 return false;
             }
+            // TODO: in the future maybe use a switch on the PrefabId (it's always the same structure in a prefab)
+            // and then statically look for the right object because we'll know exactly which one it is
 
-            if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>().AliveOrNull())
+            // To treat the WaterPark in parent case, we need its case to happen before the IBaseModule one because
+            // IBaseModule will get the WaterPark but not get the id on the right object like in the first case
+            if (parent.TryGetComponent(out WaterPark waterPark))
+            {
+                return waterPark.planter.TryGetIdOrWarn(out ownerId);
+            }
+            else if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>().AliveOrNull())
             {
                 return parent.TryGetIdOrWarn(out ownerId);
             }
@@ -65,6 +73,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return true;
             }
+            // For regular water parks, the main object contains the StorageRoot and the planter at the same level
             else if (LockerRegex.IsMatch(ownerTransform.gameObject.name))
             {
                 string lockerId = ownerTransform.gameObject.name.Substring(7, 1);

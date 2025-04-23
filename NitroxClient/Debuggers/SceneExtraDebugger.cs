@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 using Mathf = UnityEngine.Mathf;
@@ -249,6 +250,28 @@ public sealed class SceneExtraDebugger : BaseDebugger
                     else
                     {
                         GUILayout.Label($"There is no component named \"{gameObjectSearch.Substring(2)}\"", "error");
+                    }
+                }
+                else if (gameObjectSearch.StartsWith("id:"))
+                {
+                    string id = gameObjectSearch.Split(':')[1];
+                    try
+                    {
+                        NitroxId foundId = new(id);
+                        if (NitroxEntity.TryGetObjectFrom(foundId, out GameObject gameObject))
+                        {
+                            gameObjectResults = [gameObject];
+                        }
+                        else
+                        {
+                            GUILayout.Label($"No GameObject found with NitroxId \"{foundId}\"");
+                            gameObjectResults = [];
+                        }
+                    }
+                    catch
+                    {
+                        GUILayout.Label($"Id \"{id}\" is not a valid NitroxId");
+                        gameObjectResults = [];
                     }
                 }
                 else

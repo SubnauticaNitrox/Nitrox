@@ -155,9 +155,13 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
                 {
                     foreach (InventoryItem item in itemGroup.items)
                     {
-                        interiorPiece.ChildEntities.Add(Items.ConvertToInventoryItemEntity(item.item.gameObject, entityMetadataManager));
+                        interiorPiece.ChildEntities.Add(Items.ConvertToInventoryItemEntity(item.item.gameObject, interiorPiece.Id, entityMetadataManager));
                     }
                 }
+                break;
+            case WaterPark:
+                PlanterEntity planter = new(interiorPiece.Id.Increment(), interiorPiece.Id);
+                interiorPiece.ChildEntities.Add(planter);
                 break;
         }
 

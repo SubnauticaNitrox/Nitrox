@@ -177,6 +177,8 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
         {
             yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, entityId);
         }
+
+        Temp.Dispose();
     }
 
     private static void SendUpdateBase(Base @base, NitroxId baseId, NitroxId pieceId, GlobalRootEntity builtPieceEntity, MoonpoolManager moonpoolManager)

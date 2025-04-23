@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InstalledModuleEntity)] = new InstalledModuleEntitySpawner();
             entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
-            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
+            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(entityMetadataManager);
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this, simulationOwnership);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
@@ -256,9 +256,28 @@ namespace NitroxClient.GameLogic
 
                 if (gameObject.HasValue)
                 {
-                    UnityEngine.Object.Destroy(gameObject.Value);
+                    DestroyObject(gameObject.Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Either perform a special operation (e.g. for plants) or a simple <see cref="UnityEngine.Object.Destroy"/>
+        /// </summary>
+        public static void DestroyObject(GameObject gameObject)
+        {
+            if (gameObject.TryGetComponent(out Plantable plantable))
+            {
+                plantable.FreeSpot();
+                return;
+            }
+            if (gameObject.TryGetComponent(out GrownPlant grownPlant))
+            {
+                grownPlant.seed.AliveOrNull()?.FreeSpot();
+                return;
+            }
+
+            UnityEngine.Object.Destroy(gameObject);
         }
 
         private void UpdateEntity(Entity entity)

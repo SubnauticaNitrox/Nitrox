@@ -49,26 +49,28 @@ public sealed partial class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
             newWaterPark = bottomWaterPark;
         }
 
-        if (newWaterPark)
+        if (!newWaterPark)
         {
-            NitroxId newId = Temp.NewWaterPark?.Id ?? new();
-            NitroxEntity.SetNewId(newWaterPark.gameObject, newId);
-            // If it was null beforehand, it means that the local player is responsible for destructing the WaterPark
-            // If it was already set, it means that the local player is remotely destructing the WaterPark
-            if (Temp.NewWaterPark == null)
+            Log.Error($"[{nameof(WaterPark_Split_Patch)}] Could not find an original WaterPark NitroxEntity");
+            return;
+        }
+
+        NitroxId newId = Temp.NewWaterPark?.Id ?? new();
+        NitroxEntity.SetNewId(newWaterPark.gameObject, newId);
+        BuildingPostSpawner.SetupWaterPark(newWaterPark, newId);
+
+        // If it was null beforehand, it means that the local player is responsible for destructing the WaterPark
+        // If it was already set, it means that the local player is remotely destructing the WaterPark
+        if (Temp.NewWaterPark == null)
+        {
+            Temp.NewWaterPark = InteriorPieceEntitySpawner.From(newWaterPark, Resolve<EntityMetadataManager>());
+            Temp.MovedChildrenIds = [];
+            foreach (NitroxEntity childEntity in newWaterPark.itemsRoot.GetComponentsInChildren<NitroxEntity>(true))
             {
-                Temp.NewWaterPark = InteriorPieceEntitySpawner.From(newWaterPark, Resolve<EntityMetadataManager>());
-                Temp.MovedChildrenIds = new();
-                foreach (NitroxEntity childEntity in newWaterPark.itemsRoot.GetComponentsInChildren<NitroxEntity>(true))
-                {
-                    Temp.MovedChildrenIds.Add(childEntity.Id);
-                }
+                Temp.MovedChildrenIds.Add(childEntity.Id);
             }
-            Log.Debug($"Splitting two WaterParks, original WaterPark NitroxEntity: {originalEntity.Id}, new WaterPark NitroxEntity: {newId}");
         }
-        else
-        {
-            Log.Error("Couldn't find an original WaterPark NitroxEntity");
-        }
+
+        Log.Debug($"Splitting two WaterParks, original WaterPark NitroxEntity: {originalEntity.Id}, new WaterPark NitroxEntity: {newId}");
     }
 }
