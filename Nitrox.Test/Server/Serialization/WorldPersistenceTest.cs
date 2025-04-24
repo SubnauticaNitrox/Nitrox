@@ -219,7 +219,7 @@ public class WorldPersistenceTest
                 // FruitPlantMetadata field is not checked before it's only temporary
                 break;
             case FruitPlantMetadata metadata when entityAfter.Metadata is FruitPlantMetadata metadataAfter:
-                Assert.AreEqual(metadata.PickedStates, metadataAfter.PickedStates);
+                Assert.IsTrue(metadata.PickedStates.SequenceEqual(metadataAfter.PickedStates));
                 Assert.AreEqual(metadata.TimeNextFruit, metadataAfter.TimeNextFruit);
                 break;
             case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
