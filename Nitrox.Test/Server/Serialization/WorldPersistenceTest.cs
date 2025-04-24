@@ -144,6 +144,12 @@ public class WorldPersistenceTest
         AssertHelper.IsListEqual(worldData.EntityData.Entities.OrderBy(x => x.Id), worldDataAfter.EntityData.Entities.OrderBy(x => x.Id), EntityTest);
     }
 
+    [DataTestMethod, DynamicWorldDataAfter]
+    public void GlobalRootDataTest(PersistedWorldData worldDataAfter, string serializerName)
+    {
+        AssertHelper.IsListEqual(worldData.GlobalRootData.Entities.OrderBy(x => x.Id), worldDataAfter.GlobalRootData.Entities.OrderBy(x => x.Id), EntityTest);
+    }
+
     private static void EntityTest(Entity entity, Entity entityAfter)
     {
         Assert.AreEqual(entity.Id, entityAfter.Id);
