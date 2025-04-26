@@ -52,7 +52,7 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
         if (!uGUI_SceneIntro_IntroSequence_Patch.IsWaitingForPartner &&
             Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.SINGLEPLAYER) // Skipping intro alone
         {
-            uGUI_SceneIntro_IntroSequence_Patch.SkipLocalCinematic(instance);
+            uGUI_SceneIntro_IntroSequence_Patch.SkipLocalCinematic(instance, true);
             return false;
         }
 

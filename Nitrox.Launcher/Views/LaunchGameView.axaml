@@ -73,7 +73,7 @@
                                         Command="{Binding StartMultiplayerCommand}"
                                         ToolTip.Tip="Launch Subnautica with multiplayer enabled">
                                         <Interaction.Behaviors>
-                                            <behaviors:SetFocusedOnViewShowBehavior />
+                                            <behaviors:FocusOnViewShowBehavior />
                                         </Interaction.Behaviors>
                                         <StackPanel>
                                             <TextBlock Text="PLAY" />

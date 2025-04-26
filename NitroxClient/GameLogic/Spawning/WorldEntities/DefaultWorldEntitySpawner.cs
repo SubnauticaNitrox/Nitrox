@@ -38,7 +38,12 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
         CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
-        WaterPark parentWaterPark = parent.HasValue ? parent.Value.GetComponent<WaterPark>() : null;
+        WaterPark parentWaterPark = null;
+        if (parent.HasValue)
+        {
+            Items.TryGetParentWaterPark(parent.Value.transform.parent, out parentWaterPark);
+        }
+
         if (!parentWaterPark)
         {
             if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())

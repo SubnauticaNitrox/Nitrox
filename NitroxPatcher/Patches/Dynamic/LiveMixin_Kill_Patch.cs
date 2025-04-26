@@ -14,11 +14,22 @@ public sealed partial class LiveMixin_Kill_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(LiveMixin __instance)
     {
-        // Whitelisted object types should have their death handled in other places
-        // This broadcaster is a more general one
-        if (Multiplayer.Active && __instance.TryGetNitroxId(out NitroxId objectId) &&
-            !Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance) &&
-            (__instance.destroyOnDeath || Resolve<LiveMixinManager>().ShouldBroadcastDeath(__instance)))
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
+        {
+            return;
+        }
+
+        // We don't broadcast if we don't have objectId or if the object is whitelisted,
+        // in which case kill broadcast is managed differently
+        if (!__instance.TryGetNitroxId(out NitroxId objectId) ||
+            Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
+        {
+            return;
+        }
+        
+        // Some objects don't have destroyOnDeath but we still need to broadcast the death
+        // (because the destruction is managed by another script)
+        if (__instance.destroyOnDeath || Resolve<LiveMixinManager>().ShouldBroadcastDeath(__instance))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(objectId));
         }

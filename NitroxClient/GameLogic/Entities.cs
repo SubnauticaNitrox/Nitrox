@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
         private readonly List<SimulatedEntity> pendingSimulatedEntities = new();
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InstalledModuleEntity)] = new InstalledModuleEntitySpawner();
             entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
-            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
+            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(entityMetadataManager);
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this, simulationOwnership);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
@@ -218,7 +218,7 @@ namespace NitroxClient.GameLogic
                 MarkAsSpawned(entity);
 
                 // Finding out about all children (can be hidden in the object's hierarchy or in a pending list)
-                
+
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
                     batch.AddRange(entity.ChildEntities);
@@ -231,7 +231,7 @@ namespace NitroxClient.GameLogic
                         pendingParentEntitiesByParentId.Remove(entity.Id);
                     }
                 }
-                
+
                 // Skip a frame to maintain FPS
                 if (Time.realtimeSinceStartup >= timeLimit && skipFrames)
                 {
@@ -256,9 +256,28 @@ namespace NitroxClient.GameLogic
 
                 if (gameObject.HasValue)
                 {
-                    UnityEngine.Object.Destroy(gameObject.Value);
+                    DestroyObject(gameObject.Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Either perform a special operation (e.g. for plants) or a simple <see cref="UnityEngine.Object.Destroy"/>
+        /// </summary>
+        public static void DestroyObject(GameObject gameObject)
+        {
+            if (gameObject.TryGetComponent(out Plantable plantable))
+            {
+                plantable.FreeSpot();
+                return;
+            }
+            if (gameObject.TryGetComponent(out GrownPlant grownPlant))
+            {
+                grownPlant.seed.AliveOrNull()?.FreeSpot();
+                return;
+            }
+
+            UnityEngine.Object.Destroy(gameObject);
         }
 
         private void UpdateEntity(Entity entity)

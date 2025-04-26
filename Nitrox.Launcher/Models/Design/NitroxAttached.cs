@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Reactive;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -22,8 +23,8 @@ public class NitroxAttached : AvaloniaObject
 
     static NitroxAttached()
     {
-        InputElement.LostFocusEvent.Raised.Subscribe(HasUserInteractedOnNext);
-        InputElement.TextInputEvent.Raised.Subscribe(HasUserInteractedOnNext);
+        InputElement.LostFocusEvent.Raised.Subscribe(new AnonymousObserver<(object, RoutedEventArgs)>(HasUserInteractedOnNext));
+        InputElement.TextInputEvent.Raised.Subscribe(new AnonymousObserver<(object, RoutedEventArgs)>(HasUserInteractedOnNext));
         AsyncCommandButtonTagger = new AsyncCommandButtonTagger("busy");
 
         void HasUserInteractedOnNext((object Sender, RoutedEventArgs EventArgs) args)

@@ -36,7 +36,7 @@ public sealed class BoolToIconConverter : MarkupExtension, IValueConverter
             @bool = !@bool;
         }
 
-        return AssetHelper.GetAssetFromStream(@bool ? True : False, static stream => new Bitmap(stream));;
+        return AssetHelper.GetAssetFromStream(@bool ? True : False, static stream => new Bitmap(stream));
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();

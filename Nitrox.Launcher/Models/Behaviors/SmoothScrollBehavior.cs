@@ -6,6 +6,7 @@ using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Reactive;
 using Avalonia.Styling;
 
 namespace Nitrox.Launcher.Models.Behaviors;
@@ -48,8 +49,8 @@ public abstract class SmoothScrollBehavior
 
     static SmoothScrollBehavior()
     {
-        SmoothScrollProperty.Changed.Subscribe(OnEnableSmoothScrollingChanged);
-        ScrollViewer.OffsetProperty.Changed.Subscribe(OnScrollOffsetChanged);
+        SmoothScrollProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<bool>>(OnEnableSmoothScrollingChanged));
+        ScrollViewer.OffsetProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<Vector>>(OnScrollOffsetChanged));
     }
 
     private static void OnScrollOffsetChanged(AvaloniaPropertyChangedEventArgs<Vector> args)

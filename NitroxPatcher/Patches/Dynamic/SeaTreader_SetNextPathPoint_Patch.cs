@@ -11,7 +11,7 @@ public sealed partial class SeaTreader_SetNextPathPoint_Patch : NitroxPatch, IDy
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaTreader t) => t.SetNextPathPoint());
 
-    public static void Prefix(SeaTreader __instance)
+    public static void Postfix(SeaTreader __instance)
     {
         if (__instance.TryGetNitroxId(out NitroxId creatureId) &&
             Resolve<SimulationOwnership>().HasAnyLockType(creatureId))

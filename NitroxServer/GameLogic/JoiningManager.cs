@@ -22,17 +22,19 @@ public sealed class JoiningManager
     private readonly PlayerManager playerManager;
     private readonly SubnauticaServerConfig serverConfig;
     private readonly World world;
+    private readonly SessionSettings sessionSettings;
 
     private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
     public Action SyncFinishedCallback { get; private set; }
 
-    public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world)
+    public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world, SessionSettings sessionSettings)
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
         this.world = world;
+        this.sessionSettings = sessionSettings;
     }
 
     private async Task JoinQueueLoop()
@@ -166,6 +168,11 @@ public sealed class JoiningManager
         Player player = playerManager.PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
         NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
 
+        if (wasBrandNewPlayer)
+        {
+            player.SubRootId = assignedEscapePodId;
+        }
+
         if (newlyCreatedEscapePod.HasValue)
         {
             SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
@@ -208,7 +215,8 @@ public sealed class JoiningManager
             world.StoryManager.GetTimeData(),
             isFirstPlayer,
             BuildingManager.GetEntitiesOperations(globalRootEntities),
-            serverConfig.KeepInventoryOnDeath
+            serverConfig.KeepInventoryOnDeath,
+            sessionSettings
         );
 
         player.SendPacket(initialPlayerSync);

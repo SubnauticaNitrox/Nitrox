@@ -30,6 +30,7 @@ public static class ScreenExtensions
         if (screen.ActiveViewModel is RoutableViewModelBase routableViewModelBase)
         {
             navigationStack.RemoveAllFast(screen.ActiveViewModel, (item, param) => item.GetType() == param.GetType());
+            await routableViewModelBase.ViewContentUnloadAsync();
             navigationStack.Add(routableViewModelBase);
         }
         Stopwatch sw = Stopwatch.StartNew();
@@ -46,7 +47,6 @@ public static class ScreenExtensions
         }
         await contentLoadTask;
         screen.ActiveViewModel = routableViewModel;
-        WeakReferenceMessenger.Default.Send(new ViewShownMessage(routableViewModel));
     }
 
     public static async Task<bool> BackAsync(this IRoutingScreen screen)

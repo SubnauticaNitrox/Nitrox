@@ -147,7 +147,8 @@ public class WorldPersistence
             EntityRegistry = entityRegistry,
             GameData = pWorldData.WorldData.GameData,
             GameMode = gameMode,
-            Seed = seed
+            Seed = seed,
+            SessionSettings = new()
         };
 
         world.JoiningManager = new(world.PlayerManager, config, world);

@@ -25,6 +25,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
     public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
     {
         // We freeze the player so that he doesn't fall before the cells around him have loaded
+        // Is disabled manually or in Terrain.WaitForWorldLoad()
         Player.main.cinematicModeActive = true;
 
         AttachPlayerToEscapePod(packet.AssignedEscapePodId);
@@ -37,13 +38,12 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         }
         Player.main.SetPosition(position, rotation);
 
-        // Player.Update is setting SubRootID to null after Player position is set
+        // Player.ValidateEscapePod is setting currentEscapePod to null if player is not inside EscapePod
         using (PacketSuppressor<EscapePodChanged>.Suppress())
         {
             Player.main.ValidateEscapePod();
         }
 
-        // Player position is relative to a subroot if in a subroot
         Optional<NitroxId> subRootId = packet.PlayerSubRootId;
         if (!subRootId.HasValue)
         {
@@ -59,14 +59,23 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
             yield break;
         }
 
-        if (!sub.Value.TryGetComponent(out SubRoot subRoot))
+        if (sub.Value.TryGetComponent(out SubRoot subRoot))
         {
-            Log.Debug("SubRootId-GameObject has no SubRoot component, so it's assumed to be the EscapePod");
-            yield return Terrain.WaitForWorldLoad();
-            yield break;
+            Player.main.SetCurrentSub(subRoot, true);
+            if (subRoot.TryGetComponent(out Base @base))
+            {
+                SetupPlayerIfInWaterPark(@base);
+            }
+        }
+        else if (sub.Value.GetComponent<EscapePod>())
+        {
+            Player.main.escapePod.Update(true);
+        }
+        else
+        {
+            Log.Error("SubRootId-GameObject has no SubRoot or EscapePod component");
         }
 
-        Player.main.SetCurrentSub(subRoot, true);
         // If the player's in a base/cyclops we don't need to wait for the world to load
         Player.main.UpdateIsUnderwater();
         Player.main.cinematicModeActive = false;
@@ -85,4 +94,27 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
     }
 
+    private static void SetupPlayerIfInWaterPark(Base @base)
+    {
+        foreach (Transform baseChild in @base.transform)
+        {
+            if (baseChild.TryGetComponent(out WaterPark waterPark))
+            {
+                if (waterPark is LargeRoomWaterPark)
+                {
+                    // LargeRoomWaterPark.VerifyPlayerWaterPark sets Player.main.currentWaterPark to the right value
+                    waterPark.VerifyPlayerWaterPark(Player.main);
+                }
+                else if (waterPark.IsPointInside(Player.main.transform.position))
+                {
+                    Player.main.currentWaterPark = waterPark;
+                }
+            }
+
+            if (Player.main.currentWaterPark)
+            {
+                return;
+            }
+        }
+    }
 }

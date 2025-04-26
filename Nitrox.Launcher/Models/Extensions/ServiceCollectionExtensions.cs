@@ -6,7 +6,6 @@ using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
 using NitroxModel.Helper;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Extensions;
 

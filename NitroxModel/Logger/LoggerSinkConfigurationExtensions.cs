@@ -1,6 +1,7 @@
 using System;
 using Serilog;
 using Serilog.Configuration;
+using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting.Display;
 
@@ -15,11 +16,10 @@ public static class LoggerSinkConfigurationExtensions
         this LoggerSinkConfiguration loggerConfiguration,
         Action<LoggerSinkConfiguration> configure,
         Func<LogEvent, bool> predicate,
-        LogEventLevel minimumLevel = LogEventLevel.Verbose,
-        string outputTemplate = "{Message}",
-        IFormatProvider formatProvider = null)
+        LogEventLevel minimumLevel = LogEventLevel.Verbose)
     {
-        return LoggerSinkConfiguration.Wrap(loggerConfiguration, wrappedSink => new ConditionalValveSink(predicate, wrappedSink), configure, LogEventLevel.Verbose, null);
+        ILogEventSink logEventSink = LoggerSinkConfiguration.Wrap(wrappedSink => new ConditionalValveSink(predicate, wrappedSink), configure);
+        return loggerConfiguration.Sink(logEventSink, minimumLevel);
     }
 
     public static LoggerConfiguration Message(

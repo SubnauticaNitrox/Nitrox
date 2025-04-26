@@ -19,7 +19,7 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
     private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
     private readonly Dictionary<Int3, BatchCells> batchCellsById;
 
-    public WorldEntitySpawner(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
+    public WorldEntitySpawner(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         worldEntitySpawnResolver = new WorldEntitySpawnerResolver(entityMetadataManager, playerManager, localPlayer, entities, simulationOwnership);
 

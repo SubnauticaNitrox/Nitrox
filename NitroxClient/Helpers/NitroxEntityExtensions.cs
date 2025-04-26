@@ -31,7 +31,7 @@ public static class NitroxEntityExtensions
         }
 
         nitroxId = nitroxEntity.Id;
-        return true;
+        return nitroxId != null;
     }
 
     public static bool TryGetNitroxId(this Component component, out NitroxId nitroxId)
@@ -43,7 +43,7 @@ public static class NitroxEntityExtensions
         }
 
         nitroxId = nitroxEntity.Id;
-        return true;
+        return nitroxId != null;
     }
 
     public static bool TryGetIdOrWarn(
@@ -67,7 +67,7 @@ public static class NitroxEntityExtensions
         }
 
         nitroxId = nitroxEntity.Id;
-        return true;
+        return nitroxId != null;
     }
 
     public static bool TryGetIdOrWarn(
@@ -91,7 +91,7 @@ public static class NitroxEntityExtensions
         }
 
         nitroxId = nitroxEntity.Id;
-        return true;
+        return nitroxId != null;
     }
 
     public static Optional<NitroxId> GetId(this GameObject gameObject)

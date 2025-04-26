@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
@@ -17,7 +17,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override object Read(string arg)
         {
-            Validate.IsTrue(Enum.TryParse(arg, true, out T value), "Unknown value received");
+            Validate.IsTrue(Enum.TryParse(arg, true, out T value), $"Unknown value received (pick from: {string.Join(", ", Enum.GetNames(typeof(T)))})");
             return value;
         }
 

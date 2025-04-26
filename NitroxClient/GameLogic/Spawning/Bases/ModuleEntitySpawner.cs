@@ -81,6 +81,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         moduleTransform.localRotation = moduleEntity.Transform.LocalRotation.ToUnity();
         moduleTransform.localScale = moduleEntity.Transform.LocalScale.ToUnity();
         ApplyModuleData(moduleEntity, moduleObject, result);
+        MoveToGlobalRoot(moduleObject);
 
         if (parent && parent.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
         {
@@ -127,6 +128,21 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         moduleEntity.TechType = constructable.techType.ToDto();
         moduleEntity.ConstructedAmount = constructable.constructedAmount;
         moduleEntity.IsInside = constructable.isInside;
+    }
+
+    /// <summary>
+    /// We don't want constructables to be put in CellRoots but in GlobalRoot, because when a player has simulation ownership over a base,
+    /// they also need to keep loaded everything which could be related to the said base (e.g. power relays)
+    /// </summary>
+    public static void MoveToGlobalRoot(GameObject gameObject)
+    {
+        if (!gameObject.TryGetComponent(out LargeWorldEntity largeWorldEntity))
+        {
+            return;
+        }
+
+        largeWorldEntity.cellLevel = LargeWorldEntity.CellLevel.Global;
+        largeWorldEntity.Start();
     }
 
     public static ModuleEntity From(Constructable constructable)

@@ -26,21 +26,12 @@ public static class DialogServiceExtensions
 
             T viewModel = dialogService.CreateViewModel<T>();
             setup?.Invoke(viewModel, extraParameter);
-            try
+            bool? result = await dialogService.ShowDialogAsync<T>(owner, viewModel);
+            if (result == true)
             {
-                viewModel.Activator.Activate();
-                bool? result = await dialogService.ShowDialogAsync<T>(owner, viewModel);
-                if (result == true)
-                {
-                    return viewModel;
-                }
-                return default;
+                return viewModel;
             }
-            finally
-            {
-                viewModel.Activator.Deactivate();
-                viewModel.Activator.Dispose();
-            }
+            return default;
         }
         catch (Exception ex)
         {

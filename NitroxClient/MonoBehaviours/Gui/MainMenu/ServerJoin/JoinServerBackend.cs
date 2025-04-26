@@ -9,9 +9,9 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
@@ -56,12 +56,14 @@ public static class JoinServerBackend
                     Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
                     MainMenuEnterPasswordPanel.ResetLastEnteredPassword();
                     MainMenuRightSide.main.OpenGroup(MainMenuEnterPasswordPanel.NAME);
+                    MainMenuEnterPasswordPanel.Instance.FocusPasswordField();
                     break;
                 }
 
                 Log.Info("Waiting for user input");
                 Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                 MainMenuRightSide.main.OpenGroup(MainMenuJoinServerPanel.NAME);
+                MainMenuJoinServerPanel.Instance.FocusNameInputField();
                 break;
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVED:

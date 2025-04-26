@@ -24,6 +24,12 @@ public class Items
     public static GameObject PickingUpObject { get; private set; }
     private readonly EntityMetadataManager entityMetadataManager;
 
+    /// <summary>
+    /// Whether or not <see cref="Inventory.Pickup"/> is running. It's useful to discriminate between Inventory.Pickup from
+    /// a regular <see cref="Pickupable.Pickup"/>
+    /// </summary>
+    public bool IsInventoryPickingUp;
+
     public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {
         this.packetSender = packetSender;
@@ -31,39 +37,50 @@ public class Items
         this.entityMetadataManager = entityMetadataManager;
     }
 
-    public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
-    {
-        ItemPosition itemPosition = new ItemPosition(id, location.ToDto(), rotation.ToDto());
-        packetSender.Send(itemPosition);
-    }
-
     public void PickedUp(GameObject gameObject, TechType techType)
     {
         PickingUpObject = gameObject;
-        // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
-        RemoveAnyRemoteControl(gameObject);
 
-        if (!gameObject.TryGetNitroxId(out NitroxId id))
+        // Try catch to avoid blocking PickingUpObject with a non null value outside of the current context
+        try
         {
-            Log.Debug($"Found item with ({gameObject.name}) with no id, assigning a new one");
-            id = NitroxEntity.GenerateNewId(gameObject);
+            // Newly created objects are always placed into the player's inventory.
+            if (!Player.main.TryGetNitroxId(out NitroxId playerId))
+            {
+                Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
+                PickingUpObject = null;
+                return;
+            }
+
+            InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, playerId);
+
+            if (inventoryItemEntity.TechType.ToUnity() != techType)
+            {
+                Log.Warn($"Provided TechType: {techType} is different than the one automatically attributed to the item {inventoryItemEntity.TechType}");
+            }
+
+            PickupItem pickupItem = new(inventoryItemEntity);
+
+            if (packetSender.Send(pickupItem))
+            {
+                Log.Debug($"Picked up item {inventoryItemEntity}");
+            }
         }
-
-        EntityPositionBroadcaster.StopWatchingEntity(id);
-
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
-
-        // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
-        // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
-        // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
-        // directly into the player's inventory.  These will ultimately be registered server side with the above inventoryItemEntity.
-        entities.MarkAsSpawned(inventoryItemEntity);
-
-        Log.Debug($"PickedUp {id} {techType}");
-
-        PickupItem pickupItem = new(id, inventoryItemEntity);
-        packetSender.Send(pickupItem);
+        catch (Exception exception)
+        {
+            Log.Error(exception);
+        }
         PickingUpObject = null;
+    }
+
+    public void Planted(GameObject gameObject, NitroxId parentId)
+    {
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, parentId);
+
+        if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
+        {
+            Log.Debug($"Planted item {inventoryItemEntity}");
+        }
     }
 
     /// <summary>
@@ -75,6 +92,12 @@ public class Items
         // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
 
+        // WaterParkCreatures need at least one ManagedUpdate to run so their data is correctly refreshed (isMature and timeNextBreed)
+        if (gameObject.TryGetComponent(out WaterParkCreature waterParkCreature))
+        {
+            waterParkCreature.ManagedUpdate();
+        }
+
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
@@ -84,7 +107,7 @@ public class Items
 
         // If the item is dropped in a WaterPark we need to handle it differently
         NitroxId parentId = null;
-        if (IsGlobalRootObject(gameObject) || (gameObject.GetComponent<Pickupable>() && TryGetCurrentWaterParkId(out parentId)))
+        if (IsGlobalRootObject(gameObject) || (gameObject.GetComponent<Pickupable>() && TryGetParentWaterParkId(gameObject.transform.parent, out parentId)))
         {
             // We cast it to an entity type that is always seeable by clients
             // therefore, the packet will be redirected to everyone
@@ -122,9 +145,10 @@ public class Items
             droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
         }
 
-        Log.Debug($"Dropping item: {droppedItem}");
-
-        packetSender.Send(new EntitySpawnedByClient(droppedItem, true));
+        if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true)))
+        {
+            Log.Debug($"Dropping item: {droppedItem}");
+        }
     }
 
     /// <summary>
@@ -158,19 +182,9 @@ public class Items
                 break;
         }
 
-        Log.Debug($"Placed object: {placedItem}");
-
-        packetSender.Send(new EntitySpawnedByClient(placedItem, true));
-    }
-
-    public void Created(GameObject gameObject)
-    {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
-        entities.MarkAsSpawned(inventoryItemEntity);
-
-        if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
+        if (packetSender.Send(new EntitySpawnedByClient(placedItem, true)))
         {
-            Log.Debug($"Creation of item {gameObject.name} into the player's inventory {inventoryItemEntity}");
+            Log.Debug($"Placed object: {placedItem}");
         }
     }
 
@@ -203,7 +217,27 @@ public class Items
         }
     }
 
-    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, EntityMetadataManager entityMetadataManager)
+    /// <summary>
+    /// Overloads <see cref="ConvertToInventoryItemEntity"/> and removes any tracking on <paramref name="gameObject"/>
+    /// </summary>
+    private InventoryItemEntity ConvertToInventoryEntityUntracked(GameObject gameObject, NitroxId parentId)
+    {
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, parentId, entityMetadataManager);
+
+        // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
+        // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
+        // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
+        // directly into the player's inventory.  These will ultimately be registered server side with the above inventoryItemEntity.
+        entities.MarkAsSpawned(inventoryItemEntity);
+
+        // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
+        RemoveAnyRemoteControl(gameObject);
+        EntityPositionBroadcaster.StopWatchingEntity(inventoryItemEntity.Id);
+
+        return inventoryItemEntity;
+    }
+
+    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, NitroxId parentId, EntityMetadataManager entityMetadataManager)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
@@ -211,13 +245,7 @@ public class Items
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         List<Entity> children = GetPrefabChildren(gameObject, itemId, entityMetadataManager).ToList();
 
-        // Newly created objects are always placed into the player's inventory.
-        if (!Player.main.TryGetNitroxId(out NitroxId ownerId))
-        {
-            throw new InvalidOperationException("[Items] Player has no id! Couldn't parent InventoryItem.");
-        }
-
-        InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
+        InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), parentId, children);
         BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
 
         return inventoryItemEntity;
@@ -232,13 +260,29 @@ public class Items
         UnityEngine.Object.Destroy(gameObject.GetComponent<RemotelyControlled>());
     }
 
-    private bool TryGetCurrentWaterParkId(out NitroxId waterParkId)
+    /// <param name="parent">Parent of the GameObject to check</param>
+    public static bool TryGetParentWaterPark(Transform parent, out WaterPark waterPark)
     {
-        if (Player.main && Player.main.currentWaterPark &&
-            Player.main.currentWaterPark.TryGetNitroxId(out waterParkId))
+        // NB: When dropped in a WaterPark, items are placed under WaterPark/items_root/
+        // So we need to search two steps higher to find the WaterPark
+        if (parent && parent.parent && parent.parent.TryGetComponent(out waterPark))
         {
             return true;
         }
+
+        waterPark = null;
+        return false;
+    }
+
+
+    /// <inheritdoc cref="TryGetParentWaterPark" />
+    private static bool TryGetParentWaterParkId(Transform parent, out NitroxId waterParkId)
+    {
+        if (TryGetParentWaterPark(parent, out WaterPark waterPark) && waterPark.TryGetNitroxId(out waterParkId))
+        {
+            return true;
+        }
+
         waterParkId = null;
         return false;
     }

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Reactive;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Nitrox.Launcher.Models.Design;
@@ -19,7 +20,7 @@ public class AsyncCommandButtonTagger : IDisposable
     public AsyncCommandButtonTagger(string className)
     {
         ClassName = className;
-        commandChangeSubscription = Button.CommandProperty.Changed.Subscribe(ButtonCommandChangedOnNext);
+        commandChangeSubscription = Button.CommandProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<ICommand>>(ButtonCommandChangedOnNext));
 
         void ButtonCommandChangedOnNext(AvaloniaPropertyChangedEventArgs<ICommand> args)
         {

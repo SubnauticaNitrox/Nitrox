@@ -54,6 +54,13 @@ public class EntityMetadataManager
         return Optional.Empty;
     }
 
+    public bool TryExtract(object o, out EntityMetadata metadata)
+    {
+        Optional<EntityMetadata> opMetadata = Extract(o);
+        metadata = opMetadata.Value;
+        return opMetadata.HasValue;
+    }
+
     public Optional<IEntityMetadataProcessor> FromMetaData(EntityMetadata metadata)
     {
         if (metadata != null && processors.TryGetValue(metadata.GetType(), out IEntityMetadataProcessor processor))
