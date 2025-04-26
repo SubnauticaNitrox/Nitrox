@@ -26,6 +26,8 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
 {
     internal static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((CreatureDeath t) => t.OnKillAsync()));
 
+    private static bool IsRemotelyCalled => Resolve<LiveMixinManager>().IsRemoteHealthChanging;
+
     /*
      * 1st injection:
      * gameObject.GetComponent<Rigidbody>().angularDrag = base.gameObject.GetComponent<Rigidbody>().angularDrag * 3f;
@@ -85,22 +87,32 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
             NitroxEntity.SetNewId(gameObject, creatureId);
         }
 
-        Resolve<Items>().Dropped(gameObject, cookedTechType);
+        if (!IsRemotelyCalled)
+        {
+            Resolve<Items>().Dropped(gameObject, cookedTechType);
+        }
     }
 
     public static void BroadcastRemoveCorpse(CreatureDeath creatureDeath)
     {
-        if (creatureDeath.TryGetNitroxId(out NitroxId creatureId))
+        // This case is expected when CreatureDeath.Spawn happens (calling this) after a metadata processor has already called this
+        if (!creatureDeath.TryGetNitroxId(out NitroxId creatureId))
         {
-            Resolve<SimulationOwnership>().StopSimulatingEntity(creatureId);
-            EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+            return;
+        }
+
+        Resolve<SimulationOwnership>().StopSimulatingEntity(creatureId);
+        EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+
+        if (!IsRemotelyCalled)
+        {
             Resolve<IPacketSender>().Send(new RemoveCreatureCorpse(creatureId, creatureDeath.transform.localPosition.ToDto(), creatureDeath.transform.localRotation.ToDto()));
         }
     }
 
     public static void BroadcastEatableMetadata(Eatable eatable)
     {
-        if (!eatable.TryGetNitroxId(out NitroxId eatableId))
+        if (IsRemotelyCalled || !eatable.TryGetNitroxId(out NitroxId eatableId))
         {
             return;
         }

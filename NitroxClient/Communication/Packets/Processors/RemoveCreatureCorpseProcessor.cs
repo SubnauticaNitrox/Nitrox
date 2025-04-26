@@ -1,4 +1,3 @@
-using System.Collections;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -34,14 +33,15 @@ public class RemoveCreatureCorpseProcessor : ClientPacketProcessor<RemoveCreatur
 
         creatureDeath.transform.localPosition = packet.DeathPosition.ToUnity();
         creatureDeath.transform.localRotation = packet.DeathRotation.ToUnity();
-        CoroutineHost.StartCoroutine(SimplerOnKillAsync(creatureDeath, packet.CreatureId));
+
+        SafeOnKillAsync(creatureDeath, packet.CreatureId, simulationOwnership, liveMixinManager);
     }
 
     /// <summary>
     /// Calls only some parts from <see cref="CreatureDeath.OnKillAsync"/> to avoid sending packets from it
     /// or already synced behaviour (like spawning another respawner from the remote clients)
     /// </summary>
-    public IEnumerator SimplerOnKillAsync(CreatureDeath creatureDeath, NitroxId creatureId)
+    public static void SafeOnKillAsync(CreatureDeath creatureDeath, NitroxId creatureId, SimulationOwnership simulationOwnership, LiveMixinManager liveMixinManager)
     {
         // Ensure we don't broadcast anything from this kill event
         simulationOwnership.StopSimulatingEntity(creatureId);
@@ -49,23 +49,26 @@ public class RemoveCreatureCorpseProcessor : ClientPacketProcessor<RemoveCreatur
         // Remove the position broadcasting stuff from it
         EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
 
-        // Receiving this packet means the creature is dead
-        liveMixinManager.SyncRemoteHealth(creatureDeath.liveMixin, 0);
-
         // To avoid SpawnRespawner to be called
         creatureDeath.respawn = false;
         creatureDeath.hasSpawnedRespawner = true;
 
         // To avoid the cooked data section
-        bool lastDamageWasHeat = creatureDeath.lastDamageWasHeat;
         creatureDeath.lastDamageWasHeat = false;
 
+        // Receiving this packet means the creature is dead
+        LiveMixin liveMixin = creatureDeath.liveMixin;
+        liveMixin.health = 0f;
+        liveMixin.tempDamage = 0f;
+        // We don't care what's inside the damage info
+        liveMixin.damageInfo.Clear();
+        liveMixin.NotifyAllAttachedDamageReceivers(liveMixin.damageInfo);
+
+        using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
+        using (PacketSuppressor<RemoveCreatureCorpse>.Suppress())
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
-            yield return creatureDeath.OnKillAsync();
+            CoroutineUtils.PumpCoroutine(creatureDeath.OnKillAsync());
         }
-
-        // Restore the field in case it was useful
-        creatureDeath.lastDamageWasHeat = lastDamageWasHeat;
     }
 }
