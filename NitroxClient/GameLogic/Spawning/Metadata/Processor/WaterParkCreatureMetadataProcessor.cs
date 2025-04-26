@@ -44,8 +44,8 @@ public class WaterParkCreatureMetadataProcessor : EntityMetadataProcessor<WaterP
         // While being fully loaded, the base is inactive and coroutines shouldn't be started (they'll throw an exception)
         // To avoid, that we postpone their execution to 1 more second which is enough because time is frozen during initial sync
         // This is the mating condition from WaterParkCreature.ManagedUpdate to postpone mating
-        if (Multiplayer.Main && !Multiplayer.Main.InitialSyncCompleted && waterParkCreature.currentWaterPark && waterParkCreature.isMature &&
-            waterParkCreature.GetCanBreed() && DayNightCycle.main.timePassedAsFloat > waterParkCreature.timeNextBreed)
+        if (Multiplayer.Main && !Multiplayer.Main.InitialSyncCompleted && waterParkCreature.currentWaterPark && waterParkCreature.GetCanBreed() &&
+            waterParkCreature.timeNextBreed != -1 && DayNightCycle.main.timePassedAsFloat > waterParkCreature.timeNextBreed)
         {
             waterParkCreature.timeNextBreed = DayNightCycle.main.timePassedAsFloat + 1;
         }

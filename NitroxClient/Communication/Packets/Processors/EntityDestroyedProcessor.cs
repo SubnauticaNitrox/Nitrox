@@ -45,7 +45,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
             }
             else
             {
-                DefaultDestroyAction(gameObject);
+                Entities.DestroyObject(gameObject);
             }
         }
     }

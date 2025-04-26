@@ -5,7 +5,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -14,7 +13,6 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.Communication.Packets.Processors
@@ -28,8 +26,9 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly EntityRegistry entityRegistry;
         private readonly SubnauticaServerConfig serverConfig;
         private readonly NtpSyncer ntpSyncer;
+        private readonly SessionSettings sessionSettings;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, SubnauticaServerConfig serverConfig, NtpSyncer ntpSyncer)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, SubnauticaServerConfig serverConfig, NtpSyncer ntpSyncer, SessionSettings sessionSettings)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.storyManager = storyManager;
@@ -38,12 +37,18 @@ namespace NitroxServer.Communication.Packets.Processors
             this.entityRegistry = entityRegistry;
             this.serverConfig = serverConfig;
             this.ntpSyncer = ntpSyncer;
+            this.sessionSettings = sessionSettings;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
             NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
+
+            if (wasBrandNewPlayer)
+            {
+                player.SubRootId = assignedEscapePodId;
+            }
 
             if (newlyCreatedEscapePod.HasValue)
             {
@@ -87,7 +92,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 storyManager.GetTimeData(),
                 isFirstPlayer,
                 BuildingManager.GetEntitiesOperations(globalRootEntities),
-                serverConfig.KeepInventoryOnDeath
+                serverConfig.KeepInventoryOnDeath,
+                sessionSettings
             );
 
             player.SendPacket(initialPlayerSync);

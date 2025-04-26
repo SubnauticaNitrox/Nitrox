@@ -49,7 +49,7 @@
 
     <!-- Shared dependencies for all Nitrox.* projects -->
     <ItemGroup Condition="'$(NitroxProject)' == 'true'">
-        <PackageReference Include="JetBrains.Annotations" Version="2024.2.0">
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0">
             <Aliases>JB</Aliases>
         </PackageReference>
         <PackageReference Include="IsExternalInit" Version="1.0.3">
@@ -57,9 +57,20 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="IndexRange" Version="1.0.3" />
-        <PackageReference Include="System.Memory" Version="4.5.5" />
-        <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+        <PackageReference Include="System.Memory" Version="4.6.3" />
+        <PackageReference Include="System.ValueTuple" Version="4.6.1" />
     </ItemGroup>
+
+    <Choose>
+        <When Condition="'$(TestLibrary)' == 'false'">
+            <ItemGroup>
+                <PackageReference Include="Nitrox.Analyzers" Version="*">
+                    <PrivateAssets>all</PrivateAssets>
+                    <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+                </PackageReference>
+            </ItemGroup>
+        </When>
+    </Choose>
 
     <!-- Include default project references to all other "Nitrox*" projects -->
     <Choose>
@@ -72,10 +83,6 @@
                 <PackageReference Include="Nitrox.Discovery.MSBuild" Version="0.1.0">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
-                </PackageReference>
-                <PackageReference Include="Nitrox.Analyzers" Version="*">
-                    <PrivateAssets>all</PrivateAssets>
-                    <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
                 </PackageReference>
             </ItemGroup>
         </When>

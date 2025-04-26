@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures;
@@ -22,20 +21,21 @@ public class WorldEntitySpawnerResolver
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
+    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
-        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(entityMetadataManager);
+        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(localPlayer);
+        customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
-        vehicleWorldEntitySpawner = new(entities);
-        prefabPlaceholderEntitySpawner = new(defaultEntitySpawner);
+        vehicleWorldEntitySpawner = new VehicleWorldEntitySpawner(entities);
+        prefabPlaceholderEntitySpawner = new PrefabPlaceholderEntitySpawner(defaultEntitySpawner);
         placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, entityMetadataManager, prefabPlaceholderEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
-        geyserWorldEntitySpawner = new(entities);
+        geyserWorldEntitySpawner = new GeyserWorldEntitySpawner(entities);
         reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();
         reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner);
-        creatureRespawnEntitySpawner = new(simulationOwnership);
+        creatureRespawnEntitySpawner = new CreatureRespawnEntitySpawner(simulationOwnership);
     }
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
