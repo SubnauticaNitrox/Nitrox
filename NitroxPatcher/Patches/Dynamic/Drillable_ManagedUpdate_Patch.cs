@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
@@ -33,7 +34,10 @@ public sealed partial class Drillable_ManagedUpdate_Patch : PacketSuppressorPatc
 
     private static void Callback(Drillable drillable, Pickupable pickupable)
     {
-        Resolve<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), drillable.drillingExo.transform);
+        if (drillable.drillingExo.TryGetIdOrWarn(out NitroxId exosuitId))
+        {
+            Resolve<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), exosuitId);
+        }
     }
 
     public override void Patch(Harmony harmony)

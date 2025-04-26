@@ -1,7 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -19,12 +18,12 @@ public sealed partial class ExosuitClawArm_OnPickup_Patch : NitroxPatch, IDynami
             PickPrefab component = componentInParent.GetActiveTarget().GetComponent<PickPrefab>();
             if (pickupable != null && pickupable.isPickupable && componentInParent.storageContainer.container.HasRoomFor(pickupable))
             {
-                NitroxServiceLocator.LocateService<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), Optional.Empty);
+                NitroxServiceLocator.LocateService<Items>().PickedUpByPlayer(pickupable.gameObject, pickupable.GetTechType());
             }
             else if (component != null)
             {
                 Log.Debug("Delete Pickprefab for exosuit claw arm");
-                NitroxServiceLocator.LocateService<Items>().PickedUp(component.gameObject, component.pickTech, Optional.Empty);
+                NitroxServiceLocator.LocateService<Items>().PickedUpByPlayer(component.gameObject, component.pickTech);
             }
         }
         return true;
