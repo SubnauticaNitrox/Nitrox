@@ -17,8 +17,8 @@ public class PlayerMovementBroadcaster : MonoBehaviour
 
     public void Update()
     {
-        // HIGHLY TEMPORARY. There should be a way to block all packets from being sent when in the join queue
-        // or during initial sync. Maybe add this if/when the session connection state system gets refactored.
+        // TODO: Replace this temporary fix. Mostly prevents server console being spammed with warnings when a client is in the queue.
+        // There should be a way to block all packets from being sent when in the join queue or during initial sync.
         if (!Multiplayer.Main.InitialSyncCompleted)
         {
             return;
