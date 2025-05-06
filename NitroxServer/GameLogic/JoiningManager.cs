@@ -24,7 +24,7 @@ public sealed class JoiningManager
     private readonly World world;
     private readonly SessionSettings sessionSettings;
 
-    private ThreadSafeQueue<(INitroxConnection, string)> joinQueue { get; } = new();
+    private readonly ThreadSafeQueue<(INitroxConnection, string)> joinQueue = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
     public Action SyncFinishedCallback { get; private set; }
@@ -59,7 +59,7 @@ public sealed class JoiningManager
                 (INitroxConnection connection, string reservationKey) = joinQueue.Dequeue();
                 string name = playerManager.GetPlayerContext(reservationKey).PlayerName;
 
-                // Do this after dequeueing because everyone's position shifts forward
+                // Do this after dequeuing because everyone's position shifts forward
                 (INitroxConnection, string)[] array = [.. joinQueue];
                 for (int i = 0; i < array.Length; i++)
                 {
@@ -70,20 +70,17 @@ public sealed class JoiningManager
                 Log.Info($"Starting sync for player {name}");
                 SendInitialSync(connection, reservationKey);
 
-                CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
+                using CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
                 bool syncFinished = false;
 
                 SyncFinishedCallback = () => { syncFinished = true; };
 
-                await Task.Run(() =>
+                while (!syncFinished &&
+                       connection.State != NitroxConnectionState.Disconnected &&
+                       !source.IsCancellationRequested)
                 {
-                    while (!syncFinished &&
-                           connection.State != NitroxConnectionState.Disconnected &&
-                           !source.IsCancellationRequested)
-                    {
-                        Task.Delay(10).Wait();
-                    }
-                });
+                    await Task.Delay(10);
+                }
 
                 if (connection.State == NitroxConnectionState.Disconnected)
                 {
@@ -225,7 +222,7 @@ public sealed class JoiningManager
     public void JoiningPlayerDisconnected(INitroxConnection connection)
     {
         // They may have been queued, so just erase their entry
-        joinQueue.Filter(tuple => !Equals(tuple.Item1, connection));
+        joinQueue.RemoveWhere(tuple => Equals(tuple.Item1, connection));
     }
 
     public void BroadcastPlayerJoined(Player player)

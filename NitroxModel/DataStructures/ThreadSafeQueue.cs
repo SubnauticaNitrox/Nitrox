@@ -121,7 +121,7 @@ namespace NitroxModel.DataStructures
             }
         }
 
-        public void Filter(Func<T, bool> predicate)
+        public void RemoveWhere(Func<T, bool> predicate)
         {
             lock (locker)
             {
@@ -129,7 +129,7 @@ namespace NitroxModel.DataStructures
                 for (int i = 0; i < count; i++)
                 {
                     T item = queue.Dequeue();
-                    if (predicate(item))
+                    if (!predicate(item))
                     {
                         queue.Enqueue(item);
                     }
