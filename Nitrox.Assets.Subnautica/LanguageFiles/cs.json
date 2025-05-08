@@ -65,6 +65,7 @@
     "Nitrox_PlayerKicked": "Byl jsi vyhozen ze serveru",
     "Nitrox_PlayerLeft": "{PLAYER} opustil hru.",
     "Nitrox_PlayerListTabName": "Seznam hráčů",
+    "Nitrox_QueueInfo": "Jste na pozici #{POSITION} v řade. Maximální čekací doba: {TIME}",
     "Nitrox_RejectedSessionPolicy": "Rezervace odmítnuta…",
     "Nitrox_RemotePlayerObstacle": "Jiný hráč je buď uvnitř, nebo příliš blízko dekonstruovatelného cíle.",
     "Nitrox_RequestingSessionPolicy": "Požadování informací o stávající relaci…",

@@ -75,7 +75,7 @@
     "Nitrox_ResyncSettings": "Ресинхронизация",
     "Nitrox_SafeBuilding": "Безопасное строительство",
     "Nitrox_SafeBuildingLog": "Журнал безопасного строительства",
-    "Nitrox_ServerEntry_DeleteWarning": "Вы уверен что хотите удалить этот сервер?",
+    "Nitrox_ServerEntry_DeleteWarning": "Вы уверены, что хотите удалить этот сервер?",
     "Nitrox_ServerStopped": "Сервер был остановлен",
     "Nitrox_Settings_Bandwidth": "Настройки пропускной способности",
     "Nitrox_Settings_HigherForUnstable_Tooltip": "Укажите более высокое значение для нестабильных соединений",
