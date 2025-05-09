@@ -22,13 +22,6 @@ public class EntityData
         // children to their respective parent entities.
         Dictionary<NitroxId, Entity> entitiesById = Entities.ToDictionary(entity => entity.Id);
 
-        // We will re-build the child hierarchy below and want to avoid duplicates.
-        // TODO: Rework system to no longer persist children entities because they are duplicates.
-        foreach (Entity entity in Entities)
-        {
-            entity.ChildEntities.Clear();
-        }
-
         foreach (Entity entity in Entities)
         {
             if (entity is WorldEntity we)
@@ -42,13 +35,17 @@ public class EntityData
                 }
 
                 NitroxQuaternion rot = we.Transform.LocalRotation;
-                if (float.IsNaN(rot.X) || float.IsNaN(rot.Y) || float.IsNaN(rot.Z)|| float.IsNaN(rot.W)||
-                    float.IsInfinity(rot.X) || float.IsInfinity(rot.Y) || float.IsInfinity(rot.Z)|| float.IsInfinity(rot.W))
+                if (float.IsNaN(rot.X) || float.IsNaN(rot.Y) || float.IsNaN(rot.Z) || float.IsNaN(rot.W) ||
+                    float.IsInfinity(rot.X) || float.IsInfinity(rot.Y) || float.IsInfinity(rot.Z) || float.IsInfinity(rot.W))
                 {
                     Log.Error("Found WorldEntity with NaN or infinite rotation. Resetting rotation.");
                     we.Transform.LocalRotation = NitroxQuaternion.Identity;
                 }
             }
+
+            // We will re-build the child hierarchy below and want to avoid duplicates.
+            // TODO: Rework system to no longer persist children entities because they are duplicates.
+            entity.ChildEntities.Clear();
 
             if (entity.ParentId == null)
             {
@@ -72,7 +69,6 @@ public class EntityData
     {
         ProtoAfterDeserialization();
     }
-
 
     public static EntityData From(List<Entity> entities)
     {
