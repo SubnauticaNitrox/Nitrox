@@ -175,6 +175,13 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
                                 }
 
                                 break;
+                            case NitroxCollectionFaker.CollectionType.QUEUE:
+                                foreach (dynamic createdValue in ((IEnumerable)parameterValues[index]))
+                                {
+                                    origColl.Enqueue(createdValue);
+                                }
+
+                                break;
                             case NitroxCollectionFaker.CollectionType.NONE:
                             default:
                                 throw new ArgumentOutOfRangeException();
