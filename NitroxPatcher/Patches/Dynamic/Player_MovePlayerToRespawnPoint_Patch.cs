@@ -23,6 +23,6 @@ public sealed partial class Player_MovePlayerToRespawnPoint_Patch : NitroxPatch,
 
         Resolve<LocalPlayer>().BroadcastSubrootChange(currentSubId);
         
-        // spawning in the escape pod is handled by EscapePod_RespawnPlayer_Patch for cross-functionality with the warpme command 
+        // BroadcastEscapePodChange() is handled by EscapePod_RespawnPlayer_Patch for cross-functionality with the warpme command 
     }
 }
