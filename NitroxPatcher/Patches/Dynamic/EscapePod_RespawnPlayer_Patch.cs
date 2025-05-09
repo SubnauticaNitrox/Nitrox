@@ -13,7 +13,7 @@ public sealed partial class EscapePod_RespawnPlayer_Patch : NitroxPatch, IDynami
 
     public static void Postfix(EscapePod __instance)
     {
-        // LifePod.RespawnPlayer() runs both for player respawn (Player.MovePlayerToRespawnPoint()) and for warpme command
+        // EscapePod.RespawnPlayer() runs both for player respawn (Player.MovePlayerToRespawnPoint()) and for warpme command
         Optional<NitroxId> id = __instance.GetId();
         Resolve<LocalPlayer>().BroadcastEscapePodChange(id);
     }
