@@ -16,7 +16,7 @@ namespace NitroxModel.DataStructures
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [IgnoreDataMember]
-        private readonly object locker = new();
+        private readonly LockObject locker = new();
 
         [IgnoreDataMember]
         public ICollection<TKey> Keys
@@ -166,6 +166,15 @@ namespace NitroxModel.DataStructures
             {
                 return dictionary.TryGetValue(key, out value);
             }
+        }
+
+        public TValue TryGetValueOrDefault(TKey key, TValue defaultValue = default)
+        {
+            if (TryGetValue(key, out TValue value))
+            {
+                return value;
+            }
+            return defaultValue;
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()

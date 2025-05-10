@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication;
 

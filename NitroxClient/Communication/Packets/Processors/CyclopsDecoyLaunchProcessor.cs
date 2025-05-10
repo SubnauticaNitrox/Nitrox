@@ -1,11 +1,10 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel_Subnautica.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class CyclopsDecoyLaunchProcessor : ClientPacketProcessor<CyclopsDecoyLaunch>
+    class CyclopsDecoyLaunchProcessor : IClientPacketProcessor<CyclopsDecoyLaunch>
     {
         private readonly IPacketSender packetSender;
         private readonly Cyclops cyclops;
@@ -16,9 +15,10 @@ namespace NitroxClient.Communication.Packets.Processors
             this.cyclops = cyclops;
         }
 
-        public override void Process(CyclopsDecoyLaunch decoyLaunchPacket)
+        public Task Process(IPacketProcessContext context, CyclopsDecoyLaunch decoyLaunchPacket)
         {
             cyclops.LaunchDecoy(decoyLaunchPacket.Id);
+            return Task.CompletedTask;
         }
     }
 }

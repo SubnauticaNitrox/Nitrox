@@ -1,11 +1,10 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
+public class PlayerStatsProcessor : IClientPacketProcessor<PlayerStats>
 {
     private readonly PlayerManager playerManager;
 
@@ -14,9 +13,9 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
         this.playerManager = playerManager;
     }
 
-    public override void Process(PlayerStats playerStats)
+    public Task Process(IPacketProcessContext context, PlayerStats playerStats)
     {
-        if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(playerStats.SessionId, out RemotePlayer remotePlayer))
         {
             RemotePlayerVitals vitals = remotePlayer.vitals;
             vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
@@ -25,5 +24,7 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
             vitals.SetWater(playerStats.Water);
             remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
         }
+
+        return Task.CompletedTask;
     }
 }

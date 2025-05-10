@@ -1,16 +1,15 @@
 using System.Collections;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
+public class VehicleDockingProcessor : IClientPacketProcessor<VehicleDocking>
 {
     private readonly Vehicles vehicles;
 
@@ -19,18 +18,18 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         this.vehicles = vehicles;
     }
 
-    public override void Process(VehicleDocking packet)
+    public Task Process(IPacketProcessContext context, VehicleDocking packet)
     {
         if (!NitroxEntity.TryGetComponentFrom(packet.VehicleId, out Vehicle vehicle))
         {
             Log.Error($"[{nameof(VehicleDockingProcessor)}] could not find Vehicle component on {packet.VehicleId}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (!NitroxEntity.TryGetComponentFrom(packet.DockId, out VehicleDockingBay dockingBay))
         {
             Log.Error($"[{nameof(VehicleDockingProcessor)}] could not find VehicleDockingBay component on {packet.DockId}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
@@ -40,6 +39,8 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         }
 
         vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.PlayerId));
+
+        return Task.CompletedTask;
     }
 
     private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)

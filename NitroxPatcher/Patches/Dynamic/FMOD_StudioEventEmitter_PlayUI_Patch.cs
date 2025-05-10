@@ -23,7 +23,7 @@ public sealed partial class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, 
             return;
         }
 
-        if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path))
+        if (!Resolve<FmodWhitelist>().IsWhitelisted(__instance.asset.path))
         {
             return;
         }

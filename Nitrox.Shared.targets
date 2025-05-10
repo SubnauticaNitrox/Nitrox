@@ -76,6 +76,8 @@
             <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).dll;$(TargetDir)%(ExecutablesBaseName.Identity).dll.config" />
             <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).runtimeconfig.json" />
             <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).deps.json" />
+            <ExcludeFiles Include="$(TargetDir)server.Development.json" />
+            <ExcludeFiles Include="$(TargetDir)server.cfg" />
             <ExcludeFiles Include="$(TargetDir)*.dylib;$(TargetDir)*.so" />
 
             <FilesToMove Include="@(AllFiles)" Exclude="@(ExcludeFiles)" />

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Platforms.OS.Shared;
 
@@ -81,6 +82,70 @@ public class ProcessEx : IDisposable
 
         Process process = Process.Start(startInfo);
         return new ProcessEx(process);
+    }
+
+#if NET5_0_OR_GREATER
+    public static Process StartProcessDetached(ProcessStartInfo startInfo)
+    {
+        if (!string.IsNullOrWhiteSpace(startInfo.Arguments))
+        {
+            throw new NotSupportedException($"Arguments must be supplied via {startInfo.ArgumentList}");
+        }
+
+        // On Linux, processes are started as child by default. So we wrap as shell command to start detached from current process.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            List<string> newArgs = ["-c", string.Join(" ", ["nohup", $"'{startInfo.FileName}'", string.Join(" ", startInfo.ArgumentList), ">/dev/null 2>&1", "&"])];
+            startInfo.FileName = "/bin/sh";
+            startInfo.ArgumentList.Clear();
+            foreach (string arg in newArgs)
+            {
+                startInfo.ArgumentList.Add(arg);
+            }
+        }
+
+        return Process.Start(startInfo);
+    }
+
+    /// <summary>
+    ///     Starts the current app as a new instance.
+    /// </summary>
+    public static void StartSelf(params string[] arguments)
+    {
+        string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
+        // On Linux, entry assembly is .dll file but real executable is without extension.
+        string temp = Path.ChangeExtension(executableFilePath, null);
+        if (File.Exists(temp))
+        {
+            executableFilePath = temp;
+        }
+        temp = Path.ChangeExtension(executableFilePath, ".exe");
+        if (File.Exists(temp))
+        {
+            executableFilePath = temp;
+        }
+
+        using Process proc = StartProcessDetached(new ProcessStartInfo(executableFilePath!, arguments));
+    }
+
+    /// <summary>
+    ///     Starts the current app as a new instance, passing the same command line arguments.
+    /// </summary>
+    public static void StartSelfCopyArgs() => StartSelf(Environment.GetCommandLineArgs().Skip(1).ToArray());
+#endif
+
+    /// <summary>
+    ///     Opens the Url in the default browser. Forces the Uri scheme as HTTPS.
+    /// </summary>
+    public static void OpenUrl(string url)
+    {
+        UriBuilder urlBuilder = new(url) { Scheme = Uri.UriSchemeHttps, Port = -1 };
+        using Process proc = Process.Start(new ProcessStartInfo
+        {
+            FileName = urlBuilder.Uri.ToString(),
+            UseShellExecute = true,
+            Verb = "open"
+        });
     }
 
     public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null)

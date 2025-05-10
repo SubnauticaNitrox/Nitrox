@@ -1,13 +1,13 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class RangedAttackLastTargetUpdateProcessor : ClientPacketProcessor<RangedAttackLastTargetUpdate>
+public class RangedAttackLastTargetUpdateProcessor : IClientPacketProcessor<RangedAttackLastTargetUpdate>
 {
-    public override void Process(RangedAttackLastTargetUpdate packet)
+    public Task Process(IPacketProcessContext context, RangedAttackLastTargetUpdate packet)
     {
         AI.RangedAttackLastTargetUpdate(packet.CreatureId, packet.TargetId, packet.AttackTypeIndex, packet.State);
+        return Task.CompletedTask;
     }
 }

@@ -1,11 +1,10 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class TorpedoShotProcessor : ClientPacketProcessor<TorpedoShot>
+public class TorpedoShotProcessor : IClientPacketProcessor<TorpedoShot>
 {
     private readonly BulletManager bulletManager;
 
@@ -14,8 +13,9 @@ public class TorpedoShotProcessor : ClientPacketProcessor<TorpedoShot>
         this.bulletManager = bulletManager;
     }
 
-    public override void Process(TorpedoShot packet)
+    public Task Process(IPacketProcessContext context, TorpedoShot packet)
     {
         bulletManager.ShootSeamothTorpedo(packet.BulletId, packet.TechType.ToUnity(), packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.Speed, packet.LifeTime);
+        return Task.CompletedTask;
     }
 }

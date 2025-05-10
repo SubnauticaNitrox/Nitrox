@@ -1,17 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SeaDragonGrabExosuitProcessor : ClientPacketProcessor<SeaDragonGrabExosuit>
+public class SeaDragonGrabExosuitProcessor : IClientPacketProcessor<SeaDragonGrabExosuit>
 {
-    public override void Process(SeaDragonGrabExosuit packet)
+    public Task Process(IPacketProcessContext context, SeaDragonGrabExosuit packet)
     {
         if (!NitroxEntity.TryGetComponentFrom(packet.SeaDragonId, out SeaDragon seaDragon) ||
             !NitroxEntity.TryGetComponentFrom(packet.TargetId, out Exosuit exosuit))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         using (PacketSuppressor<SeaDragonGrabExosuit>.Suppress())
@@ -19,5 +18,7 @@ public class SeaDragonGrabExosuitProcessor : ClientPacketProcessor<SeaDragonGrab
             seaDragon.GrabExosuit(exosuit);
             seaDragon.CancelInvoke(nameof(SeaDragon.DamageExosuit));
         }
+
+        return Task.CompletedTask;
     }
 }

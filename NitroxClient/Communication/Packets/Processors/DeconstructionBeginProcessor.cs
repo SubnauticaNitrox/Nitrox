@@ -1,14 +1,13 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class DeconstructionBeginProcessor : ClientPacketProcessor<DeconstructionBegin>
+    public class DeconstructionBeginProcessor : IClientPacketProcessor<DeconstructionBegin>
     {
         private readonly IPacketSender packetSender;
 
@@ -17,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.packetSender = packetSender;
         }
 
-        public override void Process(DeconstructionBegin packet)
+        public Task Process(IPacketProcessContext context, DeconstructionBegin packet)
         {
             Log.Info($"Received deconstruction packet for id: {packet.Id}");
 
@@ -38,6 +37,8 @@ namespace NitroxClient.Communication.Packets.Processors
                     constructable.SetState(false, false);
                 }
             }
+
+            return Task.CompletedTask;
         }
     }
 }

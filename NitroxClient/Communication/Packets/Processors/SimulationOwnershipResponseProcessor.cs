@@ -1,15 +1,14 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class SimulationOwnershipResponseProcessor : ClientPacketProcessor<SimulationOwnershipResponse>
+    public class SimulationOwnershipResponseProcessor : IClientPacketProcessor<SimulationOwnershipResponse>
     {
         private readonly IMultiplayerSession multiplayerSession;
         private readonly SimulationOwnership simulationOwnershipManager;
@@ -20,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.simulationOwnershipManager = simulationOwnershipManager;
         }
 
-        public override void Process(SimulationOwnershipResponse response)
+        public Task Process(IPacketProcessContext context, SimulationOwnershipResponse response)
         {
             /*
              * For now, we expect the simulation lock callback to setup entity broadcasting as
@@ -37,6 +36,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 RemoveRemoteController(response.Id);
             }
+
+            return Task.CompletedTask;
         }
 
         private void RemoveRemoteController(NitroxId id)

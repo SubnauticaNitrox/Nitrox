@@ -1,4 +1,5 @@
-﻿using NitroxModel.Helper;
+﻿using NitroxModel.Core;
+using NitroxModel.Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.XR;

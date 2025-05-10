@@ -1,12 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using BinaryPack.Attributes;
-using NitroxModel.Logger;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -41,13 +35,12 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
         }
 
         if (!TryGetConstructorForType(type, memberInfos, out constructor) &&
-            !TryGetConstructorForType(type, Array.Empty<MemberInfo>(), out constructor))
+            !TryGetConstructorForType(type, [], out constructor))
         {
             throw new NullReferenceException($"Could not find a constructor with no parameters for {type}");
         }
 
         parameterFakers = new INitroxFaker[memberInfos.Length];
-
         Type[] constructorArgumentTypes = constructor.GetParameters().Select(p => p.ParameterType).ToArray();
         for (int i = 0; i < memberInfos.Length; i++)
         {
@@ -116,7 +109,7 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
         {
             INitroxFaker parameterFaker = parameterFakers[i];
 
-            if (typeTree.Contains(parameterFaker.OutputType))
+            if (!typeTree.Add(parameterFaker.OutputType))
             {
                 if (parameterFaker is NitroxCollectionFaker collectionFaker)
                 {
@@ -129,7 +122,6 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
             }
             else
             {
-                typeTree.Add(parameterFaker.OutputType);
                 parameterValues[i] = parameterFakers[i].GenerateUnsafe(typeTree);
                 typeTree.Remove(parameterFaker.OutputType);
             }
@@ -137,10 +129,17 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
 
         if (constructor.GetParameters().Length == parameterValues.Length)
         {
-            return (T)constructor.Invoke(parameterValues);
+            try
+            {
+                return (T)constructor.Invoke(parameterValues);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Constructor call {constructor.DeclaringType}({string.Join(", ", constructor.GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}"))}) failed", ex);
+            }
         }
 
-        T obj = (T)constructor.Invoke(Array.Empty<object>());
+        T obj = (T)constructor.Invoke([]);
         for (int index = 0; index < memberInfos.Length; index++)
         {
             MemberInfo memberInfo = memberInfos[index];

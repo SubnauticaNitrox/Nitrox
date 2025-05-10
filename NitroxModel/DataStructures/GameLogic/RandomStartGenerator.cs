@@ -4,14 +4,9 @@ using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic;
 
-public class RandomStartGenerator
+public class RandomStartGenerator(RandomStartGenerator.IPixelProvider pixelProvider)
 {
-    private readonly IPixelProvider pixelProvider;
-
-    public RandomStartGenerator(IPixelProvider pixelProvider)
-    {
-        this.pixelProvider = pixelProvider;
-    }
+    private readonly IPixelProvider pixelProvider = pixelProvider;
 
     public NitroxVector3 GenerateRandomStartPosition(Random rnd)
     {

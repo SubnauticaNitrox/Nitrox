@@ -14,6 +14,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Core;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -190,7 +191,9 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private void OpenContributionsOfYear()
     {
-        Process.Start(new ProcessStartInfo($"https://github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):yyyy/M/d}")}") { UseShellExecute = true, Verb = "open" })?.Dispose();
+        string fromValue = HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):M/d/yyyy}");
+        string toValue = HttpUtility.UrlEncode($"{DateTime.UtcNow:M/d/yyyy}");
+        ProcessEx.OpenUrl($"https://github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={fromValue}&to={toValue}");
     }
 
     /// <summary>

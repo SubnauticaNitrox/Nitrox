@@ -7,8 +7,10 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -85,6 +87,6 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     [RelayCommand]
     private void DownloadUpdate()
     {
-        ProcessUtils.OpenUrl("nitrox.rux.gg/download");
+        ProcessEx.OpenUrl("nitrox.rux.gg/download");
     }
 }

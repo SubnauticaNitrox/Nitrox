@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
@@ -15,8 +14,7 @@ using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxModel.Core;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel.Networking.Packets.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -26,7 +24,7 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-        private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = new();
+        private PacketProcessorsInvoker processorInvoker;
         private IClient client;
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
@@ -47,7 +45,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            NitroxServiceLocator.LifetimeScopeEnded += (_, _) => packetProcessorCache.Clear();
+            NitroxServiceLocator.LifetimeScopeEnded += (_, _) => processorInvoker = null;
             client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
@@ -63,6 +61,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
+            processorInvoker ??= new PacketProcessorsInvoker(NitroxServiceLocator.LocateService<IEnumerable<IPacketProcessor>>());
             client.PollEvents();
 
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
@@ -125,38 +124,22 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            static PacketProcessor ResolveProcessor(Packet packet, Dictionary<Type, PacketProcessor> processorCache)
-            {
-                Type packetType = packet.GetType();
-                if (processorCache.TryGetValue(packetType, out PacketProcessor processor))
-                {
-                    return processor;
-                }
-
-                try
-                {
-                    Type packetProcessorType = typeof(ClientPacketProcessor<>).MakeGenericType(packetType);
-                    return processorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, $"Failed to find packet processor for packet {packet}");
-                }
-
-                return null;
-            }
-
-            packetReceiver.ConsumePackets(static (packet, processorCache) =>
+            packetReceiver.ConsumePackets(static (packet, registry) =>
             {
                 try
                 {
-                    ResolveProcessor(packet, processorCache)?.ProcessPacket(packet, null);
+                    PacketProcessorsInvoker.Entry processor = registry.GetProcessor(packet);
+                    if (processor == null)
+                    {
+                        throw new Exception($"Failed to find packet processor for packet {packet}");
+                    }
+                    processor.Execute(null, packet).ContinueWithHandleError();
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error while processing packet {packet}");
+                    Log.Error(ex, $"Error trying to process packet {packet}");
                 }
-            }, packetProcessorCache);
+            }, processorInvoker);
         }
 
         public IEnumerator StartSession()

@@ -1,47 +1,47 @@
 using System.Runtime.Serialization;
-using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Players;
 
-namespace NitroxServer.Serialization.World
+namespace NitroxServer.Serialization.World;
+
+[DataContract]
+public class PersistedWorldData
 {
-    [DataContract]
-    public class PersistedWorldData
+    [DataMember(Order = 1)]
+    public WorldData WorldData { get; set; } = new();
+
+    [DataMember(Order = 2)]
+    public PlayerData PlayerData { get; set; }
+
+    [DataMember(Order = 3)]
+    public GlobalRootData GlobalRootData { get; set; }
+
+    [DataMember(Order = 4)]
+    public EntityData EntityData { get; set; }
+
+    public static PersistedWorldData From(World world)
     {
-        [DataMember(Order = 1)]
-        public WorldData WorldData { get; set; } = new WorldData();
+        return new PersistedWorldData();
+        // TODO: Use SQLite for saving instead of this...
+        // return new PersistedWorldData
+        // {
+        //     WorldData =
+        //     {
+        // ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
+        // GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
+        //         Seed = world.Seed
+        //     },
+        //     PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
+        //     GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetPersistentGlobalRootEntities()),
+        //     EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(true))
+        // };
+    }
 
-        [DataMember(Order = 2)]
-        public PlayerData PlayerData { get; set; }
-
-        [DataMember(Order = 3)]
-        public GlobalRootData GlobalRootData { get; set; }
-
-        [DataMember(Order = 4)]
-        public EntityData EntityData { get; set; }
-
-        public static PersistedWorldData From(World world)
-        {
-            return new PersistedWorldData
-            {
-                WorldData =
-                {
-                    ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
-                    GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
-                    Seed = world.Seed
-                },
-                PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetPersistentGlobalRootEntities()),
-                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(true))
-            };
-        }
-
-        public bool IsValid()
-        {
-            return WorldData.IsValid() &&
-                   PlayerData != null &&
-                   GlobalRootData != null &&
-                   EntityData != null;
-        }
+    public bool IsValid()
+    {
+        return WorldData.IsValid() &&
+               PlayerData != null &&
+               GlobalRootData != null &&
+               EntityData != null;
     }
 }

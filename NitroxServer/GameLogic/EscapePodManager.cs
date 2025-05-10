@@ -10,6 +10,8 @@ using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.GameLogic;
 
+// TODO: REMOVE CLASS
+[Obsolete("Use EscapePodService instead")]
 public class EscapePodManager
 {
     private const int PLAYERS_PER_ESCAPEPOD = 50;

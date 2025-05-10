@@ -3,7 +3,7 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using Story;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -39,6 +39,6 @@ public sealed partial class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDy
         }
 
         float timeExecute = StoryGoalScheduler.main.schedule.GetLast().timeExecute;
-        Resolve<IPacketSender>().Send(new Schedule(timeExecute, goal.key, (int)goal.goalType));
+        Resolve<IPacketSender>().Send(new Schedule(timeExecute, goal.key, (Schedule.GoalCategory)goal.goalType));
     }
 }

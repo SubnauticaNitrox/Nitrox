@@ -1,6 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -18,7 +18,7 @@ public sealed partial class FMODUWE_PlayOneShotImpl_Patch : NitroxPatch, IDynami
 
     public static void Postfix(string eventPath, Vector3 position, float volume)
     {
-        if (Resolve<FMODWhitelist>().IsWhitelisted(eventPath))
+        if (Resolve<FmodWhitelist>().IsWhitelisted(eventPath))
         {
             Resolve<FMODSystem>().SendAssetPlay(eventPath, position.ToDto(), volume);
         }

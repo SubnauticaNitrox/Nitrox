@@ -214,7 +214,7 @@
                         Text="GAMEMODE" />
                     <controls:RadioButtonGroup
                         Classes="radioGroup"
-                        Enum="{x:Type server:NitroxGameMode}"
+                        Enum="{x:Type server:SubnauticaGameMode}"
                         IsEnabled="{Binding !ServerIsOnline}"
                         SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
                 </StackPanel>

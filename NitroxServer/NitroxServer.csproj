@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
         <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
@@ -12,5 +13,9 @@
         <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ConsoleCommands\" />
     </ItemGroup>
 </Project>

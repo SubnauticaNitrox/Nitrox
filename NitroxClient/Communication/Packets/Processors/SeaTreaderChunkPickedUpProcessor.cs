@@ -1,17 +1,18 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SeaTreaderChunkPickedUpProcessor : ClientPacketProcessor<SeaTreaderChunkPickedUp>
+public class SeaTreaderChunkPickedUpProcessor : IClientPacketProcessor<SeaTreaderChunkPickedUp>
 {
-    public override void Process(SeaTreaderChunkPickedUp packet)
+    public Task Process(IPacketProcessContext context, SeaTreaderChunkPickedUp packet)
     {
         if (NitroxEntity.TryGetComponentFrom(packet.ChunkId, out SinkingGroundChunk sinkingGroundChunk))
         {
             GameObject.Destroy(sinkingGroundChunk.gameObject);
         }
+
+        return Task.CompletedTask;
     }
 }

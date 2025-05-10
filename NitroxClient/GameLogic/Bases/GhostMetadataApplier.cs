@@ -2,7 +2,7 @@ using System.Collections;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
 

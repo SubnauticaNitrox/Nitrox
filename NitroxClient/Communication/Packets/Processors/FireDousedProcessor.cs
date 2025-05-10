@@ -1,13 +1,12 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class FireDousedProcessor : ClientPacketProcessor<FireDoused>
+    public class FireDousedProcessor : IClientPacketProcessor<FireDoused>
     {
         private readonly IPacketSender packetSender;
 
@@ -20,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         /// Finds and executes <see cref="Fire.Douse(float)"/>. If the fire is extinguished, it will pass a large float to trigger the private
         /// <see cref="Fire.Extinguish()"/> method.
         /// </summary>
-        public override void Process(FireDoused packet)
+        public Task Process(IPacketProcessContext context, FireDoused packet)
         {
             GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
 
@@ -28,6 +27,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

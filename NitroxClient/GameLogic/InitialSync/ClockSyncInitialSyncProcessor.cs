@@ -5,7 +5,7 @@ using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Modals;
 using NitroxModel.Networking;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

@@ -4,7 +4,7 @@ using System.Reflection;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

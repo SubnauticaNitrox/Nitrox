@@ -2,8 +2,9 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
+using NitroxModel.Core;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;
@@ -43,7 +44,15 @@ namespace NitroxClient.GameLogic.ChatUI
             playerChat.Show();
         }
 
-        public void HideChat() => Player.main.StartCoroutine(HideChatAsync());
+        public void HideChat()
+        {
+            if (!Player.main)
+            {
+                return;
+            }
+            Player.main.StartCoroutine(HideChatAsync());
+        }
+
         private IEnumerator HideChatAsync()
         {
             yield return new WaitUntil(() => PlayerChat.IsReady);

@@ -2,14 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class InitialPlayerSyncProcessor : ClientPacketProcessor<InitialPlayerSync>
+    public class InitialPlayerSyncProcessor : IClientPacketProcessor<InitialPlayerSync>
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<IInitialSyncProcessor> processors;
@@ -28,12 +27,14 @@ namespace NitroxClient.Communication.Packets.Processors
             this.processors = processors.ToSet();
         }
 
-        public override void Process(InitialPlayerSync packet)
+        public Task Process(IPacketProcessContext context, InitialPlayerSync packet)
         {
             this.packet = packet;
             loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
             cumulativeProcessorsRan = 0;
             Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
+
+            return Task.CompletedTask;
         }
 
         private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)

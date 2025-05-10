@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Networking;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -47,6 +44,8 @@ public abstract class NitroxFaker
         // Nitrox types
         { typeof(NitroxTechType), new NitroxActionFaker(typeof(NitroxTechType), f => new NitroxTechType(f.PickRandom<TechType>().ToString())) },
         { typeof(NitroxId), new NitroxActionFaker(typeof(NitroxId), f => new NitroxId(f.Random.Guid())) },
+        { typeof(SessionId), new NitroxActionFaker(typeof(SessionId), f => (SessionId)f.Random.UShort()) },
+        { typeof(PeerId), new NitroxActionFaker(typeof(PeerId), f => (PeerId)f.Random.UInt()) },
     };
 
     public static INitroxFaker GetOrCreateFaker(Type t)
@@ -91,14 +90,14 @@ public abstract class NitroxFaker
             return new NitroxCollectionFaker(type, collectionType);
         }
 
-        ConstructorInfo constructor = typeof(NitroxAutoFaker<>).MakeGenericType(type).GetConstructor(Array.Empty<Type>());
+        ConstructorInfo constructor = typeof(NitroxAutoFaker<>).MakeGenericType(type).GetConstructor([]);
 
         if (constructor == null)
         {
             throw new NullReferenceException($"Could not get generic constructor for {type}");
         }
 
-        return (INitroxFaker)constructor.Invoke(Array.Empty<object>());
+        return (INitroxFaker)constructor.Invoke([]);
     }
 
     protected static bool IsValidType(Type type)

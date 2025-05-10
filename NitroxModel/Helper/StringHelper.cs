@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Text;
 
-namespace NitroxModel.Helper
+namespace NitroxModel.Helper;
+
+public static class StringHelper
 {
-    public static class StringHelper
+    private static readonly Random random = new();
+
+    public static string GenerateRandomString(int size)
     {
-        private static readonly Random random = new Random();
+        StringBuilder builder = new();
 
-        public static string GenerateRandomString(int size)
+        for (int i = 0; i < size; i++)
         {
-            StringBuilder builder = new StringBuilder();
-
-            char ch;
-            for (int i = 0; i < size; i++)
-            {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
-                builder.Append(ch);
-            }
-
-            return builder.ToString();
+            char ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+            builder.Append(ch);
         }
+
+        return builder.ToString();
     }
 }

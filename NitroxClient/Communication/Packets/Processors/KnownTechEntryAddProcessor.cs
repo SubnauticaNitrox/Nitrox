@@ -1,12 +1,11 @@
 using System;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAdd>
+public class KnownTechEntryProcessorAdd : IClientPacketProcessor<KnownTechEntryAdd>
 {
     private readonly IPacketSender packetSender;
 
@@ -15,7 +14,7 @@ public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAd
         this.packetSender = packetSender;
     }
 
-    public override void Process(KnownTechEntryAdd packet)
+    public Task Process(IPacketProcessContext context, KnownTechEntryAdd packet)
     {
         using (PacketSuppressor<KnownTechEntryAdd>.Suppress())
         {
@@ -33,5 +32,7 @@ public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAd
                     break;
             }
         }
+
+        return Task.CompletedTask;
     }
 }

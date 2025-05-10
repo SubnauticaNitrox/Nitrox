@@ -1,5 +1,5 @@
-﻿using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+﻿using NitroxModel.Networking.Packets;
+using NitroxModel.Networking.Session;
 
 namespace NitroxClient.Communication.Abstract
 {

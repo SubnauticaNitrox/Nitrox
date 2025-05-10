@@ -132,7 +132,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         Player.main.GetPDA().Close();
     }
 
-    private static void SetPlayerGameMode(NitroxGameMode gameMode)
+    private static void SetPlayerGameMode(SubnauticaGameMode gameMode)
     {
         Log.Info($"Received initial sync packet with gamemode {gameMode}");
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);

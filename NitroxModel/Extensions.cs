@@ -14,13 +14,13 @@ namespace NitroxModel;
 
 public static class Extensions
 {
-    public static string GetSavesFolderDir(this IKeyValueStore store)
+    public static string GetServerSavesPath(this IKeyValueStore store)
     {
         if (store == null)
         {
             return Path.Combine(NitroxUser.AppDataPath, "saves");
         }
-        return store.GetValue("SavesFolderDir", Path.Combine(NitroxUser.AppDataPath, "saves"));
+        return store.GetValue("ServerSavesPath", Path.Combine(NitroxUser.AppDataPath, "saves"));
     }
 
     public static TAttribute GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
@@ -204,38 +204,36 @@ public static class Extensions
         return buffer;
     }
 
-    /// <summary>
-    ///     Gets the arguments passed to a command, given its name.
-    /// </summary>
-    /// <param name="args">All arguments passed to the program.</param>
-    /// <param name="name">Name of the command, include the - or -- prefix.</param>
-    /// <returns>All arguments passed to the given command name or empty if not found or no arguments passed.</returns>
-    public static IEnumerable<string> GetCommandArgs(this string[] args, string name)
+    public static bool IsAssignableToGenericType(this Type givenType, Type genericType)
     {
-        for (int i = 0; i < args.Length; i++)
+        if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
         {
-            string arg = args[i];
-            if (!arg.StartsWith(name))
-            {
-                continue;
-            }
-            if (arg.Length > name.Length && arg[name.Length] == '=')
-            {
-                yield return arg.Substring(name.Length + 1);
-                continue;
-            }
-            for (i += 1; i < args.Length; i++)
-            {
-                arg = args[i];
-                if (arg.StartsWith("-"))
-                {
-                    break;
-                }
-                yield return arg;
-            }
+            return true;
         }
+
+        Type givenBaseType = givenType.BaseType;
+        if (givenBaseType == null)
+        {
+            return false;
+        }
+
+        return IsAssignableToGenericType(givenBaseType, genericType);
     }
 
-    public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;
+    public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == SubnauticaGameMode.HARDCORE;
     public static bool IsPasswordRequired(this SubnauticaServerConfig config) => config.ServerPassword != "";
+
+#if NET5_0_OR_GREATER
+    public static bool EqualsAny(this ReadOnlySpan<char> input, StringComparison comparison = StringComparison.Ordinal, params ReadOnlySpan<string> compares)
+    {
+        foreach (string compare in compares)
+        {
+            if (input.Equals(compare, comparison))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+#endif
 }

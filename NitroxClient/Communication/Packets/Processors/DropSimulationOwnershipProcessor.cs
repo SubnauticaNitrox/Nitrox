@@ -1,10 +1,9 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class DropSimulationOwnershipProcessor : ClientPacketProcessor<DropSimulationOwnership>
+public class DropSimulationOwnershipProcessor : IClientPacketProcessor<DropSimulationOwnership>
 {
     private readonly SimulationOwnership simulationOwnershipManager;
 
@@ -13,8 +12,9 @@ public class DropSimulationOwnershipProcessor : ClientPacketProcessor<DropSimula
         this.simulationOwnershipManager = simulationOwnershipManager;
     }
 
-    public override void Process(DropSimulationOwnership packet)
+    public Task Process(IPacketProcessContext context, DropSimulationOwnership packet)
     {
         simulationOwnershipManager.DropSimulationFrom(packet.EntityId);
+        return Task.CompletedTask;
     }
 }

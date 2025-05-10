@@ -5,12 +5,12 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
-using NitroxModel_Subnautica.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 using static NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor;
 

@@ -1,14 +1,13 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
-using static NitroxModel.Packets.EntityTransformUpdates;
+using static NitroxModel.Networking.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTransformUpdates>
+public class EntityTransformUpdatesProcessor : IClientPacketProcessor<EntityTransformUpdates>
 {
     private readonly SimulationOwnership simulationOwnership;
 
@@ -17,7 +16,7 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
         this.simulationOwnership = simulationOwnership;
     }
 
-    public override void Process(EntityTransformUpdates packet)
+    public Task Process(IPacketProcessContext context, EntityTransformUpdates packet)
     {
         foreach (EntityTransformUpdate update in packet.Updates)
         {
@@ -42,5 +41,7 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
                 remotelyControlled.UpdateOrientation(position, rotation);
             }
         }
+
+        return Task.CompletedTask;
     }
 }

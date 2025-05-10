@@ -40,7 +40,7 @@
                     <TextBlock Text="GAMEMODE" />
                     <controls:RadioButtonGroup
                         Classes="radioGroup"
-                        Enum="{x:Type server:NitroxGameMode}"
+                        Enum="{x:Type server:SubnauticaGameMode}"
                         SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>

@@ -48,6 +48,8 @@ public sealed class GameInfo
         {
             Subnautica.ExeName = "Subnautica";
             Subnautica.DataFolder = Path.Combine("Resources", "Data");
+            SubnauticaBelowZero.ExeName = "SubnauticaZero";
+            SubnauticaBelowZero.DataFolder = Path.Combine("Resources", "Data");
         }
     }
 

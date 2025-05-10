@@ -1,8 +1,4 @@
-﻿using System;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace NitroxModel.DataStructures;
+﻿namespace NitroxModel.DataStructures;
 
 [TestClass]
 public class NitroxIdTest

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nitrox.Test.Client.Communication.MultiplayerSession;
-using NitroxModel.MultiplayerSession;
-using NitroxModel_Subnautica.DataStructures;
+﻿using Nitrox.Test.Client.Communication.MultiplayerSession;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Session;
 using NSubstitute;
 using UnityEngine;
 

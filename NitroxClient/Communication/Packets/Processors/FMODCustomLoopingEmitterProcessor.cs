@@ -1,18 +1,17 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FMODCustomLoopingEmitterProcessor : ClientPacketProcessor<FMODCustomLoopingEmitterPacket>
+public class FMODCustomLoopingEmitterProcessor : IClientPacketProcessor<FMODCustomLoopingEmitterPacket>
 {
-    public override void Process(FMODCustomLoopingEmitterPacket packet)
+    public Task Process(IPacketProcessContext context, FMODCustomLoopingEmitterPacket packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject emitterControllerObject))
         {
             Log.ErrorOnce($"[{nameof(FMODCustomLoopingEmitterProcessor)}] Couldn't find entity {packet.Id}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (!emitterControllerObject.TryGetComponent(out FMODEmitterController fmodEmitterController))
@@ -22,5 +21,7 @@ public class FMODCustomLoopingEmitterProcessor : ClientPacketProcessor<FMODCusto
         }
 
         fmodEmitterController.PlayCustomLoopingEmitter(packet.AssetPath);
+
+        return Task.CompletedTask;
     }
 }

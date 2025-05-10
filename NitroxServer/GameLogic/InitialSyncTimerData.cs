@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking.Session;
 using NitroxServer.Communication;
 
 namespace NitroxServer.GameLogic
@@ -9,7 +9,7 @@ namespace NitroxServer.GameLogic
     /// 
     /// For use with <see cref="System.Threading.Timer"/>
     /// </summary>
-    internal class InitialSyncTimerData
+    public class InitialSyncTimerData
     {
         public readonly INitroxConnection Connection;
         public readonly AuthenticationContext Context;

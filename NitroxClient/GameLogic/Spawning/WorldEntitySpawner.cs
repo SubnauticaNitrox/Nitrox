@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
@@ -17,16 +16,18 @@ namespace NitroxClient.GameLogic.Spawning;
 public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
 {
     private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
-    private readonly Dictionary<Int3, BatchCells> batchCellsById;
+    private readonly Lazy<Dictionary<Int3, BatchCells>> batchCellsById = new(() =>
+    {
+        if (NitroxEnvironment.IsNormal)
+        {
+            return LargeWorldStreamer.main.cellManager.batch2cells;
+        }
+        return [];
+    });
 
     public WorldEntitySpawner(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         worldEntitySpawnResolver = new WorldEntitySpawnerResolver(entityMetadataManager, playerManager, localPlayer, entities, simulationOwnership);
-
-        if (NitroxEnvironment.IsNormal)
-        {
-            batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
-        }
     }
 
     protected override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
@@ -79,7 +80,7 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
         Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
         Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
 
-        if (!batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
+        if (!batchCellsById.Value.TryGetValue(batchId, out BatchCells batchCells))
         {
             batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
         }

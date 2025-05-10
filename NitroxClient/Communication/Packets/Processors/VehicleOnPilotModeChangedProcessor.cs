@@ -1,12 +1,11 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleOnPilotModeChangedProcessor : ClientPacketProcessor<VehicleOnPilotModeChanged>
+public class VehicleOnPilotModeChangedProcessor : IClientPacketProcessor<VehicleOnPilotModeChanged>
 {
     private readonly Vehicles vehicles;
     private readonly PlayerManager playerManager;
@@ -17,7 +16,7 @@ public class VehicleOnPilotModeChangedProcessor : ClientPacketProcessor<VehicleO
         this.playerManager = playerManager;
     }
 
-    public override void Process(VehicleOnPilotModeChanged packet)
+    public Task Process(IPacketProcessContext context, VehicleOnPilotModeChanged packet)
     {
         if (NitroxEntity.TryGetObjectFrom(packet.VehicleId, out GameObject gameObject))
         {
@@ -27,10 +26,12 @@ public class VehicleOnPilotModeChangedProcessor : ClientPacketProcessor<VehicleO
             // before the animation completes on the remote player.)
             if (gameObject.TryGetComponent(out Vehicle vehicle) && vehicle.docked)
             {
-                return;
+                return Task.CompletedTask;
             }
 
             vehicles.SetOnPilotMode(gameObject, packet.PlayerId, packet.IsPiloting);
         }
+
+        return Task.CompletedTask;
     }
 }

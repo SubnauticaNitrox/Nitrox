@@ -4,10 +4,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
 using System.Collections.Generic;
 using System.Reflection;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 

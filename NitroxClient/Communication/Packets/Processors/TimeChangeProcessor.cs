@@ -1,10 +1,9 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class TimeChangeProcessor : ClientPacketProcessor<TimeChange>
+public class TimeChangeProcessor : IClientPacketProcessor<TimeChange>
 {
     private readonly TimeManager timeManager;
 
@@ -13,8 +12,9 @@ public class TimeChangeProcessor : ClientPacketProcessor<TimeChange>
         this.timeManager = timeManager;
     }
 
-    public override void Process(TimeChange timeChangePacket)
+    public Task Process(IPacketProcessContext context, TimeChange timeChangePacket)
     {
         timeManager.ProcessUpdate(timeChangePacket);
+        return Task.CompletedTask;
     }
 }

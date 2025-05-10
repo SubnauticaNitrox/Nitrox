@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Timers;
 using NitroxModel.Networking;
-using NitroxModel.Packets;
-using static NitroxServer.GameLogic.StoryManager;
+using NitroxModel.Networking.Packets;
+using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.GameLogic;
 
@@ -163,18 +163,18 @@ public class TimeKeeper
     /// Set current time depending on the current time in the day (replication of SN's system, see DayNightCycle.cs commands for more information).
     /// </summary>
     /// <param name="type">Time to which you want to get to.</param>
-    public void ChangeTime(TimeModification type)
+    public void ChangeTime(StoryManager.TimeModification type)
     {
         double skipAmount = 0;
         switch (type)
         {
-            case TimeModification.DAY:
+            case StoryManager.TimeModification.DAY:
                 skipAmount = 1200 - (ElapsedSeconds % 1200) + 600;
                 break;
-            case TimeModification.NIGHT:
+            case StoryManager.TimeModification.NIGHT:
                 skipAmount = 1200 - (ElapsedSeconds % 1200);
                 break;
-            case TimeModification.SKIP:
+            case StoryManager.TimeModification.SKIP:
                 skipAmount = 600 - (ElapsedSeconds % 600);
                 break;
         }

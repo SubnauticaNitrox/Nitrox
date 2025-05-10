@@ -1,10 +1,9 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
+public class GameModeChangedProcessor : IClientPacketProcessor<GameModeChanged>
 {
     private readonly LocalPlayer localPlayer;
     private readonly PlayerManager playerManager;
@@ -15,7 +14,7 @@ public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
         this.playerManager = playerManager;
     }
 
-    public override void Process(GameModeChanged packet)
+    public Task Process(IPacketProcessContext context, GameModeChanged packet)
     {
         if (packet.AllPlayers || packet.PlayerId == localPlayer.PlayerId)
         {
@@ -32,5 +31,7 @@ public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
         {
             remotePlayer.SetGameMode(packet.GameMode);
         }
+
+        return Task.CompletedTask;
     }
 }

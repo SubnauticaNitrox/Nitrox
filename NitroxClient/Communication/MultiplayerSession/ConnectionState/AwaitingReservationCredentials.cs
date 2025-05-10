@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
+using NitroxModel.Networking.Session;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {

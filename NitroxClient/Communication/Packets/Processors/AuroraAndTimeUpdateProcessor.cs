@@ -1,10 +1,9 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeUpdate>
+public class AuroraAndTimeUpdateProcessor : IClientPacketProcessor<AuroraAndTimeUpdate>
 {
     private readonly TimeManager timeManager;
 
@@ -13,7 +12,7 @@ public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeU
         this.timeManager = timeManager;
     }
 
-    public override void Process(AuroraAndTimeUpdate packet)
+    public Task Process(IPacketProcessContext context, AuroraAndTimeUpdate packet)
     {
         timeManager.ProcessUpdate(packet.TimeData.TimePacket);
         StoryManager.UpdateAuroraData(packet.TimeData.AuroraEventData);
@@ -22,5 +21,6 @@ public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeU
         {
             StoryManager.RestoreAurora();
         }
+        return Task.CompletedTask;
     }
 }

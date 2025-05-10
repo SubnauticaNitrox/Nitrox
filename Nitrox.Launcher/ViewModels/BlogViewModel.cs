@@ -10,6 +10,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -50,6 +51,6 @@ public partial class BlogViewModel : RoutableViewModelBase
     [RelayCommand]
     private void BlogEntryClick(string blogUrl)
     {
-        ProcessUtils.OpenUrl(blogUrl);
+        ProcessEx.OpenUrl(blogUrl);
     }
 }

@@ -36,7 +36,7 @@ public class CacheFile
     }
 
     /// <summary>
-    ///     Gets the cached data if not old or refreshes the cache using the <see cref="refreshedValueFactory"/>.
+    ///     Gets the cached data if not old or refreshes the cache using the <see cref="refreshedValueFactory" />.
     /// </summary>
     public static async Task<T> GetOrRefreshAsync<T>(string name, Func<ValueReader, T> reader, Action<BinaryWriter, T> writer, Func<Task<T>> refreshedValueFactory = null, TimeSpan age = default)
     {
@@ -71,35 +71,13 @@ public class CacheFile
         return reader;
     }
 
-    public class ValueReader : IDisposable
+    public class ValueReader(BinaryReader binaryReader) : IDisposable
     {
-        private readonly BinaryReader binaryReader;
+        private readonly BinaryReader binaryReader = binaryReader;
         public bool ReachedEarlyEnd { get; private set; }
-
-        public ValueReader(BinaryReader binaryReader)
-        {
-            this.binaryReader = binaryReader;
-        }
 
         public T Read<T>(T defaultValue = default)
         {
-            static T InnerRead<T2>(ValueReader reader, Func<BinaryReader, T2> read, T defaultValue = default)
-            {
-                try
-                {
-                    return (T)(object)read(reader.binaryReader);
-                }
-                catch (EndOfStreamException)
-                {
-                    reader.ReachedEarlyEnd = true;
-                    return defaultValue;
-                }
-                catch
-                {
-                    return defaultValue;
-                }
-            }
-
             // Return default values for future reads when end of file (EOF).
             if (ReachedEarlyEnd)
             {
@@ -124,6 +102,23 @@ public class CacheFile
                 }, defaultValue);
             }
             throw new NotSupportedException($"Type: '{requestedType}' is not yet supported to be read from cache files");
+
+            static T InnerRead<T2>(ValueReader reader, Func<BinaryReader, T2> read, T defaultValue = default)
+            {
+                try
+                {
+                    return (T)(object)read(reader.binaryReader);
+                }
+                catch (EndOfStreamException)
+                {
+                    reader.ReachedEarlyEnd = true;
+                    return defaultValue;
+                }
+                catch
+                {
+                    return defaultValue;
+                }
+            }
         }
 
         public void Dispose() => binaryReader?.Dispose();

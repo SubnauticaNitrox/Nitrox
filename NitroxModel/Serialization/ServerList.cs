@@ -10,7 +10,7 @@ namespace NitroxModel.Serialization;
 public class ServerList
 {
     private const string SERVERS_FILE_NAME = "servers";
-    public const int DEFAULT_PORT = 11000;
+    public const ushort DEFAULT_PORT = 11000;
     private static ServerList instance;
     private readonly List<Entry> entries = new();
     public static ServerList Instance => instance ??= Refresh();

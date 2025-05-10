@@ -15,6 +15,7 @@ resharper_max_initializer_elements_on_line = 1
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
 resharper_space_before_self_closing = true
 resharper_xmldoc_space_before_self_closing = true
+resharper_prefer_concrete_value_over_default_highlighting = none
 ij_xml_space_inside_empty_tag = true
 
 [*.{proj,csproj,props,targets}]
@@ -108,6 +109,7 @@ csharp_style_var_when_type_is_apparent = false:silent
 csharp_style_var_elsewhere = false:silent
 csharp_style_conditional_delegate_call = true:suggestion
 csharp_using_directive_placement = outside_namespace:silent
+dotnet_diagnostic.CS4014.severity = error
 
 # Newlines
 csharp_new_line_before_open_brace = all

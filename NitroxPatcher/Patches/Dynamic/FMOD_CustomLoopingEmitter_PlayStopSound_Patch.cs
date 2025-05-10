@@ -18,7 +18,7 @@ public sealed partial class FMOD_CustomLoopingEmitter_PlayStopSound_Patch : Nitr
 
     public static void Postfix(FMOD_CustomLoopingEmitter __instance)
     {
-        if (!__instance.assetStop || !Resolve<FMODWhitelist>().IsWhitelisted(__instance.assetStop.path))
+        if (!__instance.assetStop || !Resolve<FmodWhitelist>().IsWhitelisted(__instance.assetStop.path))
         {
             return;
         }

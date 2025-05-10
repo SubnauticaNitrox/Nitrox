@@ -2,7 +2,7 @@ using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.Helper;
+using Nitrox.Model.Subnautica.Helper;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;

@@ -1,11 +1,10 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
+public class SpawnEntitiesProcessor : IClientPacketProcessor<SpawnEntities>
 {
     private readonly Entities entities;
     private readonly SimulationOwnership simulationOwnership;
@@ -16,7 +15,7 @@ public class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
         this.simulationOwnership = simulationOwnership;
     }
 
-    public override void Process(SpawnEntities packet)
+    public Task Process(IPacketProcessContext context, SpawnEntities packet)
     {
         if (packet.ForceRespawn)
         {
@@ -36,5 +35,7 @@ public class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
             // Packet processing is done in the main thread so there's no issue calling this
             entities.EnqueueEntitiesToSpawn(packet.Entities);
         }
+
+        return Task.CompletedTask;
     }
 }

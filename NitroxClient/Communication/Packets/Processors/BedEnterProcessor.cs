@@ -1,12 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
+﻿using NitroxModel.Networking.Packets;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+class BedEnterProcessor : IClientPacketProcessor<BedEnter>
 {
-    class BedEnterProcessor : ClientPacketProcessor<BedEnter>
+    public Task Process(IPacketProcessContext context, BedEnter packet)
     {
-        public override void Process(BedEnter packet)
-        {
-        }
+        return Task.CompletedTask;
     }
 }

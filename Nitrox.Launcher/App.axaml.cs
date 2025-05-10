@@ -16,6 +16,7 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
@@ -153,7 +154,7 @@ public class App : Application
             {
                 string crashReportFile = Path.Combine(executableRoot, CRASH_REPORT_FILE_NAME);
                 File.WriteAllText(crashReportFile, ex.ToString());
-                ProcessUtils.StartSelf("--crash-report");
+                ProcessEx.StartSelf("--crash-report");
             }
             else
             {

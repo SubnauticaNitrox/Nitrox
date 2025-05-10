@@ -1,13 +1,12 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
+public class EntityDestroyedProcessor : IClientPacketProcessor<EntityDestroyed>
 {
     public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
 
@@ -18,14 +17,14 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         this.entities = entities;
     }
 
-    public override void Process(EntityDestroyed packet)
+    public Task Process(IPacketProcessContext context, EntityDestroyed packet)
     {
         entities.RemoveEntity(packet.Id);
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
         {
             entities.MarkForDeletion(packet.Id);
             Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
-            return;
+            return Task.CompletedTask;
         }
 
         using (PacketSuppressor<EntityDestroyed>.Suppress())
@@ -44,6 +43,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
                 Entities.DestroyObject(gameObject);
             }
         }
+        return Task.CompletedTask;
     }
 
     private void DestroySubroot(SubRoot subRoot)

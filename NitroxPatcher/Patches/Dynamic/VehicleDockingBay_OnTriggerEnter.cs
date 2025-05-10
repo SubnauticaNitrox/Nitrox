@@ -4,7 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

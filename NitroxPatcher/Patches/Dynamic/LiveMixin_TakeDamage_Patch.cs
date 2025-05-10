@@ -7,7 +7,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -70,21 +70,22 @@ public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPa
             return false;
         }
         
-        PvPAttack.AttackType attackType;
+        PvpAttack.AttackType attackType;
         switch (Inventory.main.GetHeldTool())
         {
             case HeatBlade:
-                attackType = PvPAttack.AttackType.HeatbladeHit;
+                attackType = PvpAttack.AttackType.HeatbladeHit;
                 break;
             case Knife:
-                attackType = PvPAttack.AttackType.KnifeHit;
+                attackType = PvpAttack.AttackType.KnifeHit;
                 break;
             default:
                 // We don't want to send non-registered attacks
                 return false;
         }
 
-        Resolve<IPacketSender>().Send(new PvPAttack(remotePlayerIdentifier.RemotePlayer.PlayerId, damage, attackType));
+        // TODO: FIX THIS - GET SESSION ID INSTEAD OF PLAYER ID
+        // Resolve<IPacketSender>().Send(new PvpAttack(remotePlayerIdentifier.RemotePlayer.PlayerId, damage, attackType));
         return true;
     }
 

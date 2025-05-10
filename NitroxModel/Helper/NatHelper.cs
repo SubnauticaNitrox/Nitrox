@@ -99,7 +99,7 @@ public static class NatHelper
     private static class MonoNatHelper
     {
         private static readonly ConcurrentDictionary<EndPoint, INatDevice> discoveredDevices = new();
-        private static readonly object discoverTaskLocker = new();
+        private static readonly LockObject discoverTaskLocker = new();
         private static Task<IEnumerable<INatDevice>> discoverTaskCache;
 
         public static Task<IEnumerable<INatDevice>> DiscoverAsync()
@@ -117,7 +117,7 @@ public static class NatHelper
         }
 
         private static DateTime lastFoundDeviceTime;
-        private static readonly object lastFoundDeviceTimeLock = new();
+        private static readonly LockObject lastFoundDeviceTimeLock = new();
         private static async Task<IEnumerable<INatDevice>> DiscoveryUncachedAsync(int timeoutInMs, int timeoutNoMoreDevicesMs)
         {
             void Handler(object sender, DeviceEventArgs args)

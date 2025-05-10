@@ -7,8 +7,8 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

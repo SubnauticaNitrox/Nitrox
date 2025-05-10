@@ -1,6 +1,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;

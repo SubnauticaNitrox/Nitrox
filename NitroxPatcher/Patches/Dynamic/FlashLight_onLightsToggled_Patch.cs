@@ -13,7 +13,7 @@ public sealed partial class FlashLight_onLightsToggled_Patch : NitroxPatch, IDyn
     {
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
-            Resolve<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, active));
+            Resolve<IPacketSender>().Send(new NitroxModel.Networking.Packets.ToggleLights(id, active));
         }
     }
 }

@@ -1,13 +1,12 @@
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class SeamothModuleActionProcessor : ClientPacketProcessor<SeamothModulesAction>
+    public class SeamothModuleActionProcessor : IClientPacketProcessor<SeamothModulesAction>
     {
         private readonly IPacketSender packetSender;
 
@@ -15,7 +14,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             this.packetSender = packetSender;
         }
-        public override void Process(SeamothModulesAction packet)
+        public Task Process(IPacketProcessContext context, SeamothModulesAction packet)
         {
             using (PacketSuppressor<SeamothModulesAction>.Suppress())
             {
@@ -37,6 +36,8 @@ namespace NitroxClient.Communication.Packets.Processors
                     }
                 }
             }
+
+            return Task.CompletedTask;
         }
     }
 }

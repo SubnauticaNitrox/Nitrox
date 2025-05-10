@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
@@ -5,7 +6,6 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
@@ -20,16 +20,17 @@ using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
+using NitroxClient.Helpers;
 using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel.Networking;
-using NitroxModel_Subnautica.Helper;
+using NitroxModel.Networking.Packets.Processors.Core;
 
 namespace NitroxClient
 {
-    public class ClientAutoFacRegistrar : IAutoFacRegistrar
+    public partial class ClientAutoFacRegistrar : IAutoFacRegistrar
     {
         private static readonly Assembly currentAssembly = Assembly.GetExecutingAssembly();
         private readonly IModule[] modules;
@@ -85,10 +86,6 @@ namespace NitroxClient
                             .As<ILocalNitroxPlayer>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<SubnauticaMap>()
-                            .As<IMap>()
-                            .InstancePerLifetimeScope();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
@@ -112,7 +109,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
-            containerBuilder.Register(_ => FMODWhitelist.Load(GameInfo.Subnautica)).InstancePerLifetimeScope();
+            containerBuilder.Register(_ => FmodWhitelist.FromCsv(File.ReadAllText(Path.Combine(NitroxUser.AssetsPath, "Resources", $"SoundWhitelist_{GameInfo.Subnautica.Name}.csv")))).InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();
@@ -142,8 +139,10 @@ namespace NitroxClient
         {
             containerBuilder
                 .RegisterAssemblyTypes(currentAssembly)
-                .AsClosedTypesOf(typeof(ClientPacketProcessor<>))
-                .InstancePerLifetimeScope();
+                .AssignableTo<IPacketProcessor>()
+                .As<IPacketProcessor>()
+                .AsSelf()
+                .SingleInstance();
         }
 
         private void RegisterColorSwapManagers(ContainerBuilder containerBuilder)

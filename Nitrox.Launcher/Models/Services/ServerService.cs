@@ -12,6 +12,7 @@ using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Server;
@@ -84,7 +85,7 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
         try
         {
             server.Version = NitroxEnvironment.Version;
-            server.Start(keyValueStore.GetSavesFolderDir());
+            server.Start(keyValueStore.GetServerSavesPath());
             if (server.IsEmbedded)
             {
                 await screen.ShowAsync(new EmbeddedServerViewModel(server));
@@ -110,10 +111,10 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         try
         {
-            Directory.CreateDirectory(keyValueStore.GetSavesFolderDir());
+            Directory.CreateDirectory(keyValueStore.GetServerSavesPath());
 
             Dictionary<string, (ServerEntry Data, bool HasFiles)> serversOnDisk = Servers.ToDictionary(entry => entry.Name, entry => (entry, false));
-            foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
+            foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetServerSavesPath()))
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 try
@@ -157,7 +158,7 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         watcher = new FileSystemWatcher
         {
-            Path = keyValueStore.GetSavesFolderDir(),
+            Path = keyValueStore.GetServerSavesPath(),
             NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size,
             Filter = "*.*",
             IncludeSubdirectories = true
@@ -268,7 +269,7 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
     public async Task<ServerEntry> GetOrCreateServerAsync(string saveName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
-        string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);
-        return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
+        string serverPath = Path.Combine(keyValueStore.GetServerSavesPath(), saveName);
+        return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, SubnauticaGameMode.SURVIVAL);
     }
 }

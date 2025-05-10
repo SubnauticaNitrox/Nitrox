@@ -1,10 +1,9 @@
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PDAEncyclopediaEntryAddProcessor : ClientPacketProcessor<PDAEncyclopediaEntryAdd>
+public class PDAEncyclopediaEntryAddProcessor : IClientPacketProcessor<PdaEncyclopediaEntryAdd>
 {
     private readonly IPacketSender packetSender;
 
@@ -13,11 +12,13 @@ public class PDAEncyclopediaEntryAddProcessor : ClientPacketProcessor<PDAEncyclo
         this.packetSender = packetSender;
     }
 
-    public override void Process(PDAEncyclopediaEntryAdd packet)
+    public Task Process(IPacketProcessContext context, PdaEncyclopediaEntryAdd packet)
     {
-        using (PacketSuppressor<PDAEncyclopediaEntryAdd>.Suppress())
+        using (PacketSuppressor<PdaEncyclopediaEntryAdd>.Suppress())
         {
             PDAEncyclopedia.Add(packet.Key, packet.Verbose);
         }
+
+        return Task.CompletedTask;
     }
 }

@@ -5,7 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel;
 using NitroxModel.Core;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

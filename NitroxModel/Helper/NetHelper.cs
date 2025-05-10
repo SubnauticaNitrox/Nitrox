@@ -26,8 +26,8 @@ namespace NitroxModel.Helper
 
         private static IPAddress wanIpCache;
         private static IPAddress lanIpCache;
-        private static readonly object wanIpLock = new();
-        private static readonly object lanIpLock = new();
+        private static readonly LockObject wanIpLock = new();
+        private static readonly LockObject lanIpLock = new();
 
         /// <summary>
         ///     Gets the network interfaces used for going onto the internet.

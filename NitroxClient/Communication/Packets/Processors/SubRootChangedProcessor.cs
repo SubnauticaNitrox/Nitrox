@@ -1,13 +1,12 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class SubRootChangedProcessor : ClientPacketProcessor<SubRootChanged>
+    public class SubRootChangedProcessor : IClientPacketProcessor<SubRootChanged>
     {
         private readonly PlayerManager remotePlayerManager;
 
@@ -16,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.remotePlayerManager = remotePlayerManager;
         }
 
-        public override void Process(SubRootChanged packet)
+        public Task Process(IPacketProcessContext context, SubRootChanged packet)
         {
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.PlayerId);
 
@@ -32,6 +31,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 remotePlayer.Value.SetSubRoot(subRoot);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
-using static NitroxModel.Packets.RangedAttackLastTargetUpdate;
+using static NitroxModel.Networking.Packets.RangedAttackLastTargetUpdate;
 
 namespace NitroxClient.GameLogic;
 

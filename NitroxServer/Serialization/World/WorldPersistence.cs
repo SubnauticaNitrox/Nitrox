@@ -5,7 +5,6 @@ using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Networking;
 using NitroxModel.Platforms.OS.Shared;
@@ -14,15 +13,13 @@ using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.Helper;
-using NitroxServer.Resources;
-using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.World;
 
+// TODO: REMOVE
+[Obsolete("use SQLite")]
 public class WorldPersistence
 {
     public const string BACKUP_DATE_TIME_FORMAT = "yyyy-MM-dd HH.mm.ss";
@@ -34,19 +31,15 @@ public class WorldPersistence
     private readonly SubnauticaServerConfig config;
     private readonly RandomStartGenerator randomStart;
     private readonly IWorldModifier worldModifier;
-    private readonly SaveDataUpgrade[] upgrades;
-    private readonly RandomSpawnSpoofer randomSpawnSpoofer;
     private readonly NtpSyncer ntpSyncer;
 
-    public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades, RandomSpawnSpoofer randomSpawnSpoofer, NtpSyncer ntpSyncer)
+    public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, NtpSyncer ntpSyncer)
     {
         this.protoBufSerializer = protoBufSerializer;
         this.jsonSerializer = jsonSerializer;
         this.config = config;
         this.randomStart = randomStart;
         this.worldModifier = worldModifier;
-        this.upgrades = upgrades;
-        this.randomSpawnSpoofer = randomSpawnSpoofer;
         this.ntpSyncer = ntpSyncer;
 
         UpdateSerializer(config.SerializerMode);
@@ -110,7 +103,7 @@ public class WorldPersistence
 
     public World Load(string saveName)
     {
-        Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName));
+        Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(KeyValueStore.Instance.GetServerSavesPath(), saveName));
         if (fileLoadedWorld.HasValue)
         {
             return fileLoadedWorld.Value;
@@ -119,7 +112,7 @@ public class WorldPersistence
         return CreateFreshWorld();
     }
 
-    public World CreateWorld(PersistedWorldData pWorldData, NitroxGameMode gameMode)
+    public World CreateWorld(PersistedWorldData pWorldData, SubnauticaGameMode gameMode)
     {
         string seed = pWorldData.WorldData.Seed;
         if (string.IsNullOrWhiteSpace(seed))
@@ -130,9 +123,6 @@ public class WorldPersistence
                 seed = StringHelper.GenerateRandomString(10);
 #endif
         }
-        // Initialized only once, just like UnityEngine.Random
-        XORRandom.InitSeed(seed.GetHashCode());
-
         Log.Info($"Loading world with seed {seed}");
 
         EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
@@ -144,37 +134,37 @@ public class WorldPersistence
             SimulationOwnershipData = new SimulationOwnershipData(),
             PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
             EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
-            EntityRegistry = entityRegistry,
-            GameData = pWorldData.WorldData.GameData,
+            // EntityRegistry = entityRegistry,
+            // GameData = pWorldData.WorldData.GameData,
             GameMode = gameMode,
             Seed = seed,
-            SessionSettings = new()
+            // SessionSettings = new()
         };
 
-        world.TimeKeeper = new(world.PlayerManager, ntpSyncer, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
-        world.StoryManager = new StoryManager(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime,
-                                              pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime, pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime);
-        world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
+        // world.TimeKeeper = new(world.PlayerManager, ntpSyncer, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
+        // world.StoryManager = new StoryManager(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime,
+        //                                       pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime, pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime);
+        // world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
 
-        world.BatchEntitySpawner = new BatchEntitySpawner(
-            NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
-            NitroxServiceLocator.LocateService<IUweWorldEntityFactory>(),
-            NitroxServiceLocator.LocateService<IUwePrefabFactory>(),
-            pWorldData.WorldData.ParsedBatchCells,
-            protoBufSerializer,
-            NitroxServiceLocator.LocateService<IEntityBootstrapperManager>(),
-            NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
-            pWorldData.WorldData.GameData.PDAState,
-            randomSpawnSpoofer,
-            world.Seed
-        );
+        // world.BatchEntitySpawner = new BatchEntitySpawner(
+        //     NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
+        //     NitroxServiceLocator.LocateService<IUweWorldEntityFactory>(),
+        //     NitroxServiceLocator.LocateService<IUwePrefabFactory>(),
+        //     pWorldData.WorldData.ParsedBatchCells,
+        //     protoBufSerializer,
+        //     NitroxServiceLocator.LocateService<IEntityBootstrapperManager>(),
+        //     NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
+        //     pWorldData.WorldData.GameData.PDAState,
+        //     // randomSpawnSpoofer,
+        //     world.Seed
+        // );
 
-        world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner, world.PlayerManager);
-
-        world.BuildingManager = new BuildingManager(world.EntityRegistry, world.WorldEntityManager, config);
-
-        ISimulationWhitelist simulationWhitelist = NitroxServiceLocator.LocateService<ISimulationWhitelist>();
-        world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, simulationWhitelist);
+        // world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, /*world.BatchEntitySpawner,*/ world.PlayerManager);
+        //
+        // world.BuildingManager = new BuildingManager(world.EntityRegistry, world.WorldEntityManager, config);
+        //
+        // ISimulationWhitelist simulationWhitelist = NitroxServiceLocator.LocateService<ISimulationWhitelist>();
+        // world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, simulationWhitelist);
 
         return world;
     }
@@ -191,10 +181,7 @@ public class WorldPersistence
     {
         try
         {
-            if (!Directory.Exists(saveDir))
-            {
-                Directory.CreateDirectory(saveDir);
-            }
+            Directory.CreateDirectory(saveDir);
 
             Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
             Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
@@ -202,10 +189,10 @@ public class WorldPersistence
             Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
             Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
-            using (config.Update(saveDir))
-            {
-                config.Seed = persistedData.WorldData.Seed;
-            }
+            // using (config.Update(saveDir))
+            // {
+            //     config.Seed = persistedData.WorldData.Seed;
+            // }
 
             Log.Info("World state saved");
             return true;
@@ -281,12 +268,12 @@ public class WorldPersistence
             PlayerData = PlayerData.From(new List<Player>()),
             WorldData = new WorldData
             {
-                GameData = new GameData
-                {
-                    PDAState = new PDAStateData(),
-                    StoryGoals = new StoryGoalData(),
-                    StoryTiming = new StoryTimingData()
-                },
+                // GameData = new GameData
+                // {
+                //     PDAState = new PDAStateData(),
+                //     StoryGoals = new StoryGoalData(),
+                //     StoryTiming = new StoryTimingData()
+                // },
                 ParsedBatchCells = new List<NitroxInt3>(),
                 Seed = config.Seed
             },
@@ -326,13 +313,14 @@ public class WorldPersistence
         {
             try
             {
-                foreach (SaveDataUpgrade upgrade in upgrades)
-                {
-                    if (upgrade.TargetVersion > saveFileVersion.Version)
-                    {
-                        upgrade.UpgradeSaveFiles(saveDir, FileEnding);
-                    }
-                }
+                // TODO: FIX UPGRADES
+                // foreach (SaveDataUpgrade upgrade in upgrades)
+                // {
+                //     if (upgrade.TargetVersion > saveFileVersion.Version)
+                //     {
+                //         upgrade.UpgradeSaveFiles(saveDir, FileEnding);
+                //     }
+                // }
             }
             catch (Exception ex)
             {

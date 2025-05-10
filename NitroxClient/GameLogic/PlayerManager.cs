@@ -7,7 +7,8 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking;
+using NitroxModel.Networking.Session;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -16,26 +17,26 @@ public class PlayerManager
 {
     private readonly PlayerModelManager playerModelManager;
     private readonly PlayerVitalsManager playerVitalsManager;
-    private readonly FMODWhitelist fmodWhitelist;
-    private readonly Dictionary<ushort, RemotePlayer> playersById = new();
+    private readonly FmodWhitelist fmodWhitelist;
+    private readonly Dictionary<SessionId, RemotePlayer> playersById = new();
 
     public OnCreateDelegate OnCreate;
     public OnRemoveDelegate OnRemove;
 
-    public PlayerManager(PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
+    public PlayerManager(PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FmodWhitelist fmodWhitelist)
     {
         this.playerModelManager = playerModelManager;
         this.playerVitalsManager = playerVitalsManager;
         this.fmodWhitelist = fmodWhitelist;
     }
 
-    public Optional<RemotePlayer> Find(ushort playerId)
+    public Optional<RemotePlayer> Find(SessionId playerId)
     {
         playersById.TryGetValue(playerId, out RemotePlayer player);
         return Optional.OfNullable(player);
     }
 
-    public bool TryFind(ushort playerId, out RemotePlayer remotePlayer) => playersById.TryGetValue(playerId, out remotePlayer);
+    public bool TryFind(SessionId playerId, out RemotePlayer remotePlayer) => playersById.TryGetValue(playerId, out remotePlayer);
 
     public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
     {
@@ -72,7 +73,7 @@ public class PlayerManager
         return remotePlayer;
     }
 
-    public void RemovePlayer(ushort playerId)
+    public void RemovePlayer(SessionId playerId)
     {
         if (playersById.TryGetValue(playerId, out RemotePlayer player))
         {
@@ -86,6 +87,6 @@ public class PlayerManager
     /// <returns>Remote players + You => X + 1</returns>
     public int GetTotalPlayerCount() => playersById.Count + 1;
 
-    public delegate void OnCreateDelegate(ushort playerId, RemotePlayer remotePlayer);
-    public delegate void OnRemoveDelegate(ushort playerId, RemotePlayer remotePlayer);
+    public delegate void OnCreateDelegate(SessionId playerId, RemotePlayer remotePlayer);
+    public delegate void OnRemoveDelegate(SessionId playerId, RemotePlayer remotePlayer);
 }

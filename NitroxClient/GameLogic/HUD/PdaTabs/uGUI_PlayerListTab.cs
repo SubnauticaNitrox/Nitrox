@@ -5,6 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.Core;
+using NitroxModel.Networking;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -224,19 +225,18 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Add(playerId, entry);
     }
 
-    private void OnAdd(ushort playerId, RemotePlayer remotePlayer)
+    private void OnAdd(SessionId playerId, RemotePlayer remotePlayer)
     {
         _isDirty = true;
     }
 
-    private void OnRemove(ushort playerId, RemotePlayer remotePlayers)
+    private void OnRemove(SessionId playerId, RemotePlayer remotePlayers)
     {
         string playerIdString = playerId.ToString();
-        if (!entries.ContainsKey(playerIdString))
+        if (!entries.TryGetValue(playerIdString, out uGUI_PlayerPingEntry entry))
         {
             return;
         }
-        uGUI_PlayerPingEntry entry = entries[playerIdString];
         entries.Remove(playerIdString);
         pool.Release(entry);
         _isDirty = true;

@@ -3,8 +3,8 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
+using NitroxModel.Networking.Session;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

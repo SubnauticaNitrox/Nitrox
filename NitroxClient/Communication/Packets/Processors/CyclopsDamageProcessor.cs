@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
-using NitroxModel_Subnautica.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -16,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
     /// <summary>
     /// Add/remove <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s to match the <see cref="CyclopsDamage"/> packet received
     /// </summary>
-    public class CyclopsDamageProcessor : ClientPacketProcessor<CyclopsDamage>
+    public class CyclopsDamageProcessor : IClientPacketProcessor<CyclopsDamage>
     {
         private readonly IPacketSender packetSender;
         private readonly Fires fires;
@@ -27,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.fires = fires;
         }
 
-        public override void Process(CyclopsDamage packet)
+        public Task Process(IPacketProcessContext context, CyclopsDamage packet)
         {
             SubRoot subRoot = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
 
@@ -65,6 +64,8 @@ namespace NitroxClient.Communication.Packets.Processors
                 subRoot.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>().subLiveMixin.health = packet.DamageManagerHealth;
                 subRoot.gameObject.RequireComponent<SubFire>().liveMixin.health = packet.SubFireHealth;
             }
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

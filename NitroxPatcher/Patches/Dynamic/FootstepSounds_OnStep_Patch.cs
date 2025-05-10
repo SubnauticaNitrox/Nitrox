@@ -9,7 +9,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -76,7 +76,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
 
     private static readonly Lazy<float> stepSoundRadius = new(() =>
     {
-        Resolve<FMODWhitelist>().TryGetSoundData(LAND_STEP_SOUND_PATH, out SoundData soundData);
+        Resolve<FmodWhitelist>().TryGetSoundData(LAND_STEP_SOUND_PATH, out SoundData soundData);
         return soundData.Radius;
     });
 

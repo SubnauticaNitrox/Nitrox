@@ -1,18 +1,17 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FMODStudioEventEmitterProcessor : ClientPacketProcessor<FMODStudioEmitterPacket>
+public class FMODStudioEventEmitterProcessor : IClientPacketProcessor<FMODStudioEmitterPacket>
 {
-    public override void Process(FMODStudioEmitterPacket packet)
+    public Task Process(IPacketProcessContext context, FMODStudioEmitterPacket packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject emitterControllerObject))
         {
             Log.ErrorOnce($"[{nameof(FMODStudioEventEmitterProcessor)}] Couldn't find entity {packet.Id}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (!emitterControllerObject.TryGetComponent(out FMODEmitterController fmodEmitterController))
@@ -32,5 +31,7 @@ public class FMODStudioEventEmitterProcessor : ClientPacketProcessor<FMODStudioE
                 fmodEmitterController.StopStudioEmitter(packet.AssetPath, packet.AllowFadeout);
             }
         }
+
+        return Task.CompletedTask;
     }
 }

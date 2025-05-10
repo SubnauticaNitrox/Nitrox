@@ -1,11 +1,10 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class StasisSphereShotProcessor : ClientPacketProcessor<StasisSphereShot>
+public class StasisSphereShotProcessor : IClientPacketProcessor<StasisSphereShot>
 {
     private readonly BulletManager bulletManager;
 
@@ -14,8 +13,10 @@ public class StasisSphereShotProcessor : ClientPacketProcessor<StasisSphereShot>
         this.bulletManager = bulletManager;
     }
 
-    public override void Process(StasisSphereShot packet)
+    public Task Process(IPacketProcessContext context, StasisSphereShot packet)
     {
         bulletManager.ShootStasisSphere(packet.PlayerId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.Speed, packet.LifeTime, packet.ChargeNormalized);
+
+        return Task.CompletedTask;
     }
 }

@@ -10,6 +10,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 
@@ -62,7 +63,7 @@ public partial class ServersViewModel : RoutableViewModelBase
 
         try
         {
-            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result.Name)));
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetServerSavesPath(), result.Name)));
             if (serverEntry == null)
             {
                 throw new Exception("Failed to create save file");

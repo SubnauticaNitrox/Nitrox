@@ -1,11 +1,10 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours.Gui.Modals;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class UserKickedProcessor : ClientPacketProcessor<PlayerKicked>
+    public class UserKickedProcessor : IClientPacketProcessor<PlayerKicked>
     {
         private readonly IMultiplayerSession session;
 
@@ -14,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.session = session;
         }
 
-        public override void Process(PlayerKicked packet)
+        public Task Process(IPacketProcessContext context, PlayerKicked packet)
         {
             string message = Language.main.Get("Nitrox_PlayerKicked");
 
@@ -25,6 +24,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
             session.Disconnect();
             Modal.Get<KickedModal>()?.Show(message);
+
+            return Task.CompletedTask;
         }
     }
 }

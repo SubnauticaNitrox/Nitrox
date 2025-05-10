@@ -1,11 +1,10 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
+public class PlayerDeathProcessor : IClientPacketProcessor<PlayerDeathEvent>
 {
     private readonly PlayerManager playerManager;
 
@@ -14,7 +13,7 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         this.playerManager = playerManager;
     }
 
-    public override void Process(PlayerDeathEvent playerDeath)
+    public Task Process(IPacketProcessContext context, PlayerDeathEvent playerDeath)
     {
         RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.PlayerId));
         Log.Debug($"{player.PlayerName} died");
@@ -22,5 +21,7 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
         player.PlayerDeathEvent.Trigger(player);
 
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
+
+        return Task.CompletedTask;
     }
 }

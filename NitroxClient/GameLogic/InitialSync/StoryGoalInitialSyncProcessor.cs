@@ -4,7 +4,7 @@ using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using Story;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -161,7 +161,7 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             ScheduledGoal goal = new()
             {
                 goalKey = scheduledGoal.GoalKey,
-                goalType = (Story.GoalType)scheduledGoal.GoalType,
+                goalType = (Story.GoalType)scheduledGoal.GoalCategory,
                 timeExecute = scheduledGoal.TimeExecute,
             };
             if (!StoryGoalManager.main.completedGoals.Contains(goal.goalKey))

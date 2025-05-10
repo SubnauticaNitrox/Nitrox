@@ -4,7 +4,7 @@ using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 using static Rocket;
 

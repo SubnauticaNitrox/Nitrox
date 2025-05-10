@@ -1,13 +1,12 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class OpenableStateChangedProcessor : ClientPacketProcessor<OpenableStateChanged>
+    public class OpenableStateChangedProcessor : IClientPacketProcessor<OpenableStateChanged>
     {
         private readonly IPacketSender packetSender;
 
@@ -16,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.packetSender = packetSender;
         }
 
-        public override void Process(OpenableStateChanged packet)
+        public Task Process(IPacketProcessContext context, OpenableStateChanged packet)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             Openable openable = gameObject.RequireComponent<Openable>();
@@ -25,6 +24,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

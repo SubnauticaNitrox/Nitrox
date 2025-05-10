@@ -18,7 +18,7 @@ public sealed partial class FMOD_CustomLoopingEmitter_OnPlay_Patch : NitroxPatch
 
     public static void Postfix(FMOD_CustomLoopingEmitter __instance)
     {
-        if (!__instance.assetStart || !Resolve<FMODWhitelist>().IsWhitelisted(__instance.assetStart.path))
+        if (!__instance.assetStart || !Resolve<FmodWhitelist>().IsWhitelisted(__instance.assetStart.path))
         {
             return;
         }

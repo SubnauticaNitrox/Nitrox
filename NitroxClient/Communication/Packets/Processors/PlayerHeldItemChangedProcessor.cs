@@ -1,15 +1,15 @@
 ﻿using System;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldItemChanged>
+public class PlayerHeldItemChangedProcessor : IClientPacketProcessor<PlayerHeldItemChanged>
 {
     private int defaultLayer;
     private int viewModelLayer;
@@ -31,14 +31,14 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
         viewModelLayer = LayerMask.NameToLayer("Viewmodel");
     }
 
-    public override void Process(PlayerHeldItemChanged packet)
+    public Task Process(IPacketProcessContext context, PlayerHeldItemChanged packet)
     {
         Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
         Validate.IsPresent(opPlayer);
 
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
-            return; // Item can be not spawned yet bc async.
+            return Task.CompletedTask; // Item can be not spawned yet bc async.
         }
 
         Pickupable pickupable = item.GetComponent<Pickupable>();
@@ -115,5 +115,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
             default:
                 throw new ArgumentOutOfRangeException(nameof(packet.Type));
         }
+
+        return Task.CompletedTask;
     }
 }

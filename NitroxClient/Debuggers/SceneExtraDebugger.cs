@@ -16,7 +16,6 @@ namespace NitroxClient.Debuggers;
 public sealed class SceneExtraDebugger : BaseDebugger
 {
     private readonly SceneDebugger sceneDebugger;
-    private readonly IMap map;
 
     private const KeyCode RAY_CAST_KEY = KeyCode.F9;
 
@@ -50,10 +49,9 @@ public sealed class SceneExtraDebugger : BaseDebugger
         }
     }
 
-    public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
+    public SceneExtraDebugger(SceneDebugger sceneDebugger) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
     {
         this.sceneDebugger = sceneDebugger;
-        this.map = map;
         ActiveTab = AddTab("Tools", RenderTabTools);
 
         // ReSharper disable once Unity.PreferAddressByIdToGraphicsParams
@@ -306,7 +304,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
             gameObjectResults.Clear();
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(ray, map.DimensionsInMeters.X, int.MaxValue);
+            RaycastHit[] hits = Physics.RaycastAll(ray, SubnauticaMap.DimensionsInMeters.X, int.MaxValue);
 
             foreach (RaycastHit hit in hits)
             {

@@ -7,8 +7,8 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class EquipmentHelper
     {
-        private static readonly List<Func<GameObject, Equipment>> equipmentFinders = new()
-        {
+        private static readonly List<Func<GameObject, Equipment>> equipmentFinders =
+        [
             o => o.GetComponent<Charger>().AliveOrNull()?.equipment,
             o => o.GetComponent<BaseNuclearReactor>().AliveOrNull()?.equipment,
             o => o.GetComponent<CyclopsDecoyLoadingTube>().AliveOrNull()?.decoySlots,
@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.Helper
             o => o.GetComponent<Vehicle>().AliveOrNull()?.modules,
             o => o.GetComponent<VehicleUpgradeConsoleInput>().AliveOrNull()?.equipment,
             o => string.Equals("Player", o.GetComponent<Player>().AliveOrNull()?.name, StringComparison.InvariantCulture) ? Inventory.main.equipment : null
-        };
+        ];
 
         public static Optional<Equipment> FindEquipmentComponent(GameObject owner)
         {

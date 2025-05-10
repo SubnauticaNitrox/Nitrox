@@ -1,4 +1,3 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -7,26 +6,26 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
+public class ToggleLightsProcessor : IClientPacketProcessor<NitroxModel.Networking.Packets.ToggleLights>
 {
-    private readonly FMODWhitelist fmodWhitelist;
+    private readonly FmodWhitelist fmodWhitelist;
 
-    public ToggleLightsProcessor(FMODWhitelist fmodWhitelist)
+    public ToggleLightsProcessor(FmodWhitelist fmodWhitelist)
     {
         this.fmodWhitelist = fmodWhitelist;
     }
 
-    public override void Process(NitroxModel.Packets.ToggleLights packet)
+    public Task Process(IPacketProcessContext context, NitroxModel.Networking.Packets.ToggleLights packet)
     {
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
         ToggleLights toggleLights = gameObject.RequireComponent<ToggleLights>();
 
         if (packet.IsOn == toggleLights.GetLightsActive())
         {
-            return;
+            return Task.CompletedTask;
         }
 
-        using (PacketSuppressor<NitroxModel.Packets.ToggleLights>.Suppress())
+        using (PacketSuppressor<NitroxModel.Networking.Packets.ToggleLights>.Suppress())
         using (FMODSystem.SuppressSendingSounds())
         {
             using (FMODSystem.SuppressSubnauticaSounds())
@@ -50,5 +49,6 @@ public class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.T
                 FMODEmitterController.PlayEventOneShot(soundAsset, soundData.Radius, toggleLights.transform.position);
             }
         }
+        return Task.CompletedTask;
     }
 }

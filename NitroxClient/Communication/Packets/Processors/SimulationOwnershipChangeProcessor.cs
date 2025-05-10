@@ -1,11 +1,10 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
+public class SimulationOwnershipChangeProcessor : IClientPacketProcessor<SimulationOwnershipChange>
 {
     private readonly SimulationOwnership simulationOwnershipManager;
 
@@ -14,12 +13,12 @@ public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<Simulati
         this.simulationOwnershipManager = simulationOwnershipManager;
     }
 
-    public override void Process(SimulationOwnershipChange simulationOwnershipChange)
+    public Task Process(IPacketProcessContext context, SimulationOwnershipChange simulationOwnershipChange)
     {
         foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
         {
             simulationOwnershipManager.TreatSimulatedEntity(simulatedEntity);
         }
+        return Task.CompletedTask;
     }
 }
-

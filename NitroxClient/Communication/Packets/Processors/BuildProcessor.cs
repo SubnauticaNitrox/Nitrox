@@ -1,14 +1,15 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
+using NitroxModel.Networking.Packets;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public abstract class BuildProcessor<T> : ClientPacketProcessor<T> where T : Packet
+public abstract class BuildProcessor<T> : IClientPacketProcessor<T> where T : Packet
 {
-    public override void Process(T packet)
+    public Task Process(IPacketProcessContext context, T packet)
     {
         BuildingHandler.Main.BuildQueue.Enqueue(packet);
+        return Task.CompletedTask;
     }
 }
 

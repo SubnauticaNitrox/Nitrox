@@ -50,7 +50,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         {
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
+            SavesFolderDir = keyValueStore.GetServerSavesPath();
         });
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }

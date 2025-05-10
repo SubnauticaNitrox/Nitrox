@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
 {
+    [Obsolete("use Nitrox.Server.Subnautica registry")]
     public class EntityRegistry
     {
         private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById = new();

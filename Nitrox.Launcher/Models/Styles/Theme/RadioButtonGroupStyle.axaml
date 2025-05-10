@@ -4,18 +4,19 @@
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <ThemeVariantScope RequestedThemeVariant="Dark">
                     <Border Background="#000000" Padding="10">
-                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
+                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:SubnauticaGameMode}" />
                     </Border>
                 </ThemeVariantScope>
                 <ThemeVariantScope RequestedThemeVariant="Light">
                     <Border Background="#FFFFFF" Padding="10">
-                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
+                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:SubnauticaGameMode}" />
                     </Border>
                 </ThemeVariantScope>
             </StackPanel>
@@ -43,7 +44,7 @@
                         CornerRadius="8"
                         Name="ItemContainer"
                         Padding="14,16"
-                        Tag="{Binding}">
+                        Tag="{Binding}" x:DataType="system:Object">
                         <design:NitroxAttached.Selected>
                             <MultiBinding Converter="{converters:EqualityConverter}">
                                 <Binding />

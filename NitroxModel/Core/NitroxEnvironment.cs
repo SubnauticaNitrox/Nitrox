@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace NitroxModel.Helper
+namespace NitroxModel.Core
 {
     /// <summary>
     ///     Environment helper for getting meta data about where and how Nitrox is running.

@@ -1,19 +1,18 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAttackTarget>
+public class SeaDragonAttackTargetProcessor : IClientPacketProcessor<SeaDragonAttackTarget>
 {
-    public override void Process(SeaDragonAttackTarget packet)
+    public Task Process(IPacketProcessContext context, SeaDragonAttackTarget packet)
     {
         if (!NitroxEntity.TryGetComponentFrom(packet.SeaDragonId, out SeaDragonMeleeAttack seaDragonMeleeAttack) ||
             !NitroxEntity.TryGetObjectFrom(packet.TargetId, out GameObject target))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         seaDragonMeleeAttack.seaDragon.Aggression.Value = packet.Aggression;
@@ -23,7 +22,7 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
             seaDragonMeleeAttack.animator.SetTrigger("shove");
             seaDragonMeleeAttack.SendMessage("OnMeleeAttack", target, SendMessageOptions.DontRequireReceiver);
             seaDragonMeleeAttack.timeLastBite = Time.time;
-            return;
+            return Task.CompletedTask;
         }
 
 
@@ -39,7 +38,7 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
         }
         else
         {
-            return;
+            return Task.CompletedTask;
         }
 
         seaDragonMeleeAttack.timeLastBite = Time.time;
@@ -51,5 +50,6 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
             }
         }
         seaDragonMeleeAttack.OnTouch(collider);
+        return Task.CompletedTask;
     }
 }

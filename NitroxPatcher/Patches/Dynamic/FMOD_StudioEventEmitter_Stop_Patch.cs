@@ -23,7 +23,7 @@ public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, ID
             return;
         }
 
-        if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path))
+        if (!Resolve<FmodWhitelist>().IsWhitelisted(__instance.asset.path))
         {
             return;
         }

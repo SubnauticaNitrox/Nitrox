@@ -1,20 +1,20 @@
 using System;
+using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxModel.Helper;
-using NitroxModel;
 
 namespace NitroxServer.GameLogic;
 
 /// <summary>
 /// Keeps track of time and Aurora-related events.
 /// </summary>
+[Obsolete("Use StoryService")]
 public class StoryManager : IDisposable
 {
     private readonly PlayerManager playerManager;
-    private readonly PDAStateData pdaStateData;
+    private readonly PdaStateData pdaStateData;
     private readonly StoryGoalData storyGoalData;
     private readonly TimeKeeper timeKeeper;
     private readonly string seed;
@@ -32,14 +32,14 @@ public class StoryManager : IDisposable
     public double AuroraWarningTimeMs;
 
     /// <summary>
-    /// In seconds
+    /// In seconds.
     /// </summary>
     public double AuroraRealExplosionTime;
 
     private double ElapsedMilliseconds => timeKeeper.ElapsedMilliseconds;
     private double ElapsedSeconds => timeKeeper.ElapsedSeconds;
 
-    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed, double? auroraExplosionTime, double? auroraWarningTime, double? auroraRealExplosionTime)
+    public StoryManager(PlayerManager playerManager, PdaStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed, double? auroraExplosionTime, double? auroraWarningTime, double? auroraRealExplosionTime)
     {
         this.playerManager = playerManager;
         this.pdaStateData = pdaStateData;
@@ -135,17 +135,17 @@ public class StoryManager : IDisposable
     /// </summary>
     public void StartSunbeamEvent(string sunbeamEventKey)
     {
-        int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(sunbeamEventKey);
-        if (beginIndex == -1)
-        {
-            Log.Error($"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {sunbeamEventKey}");
-            return;
-        }
-        for (int i = beginIndex; i < PlaySunbeamEvent.SunbeamGoals.Length; i++)
-        {
-            storyGoalData.CompletedGoals.Remove(PlaySunbeamEvent.SunbeamGoals[i]);
-        }
-        playerManager.SendPacketToAllPlayers(new PlaySunbeamEvent(sunbeamEventKey));
+        // int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(sunbeamEventKey);
+        // if (beginIndex == -1)
+        // {
+        //     Log.Error($"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {sunbeamEventKey}");
+        //     return;
+        // }
+        // for (int i = beginIndex; i < PlaySunbeamEvent.SunbeamGoals.Length; i++)
+        // {
+        //     storyGoalData.CompletedGoals.Remove(PlaySunbeamEvent.SunbeamGoals[i]);
+        // }
+        // playerManager.SendPacketToAllPlayers(new PlaySunbeamEvent(sunbeamEventKey));
     }
 
     /// <returns>Either the time in before Aurora explodes or -1 if it has already exploded.</returns>

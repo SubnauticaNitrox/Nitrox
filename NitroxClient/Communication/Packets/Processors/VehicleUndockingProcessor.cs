@@ -1,14 +1,13 @@
 using System.Collections;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
+public class VehicleUndockingProcessor : IClientPacketProcessor<VehicleUndocking>
 {
     private readonly Vehicles vehicles;
     private readonly PlayerManager remotePlayerManager;
@@ -19,7 +18,7 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
         this.remotePlayerManager = remotePlayerManager;
     }
 
-    public override void Process(VehicleUndocking packet)
+    public Task Process(IPacketProcessContext context, VehicleUndocking packet)
     {
         GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
         GameObject vehicleDockingBayGo = NitroxEntity.RequireObjectFrom(packet.DockId);
@@ -38,6 +37,8 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
                 FinishVehicleUndocking(packet, vehicle, vehicleDockingBay);
             }
         }
+
+        return Task.CompletedTask;
     }
 
     private void StartVehicleUndocking(VehicleUndocking packet, GameObject vehicleGo, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)

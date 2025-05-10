@@ -1,14 +1,15 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using Story;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class RadioPlayPendingMessageProcessor : ClientPacketProcessor<RadioPlayPendingMessage>
+    public class RadioPlayPendingMessageProcessor : IClientPacketProcessor<RadioPlayPendingMessage>
     {
-        public override void Process(RadioPlayPendingMessage packet)
+        public Task Process(IPacketProcessContext context, RadioPlayPendingMessage packet)
         {
             StoryGoalManager.main.ExecutePendingRadioMessage();
+
+            return Task.CompletedTask;
         }
     }
 }

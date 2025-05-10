@@ -1,10 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class MultiplayerSessionReservationProcessor : ClientPacketProcessor<MultiplayerSessionReservation>
+    public class MultiplayerSessionReservationProcessor : IClientPacketProcessor<MultiplayerSessionReservation>
     {
         private readonly IMultiplayerSession multiplayerSession;
 
@@ -13,9 +12,11 @@ namespace NitroxClient.Communication.Packets.Processors
             this.multiplayerSession = multiplayerSession;
         }
 
-        public override void Process(MultiplayerSessionReservation packet)
+        public Task Process(IPacketProcessContext context, MultiplayerSessionReservation packet)
         {
             multiplayerSession.ProcessReservationResponsePacket(packet);
+
+            return Task.CompletedTask;
         }
     }
 }

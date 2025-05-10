@@ -1,18 +1,19 @@
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel.Networking.Packets;
+using NitroxModel.Networking.Session;
 using NitroxModel.Server;
 using NitroxServer.Communication;
 
 namespace NitroxServer
 {
-    public class Player : IProcessorContext
+    [Obsolete("Use PeerId instead. Fetch data from database using this id.")]
+    public class Player
     {
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
@@ -22,6 +23,13 @@ namespace NitroxServer
         public INitroxConnection Connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
+
+        /// <summary>
+        ///     Gets the connected player index of the player.
+        /// </summary>
+        /// <remarks>
+        ///     This ID is not unique and should not be persisted.
+        /// </remarks>
         public ushort Id { get; }
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
@@ -31,7 +39,7 @@ namespace NitroxServer
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
-        public NitroxGameMode GameMode { get; set; }
+        public SubnauticaGameMode GameMode { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
@@ -43,7 +51,7 @@ namespace NitroxServer
         public PlayerWorldEntity Entity { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
-                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,
+                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
         {
@@ -105,7 +113,7 @@ namespace NitroxServer
         /// <summary>
         /// Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells"/>, <see cref="RemoveCells"/> and <see cref="HasCellLoaded"/>.
         /// </summary>
-        internal List<AbsoluteEntityCell> GetVisibleCells()
+        public List<AbsoluteEntityCell> GetVisibleCells()
         {
             return [.. visibleCells];
         }
@@ -154,7 +162,8 @@ namespace NitroxServer
 
         public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID)
         {
-            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination, subRootID);
+            throw new NotSupportedException("USE PLAYERSERVICE");
+            PlayerTeleported playerTeleported = new(0, Position, destination, subRootID);
 
             Position = playerTeleported.DestinationTo;
             LastStoredPosition = playerTeleported.DestinationFrom;

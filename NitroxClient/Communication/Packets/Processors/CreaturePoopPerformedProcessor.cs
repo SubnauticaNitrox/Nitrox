@@ -1,13 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class CreaturePoopPerformedProcessor : ClientPacketProcessor<CreaturePoopPerformed>
+public class CreaturePoopPerformedProcessor : IClientPacketProcessor<CreaturePoopPerformed>
 {
-    public override void Process(CreaturePoopPerformed packet)
+    public Task Process(IPacketProcessContext context, CreaturePoopPerformed packet)
     {
         AI.CreaturePoopPerformed(packet.CreatureId);
+
+        return Task.CompletedTask;
     }
 }

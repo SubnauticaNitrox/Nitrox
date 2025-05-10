@@ -2,7 +2,7 @@
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

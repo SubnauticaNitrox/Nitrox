@@ -1,15 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabinetClicked>
+public class MedicalCabinetClickedProcessor : IClientPacketProcessor<MedicalCabinetClicked>
 {
-    public override void Process(MedicalCabinetClicked packet)
+    public Task Process(IPacketProcessContext context, MedicalCabinetClicked packet)
     {
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
         MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
@@ -32,5 +31,7 @@ public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabin
                 cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 2f);
             }
         }
+
+        return Task.CompletedTask;
     }
 }

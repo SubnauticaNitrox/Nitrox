@@ -10,7 +10,8 @@ using System.Runtime.InteropServices;
 using JB::JetBrains.Annotations;
 using Microsoft.Win32;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.Logger;
+using Nitrox.Model.Subnautica.Logger;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxPatcher;

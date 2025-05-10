@@ -1,7 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
+using NitroxModel.Networking.Session;
 
 namespace NitroxClient.GameLogic.InitialSync;
 

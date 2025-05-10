@@ -2,7 +2,7 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -20,7 +20,7 @@ public sealed partial class PDAEncyclopedia_Add_Patch : NitroxPatch, IDynamicPat
         // Is null when it's a duplicate call
         if (__result != null)
         {
-            Resolve<IPacketSender>().Send(new PDAEncyclopediaEntryAdd(key, verbose));
+            Resolve<IPacketSender>().Send(new PdaEncyclopediaEntryAdd(key, verbose));
         }
     }
 }

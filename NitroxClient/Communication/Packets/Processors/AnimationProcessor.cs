@@ -1,12 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class AnimationProcessor : ClientPacketProcessor<AnimationChangeEvent>
+    public class AnimationProcessor : IClientPacketProcessor<AnimationChangeEvent>
     {
         private readonly PlayerManager remotePlayerManager;
 
@@ -15,13 +14,14 @@ namespace NitroxClient.Communication.Packets.Processors
             this.remotePlayerManager = remotePlayerManager;
         }
 
-        public override void Process(AnimationChangeEvent animEvent)
+        public Task Process(IPacketProcessContext context, AnimationChangeEvent animEvent)
         {
             Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(animEvent.PlayerId);
             if (opPlayer.HasValue)
             {
                 opPlayer.Value.UpdateAnimationAndCollider((AnimChangeType)animEvent.Type, (AnimChangeState)animEvent.State);
             }
+            return Task.CompletedTask;
         }
     }
 }

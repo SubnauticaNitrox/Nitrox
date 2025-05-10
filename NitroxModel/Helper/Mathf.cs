@@ -71,6 +71,16 @@ namespace NitroxModel.Helper
             return a + (b - a) * t;
         }
 
+        public static double Lerp(double a, double b, float t)
+        {
+            return a + (b - a) * t;
+        }
+
+        public static TimeSpan Lerp(TimeSpan a, TimeSpan b, float t)
+        {
+            return TimeSpan.FromMilliseconds(Lerp(a.TotalMilliseconds, b.TotalMilliseconds, t));
+        }
+
         /// <summary>
         /// Reciprocal function of <see cref="Lerp"/>. Unlerp(a, b, Lerp(a, b, t)) = t
         /// </summary>

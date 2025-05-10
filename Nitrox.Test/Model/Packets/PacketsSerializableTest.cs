@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BinaryPack.Attributes;
+﻿using BinaryPack.Attributes;
 using KellermanSoftware.CompareNetObjects;
 using KellermanSoftware.CompareNetObjects.TypeComparers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel_Subnautica.Logger;
+using Nitrox.Model.Subnautica.Logger;
 using NitroxModel.DataStructures;
+using NitroxModel.Networking;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxModel.Packets;
 
@@ -24,10 +21,13 @@ public class PacketsSerializableTest
     [TestMethod]
     public void PacketSerializationTest()
     {
-        ComparisonConfig config = new();
-        config.SkipInvalidIndexers = true;
+        ComparisonConfig config = new()
+        {
+            SkipInvalidIndexers = true
+        };
         config.AttributesToIgnore.Add(typeof(IgnoredMemberAttribute));
         config.CustomComparers.Add(new CustomComparer<NitroxId, NitroxId>((id1, id2) => id1.Equals(id2)));
+        config.CustomComparers.Add(new CustomComparer<SessionId, SessionId>((id1, id2) => id1.Equals(id2)));
         CompareLogic comparer = new(config);
 
         IEnumerable<Type> types = typeof(Packet).Assembly.GetTypes().Concat(typeof(SubnauticaInGameLogger).Assembly.GetTypes());
@@ -52,8 +52,13 @@ public class PacketsSerializableTest
             if (!emptyPackets.Contains(type))
             {
                 ComparisonResult result;
+                int maxCompares = 10_000;
                 do
                 {
+                    if (maxCompares-- <= 0)
+                    {
+                        throw new Exception($"Possible infinite loop. Check if a custom comparer is needed any of the properties in {packet.GetType()}.");
+                    }
                     packet2 = faker.Generate();
                     result = comparer.Compare(packet, packet2);
                 } while (result == null || result.AreEqual);

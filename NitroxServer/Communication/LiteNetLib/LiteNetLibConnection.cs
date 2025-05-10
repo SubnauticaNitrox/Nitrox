@@ -3,7 +3,7 @@ using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.Networking;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxServer.Communication.LiteNetLib;
 

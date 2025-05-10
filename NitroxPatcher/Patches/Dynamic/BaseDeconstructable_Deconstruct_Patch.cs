@@ -9,6 +9,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
+using NitroxModel.Networking.Packets;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;

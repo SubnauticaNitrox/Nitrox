@@ -6,8 +6,8 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
@@ -42,10 +42,10 @@ public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
 
     private static IEnumerator RestorePDALog(InitialPlayerSync packet)
     {
-        List<PDALogEntry> logEntries = packet.PDAData.PDALogEntries;
+        List<PdaLogEntry> logEntries = packet.PDAData.PDALogEntries;
         Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 
-        using (PacketSuppressor<PDALogEntryAdd>.Suppress())
+        using (PacketSuppressor<PdaLogEntryAdd>.Suppress())
         {
             // We just need the timestamp and the key because everything else is provided by PDALog.InitDataForEntries
             PDALog.Deserialize(logEntries.ToDictionary(m => m.Key, m => new PDALog.Entry() { timestamp = m.Timestamp }));
@@ -58,7 +58,7 @@ public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
         List<string> entries = packet.PDAData.EncyclopediaEntries;
         Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
 
-        using (PacketSuppressor<PDAEncyclopediaEntryAdd>.Suppress())
+        using (PacketSuppressor<PdaEncyclopediaEntryAdd>.Suppress())
         {
             // We don't do as in PDAEncyclopedia.Deserialize because we don't persist the entry's fields which are useless
             foreach (string entry in entries)

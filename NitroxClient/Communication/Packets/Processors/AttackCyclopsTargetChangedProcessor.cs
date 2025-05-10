@@ -1,13 +1,13 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class AttackCyclopsTargetChangedProcessor : ClientPacketProcessor<AttackCyclopsTargetChanged>
+public class AttackCyclopsTargetChangedProcessor : IClientPacketProcessor<AttackCyclopsTargetChanged>
 {
-    public override void Process(AttackCyclopsTargetChanged packet)
+    public Task Process(IPacketProcessContext context, AttackCyclopsTargetChanged packet)
     {
         AI.AttackCyclopsTargetChanged(packet.CreatureId, packet.TargetId, packet.AggressiveToNoiseAmount);
+        return Task.CompletedTask;
     }
 }

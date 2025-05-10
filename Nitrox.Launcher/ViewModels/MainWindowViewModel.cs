@@ -13,6 +13,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 

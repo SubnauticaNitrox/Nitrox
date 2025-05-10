@@ -6,12 +6,15 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using NitroxModel.Networking.Packets;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
 using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.GameLogic.Bases;
 
+// TODO: REMOVE
+[Obsolete("use Nitrox.Server.Subnautica BuildingManager")]
 public class BuildingManager
 {
     private readonly EntityRegistry entityRegistry;

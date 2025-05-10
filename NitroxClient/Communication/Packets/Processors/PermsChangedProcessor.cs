@@ -1,11 +1,10 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PermsChangedProcessor : ClientPacketProcessor<PermsChanged>
+public class PermsChangedProcessor : IClientPacketProcessor<PermsChanged>
 {
     private LocalPlayer localPlayer;
 
@@ -17,9 +16,11 @@ public class PermsChangedProcessor : ClientPacketProcessor<PermsChanged>
         this.localPlayer = localPlayer;
     }
 
-    public override void Process(PermsChanged packet)
+    public Task Process(IPacketProcessContext context, PermsChanged packet)
     {
         localPlayer.Permissions = packet.NewPerms;
         OnPermissionsChanged(packet.NewPerms);
+
+        return Task.CompletedTask;
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace NitroxModel.Constants
 {
     /// <summary>
-    ///     Shared values across LANDiscoveryClient, in NitroxClient project and LANDiscoveryServer in NitroxServer project.
+    ///     Shared values across Nitrox client and server projects.
     /// </summary>
     public static class LANDiscoveryConstants
     {

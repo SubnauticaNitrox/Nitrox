@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Packets;
+﻿using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication;
 

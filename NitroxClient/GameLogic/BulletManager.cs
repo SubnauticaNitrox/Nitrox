@@ -4,6 +4,7 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.Networking;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -18,7 +19,7 @@ public class BulletManager
 
     // This only allows for one stasis sphere per player
     // (which is the normal capacity, but could be adapted for a mod letting multiple stasis spheres)
-    private readonly Dictionary<ushort, StasisSphere> stasisSpherePerPlayerId = [];
+    private readonly Dictionary<SessionId, StasisSphere> stasisSpherePerPlayerId = [];
 
     /// <summary>
     /// TechTypes of objects which should have a Vehicle MB
@@ -104,7 +105,7 @@ public class BulletManager
         cloneSphere.Deactivate();
     }
 
-    private StasisSphere EnsurePlayerHasSphere(ushort playerId)
+    private StasisSphere EnsurePlayerHasSphere(SessionId playerId)
     {
         if (stasisSpherePerPlayerId.TryGetValue(playerId, out StasisSphere remoteSphere) && remoteSphere)
         {
@@ -122,7 +123,7 @@ public class BulletManager
         return stasisSphere;
     }
 
-    private void DestroyPlayerSphere(ushort playerId)
+    private void DestroyPlayerSphere(SessionId playerId)
     {
         if (stasisSpherePerPlayerId.TryGetValue(playerId, out StasisSphere stasisSphere) && stasisSphere)
         {

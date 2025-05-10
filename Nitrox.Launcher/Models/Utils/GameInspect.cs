@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.ViewModels;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;

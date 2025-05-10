@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Nitrox.Server.Subnautica.Database\Nitrox.Server.Subnautica.Database.csproj" />
+        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
+        <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AssetsTools.NET" />
+        <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="ServiceScan.SourceGenerator" />
+        <PackageReference Include="ZLogger" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="protobuf-net">
+            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" Visible="False" />
+    </ItemGroup>
+
+    <Import Project="..\Nitrox.Shared.targets" />
+</Project>

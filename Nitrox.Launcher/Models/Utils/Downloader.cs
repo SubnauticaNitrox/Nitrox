@@ -5,24 +5,27 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
-using LitJson;
 using Nitrox.Launcher.Models.Design;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.Utils;
 
-public partial class Downloader
+public static class Downloader
 {
     public const string BLOGS_URL = "https://nitroxblog.rux.gg/wp-json/wp/v2/posts?per_page=8&page=1";
     public const string LATEST_VERSION_URL = "https://nitrox.rux.gg/api/version/latest";
     public const string CHANGELOGS_URL = "https://nitrox.rux.gg/api/changelog/releases";
     public const string RELEASES_URL = "https://nitrox.rux.gg/api/version/releases";
 
-    [GeneratedRegex(@"""version"":""([^""]*)""")]
-    private static partial Regex JsonVersionFieldRegex { get; }
+    private static readonly JsonSerializerOptions serializerOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString
+    };
 
     public static async Task<IList<NitroxBlog>> GetBlogsAsync()
     {
@@ -31,33 +34,19 @@ public partial class Downloader
         try
         {
             string jsonString = await CacheFile.GetOrRefreshAsync("blogs",
-                                                                      r => r.Read(""),
-                                                                      (w, v) => w.Write(v),
-                                                                      async () =>
-                                                                      {
-                                                                          using HttpResponseMessage response = await GetResponseFromCacheAsync(BLOGS_URL);
-                                                                          return await response.Content.ReadAsStringAsync();
-                                                                      });
+                                                                  r => r.Read(""),
+                                                                  (w, v) => w.Write(v),
+                                                                  async () =>
+                                                                  {
+                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(BLOGS_URL);
+                                                                      return await response.Content.ReadAsStringAsync();
+                                                                  });
 
-            JsonData data = JsonMapper.ToObject(jsonString);
-
-            // TODO : Add a json schema validator
-            for (int i = 0; i < data.Count; i++)
+            BlogPostJson[] data = JsonSerializer.Deserialize<BlogPostJson[]>(jsonString, serializerOptions);
+            foreach (BlogPostJson blogPost in data)
             {
-                string released = (string)data[i]["date"];
-                string url = (string)data[i]["link"];
-                string title = WebUtility.HtmlDecode((string)data[i]["title"]["rendered"]);
-                string imageUrl = (string)data[i]["jetpack_featured_media_url"];
-                string imageCacheName = $"blogimage_{title.ReplaceInvalidFileNameCharacters().ToLowerInvariant()}";
-                if (!DateTimeOffset.TryParse(released, out DateTimeOffset dateTime))
-                {
-                    dateTime = DateTimeOffset.UtcNow;
-                    Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
-                }
-                else
-                {
-                    imageCacheName = $"blogimage_{dateTime.ToUnixTimeSeconds()}";
-                }
+                string title = WebUtility.HtmlDecode(blogPost.Title.Rendered);
+                string imageCacheName = $"blogimage_{blogPost.Released.ToUnixTimeSeconds()}";
                 // Get image bitmap from image URL
                 byte[] imageData = await CacheFile.GetOrRefreshAsync(imageCacheName,
                                                                      r => r.Read<byte[]>(),
@@ -68,13 +57,14 @@ public partial class Downloader
                                                                      },
                                                                      async () =>
                                                                      {
-                                                                         HttpResponseMessage imageResponse = await GetResponseFromCacheAsync(imageUrl);
+                                                                         HttpResponseMessage imageResponse = await GetResponseFromCacheAsync(blogPost.ThumbnailImageUrl);
                                                                          return await imageResponse.Content.ReadAsByteArrayAsync();
-                                                                     });
+                                                                     },
+                                                                     TimeSpan.FromDays(7));
                 using MemoryStream imageMemoryStream = new(imageData);
                 Bitmap image = new(imageMemoryStream);
 
-                blogs.Add(new NitroxBlog(title, DateOnly.FromDateTime(dateTime.DateTime), url, image));
+                blogs.Add(new NitroxBlog(title, DateOnly.FromDateTime(blogPost.Released.DateTime), blogPost.PostUrl, image));
             }
         }
         catch (Exception ex)
@@ -102,35 +92,27 @@ public partial class Downloader
                                                                       return await response.Content.ReadAsStringAsync();
                                                                   });
             StringBuilder builder = new();
-            JsonData data = JsonMapper.ToObject(jsonString);
-
-            // TODO : Add a json schema validator
-            for (int i = 0; i < data.Count; i++)
+            foreach (ChangelogJson changelog in JsonSerializer.Deserialize<ChangelogJson[]>(jsonString, serializerOptions))
             {
-                string version = (string)data[i]["version"];
-                string released = (string)data[i]["released"];
-                JsonData patchnotes = data[i]["patchnotes"];
-
-                if (!DateTime.TryParse(released, out DateTime dateTime))
-                {
-                    dateTime = DateTime.UtcNow;
-                    Log.Error($"Error while trying to parse release time ({released}) of Nitrox v{version}");
-                }
-
                 builder.Clear();
-                for (int j = 0; j < patchnotes.Count; j++)
+                foreach (string patchNote in changelog.PatchNotes)
                 {
-                    if (patchnotes[j].ToString().StartsWith('-'))
+                    if (string.IsNullOrWhiteSpace(patchNote))
                     {
-                        builder.AppendLine($"\n[b][u]{patchnotes[j].ToString().TrimStart('-', ' ')}[/u][/b]");
+                        continue;
+                    }
+
+                    if (patchNote.StartsWith('-'))
+                    {
+                        builder.AppendLine($"\n[b][u]{patchNote.TrimStart('-', ' ')}[/u][/b]");
                     }
                     else
                     {
-                        builder.AppendLine($"• {(string)patchnotes[j]}");
+                        builder.AppendLine($"• {patchNote}");
                     }
                 }
 
-                changelogs.Add(new NitroxChangelog(version, dateTime, builder.ToString()));
+                changelogs.Add(new NitroxChangelog(changelog.Version, changelog.Released.DateTime, builder.ToString()));
             }
         }
         catch (Exception ex)
@@ -155,17 +137,13 @@ public partial class Downloader
                                                                       return await response.Content.ReadAsStringAsync();
                                                                   });
 
-            Match match = JsonVersionFieldRegex.Match(jsonString);
-            if (match.Success && match.Groups.Count > 1)
-            {
-                return new Version(match.Groups[1].Value);
-            }
+            UpdateJson updateJson = JsonSerializer.Deserialize<UpdateJson>(jsonString, serializerOptions);
+            return updateJson.Version;
         }
         catch (Exception ex)
         {
             Log.Error(ex, $"{nameof(Downloader)} : Error while fetching Nitrox version from {LATEST_VERSION_URL}");
             LauncherNotifier.Error("Unable to check for Nitrox updates");
-            throw;
         }
 
         return new Version();
@@ -190,5 +168,65 @@ public partial class Downloader
         }
 
         return null;
+    }
+
+    private record BlogPostJson
+    {
+        /// <summary>
+        ///     Release time of this blog post.
+        /// </summary>
+        [JsonPropertyName("date")]
+        public DateTimeOffset Released { get; init; }
+
+        [JsonPropertyName("link")]
+        public string PostUrl { get; init; }
+
+        [JsonPropertyName("title")]
+        public BlogPostTitle Title { get; init; }
+
+        [JsonPropertyName("jetpack_featured_media_url")]
+        public string ThumbnailImageUrl { get; init; }
+
+        public record BlogPostTitle
+        {
+            [JsonPropertyName("rendered")]
+            public string Rendered { get; init; }
+        }
+    }
+
+    private record ChangelogJson
+    {
+        /// <summary>
+        ///     Release time of this change log.
+        /// </summary>
+        [JsonPropertyName("released")]
+        public DateTimeOffset Released { get; init; }
+
+        [JsonPropertyName("patchnotes")]
+        public string[] PatchNotes { get; init; }
+
+        [JsonPropertyName("version")]
+        public string Version { get; init; }
+    }
+
+    private record UpdateJson
+    {
+        /// <summary>
+        ///     Url pointing to the zip file to download this Nitrox release.
+        /// </summary>
+        [JsonPropertyName("url")]
+        public string DownloadUrl { get; init; }
+
+        [JsonPropertyName("filesize")]
+        public float FileSizeMegaBytes { get; init; }
+
+        [JsonPropertyName("version")]
+        public Version Version { get; init; }
+
+        /// <summary>
+        ///     Hash to verify that the download was received as expected.
+        /// </summary>
+        [JsonPropertyName("md5")]
+        public string Md5Hash { get; init; }
     }
 }

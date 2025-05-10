@@ -4,7 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

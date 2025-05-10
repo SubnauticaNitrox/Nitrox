@@ -11,7 +11,7 @@ using NitroxModel;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking.Session;
 
 namespace NitroxPatcher.Patches.Persistent;
 

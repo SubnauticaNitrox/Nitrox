@@ -1,28 +1,28 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using NitroxModel_Subnautica.DataStructures;
+﻿using NitroxClient.MonoBehaviours;
+using Nitrox.Model.Subnautica.DataStructures;
 using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FMODAssetProcessor : ClientPacketProcessor<FMODAssetPacket>
+public class FMODAssetProcessor : IClientPacketProcessor<FMODAssetPacket>
 {
-    private readonly FMODWhitelist fmodWhitelist;
+    private readonly FmodWhitelist fmodWhitelist;
 
-    public FMODAssetProcessor(FMODWhitelist fmodWhitelist)
+    public FMODAssetProcessor(FmodWhitelist fmodWhitelist)
     {
         this.fmodWhitelist = fmodWhitelist;
     }
 
-    public override void Process(FMODAssetPacket packet)
+    public Task Process(IPacketProcessContext context, FMODAssetPacket packet)
     {
         if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
             Log.ErrorOnce($"[{nameof(FMODAssetProcessor)}] Whitelist has no item for {packet.AssetPath}.");
-            return;
+            return Task.CompletedTask;
         }
 
         FMODEmitterController.PlayEventOneShot(packet.AssetPath, soundData.Radius, packet.Position.ToUnity(), packet.Volume);
+        return Task.CompletedTask;
     }
 }

@@ -3,7 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic

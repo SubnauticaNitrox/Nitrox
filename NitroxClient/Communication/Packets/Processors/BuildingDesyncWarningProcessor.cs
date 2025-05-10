@@ -1,19 +1,18 @@
 using System.Collections.Generic;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Settings;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class BuildingDesyncWarningProcessor : ClientPacketProcessor<BuildingDesyncWarning>
+public class BuildingDesyncWarningProcessor : IClientPacketProcessor<BuildingDesyncWarning>
 {
-    public override void Process(BuildingDesyncWarning packet)
+    public Task Process(IPacketProcessContext context, BuildingDesyncWarning packet)
     {        
         if (!BuildingHandler.Main)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         foreach (KeyValuePair<NitroxId, int> operation in packet.Operations)
@@ -27,5 +26,6 @@ public class BuildingDesyncWarningProcessor : ClientPacketProcessor<BuildingDesy
         {
             Log.InGame(Language.main.Get("Nitrox_BuildingDesyncDetected"));
         }
+        return Task.CompletedTask;
     }
 }

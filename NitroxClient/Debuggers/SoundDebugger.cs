@@ -26,7 +26,7 @@ public class SoundDebugger : BaseDebugger
     private bool displayIsGlobal;
     private bool displayWithRadius;
 
-    public SoundDebugger(FMODWhitelist fmodWhitelist) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SoundDebugger(FmodWhitelist fmodWhitelist) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
         assetList = fmodWhitelist.GetWhitelist();
 

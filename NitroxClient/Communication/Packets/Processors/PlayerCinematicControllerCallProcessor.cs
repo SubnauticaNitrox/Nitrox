@@ -1,15 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<PlayerCinematicControllerCall>
+public class PlayerCinematicControllerCallProcessor : IClientPacketProcessor<PlayerCinematicControllerCall>
 {
     private readonly PlayerManager playerManager;
 
@@ -18,17 +17,17 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
         this.playerManager = playerManager;
     }
 
-    public override void Process(PlayerCinematicControllerCall packet)
+    public Task Process(IPacketProcessContext context, PlayerCinematicControllerCall packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.ControllerID, out GameObject entity))
         {
-            return; // Entity can be not spawned yet bc async.
+            return Task.CompletedTask; // Entity can be not spawned yet bc async.
         }
 
         if (!entity.TryGetComponent(out MultiplayerCinematicReference reference))
         {
             Log.Warn($"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
-            return;
+            return Task.CompletedTask;
         }
 
         Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
@@ -42,5 +41,7 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
         {
             reference.CallCinematicModeEnd(packet.Key, packet.ControllerNameHash, opPlayer.Value);
         }
+
+        return Task.CompletedTask;
     }
 }

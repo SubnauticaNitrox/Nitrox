@@ -1,12 +1,10 @@
 using System.Collections;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
-using UWE;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<PlayerJoinedMultiplayerSession>
+public class PlayerJoinedMultiplayerSessionProcessor : IClientPacketProcessor<PlayerJoinedMultiplayerSession>
 {
     private readonly PlayerManager playerManager;
     private readonly Entities entities;
@@ -17,9 +15,10 @@ public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<Pla
         this.entities = entities;
     }
 
-    public override void Process(PlayerJoinedMultiplayerSession packet)
+    public Task Process(IPacketProcessContext context, PlayerJoinedMultiplayerSession packet)
     {
         CoroutineHost.StartCoroutine(SpawnRemotePlayer(packet));
+        return Task.CompletedTask;
     }
 
     private IEnumerator SpawnRemotePlayer(PlayerJoinedMultiplayerSession packet)

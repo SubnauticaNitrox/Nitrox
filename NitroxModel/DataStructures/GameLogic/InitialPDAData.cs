@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic
     {
         public List<NitroxTechType> KnownTechTypes { get; set; }
         public List<NitroxTechType> AnalyzedTechTypes { get; set; }
-        public List<PDALogEntry> PDALogEntries { get; set; }
+        public List<PdaLogEntry> PDALogEntries { get; set; }
         public List<string> EncyclopediaEntries { get; set; }
         
         // PDA Scanner data
@@ -23,7 +23,7 @@ namespace NitroxModel.DataStructures.GameLogic
             //Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public InitialPDAData(List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<PDALogEntry> pDALogEntries, List<string> encyclopediaEntries, List<NitroxId> scannerFragments, List<PDAEntry> scannerPartial, List<NitroxTechType> scannerComplete)
+        public InitialPDAData(List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<PdaLogEntry> pDALogEntries, List<string> encyclopediaEntries, List<NitroxId> scannerFragments, List<PDAEntry> scannerPartial, List<NitroxTechType> scannerComplete)
         {
             KnownTechTypes = knownTechTypes;
             AnalyzedTechTypes = analyzedTechTypes;

@@ -4,11 +4,12 @@ using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxServer.GameLogic.Entities;
 
-public class EntitySimulation
+[Obsolete("Use new EntitySimulation")]
+internal class EntitySimulation
 {
     private const SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
 

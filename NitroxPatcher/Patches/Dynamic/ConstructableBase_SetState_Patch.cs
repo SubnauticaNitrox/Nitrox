@@ -4,7 +4,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;

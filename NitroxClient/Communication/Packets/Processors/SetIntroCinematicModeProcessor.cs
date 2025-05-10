@@ -1,11 +1,10 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCinematicMode>
+public class SetIntroCinematicModeProcessor : IClientPacketProcessor<SetIntroCinematicMode>
 {
     private readonly PlayerManager playerManager;
     private readonly PlayerCinematics playerCinematics;
@@ -18,7 +17,7 @@ public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCine
         this.localPlayer = localPlayer;
     }
 
-    public override void Process(SetIntroCinematicMode packet)
+    public Task Process(IPacketProcessContext context, SetIntroCinematicMode packet)
     {
         if (localPlayer.PlayerId == packet.PlayerId)
         {
@@ -28,15 +27,17 @@ public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCine
             }
 
             localPlayer.IntroCinematicMode = packet.Mode;
-            return;
+            return Task.CompletedTask;
         }
 
         if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
         {
             remotePlayer.PlayerContext.IntroCinematicMode = packet.Mode;
-            return;
+            return Task.CompletedTask;
         }
 
         Log.Debug($"SetIntroCinematicMode couldn't find Player with id {packet.PlayerId}. This is normal if player has not yet officially joined.");
+
+        return Task.CompletedTask;
     }
 }

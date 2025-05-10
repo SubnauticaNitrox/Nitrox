@@ -1,13 +1,12 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class EscapePodChangedProcessor : ClientPacketProcessor<EscapePodChanged>
+    public class EscapePodChangedProcessor : IClientPacketProcessor<EscapePodChanged>
     {
         private readonly PlayerManager remotePlayerManager;
 
@@ -16,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.remotePlayerManager = remotePlayerManager;
         }
 
-        public override void Process(EscapePodChanged packet)
+        public Task Process(IPacketProcessContext context, EscapePodChanged packet)
         {
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.PlayerId);
 
@@ -32,8 +31,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 remotePlayer.Value.SetEscapePod(escapePod);
             }
+
+            return Task.CompletedTask;
         }
     }
 }
-
-

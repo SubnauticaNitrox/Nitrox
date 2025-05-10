@@ -1,4 +1,5 @@
 using System;
+using NitroxModel.Networking;
 
 namespace NitroxModel.DataStructures
 {
@@ -14,10 +15,10 @@ namespace NitroxModel.DataStructures
         /// </summary>
         public bool ChangesPosition { get; }
         public NitroxId Id { get; }
-        public ushort PlayerId { get; }
+        public PeerId PlayerId { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulatedEntity(NitroxId id, ushort playerId, bool changesPosition, SimulationLockType lockType)
+        public SimulatedEntity(NitroxId id, PeerId playerId, bool changesPosition, SimulationLockType lockType)
         {
             Id = id;
             PlayerId = playerId;

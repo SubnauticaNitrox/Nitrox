@@ -1,5 +1,5 @@
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;

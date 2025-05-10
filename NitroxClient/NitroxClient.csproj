@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net472;net9.0</TargetFrameworks>
+        <TargetFramework>net472</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
         <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
+        <PackageReference Include="DiscordGameSDKWrapper" />
     </ItemGroup>
 
 </Project>

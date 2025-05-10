@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
 
@@ -20,9 +19,7 @@ public class AbsoluteEntityCell
     [DataMember(Order = 3)]
     public int Level { get; }
 
-    private static readonly Lazy<IMap> map = new(NitroxServiceLocator.LocateService<IMap>);
-
-    private NitroxInt3 BatchPosition => BatchId * map.Value.BatchSize - map.Value.BatchDimensionCenter;
+    private NitroxInt3 BatchPosition => BatchId * SubnauticaMap.BatchSize - SubnauticaMap.BatchDimensionCenter;
     public NitroxInt3 Position => BatchPosition + CellId * GetCellSize();
 
     public NitroxInt3 Center
@@ -51,7 +48,7 @@ public class AbsoluteEntityCell
     {
         Level = level;
 
-        NitroxVector3 localPosition = (worldSpace + map.Value.BatchDimensionCenter) / map.Value.BatchSize;
+        NitroxVector3 localPosition = (worldSpace + SubnauticaMap.BatchDimensionCenter) / SubnauticaMap.BatchSize;
         BatchId = NitroxInt3.Floor(localPosition);
 
         NitroxVector3 cell = (localPosition - BatchId) * GetCellsPerBlock();
@@ -124,7 +121,7 @@ public class AbsoluteEntityCell
 
     public NitroxInt3 GetCellSize()
     {
-        return GetCellSize(map.Value.BatchDimensions);
+        return GetCellSize(SubnauticaMap.BatchDimensions);
     }
 
     public NitroxInt3 GetCellSize(NitroxInt3 blocksPerBatch)

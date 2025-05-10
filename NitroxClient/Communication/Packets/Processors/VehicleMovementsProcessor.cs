@@ -1,16 +1,15 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleMovementsProcessor : ClientPacketProcessor<VehicleMovements>
+public class VehicleMovementsProcessor : IClientPacketProcessor<VehicleMovements>
 {
-    public override void Process(VehicleMovements packet)
+    public Task Process(IPacketProcessContext context, VehicleMovements packet)
     {
         if (!MovementBroadcaster.Instance)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         foreach (MovementData movementData in packet.Data)
@@ -20,5 +19,7 @@ public class VehicleMovementsProcessor : ClientPacketProcessor<VehicleMovements>
                 movementReplicator.AddSnapshot(movementData, (float)packet.RealTime);
             }
         }
+
+        return Task.CompletedTask;
     }
 }

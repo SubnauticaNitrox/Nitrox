@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -19,6 +19,6 @@ public sealed partial class PDALog_Add_Patch : NitroxPatch, IDynamicPatch
         {
             return;
         }
-        Resolve<IPacketSender>().Send(new PDALogEntryAdd(key, entry.timestamp));
+        Resolve<IPacketSender>().Send(new PdaLogEntryAdd(key, entry.timestamp));
     }
 }

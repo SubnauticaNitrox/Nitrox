@@ -6,8 +6,8 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -61,7 +61,7 @@ public sealed partial class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             // We want to broadcast the destruction event before the object is destroyed and corresponding scan data is invalidated.
             if (scanTarget.hasUID)
             {
-                PDAScanFinished packet = new(new(scanTarget.uid), techType.ToDto(), entryData.totalFragments, true, true, true);
+                PdaScanFinished packet = new(new(scanTarget.uid), techType.ToDto(), entryData.totalFragments, true, true, true);
                 Resolve<IPacketSender>().Send(packet);
             }
             return;
@@ -78,13 +78,13 @@ public sealed partial class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
                     // Something wrong happened
                     return;
                 }
-                PDAScanFinished packet = new(targetId, techType.ToDto(), entry.unlocked, false, entryData.destroyAfterScan);
+                PdaScanFinished packet = new(targetId, techType.ToDto(), entry.unlocked, false, entryData.destroyAfterScan);
                 Resolve<IPacketSender>().Send(packet);
             }
             // Case in which the scanned entry is fully unlocked
             else if (result == PDAScanner.Result.Researched)
             {
-                PDAScanFinished packet = new(targetId, techType.ToDto(), entryData.totalFragments, true, entryData.destroyAfterScan);
+                PdaScanFinished packet = new(targetId, techType.ToDto(), entryData.totalFragments, true, entryData.destroyAfterScan);
                 Resolve<IPacketSender>().Send(packet);
             }
         }

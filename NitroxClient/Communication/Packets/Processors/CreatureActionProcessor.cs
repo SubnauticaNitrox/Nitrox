@@ -1,10 +1,9 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using NitroxModel.Networking.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class CreatureActionProcessor : ClientPacketProcessor<CreatureActionChanged>
+public class CreatureActionProcessor : IClientPacketProcessor<CreatureActionChanged>
 {
     private readonly AI ai;
 
@@ -13,8 +12,10 @@ public class CreatureActionProcessor : ClientPacketProcessor<CreatureActionChang
         this.ai = ai;
     }
 
-    public override void Process(CreatureActionChanged packet)
+    public Task Process(IPacketProcessContext context, CreatureActionChanged packet)
     {
         ai.CreatureActionChanged(packet.CreatureId, packet.CreatureActionType);
+
+        return Task.CompletedTask;
     }
 }

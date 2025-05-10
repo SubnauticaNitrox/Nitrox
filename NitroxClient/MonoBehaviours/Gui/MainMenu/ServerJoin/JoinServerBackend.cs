@@ -10,8 +10,8 @@ using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Session;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
@@ -124,7 +124,7 @@ public static class JoinServerBackend
 
             if (ip.IsLocalhost())
             {
-                if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
+                if (Process.GetProcessesByName("Nitrox.Server.Subnautica").Length == 0)
                 {
                     Log.Error("No server process was found while address was localhost");
                     msg += $"\n{Language.main.Get("Nitrox_StartServer")}";

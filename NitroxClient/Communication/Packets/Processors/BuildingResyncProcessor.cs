@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -14,13 +13,13 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using NitroxModel.Networking.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
+public class BuildingResyncProcessor : IClientPacketProcessor<BuildingResync>
 {
     private readonly Entities entities;
     private readonly EntityMetadataManager entityMetadataManager;
@@ -31,14 +30,15 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         this.entityMetadataManager = entityMetadataManager;
     }
 
-    public override void Process(BuildingResync packet)
+    public Task Process(IPacketProcessContext context, BuildingResync packet)
     {
         if (!BuildingHandler.Main)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         BuildingHandler.Main.StartCoroutine(ResyncBuildingEntities(packet.BuildEntities, packet.ModuleEntities));
+        return Task.CompletedTask;
     }
 
     public IEnumerator ResyncBuildingEntities(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
