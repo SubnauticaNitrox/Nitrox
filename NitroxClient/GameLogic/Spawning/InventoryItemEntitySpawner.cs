@@ -107,7 +107,6 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
             planter.Subscribe(false);
         }
 
-        using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
