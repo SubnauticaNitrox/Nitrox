@@ -68,18 +68,31 @@ public class MoonpoolManager : MonoBehaviour
 
     private void AssignNitroxEntityToMoonpool(Int3 absoluteCell, NitroxId moonpoolId, TaskResult<Optional<GameObject>> result = null)
     {
+        GameObject moonpoolObject = FindGameObjectForMoonpool(absoluteCell);
+        if (moonpoolObject)
+        {
+            result?.Set(moonpoolObject);
+            NitroxEntity.SetNewId(moonpoolObject, moonpoolId);
+        }
+    }
+
+    public GameObject FindGameObjectForMoonpool(Int3 absoluteCell)
+    {
         Int3 relativeCell = Relative(absoluteCell);
+
         Transform baseCellTransform = @base.GetCellObject(relativeCell);
         if (!baseCellTransform)
         {
-            Log.Warn($"[{nameof(AssignNitroxEntityToMoonpool)}] CellObject not found for RelativeCell: {relativeCell}, AbsoluteCell: {absoluteCell}");
-            return;
+            Log.Warn($"[{nameof(FindGameObjectForMoonpool)}] CellObject not found for RelativeCell: {relativeCell}, AbsoluteCell: {absoluteCell}");
+            return null;
         }
+
         if (baseCellTransform.TryGetComponentInChildren(out VehicleDockingBay vehicleDockingBay, true))
         {
-            result?.Set(vehicleDockingBay.gameObject);
-            NitroxEntity.SetNewId(vehicleDockingBay.gameObject, moonpoolId);
+            return vehicleDockingBay.gameObject;
         }
+
+        return null;
     }
 
     public Optional<GameObject> RegisterMoonpool(Transform constructableTransform, NitroxId moonpoolId)
