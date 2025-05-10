@@ -80,7 +80,16 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 
-        InventoryItem inventoryItem = new(pickupable);
-        equipment.AddItem(entity.Slot, inventoryItem, true);
+        InventoryItem inventoryItem = new(pickupable)
+        {
+            container = equipment
+        };
+        inventoryItem.item.Reparent(equipment.tr);
+
+        equipment.equipment[entity.Slot] = inventoryItem;
+
+        equipment.UpdateCount(pickupable.GetTechType(), true);
+        Equipment.SendEquipmentEvent(pickupable, 0, parentObject, entity.Slot);
+        equipment.NotifyEquip(entity.Slot, inventoryItem);
     }
 }
