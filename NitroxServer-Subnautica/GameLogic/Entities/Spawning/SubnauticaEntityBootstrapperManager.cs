@@ -13,9 +13,10 @@ public class SubnauticaEntityBootstrapperManager : IEntityBootstrapperManager
     private static readonly Dictionary<NitroxTechType, IEntityBootstrapper> entityBootstrappersByTechType = new()
     {
         [TechType.CrashHome.ToDto()] = new CrashHomeBootstrapper(),
+        [TechType.GhostLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
         [TechType.ReaperLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
         [TechType.SeaDragon.ToDto()] = new StayAtLeashPositionBootstrapper(),
-        [TechType.GhostLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
+        [TechType.Stalker.ToDto()] = new StayAtLeashPositionBootstrapper(),
     };
     private static readonly Dictionary<string, IEntityBootstrapper> entityBootstrappersByClassId = new()
     {

@@ -40,7 +40,6 @@ namespace NitroxClient.GameLogic
         private bool spawningEntities;
 
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
-        private readonly List<SimulatedEntity> pendingSimulatedEntities = new();
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
         {
