@@ -1,6 +1,7 @@
 using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 
 namespace NitroxModel_Subnautica.Packets;
@@ -21,5 +22,7 @@ public class GrapplingHookMovement : Packet
         Position = position;
         Velocity = velocity;
         Rotation = rotation;
+        DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
+        UdpChannel = UdpChannelId.MOVEMENTS;
     }
 }

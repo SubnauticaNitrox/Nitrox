@@ -46,6 +46,7 @@ public class Items
         if (!Player.main.TryGetNitroxId(out NitroxId playerId))
         {
             Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
+            return;
         }
 
         PickedUp(gameObject, techType, playerId);

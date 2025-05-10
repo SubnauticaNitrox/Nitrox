@@ -126,10 +126,10 @@ public class ExosuitModuleEvent
         switch (armAction)
         {
             case ExosuitArmAction.START_USE_TOOL:
-                propulsionArm.propulsionCannon.animator.SetBool("use_tool", true);
+                propulsionArm.propulsionCannon.animator.SetBool(useToolAnimation, true);
                 break;
             case ExosuitArmAction.END_USE_TOOL:
-                propulsionArm.propulsionCannon.animator.SetBool("use_tool", false);
+                propulsionArm.propulsionCannon.animator.SetBool(useToolAnimation, false);
                 break;
             default:
                 Log.Error($"Propulsion arm got an arm action it should not get: {armAction}");
@@ -142,10 +142,10 @@ public class ExosuitModuleEvent
         switch (armAction)
         {
             case ExosuitArmAction.START_USE_TOOL:
-                torpedoArm.animator.SetBool("use_tool", true);
+                torpedoArm.animator.SetBool(useToolAnimation, true);
                 break;
             case ExosuitArmAction.END_USE_TOOL:
-                torpedoArm.animator.SetBool("use_tool", false);
+                torpedoArm.animator.SetBool(useToolAnimation, false);
                 break;
             default:
                 Log.Error($"Torpedo arm got an arm action it should not get: {armAction}");

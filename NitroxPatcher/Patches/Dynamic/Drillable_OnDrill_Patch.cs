@@ -23,24 +23,23 @@ public sealed partial class Drillable_OnDrill_Patch : NitroxPatch, IDynamicPatch
         if (__instance.TryGetNitroxId(out NitroxId id))
         {
             Resolve<Entities>().EntityMetadataChanged(__instance, id);
+            return;
         }
-        else
+
+        // For some reason the drillable ion cube deposit in the primary containment facility
+        // is not automatically tagged as an entity. We spawn it here as a workaround.
+
+        AnteChamber antechamber = __instance.GetComponentInParent<AnteChamber>();
+
+        if (antechamber && antechamber.TryGetIdOrWarn(out NitroxId parentId))
         {
-            // For some reason the drillable ion cube deposit in the primary containment facility
-            // is not automatically tagged as an entity. We spawn it here as a workaround.
+            id = NitroxEntity.GenerateNewId(__instance.gameObject);
 
-            AnteChamber antechamber = __instance.GetComponentInParent<AnteChamber>();
+            Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(__instance.gameObject);
+            Validate.IsPresent(metadata);
 
-            if (antechamber != null && antechamber.TryGetIdOrWarn(out NitroxId parentId))
-            {
-                id = NitroxEntity.GenerateNewId(__instance.gameObject);
-
-                Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(__instance.gameObject);
-                Validate.IsPresent(metadata);
-
-                PathBasedChildEntity entity = new(__instance.name, id, NitroxTechType.None, metadata.Value, parentId, []);
-                Resolve<IPacketSender>().Send(new EntitySpawnedByClient(entity));
-            }
+            PathBasedChildEntity entity = new(__instance.name, id, NitroxTechType.None, metadata.Value, parentId, []);
+            Resolve<IPacketSender>().Send(new EntitySpawnedByClient(entity));
         }
     }
 }

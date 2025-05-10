@@ -1,4 +1,5 @@
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -72,7 +73,9 @@ public class WatchedEntry
             {
                 throttleApplied = input.y > 0f;
 
-                return new ExosuitMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), exosuit.aimTargetLeft.transform.localPosition.ToDto(), exosuit.aimTargetRight.transform.localPosition.ToDto(), steeringWheelYaw, steeringWheelPitch, throttleApplied, exosuit.IKenabled);
+                NitroxVector3 aimTargetLeft = exosuit.aimTargetLeft.transform.localPosition.ToDto();
+                NitroxVector3 aimTargetRight = exosuit.aimTargetRight.transform.localPosition.ToDto();
+                return new ExosuitMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), aimTargetLeft, aimTargetRight, steeringWheelYaw, steeringWheelPitch, throttleApplied, exosuit.IKenabled);
             }
 
             return new DrivenVehicleMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), steeringWheelYaw, steeringWheelPitch, throttleApplied);

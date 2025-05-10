@@ -12,18 +12,7 @@ public class GrapplingHookMovementProcessor : ClientPacketProcessor<GrapplingHoo
     public override void Process(GrapplingHookMovement packet)
     {
         Exosuit exosuit = NitroxEntity.RequireObjectFrom(packet.ExosuitId).RequireComponent<Exosuit>();
-
-        IExosuitArm arm = null;
-
-        switch (packet.ArmSide)
-        {
-            case Exosuit.Arm.Left:
-                arm = exosuit.leftArm;
-                break;
-            case Exosuit.Arm.Right:
-                arm = exosuit.rightArm;
-                break;
-        }
+        IExosuitArm arm = packet.ArmSide == Exosuit.Arm.Left ? exosuit.leftArm : exosuit.rightArm;
 
         if (arm is not ExosuitGrapplingArm grapplingArm)
         {

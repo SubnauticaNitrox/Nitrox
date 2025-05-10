@@ -105,7 +105,7 @@ public class ItemContainers
             return;
         }
 
-        EnergyMixin[] components = parent.gameObject.GetAllComponentsInChildren<EnergyMixin>();
+        EnergyMixin[] components = parent.gameObject.GetComponentsInChildren<EnergyMixin>(true);
         int componentIndex = 0;
         for (int i = 0; i < components.Length; i++)
         {

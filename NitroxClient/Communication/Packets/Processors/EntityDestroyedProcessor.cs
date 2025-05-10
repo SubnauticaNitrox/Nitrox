@@ -106,9 +106,4 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         pickupable.OnDestroy();
         Object.Destroy(pickupable.gameObject);
     }
-
-    private void DefaultDestroyAction(GameObject gameObject)
-    {
-        Object.Destroy(gameObject);
-    }
 }
