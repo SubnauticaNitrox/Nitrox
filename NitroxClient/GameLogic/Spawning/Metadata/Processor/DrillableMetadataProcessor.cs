@@ -28,6 +28,9 @@ public class DrillableMetadataProcessor : EntityMetadataProcessor<DrillableMetad
 
         Validate.IsTrue(drillable.health.Length == metadata.ChunkHealth.Length);
 
+        // Updates health of each node and spawns VFX as if each node had been drilled
+        // by the packet's given amounts in the order they are stored. See Drillable.OnDrill
+
         float totalHealth = drillable.health.Sum();
 
         for (int i = 0; i < drillable.health.Length; i++)

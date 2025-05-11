@@ -11,7 +11,7 @@ public sealed partial class ExosuitTorpedoArm_TryShoot_Patch : NitroxPatch, IDyn
 
     public static void Postfix(ExosuitTorpedoArm __instance)
     {
-        ExosuitArmAction action = __instance.animator.GetBool("use_tool") ? ExosuitArmAction.START_USE_TOOL : ExosuitArmAction.END_USE_TOOL;
+        ExosuitArmAction action = __instance.animator.GetBool(ExosuitModuleEvent.useToolAnimation) ? ExosuitArmAction.START_USE_TOOL : ExosuitArmAction.END_USE_TOOL;
         Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule, __instance.exosuit, __instance, action);
     }
 }

@@ -7,8 +7,8 @@ namespace NitroxClient.GameLogic;
 
 public class ExosuitModuleEvent
 {
-    private static readonly int useToolAnimation = Animator.StringToHash("use_tool");
-    private static readonly int bashAnimation = Animator.StringToHash("bash");
+    public static readonly int useToolAnimation = Animator.StringToHash("use_tool");
+    public static readonly int bashAnimation = Animator.StringToHash("bash");
 
     private readonly IPacketSender packetSender;
     private readonly SimulationOwnership simulationOwnership;
