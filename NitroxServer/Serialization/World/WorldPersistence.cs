@@ -136,7 +136,7 @@ public class WorldPersistence
 #if DEBUG
             seed = "TCCBIBZXAB";
 #else
-                seed = StringHelper.GenerateRandomString(10);
+            seed = StringHelper.GenerateRandomString(10);
 #endif
         }
         // Initialized only once, just like UnityEngine.Random
