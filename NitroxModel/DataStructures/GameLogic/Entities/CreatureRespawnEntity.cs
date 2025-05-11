@@ -17,7 +17,7 @@ public class CreatureRespawnEntity : WorldEntity
     public NitroxTechType RespawnTechType { get; set; }
 
     [DataMember(Order = 3)]
-    public List<string> AddComponents { get; set; }
+    public List<string> AddComponents { get; set; } = [];
 
     [IgnoreConstructor]
     protected CreatureRespawnEntity()

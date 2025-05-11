@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "NitroxServer-Subnautica": {
+      "commandName": "Project"
+    },
+    "Launch test save": {
+      "commandName": "Project",
+      "commandLineArgs": "--save test"
+    }
+  }
+}

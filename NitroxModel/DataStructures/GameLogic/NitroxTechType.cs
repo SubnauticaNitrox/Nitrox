@@ -24,7 +24,6 @@ public class NitroxTechType : IEquatable<NitroxTechType>
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-
     public NitroxTechType(string name)
     {
         Name = name;

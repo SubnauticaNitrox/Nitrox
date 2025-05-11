@@ -10,6 +10,8 @@ namespace NitroxServer.Serialization;
 
 public class ServerProtoBufSerializer : IServerSerializer
 {
+    public const string FILE_ENDING = ".nitrox";
+
     protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
     public ServerProtoBufSerializer(params string[] assemblies)
@@ -20,7 +22,7 @@ public class ServerProtoBufSerializer : IServerSerializer
         }
     }
 
-    public string FileEnding => ".nitrox";
+    public string FileEnding => FILE_ENDING;
 
     public void Serialize(Stream stream, object o)
     {

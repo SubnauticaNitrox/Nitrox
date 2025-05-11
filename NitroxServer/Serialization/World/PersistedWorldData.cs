@@ -9,7 +9,7 @@ namespace NitroxServer.Serialization.World
     public class PersistedWorldData
     {
         [DataMember(Order = 1)]
-        public WorldData WorldData { get; set; } = new WorldData();
+        public WorldData WorldData { get; set; }
 
         [DataMember(Order = 2)]
         public PlayerData PlayerData { get; set; }
@@ -24,15 +24,15 @@ namespace NitroxServer.Serialization.World
         {
             return new PersistedWorldData
             {
-                WorldData =
+                WorldData = new()
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
-                    Seed = world.Seed
+                    Seed = world.Seed,
                 },
                 PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
                 GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetPersistentGlobalRootEntities()),
-                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(true))
+                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(exceptGlobalRoot: true))
             };
         }
 

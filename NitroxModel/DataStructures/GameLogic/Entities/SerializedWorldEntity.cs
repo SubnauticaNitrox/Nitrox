@@ -23,7 +23,7 @@ public class SerializedWorldEntity : WorldEntity
     public override AbsoluteEntityCell AbsoluteEntityCell => new(BatchId, CellId, Level);
 
     [DataMember(Order = 1)]
-    public List<SerializedComponent> Components { get; set; } = new();
+    public List<SerializedComponent> Components { get; set; } = [];
 
     [DataMember(Order = 2)]
     public int Layer { get; set; }

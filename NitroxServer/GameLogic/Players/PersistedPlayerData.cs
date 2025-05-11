@@ -17,13 +17,13 @@ public class PersistedPlayerData
     public string Name { get; set; }
 
     [DataMember(Order = 2)]
-    public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
+    public List<NitroxTechType> UsedItems { get; set; } = [];
 
     [DataMember(Order = 3)]
-    public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; } = Array.Empty<Optional<NitroxId>>();
+    public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; } = [];
 
     [DataMember(Order = 4)]
-    public Dictionary<string, NitroxId> EquippedItems { get; set; } = new Dictionary<string, NitroxId>();
+    public Dictionary<string, NitroxId> EquippedItems { get; set; } = [];
 
     [DataMember(Order = 5)]
     public ushort Id { get; set; }
@@ -56,7 +56,7 @@ public class PersistedPlayerData
     /// Those goals are unlocked individually (e.g. opening PDA, eating, picking up a fire extinguisher for the first time)
     /// </summary>
     [DataMember(Order = 15)]
-    public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = new Dictionary<string, float>();
+    public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = [];
 
     [DataMember(Order = 16)]
     public SubnauticaPlayerPreferences PlayerPreferences { get; set; }

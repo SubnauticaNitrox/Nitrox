@@ -22,7 +22,7 @@ public class RocketMetadata : EntityMetadata
     public float ElevatorPosition { get; set; }
 
     [DataMember(Order = 5)]
-    public List<int> PreflightChecks { get; set; } = new();
+    public List<int> PreflightChecks { get; set; } = [];
 
     [IgnoreConstructor]
     protected RocketMetadata()

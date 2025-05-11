@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -15,7 +16,7 @@ public class BatchEntitySpawner : IEntitySpawner
 {
     private readonly BatchCellsParser batchCellsParser;
 
-    private readonly HashSet<NitroxInt3> emptyBatches = new();
+    private readonly HashSet<NitroxInt3> emptyBatches = [];
     private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId;
     private readonly RandomSpawnSpoofer randomSpawnSpoofer;
     private readonly IUwePrefabFactory prefabFactory;
@@ -26,8 +27,8 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private readonly IUweWorldEntityFactory worldEntityFactory;
 
-    private readonly object parsedBatchesLock = new object();
-    private readonly object emptyBatchesLock = new object();
+    private readonly Lock parsedBatchesLock = new();
+    private readonly Lock emptyBatchesLock = new();
     private HashSet<NitroxInt3> parsedBatches;
 
     public List<NitroxInt3> SerializableParsedBatches
@@ -39,31 +40,41 @@ public class BatchEntitySpawner : IEntitySpawner
 
             lock (parsedBatchesLock)
             {
-                parsed = new List<NitroxInt3>(parsedBatches);
+                parsed = [.. parsedBatches];
             }
 
             lock (emptyBatchesLock)
             {
-                empty = new List<NitroxInt3>(emptyBatches);
+                empty = [.. emptyBatches];
             }
 
-            return parsed.Except(empty).ToList();
+            return [.. parsed.Except(empty)];
         }
         set
         {
             lock (parsedBatchesLock)
             {
-                parsedBatches = new HashSet<NitroxInt3>(value);
+                parsedBatches = [.. value];
             }
         }
     }
 
     private static readonly NitroxQuaternion prefabZUpRotation = NitroxQuaternion.FromEuler(new(-90f, 0f, 0f));
 
-    public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, IUweWorldEntityFactory worldEntityFactory, IUwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
-                              IEntityBootstrapperManager entityBootstrapperManager, Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId, PDAStateData pdaStateData, RandomSpawnSpoofer randomSpawnSpoofer, string seed)
+    public BatchEntitySpawner(
+        EntitySpawnPointFactory entitySpawnPointFactory,
+        IUweWorldEntityFactory worldEntityFactory,
+        IUwePrefabFactory prefabFactory,
+        List<NitroxInt3> loadedPreviousParsed,
+        ServerProtoBufSerializer serializer,
+        IEntityBootstrapperManager entityBootstrapperManager,
+        Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId,
+        PDAStateData pdaStateData,
+        RandomSpawnSpoofer randomSpawnSpoofer,
+        string seed
+    )
     {
-        parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
+        parsedBatches = [.. loadedPreviousParsed];
         this.worldEntityFactory = worldEntityFactory;
         this.prefabFactory = prefabFactory;
         this.entityBootstrapperManager = entityBootstrapperManager;
@@ -88,13 +99,13 @@ public class BatchEntitySpawner : IEntitySpawner
         {
             if (parsedBatches.Contains(batchId))
             {
-                return new List<Entity>();
+                return [];
             }
 
             parsedBatches.Add(batchId);
         }
 
-        DeterministicGenerator deterministicBatchGenerator = new DeterministicGenerator(seed, batchId);
+        DeterministicGenerator deterministicBatchGenerator = new(seed, batchId);
         List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
         List<Entity> entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
@@ -193,7 +204,7 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private List<UwePrefab> FilterAllowedPrefabs(List<UwePrefab> prefabs, EntitySpawnPoint entitySpawnPoint, out float fragmentProbability, out float completeFragmentProbability)
     {
-        List<UwePrefab> allowedPrefabs = new();
+        List<UwePrefab> allowedPrefabs = [];
 
         fragmentProbability = 0;
         completeFragmentProbability = 0;
@@ -332,7 +343,7 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private List<Entity> SpawnEntities(List<EntitySpawnPoint> entitySpawnPoints, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
     {
-        List<Entity> entities = new();
+        List<Entity> entities = [];
         foreach (EntitySpawnPoint esp in entitySpawnPoints)
         {
             if (esp is SerializedEntitySpawnPoint serializedEsp)
@@ -434,7 +445,7 @@ public class BatchEntitySpawner : IEntitySpawner
         {
             return null;
         }
-        List<Entity> entities = new();
+        List<Entity> entities = [];
 
         EntitySpawnPoint entitySpawnPoint = new(cell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
         entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
