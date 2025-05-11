@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class MeleeAttack_CanDealDamageTo_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((MeleeAttack t) => t.CanDealDamageTo(default));
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((MeleeAttack t) => t.CanDealDamageTo(default));
 
     /*
      * REPLACE:
