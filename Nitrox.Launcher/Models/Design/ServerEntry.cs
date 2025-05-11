@@ -117,12 +117,12 @@ public partial class ServerEntry : ObservableObject
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
         string fileEnding = config.SerializerMode switch
         {
-            ServerSerializerMode.JSON => "json",
-            ServerSerializerMode.PROTOBUF => "nitrox",
+            ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
+            ServerSerializerMode.PROTOBUF => ServerProtoBufSerializer.FILE_ENDING,
             _ => throw new NotImplementedException()
         };
 
-        File.WriteAllText(Path.Combine(saveDir, $"Version.{fileEnding}"), null);
+        File.WriteAllText(Path.Combine(saveDir, $"Version{fileEnding}"), null);
         using (config.Update(saveDir))
         {
             config.GameMode = saveGameMode;
