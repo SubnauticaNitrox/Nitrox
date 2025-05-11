@@ -87,6 +87,7 @@
     </Target>
 
     <ItemGroup>
+        <Content Include="..\Nitrox.Assets.Subnautica\*.dll" LinkBase="lib\net472" CopyToOutputDirectory="PreserveNewest" />
         <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
         <Content Include="..\Nitrox.Assets.Subnautica\LanguageFiles\**" LinkBase="Resources\LanguageFiles" CopyToOutputDirectory="PreserveNewest" />
         <Content Include="..\Nitrox.Assets.Subnautica\AssetBundles\**" LinkBase="Resources\AssetBundles" CopyToOutputDirectory="PreserveNewest" />
