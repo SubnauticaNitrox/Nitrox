@@ -114,11 +114,11 @@ public class Server
             {
                 for (int i = 1; i < saves.Count; i++)
                 {
-                    if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, $"PlayerData.{ServerProtoBufSerializer.FILE_ENDING}")) > File.GetLastWriteTime(lastSaveAccessed))
+                    if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, $"WorldData{ServerProtoBufSerializer.FILE_ENDING}")) > File.GetLastWriteTime(lastSaveAccessed))
                     {
                         lastSaveAccessed = saves[i].SaveDir;
                     }
-                    else if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, $"PlayerData.{ServerJsonSerializer.FILE_ENDING}")) > File.GetLastWriteTime(lastSaveAccessed))
+                    else if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, $"WorldData{ServerJsonSerializer.FILE_ENDING}")) > File.GetLastWriteTime(lastSaveAccessed))
                     {
                         lastSaveAccessed = saves[i].SaveDir;
                     }
