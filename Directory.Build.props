@@ -10,7 +10,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Prefer32Bit>false</Prefer32Bit>
         <DebugType>embedded</DebugType>
-        <Nullable>disable</Nullable>
+        <Nullable>annotations</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>

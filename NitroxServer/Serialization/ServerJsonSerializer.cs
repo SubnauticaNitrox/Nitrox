@@ -8,6 +8,8 @@ namespace NitroxServer.Serialization;
 
 public class ServerJsonSerializer : IServerSerializer
 {
+    public const string FILE_ENDING = ".json";
+
     private readonly JsonSerializer serializer;
 
     public ServerJsonSerializer()
@@ -28,7 +30,7 @@ public class ServerJsonSerializer : IServerSerializer
         serializer.Converters.Add(new StringEnumConverter());
     }
 
-    public string FileEnding => ".json";
+    public string FileEnding => FILE_ENDING;
 
     public void Serialize(Stream stream, object o)
     {

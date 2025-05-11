@@ -38,7 +38,16 @@ public class WorldPersistence
     private readonly RandomSpawnSpoofer randomSpawnSpoofer;
     private readonly NtpSyncer ntpSyncer;
 
-    public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades, RandomSpawnSpoofer randomSpawnSpoofer, NtpSyncer ntpSyncer)
+    public WorldPersistence(
+        ServerProtoBufSerializer protoBufSerializer,
+        ServerJsonSerializer jsonSerializer,
+        SubnauticaServerConfig config,
+        RandomStartGenerator randomStart,
+        IWorldModifier worldModifier,
+        SaveDataUpgrade[] upgrades,
+        RandomSpawnSpoofer randomSpawnSpoofer,
+        NtpSyncer ntpSyncer
+    )
     {
         this.protoBufSerializer = protoBufSerializer;
         this.jsonSerializer = jsonSerializer;
