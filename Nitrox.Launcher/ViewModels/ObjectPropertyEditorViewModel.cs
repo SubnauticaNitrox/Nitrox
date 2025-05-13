@@ -35,6 +35,8 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     /// </summary>
     public Func<PropertyInfo, bool> FieldAcceptFilter { get; set; } = _ => true;
 
+    public bool DisableButtons { get; set; }
+
     public ObjectPropertyEditorViewModel() : this(null)
     {
     }

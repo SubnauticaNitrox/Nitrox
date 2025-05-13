@@ -319,6 +319,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             model.Title = $"Server '{ServerName}' config editor";
             model.FieldAcceptFilter = p => !advancedSettingsDeniedFields.Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
             model.OwnerObject = Config.Load(SaveFolderDirectory);
+            model.DisableButtons = Server.IsOnline;
         });
         if (result && result.OwnerObject is Config config)
         {
