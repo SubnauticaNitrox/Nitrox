@@ -40,45 +40,45 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private readonly ServerService serverService;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowCommands;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowLanDiscovery;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAutoPortForward;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Range(10, 86400, ErrorMessage = "Value must be between 10s and 24 hours (86400s).")]
     private int serverAutoSaveInterval;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private Perms serverDefaultPlayerPerm;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private NitroxGameMode serverGameMode;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private Bitmap serverIcon;
 
     private string serverIconDir;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [Range(1, 1000)]
     [NotifyDataErrorInfo]
     private int serverMaxPlayers;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
@@ -87,21 +87,21 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private string serverName;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private string serverPassword;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private int serverPlayers;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Range(ushort.MinValue, ushort.MaxValue)]
     private int serverPort;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
     private string serverSeed;
@@ -252,6 +252,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         BackCommand.NotifyCanExecuteChanged();
         StartServerCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
+        RestoreBackupCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
     }
 
@@ -337,7 +338,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             UseShellExecute = true
         })?.Dispose();
 
-    [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
+    [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()
     {
         BackupRestoreViewModel result = await dialogService.ShowAsync<BackupRestoreViewModel>(model =>
@@ -368,13 +369,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
     }
 
-    [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
+    private bool CanRestoreBackup() => !ServerIsOnline && !HasChanges();
+
+    [RelayCommand(CanExecute = nameof(CanDeleteServer))]
     private async Task DeleteServerAsync()
     {
         await CoreDeleteServerAsync();
     }
 
-    [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
+    [RelayCommand(CanExecute = nameof(CanDeleteServer))]
     private async Task ForceDeleteServerAsync()
     {
         await CoreDeleteServerAsync(true);
@@ -407,7 +410,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
     }
 
-    private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
+    private bool CanDeleteServer() => !ServerIsOnline;
 
     partial void OnServerEmbeddedChanged(bool value)
     {
