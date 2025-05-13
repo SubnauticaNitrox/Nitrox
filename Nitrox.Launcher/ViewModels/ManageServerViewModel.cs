@@ -349,7 +349,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
         if (result)
         {
-            string backupFile = result.SelectedBackup.BackupFileName;
+            string backupFile = result.SelectedBackup.BackupFilePath;
             try
             {
                 if (!File.Exists(backupFile))
