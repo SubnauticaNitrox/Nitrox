@@ -107,7 +107,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private string serverSeed;
     
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private bool serverEmbedded = true;
 
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
@@ -177,19 +176,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
-        ServerEmbedded = Server.IsEmbedded;
-        
-        // Force embedded on MacOS
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            Server.IsEmbedded = ServerEmbedded = true;
-            
-            Config config = Config.Load(SaveFolderDirectory);
-            using (config.Update(SaveFolderDirectory))
-            {
-                config.IsEmbedded = Server.IsEmbedded;
-            }
-        }
+        ServerEmbedded = Server.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
     }
 
     private bool HasChanges() => ServerName != Server.Name ||
@@ -204,8 +191,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerPort != Server.Port ||
                                  ServerAutoPortForward != Server.AutoPortForward ||
                                  ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
-                                 ServerAllowCommands != Server.AllowCommands ||
-                                 ServerEmbedded != Server.IsEmbedded;
+                                 ServerAllowCommands != Server.AllowCommands;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
@@ -245,7 +231,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
-        Server.IsEmbedded = ServerEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS;
 
         Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))
@@ -260,7 +245,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             config.AutoPortForward = Server.AutoPortForward;
             config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
             config.DisableConsole = !Server.AllowCommands;
-            config.IsEmbedded = Server.IsEmbedded;
         }
 
         Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
@@ -289,7 +273,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
-        ServerEmbedded = Server.IsEmbedded;
     }
 
     private bool CanUndo() => !ServerIsOnline && HasChanges();
@@ -424,4 +407,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
+
+    partial void OnServerEmbeddedChanged(bool value)
+    {
+        Server.IsEmbedded = value || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
+
+        Config config = Config.Load(SaveFolderDirectory);
+        using (config.Update(SaveFolderDirectory))
+        {
+            config.IsEmbedded = value;
+        }
+    }
 }
