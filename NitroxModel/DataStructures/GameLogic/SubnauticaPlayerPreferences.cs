@@ -9,13 +9,13 @@ namespace NitroxModel.DataStructures.GameLogic;
 public class SubnauticaPlayerPreferences
 {
     [DataMember(Order = 1)]
-    public Dictionary<string, PingInstancePreference> PingPreferences { get; set; } = new();
+    public Dictionary<string, PingInstancePreference> PingPreferences { get; set; } = [];
 
     /// <remarks>
     /// The int type refers to a TechType.
     /// </remarks>
     [DataMember(Order = 2)]
-    public List<int> PinnedTechTypes { get; set; } = new();
+    public List<int> PinnedTechTypes { get; set; } = [];
 
     [IgnoreConstructor]
     protected SubnauticaPlayerPreferences()

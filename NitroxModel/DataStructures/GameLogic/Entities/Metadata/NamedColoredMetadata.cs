@@ -15,7 +15,7 @@ public abstract class NamedColoredMetadata : EntityMetadata
     public string Name { get; init; }
 
     [DataMember(Order = 2)]
-    public NitroxVector3[] Colors { get; init; }
+    public NitroxVector3[] Colors { get; init; } = [];
 
     [IgnoreConstructor]
     protected NamedColoredMetadata()

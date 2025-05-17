@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
@@ -10,6 +10,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     {
         [DataMember(Order = 1)]
         public bool DoorLocked { get; }
+
         [DataMember(Order = 2)]
         public bool DoorOpen { get; }
 

@@ -91,11 +91,12 @@ public class Server
     // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
     public static SubnauticaServerConfig CreateOrLoadConfig()
     {
-        string saveDir = null;
+        string? saveDir = null;
         if (GetSaveName(Environment.GetCommandLineArgs()) is { } saveName)
         {
             saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName);
         }
+
         if (Directory.Exists(saveDir))
         {
             return SubnauticaServerConfig.Load(saveDir);
@@ -103,20 +104,27 @@ public class Server
 
         // Check if there are any save files
         List<ServerListing> saves = GetSaves();
-        if (saves.Any())
+
+        if (saves.Count > 0)
         {
             // Get last save file used
             string lastSaveAccessed = saves[0].SaveDir;
+
             if (saves.Count > 1)
             {
                 for (int i = 1; i < saves.Count; i++)
                 {
-                    if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
+                    if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, $"WorldData{ServerProtoBufSerializer.FILE_ENDING}")) > File.GetLastWriteTime(lastSaveAccessed))
+                    {
+                        lastSaveAccessed = saves[i].SaveDir;
+                    }
+                    else if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, $"WorldData{ServerJsonSerializer.FILE_ENDING}")) > File.GetLastWriteTime(lastSaveAccessed))
                     {
                         lastSaveAccessed = saves[i].SaveDir;
                     }
                 }
             }
+
             saveDir = lastSaveAccessed;
         }
         else
@@ -391,34 +399,48 @@ internal class ServerListing
     public Version SaveVersion { get; set; }
     public DateTime LastAccessedTime { get; set; }
 
-    internal static ServerListing Validate(string saveDir)
+    internal static ServerListing? Validate(string saveDir)
     {
         ServerListing serverListing = new();
-        if (!File.Exists(Path.Combine(saveDir, "server.cfg")) || !File.Exists(Path.Combine(saveDir, "Version.json")))
+        if (!File.Exists(Path.Combine(saveDir, "server.cfg")))
         {
             return null;
         }
 
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
-        string fileEnding = "json";
-        if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
-        { fileEnding = "nitrox"; }
+        string fileEnding = config.SerializerMode switch
+        {
+            ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
+            ServerSerializerMode.PROTOBUF => ServerProtoBufSerializer.FILE_ENDING,
+            _ => throw new NotImplementedException()
+        };
+
+        string saveFileVersion = Path.Combine(saveDir, $"Version{fileEnding}");
+        if (!File.Exists(saveFileVersion))
+        {
+            return null;
+        }
 
         Version version;
-        using (FileStream stream = new(Path.Combine(saveDir, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
+        using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+            version = config.SerializerMode switch
+            {
+                ServerSerializerMode.JSON => new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                ServerSerializerMode.PROTOBUF => new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                _ => throw new NotImplementedException()
+            };
         }
 
         serverListing.SaveDir = saveDir;
         serverListing.SaveVersion = version;
-        serverListing.LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}"))
+        serverListing.LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                                    ?
                                                                    // This file is affected by server saving
-                                                                   Path.Combine(saveDir, $"WorldData.{fileEnding}")
+                                                                   Path.Combine(saveDir, $"PlayerData{fileEnding}")
                                                                    :
                                                                    // If the above file doesn't exist (server was never ran), use the Version file instead
-                                                                   Path.Combine(saveDir, $"Version.{fileEnding}"));
+                                                                   Path.Combine(saveDir, $"Version{fileEnding}"));
 
         return serverListing;
     }
