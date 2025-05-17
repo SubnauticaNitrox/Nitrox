@@ -107,7 +107,8 @@
                 Grid.Column="0"
                 Text="{Binding ServerCommand}"
                 Watermark="A server command here"
-                x:Name="ServerCommandTextBox">
+                x:Name="ServerCommandTextBox"
+                IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                 <Interaction.Behaviors>
                     <behaviors:FocusOnViewShowBehavior />
                 </Interaction.Behaviors>
@@ -129,7 +130,8 @@
                     CommandParameter="{Binding #ServerCommandTextBox}"
                     Cursor="Hand"
                     HotKey="Enter"
-                    ToolTip.Tip="Send command">
+                    ToolTip.Tip="Send command"
+                    IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                     <Svg
                         Classes="theme"
                         Height="20"

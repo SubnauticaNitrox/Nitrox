@@ -143,21 +143,10 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public async Task StartServerAsync()
-    {
-        await serverService.StartServerAsync(Server);
-    }
+    public async Task StartServerAsync() => await serverService.StartServerAsync(Server);
 
     [RelayCommand]
-    public async Task<bool> StopServerAsync()
-    {
-        if (!await Server.StopAsync())
-        {
-            return false;
-        }
-
-        return true;
-    }
+    public async Task StopServerAsync() => await Server.StopAsync();
 
     public void LoadFrom(ServerEntry serverEntry)
     {

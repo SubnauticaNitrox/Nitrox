@@ -86,6 +86,9 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
 
+    [ObservableProperty]
+    private bool isServerClosing = false;
+
     internal ServerProcess Process { get; private set; }
 
     public static ServerEntry FromDirectory(string saveDir)
@@ -195,20 +198,18 @@ public partial class ServerEntry : ObservableObject
     }
 
     [RelayCommand]
-    public async Task<bool> StopAsync()
+    public async Task StopAsync()
     {
-        if (Process is not { IsRunning: true })
+        IsServerClosing = true;
+        if (Process is { IsRunning: true } && !await Process.CloseAsync())
         {
-            IsOnline = false;
-            return true;
+            // Force shutdown if server doesn't respond to close command.
+            Log.Warn($"Server '{Name}' didn't respond to close command. Forcing shutdown.");
+            Process.Dispose();
         }
-        if (await Process.CloseAsync())
-        {
-            IsOnline = false;
-            return true;
-        }
-
-        return false;
+        
+        IsOnline = false;
+        IsServerClosing = false;
     }
 
     [RelayCommand]
@@ -320,16 +321,16 @@ public partial class ServerEntry : ObservableObject
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded) => new(saveDir, onExited, isEmbedded);
 
         /// <summary>
-        ///     Tries to close the server gracefully with a timeout of 30 seconds. If it fails, returns false.
+        ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.
         /// </summary>
         public async Task<bool> CloseAsync()
         {
-            using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(30));
+            using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(7));
             try
             {
                 do
                 {
-                    if (!await SendCommandAsync("stop"))
+                    if (!await SendCommandAsync("stop", ctsCloseTimeout.Token))
                     {
                         await Task.Delay(100, ctsCloseTimeout.Token);
                     }
@@ -348,7 +349,7 @@ public partial class ServerEntry : ObservableObject
             return true;
         }
 
-        public async Task<bool> SendCommandAsync(string command)
+        public async Task<bool> SendCommandAsync(string command, CancellationToken cancellationToken = default)
         {
             if (!IsRunning || string.IsNullOrWhiteSpace(command))
             {
@@ -360,12 +361,16 @@ public partial class ServerEntry : ObservableObject
                 commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous);
                 if (!commandStream.IsConnected)
                 {
-                    await commandStream.ConnectAsync(5000);
+                    await commandStream.ConnectAsync(1000, cancellationToken);
                 }
                 byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-                await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length));
-                await commandStream.WriteAsync(commandBytes);
+                await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length), cancellationToken);
+                await commandStream.WriteAsync(commandBytes, cancellationToken);
                 return true;
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
             }
             catch (TimeoutException)
             {
