@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 public class EscapePodWorldEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public List<ushort> Players { get; set; }
+    public List<ushort> Players { get; set; } = [];
 
     [IgnoreConstructor]
     protected EscapePodWorldEntity()
