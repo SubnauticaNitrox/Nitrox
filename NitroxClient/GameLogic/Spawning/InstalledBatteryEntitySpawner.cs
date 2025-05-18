@@ -1,10 +1,10 @@
 using System.Collections;
+using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -55,7 +55,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
 
     protected override bool SpawnsOwnChildren(InstalledBatteryEntity entity) => false;
 
-    private bool CanSpawn(Entity entity, out EnergyMixin energyMixin, out string errorLog)
+    private bool CanSpawn(InstalledBatteryEntity entity, out EnergyMixin energyMixin, out string errorLog)
     {
         if (!NitroxEntity.TryGetObjectFrom(entity.ParentId, out GameObject parentObject))
         {
@@ -64,7 +64,8 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
             return false;
         }
 
-        energyMixin = parentObject.GetComponent<EnergyMixin>();
+        energyMixin = parentObject.GetComponentsInChildren<EnergyMixin>(true)
+                                  .ElementAt(entity.ComponentIndex);
 
         if (!energyMixin)
         {
