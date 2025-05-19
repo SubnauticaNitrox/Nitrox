@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -53,7 +56,8 @@ public partial class MainWindowViewModel : ViewModelBase
         UpdatesViewModel updatesViewModel,
         OptionsViewModel optionsViewModel,
         IDialogService dialogService,
-        ServerService serverService
+        ServerService serverService,
+        IKeyValueStore keyValueStore
     )
     {
         this.launchGameViewModel = launchGameViewModel;
@@ -82,6 +86,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 vm.Notifications.Remove(message.Item);
             }
         });
+
+        bool lightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+        Dispatcher.UIThread.Invoke(() => Application.Current.RequestedThemeVariant = lightModeEnabled ? ThemeVariant.Light : ThemeVariant.Dark);
 
         if (!Design.IsDesignMode)
         {

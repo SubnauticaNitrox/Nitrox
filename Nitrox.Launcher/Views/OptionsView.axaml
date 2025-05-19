@@ -178,6 +178,53 @@
                     </Grid>
                 </Border>
             </StackPanel>
+            
+            <!--  Launcher Settings  -->
+            <StackPanel Spacing="12">
+                <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="Launcher Settings" />
+                <TextBlock
+                    FontSize="12"
+                    HorizontalAlignment="Left"
+                    Text="Configure the launcher with these settings" />
+                
+                <WrapPanel Margin="-5">
+                    <WrapPanel.Styles>
+                        <Style Selector="WrapPanel > Border">
+                            <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+                            <Setter Property="CornerRadius" Value="12" />
+                            <Setter Property="Margin" Value="5" />
+                            <Setter Property="Padding" Value="22,15" />
+                            <Style Selector="^ > StackPanel">
+                                <Setter Property="Spacing" Value="10" />
+                                <Setter Property="Orientation" Value="Horizontal" />
+                                <Style Selector="^ > TextBlock">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </Style>
+                        </Style>
+                    </WrapPanel.Styles>
+                    
+                    <Border>
+                        <StackPanel>
+                            <TextBlock Text="Enable light mode" />
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding LightModeEnabled}" />
+                        </StackPanel>
+                    </Border>
+                    <!--<Border>
+                        <StackPanel>
+                            <TextBlock Text="Example setting name" />
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding LightModeEnabled}" />
+                        </StackPanel>
+                    </Border>-->
+                </WrapPanel>
+                
+            </StackPanel>
 
             <!--  Saves Folder Location  -->
             <StackPanel Spacing="12">
