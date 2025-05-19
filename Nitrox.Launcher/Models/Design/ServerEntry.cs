@@ -250,6 +250,7 @@ public partial class ServerEntry : ObservableObject
         private NamedPipeClientStream commandStream;
         private OutputLineType lastOutputType;
         private Process serverProcess;
+        private Ipc ipc;
 
         [GeneratedRegex(@"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$")]
         private static partial Regex OutputLineRegex { get; }
@@ -259,6 +260,8 @@ public partial class ServerEntry : ObservableObject
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
+            string saveName = Path.GetFileName(saveDir);
+            
             string serverExeName = "NitroxServer-Subnautica.exe";
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -271,7 +274,7 @@ public partial class ServerEntry : ObservableObject
                 ArgumentList =
                 {
                     "--save",
-                    Path.GetFileName(saveDir)
+                    saveName
                 },
                 RedirectStandardOutput = isEmbeddedMode,
                 RedirectStandardError = isEmbeddedMode,
@@ -285,13 +288,14 @@ public partial class ServerEntry : ObservableObject
             }
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
+            //ipc = Ipc.Create(saveName);
             serverProcess = System.Diagnostics.Process.Start(startInfo);
             if (serverProcess != null)
             {
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
                 if (isEmbeddedMode)
                 {
-                    serverProcess.OutputDataReceived += (_, args) =>
+                    serverProcess.OutputDataReceived += (_, args) => // Replace this
                     {
                         if (args.Data == null)
                         {
@@ -375,7 +379,7 @@ public partial class ServerEntry : ObservableObject
 
             try
             {
-                commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous);
+                commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous); // Replace this
                 if (!commandStream.IsConnected)
                 {
                     await commandStream.ConnectAsync(1000, cancellationToken);

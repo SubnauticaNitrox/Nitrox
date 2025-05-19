@@ -33,6 +33,7 @@ public class Program
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
     private static readonly CancellationTokenSource serverCts = new();
+    private static Ipc ipc;
 
     private static async Task Main(string[] args)
     {
@@ -166,6 +167,7 @@ public class Program
     {
         context.Cancel = false;
         serverCts?.Cancel();
+        //ipc?.Dispose();
     }
 
     /// <summary>
@@ -373,7 +375,7 @@ public class Program
             }, ct);
         }
 
-        using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
+        using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command), ct); // Replace this
         
         if (!Console.IsInputRedirected)
         {

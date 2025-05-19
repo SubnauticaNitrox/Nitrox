@@ -1,5 +1,4 @@
-﻿#if NET5_0_OR_GREATER
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
@@ -11,10 +10,10 @@ namespace NitroxModel.Helper;
 public class Ipc : IDisposable
 {
     private readonly NamedPipeServerStream receivePipe;
-    private readonly NamedPipeClientStream sendPipe;
+    private readonly NamedPipeServerStream sendPipe;
     private readonly CancellationTokenSource cancellationTokenSource;
     
-    private Ipc(NamedPipeServerStream receivePipe, NamedPipeClientStream sendPipe, CancellationTokenSource cancellationTokenSource)
+    private Ipc(NamedPipeServerStream receivePipe, NamedPipeServerStream sendPipe, CancellationTokenSource cancellationTokenSource)
     {
         this.receivePipe = receivePipe;
         this.sendPipe = sendPipe;
@@ -23,9 +22,10 @@ public class Ipc : IDisposable
     
     public static Ipc Create(string pipeName)
     {
-        var receivePipe = new NamedPipeServerStream($"{pipeName}_receive", PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-        var sendPipe = new NamedPipeClientStream(".", $"{pipeName}_send", PipeDirection.Out, PipeOptions.Asynchronous);
-        var cancellationTokenSource = new CancellationTokenSource();
+        NamedPipeServerStream receivePipe = new($"{pipeName}_receive", PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+        NamedPipeServerStream sendPipe = new($"{pipeName}_send", PipeDirection.Out, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+
+        CancellationTokenSource cancellationTokenSource = new();
 
         return new Ipc(receivePipe, sendPipe, cancellationTokenSource);
     }
@@ -37,8 +37,8 @@ public class Ipc : IDisposable
             await receivePipe.WaitForConnectionAsync(cancellationToken);
         }
 
-        using var memoryStream = new MemoryStream();
-        var buffer = new byte[1024];
+        using MemoryStream memoryStream = new();
+        byte[] buffer = new byte[1024];
         int bytesRead;
 
         do
@@ -54,19 +54,18 @@ public class Ipc : IDisposable
     {
         if (!sendPipe.IsConnected)
         {
-            await sendPipe.ConnectAsync(cancellationToken);
+            await sendPipe.WaitForConnectionAsync(cancellationToken);
         }
 
-        var messageBytes = Encoding.UTF8.GetBytes(message);
+        byte[] messageBytes = Encoding.UTF8.GetBytes(message);
         await sendPipe.WriteAsync(messageBytes, 0, messageBytes.Length, cancellationToken);
         await sendPipe.FlushAsync(cancellationToken);
     }
 
     public void Dispose()
     {
-        cancellationTokenSource?.Cancel();
-        receivePipe?.Dispose();
-        sendPipe?.Dispose();
+        cancellationTokenSource.Cancel();
+        receivePipe.Dispose();
+        sendPipe.Dispose();
     }
 }
-#endif
