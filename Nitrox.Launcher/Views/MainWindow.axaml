@@ -56,24 +56,32 @@
                                HorizontalAlignment="Stretch">
                             <Grid Margin="{TemplateBinding Padding}"
                                   ColumnDefinitions="48,*">
-                                <Image Grid.Column="0"
-                                       Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}"
-                                       Stretch="UniformToFill" />
+                                <controls:RecolorImage Grid.Column="0"
+                                                       Height="24" Width="24"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Center"
+                                                       Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}" />
                                 <TextBlock Grid.Column="1"
                                            TextAlignment="Start"
                                            VerticalAlignment="Center"
                                            FontSize="{TemplateBinding FontSize}"
                                            Text="{TemplateBinding Content}" />
                             </Grid>
+                            <!-- Update Available green dot -->
+                            <Border Height="10" Width="10" CornerRadius="5" 
+                                    Background="{DynamicResource BrandOnColor}"
+                                    BorderBrush="{DynamicResource BrandPanelBackground}"
+                                    BorderThickness="2"
+                                    HorizontalAlignment="Left"
+                                    Margin="49.25,13.5,0,0"
+                                    IsVisible="False"
+                                    ToolTip.Tip="New Nitrox update available" />
                         </Panel>
                     </ControlTemplate>
                 </Setter>
-
-                <Style Selector="^ Image">
-                    <Setter Property="Width" Value="24" />
-                    <Setter Property="Height" Value="24" />
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
+                
+                <Style Selector="^.updates Border">
+                    <Setter Property="IsVisible" Value="{Binding UpdateAvailableOrUnofficial}" />
                 </Style>
 
                 <Style Selector="^[IsChecked=True]">
@@ -237,9 +245,10 @@
                             Margin="0,0,0,20"
                             VerticalAlignment="Bottom">
                             <RadioButton
+                                Classes="updates"
                                 Command="{Binding OpenUpdatesViewCommand}"
                                 Content="Updates"
-                                Tag="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}"
+                                Tag="/Assets/Images/tabs-icons/update.png"
                                 ToolTip.Tip="Check latest updates from Nitrox">
                                 <RadioButton.IsChecked>
                                     <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">

@@ -36,7 +36,7 @@
                 Command="{Binding BackCommand}"
                 Cursor="Hand"
                 HorizontalAlignment="Left">
-                <Image
+                <controls:RecolorImage
                     Height="24"
                     HorizontalAlignment="Left"
                     Source="/Assets/Images/world-manager/back.png"
@@ -45,7 +45,7 @@
             <TextBlock
                 Classes="header"
                 HorizontalAlignment="Center"
-                Text="{Binding ServerEntry.Name}" />
+                Text="{Binding ServerEntry.Name, FallbackValue=Server Name}" />
             <CheckBox
                 Content="Auto scroll"
                 HorizontalAlignment="Right"
@@ -133,7 +133,7 @@
                     ToolTip.Tip="Send command"
                     IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                     <Svg
-                        Classes="theme"
+                        Css="* { fill: #fff; stroke: #fff; }"
                         Height="20"
                         Path="/Assets/Icons/send.svg" />
                 </Button>

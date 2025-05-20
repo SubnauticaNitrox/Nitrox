@@ -59,7 +59,7 @@
                                             <TextBlock Foreground="{DynamicResource BrandSubText}" Text="PLAY NITROX" />
                                             <TextBlock Text="{Binding Version, FallbackValue='PHASE x.x.x.x'}" />
                                         </StackPanel>
-                                        <Image
+                                        <controls:RecolorImage
                                             Width="19"
                                             Height="19"
                                             Margin="3,0"
@@ -91,7 +91,6 @@
                                             Padding="0,4,0,0"
                                             HorizontalAlignment="Center"
                                             FontSize="14"
-                                            Foreground="White"
                                             Text="SINGLEPLAYER" />
                                     </Button>
                                 </StackPanel>

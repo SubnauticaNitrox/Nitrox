@@ -14,7 +14,11 @@
         </Border>
     </Design.PreviewWith>
 
+    <!-- Known issue: Tooltip doesn't correctly change with the launcher theme, so it's forced to be light theme to stay consistent. Fixed in Avalonia 11.2 and higher -->
     <Style Selector="ToolTip">
+        <Setter Property="Background" Value="#F3F3F3" />
+        <Setter Property="BorderBrush" Value="#D6D6D6" />
+        
         <Setter Property="IsHitTestVisible" Value="False" />
         <Style Selector="^ Border">
             <Setter Property="Opacity" Value="0.9" />
@@ -23,7 +27,7 @@
         <Style Selector="^ TextBlock">
             <Setter Property="FontWeight" Value="600" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
+            <Setter Property="Foreground" Value="Black" />
         </Style>
     </Style>
 </Styles>

@@ -9,12 +9,19 @@
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls">
     <Design.DataContext>
         <vm:OptionsViewModel>
             <vm:OptionsViewModel.SelectedGame>
                 <design:KnownGame PathToGame="C:\Users\Me\Games\Subnautica" Platform="STEAM" />
             </vm:OptionsViewModel.SelectedGame>
+            <vm:OptionsViewModel.LaunchArgs>
+                -vrmode none
+            </vm:OptionsViewModel.LaunchArgs>
+            <vm:OptionsViewModel.SavesFolderDir>
+                C:\Users\Me\AppData\Roaming\Nitrox\saves
+            </vm:OptionsViewModel.SavesFolderDir>
         </vm:OptionsViewModel>
     </Design.DataContext>
     <UserControl.Resources>
@@ -53,13 +60,13 @@
                     CornerRadius="12"
                     Padding="22,15">
                     <Grid ColumnDefinitions=" Auto, *, Auto">
-                        <Image
-                            Height="36"
+                        <controls:RecolorImage
+                            Grid.Column="0"
+                            Height="36" Width="36"
                             Margin="0,0,22,0"
                             Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
                             Stretch="Uniform"
-                            ToolTip.Tip="Welcome aboard, Captain!"
-                            Width="36" />
+                            ToolTip.Tip="Welcome aboard, Captain!" />
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Left"
@@ -71,7 +78,8 @@
                                 Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
                             <SelectableTextBlock
                                 FontSize="14"
-                                Foreground="#BFFFFFFF"
+                                Foreground="{DynamicResource BrandBlack}"
+                                Opacity="0.75"
                                 Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
                         </StackPanel>
                         <Button
@@ -158,10 +166,9 @@
                             <Button.Styles>
                                 <Style Selector="Button:pointerover">
                                     <Setter Property="Effect">
-                                        <!--  TODO: Figure out how to dynamically bind color property to change with active theme  -->
                                         <DropShadowDirectionEffect
                                             BlurRadius="20"
-                                            Color="White"
+                                            Color="{DynamicResource BrandBlack}"
                                             ShadowDepth="0" />
                                     </Setter>
                                 </Style>
@@ -242,9 +249,10 @@
                     CornerRadius="12"
                     Padding="22,15">
                     <Grid ColumnDefinitions="*,Auto">
-                        <TextBlock
+                        <SelectableTextBlock
                             FontSize="15"
-                            Foreground="#BFFFFFFF"
+                            Foreground="{DynamicResource BrandBlack}"
+                            Opacity="0.75"
                             Text="{Binding SavesFolderDir}"
                             VerticalAlignment="Center" />
                         <Button

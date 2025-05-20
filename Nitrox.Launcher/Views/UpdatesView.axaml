@@ -96,7 +96,7 @@
                     <!--  Unofficial Version only text  -->
                     <StackPanel IsVisible="{Binding !UsingOfficialVersion, Mode=OneWay}" Spacing="10">
                         <!--  TODO: Better Icon here  -->
-                        <Image
+                        <controls:RecolorImage
                             Height="56"
                             HorizontalAlignment="Center"
                             Source="/Assets/Images/store-icons/pirated.png"

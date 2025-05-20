@@ -71,6 +71,10 @@
     <Style Selector="controls|CustomTitlebar">
         <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
     </Style>
+    
+    <Style Selector="controls|RecolorImage">
+        <Setter Property="Color" Value="{DynamicResource BrandBlack}" />
+    </Style>
 
     <Style Selector="Svg.theme">
         <Setter Property="Css" Value="{DynamicResource BrandSvgStyle}" />
@@ -105,6 +109,52 @@
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value=".85" />
         </Style>
+    </Style>
+    
+    <!-- Global Transition Styles -->
+    <Style Selector=":is(Window)">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector=":is(Panel)">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector=":is(Border)">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
+                <BrushTransition Duration="0:0:0.075" Property="BorderBrush" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector=":is(TemplatedControl)">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.005" Property="Foreground" />
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector=":is(Button)">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.075" Property="Background" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector=":is(Path)">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Duration="0:0:0.075" Property="Fill" />
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector=".form">
