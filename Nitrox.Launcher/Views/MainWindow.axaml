@@ -383,13 +383,15 @@
                             Padding="5,10,10,10">
                             <Grid ColumnDefinitions="50,*,20">
                                 <Svg
-                                    Classes="theme icon"
+                                    Classes="icon"
+                                    Css="* { fill: #fff; stroke: #fff; }"
                                     Grid.Column="0"
                                     Margin="0,0,5,0"
                                     VerticalAlignment="Center"
                                     Width="25" />
                                 <TextBlock
                                     Grid.Column="1"
+                                    Foreground="White"
                                     Text="{Binding Message}"
                                     VerticalAlignment="Center" />
                                 <Button
@@ -399,7 +401,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top">
                                     <Svg
-                                        Classes="theme"
+                                        Css="* { fill: #fff; stroke: #fff; }"
                                         Path="/Assets/Icons/close.svg"
                                         VerticalAlignment="Top"
                                         Width="10" />
