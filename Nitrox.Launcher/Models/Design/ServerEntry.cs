@@ -247,15 +247,14 @@ public partial class ServerEntry : ObservableObject
 
     internal partial class ServerProcess : IDisposable
     {
-        private NamedPipeClientStream commandStream;
         private OutputLineType lastOutputType;
         private Process serverProcess;
-        private Ipc ipc;
+        private Ipc.ClientIpc ipc;
 
         [GeneratedRegex(@"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$")]
         private static partial Regex OutputLineRegex { get; }
 
-        public bool IsRunning => !serverProcess?.HasExited ?? false;
+        public bool IsRunning => !serverProcess?.HasExited ?? false; // Will need to be changed to use IPC
         public AvaloniaList<OutputLine> Output { get; } = [];
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
@@ -288,14 +287,14 @@ public partial class ServerEntry : ObservableObject
             }
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
-            //ipc = Ipc.Create(saveName);
-            serverProcess = System.Diagnostics.Process.Start(startInfo);
+            serverProcess = System.Diagnostics.Process.Start(startInfo); // Might need to be changed for when the launcher reconnects to a running server
             if (serverProcess != null)
             {
+                ipc = new Ipc.ClientIpc(serverProcess.Id, new CancellationTokenSource());
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
                 if (isEmbeddedMode)
                 {
-                    serverProcess.OutputDataReceived += (_, args) => // Replace this
+                    serverProcess.OutputDataReceived += (_, args) => // Replace this with IPC (so that it works when the launcher reconnects to a running server)
                     {
                         if (args.Data == null)
                         {
@@ -379,15 +378,7 @@ public partial class ServerEntry : ObservableObject
 
             try
             {
-                commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous); // Replace this
-                if (!commandStream.IsConnected)
-                {
-                    await commandStream.ConnectAsync(1000, cancellationToken);
-                }
-                byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-                await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length), cancellationToken);
-                await commandStream.WriteAsync(commandBytes, cancellationToken);
-                return true;
+                return await ipc.SendCommand(command, cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -406,14 +397,7 @@ public partial class ServerEntry : ObservableObject
 
         public void Dispose()
         {
-            try
-            {
-                commandStream?.Dispose();
-            }
-            catch
-            {
-                // ignored
-            }
+            ipc?.Dispose();
             serverProcess?.Dispose();
             serverProcess = null;
         }
