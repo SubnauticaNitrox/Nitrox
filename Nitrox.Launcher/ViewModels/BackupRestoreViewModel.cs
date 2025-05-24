@@ -63,6 +63,14 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
 
                          string dateTimePart = fileName["Backup - ".Length..];
                          return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+                     })
+                     .OrderByDescending(file =>
+                     {
+                         string fileName = Path.GetFileNameWithoutExtension(file);
+                         string dateTimePart = fileName["Backup - ".Length..];
+                         return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate)
+                             ? parsedDate
+                             : File.GetCreationTime(file);
                      });
 
         if (saveDirectory == null)
@@ -75,13 +83,16 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
             yield break;
         }
 
+        int i = 0;
         foreach (string backupPath in GetBackupFilePaths(backupDir))
         {
             if (!DateTime.TryParseExact(Path.GetFileNameWithoutExtension(backupPath)["Backup - ".Length..], WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime backupDate))
             {
                 backupDate = File.GetCreationTime(backupPath);
             }
-            yield return new BackupItem(backupDate, backupPath);
+            i++;
+            string backupName = $"[b]Backup {i})[/b]\t{backupDate}";
+            yield return new BackupItem(backupName, backupPath);
         }
     }
 }

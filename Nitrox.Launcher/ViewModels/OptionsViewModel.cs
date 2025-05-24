@@ -3,7 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Input;
+using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
@@ -33,6 +36,9 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool showResetArgsBtn;
 
+    [ObservableProperty]
+    private bool lightModeEnabled;
+
     private static string DefaultLaunchArg => "-vrmode none";
 
     public OptionsViewModel()
@@ -51,6 +57,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
             SavesFolderDir = keyValueStore.GetSavesFolderDir();
+            LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         });
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -150,5 +157,11 @@ public partial class OptionsViewModel : RoutableViewModelBase
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
+    }
+    
+    partial void OnLightModeEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsLightModeEnabled(value);
+        Dispatcher.UIThread.Invoke(() => Application.Current.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
     }
 }

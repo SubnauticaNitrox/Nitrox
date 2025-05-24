@@ -11,7 +11,7 @@ namespace NitroxServer_Subnautica.Communication;
 /// <summary>
 ///     Exposes an IPC channel for other local processes to communicate with the server.
 /// </summary>
-public class IpcHost : IDisposable
+public class IpcHost : IDisposable // Delete this class once Ipc is fully implemented
 {
     private readonly CancellationTokenSource commandReadCancellation;
     private readonly NamedPipeServerStream server = new($"Nitrox Server {NitroxEnvironment.CurrentProcessId}", PipeDirection.In, 1);

@@ -127,7 +127,8 @@
                                             Classes="primary"
                                             Content="Console"
                                             Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
-                                            CommandParameter="{Binding}">
+                                            CommandParameter="{Binding}"
+                                            IsEnabled="{Binding !IsServerClosing}">
                                             <Button.IsVisible>
                                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                                     <Binding Path="IsOnline" />

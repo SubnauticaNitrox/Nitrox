@@ -58,7 +58,8 @@
                                         <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <TextBlock Text="{Binding Description}" />
-                                            <TextBox Text="{Binding Value, Mode=TwoWay}" />
+                                            <TextBox Text="{Binding Value, Mode=TwoWay}"
+                                                     IsEnabled="{Binding !$parent[ItemsControl].((vm:ObjectPropertyEditorViewModel)DataContext).DisableButtons}" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Boolean}">
@@ -68,28 +69,32 @@
                                             <CheckBox
                                                 Classes="switch"
                                                 HorizontalAlignment="Left"
-                                                IsChecked="{Binding Value}" />
+                                                IsChecked="{Binding Value}"
+                                                IsEnabled="{Binding !$parent[ItemsControl].((vm:ObjectPropertyEditorViewModel)DataContext).DisableButtons}" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Int32}">
                                         <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <TextBlock Text="{Binding Description}" />
-                                            <NumericUpDown Value="{Binding Value, Mode=TwoWay}" />
+                                            <NumericUpDown Value="{Binding Value, Mode=TwoWay}"
+                                                           IsEnabled="{Binding !$parent[ItemsControl].((vm:ObjectPropertyEditorViewModel)DataContext).DisableButtons}" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Single}">
                                         <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <TextBlock Text="{Binding Description}" />
-                                            <NumericUpDown Value="{Binding Value, Mode=TwoWay}" />
+                                            <NumericUpDown Value="{Binding Value, Mode=TwoWay}"
+                                                           IsEnabled="{Binding !$parent[ItemsControl].((vm:ObjectPropertyEditorViewModel)DataContext).DisableButtons}" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Object}">
                                         <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <TextBlock Text="{Binding Description}" />
-                                            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedValue="{Binding Value}">
+                                            <ComboBox ItemsSource="{Binding PossibleValues}" SelectedValue="{Binding Value}"
+                                                      IsEnabled="{Binding !$parent[ItemsControl].((vm:ObjectPropertyEditorViewModel)DataContext).DisableButtons}">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding Converter={converters:ToStringConverter}}" />
@@ -118,7 +123,8 @@
                     Command="{Binding SaveCommand}"
                     Content="Save"
                     HorizontalAlignment="Right"
-                    HotKey="Enter" />
+                    HotKey="Enter"
+                    IsEnabled="{Binding !DisableButtons}" />
             </Panel>
         </Border>
 
