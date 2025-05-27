@@ -49,7 +49,7 @@ public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPa
         }
 
         // At this point, if the victim didn't take damage, there's no point in broadcasting it
-        if (__state != __instance.health)
+        if (__state == __instance.health)
         {
             return;
         }
