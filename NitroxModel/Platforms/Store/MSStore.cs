@@ -34,7 +34,7 @@ public sealed class MSStore : IGamePlatform
         return await Task.FromResult(
             ProcessEx.Start(
                 @"C:\Windows\System32\cmd.exe",
-                null,
+                [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
                 @$"/C start /b {pathToGameExe} --nitrox ""{NitroxUser.LauncherPath}"" {subnauticaLaunchArguments}",
                 createWindow: false)

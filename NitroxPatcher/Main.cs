@@ -3,7 +3,6 @@ global using NitroxModel.Logger;
 global using static NitroxClient.Helpers.NitroxEntityExtensions;
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -62,12 +61,23 @@ public static class Main
     ///     Use the <see cref="Init" /> method or later before using dependency code.
     /// </summary>
     [UsedImplicitly]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Execute()
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-        Init();
+        if (!Directory.Exists(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH")))
+        {
+            Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
+        }
+        if (!Directory.Exists(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH")))
+        {
+            Console.WriteLine("Nitrox will not load because launcher path was not provided.");
+            return;
+        }
+
+        InitWithDependencies();
     }
 
     /// <summary>
@@ -76,17 +86,9 @@ public static class Main
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void Init()
+    private static void InitWithDependencies()
     {
         Log.Setup(gameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
-
-        if (nitroxLauncherDir.Value == null)
-        {
-            Console.WriteLine("Nitrox will not load because launcher path was not provided.");
-            return;
-        }
-
-        Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
 
         // Capture unity errors to be logged by our logging framework.
         Application.logMessageReceived += (condition, stackTrace, type) =>
