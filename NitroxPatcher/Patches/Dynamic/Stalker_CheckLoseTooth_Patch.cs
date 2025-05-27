@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
+using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -8,22 +10,58 @@ public sealed partial class Stalker_CheckLoseTooth_Patch : NitroxPatch, IDynamic
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Stalker t) => t.CheckLoseTooth(default(GameObject)));
 
-    //GetComponent<HardnessMixin> was returning null for everything instead of a HardnessMixin with a hardness value. Since this component
-    //isn't used for anything else than the stalker teeth drop, we hard-code the values and bingo.
+    // HardnessMixin seems to be a bit buggy (ie: undefined values for some scraps, which is a vanilla bug), so we'll just hard-code the values for now.
+    // Note that HardnessMixin is only used by Stalkers
     public static bool Prefix(Stalker __instance, GameObject target)
     {
-        float dropProbability = 0f;
+        if (!__instance.TryGetNitroxId(out NitroxId creatureId))
+        {
+            return false;
+        }
+
+        if (!Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+        {
+            return false;
+        }
+
         TechType techType = CraftData.GetTechType(target);
 
-        if (techType == TechType.ScrapMetal)
+        float dropProbability = techType switch
         {
-            dropProbability = 0.15f; // 15% probability
+            TechType.ScrapMetal => 0.25f, // https://subnautica.fandom.com/wiki/Metal_Salvage_(Subnautica)
+            TechType.MapRoomCamera => 0.25f,
+            TechType.Titanium or TechType.Silver or TechType.Gold or TechType.Kyanite or TechType.Copper or TechType.Nickel => 0.15f,
+            _ => 0f,
+        };
+
+        if (dropProbability == 0)
+        {
+            return false;
         }
 
-        if (UnityEngine.Random.value < dropProbability)
+        // Random.value returns a random float within[0.0..1.0] (range is inclusive)
+        if (UnityEngine.Random.value < dropProbability && UnityEngine.Random.value < 0.5f)
         {
-            __instance.LoseTooth();
+            // Code from Stalker.LoseTooth()
+
+            GameObject toothGameObject = Object.Instantiate<GameObject>(__instance.toothPrefab);
+            toothGameObject.transform.position = __instance.loseToothDropLocation.transform.position;
+            toothGameObject.transform.rotation = __instance.loseToothDropLocation.transform.rotation;
+
+            if (toothGameObject.activeSelf && __instance.isActiveAndEnabled)
+            {
+                Collider[] componentsInChildren = toothGameObject.GetComponentsInChildren<Collider>();
+                for (int i = 0; i < componentsInChildren.Length; i++)
+                {
+                    Physics.IgnoreCollision(__instance.stalkerBodyCollider, componentsInChildren[i]);
+                }
+            }
+
+            Utils.PlayFMODAsset(__instance.loseToothSound, toothGameObject.transform, 20f);
+            LargeWorldEntity.Register(toothGameObject);
+            Resolve<Items>().Dropped(toothGameObject);
         }
+
         return false;
     }
 }
