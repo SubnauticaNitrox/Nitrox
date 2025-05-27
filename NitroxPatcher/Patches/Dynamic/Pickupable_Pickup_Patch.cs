@@ -10,7 +10,7 @@ public sealed partial class Pickupable_Pickup_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(Pickupable __instance)
     {
-        Resolve<Items>().PickedUp(__instance.gameObject, __instance.GetTechType());
+        Resolve<Items>().PickedUpByPlayer(__instance.gameObject, __instance.GetTechType());
     }
 }
 
