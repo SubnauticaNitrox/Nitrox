@@ -43,14 +43,19 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield break;
         }
         GameObject moduleObject = result.Get().Value;
+        
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(moduleObject);
-        if (!opContainer.HasValue)
+        if (opContainer.HasValue)
         {
-            yield break;
+            yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
         }
 
-        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
-
+        Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(moduleObject);
+        if (opEquipment.HasValue)
+        {
+            yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InstalledModuleEntity>().ToList<Entity>(), true);
+        }
+        
         if (moduleObject.TryGetComponent(out PowerSource powerSource))
         {
             // TODO: Have synced/restored power
