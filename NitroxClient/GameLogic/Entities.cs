@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -66,6 +65,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BaseLeakEntity)] = new BaseLeakEntitySpawner(liveMixinManager);
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this, (BaseLeakEntitySpawner)entitySpawnersByType[typeof(BaseLeakEntity)]);
+            entitySpawnersByType[typeof(MoonpoolEntity)] = new MoonpoolEntitySpawner();
             entitySpawnersByType[typeof(RadiationLeakEntity)] = new RadiationLeakEntitySpawner(timeManager);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
