@@ -80,7 +80,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartSingleplayerAsync()
     {
-        if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica))
+        if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica) && !keyValueStore.GetIsMultipleGameInstancesAllowed())
         {
             return;
         }
@@ -124,7 +124,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                     LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
                     return false;
                 }
-                if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica))
+                if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica) && !keyValueStore.GetIsMultipleGameInstancesAllowed())
                 {
                     return false;
                 }
@@ -249,7 +249,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         // Start game & gaming platform if needed.
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ProcessEx.ProcessExists(GameInfo.Subnautica.Name) && keyValueStore.GetIsMultipleGameInstancesAllowed()),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),

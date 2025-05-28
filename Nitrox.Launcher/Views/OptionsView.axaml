@@ -215,14 +215,22 @@
                         </Style>
                     </WrapPanel.Styles>
                     
-                    <Border>
+                    <Border ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode">
                         <StackPanel>
                             <TextBlock Text="Enable light mode" />
                             <CheckBox Classes="switch"
                                       IsChecked="{Binding LightModeEnabled}" />
                         </StackPanel>
                     </Border>
-                    <!--<Border>
+                    <Border ToolTip.Tip="{Binding MultipleInstancesTooltip}">
+                        <StackPanel>
+                            <TextBlock Text="Allow multiple game instances" />
+                            <CheckBox Classes="switch"
+                                      IsEnabled="{Binding IsInReleaseMode}"
+                                      IsChecked="{Binding AllowMultipleGameInstances}" />
+                        </StackPanel>
+                    </Border>
+                    <!--<Border ToolTip.Tip="">
                         <StackPanel>
                             <TextBlock Text="Example setting name" />
                             <CheckBox Classes="switch"
