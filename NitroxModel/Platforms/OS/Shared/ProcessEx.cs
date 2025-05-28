@@ -83,7 +83,7 @@ public class ProcessEx : IDisposable
         return new ProcessEx(process);
     }
 
-    public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null)
+    public static ProcessEx? GetFirstProcess(string procName, Func<ProcessEx, bool>? predicate = null)
     {
         ProcessEx found = null;
         foreach (Process proc in Process.GetProcessesByName(procName))
@@ -230,7 +230,7 @@ public class WindowsProcessEx : ProcessExBase
         }
     }
 
-    public override string MainModuleFileName => Process.MainModule?.FileName;
+    public override string? MainModuleFileName => Process.MainModule?.FileName;
     public override IntPtr MainWindowHandle => Process.MainWindowHandle;
     public override string MainWindowTitle => Process.MainWindowTitle;
 
@@ -391,7 +391,7 @@ public class LinuxProcessEx : ProcessExBase
     public override int Id => pid;
     public override IntPtr Handle => IntPtr.Zero; // Linux doesn't use handles
 
-    public override string Name
+    public override string? Name
     {
         get
         {
@@ -450,11 +450,11 @@ public class LinuxProcessEx : ProcessExBase
         {
             BaseAddress = IntPtr.Zero,
             ModuleName = Name,
-            FileName = MainModuleFileName,
+            FileName = MainModuleFileName ?? "",
             ModuleMemorySize = 0
         };
 
-    public override string MainModuleFileName
+    public override string? MainModuleFileName
     {
         get
         {

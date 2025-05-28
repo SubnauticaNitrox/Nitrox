@@ -10,7 +10,7 @@ namespace Nitrox.Launcher.Models.Utils;
 
 public static class ProcessUtils
 {
-    public static Process StartProcessDetached(ProcessStartInfo startInfo)
+    public static Process? StartProcessDetached(ProcessStartInfo startInfo)
     {
         if (!string.IsNullOrWhiteSpace(startInfo.Arguments))
         {

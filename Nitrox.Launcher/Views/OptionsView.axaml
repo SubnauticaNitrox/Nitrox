@@ -222,11 +222,10 @@
                                       IsChecked="{Binding LightModeEnabled}" />
                         </StackPanel>
                     </Border>
-                    <Border ToolTip.Tip="{Binding MultipleInstancesTooltip}">
+                    <Border ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time">
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch"
-                                      IsEnabled="{Binding IsInReleaseMode}"
                                       IsChecked="{Binding AllowMultipleGameInstances}" />
                         </StackPanel>
                     </Border>

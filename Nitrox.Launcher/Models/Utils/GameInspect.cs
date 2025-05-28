@@ -51,12 +51,7 @@ internal static class GameInspect
     /// </summary>
     public static bool WarnIfGameProcessExists(GameInfo game)
     {
-        if (!NitroxEnvironment.IsReleaseMode)
-        {
-            return false;
-        }
-
-        if (!ProcessEx.ProcessExists(game.Name))
+        if (!ProcessEx.ProcessExists(game.ExeName))
         {
             return false;
         }

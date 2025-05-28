@@ -67,9 +67,8 @@ public partial class OptionsViewModel : RoutableViewModelBase
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
             SavesFolderDir = keyValueStore.GetSavesFolderDir();
             LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
-            AllowMultipleGameInstances = !NitroxEnvironment.IsReleaseMode || keyValueStore.GetIsMultipleGameInstancesAllowed();
+            AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
             IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-            MultipleInstancesTooltip = IsInReleaseMode ? "Enable this option to allow multiple instances of the game to run at the same time" : "This setting cannot be changed while using a DEV build of Nitrox";
         });
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -179,9 +178,6 @@ public partial class OptionsViewModel : RoutableViewModelBase
     
     partial void OnAllowMultipleGameInstancesChanged(bool value)
     {
-        if (NitroxEnvironment.IsReleaseMode)
-        {
-            keyValueStore.SetIsMultipleGameInstancesAllowed(value);
-        }
+        keyValueStore.SetIsMultipleGameInstancesAllowed(value);
     }
 }

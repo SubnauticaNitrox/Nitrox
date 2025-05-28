@@ -133,7 +133,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool launchExtraGameInstance)
+    public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool supportMultipleInstances)
     {
         try
         {
@@ -150,7 +150,7 @@ public sealed class Steam : IGamePlatform
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (launchExtraGameInstance || !NitroxEnvironment.IsReleaseMode)
+            if (supportMultipleInstances)
             {
                 // Needed to start multiple SN instances, but note that Steam Overlay won't work on this instance
                 return ProcessEx.Start(
