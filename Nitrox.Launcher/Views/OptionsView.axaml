@@ -215,25 +215,25 @@
                         </Style>
                     </WrapPanel.Styles>
                     
-                    <Border ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode">
+                    <Border>
                         <StackPanel>
                             <TextBlock Text="Enable light mode" />
-                            <CheckBox Classes="switch"
-                                      IsChecked="{Binding LightModeEnabled}" />
+                            <CheckBox Classes="switch" IsChecked="{Binding LightModeEnabled}"
+                                      ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
                         </StackPanel>
                     </Border>
-                    <Border ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time">
+                    <Border>
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
-                            <CheckBox Classes="switch"
-                                      IsChecked="{Binding AllowMultipleGameInstances}" />
+                            <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
+                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time" />
                         </StackPanel>
                     </Border>
-                    <!--<Border ToolTip.Tip="">
+                    <!--<Border>
                         <StackPanel>
                             <TextBlock Text="Example setting name" />
-                            <CheckBox Classes="switch"
-                                      IsChecked="{Binding LightModeEnabled}" />
+                            <CheckBox Classes="switch" IsChecked="{Binding LightModeEnabled}"
+                                      ToolTip.Tip="" />
                         </StackPanel>
                     </Border>-->
                 </WrapPanel>
