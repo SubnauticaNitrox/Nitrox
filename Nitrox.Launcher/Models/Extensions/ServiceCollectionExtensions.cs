@@ -3,13 +3,14 @@ using HanumanInstitute.MvvmDialogs.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
-using Nitrox.Launcher.ViewModels;
-using Nitrox.Launcher.Views;
+using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Launcher.Views.Abstract;
 using NitroxModel.Helper;
+using ServiceScan.SourceGenerator;
 
 namespace Nitrox.Launcher.Models.Extensions;
 
-public static class ServiceCollectionExtensions
+public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAppServices(this IServiceCollection collection)
     {
@@ -25,38 +26,20 @@ public static class ServiceCollectionExtensions
         // Domain services
         collection.AddSingleton(_ => KeyValueStore.Instance);
         collection.AddSingleton<ServerService>();
-        
-        // Dialog ViewModels and Dialog Views
-        collection.AddTransient<CreateServerViewModel>();
-        collection.AddTransient<CreateServerModal>();
-        collection.AddTransient<BackupRestoreViewModel>();
-        collection.AddTransient<BackupRestoreModal>();
-        collection.AddTransient<ObjectPropertyEditorViewModel>();
-        collection.AddTransient<ObjectPropertyEditorModal>();
-        collection.AddTransient<DialogBoxViewModel>();
-        collection.AddTransient<DialogBoxModal>();
 
-        // Views
-        collection.AddSingleton<LaunchGameView>();
-        collection.AddSingleton<OptionsView>();
-        collection.AddSingleton<ServersView>();
-        collection.AddSingleton<ManageServerView>();
-        collection.AddSingleton<BlogView>();
-        collection.AddSingleton<CommunityView>();
-        collection.AddSingleton<UpdatesView>();
-        collection.AddSingleton<EmbeddedServerView>();
-
-        // ViewModels
-        collection.AddTransient<MainWindowViewModel>();
-        collection.AddTransient<LaunchGameViewModel>();
-        collection.AddTransient<OptionsViewModel>();
-        collection.AddTransient<ServersViewModel>();
-        collection.AddTransient<ManageServerViewModel>();
-        collection.AddTransient<BlogViewModel>();
-        collection.AddTransient<CommunityViewModel>();
-        collection.AddTransient<UpdatesViewModel>();
-        collection.AddTransient<EmbeddedServerViewModel>();
-
-        return collection;
+        return collection
+               .AddDialogs()
+               .AddViews()
+               .AddViewModels();
     }
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(ModalViewModelBase), AsSelf = true)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(ModalBase), AsSelf = true)]
+    private static partial IServiceCollection AddDialogs(this IServiceCollection services);
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(RoutableViewBase<>), AsSelf = true, Lifetime = ServiceLifetime.Singleton)]
+    private static partial IServiceCollection AddViews(this IServiceCollection services);
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(ViewModelBase), AsSelf = true)]
+    private static partial IServiceCollection AddViewModels(this IServiceCollection services);
 }
