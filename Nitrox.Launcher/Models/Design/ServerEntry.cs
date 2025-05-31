@@ -89,6 +89,9 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
 
+    [ObservableProperty]
+    private bool isServerClosing = false;
+
     internal ServerProcess Process { get; private set; }
 
     public static ServerEntry FromDirectory(string saveDir)
@@ -217,21 +220,18 @@ public partial class ServerEntry : ObservableObject
     }
 
     [RelayCommand]
-    public async Task<bool> StopAsync()
+    public async Task StopAsync()
     {
-        if (Process is not { IsRunning: true })
+        IsServerClosing = true;
+        if (Process is { IsRunning: true } && !await Process.CloseAsync())
         {
-            IsOnline = false;
-            return true;
+            // Force shutdown if server doesn't respond to close command.
+            Log.Warn($"Server '{Name}' didn't respond to close command. Forcing shutdown.");
+            Process.Dispose();
         }
-
-        if (await Process.CloseAsync())
-        {
-            IsOnline = false;
-            return true;
-        }
-
-        return false;
+        
+        IsOnline = false;
+        IsServerClosing = false;
     }
 
     [RelayCommand]
@@ -247,18 +247,20 @@ public partial class ServerEntry : ObservableObject
 
     internal partial class ServerProcess : IDisposable
     {
-        private NamedPipeClientStream commandStream;
         private OutputLineType lastOutputType;
         private Process serverProcess;
+        private Ipc.ClientIpc ipc;
 
         [GeneratedRegex(@"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$")]
         private static partial Regex OutputLineRegex { get; }
 
-        public bool IsRunning => !serverProcess?.HasExited ?? false;
+        public bool IsRunning => !serverProcess?.HasExited ?? false; // Will need to be changed to use IPC
         public AvaloniaList<OutputLine> Output { get; } = [];
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
+            string saveName = Path.GetFileName(saveDir);
+            
             string serverExeName = "NitroxServer-Subnautica.exe";
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -271,7 +273,7 @@ public partial class ServerEntry : ObservableObject
                 ArgumentList =
                 {
                     "--save",
-                    Path.GetFileName(saveDir)
+                    saveName
                 },
                 RedirectStandardOutput = isEmbeddedMode,
                 RedirectStandardError = isEmbeddedMode,
@@ -285,13 +287,14 @@ public partial class ServerEntry : ObservableObject
             }
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
-            serverProcess = System.Diagnostics.Process.Start(startInfo);
+            serverProcess = System.Diagnostics.Process.Start(startInfo); // Might need to be changed for when the launcher reconnects to a running server
             if (serverProcess != null)
             {
+                ipc = new Ipc.ClientIpc(serverProcess.Id, new CancellationTokenSource());
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
                 if (isEmbeddedMode)
                 {
-                    serverProcess.OutputDataReceived += (_, args) =>
+                    serverProcess.OutputDataReceived += (_, args) => // Replace this with IPC (so that it works when the launcher reconnects to a running server)
                     {
                         if (args.Data == null)
                         {
@@ -338,16 +341,16 @@ public partial class ServerEntry : ObservableObject
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded) => new(saveDir, onExited, isEmbedded);
 
         /// <summary>
-        ///     Tries to close the server gracefully with a timeout of 30 seconds. If it fails, returns false.
+        ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.
         /// </summary>
         public async Task<bool> CloseAsync()
         {
-            using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(30));
+            using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(7));
             try
             {
                 do
                 {
-                    if (!await SendCommandAsync("stop"))
+                    if (!await SendCommandAsync("stop", ctsCloseTimeout.Token))
                     {
                         await Task.Delay(100, ctsCloseTimeout.Token);
                     }
@@ -366,7 +369,7 @@ public partial class ServerEntry : ObservableObject
             return true;
         }
 
-        public async Task<bool> SendCommandAsync(string command)
+        public async Task<bool> SendCommandAsync(string command, CancellationToken cancellationToken = default)
         {
             if (!IsRunning || string.IsNullOrWhiteSpace(command))
             {
@@ -375,15 +378,11 @@ public partial class ServerEntry : ObservableObject
 
             try
             {
-                commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous);
-                if (!commandStream.IsConnected)
-                {
-                    await commandStream.ConnectAsync(5000);
-                }
-                byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-                await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length));
-                await commandStream.WriteAsync(commandBytes);
-                return true;
+                return await ipc.SendCommand(command, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
             }
             catch (TimeoutException)
             {
@@ -398,14 +397,7 @@ public partial class ServerEntry : ObservableObject
 
         public void Dispose()
         {
-            try
-            {
-                commandStream?.Dispose();
-            }
-            catch
-            {
-                // ignored
-            }
+            ipc?.Dispose();
             serverProcess?.Dispose();
             serverProcess = null;
         }

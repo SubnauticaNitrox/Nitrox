@@ -14,4 +14,26 @@ public static class KeyValueStoreExtensions
         }
         store.SetValue("SubnauticaLaunchArguments", value);
     }
+    
+    public static bool GetIsLightModeEnabled(this IKeyValueStore store, bool defaultValue = false) => store == null ? defaultValue : store.GetValue("IsLightModeEnabled", defaultValue);
+
+    public static void SetIsLightModeEnabled(this IKeyValueStore store, bool value)
+    {
+        if (store == null)
+        {
+            return;
+        }
+        store.SetValue("IsLightModeEnabled", value);
+    }
+    
+    public static bool GetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool defaultValue = false) => store == null ? defaultValue : store.GetValue("IsMultipleGameInstancesAllowed", defaultValue);
+
+    public static void SetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool value)
+    {
+        if (store == null)
+        {
+            return;
+        }
+        store.SetValue("IsMultipleGameInstancesAllowed", value);
+    }
 }
