@@ -10,6 +10,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <TextBlock Text="Hello, World!" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24"/>
+  <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto" HorizontalAlignment="Center" VerticalAlignment="Center">
+  <TextBlock Text="Enable port checking" FontSize="20" Grid.Column="0" Grid.Row="0"/>
+  <CheckBox
+        Classes="switch"
+        Checked="EnablePortChecking"
+        Unchecked="DisablePortChecking"
+        Grid.Column="1"
+        Margin="30,0,0,0"
+        Grid.Row="0"/>
+  </Grid>
 </UserControl>
