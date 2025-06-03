@@ -10,14 +10,53 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto" HorizontalAlignment="Center" VerticalAlignment="Center">
-  <TextBlock Text="Enable port checking" FontSize="20" Grid.Column="0" Grid.Row="0"/>
-  <CheckBox
-        Classes="switch"
-        Checked="EnablePortChecking"
-        Unchecked="DisablePortChecking"
-        Grid.Column="1"
-        Margin="30,0,0,0"
-        Grid.Row="0"/>
+  <StackPanel>
+  <TextBlock
+  Text="Troubleshooting"
+  Margin="100,0,0,0"
+  FontSize="48"
+  Grid.Row="0"
+  Grid.Column="0"/>
+  <Grid
+    ColumnDefinitions="Auto,Auto,Auto"
+    RowDefinitions="Auto, Auto"
+    HorizontalAlignment="Center"
+    Margin="0,50,0,0">
+  <TextBlock
+    Text="Enable port checking"
+    FontSize="20"
+    Grid.Column="0"
+    Grid.Row="0"/>
+    <Button
+      Name="PortForwardCheckButton"
+      Content="Start"
+      Click="OnPortForwardClick"
+      Margin="30,0,0,0"
+      Grid.Row="0"
+      Grid.Column="1"
+      Classes="primary"/>
+    <TextBlock
+      Text="Status:"
+      FontSize="16"
+      Grid.Column="0"
+      Grid.Row="1"
+      Margin="0,25,0,0"/>
+    <Ellipse
+      Name="PortForwardStatusCircle"
+      Width="25"
+      Height="25"
+      Fill="DarkGray"
+      Grid.Column="1"
+      Grid.Row="1"
+      Margin="0,25,0,0"/>
+    <TextBlock
+      Name="PortForwardStatusText"
+      Text="Not started"
+      FontSize="16"
+      Foreground="DarkGray"
+      Grid.Column="2"
+      Grid.Row="1"
+      Margin="0,25,0,0"/>
   </Grid>
+  </StackPanel>
 </UserControl>
