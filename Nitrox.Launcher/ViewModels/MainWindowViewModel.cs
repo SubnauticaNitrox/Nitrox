@@ -28,6 +28,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly UpdatesViewModel updatesViewModel;
     private readonly IDialogService dialogService;
     private readonly ServerService serverService;
+    private readonly TroubleshootingViewModel troubleshootingViewModel;
 
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
@@ -53,7 +54,8 @@ public partial class MainWindowViewModel : ViewModelBase
         UpdatesViewModel updatesViewModel,
         OptionsViewModel optionsViewModel,
         IDialogService dialogService,
-        ServerService serverService
+        ServerService serverService,
+        TroubleshootingViewModel troubleshootingViewModel
     )
     {
         this.launchGameViewModel = launchGameViewModel;
@@ -65,6 +67,7 @@ public partial class MainWindowViewModel : ViewModelBase
         this.routingScreen = routingScreen;
         this.dialogService = dialogService;
         this.serverService = serverService;
+        this.troubleshootingViewModel = troubleshootingViewModel;
 
         this.RegisterMessageListener<ViewShownMessage, MainWindowViewModel>(static (message, vm) => vm.ActiveViewModel = message.ViewModel);
         this.RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
@@ -139,6 +142,12 @@ public partial class MainWindowViewModel : ViewModelBase
     public async Task OpenOptionsViewAsync()
     {
         await RoutingScreen.ShowAsync(optionsViewModel);
+    }
+
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    public async Task OpenTroubleshootingViewAsync()
+    {
+        await RoutingScreen.ShowAsync(troubleshootingViewModel);
     }
 
     [RelayCommand]

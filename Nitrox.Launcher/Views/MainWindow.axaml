@@ -266,6 +266,21 @@
                                     </Binding>
                                 </RadioButton.IsChecked>
                             </RadioButton>
+                          <RadioButton
+                            Command="{Binding OpenTroubleshootingViewCommand}"
+                            Content="Troubleshooting"
+                            Tag="/Assets/Images/tabs-icons/options.png"
+                            ToolTip.Tip="Find solutions to issues with Nitrox">
+                            <RadioButton.IsChecked>
+                              <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                <Binding.ConverterParameter>
+                                  <generic:List x:TypeArguments="system:Type">
+                                    <x:Type TypeName="vm:TroubleshootingViewModel" />
+                                  </generic:List>
+                                </Binding.ConverterParameter>
+                              </Binding>
+                            </RadioButton.IsChecked>
+                          </RadioButton>
                         </StackPanel>
                     </Panel>
                 </Grid>
@@ -340,6 +355,9 @@
                         <DataTemplate x:DataType="vm:OptionsViewModel">
                             <views:OptionsView />
                         </DataTemplate>
+                      <DataTemplate x:DataType="vm:TroubleshootingViewModel">
+                        <views:TroubleshootingView />
+                      </DataTemplate>
                         <!--  Fallback view. This DataTemplate must be kept at the bottom.  -->
                         <DataTemplate x:DataType="system:Object">
                             <TextBlock>

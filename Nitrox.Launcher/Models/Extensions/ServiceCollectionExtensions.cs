@@ -45,6 +45,7 @@ public static class ServiceCollectionExtensions
         collection.AddSingleton<CommunityView>();
         collection.AddSingleton<UpdatesView>();
         collection.AddSingleton<EmbeddedServerView>();
+        collection.AddSingleton<TroubleshootingView>();
 
         // ViewModels
         collection.AddTransient<MainWindowViewModel>();
@@ -56,6 +57,7 @@ public static class ServiceCollectionExtensions
         collection.AddTransient<CommunityViewModel>();
         collection.AddTransient<UpdatesViewModel>();
         collection.AddTransient<EmbeddedServerViewModel>();
+        collection.AddTransient<TroubleshootingViewModel>();
 
         return collection;
     }
