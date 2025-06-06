@@ -18,17 +18,21 @@ public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, World
 
         foreach (AssetTypeValueField info in assetValue["infos"])
         {
-            WorldEntityInfo entityData = new()
-            {
-                classId = info["classId"].AsString,
-                techType = (TechType)info["techType"].AsInt,
-                slotType = (EntitySlot.Type)info["slotType"].AsInt,
-                prefabZUp = info["prefabZUp"].AsBool,
-                cellLevel = (LargeWorldEntity.CellLevel)info["cellLevel"].AsInt,
-                localScale = info["localScale"].ToVector3()
-            };
+           foreach (AssetTypeValueField entityInfo in info)
+           {
+               WorldEntityInfo entityData = new()
+               {
+                   classId = entityInfo["classId"].AsString,
+                   techType = (TechType)entityInfo["techType"].AsInt,
+                   slotType = (EntitySlot.Type)entityInfo["slotType"].AsInt,
+                   prefabZUp = entityInfo["prefabZUp"].AsBool,
+                   cellLevel = (LargeWorldEntity.CellLevel)entityInfo["cellLevel"].AsInt,
+                   localScale = entityInfo["localScale"].ToVector3()
+               };
 
-            worldEntitiesByClassId.Add(entityData.classId, entityData);
+               worldEntitiesByClassId.Add(entityData.classId, entityData);
+
+            }
         }
 
         assetsManager.UnloadAll();

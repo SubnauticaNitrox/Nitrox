@@ -98,7 +98,7 @@ public class AssetsBundleManager : AssetsManager
     public new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)
     {
         monoTempGenerator = (ThreadSafeMonoCecilTempGenerator)generator;
-        base.SetMonoTempGenerator(generator);
+        base.MonoTempGenerator = generator;
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using AssetsTools.NET;
+using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using AssetsTools.NET.Texture;
 using NitroxModel.DataStructures.GameLogic;
@@ -20,7 +20,8 @@ public class RandomStartParser : BundleFileParser<RandomStartGenerator>
         AssetFileInfo assetFile = bundleFile.GetAssetInfo(assetsManager, "RandomStart", AssetClassID.Texture2D);
         AssetTypeValueField textureValueField = assetsManager.GetBaseField(assetFileInst, assetFile);
         TextureFile textureFile = TextureFile.ReadTextureFile(textureValueField);
-        byte[] texDat = textureFile.GetTextureData(assetFileInst);
+        byte[] rawTexDat = textureFile.FillPictureData(assetFileInst);
+        byte[] texDat = textureFile.DecodeTextureRaw(rawTexDat);
         assetsManager.UnloadAll();
 
         if (texDat is not { Length: > 0 })

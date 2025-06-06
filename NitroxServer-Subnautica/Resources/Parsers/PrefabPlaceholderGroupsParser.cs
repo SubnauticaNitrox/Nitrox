@@ -263,18 +263,21 @@ public class PrefabPlaceholderGroupsParser : IDisposable
                     GetPrefabGameObjectInfoFromBundle(bundleManagerInst, assetFileInst, out AssetFileInfo prefabGameObjectInfo);
 
                     AssetFileInfo spawnRandomInfo = bundleManagerInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
-                    // See SpawnRandom.Start
-                    AssetTypeValueField spawnRandom = bundleManagerInst.GetBaseField(assetFileInst, spawnRandomInfo);
-                    List<string> classIds = [];
-                    foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
-                    {
-                        classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
-                    }
+                    //if (spawnRandomInfo != null)
+                    //{
+                        // See SpawnRandom.Start
+                        AssetTypeValueField spawnRandom = bundleManagerInst.GetBaseField(assetFileInst, spawnRandomInfo);
+                        List<string> classIds = [];
+                        foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
+                        {
+                            classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
+                        }
 
-                    RandomPossibilitiesByClassId.TryAdd(keyValuePair.Key, [.. classIds]);
-                    break;
+                        RandomPossibilitiesByClassId.TryAdd(keyValuePair.Key, [.. classIds]);
+                        break;
+                    }
                 }
-            }
+           // }
 
             bundleManagerInst.UnloadAll();
         });

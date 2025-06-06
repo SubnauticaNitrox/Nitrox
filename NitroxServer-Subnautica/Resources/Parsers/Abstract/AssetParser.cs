@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using AssetsTools.NET.Extra;
 using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
@@ -18,7 +18,7 @@ public abstract class AssetParser
         assetsManager = new AssetsManager();
         assetsManager.LoadClassPackage(Path.Combine(NitroxUser.AssetsPath, "Resources", "classdata.tpk"));
         assetsManager.LoadClassDatabaseFromPackage("2019.4.36f1");
-        assetsManager.SetMonoTempGenerator(monoGen = new ThreadSafeMonoCecilTempGenerator(Path.Combine(rootPath, "Managed")));
+        assetsManager.MonoTempGenerator = monoGen = new ThreadSafeMonoCecilTempGenerator(Path.Combine(rootPath, "Managed"));
     }
 
     public static void Dispose()

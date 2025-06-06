@@ -17,8 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview2" />
-        <PackageReference Include="AssetsTools.NET.Texture" Version="1.0.0-preview1" />
+        <PackageReference Include="AssetsTools.NET" Version="3.0.1" />
+        <PackageReference Include="AssetsTools.NET.MonoCecil" Version="1.0.1" />
+        <PackageReference Include="AssetsTools.NET.Texture" Version="1.1.0-preview1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="[2.1.10]" />
     </ItemGroup>
 
