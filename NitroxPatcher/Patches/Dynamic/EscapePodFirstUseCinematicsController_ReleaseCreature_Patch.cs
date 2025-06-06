@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -23,3 +24,4 @@ public sealed partial class EscapePodFirstUseCinematicsController_ReleaseCreatur
     }
 
 }
+#endif

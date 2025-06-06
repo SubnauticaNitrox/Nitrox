@@ -96,7 +96,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 return;
             }
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
+#if SUBNAUTICA
             await StartSubnauticaAsync();
+#elif BELOWZERO
+            await StartSubnauticaBelowZeroAsync();
+#endif
         }
         catch (Exception ex)
         {
@@ -184,8 +188,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             {
                 return;
             }
-
+#if SUBNAUTICA
             await StartSubnauticaAsync(args);
+#elif BELOWZERO
+            await StartSubnauticaBelowZeroAsync(args);
+#endif
         }
         catch (Exception ex)
         {
@@ -230,7 +237,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             await serverStartTask;
         }).ContinueWithHandleError();
     }
-
+#if SUBNAUTICA
     private async Task StartSubnauticaAsync(string[] args = null)
     {
         LauncherNotifier.Info("Starting game");
@@ -268,6 +275,45 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             throw new Exception($"Game failed to start through {platform.Name}");
         }
     }
+#elif BELOWZERO
+    private async Task StartSubnauticaBelowZeroAsync(string[] args = null)
+    {
+        LauncherNotifier.Info("Starting game");
+        string subnauticaPath = NitroxUser.GamePath;
+        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? Environment.GetCommandLineArgs())}";
+        string subnauticaExe;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            subnauticaExe = Path.Combine(subnauticaPath, "MacOS", GameInfo.SubnauticaBelowZero.ExeName);
+        }
+        else
+        {
+            subnauticaExe = Path.Combine(subnauticaPath, GameInfo.SubnauticaBelowZero.ExeName);
+        }
+
+        if (!File.Exists(subnauticaExe))
+        {
+            throw new FileNotFoundException("Unable to find Subnautica Below Zero executable");
+        }
+
+        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
+
+        // Start game & gaming platform if needed.
+        using ProcessEx game = platform switch
+        {
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.SubnauticaBelowZero.SteamAppId),
+            EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
+            MSStore m => await m.StartGameAsync(subnauticaExe),
+            Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
+            _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.SubnauticaBelowZero.Name} game installation or the game platform is unsupported by Nitrox.")
+        };
+
+        if (game is null)
+        {
+            throw new Exception($"Game failed to start through {platform.Name}");
+        }
+    }
+#endif
 
     private void UpdateGamePlatform()
     {

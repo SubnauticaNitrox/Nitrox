@@ -24,7 +24,7 @@ internal static class GameInspect
             if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
 #elif BELOWZERO
             string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.SubnauticaBelowZero.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
-            if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
+            if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 49370)
 #endif
             {
                 if (dialogService != null)

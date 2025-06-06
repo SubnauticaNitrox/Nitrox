@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
@@ -109,7 +111,7 @@ public class AssetsBundleManager : AssetsManager
         AssetsBundleManager bundleManagerInst = new(aaRootPath) { classDatabase = classDatabase, classPackage = classPackage };
 #elif BELOWZERO
         AssetsBundleManager bundleManagerInst = new(aaRootPath);
-        bundleManagerInst.LoadClassPackage("classdata.tpk");
+        bundleManagerInst.LoadClassPackage(Path.Combine(NitroxUser.AssetsPath, "Resources", "classdata.tpk"));
         bundleManagerInst.LoadClassDatabaseFromPackage("2019.4.36f1");
 #endif
         bundleManagerInst.SetMonoTempGenerator(monoTempGenerator);

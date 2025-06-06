@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -14,3 +15,4 @@ public sealed partial class EscapePodFirstUseCinematicsController_OnSceneObjects
 
     public static bool Prefix(EscapePodFirstUseCinematicsController __instance) => !Multiplayer.Active;
 }
+#endif
