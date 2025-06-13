@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -25,8 +26,8 @@ namespace Nitrox.Launcher;
 public class App : Application
 {
     internal const string CRASH_REPORT_FILE_NAME = "Nitrox.Launcher-crash.txt";
-    internal static Func<Window> StartupWindowFactory;
-    internal static InstantLaunchData InstantLaunch;
+    internal static Func<Window>? StartupWindowFactory;
+    internal static InstantLaunchData? InstantLaunch;
     internal static bool IsCrashReport;
 
     /// <summary>
@@ -94,6 +95,14 @@ public class App : Application
                 CheckForRunningInstance();
             }
             ServiceProvider services = new ServiceCollection().AddAppServices().BuildServiceProvider();
+
+            // TODO: Use .NET Host API to pass options instead of direct reference to KeyValueStore.
+            if (!NitroxEnvironment.IsReleaseMode)
+            {
+                // Set debug default options here.
+                services.GetRequiredService<IKeyValueStore>().SetIsMultipleGameInstancesAllowed(true);
+            }
+
             StartupWindowFactory = () => new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
         }
 
@@ -126,6 +135,8 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Debug.Assert(StartupWindowFactory != null, $"{nameof(StartupWindowFactory)} != null");
+
         FixAvaloniaPlugins();
         ApplyAppDefaults();
 

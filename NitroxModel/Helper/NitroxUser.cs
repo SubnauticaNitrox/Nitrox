@@ -16,12 +16,12 @@ public static class NitroxUser
 {
     public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
     private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
-    private static string appDataPath;
-    private static string launcherPath;
-    private static string gamePath;
-    private static string executableRootPath;
-    private static string executablePath;
-    private static string assetsPath;
+    private static string? appDataPath;
+    private static string? launcherPath;
+    private static string? gamePath;
+    private static string? executableRootPath;
+    private static string? executablePath;
+    private static string? assetsPath;
 
     private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
     {
@@ -188,7 +188,7 @@ public static class NitroxUser
         }
     }
 
-    public static string ExecutableRootPath
+    public static string? ExecutableRootPath
     {
         get
         {
@@ -206,7 +206,7 @@ public static class NitroxUser
         }
     }
 
-    public static string ExecutableFilePath
+    public static string? ExecutableFilePath
     {
         get
         {

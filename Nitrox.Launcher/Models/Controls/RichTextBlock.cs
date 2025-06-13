@@ -4,7 +4,9 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Input.Platform;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Nitrox.Launcher.Models.Controls;
 
@@ -17,7 +19,7 @@ namespace Nitrox.Launcher.Models.Controls;
 ///     [i][/i] - Italicize <br />
 ///     [u][/u] - Underline <br />
 ///     [#colorHex][/#colorHex] - Change text color <br />
-///     [Flavor text](example.com) <br />
+///     [Flavor text](example.com) - Link text <br />
 /// </remarks>
 /// <example>
 ///     [b]Text[/b] => <b>Text</b> <br />
@@ -95,7 +97,32 @@ public partial class RichTextBlock : TextBlock
                     TextBlock textBlock = new();
                     textBlock.Classes.Add("link");
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
-                    textBlock.Tag = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
+                    string link = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
+                    textBlock.Tag = link;
+                    link = link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || link.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ? link : $"https://{link}";
+                    textBlock.SetValue(ToolTip.TipProperty, link);
+                    textBlock.ContextMenu = new ContextMenu
+                    {
+                        Items =
+                        {
+                            new MenuItem
+                            {
+                                Header = "Copy URL",
+                                Command = new RelayCommand(async void () =>
+                                {
+                                    if (string.IsNullOrEmpty(link))
+                                    {
+                                        return;
+                                    }
+                                    IClipboard clipboard = textBlock.GetWindow().Clipboard;
+                                    if (clipboard != null)
+                                    {
+                                        await clipboard.SetTextAsync(link);
+                                    }
+                                })
+                            }
+                        }
+                    };
                     inlines.Add(textBlock);
                     break;
                 case ['[', '#', ..]:

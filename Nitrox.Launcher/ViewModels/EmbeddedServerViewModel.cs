@@ -77,7 +77,14 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
                 LogText = $"> {ServerCommand}"
             });
         }
-        await ServerEntry.Process.SendCommandAsync(ServerCommand);
+        if (!string.Equals(ServerCommand, "stop", StringComparison.OrdinalIgnoreCase))
+        {
+            await ServerEntry.Process.SendCommandAsync(ServerCommand);
+        }
+        else
+        {
+            await StopServerAsync();
+        }
         ClearInput(textBox);
     }
     
