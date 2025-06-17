@@ -2,9 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -250,11 +248,12 @@ public partial class ServerEntry : ObservableObject
         private OutputLineType lastOutputType;
         private Process serverProcess;
         private Ipc.ClientIpc ipc;
+        private CancellationTokenSource ipcCts;
 
         [GeneratedRegex(@"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$")]
         private static partial Regex OutputLineRegex { get; }
 
-        public bool IsRunning => !serverProcess?.HasExited ?? false; // Will need to be changed to use IPC
+        public bool IsRunning { get; private set; } = true;
         public AvaloniaList<OutputLine> Output { get; } = [];
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
@@ -287,21 +286,21 @@ public partial class ServerEntry : ObservableObject
             }
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
-            serverProcess = System.Diagnostics.Process.Start(startInfo); // Might need to be changed for when the launcher reconnects to a running server
+            serverProcess = System.Diagnostics.Process.Start(startInfo); // Only used for starting and disposing
             if (serverProcess != null)
             {
-                ipc = new Ipc.ClientIpc(serverProcess.Id, new CancellationTokenSource());
-                serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
-                if (isEmbeddedMode)
-                {
-                    serverProcess.OutputDataReceived += (_, args) => // Replace this with IPC (so that it works when the launcher reconnects to a running server)
+                IsRunning = true;
+                ipcCts = new CancellationTokenSource();
+                ipc = new Ipc.ClientIpc(serverProcess.Id, ipcCts);
+                ipc.StartReadingServerOutput(
+                    output =>
                     {
-                        if (args.Data == null)
+                        if (string.IsNullOrWhiteSpace(output))
                         {
                             return;
                         }
 
-                        Match match = OutputLineRegex.Match(args.Data);
+                        Match match = OutputLineRegex.Match(output);
                         if (match.Success)
                         {
                             OutputLine outputLine = new()
@@ -324,17 +323,18 @@ public partial class ServerEntry : ObservableObject
                             Output.Add(new OutputLine
                             {
                                 Timestamp = "",
-                                LogText = args.Data,
+                                LogText = output,
                                 Type = lastOutputType
                             });
                         }
-                    };
-                    serverProcess.BeginOutputReadLine();
-                }
-                serverProcess.Exited += (_, _) =>
-                {
-                    onExited?.Invoke();
-                };
+                    },
+                    () =>
+                    {
+                        IsRunning = false;
+                        onExited?.Invoke();
+                    },
+                    ipcCts.Token
+                );
             }
         }
 
@@ -397,6 +397,8 @@ public partial class ServerEntry : ObservableObject
 
         public void Dispose()
         {
+            IsRunning = false;
+            ipcCts?.Cancel();
             ipc?.Dispose();
             serverProcess?.Dispose();
             serverProcess = null;

@@ -21,7 +21,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer;
-using NitroxServer_Subnautica.Communication;
 using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer_Subnautica;
@@ -33,7 +32,7 @@ public class Program
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
     private static readonly CancellationTokenSource serverCts = new();
-    private Ipc.ServerIpc ipc;
+    private static Ipc.ServerIpc ipc;
 
     private static async Task Main(string[] args)
     {
@@ -53,8 +52,15 @@ public class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static async Task StartServer(string[] args)
     {
-        // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
-        Log.Setup(true, isConsoleApp: !args.Contains("--embedded", StringComparer.OrdinalIgnoreCase));
+        // Start ServerIpc for log output to launcher
+        ipc = new Ipc.ServerIpc(Environment.ProcessId, CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token));
+        bool isConsoleApp = !args.Contains("--embedded", StringComparer.OrdinalIgnoreCase);
+        Log.Setup(
+            asyncConsoleWriter: true,
+            isConsoleApp: isConsoleApp,
+            logOutputCallback: isConsoleApp ? null : msg => _ = ipc.SendOutput(msg)
+        );
+
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         PosixSignalRegistration.Create(PosixSignal.SIGTERM, CloseWindowHandler);
         PosixSignalRegistration.Create(PosixSignal.SIGQUIT, CloseWindowHandler);
@@ -130,6 +136,7 @@ public class Program
 
         await handleConsoleInputTask;
         server.Stop(true);
+        ipc.Dispose();
 
         try
         {
@@ -167,7 +174,6 @@ public class Program
     {
         context.Cancel = false;
         serverCts?.Cancel();
-        //ipc?.Dispose();
     }
 
     /// <summary>
@@ -375,7 +381,7 @@ public class Program
             }, ct);
         }
 
-        using Ipc.ServerIpc ipc = Ipc.ServerIpc.StartReadingCommands(Environment.ProcessId, command => commandQueue.Enqueue(command), ct);
+        ipc.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
         
         if (!Console.IsInputRedirected)
         {
