@@ -198,7 +198,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Height" Value="96" />
 
-        <Style Selector="^ StackPanel.description">
+        <Style Selector="^ :is(Panel).description">
             <Style Selector="^ >  :is(Control)">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="6 0" />
@@ -215,7 +215,11 @@
             </Style>
             <Style Selector="^ TextBlock">
                 <Setter Property="Opacity" Value="0.5" />
+                <Setter Property="TextWrapping" Value="NoWrap" />
             </Style>
+        </Style>
+        <Style Selector="^ Button">
+            <Setter Property="Margin" Value="8 0 0 0" />
         </Style>
     </Style>
 
