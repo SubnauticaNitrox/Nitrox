@@ -13,4 +13,4 @@ public record NotificationCloseMessage(NotificationItem Item);
 
 public record ViewShownMessage(object ViewModel);
 
-public record ServerStatusMessage(ServerEntry Server, bool IsOnline);
+public record ServerStatusMessage(ServerEntry Server);

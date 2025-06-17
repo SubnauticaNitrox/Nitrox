@@ -90,7 +90,7 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private bool isServerClosing = false;
 
-    internal ServerProcess Process { get; private set; }
+    internal ServerProcess? Process { get; private set; }
 
     public static ServerEntry FromDirectory(string saveDir)
     {
@@ -103,7 +103,7 @@ public partial class ServerEntry : ObservableObject
         switch (e.PropertyName)
         {
             case nameof(IsOnline):
-                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(this, IsOnline));
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(this));
                 break;
         }
         base.OnPropertyChanged(e);

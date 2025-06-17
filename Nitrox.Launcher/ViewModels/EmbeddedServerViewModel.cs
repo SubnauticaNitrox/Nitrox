@@ -31,7 +31,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process.Output;
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
 
     public EmbeddedServerViewModel()
     {
@@ -46,9 +46,9 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
             {
                 return;
             }
-            if (!status.IsOnline && model.HostScreen.ActiveViewModel is EmbeddedServerViewModel)
+            if (!status.Server.IsOnline && model.HostScreen.ActiveViewModel is EmbeddedServerViewModel)
             {
-                model.HostScreen.BackAsync().ConfigureAwait(false);
+                model.HostScreen.BackToAsync<ServersViewModel>().ConfigureAwait(false);
             }
         });
     }

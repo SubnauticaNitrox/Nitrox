@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -19,7 +18,7 @@ public static class ScreenExtensions
     /// <param name="screen">The screen used to display the view.</param>
     /// <param name="routableViewModel">ViewModel that should be shown.</param>
     /// <typeparam name="TViewModel">Type of the ViewModel to show.</typeparam>
-    public static async Task ShowAsync<TViewModel>(this IRoutingScreen screen, TViewModel routableViewModel) where TViewModel : RoutableViewModelBase
+    public static async Task ShowAsync<TViewModel>(this IRoutingScreen? screen, TViewModel routableViewModel) where TViewModel : RoutableViewModelBase
     {
         if (screen == null)
         {
@@ -51,13 +50,16 @@ public static class ScreenExtensions
 
     public static async Task<bool> BackAsync(this IRoutingScreen screen)
     {
-        if (navigationStack.Count < 1)
+        RoutableViewModelBase? backViewModel = null;
+        while (navigationStack.Count > 0 && (backViewModel == null || backViewModel == screen.ActiveViewModel))
         {
-            return false;
+            backViewModel = navigationStack[^1];
+            navigationStack.Remove(backViewModel);
         }
-        RoutableViewModelBase backViewModel = navigationStack[^1];
-        navigationStack.Remove(backViewModel);
-        await ShowAsync(screen, backViewModel);
+        if (backViewModel != null)
+        {
+            await ShowAsync(screen, backViewModel);
+        }
         return true;
     }
 

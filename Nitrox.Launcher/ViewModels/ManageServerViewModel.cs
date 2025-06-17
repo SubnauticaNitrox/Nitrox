@@ -138,7 +138,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             {
                 return;
             }
-            vm.ServerIsOnline = status.IsOnline;
+            vm.ServerIsOnline = status.Server.IsOnline;
         });
     }
 
