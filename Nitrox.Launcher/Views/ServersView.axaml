@@ -88,13 +88,14 @@
                                             Grid.Column="0"
                                             HorizontalAlignment="Stretch"
                                             Margin="16 0 0 0"
-                                            VerticalAlignment="Center">
+                                            VerticalAlignment="Center"
+                                            Background="Transparent"
+                                            ToolTip.Tip="{Binding Name}">
                                             <TextBlock
                                                 FontSize="16"
                                                 FontWeight="600"
                                                 TextWrapping="NoWrap"
                                                 TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
-                                                ToolTip.Tip="{Binding Name}"
                                                 Text="{Binding Name}" />
                                             <WrapPanel
                                                 Classes="description"

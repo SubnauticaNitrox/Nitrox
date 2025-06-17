@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -46,7 +47,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
     }
 
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         Servers = [..await serverService.GetServersAsync()];
     }

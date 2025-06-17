@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
@@ -11,6 +12,8 @@ namespace Nitrox.Launcher.Models.Extensions;
 public static class ScreenExtensions
 {
     private static readonly List<RoutableViewModelBase> navigationStack = [];
+    private static CancellationTokenSource? viewChangeBusyCts;
+    private static readonly Lock viewChangeBusyCtsLocker = new();
 
     /// <summary>
     ///     Navigates to a view assigned to the given ViewModel.
@@ -24,6 +27,17 @@ public static class ScreenExtensions
         {
             return;
         }
+        CancellationToken ctsToken;
+        lock (viewChangeBusyCtsLocker)
+        {
+            if (viewChangeBusyCts != null)
+            {
+                viewChangeBusyCts.Cancel();
+                viewChangeBusyCts.Dispose();
+            }
+            viewChangeBusyCts = new CancellationTokenSource();
+            ctsToken = viewChangeBusyCts.Token;
+        }
         // When navigating away from a view in an async button command, busy states on buttons should also reset. Otherwise, when navigating back it would still show buttons being busy.
         NitroxAttached.AsyncCommandButtonTagger.Clear();
         if (screen.ActiveViewModel is RoutableViewModelBase routableViewModelBase)
@@ -32,20 +46,38 @@ public static class ScreenExtensions
             await routableViewModelBase.ViewContentUnloadAsync();
             navigationStack.Add(routableViewModelBase);
         }
-        Stopwatch sw = Stopwatch.StartNew();
-        Task contentLoadTask = routableViewModel.ViewContentLoadAsync();
-        if (screen.ActiveViewModel != null)
+        else
         {
-            // Only show loading screen if page isn't loading super quickly.
-            await Task.Delay(50);
-            if (!contentLoadTask.IsCompleted)
+            routableViewModelBase = null;
+        }
+
+        try
+        {
+            ctsToken.ThrowIfCancellationRequested();
+            Stopwatch sw = Stopwatch.StartNew();
+            Task contentLoadTask = routableViewModel.ViewContentLoadAsync(ctsToken);
+            if (screen.ActiveViewModel != null)
             {
-                screen.ActiveViewModel = AssetHelper.GetFullAssetPath("/Assets/Icons/loading.svg");
-                await Task.Delay((int)Math.Max(0, 500 - sw.Elapsed.TotalMilliseconds));
+                // Only show loading screen if page isn't loading super quickly.
+                await Task.Delay(50, ctsToken);
+                if (!contentLoadTask.IsCompleted)
+                {
+                    ctsToken.ThrowIfCancellationRequested();
+                    screen.ActiveViewModel = AssetHelper.GetFullAssetPath("/Assets/Icons/loading.svg");
+                    await Task.Delay((int)Math.Max(0, 500 - sw.Elapsed.TotalMilliseconds), ctsToken);
+                }
+            }
+            await contentLoadTask;
+            ctsToken.ThrowIfCancellationRequested();
+            screen.ActiveViewModel = routableViewModel;
+        }
+        catch (OperationCanceledException)
+        {
+            if (routableViewModelBase != null)
+            {
+                navigationStack.Remove(navigationStack[^1]);
             }
         }
-        await contentLoadTask;
-        screen.ActiveViewModel = routableViewModel;
     }
 
     public static async Task<bool> BackAsync(this IRoutingScreen screen)

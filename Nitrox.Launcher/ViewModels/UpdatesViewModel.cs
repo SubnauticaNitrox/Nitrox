@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Threading;
@@ -29,7 +30,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
 
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {

@@ -59,7 +59,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         this.keyValueStore = keyValueStore;
     }
 
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
         {
@@ -69,7 +69,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
             IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-        });
+        }, cancellationToken);
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
@@ -102,10 +102,6 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
-            if (NitroxEntryPatch.IsPatchApplied(NitroxUser.GamePath))
-            {
-                NitroxEntryPatch.Remove(NitroxUser.GamePath);
-            }
 
             return path;
         });

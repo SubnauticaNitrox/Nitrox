@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Avalonia.Media.Imaging;
@@ -61,14 +62,14 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         this.keyValueStore = keyValueStore;
     }
 
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
         {
             NitroxUser.GamePlatformChanged += UpdateGamePlatform;
             UpdateGamePlatform();
             HandleInstantLaunchForDevelopment();
-        });
+        }, cancellationToken);
     }
 
     internal override Task ViewContentUnloadAsync()

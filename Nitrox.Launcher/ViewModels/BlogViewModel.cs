@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -24,7 +25,7 @@ public partial class BlogViewModel : RoutableViewModelBase
     {
     }
 
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         if (Design.IsDesignMode)
         {
