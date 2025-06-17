@@ -246,14 +246,14 @@ public partial class ServerEntry : ObservableObject
     internal partial class ServerProcess : IDisposable
     {
         private OutputLineType lastOutputType;
-        private Process serverProcess;
+        private Process? serverProcess;
         private Ipc.ClientIpc ipc;
         private CancellationTokenSource ipcCts;
 
-        [GeneratedRegex(@"^\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>.*)?$")]
+        [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
         private static partial Regex OutputLineRegex { get; }
 
-        public bool IsRunning { get; private set; } = true;
+        public bool IsRunning { get; private set; }
         public AvaloniaList<OutputLine> Output { get; } = [];
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)

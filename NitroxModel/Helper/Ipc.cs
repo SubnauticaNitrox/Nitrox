@@ -25,7 +25,7 @@ public static class Ipc
             this.cancellationTokenSource = cancellationTokenSource;
 
             Log.Info($"Creating IPC for process {processId}.");
-            serverPipe = new NamedPipeServerStream(PipeName(ProcessId), PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+            serverPipe = new NamedPipeServerStream(PipeName(ProcessId), PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         }
 
         public async Task<bool> SendOutput(string output, CancellationToken cancellationToken = default)
