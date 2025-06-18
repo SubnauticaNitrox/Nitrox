@@ -1,5 +1,6 @@
 ﻿#if NET5_0_OR_GREATER
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
@@ -18,6 +19,9 @@ public static class Ipc
         public readonly int ProcessId;
         private readonly NamedPipeServerStream serverPipe;
         private readonly CancellationTokenSource cancellationTokenSource;
+        private readonly ConcurrentQueue<(string Output, CancellationToken Token)> outputBuffer = new();
+        private readonly SemaphoreSlim outputSemaphore = new(1, 1);
+        private bool isProcessingBuffer = false;
 
         public ServerIpc(int processId, CancellationTokenSource cancellationTokenSource)
         {
@@ -28,17 +32,40 @@ public static class Ipc
             serverPipe = new NamedPipeServerStream(PipeName(ProcessId), PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         }
 
-        public async Task<bool> SendOutput(string output, CancellationToken cancellationToken = default)
+        public Task<bool> SendOutput(string output, CancellationToken cancellationToken = default)
         {
-            if (!serverPipe.IsConnected)
+            outputBuffer.Enqueue((output, cancellationToken));
+            ProcessBuffer();
+            return Task.FromResult(true);
+        }
+
+        private async void ProcessBuffer()
+        {
+            if (isProcessingBuffer)
             {
-                await serverPipe.WaitForConnectionAsync(cancellationToken);
+                return;
             }
-            byte[] outputBytes = Encoding.UTF8.GetBytes(output);
-            await serverPipe.WriteAsync(BitConverter.GetBytes((uint)outputBytes.Length), cancellationToken);
-            await serverPipe.WriteAsync(outputBytes, cancellationToken);
-            await serverPipe.FlushAsync(cancellationToken);
-            return true;
+            isProcessingBuffer = true;
+            await outputSemaphore.WaitAsync();
+            try
+            {
+                while (outputBuffer.TryDequeue(out (string Output, CancellationToken Token) item))
+                {
+                    if (!serverPipe.IsConnected)
+                    {
+                        await serverPipe.WaitForConnectionAsync(item.Token);
+                    }
+                    byte[] outputBytes = Encoding.UTF8.GetBytes(item.Output);
+                    await serverPipe.WriteAsync(BitConverter.GetBytes((uint)outputBytes.Length), item.Token);
+                    await serverPipe.WriteAsync(outputBytes, item.Token);
+                    await serverPipe.FlushAsync(item.Token);
+                }
+            }
+            finally
+            {
+                isProcessingBuffer = false;
+                outputSemaphore.Release();
+            }
         }
 
         public void StartReadingCommands(Action<string> onCommandReceived, CancellationToken cancellationToken = default)

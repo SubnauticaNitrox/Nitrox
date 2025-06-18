@@ -404,15 +404,10 @@ namespace NitroxModel.Logger
             }
         }
 
-        private class DelegateSink : ILogEventSink
+        private class DelegateSink(Action<string> callback, string? outputTemplate = null) : ILogEventSink
         {
-            private readonly Action<string> callback;
-            private readonly string outputTemplate;
-            public DelegateSink(Action<string> callback, string outputTemplate = null)
-            {
-                this.callback = callback;
-                this.outputTemplate = outputTemplate;
-            }
+            private readonly Action<string?> callback = callback;
+
             public void Emit(LogEvent logEvent)
             {
                 string rendered = outputTemplate != null
