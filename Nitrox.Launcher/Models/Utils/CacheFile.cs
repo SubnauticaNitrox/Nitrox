@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nitrox.Launcher.Models.Utils;
@@ -16,14 +17,21 @@ public class CacheFile
         {
             if (creationTime == null && File.Exists(TempFilePath))
             {
-                using FileStream stream = File.OpenRead(TempFilePath);
-                if (stream.Length < 8)
+                try
                 {
-                    return null;
+                    using FileStream stream = File.OpenRead(TempFilePath);
+                    if (stream.Length < 8)
+                    {
+                        return null;
+                    }
+                    Span<byte> buffer = stackalloc byte[8];
+                    stream.ReadExactly(buffer);
+                    creationTime = DateTimeOffset.FromUnixTimeSeconds(BitConverter.ToInt64(buffer));
                 }
-                Span<byte> buffer = stackalloc byte[8];
-                stream.ReadExactly(buffer);
-                creationTime = DateTimeOffset.FromUnixTimeSeconds(BitConverter.ToInt64(buffer));
+                catch (IOException)
+                {
+                    return creationTime = File.GetCreationTimeUtc(TempFilePath);
+                }
             }
             return creationTime;
         }
@@ -36,11 +44,12 @@ public class CacheFile
     }
 
     /// <summary>
-    ///     Gets the cached data if not old or refreshes the cache using the <see cref="refreshedValueFactory"/>.
+    ///     Gets the cached data if not old or refreshes the cache using the <see cref="refreshedValueFactory" />.
     /// </summary>
-    public static async Task<T> GetOrRefreshAsync<T>(string name, Func<ValueReader, T> reader, Action<BinaryWriter, T> writer, Func<Task<T>> refreshedValueFactory = null, TimeSpan age = default)
+    public static async Task<T> GetOrRefreshAsync<T>(string name, Func<ValueReader, T> reader, Action<BinaryWriter, T>? writer, Func<CancellationToken, Task<T>>? refreshedValueFactory = null, TimeSpan age = default,
+                                                     CancellationToken cancellationToken = default)
     {
-        if (age == default)
+        if (age == TimeSpan.Zero)
         {
             age = TimeSpan.FromDays(1);
         }
@@ -48,9 +57,14 @@ public class CacheFile
         CacheFile file = new(name);
         if (writer != null && (file.CreationTime == null || DateTimeOffset.UtcNow - file.CreationTime >= age))
         {
+            T newValue = refreshedValueFactory == null ? default : await refreshedValueFactory(cancellationToken);
+            if (newValue == null)
+            {
+                return reader(ValueReader.Empty);
+            }
+
             await using BinaryWriter binaryWriter = new(File.Create(file.TempFilePath));
             binaryWriter.Write(BitConverter.GetBytes(DateTimeOffset.UtcNow.ToUnixTimeSeconds()));
-            T newValue = refreshedValueFactory == null ? default : await refreshedValueFactory();
             writer(binaryWriter, newValue);
             return newValue;
         }
@@ -59,7 +73,7 @@ public class CacheFile
         T readerResult = reader(valueReader);
         if (valueReader.ReachedEarlyEnd)
         {
-            return refreshedValueFactory == null ? default : await refreshedValueFactory();
+            return refreshedValueFactory == null ? default : await refreshedValueFactory(cancellationToken);
         }
         return readerResult;
     }
@@ -73,7 +87,12 @@ public class CacheFile
 
     public class ValueReader : IDisposable
     {
+        [ThreadStatic]
+        private static ValueReader? empty;
+
         private readonly BinaryReader binaryReader;
+
+        public static ValueReader Empty => empty ??= new ValueReader(new BinaryReader(Stream.Null));
         public bool ReachedEarlyEnd { get; private set; }
 
         public ValueReader(BinaryReader binaryReader)

@@ -73,7 +73,7 @@ public static class ScreenExtensions
         }
         catch (OperationCanceledException)
         {
-            if (routableViewModelBase != null)
+            if (routableViewModelBase != null && navigationStack.Count > 0)
             {
                 navigationStack.Remove(navigationStack[^1]);
             }

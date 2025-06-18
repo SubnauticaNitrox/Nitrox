@@ -37,7 +37,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
             try
             {
                 NitroxChangelogs.Clear();
-                NitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync());
+                NitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync(cancellationToken));
             }
             catch (Exception ex)
             {

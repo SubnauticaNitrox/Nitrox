@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -6,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using LitJson;
@@ -16,6 +18,8 @@ namespace Nitrox.Launcher.Models.Utils;
 
 public partial class Downloader
 {
+    private static readonly ConcurrentDictionary<string, Task<byte[]>> responseCache = [];
+
     public const string BLOGS_URL = "https://nitroxblog.rux.gg/wp-json/wp/v2/posts?per_page=8&page=1";
     public const string LATEST_VERSION_URL = "https://nitrox.rux.gg/api/version/latest";
     public const string CHANGELOGS_URL = "https://nitrox.rux.gg/api/changelog/releases";
@@ -24,20 +28,24 @@ public partial class Downloader
     [GeneratedRegex(@"""version"":""([^""]*)""")]
     private static partial Regex JsonVersionFieldRegex { get; }
 
-    public static async Task<IList<NitroxBlog>> GetBlogsAsync()
+    public static async Task<IList<NitroxBlog>> GetBlogsAsync(CancellationToken cancellationToken = default)
     {
         IList<NitroxBlog> blogs = new List<NitroxBlog>();
 
         try
         {
             string jsonString = await CacheFile.GetOrRefreshAsync("blogs",
-                                                                      r => r.Read(""),
-                                                                      (w, v) => w.Write(v),
-                                                                      async () =>
+                                                                  r => r.Read("{}"),
+                                                                  (w, v) => w.Write(v),
+                                                                  async token =>
+                                                                  {
+                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(BLOGS_URL, token);
+                                                                      if (response == null)
                                                                       {
-                                                                          using HttpResponseMessage response = await GetResponseFromCacheAsync(BLOGS_URL);
-                                                                          return await response.Content.ReadAsStringAsync();
-                                                                      });
+                                                                          return null;
+                                                                      }
+                                                                      return await response.Content.ReadAsStringAsync(token);
+                                                                  }, cancellationToken: cancellationToken);
 
             JsonData data = JsonMapper.ToObject(jsonString);
 
@@ -60,17 +68,21 @@ public partial class Downloader
                 }
                 // Get image bitmap from image URL
                 byte[] imageData = await CacheFile.GetOrRefreshAsync(imageCacheName,
-                                                                     r => r.Read<byte[]>(),
+                                                                     r => r.Read<byte[]>([]),
                                                                      (w, v) =>
                                                                      {
                                                                          w.Write(v.Length);
                                                                          w.Write(v);
                                                                      },
-                                                                     async () =>
+                                                                     async token =>
                                                                      {
-                                                                         HttpResponseMessage imageResponse = await GetResponseFromCacheAsync(imageUrl);
-                                                                         return await imageResponse.Content.ReadAsByteArrayAsync();
-                                                                     });
+                                                                         HttpResponseMessage imageResponse = await GetResponseFromCacheAsync(imageUrl, token);
+                                                                         if (imageResponse == null)
+                                                                         {
+                                                                             return null;
+                                                                         }
+                                                                         return await imageResponse.Content.ReadAsByteArrayAsync(token);
+                                                                     }, cancellationToken: cancellationToken);
                 using MemoryStream imageMemoryStream = new(imageData);
                 Bitmap image = new(imageMemoryStream);
 
@@ -86,7 +98,7 @@ public partial class Downloader
         return blogs;
     }
 
-    public static async Task<IList<NitroxChangelog>> GetChangeLogsAsync()
+    public static async Task<IList<NitroxChangelog>> GetChangeLogsAsync(CancellationToken cancellationToken = default)
     {
         IList<NitroxChangelog> changelogs = new List<NitroxChangelog>();
 
@@ -94,13 +106,17 @@ public partial class Downloader
         {
             //https://developer.wordpress.org/rest-api/reference/posts/#arguments
             string jsonString = await CacheFile.GetOrRefreshAsync("changelogs",
-                                                                  r => r.Read(""),
+                                                                  r => r.Read("{}"),
                                                                   (w, v) => w.Write(v),
-                                                                  async () =>
+                                                                  async token =>
                                                                   {
-                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(CHANGELOGS_URL);
-                                                                      return await response.Content.ReadAsStringAsync();
-                                                                  });
+                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(CHANGELOGS_URL, token);
+                                                                      if (response == null)
+                                                                      {
+                                                                          return null;
+                                                                      }
+                                                                      return await response.Content.ReadAsStringAsync(token);
+                                                                  }, cancellationToken: cancellationToken);
             StringBuilder builder = new();
             JsonData data = JsonMapper.ToObject(jsonString);
 
@@ -142,18 +158,22 @@ public partial class Downloader
         return changelogs;
     }
 
-    public static async Task<Version> GetNitroxLatestVersionAsync()
+    public static async Task<Version> GetNitroxLatestVersionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             string jsonString = await CacheFile.GetOrRefreshAsync("update",
-                                                                  r => r.Read(""),
+                                                                  r => r.Read("{}"),
                                                                   (w, v) => w.Write(v),
-                                                                  async () =>
+                                                                  async token =>
                                                                   {
-                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(LATEST_VERSION_URL);
-                                                                      return await response.Content.ReadAsStringAsync();
-                                                                  });
+                                                                      using HttpResponseMessage? response = await GetResponseFromCacheAsync(LATEST_VERSION_URL, token);
+                                                                      if (response == null)
+                                                                      {
+                                                                          return null;
+                                                                      }
+                                                                      return await response.Content.ReadAsStringAsync(token);
+                                                                  }, cancellationToken: cancellationToken);
 
             Match match = JsonVersionFieldRegex.Match(jsonString);
             if (match.Success && match.Groups.Count > 1)
@@ -171,24 +191,45 @@ public partial class Downloader
         return new Version();
     }
 
-    private static async Task<HttpResponseMessage> GetResponseFromCacheAsync(string url)
+    /// <summary>
+    ///     Downloads data from the url. When cancelled, continues downloading in the background to cache the result in-memory to prevent spam.
+    /// </summary>
+    private static async Task<HttpResponseMessage?> GetResponseFromCacheAsync(string url, CancellationToken cancellationToken = default)
     {
+        if (responseCache.TryGetValue(url, out Task<byte[]> data))
+        {
+            return CreateResponseFromData(await data);
+        }
         Log.Info($"Trying to request data from {url}");
-
-        using HttpClient client = new();
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("Nitrox.Launcher");
-        client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(1) };
-        client.Timeout = TimeSpan.FromSeconds(5);
 
         try
         {
-            return await client.GetAsync(url);
+            Task<byte[]> dataTask = Task.Run(async () =>
+            {
+                using HttpClient client = new();
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Nitrox.Launcher");
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(1) };
+                client.Timeout = TimeSpan.FromSeconds(5);
+
+                using HttpResponseMessage response = await client.GetAsync(url, CancellationToken.None);
+                return await response.Content.ReadAsByteArrayAsync(CancellationToken.None);
+            });
+            responseCache.TryAdd(url, dataTask);
+            return CreateResponseFromData(await dataTask.WaitAsync(cancellationToken));
         }
-        catch (Exception ex)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            Log.Error(ex, $"Error while requesting data from {url}");
+            return null;
         }
 
-        return null;
+        static HttpResponseMessage? CreateResponseFromData(byte[] data)
+        {
+            if (data is null or [])
+            {
+                return null;
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ReadOnlyMemoryContent(data) };
+        }
     }
 }
