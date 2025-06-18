@@ -24,7 +24,7 @@ using NitroxModel.Platforms.Store.Interfaces;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class LaunchGameViewModel : RoutableViewModelBase
+internal partial class LaunchGameViewModel : RoutableViewModelBase
 {
     public static Task<string> LastFindSubnauticaTask;
     private static bool hasInstantLaunched;

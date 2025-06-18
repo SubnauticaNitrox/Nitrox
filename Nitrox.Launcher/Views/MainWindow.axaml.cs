@@ -7,7 +7,7 @@ using Nitrox.Launcher.ViewModels;
 
 namespace Nitrox.Launcher.Views;
 
-public partial class MainWindow : Abstract.WindowEx<MainWindowViewModel>
+internal partial class MainWindow : Abstract.WindowEx<MainWindowViewModel>
 {
     public MainWindow()
     {

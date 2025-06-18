@@ -13,7 +13,7 @@ using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class CrashWindowViewModel : ViewModelBase
+internal partial class CrashWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
     private string title;

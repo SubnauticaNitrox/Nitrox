@@ -27,7 +27,7 @@ using Config = NitroxModel.Serialization.SubnauticaServerConfig;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class ManageServerViewModel : RoutableViewModelBase
+internal partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly string[] advancedSettingsDeniedFields =
     [

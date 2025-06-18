@@ -10,16 +10,16 @@ using Nitrox.Launcher.Views;
 
 namespace Nitrox.Launcher;
 
-public sealed class AppViewLocator : ViewLocatorBase
+internal sealed class AppViewLocator : ViewLocatorBase
 {
-    private static IServiceProvider serviceProvider;
+    private static IServiceProvider serviceProvider = null!;
 
     public AppViewLocator(IServiceProvider serviceProvider)
     {
         AppViewLocator.serviceProvider = serviceProvider;
     }
 
-    private static MainWindow mainWindow;
+    private static MainWindow? mainWindow;
     public static MainWindow MainWindow
     {
         get
@@ -31,7 +31,7 @@ public sealed class AppViewLocator : ViewLocatorBase
 
             if (Application.Current?.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime desktop)
             {
-                return mainWindow = (MainWindow)desktop.MainWindow;
+                return mainWindow = (MainWindow)desktop.MainWindow!;
             }
             throw new NotSupportedException("This Avalonia application is only supported on desktop environments.");
         }

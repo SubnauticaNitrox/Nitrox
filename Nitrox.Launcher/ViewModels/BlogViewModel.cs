@@ -8,14 +8,16 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class BlogViewModel : RoutableViewModelBase
+internal sealed partial class BlogViewModel : RoutableViewModelBase
 {
+    private readonly NitroxBlogService? nitroxBlogService;
     public static Bitmap FallbackImage { get; } = AssetHelper.GetAssetFromStream("/Assets/Images/blog/vines.png", static stream => new Bitmap(stream));
 
     [ObservableProperty]
@@ -23,6 +25,11 @@ public partial class BlogViewModel : RoutableViewModelBase
 
     public BlogViewModel()
     {
+    }
+
+    public BlogViewModel(NitroxBlogService nitroxBlogService)
+    {
+        this.nitroxBlogService = nitroxBlogService;
     }
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
@@ -38,7 +45,14 @@ public partial class BlogViewModel : RoutableViewModelBase
                 try
                 {
                     NitroxBlogs.Clear();
-                    NitroxBlogs.AddRange(await Downloader.GetBlogsAsync(cancellationToken));
+                    NitroxBlogs.AddRange(await nitroxBlogService?.GetBlogPostsAsync(cancellationToken)! ?? []);
+                }
+                catch (OperationCanceledException)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        LauncherNotifier.Error("Failed to fetch Nitrox blogs");
+                    }
                 }
                 catch (Exception ex)
                 {

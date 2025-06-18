@@ -9,7 +9,7 @@ using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Models.Extensions;
 
-public static class ScreenExtensions
+internal static class ScreenExtensions
 {
     private static readonly List<RoutableViewModelBase> navigationStack = [];
     private static CancellationTokenSource? viewChangeBusyCts;

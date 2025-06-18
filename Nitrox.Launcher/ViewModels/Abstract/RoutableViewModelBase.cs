@@ -4,7 +4,7 @@ using Nitrox.Launcher.Models.Design;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class RoutableViewModelBase : ViewModelBase
+internal abstract class RoutableViewModelBase : ViewModelBase
 {
     public IRoutingScreen HostScreen { get; } = AppViewLocator.HostScreen;
 

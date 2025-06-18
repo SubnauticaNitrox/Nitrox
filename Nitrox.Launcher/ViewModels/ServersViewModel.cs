@@ -16,7 +16,7 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class ServersViewModel : RoutableViewModelBase
+internal partial class ServersViewModel : RoutableViewModelBase
 {
     private readonly IKeyValueStore keyValueStore;
     private readonly IDialogService dialogService;

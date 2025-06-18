@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
@@ -13,10 +14,18 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class UpdatesViewModel : RoutableViewModelBase
+internal partial class UpdatesViewModel : RoutableViewModelBase
 {
+    private readonly NitroxWebsiteApiService? nitroxWebsiteApi;
+
     [ObservableProperty]
     private bool newUpdateAvailable;
+
+    [ObservableProperty]
+    private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
+
+    [ObservableProperty]
+    private string officialVersion;
 
     [ObservableProperty]
     private bool usingOfficialVersion;
@@ -24,26 +33,13 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     [ObservableProperty]
     private string version;
 
-    [ObservableProperty]
-    private string officialVersion;
-
-    [ObservableProperty]
-    private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
-
-    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
+    public UpdatesViewModel()
     {
-        await Dispatcher.UIThread.InvokeAsync(async () =>
-        {
-            try
-            {
-                NitroxChangelogs.Clear();
-                NitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync(cancellationToken));
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while trying to display Nitrox changelogs");
-            }
-        });
+    }
+
+    public UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi)
+    {
+        this.nitroxWebsiteApi = nitroxWebsiteApi;
     }
 
     public async Task<bool> IsNitroxUpdateAvailableAsync()
@@ -51,7 +47,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
         try
         {
             Version currentVersion = NitroxEnvironment.Version;
-            Version latestVersion = await Downloader.GetNitroxLatestVersionAsync();
+            Version latestVersion = (await nitroxWebsiteApi?.GetNitroxLatestVersionAsync()!)?.Version ?? new Version(0, 0);
 
             NewUpdateAvailable = latestVersion > currentVersion;
 #if DEBUG
@@ -83,9 +79,29 @@ public partial class UpdatesViewModel : RoutableViewModelBase
         return NewUpdateAvailable || !UsingOfficialVersion;
     }
 
-    [RelayCommand]
-    private void DownloadUpdate()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        ProcessUtils.OpenUrl("nitrox.rux.gg/download");
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            try
+            {
+                NitroxChangelogs.Clear();
+                NitroxChangelogs.AddRange(await nitroxWebsiteApi?.GetChangeLogsAsync(cancellationToken)! ?? []);
+            }
+            catch (OperationCanceledException)
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    LauncherNotifier.Error("Failed to fetch Nitrox changelogs");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while trying to display Nitrox changelogs");
+            }
+        });
     }
+
+    [RelayCommand]
+    private void DownloadUpdate() => ProcessUtils.OpenUrl("nitrox.rux.gg/download");
 }

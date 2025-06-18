@@ -19,7 +19,7 @@ using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class OptionsViewModel : RoutableViewModelBase
+internal partial class OptionsViewModel : RoutableViewModelBase
 {
     private readonly IKeyValueStore keyValueStore;
 

@@ -7,7 +7,7 @@ using Nitrox.Launcher.Models;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class ViewModelBase : ObservableValidator, IMessageReceiver
+internal abstract class ViewModelBase : ObservableValidator, IMessageReceiver
 {
     protected Window MainWindow => AppViewLocator.MainWindow;
 

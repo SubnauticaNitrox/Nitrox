@@ -21,7 +21,7 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+internal partial class MainWindowViewModel : ViewModelBase
 {
     private readonly BlogViewModel blogViewModel;
     private readonly CommunityViewModel communityViewModel;

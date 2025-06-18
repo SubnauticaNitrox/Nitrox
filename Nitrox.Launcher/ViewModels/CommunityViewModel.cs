@@ -4,7 +4,7 @@ using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class CommunityViewModel : RoutableViewModelBase
+internal partial class CommunityViewModel : RoutableViewModelBase
 {
     [RelayCommand]
     private void DiscordLink()
