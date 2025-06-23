@@ -7,7 +7,7 @@ using Avalonia.Media.Imaging;
 
 namespace Nitrox.Launcher.Models.Services;
 
-internal class HttpImageService
+internal sealed class HttpImageService
 {
     private readonly HttpClient httpClient;
 

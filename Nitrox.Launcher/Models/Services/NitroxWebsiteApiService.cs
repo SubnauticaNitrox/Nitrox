@@ -6,11 +6,10 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Design;
-using Nitrox.Launcher.Models.Utils;
 
 namespace Nitrox.Launcher.Models.Services;
 
-internal class NitroxWebsiteApiService
+internal sealed class NitroxWebsiteApiService
 {
     private readonly HttpClient httpClient;
 
@@ -24,28 +23,11 @@ internal class NitroxWebsiteApiService
     {
         ChangeLog[] changeLogs = await httpClient.GetFromJsonAsync<ChangeLog[]>("changelog/releases", cancellationToken: cancellationToken);
         NitroxChangelog[] result = new NitroxChangelog[changeLogs.Length];
-
-        StringBuilder builder = new();
+        StringBuilder buffer = new();
         for (int i = 0; i < changeLogs.Length; i++)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            ChangeLog item = changeLogs[i];
-
-            builder.Clear();
-            foreach (string patchNote in item.PatchNotes)
-            {
-                if (patchNote.StartsWith('-'))
-                {
-                    builder.AppendLine($"\n[b][u]{patchNote.TrimStart('-', ' ')}[/u][/b]");
-                }
-                else
-                {
-                    builder.AppendLine($"• {patchNote}");
-                }
-            }
-            result[i] = new NitroxChangelog(item.Version, item.Released.DateTime, string.Join(Environment.NewLine, builder.ToString()));
+            result[i] = changeLogs[i].FromDtoToLauncher(buffer);
         }
-
         return result;
     }
 

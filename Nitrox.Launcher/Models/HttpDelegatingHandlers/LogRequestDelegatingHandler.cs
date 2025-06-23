@@ -11,7 +11,7 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        string url = request.RequestUri == null ? "<no-url>" : $"{request.RequestUri.Scheme}://{request.RequestUri.Host}{request.RequestUri.LocalPath}";
+        string url = request.RequestUri == null ? "<no-url>" : request.RequestUri.ToString();
         Log.Info($"{request.Method} request to {url}");
         try
         {

@@ -21,7 +21,7 @@ namespace Nitrox.Launcher.Models.Services;
 /// <summary>
 ///     Keeps track of server instances.
 /// </summary>
-public class ServerService : IMessageReceiver, INotifyPropertyChanged
+internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 {
     private readonly IDialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
@@ -29,7 +29,7 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
     private List<ServerEntry> servers = [];
     private readonly Lock serversLock = new();
     private bool shouldRefreshServersList;
-    private FileSystemWatcher watcher;
+    private FileSystemWatcher? watcher;
     private readonly CancellationTokenSource serverRefreshCts = new();
     private readonly HashSet<string> loggedErrorDirectories = [];
     private volatile bool hasUpdatedAtLeastOnce;
@@ -247,14 +247,14 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
         }
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
         {

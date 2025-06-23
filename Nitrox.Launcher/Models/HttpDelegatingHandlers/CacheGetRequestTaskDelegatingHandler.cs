@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -13,37 +13,41 @@ namespace Nitrox.Launcher.Models.HttpDelegatingHandlers;
 /// </summary>
 internal sealed class CacheGetRequestTaskDelegatingHandler : DelegatingHandler
 {
-    private static readonly ConcurrentDictionary<string, Task<byte[]>> cache = [];
+    private static readonly Dictionary<string, Task<byte[]>> cache = [];
+    private static readonly Lock cacheLocker = new();
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.Method != HttpMethod.Get)
-        {
-            return await base.SendAsync(request, cancellationToken);
-        }
-        string? url = request.RequestUri == null ? null : $"{request.RequestUri.Scheme}://{request.RequestUri.Host}{request.RequestUri.LocalPath}";
-        if (url == null)
+        if (request is not { Method: { } method, RequestUri: not null } || method != HttpMethod.Get)
         {
             return await base.SendAsync(request, cancellationToken);
         }
 
         // Cache request in background, ignoring cancellation.
-        if (!cache.TryGetValue(url, out Task<byte[]> task) || task is { IsCompleted: true, IsCompletedSuccessfully: false })
+        string url = request.RequestUri.ToString();
+        Task<byte[]> task;
+        lock (cacheLocker)
         {
-            task = Task.Run(async () =>
+            if (!cache.TryGetValue(url, out task) || task is { IsCompleted: true, IsCompletedSuccessfully: false })
             {
-                using HttpResponseMessage response = await base.SendAsync(request, CancellationToken.None);
-                byte[] data = await response.Content.ReadAsByteArrayAsync(CancellationToken.None);
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception(Encoding.UTF8.GetString(data));
-                }
-                return data;
-            }, CancellationToken.None);
-            cache.TryAdd(url, task);
+                task = UncancellableRequest(request);
+                cache.TryAdd(url, task);
+            }
         }
-        return CreateResponseFromData(await task.WaitAsync(cancellationToken));
+
+        return CreateResponseFromRequestData(await task.WaitAsync(cancellationToken));
     }
 
-    private static HttpResponseMessage CreateResponseFromData(byte[] data) => new(HttpStatusCode.OK) { Content = new ReadOnlyMemoryContent(data) };
+    private async Task<byte[]> UncancellableRequest(HttpRequestMessage request)
+    {
+        using HttpResponseMessage response = await base.SendAsync(request, CancellationToken.None);
+        byte[] data = await response.Content.ReadAsByteArrayAsync(CancellationToken.None);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(Encoding.UTF8.GetString(data));
+        }
+        return data;
+    }
+
+    private static HttpResponseMessage CreateResponseFromRequestData(byte[] data) => new(HttpStatusCode.OK) { Content = new ReadOnlyMemoryContent(data) };
 }

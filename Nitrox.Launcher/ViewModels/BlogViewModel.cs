@@ -45,7 +45,10 @@ internal sealed partial class BlogViewModel : RoutableViewModelBase
                 try
                 {
                     NitroxBlogs.Clear();
-                    NitroxBlogs.AddRange(await nitroxBlogService?.GetBlogPostsAsync(cancellationToken)! ?? []);
+                    await foreach (NitroxBlog? blog in nitroxBlogService?.GetBlogPostsAsync(cancellationToken)!)
+                    {
+                        NitroxBlogs.Add(blog);
+                    }
                 }
                 catch (OperationCanceledException)
                 {

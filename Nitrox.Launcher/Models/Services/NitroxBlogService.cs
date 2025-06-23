@@ -1,14 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Threading;
-using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Design;
 
 namespace Nitrox.Launcher.Models.Services;
 
-internal class NitroxBlogService
+internal sealed class NitroxBlogService
 {
     private readonly HttpClient httpClient;
     private readonly HttpImageService httpImageService;
@@ -21,17 +22,14 @@ internal class NitroxBlogService
         httpClient.DefaultRequestHeaders.CacheControl!.MaxAge = TimeSpan.FromDays(7);
     }
 
-    public async Task<NitroxBlog[]?> GetBlogPostsAsync(CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<NitroxBlog> GetBlogPostsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        BlogPost[] blogs = await httpClient.GetFromJsonAsync<BlogPost[]>("posts?per_page=8&page=1", cancellationToken: cancellationToken);
-        NitroxBlog[] result = new NitroxBlog[blogs.Length];
-        for (int i = 0; i < blogs.Length; i++)
+        BlogPost[] blogs = await httpClient.GetFromJsonAsync<BlogPost[]>("posts?per_page=8&page=1", cancellationToken);
+        foreach (BlogPost blog in blogs)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            BlogPost item = blogs[i];
-            result[i] = item.FromDtoToLauncher(await httpImageService.GetImageAsync(item.ThumbnailImageUrl, cancellationToken));
+            yield return blog.FromDtoToLauncher(await httpImageService.GetImageAsync(blog.ThumbnailImageUrl, cancellationToken));
         }
-        return result;
     }
 
     public sealed record BlogPost

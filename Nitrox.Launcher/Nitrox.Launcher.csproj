@@ -34,7 +34,7 @@
         <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.1.0.7" />
         <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.1.0.7" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="ConsoleAppFramework" Version="5.3.1">
+        <PackageReference Include="ConsoleAppFramework" Version="5.5.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
