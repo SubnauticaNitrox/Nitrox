@@ -180,7 +180,7 @@
         </Style>
 
         <Style Selector="^:disabled">
-            <Setter Property="Background" Value="{TemplateBinding Background}" />
+            <Setter Property="Background" Value="{Binding $parent[ComboBox].Background}" />
         </Style>
     </Style>
 </Styles>
