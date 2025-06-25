@@ -32,8 +32,8 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
      * 1st injection:
      * gameObject.GetComponent<Rigidbody>().angularDrag = base.gameObject.GetComponent<Rigidbody>().angularDrag * 3f;
      * UnityEngine.Object.Destroy(base.gameObject);
-     * result = null;
      * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject, cookedData); <---- INSERTED LINE
+     * result = null;
      * 
      * 2nd injection:
      * base.Invoke("RemoveCorpse", this.removeCorpseAfterSeconds);
@@ -46,14 +46,13 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         // First injection
-        return new CodeMatcher(instructions).MatchEndForward([
+        return new CodeMatcher(instructions).MatchStartForward([
                                                 new CodeMatch(OpCodes.Ldarg_0),
                                                 new CodeMatch(OpCodes.Ldnull),
                                                 new CodeMatch(OpCodes.Stfld),
                                                 new CodeMatch(OpCodes.Br),
                                             ])
-                                            .Advance(1)
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
+                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1))
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_2))
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_3))
                                             .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastCookedSpawned(default, default, default))))
@@ -64,7 +63,7 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
                                                 new CodeMatch(OpCodes.Call),
                                             ])
                                             .Advance(1)
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
+                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1))
                                             .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastRemoveCorpse(default))))
                                             // Third injection
                                             .MatchEndForward([
