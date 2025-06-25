@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery;
@@ -19,9 +20,10 @@ using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class OptionsViewModel : RoutableViewModelBase
+internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageService storageService) : RoutableViewModelBase
 {
-    private readonly IKeyValueStore keyValueStore;
+    private readonly IKeyValueStore keyValueStore = keyValueStore;
+    private readonly StorageService storageService = storageService;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
@@ -49,15 +51,6 @@ internal partial class OptionsViewModel : RoutableViewModelBase
     private string multipleInstancesTooltip;
 
     private static string DefaultLaunchArg => "-vrmode none";
-
-    public OptionsViewModel()
-    {
-    }
-
-    public OptionsViewModel(IKeyValueStore keyValueStore)
-    {
-        this.keyValueStore = keyValueStore;
-    }
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
@@ -112,7 +105,7 @@ internal partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task SetGamePath()
     {
-        string selectedDirectory = await MainWindow.StorageProvider.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
+        string selectedDirectory = await storageService.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
         if (selectedDirectory == "")
         {
             return;
@@ -133,7 +126,7 @@ internal partial class OptionsViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void ResetArguments(IInputElement focusTargetAfterReset = null)
+    private void ResetArguments(IInputElement? focusTargetAfterReset = null)
     {
         LaunchArgs = DefaultLaunchArg;
         ShowResetArgsBtn = false;

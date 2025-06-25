@@ -1,13 +1,19 @@
 <UserControl
+    d:DesignHeight="500"
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.ServersView"
     x:DataType="vm:ServersViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:ServersViewModel />
+        <designer:DesignServersViewModel />
     </Design.DataContext>
     <Panel Background="{DynamicResource BrandWhite}" Classes="viewPadding">
         <Panel IsVisible="{Binding !Servers.Count}">

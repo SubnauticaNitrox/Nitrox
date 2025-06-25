@@ -49,7 +49,7 @@ public class App : Application
                 case ISingleViewApplicationLifetime singleViewPlatform:
                     singleViewPlatform.MainView = value;
                     break;
-                case null when Design.IsDesignMode:
+                case null when IsDesignMode:
                     Log.Info("Running in design previewer!");
                     break;
                 default:
@@ -103,7 +103,7 @@ public class App : Application
                 services.GetRequiredService<IKeyValueStore>().SetIsMultipleGameInstancesAllowed(true);
             }
 
-            StartupWindowFactory = () => new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
+            StartupWindowFactory = services.GetRequiredService<Func<Window>>();
         }
 
         AppBuilder builder = AppBuilder.Configure<App>()

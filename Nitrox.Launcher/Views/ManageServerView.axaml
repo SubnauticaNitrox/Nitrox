@@ -1,5 +1,6 @@
 <UserControl
     d:DesignWidth="700"
+    d:DesignHeight="700"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.ManageServerView"
     x:DataType="vm:ManageServerViewModel"
@@ -12,9 +13,10 @@
     xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:ManageServerViewModel ServerName="My fun server" />
+        <designer:DesignManageServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
         <KeyBinding Command="{Binding ForceDeleteServerCommand}" Gesture="Shift+Delete" />

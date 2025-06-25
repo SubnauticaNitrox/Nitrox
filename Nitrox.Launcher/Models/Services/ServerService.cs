@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
@@ -23,9 +22,9 @@ namespace Nitrox.Launcher.Models.Services;
 /// </summary>
 internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 {
-    private readonly IDialogService dialogService;
+    private readonly DialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
-    private readonly IRoutingScreen screen;
+    private readonly Func<IRoutingScreen> screenProvider;
     private List<ServerEntry> servers = [];
     private readonly Lock serversLock = new();
     private bool shouldRefreshServersList;
@@ -34,13 +33,16 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     private readonly HashSet<string> loggedErrorDirectories = [];
     private volatile bool hasUpdatedAtLeastOnce;
 
-    public ServerService(IDialogService dialogService, IKeyValueStore keyValueStore, IRoutingScreen screen)
+    public ServerService(DialogService dialogService, IKeyValueStore keyValueStore, Func<IRoutingScreen> screenProvider)
     {
         this.dialogService = dialogService;
         this.keyValueStore = keyValueStore;
-        this.screen = screen;
+        this.screenProvider = screenProvider;
 
-        _ = LoadServersAsync().ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+        if (!IsDesignMode)
+        {
+            _ = LoadServersAsync().ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+        }
 
         this.RegisterMessageListener<SaveDeletedMessage, ServerService>(static (message, receiver) =>
         {
@@ -87,7 +89,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
             server.Start(keyValueStore.GetSavesFolderDir());
             if (server.IsEmbedded)
             {
-                await screen.ShowAsync(new EmbeddedServerViewModel(server));
+                await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));
             }
             return true;
         }

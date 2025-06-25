@@ -1,13 +1,17 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using HanumanInstitute.MvvmDialogs;
-using HanumanInstitute.MvvmDialogs.Avalonia;
+using System.Reflection;
+using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Nitrox.Launcher.Models.Attributes;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.HttpDelegatingHandlers;
 using Nitrox.Launcher.Models.Services;
+using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Launcher.Views;
 using Nitrox.Launcher.Views.Abstract;
 using NitroxModel.Helper;
 using ServiceScan.SourceGenerator;
@@ -19,19 +23,23 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         // Add Avalonia (and related frameworks) services
-        services.AddSingleton(provider => new AppViewLocator(provider))
-                .AddSingleton<IRoutingScreen, RoutingScreen>()
-                .AddSingleton<IDialogService>(provider => new DialogService(
-                                                  new DialogManager(
-                                                      provider.GetRequiredService<AppViewLocator>(),
-                                                      new DialogFactory()),
-                                                  provider.GetRequiredService))
-                .AddHttpClients()
+        services.AddHttp()
                 // Domain APIs
                 .AddSingleton(_ => KeyValueStore.Instance)
                 // Services
                 .AddSingleton<ServerService>()
+                .AddSingleton<DialogService>()
+                .AddSingleton<StorageService>()
                 // UI
+                .AddSingleton<Window, MainWindow>()
+                .AddSingleton<MainWindowViewModel>()
+                .AddSingleton<Func<IRoutingScreen>>(provider => provider.GetRequiredService<MainWindowViewModel>)
+                .AddSingleton<Func<Window>>(provider => () =>
+                {
+                    Window window = provider.GetRequiredService<Window>();
+                    window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
+                    return window;
+                })
                 .AddDialogs()
                 .AddViews()
                 .AddViewModels();
@@ -39,38 +47,50 @@ public static partial class ServiceCollectionExtensions
         return services;
     }
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(ModalViewModelBase), AsSelf = true)]
-    [GenerateServiceRegistrations(AssignableTo = typeof(ModalBase), AsSelf = true)]
+    [GenerateServiceRegistrations(AttributeFilter = typeof(ModalForViewModelAttribute), CustomHandler = nameof(AddDialog))]
     private static partial IServiceCollection AddDialogs(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(RoutableViewBase<>), AsSelf = true, Lifetime = ServiceLifetime.Singleton)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(RoutableViewBase<>), ExcludeAssignableTo = typeof(MainWindow), AsSelf = true, Lifetime = ServiceLifetime.Singleton)]
     private static partial IServiceCollection AddViews(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(ViewModelBase), AsSelf = true)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(ViewModelBase), ExcludeAssignableTo = typeof(MainWindowViewModel), AsSelf = true)]
     private static partial IServiceCollection AddViewModels(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(DelegatingHandler))]
     [GenerateServiceRegistrations(AssignableTo = typeof(DelegatingHandler), AsSelf = true)]
     private static partial IServiceCollection AddHttpClientDelegatingHandlers(this IServiceCollection services);
 
-    private static IServiceCollection AddHttpClients(this IServiceCollection services)
+    [GenerateServiceRegistrations(AttributeFilter = typeof(HttpServiceAttribute), CustomHandler = nameof(InternalAddHttpClient))]
+    private static partial IServiceCollection AddHttpClients(this IServiceCollection services);
+
+    private static void InternalAddHttpClient<T>(this IServiceCollection services) where T : class => services.AddHttpClient<T>();
+
+    private static void AddDialog<TDialog>(this IServiceCollection services) where TDialog : ModalBase
     {
-        services.AddHttpClientDelegatingHandlers();
-        services.ConfigureHttpClientDefaults(builder =>
+        services.AddTransient<TDialog>();
+        services.TryAddTransient(GetViewModelType());
+        services.AddSingleton(provider => new DialogService.Mapping(GetViewModelType(), viewModel =>
         {
-            builder.AddHttpMessageHandler<CacheGetRequestTaskDelegatingHandler>()
-                   .AddHttpMessageHandler<FileCacheDelegatingHandler>()
-                   .AddHttpMessageHandler<LogRequestDelegatingHandler>();
-            builder.ConfigureHttpClient(client =>
-            {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Nitrox.Launcher");
-                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(1) };
-                client.Timeout = TimeSpan.FromSeconds(10);
-            });
-        });
-        services.AddHttpClient<NitroxWebsiteApiService>();
-        services.AddHttpClient<NitroxBlogService>();
-        services.AddHttpClient<HttpImageService>();
-        return services;
+            TDialog dialog = provider.GetRequiredService<TDialog>();
+            dialog.DataContext = provider.GetRequiredService(viewModel);
+            return dialog;
+        }));
+        static Type GetViewModelType() => typeof(TDialog).GetCustomAttribute<ModalForViewModelAttribute>()?.ViewModelType ?? throw new Exception($"No ViewModel assigned to {typeof(TDialog).Name}");
     }
+
+    private static IServiceCollection AddHttp(this IServiceCollection services) =>
+        services.AddHttpClientDelegatingHandlers()
+                .ConfigureHttpClientDefaults(builder =>
+                {
+                    builder.AddHttpMessageHandler<CacheGetRequestTaskDelegatingHandler>()
+                           .AddHttpMessageHandler<FileCacheDelegatingHandler>()
+                           .AddHttpMessageHandler<LogRequestDelegatingHandler>();
+                    builder.ConfigureHttpClient(client =>
+                    {
+                        client.DefaultRequestHeaders.UserAgent.ParseAdd("Nitrox.Launcher");
+                        client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(1) };
+                        client.Timeout = TimeSpan.FromSeconds(10);
+                    });
+                })
+                .AddHttpClients();
 }

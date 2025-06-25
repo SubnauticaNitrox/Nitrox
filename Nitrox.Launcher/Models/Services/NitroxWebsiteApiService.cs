@@ -5,10 +5,12 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Nitrox.Launcher.Models.Attributes;
 using Nitrox.Launcher.Models.Design;
 
 namespace Nitrox.Launcher.Models.Services;
 
+[HttpService]
 internal sealed class NitroxWebsiteApiService
 {
     private readonly HttpClient httpClient;

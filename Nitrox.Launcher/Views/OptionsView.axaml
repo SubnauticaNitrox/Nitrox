@@ -1,28 +1,19 @@
 ﻿<UserControl
+    d:DesignHeight="500"
     d:DesignWidth="1000"
     mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     x:Class="Nitrox.Launcher.Views.OptionsView"
     x:DataType="vm:OptionsViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls">
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:OptionsViewModel>
-            <vm:OptionsViewModel.SelectedGame>
-                <design:KnownGame PathToGame="C:\Users\Me\Games\Subnautica" Platform="STEAM" />
-            </vm:OptionsViewModel.SelectedGame>
-            <vm:OptionsViewModel.LaunchArgs>
-                -vrmode none
-            </vm:OptionsViewModel.LaunchArgs>
-            <vm:OptionsViewModel.SavesFolderDir>
-                C:\Users\Me\AppData\Roaming\Nitrox\saves
-            </vm:OptionsViewModel.SavesFolderDir>
-        </vm:OptionsViewModel>
+        <designer:DesignOptionsViewModel />
     </Design.DataContext>
     <UserControl.Resources>
         <StackPanel Orientation="Vertical" x:Key="InfoIconTooltipText">

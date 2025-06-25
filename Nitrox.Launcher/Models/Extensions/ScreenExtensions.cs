@@ -40,15 +40,15 @@ internal static class ScreenExtensions
         }
         // When navigating away from a view in an async button command, busy states on buttons should also reset. Otherwise, when navigating back it would still show buttons being busy.
         NitroxAttached.AsyncCommandButtonTagger.Clear();
-        if (screen.ActiveViewModel is RoutableViewModelBase routableViewModelBase)
+        if (screen.ActiveViewModel is RoutableViewModelBase priorViewModel)
         {
             navigationStack.RemoveAllFast(screen.ActiveViewModel, (item, param) => item.GetType() == param.GetType());
-            await routableViewModelBase.ViewContentUnloadAsync();
-            navigationStack.Add(routableViewModelBase);
+            await priorViewModel.ViewContentUnloadAsync();
+            navigationStack.Add(priorViewModel);
         }
         else
         {
-            routableViewModelBase = null;
+            priorViewModel = null;
         }
 
         try
@@ -73,7 +73,7 @@ internal static class ScreenExtensions
         }
         catch (OperationCanceledException)
         {
-            if (routableViewModelBase != null && navigationStack.Count > 0)
+            if (priorViewModel != null && navigationStack.Count > 0)
             {
                 navigationStack.Remove(navigationStack[^1]);
             }
@@ -102,11 +102,17 @@ internal static class ScreenExtensions
     ///     True if ViewModel was found in the routing navigation stack. False when the ViewModel wasn't found and routing
     ///     failed.
     /// </returns>
-    public static async Task<bool> BackToAsync<T>(this IRoutingScreen screen) where T : RoutableViewModelBase
+    public static async Task<bool> BackToAsync(this IRoutingScreen screen, Type? type)
     {
+        if (type == null)
+        {
+            return await BackAsync(screen);
+        }
+
         for (int i = navigationStack.Count - 1; i >= 0; i--)
         {
-            if (navigationStack[i] is T target)
+            RoutableViewModelBase target = navigationStack[i];
+            if (type.IsAssignableFrom(target.GetType()))
             {
                 // Cleanup the stack up and including the back-target.
                 for (int j = i; j < navigationStack.Count; j++)

@@ -1,5 +1,6 @@
 <UserControl
     d:DesignWidth="700"
+    d:DesignHeight="400"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.EmbeddedServerView"
     x:DataType="vm:EmbeddedServerViewModel"
@@ -11,9 +12,10 @@
     xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:EmbeddedServerViewModel />
+        <designer:DesignEmbeddedServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
         <KeyBinding

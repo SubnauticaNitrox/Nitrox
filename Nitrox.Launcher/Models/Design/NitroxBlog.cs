@@ -7,7 +7,7 @@ public sealed record NitroxBlog(string Title, DateOnly Date, string Url, Bitmap 
 {
     public NitroxBlog() : this("", default, "", null!)
     {
-        if (!Avalonia.Controls.Design.IsDesignMode)
+        if (!IsDesignMode)
         {
             throw new Exception("This constructor must only be called in design mode");
         }

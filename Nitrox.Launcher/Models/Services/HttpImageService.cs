@@ -4,9 +4,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using Nitrox.Launcher.Models.Attributes;
 
 namespace Nitrox.Launcher.Models.Services;
 
+[HttpService]
 internal sealed class HttpImageService
 {
     private readonly HttpClient httpClient;

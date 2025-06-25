@@ -177,20 +177,15 @@ public class RecolorImage : Control
             using ISkiaSharpApiLease lease = leaseFeature.Lease();
             SKCanvas canvas = lease.SkCanvas;
 
-            if (data == null)
-            {
-                return;
-            }
-
             using SKBitmap bitmap = SKBitmap.Decode(data.ToArray());
             using SKPaint paint = new();
+            paint.IsAntialias = true;
             if (bitmap == null)
             {
                 return;
             }
             SKImage img = SKImage.FromBitmap(bitmap);
             paint.ImageFilter = SKImageFilter.CreateColorFilter(SKColorFilter.CreateBlendMode(color.ToSKColor(), SKBlendMode.Modulate));
-            paint.FilterQuality = SKFilterQuality.High;
             canvas.DrawImage(img, dest.ToSKRect(), Bounds.ToSKRect(), paint);
         }
 

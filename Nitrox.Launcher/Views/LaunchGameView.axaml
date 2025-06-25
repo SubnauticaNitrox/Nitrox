@@ -8,11 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
     d:DesignWidth="1000"
     x:DataType="vm:LaunchGameViewModel"
     mc:Ignorable="d">
     <Design.DataContext>
-        <vm:LaunchGameViewModel />
+        <designer:DesignLaunchGameViewModel />
     </Design.DataContext>
     <ScrollViewer Classes="main">
         <StackPanel

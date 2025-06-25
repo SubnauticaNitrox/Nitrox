@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -34,7 +33,7 @@ internal sealed partial class BlogViewModel : RoutableViewModelBase
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        if (Design.IsDesignMode)
+        if (IsDesignMode)
         {
             return;
         }

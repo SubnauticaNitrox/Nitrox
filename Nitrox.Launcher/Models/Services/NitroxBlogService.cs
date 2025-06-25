@@ -5,10 +5,12 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Threading;
+using Nitrox.Launcher.Models.Attributes;
 using Nitrox.Launcher.Models.Design;
 
 namespace Nitrox.Launcher.Models.Services;
 
+[HttpService]
 internal sealed class NitroxBlogService
 {
     private readonly HttpClient httpClient;

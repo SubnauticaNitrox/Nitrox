@@ -20,9 +20,10 @@
     xmlns:views="clr-namespace:Nitrox.Launcher.Views"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
+    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:MainWindowViewModel />
+        <designer:DesignMainWindowViewModel />
     </Design.DataContext>
     <Window.Styles>
         <Style Selector="Border.nav">

@@ -21,7 +21,7 @@ public static class AssetHelper
         }
 
         Uri uri = assetPath.StartsWith("avares://") ? new Uri(assetPath) : new Uri($"avares://{assemblyName}{assetPath}");
-        if (!AssetLoader.Exists(uri) && !Avalonia.Controls.Design.IsDesignMode)
+        if (!AssetLoader.Exists(uri) && !IsDesignMode)
         {
             return assetPathCache[assetPath] = null;
         }
@@ -46,7 +46,7 @@ public static class AssetHelper
                 }
             }
             // In design mode, resource aren't yet embedded.
-            if (Avalonia.Controls.Design.IsDesignMode && TryGetPathFromLocalFileSystem(rawUri) is { } localPath)
+            if (IsDesignMode && TryGetPathFromLocalFileSystem(rawUri) is { } localPath)
             {
                 using Stream stream = File.OpenRead(localPath);
                 data = streamToDataFactory(stream);

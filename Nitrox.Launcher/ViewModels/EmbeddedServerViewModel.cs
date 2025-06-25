@@ -23,7 +23,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     private int? selectedHistoryIndex;
 
     [ObservableProperty]
-    private string serverCommand;
+    private string? serverCommand;
 
     [ObservableProperty]
     private ServerEntry serverEntry;
@@ -32,10 +32,6 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     private bool shouldAutoScroll = true;
 
     public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
-
-    public EmbeddedServerViewModel()
-    {
-    }
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
@@ -46,15 +42,16 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
             {
                 return;
             }
-            if (!status.Server.IsOnline && model.HostScreen.ActiveViewModel is EmbeddedServerViewModel)
+            // TODO: Verify correctness - model.HostScreen.BackToAsync<ServersViewModel>().ConfigureAwait(false);
+            if (!status.Server.IsOnline)
             {
-                model.HostScreen.BackToAsync<ServersViewModel>().ConfigureAwait(false);
+                model.Back();
             }
         });
     }
     
     [RelayCommand]
-    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
+    private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)

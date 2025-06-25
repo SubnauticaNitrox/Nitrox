@@ -12,7 +12,6 @@ using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
@@ -35,7 +34,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm), nameof(Config.IsEmbedded)
     ];
 
-    private readonly IDialogService dialogService;
+    private readonly DialogService dialogService;
+    private readonly StorageService storageService;
     private readonly IKeyValueStore keyValueStore;
     private readonly ServerService serverService;
 
@@ -67,9 +67,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private Bitmap serverIcon;
+    private Bitmap? serverIcon;
 
-    private string serverIconDir;
+    private string? serverIconDir;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -84,11 +84,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [FileName]
     [NotEndsWith(".")]
     [NitroxUniqueSaveName(nameof(SavesFolderDir), true, nameof(OriginalServerName))]
-    private string serverName;
+    private string? serverName;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private string serverPassword;
+    private string? serverPassword;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -104,31 +104,28 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
-    private string serverSeed;
+    private string? serverSeed;
     
     [ObservableProperty]
     private bool serverEmbedded = true;
 
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
-    public string OriginalServerName => Server?.Name;
+    public string? OriginalServerName => Server?.Name;
 
     [ObservableProperty]
-    private ServerEntry server;
+    private ServerEntry? server;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
     private bool serverIsOnline;
 
-    private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
+    private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server?.Name ?? throw new Exception($"{nameof(Server)} is not set"));
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
 
-    public ManageServerViewModel()
-    {
-    }
-
-    public ManageServerViewModel(IDialogService dialogService, IKeyValueStore keyValueStore, ServerService serverService)
+    public ManageServerViewModel(DialogService dialogService, StorageService storageService, IKeyValueStore keyValueStore, ServerService serverService)
     {
         this.dialogService = dialogService;
+        this.storageService = storageService;
         this.keyValueStore = keyValueStore;
         this.serverService = serverService;
 
@@ -150,6 +147,10 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     public void LoadFrom(ServerEntry serverEntry)
     {
+        if (Server == serverEntry)
+        {
+            return;
+        }
         Server = serverEntry;
 
         ServerName = Server.Name;
@@ -183,7 +184,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerAllowCommands != Server.AllowCommands;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
+    private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
     private bool CanGoBackAndStartServer() => !HasChanges();
 
@@ -272,7 +273,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     {
         try
         {
-            IReadOnlyList<IStorageFile> files = await MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            IReadOnlyList<IStorageFile> files = await storageService.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "Select an image",
                 AllowMultiple = false,
@@ -311,7 +312,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
             model.OwnerObject = Config.Load(SaveFolderDirectory);
             model.DisableButtons = Server.IsOnline;
         });
-        if (result && result.OwnerObject is Config config)
+        if (result && result!.OwnerObject is Config config)
         {
             config.Serialize(SaveFolderDirectory);
         }
@@ -391,7 +392,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         {
             Directory.Delete(SaveFolderDirectory, true);
             WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
-            await HostScreen.BackAsync();
+            ChangeViewToPrevious();
         }
         catch (Exception ex)
         {

@@ -10,7 +10,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
@@ -24,21 +23,21 @@ using NitroxModel.Platforms.Store.Interfaces;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class LaunchGameViewModel : RoutableViewModelBase
+internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
+    : RoutableViewModelBase
 {
-    public static Task<string> LastFindSubnauticaTask;
+    public static Task<string>? LastFindSubnauticaTask;
     private static bool hasInstantLaunched;
 
-    private readonly OptionsViewModel optionsViewModel;
-    private readonly ServerService serverService;
-    private readonly IKeyValueStore keyValueStore;
-    private readonly IDialogService dialogService;
+    private readonly ServerService serverService = serverService;
+    private readonly IKeyValueStore keyValueStore = keyValueStore;
+    private readonly DialogService dialogService = dialogService;
 
     [ObservableProperty]
     private Platform gamePlatform;
 
     [ObservableProperty]
-    private string platformToolTip;
+    private string? platformToolTip;
 
     public Bitmap[] GalleryImageSources { get; } = [
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-1.png", static stream => new Bitmap(stream)),
@@ -49,18 +48,6 @@ internal partial class LaunchGameViewModel : RoutableViewModelBase
 
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
-
-    public LaunchGameViewModel()
-    {
-    }
-
-    public LaunchGameViewModel(IDialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
-    {
-        this.dialogService = dialogService;
-        this.serverService = serverService;
-        this.optionsViewModel = optionsViewModel;
-        this.keyValueStore = keyValueStore;
-    }
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
@@ -92,7 +79,7 @@ internal partial class LaunchGameViewModel : RoutableViewModelBase
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
-                await HostScreen.ShowAsync(optionsViewModel);
+                ChangeView(optionsViewModel);
                 LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                 return;
             }
@@ -116,7 +103,7 @@ internal partial class LaunchGameViewModel : RoutableViewModelBase
             {
                 if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
                 {
-                    await Dispatcher.UIThread.InvokeAsync(async () => await HostScreen.ShowAsync(optionsViewModel));
+                    ChangeView(optionsViewModel);
                     LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                     return false;
                 }

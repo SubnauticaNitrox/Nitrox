@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
@@ -19,17 +18,13 @@ namespace Nitrox.Launcher.ViewModels;
 internal partial class ServersViewModel : RoutableViewModelBase
 {
     private readonly IKeyValueStore keyValueStore;
-    private readonly IDialogService dialogService;
+    private readonly DialogService dialogService;
     private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
     [ObservableProperty]
-    private AvaloniaList<ServerEntry> servers;
+    private AvaloniaList<ServerEntry>? servers;
 
-    public ServersViewModel()
-    {
-    }
-
-    public ServersViewModel(IKeyValueStore keyValueStore, IDialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
+    public ServersViewModel(IKeyValueStore keyValueStore, DialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
     {
         this.keyValueStore = keyValueStore;
         this.dialogService = dialogService;
@@ -88,7 +83,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
     {
         if (server.IsOnline && server.IsEmbedded)
         {
-            await HostScreen.ShowAsync(new EmbeddedServerViewModel(server));
+            ChangeView(new EmbeddedServerViewModel(server));
             return;
         }
         if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server))
@@ -97,6 +92,6 @@ internal partial class ServersViewModel : RoutableViewModelBase
         }
 
         manageServerViewModel.LoadFrom(server);
-        await HostScreen.ShowAsync(manageServerViewModel);
+        ChangeView(manageServerViewModel);
     }
 }
