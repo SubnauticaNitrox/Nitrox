@@ -11,7 +11,7 @@ namespace Nitrox.Launcher.Models.Converters;
 /// </summary>
 public class ToStringConverter : Converter<ToStringConverter>
 {
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is null)
         {
@@ -28,7 +28,7 @@ public class ToStringConverter : Converter<ToStringConverter>
             sourceText = value?.ToString();
         }
 
-        if (!targetType.IsAssignableTo(typeof(string)) || sourceText == null)
+        if (!targetType.IsAssignableFrom(typeof(string)) || sourceText == null)
         {
             return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
         }
@@ -37,6 +37,7 @@ public class ToStringConverter : Converter<ToStringConverter>
         {
             "upper" => sourceText.ToUpperInvariant(),
             "lower" => sourceText.ToLowerInvariant(),
+            "url" or "uri" or "link" => new UriBuilder(sourceText) { Scheme = Uri.UriSchemeHttps, Port = -1 }.Uri.ToString(),
             _ => CultureManager.CultureInfo.TextInfo.ToTitleCase(sourceText.ToLower().Replace("_", " ")),
         };
     }

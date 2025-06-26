@@ -100,37 +100,6 @@ public partial class RichTextBlock : TextBlock
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
                     string link = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
                     textBlock.Tag = link;
-                    link = link.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || link.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ? link : $"https://{link}";
-                    textBlock.SetValue(ToolTip.TipProperty, link);
-                    textBlock.ContextMenu = new ContextMenu
-                    {
-                        Items =
-                        {
-                            new MenuItem
-                            {
-                                Header = "Copy URL",
-                                Command = new RelayCommand(async void () =>
-                                {
-                                    try
-                                    {
-                                        if (string.IsNullOrEmpty(link))
-                                        {
-                                            return;
-                                        }
-                                        IClipboard clipboard = textBlock.GetWindow().Clipboard;
-                                        if (clipboard != null)
-                                        {
-                                            await clipboard.SetTextAsync(link);
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Log.Error(e, "Error trying to set clipboard");
-                                    }
-                                })
-                            }
-                        }
-                    };
                     inlines.Add(textBlock);
                     break;
                 case ['[', '#', ..]:
