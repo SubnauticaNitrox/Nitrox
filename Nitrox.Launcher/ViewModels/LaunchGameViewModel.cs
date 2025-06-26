@@ -74,7 +74,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         Log.Info("Launching Subnautica in singleplayer mode");
-
         try
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
@@ -83,6 +82,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                 return;
             }
+
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
             await StartSubnauticaAsync();
         }
@@ -149,7 +149,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 {
                     await LastFindSubnauticaTask;
                 }
-                NitroxEntryPatch.Remove(NitroxUser.GamePath);
                 NitroxEntryPatch.Apply(NitroxUser.GamePath);
 
                 if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
