@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Reactive;
-using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 
 namespace Nitrox.Launcher.Views;
@@ -21,7 +20,7 @@ internal partial class MainWindow : Abstract.WindowEx<MainWindowViewModel>
                 pArgs.Source is Control { Tag: string url } control &&
                 control.Classes.Contains("link"))
             {
-                ProcessUtils.OpenUrl(url);
+                OpenUrl(url);
                 args.Item2.Handled = true;
             }
         }));

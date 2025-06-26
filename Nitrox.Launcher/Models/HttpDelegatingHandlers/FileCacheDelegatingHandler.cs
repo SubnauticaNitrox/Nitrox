@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.Models.HttpDelegatingHandlers;
 
@@ -52,6 +53,6 @@ internal sealed class FileCacheDelegatingHandler : DelegatingHandler
         {
             throw new Exception($"{nameof(request.RequestUri)} must not be null");
         }
-        return Path.Combine(Path.GetTempPath(), $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().AsMd5Hash())}.cache");
+        return Path.Combine(NitroxUser.AppDataPath, "Cache", $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().AsMd5Hash())}.cache");
     }
 }

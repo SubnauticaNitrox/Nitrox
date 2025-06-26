@@ -103,5 +103,5 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void DownloadUpdate() => ProcessUtils.OpenUrl("nitrox.rux.gg/download");
+    private void DownloadUpdate() => OpenUrl("nitrox.rux.gg/download");
 }

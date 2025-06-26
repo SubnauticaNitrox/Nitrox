@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -9,30 +8,30 @@ internal partial class CommunityViewModel : RoutableViewModelBase
     [RelayCommand]
     private void DiscordLink()
     {
-        ProcessUtils.OpenUrl("discord.gg/E8B4X9s");
+        OpenUrl("discord.gg/E8B4X9s");
     }
 
     [RelayCommand]
     private void TwitterLink()
     {
-        ProcessUtils.OpenUrl("twitter.com/modnitrox");
+        OpenUrl("twitter.com/modnitrox");
     }
 
     [RelayCommand]
     private void RedditLink()
     {
-        ProcessUtils.OpenUrl("reddit.com/r/SubnauticaNitrox");
+        OpenUrl("reddit.com/r/SubnauticaNitrox");
     }
 
     [RelayCommand]
     private void BlueskyLink()
     {
-        ProcessUtils.OpenUrl("bsky.app/profile/nitroxmod.bsky.social");
+        OpenUrl("bsky.app/profile/nitroxmod.bsky.social");
     }
 
     [RelayCommand]
     private void GithubLink()
     {
-        ProcessUtils.OpenUrl("github.com/SubnauticaNitrox/Nitrox");
+        OpenUrl("github.com/SubnauticaNitrox/Nitrox");
     }
 }

@@ -29,7 +29,7 @@ public static class NitroxUser
         () =>
         {
             Assembly currentAsm = Assembly.GetEntryAssembly();
-            if (currentAsm?.GetName().Name.Equals("Nitrox.Launcher") ?? false)
+            if (currentAsm?.GetName().Name?.Equals("Nitrox.Launcher") ?? false)
             {
                 return Path.GetDirectoryName(currentAsm.Location);
             }
@@ -55,7 +55,7 @@ public static class NitroxUser
         () =>
         {
             using ProcessEx proc = ProcessEx.GetFirstProcess("Nitrox.Launcher");
-            string executable = proc?.MainModule?.FileName;
+            string executable = proc?.MainModule.FileName;
             return !string.IsNullOrWhiteSpace(executable) ? Path.GetDirectoryName(executable) : null;
         }
     };
@@ -95,7 +95,7 @@ public static class NitroxUser
     /// <summary>
     ///     Tries to get the launcher path that was previously saved by other Nitrox code.
     /// </summary>
-    public static string LauncherPath
+    public static string? LauncherPath
     {
         get
         {
@@ -117,8 +117,8 @@ public static class NitroxUser
         }
     }
 
-    public static string AssetBundlePath => Path.Combine(LauncherPath, "Resources", "AssetBundles");
-    public static string LanguageFilesPath => Path.Combine(LauncherPath, "Resources", "LanguageFiles");
+    public static string AssetBundlePath => Path.Combine(LauncherPath ?? throw new Exception("Unable to find launcher path"), "Resources", "AssetBundles");
+    public static string LanguageFilesPath => Path.Combine(LauncherPath ?? throw new Exception("Unable to find launcher path"), "Resources", "LanguageFiles");
 
     public static string PreferredGamePath
     {
@@ -126,10 +126,10 @@ public static class NitroxUser
         set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
     }
 
-    private static IGamePlatform gamePlatform;
-    public static event Action GamePlatformChanged;
+    private static IGamePlatform? gamePlatform;
+    public static event Action? GamePlatformChanged;
 
-    public static IGamePlatform GamePlatform
+    public static IGamePlatform? GamePlatform
     {
         get
         {
@@ -230,7 +230,7 @@ public static class NitroxUser
         }
     }
 
-    public static string AssetsPath
+    public static string? AssetsPath
     {
         get
         {

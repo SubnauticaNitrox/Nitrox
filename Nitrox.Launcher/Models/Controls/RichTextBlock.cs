@@ -7,6 +7,7 @@ using Avalonia.Controls.Documents;
 using Avalonia.Input.Platform;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
+using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.Controls;
 
@@ -110,14 +111,21 @@ public partial class RichTextBlock : TextBlock
                                 Header = "Copy URL",
                                 Command = new RelayCommand(async void () =>
                                 {
-                                    if (string.IsNullOrEmpty(link))
+                                    try
                                     {
-                                        return;
+                                        if (string.IsNullOrEmpty(link))
+                                        {
+                                            return;
+                                        }
+                                        IClipboard clipboard = textBlock.GetWindow().Clipboard;
+                                        if (clipboard != null)
+                                        {
+                                            await clipboard.SetTextAsync(link);
+                                        }
                                     }
-                                    IClipboard clipboard = textBlock.GetWindow().Clipboard;
-                                    if (clipboard != null)
+                                    catch (Exception e)
                                     {
-                                        await clipboard.SetTextAsync(link);
+                                        Log.Error(e, "Error trying to set clipboard");
                                     }
                                 })
                             }

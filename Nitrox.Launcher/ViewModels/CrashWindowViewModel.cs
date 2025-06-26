@@ -6,10 +6,10 @@ using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -23,7 +23,7 @@ internal partial class CrashWindowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanRestart))]
     private void Restart()
     {
-        ProcessUtils.StartSelf();
+        ProcessEx.StartSelf("--allow-instances");
         Environment.Exit(0);
     }
 
@@ -50,7 +50,7 @@ internal partial class CrashWindowViewModel : ViewModelBase
             _ => "Other"
         };
         string createGithubIssueUrl = $"https://github.com/SubnauticaNitrox/Nitrox/issues/new?assignees=&labels=Type%3A+bug%2CStatus%3A+to+verify&projects=&template=bug_report.yaml&title={HttpUtility.UrlEncode(issueTitle)}&what_happened={HttpUtility.UrlEncode(whatHappened)}&os_type={HttpUtility.UrlEncode(GetOsType())}&store_type={HttpUtility.UrlEncode(storeType)}";
-        ProcessUtils.OpenUrl(createGithubIssueUrl);
+        OpenUrl(createGithubIssueUrl);
 
         static string GetOsType()
         {

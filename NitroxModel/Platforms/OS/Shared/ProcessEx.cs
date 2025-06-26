@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Platforms.OS.Shared;
 
@@ -16,12 +17,12 @@ public class ProcessEx : IDisposable
     private readonly ProcessExBase implementation;
 
     public int Id => implementation.Id;
-    public string Name => implementation.Name;
+    public string? Name => implementation.Name;
     public IntPtr Handle => implementation.Handle;
     public ProcessModuleEx MainModule => implementation.MainModule;
-    public string MainModuleFileName => implementation.MainModuleFileName;
+    public string? MainModuleFileName => implementation.MainModuleFileName;
     public IntPtr MainWindowHandle => implementation.MainWindowHandle;
-    public string MainWindowTitle => implementation.MainWindowTitle;
+    public string? MainWindowTitle => implementation.MainWindowTitle;
 
     /// <summary>
     ///     True if process is running and in a recoverable state.
@@ -38,7 +39,7 @@ public class ProcessEx : IDisposable
         implementation = ProcessExFactory.Create(process.Id);
     }
 
-    public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null)
+    public static bool ProcessExists(string procName, Func<ProcessEx, bool>? predicate = null)
     {
         ProcessEx proc = null;
         try
@@ -56,15 +57,18 @@ public class ProcessEx : IDisposable
         }
     }
 
-    public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
+    public static ProcessEx? Start(string fileName, IEnumerable<(string, string)>? environmentVariables = null, string? workingDirectory = null, string? commandLine = null, bool createWindow = true)
     {
         ProcessStartInfo startInfo = new()
         {
             FileName = fileName,
-            WorkingDirectory = workingDirectory,
             UseShellExecute = false,
             CreateNoWindow = !createWindow
         };
+        if (workingDirectory != null)
+        {
+            startInfo.WorkingDirectory = workingDirectory;
+        }
 
         if (environmentVariables != null)
         {
@@ -80,7 +84,71 @@ public class ProcessEx : IDisposable
         }
 
         Process process = Process.Start(startInfo);
-        return new ProcessEx(process);
+        return process != null ? new ProcessEx(process) : null;
+    }
+
+#if NET9_0_OR_GREATER
+    public static Process? StartProcessDetached(ProcessStartInfo startInfo)
+    {
+        if (!string.IsNullOrWhiteSpace(startInfo.Arguments))
+        {
+            throw new NotSupportedException($"Arguments must be supplied via {startInfo.ArgumentList}");
+        }
+
+        // On Linux, processes are started as child by default. So we wrap as shell command to start detached from current process.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            List<string> newArgs = ["-c", string.Join(" ", "nohup", $"'{startInfo.FileName}'", string.Join(" ", startInfo.ArgumentList), ">/dev/null 2>&1", "&")];
+            startInfo.FileName = "/bin/sh";
+            startInfo.ArgumentList.Clear();
+            foreach (string arg in newArgs)
+            {
+                startInfo.ArgumentList.Add(arg);
+            }
+        }
+
+        return Process.Start(startInfo);
+    }
+
+    /// <summary>
+    ///     Starts the current app as a new instance.
+    /// </summary>
+    public static void StartSelf(params string[] arguments)
+    {
+        string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
+        // On Linux, entry assembly is .dll file but real executable is without extension.
+        string temp = Path.ChangeExtension(executableFilePath, null);
+        if (File.Exists(temp))
+        {
+            executableFilePath = temp;
+        }
+        temp = Path.ChangeExtension(executableFilePath, ".exe");
+        if (File.Exists(temp))
+        {
+            executableFilePath = temp;
+        }
+
+        using Process proc = StartProcessDetached(new ProcessStartInfo(executableFilePath!, arguments));
+    }
+
+    /// <summary>
+    ///     Starts the current app as a new instance, passing the same command line arguments.
+    /// </summary>
+    public static void StartSelfCopyArgs() => StartSelf(Environment.GetCommandLineArgs().Skip(1).ToArray());
+#endif
+
+    /// <summary>
+    ///     Opens the Url in the default browser. Forces the Uri scheme as HTTPS.
+    /// </summary>
+    public static void OpenUrl(string url)
+    {
+        UriBuilder urlBuilder = new(url) { Scheme = Uri.UriSchemeHttps, Port = -1 };
+        using Process proc = Process.Start(new ProcessStartInfo
+        {
+            FileName = urlBuilder.Uri.ToString(),
+            UseShellExecute = true,
+            Verb = "open"
+        });
     }
 
     public static ProcessEx? GetFirstProcess(string procName, Func<ProcessEx, bool>? predicate = null)
@@ -125,14 +193,14 @@ public class ProcessEx : IDisposable
 
 public abstract class ProcessExBase : IDisposable
 {
-    protected readonly Process Process;
+    protected readonly Process? Process;
     public virtual int Id => Process?.Id ?? -1;
-    public virtual string Name => Process?.ProcessName;
+    public virtual string? Name => Process?.ProcessName;
     public virtual IntPtr Handle => Process?.Handle ?? IntPtr.Zero;
     public abstract ProcessModuleEx MainModule { get; }
-    public virtual string MainModuleFileName => Process?.MainModule?.FileName;
+    public virtual string? MainModuleFileName => Process?.MainModule?.FileName;
     public virtual IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
-    public virtual string MainWindowTitle => Process?.MainWindowTitle;
+    public virtual string? MainWindowTitle => Process?.MainWindowTitle;
 
     public virtual bool IsRunning
     {
@@ -196,12 +264,12 @@ public abstract class ProcessExBase : IDisposable
 public class ProcessModuleEx
 {
     public IntPtr BaseAddress { get; set; }
-    public string ModuleName { get; set; }
-    public string FileName { get; set; }
+    public string? ModuleName { get; set; }
+    public string? FileName { get; set; }
     public int ModuleMemorySize { get; set; }
 }
 
-#if NET5_0_OR_GREATER
+#if NET9_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
 public class WindowsProcessEx : ProcessExBase
@@ -211,11 +279,11 @@ public class WindowsProcessEx : ProcessExBase
 
     public override IntPtr Handle => handle;
 
-    public override ProcessModuleEx MainModule
+    public override ProcessModuleEx? MainModule
     {
         get
         {
-            ProcessModule mainModule = Process.MainModule;
+            ProcessModule mainModule = Process?.MainModule;
             if (mainModule == null)
             {
                 return null;
@@ -230,9 +298,9 @@ public class WindowsProcessEx : ProcessExBase
         }
     }
 
-    public override string? MainModuleFileName => Process.MainModule?.FileName;
-    public override IntPtr MainWindowHandle => Process.MainWindowHandle;
-    public override string MainWindowTitle => Process.MainWindowTitle;
+    public override string? MainModuleFileName => Process?.MainModule?.FileName;
+    public override IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
+    public override string? MainWindowTitle => Process?.MainWindowTitle;
 
     public WindowsProcessEx(int id) : base(id)
     {
@@ -292,18 +360,18 @@ public class WindowsProcessEx : ProcessExBase
 
     public override IEnumerable<ProcessModuleEx> GetModules()
     {
-        return Process.Modules.Cast<ProcessModule>().Select(m => new ProcessModuleEx
+        return Process?.Modules.Cast<ProcessModule>().Select(m => new ProcessModuleEx
         {
             BaseAddress = m.BaseAddress,
             ModuleName = m.ModuleName,
             FileName = m.FileName,
             ModuleMemorySize = m.ModuleMemorySize
-        });
+        }) ?? [];
     }
 
     public override void Suspend()
     {
-        foreach (ProcessThread thread in Process.Threads)
+        foreach (ProcessThread thread in Process?.Threads ?? new ProcessThreadCollection([]))
         {
             IntPtr threadHandle = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
             if (threadHandle != IntPtr.Zero)
@@ -325,7 +393,7 @@ public class WindowsProcessEx : ProcessExBase
 
     public override void Resume()
     {
-        foreach (ProcessThread thread in Process.Threads)
+        foreach (ProcessThread thread in Process?.Threads ?? new ProcessThreadCollection([]))
         {
             IntPtr threadHandle = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
             if (threadHandle != IntPtr.Zero)
@@ -345,7 +413,7 @@ public class WindowsProcessEx : ProcessExBase
         }
     }
 
-    public override void Terminate() => Process.Kill();
+    public override void Terminate() => Process?.Kill();
 
     public override void Dispose()
     {
@@ -356,7 +424,7 @@ public class WindowsProcessEx : ProcessExBase
                 CloseHandle(handle);
                 handle = IntPtr.Zero;
             }
-            Process.Dispose();
+            Process?.Dispose();
             disposed = true;
         }
         GC.SuppressFinalize(this);
@@ -450,7 +518,7 @@ public class LinuxProcessEx : ProcessExBase
         {
             BaseAddress = IntPtr.Zero,
             ModuleName = Name,
-            FileName = MainModuleFileName ?? "",
+            FileName = MainModuleFileName,
             ModuleMemorySize = 0
         };
 
