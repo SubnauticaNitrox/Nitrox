@@ -20,16 +20,16 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
     private AvaloniaList<BackupItem> backups = [];
 
     [ObservableProperty]
-    private string saveFolderDirectory;
+    private string? saveFolderDirectory;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand))]
     [NotifyDataErrorInfo]
     [Backup]
-    private BackupItem selectedBackup;
+    private BackupItem? selectedBackup;
 
     [ObservableProperty]
-    private string title;
+    private string? title;
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -48,7 +48,7 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
 
     public bool CanRestoreBackup() => !HasErrors;
 
-    private static IEnumerable<BackupItem> GetBackups(string saveDirectory)
+    private static IEnumerable<BackupItem> GetBackups(string? saveDirectory)
     {
         IEnumerable<string> GetBackupFilePaths(string backupRootDir) =>
             Directory.EnumerateFiles(backupRootDir, "*.zip")

@@ -3,6 +3,4 @@ using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.ViewModels.Designer;
 
-internal class DesignServersViewModel() : ServersViewModel(KeyValueStore.Instance, null!, new ServerService(null!, KeyValueStore.Instance, null!), null!)
-{
-}
+internal class DesignServersViewModel() : ServersViewModel(KeyValueStore.Instance, null!, new ServerService(null!, KeyValueStore.Instance, null!), null!);

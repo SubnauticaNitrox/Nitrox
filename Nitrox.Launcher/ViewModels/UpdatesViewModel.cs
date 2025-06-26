@@ -14,9 +14,9 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class UpdatesViewModel : RoutableViewModelBase
+internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi) : RoutableViewModelBase
 {
-    private readonly NitroxWebsiteApiService? nitroxWebsiteApi;
+    private readonly NitroxWebsiteApiService nitroxWebsiteApi = nitroxWebsiteApi;
 
     [ObservableProperty]
     private bool newUpdateAvailable;
@@ -25,29 +25,20 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
     private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
 
     [ObservableProperty]
-    private string officialVersion;
+    private string? officialVersion;
 
     [ObservableProperty]
     private bool usingOfficialVersion;
 
     [ObservableProperty]
-    private string version;
-
-    public UpdatesViewModel()
-    {
-    }
-
-    public UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi)
-    {
-        this.nitroxWebsiteApi = nitroxWebsiteApi;
-    }
+    private string? version;
 
     public async Task<bool> IsNitroxUpdateAvailableAsync()
     {
         try
         {
             Version currentVersion = NitroxEnvironment.Version;
-            Version latestVersion = (await nitroxWebsiteApi?.GetNitroxLatestVersionAsync()!)?.Version ?? new Version(0, 0);
+            Version latestVersion = (await nitroxWebsiteApi.GetNitroxLatestVersionAsync()!)?.Version ?? new Version(0, 0);
 
             NewUpdateAvailable = latestVersion > currentVersion;
 #if DEBUG
@@ -86,7 +77,7 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
             try
             {
                 NitroxChangelogs.Clear();
-                NitroxChangelogs.AddRange(await nitroxWebsiteApi?.GetChangeLogsAsync(cancellationToken)! ?? []);
+                NitroxChangelogs.AddRange(await nitroxWebsiteApi.GetChangeLogsAsync(cancellationToken)! ?? []);
             }
             catch (OperationCanceledException)
             {

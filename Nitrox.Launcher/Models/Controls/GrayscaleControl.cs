@@ -77,12 +77,10 @@ public class GrayscaleControl : Decorator
             using SKImage backgroundSnapshot = skia.SkSurface.Snapshot();
             using SKShader backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, currentInvertedTransform);
             using SKImageFilter grayscaleFilter = SKImageFilter.CreateColorFilter(CreateGrayscaleColorFilter());
-            using SKPaint paint = new()
-            {
-                Shader = backdropShader,
-                ImageFilter = grayscaleFilter,
-                Color = new SKColor(0, 0, 0, opacity)
-            };
+            using SKPaint paint = new();
+            paint.Shader = backdropShader;
+            paint.ImageFilter = grayscaleFilter;
+            paint.Color = new SKColor(0, 0, 0, opacity);
             skia.SkCanvas.DrawRect(0, 0, (float)bounds.Width, (float)bounds.Height, paint);
         }
 

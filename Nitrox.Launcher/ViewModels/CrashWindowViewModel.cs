@@ -16,9 +16,9 @@ namespace Nitrox.Launcher.ViewModels;
 internal partial class CrashWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string title;
+    private string? title;
     [ObservableProperty]
-    private string message;
+    private string? message;
 
     [RelayCommand(CanExecute = nameof(CanRestart))]
     private void Restart()
@@ -71,9 +71,9 @@ internal partial class CrashWindowViewModel : ViewModelBase
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task CopyToClipboard(ContentControl commandControl)
+    private async Task CopyToClipboard(ContentControl? commandControl)
     {
-        IClipboard clipboard = commandControl?.GetWindow().Clipboard;
+        IClipboard clipboard = commandControl?.GetWindow()?.Clipboard;
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(Message);

@@ -4,10 +4,7 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using Avalonia.Input.Platform;
 using Avalonia.Media;
-using CommunityToolkit.Mvvm.Input;
-using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.Controls;
 
@@ -52,7 +49,7 @@ public partial class RichTextBlock : TextBlock
     [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
     private static partial Regex TagParserRegex { get; }
 
-    public static void ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection inlines)
+    public static void ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection? inlines)
     {
         if (inlines == null)
         {

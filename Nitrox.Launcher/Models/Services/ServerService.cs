@@ -251,12 +251,12 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
         {
@@ -267,7 +267,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         return true;
     }
 
-    public async Task<ServerEntry> GetOrCreateServerAsync(string saveName)
+    public async Task<ServerEntry?> GetOrCreateServerAsync(string saveName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
         string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);

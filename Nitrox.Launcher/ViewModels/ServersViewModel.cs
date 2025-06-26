@@ -50,7 +50,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task CreateServerAsync()
     {
-        CreateServerViewModel result = await dialogService.ShowAsync<CreateServerViewModel>();
+        CreateServerViewModel? result = await dialogService.ShowAsync<CreateServerViewModel>();
         if (!result)
         {
             return;
@@ -58,7 +58,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
 
         try
         {
-            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result.Name)));
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result!.Name)));
             if (serverEntry == null)
             {
                 throw new Exception("Failed to create save file");

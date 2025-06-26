@@ -94,7 +94,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     }
 
     [RelayCommand]
-    private async Task StartMultiplayerAsync(string[] args = null)
+    private async Task StartMultiplayerAsync(string[]? args = null)
     {
         Log.Info("Launching Subnautica in multiplayer mode");
         try
@@ -201,7 +201,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         Task.Run(async () =>
         {
             // Start the server
-            ServerEntry server = await serverService.GetOrCreateServerAsync(App.InstantLaunch.SaveName);
+            ServerEntry? server = await serverService.GetOrCreateServerAsync(App.InstantLaunch.SaveName);
+            if (server == null)
+            {
+                throw new Exception("Failed to create new server save files");
+            }
             server.Name = App.InstantLaunch.SaveName;
             Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serverService.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player
@@ -214,7 +218,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }).ContinueWithHandleError();
     }
 
-    private async Task StartSubnauticaAsync(string[] args = null)
+    private async Task StartSubnauticaAsync(string[]? args = null)
     {
         LauncherNotifier.Info("Starting game");
         string subnauticaPath = NitroxUser.GamePath;
@@ -255,6 +259,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private void UpdateGamePlatform()
     {
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>().Description;
     }
 }

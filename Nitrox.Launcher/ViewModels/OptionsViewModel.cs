@@ -162,7 +162,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     partial void OnLightModeEnabledChanged(bool value)
     {
         keyValueStore.SetIsLightModeEnabled(value);
-        Dispatcher.UIThread.Invoke(() => Application.Current.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
+        Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
     }
     
     partial void OnAllowMultipleGameInstancesChanged(bool value)

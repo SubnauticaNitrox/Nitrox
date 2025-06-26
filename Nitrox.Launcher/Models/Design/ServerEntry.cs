@@ -64,10 +64,10 @@ public partial class ServerEntry : ObservableObject
     private int maxPlayers = serverDefaults.MaxConnections;
 
     [ObservableProperty]
-    private string name;
+    private string? name;
 
     [ObservableProperty]
-    private string password;
+    private string? password;
 
     [ObservableProperty]
     private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
@@ -79,20 +79,20 @@ public partial class ServerEntry : ObservableObject
     private int port = serverDefaults.ServerPort;
 
     [ObservableProperty]
-    private string seed;
+    private string? seed;
 
     [ObservableProperty]
-    private Bitmap serverIcon;
+    private Bitmap? serverIcon;
 
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
 
     [ObservableProperty]
-    private bool isServerClosing = false;
+    private bool isServerClosing;
 
     internal ServerProcess? Process { get; private set; }
 
-    public static ServerEntry FromDirectory(string saveDir)
+    public static ServerEntry? FromDirectory(string saveDir)
     {
         ServerEntry result = new();
         return result.RefreshFromDirectory(saveDir) ? result : null;
@@ -109,7 +109,7 @@ public partial class ServerEntry : ObservableObject
         base.OnPropertyChanged(e);
     }
 
-    public static ServerEntry CreateNew(string saveDir, NitroxGameMode saveGameMode)
+    public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveDir, nameof(saveDir));
 
@@ -140,11 +140,11 @@ public partial class ServerEntry : ObservableObject
             return false;
         }
 
-        Bitmap serverIcon = null;
+        Bitmap icon = null;
         string serverIconPath = Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME);
         if (File.Exists(serverIconPath))
         {
-            serverIcon = new Bitmap(Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME));
+            icon = new Bitmap(Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME));
         }
 
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
@@ -162,10 +162,10 @@ public partial class ServerEntry : ObservableObject
             return false;
         }
 
-        Version version;
+        Version serverVersion;
         using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            version = config.SerializerMode switch
+            serverVersion = config.SerializerMode switch
             {
                 ServerSerializerMode.JSON => new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
                 ServerSerializerMode.PROTOBUF => new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
@@ -174,7 +174,7 @@ public partial class ServerEntry : ObservableObject
         }
 
         Name = Path.GetFileName(saveDir);
-        ServerIcon = serverIcon;
+        ServerIcon = icon;
         Password = config.ServerPassword;
         Seed = config.Seed;
         GameMode = config.GameMode;
@@ -186,7 +186,7 @@ public partial class ServerEntry : ObservableObject
         AllowLanDiscovery = config.LANDiscoveryEnabled;
         AllowCommands = !config.DisableConsole;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
-        Version = version;
+        Version = serverVersion;
         IsEmbedded = config.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                      ?
@@ -200,6 +200,10 @@ public partial class ServerEntry : ObservableObject
 
     public void Start(string savesDir)
     {
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            throw new Exception($"Server {nameof(Name)} not set");
+        }
         if (!Directory.Exists(savesDir))
         {
             throw new DirectoryNotFoundException($"Directory '{savesDir}' not found");
@@ -235,6 +239,11 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand]
     public void OpenSaveFolder()
     {
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            throw new Exception($"Server {nameof(Name)} is not set");
+        }
+
         System.Diagnostics.Process.Start(new ProcessStartInfo
         {
             FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name),
@@ -247,8 +256,8 @@ public partial class ServerEntry : ObservableObject
     {
         private OutputLineType lastOutputType;
         private Process? serverProcess;
-        private Ipc.ClientIpc ipc;
-        private CancellationTokenSource ipcCts;
+        private readonly Ipc.ClientIpc ipc;
+        private readonly CancellationTokenSource ipcCts;
 
         [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
         private static partial Regex OutputLineRegex { get; }
@@ -259,16 +268,21 @@ public partial class ServerEntry : ObservableObject
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
             string saveName = Path.GetFileName(saveDir);
-            
             string serverExeName = "NitroxServer-Subnautica.exe";
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 serverExeName = "NitroxServer-Subnautica";
             }
-            string serverFile = Path.Combine(NitroxUser.ExecutableRootPath, serverExeName);
+            string launcherPath = NitroxUser.ExecutableRootPath;
+            if (string.IsNullOrWhiteSpace(launcherPath))
+            {
+                throw new Exception($"{nameof(launcherPath)} must be set");
+            }
+
+            string serverFile = Path.Combine(launcherPath, serverExeName);
             ProcessStartInfo startInfo = new(serverFile)
             {
-                WorkingDirectory = NitroxUser.ExecutableRootPath,
+                WorkingDirectory = launcherPath,
                 ArgumentList =
                 {
                     "--save",
@@ -398,8 +412,8 @@ public partial class ServerEntry : ObservableObject
         public void Dispose()
         {
             IsRunning = false;
-            ipcCts?.Cancel();
-            ipc?.Dispose();
+            ipcCts.Cancel();
+            ipc.Dispose();
             serverProcess?.Dispose();
             serverProcess = null;
         }
