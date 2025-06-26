@@ -180,7 +180,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         string fromValue = HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):M/d/yyyy}");
         string toValue = HttpUtility.UrlEncode($"{DateTime.UtcNow:M/d/yyyy}");
-        OpenUrl($"github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={fromValue}&to={toValue}");
+        OpenUri($"github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={fromValue}&to={toValue}");
     }
 
     /// <summary>

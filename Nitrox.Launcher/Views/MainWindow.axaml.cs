@@ -20,7 +20,7 @@ internal partial class MainWindow : Abstract.WindowEx<MainWindowViewModel>
                 pArgs.Source is Control { Tag: string url } control &&
                 control.Classes.Contains("link"))
             {
-                OpenUrl(url);
+                OpenUri(url);
                 args.Item2.Handled = true;
             }
         }));

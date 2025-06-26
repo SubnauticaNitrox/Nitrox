@@ -138,14 +138,22 @@ public class ProcessEx : IDisposable
 #endif
 
     /// <summary>
-    ///     Opens the Url in the default browser. Forces the Uri scheme as HTTPS.
+    ///     Opens the URI in the default browser. Forces the URI scheme as HTTPS if given as HTTP.
     /// </summary>
-    public static void OpenUrl(string url)
+    public static void OpenUri(string uri)
     {
-        UriBuilder urlBuilder = new(url) { Scheme = Uri.UriSchemeHttps, Port = -1 };
+        UriBuilder builder = new(uri);
+        if (builder.Scheme == Uri.UriSchemeHttps || builder.Scheme == Uri.UriSchemeHttp)
+        {
+            builder.Scheme = Uri.UriSchemeHttps;
+            if (builder.Port is 80 or 443)
+            {
+                builder.Port = -1;
+            }
+        }
         using Process proc = Process.Start(new ProcessStartInfo
         {
-            FileName = urlBuilder.Uri.ToString(),
+            FileName = builder.Uri.ToString(),
             UseShellExecute = true,
             Verb = "open"
         });

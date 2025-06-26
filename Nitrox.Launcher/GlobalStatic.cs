@@ -7,6 +7,6 @@ internal static class GlobalStatic
 {
     public static bool IsDesignMode => Design.IsDesignMode;
 
-    /// <inheritdoc cref="ProcessEx.OpenUrl" />
-    public static void OpenUrl(string url) => ProcessEx.OpenUrl(url);
+    /// <inheritdoc cref="ProcessEx.OpenUri" />
+    public static void OpenUri(string url) => ProcessEx.OpenUri(url);
 }

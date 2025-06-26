@@ -94,5 +94,5 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
     }
 
     [RelayCommand]
-    private void DownloadUpdate() => OpenUrl("nitrox.rux.gg/download");
+    private void DownloadUpdate() => OpenUri("nitrox.rux.gg/download");
 }

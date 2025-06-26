@@ -50,7 +50,7 @@ internal partial class CrashWindowViewModel : ViewModelBase
             _ => "Other"
         };
         string createGithubIssueUrl = $"https://github.com/SubnauticaNitrox/Nitrox/issues/new?assignees=&labels=Type%3A+bug%2CStatus%3A+to+verify&projects=&template=bug_report.yaml&title={HttpUtility.UrlEncode(issueTitle)}&what_happened={HttpUtility.UrlEncode(whatHappened)}&os_type={HttpUtility.UrlEncode(GetOsType())}&store_type={HttpUtility.UrlEncode(storeType)}";
-        OpenUrl(createGithubIssueUrl);
+        OpenUri(createGithubIssueUrl);
 
         static string GetOsType()
         {
