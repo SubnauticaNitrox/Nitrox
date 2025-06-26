@@ -173,6 +173,17 @@ public partial class BuildingHandler : MonoBehaviour
         BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
         constructableBase.SetState(true, true);
         NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, placeBase.FormerGhostId);
+
+        // Specific case : just a moonpool built as a base
+        if (constructableBase.techType == TechType.BaseMoonpool)
+        {
+            // For a new base, the moonpool will be the only cell which is 0, 0, 0
+            Int3 absoluteCell = new(0, 0, 0);
+            // Deterministic id, see MoonpoolManager.LateAssignNitroxEntity
+            NitroxId moonpoolId = placeBase.FormerGhostId.Increment();
+            baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(absoluteCell, moonpoolId);
+        }
+
         BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.UtcNow;
     }
 
