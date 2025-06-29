@@ -123,7 +123,7 @@ event:/creature/tred/stomp;false;false;0
 event:/creature/trident/bite;false;false;0
 event:/creature/trident/charge;false;false;0
 event:/creature/trident/roar;false;false;0
-event:/creature/trident/tooth_break;false;false;0
+event:/creature/trident/tooth_break;true;true;15
 event:/creature/trident/wound;false;false;0
 event:/creature/warper/idle;false;false;0
 event:/creature/warper/portal_close;false;false;0
