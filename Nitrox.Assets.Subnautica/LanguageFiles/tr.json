@@ -65,6 +65,7 @@
     "Nitrox_PlayerKicked": "Sunucudan atıldınız",
     "Nitrox_PlayerLeft": "{PLAYER} oyundan ayrıldı.",
     "Nitrox_PlayerListTabName": "Oyuncu listesi",
+    "Nitrox_QueueInfo": "#{POSITION}.  sıradasınız. Maksimum bekleme süresi: {TIME}",
     "Nitrox_RejectedSessionPolicy": "Rezervasyon reddedildi…",
     "Nitrox_RemotePlayerObstacle": "Bir oyuncu yıkılabilecek hedefin içinde veya çok yakınında.",
     "Nitrox_RequestingSessionPolicy": "Oturum bilgileri alınıyor…",
