@@ -122,6 +122,9 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     {
         Log.Info($"[Base RESYNC] Overwriting base with id {buildEntity.Id}");
         ClearBaseChildren(@base);
+        // Frame to let all children be deleted properly
+        yield return Yielders.WaitForEndOfFrame;
+
         yield return BuildEntitySpawner.SetupBase(buildEntity, @base, entities);
         yield return MoonpoolManager.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
         yield return entities.SpawnBatchAsync(buildEntity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>(), false, false);
