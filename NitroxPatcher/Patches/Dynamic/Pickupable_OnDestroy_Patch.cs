@@ -10,7 +10,7 @@ public sealed partial class Pickupable_OnDestroy_Patch : NitroxPatch, IDynamicPa
 
     public static bool Prefix(Pickupable __instance)
     {
-        // stops Pickupable.OnDestroy from triggering the OnDestroy function if BuildingHandler is Resyncing
+        // Stops Pickupable.OnDestroy from triggering the OnDestroy function if BuildingHandler is Resyncing
         // this stops the IItemsContainer.RemoveItem() method from being called which broadcasts a packet in some implementations 
         if (BuildingHandler.Main.Resyncing)
         {
@@ -20,5 +20,4 @@ public sealed partial class Pickupable_OnDestroy_Patch : NitroxPatch, IDynamicPa
 
         return true;
     }
-    
 }
