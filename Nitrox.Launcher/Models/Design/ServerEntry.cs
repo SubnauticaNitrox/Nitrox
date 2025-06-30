@@ -314,32 +314,39 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
 
-                        Match match = OutputLineRegex.Match(output);
-                        if (match.Success)
+                        using (StringReader reader = new(output))
                         {
-                            OutputLine outputLine = new()
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
                             {
-                                Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
-                                LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
-                                Type = match.Groups["level"].ValueSpan switch
+                                Match match = OutputLineRegex.Match(line);
+                                if (match.Success)
                                 {
-                                    "DBG" => OutputLineType.DEBUG_LOG,
-                                    "WRN" => OutputLineType.WARNING_LOG,
-                                    "ERR" => OutputLineType.ERROR_LOG,
-                                    _ => OutputLineType.INFO_LOG
+                                    OutputLine outputLine = new()
+                                    {
+                                        Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
+                                        LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
+                                        Type = match.Groups["level"].ValueSpan switch
+                                        {
+                                            "DBG" => OutputLineType.DEBUG_LOG,
+                                            "WRN" => OutputLineType.WARNING_LOG,
+                                            "ERR" => OutputLineType.ERROR_LOG,
+                                            _ => OutputLineType.INFO_LOG
+                                        }
+                                    };
+                                    lastOutputType = outputLine.Type;
+                                    Output.Add(outputLine);
                                 }
-                            };
-                            lastOutputType = outputLine.Type;
-                            Output.Add(outputLine);
-                        }
-                        else
-                        {
-                            Output.Add(new OutputLine
-                            {
-                                Timestamp = "",
-                                LogText = output,
-                                Type = lastOutputType
-                            });
+                                else
+                                {
+                                    Output.Add(new OutputLine
+                                    {
+                                        Timestamp = "",
+                                        LogText = line,
+                                        Type = lastOutputType
+                                    });
+                                }
+                            }
                         }
                     },
                     () =>
