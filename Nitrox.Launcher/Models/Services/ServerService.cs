@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Design;
@@ -31,6 +34,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     private FileSystemWatcher? watcher;
     private readonly CancellationTokenSource serverRefreshCts = new();
     private readonly HashSet<string> loggedErrorDirectories = [];
+    public readonly HashSet<int> KnownServerProcessIds = [];
     private volatile bool hasUpdatedAtLeastOnce;
 
     public ServerService(DialogService dialogService, IKeyValueStore keyValueStore, Func<IRoutingScreen> screenProvider)
@@ -272,5 +276,70 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
         string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);
         return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
+    }
+
+    public async Task DetectAndAttachRunningServersAsync()
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return;
+        }
+        List<string>? pipeNames = GetNitroxServerPipeNames();
+        if (pipeNames == null)
+        {
+            return;
+        }
+        foreach (string? pipeName in pipeNames)
+        {
+            try
+            {
+                Match? match = Regex.Match(pipeName, @"NitroxServer_(\d+)");
+                if (!match.Success)
+                {
+                    continue;
+                }
+                int processId = int.Parse(match.Groups[1].Value);
+                if (KnownServerProcessIds.Contains(processId))
+                {
+                    continue;
+                }
+                using CancellationTokenSource? cts = new(1000);
+                using Ipc.ClientIpc ipc = new(processId, cts);
+                await ipc.SendCommand(Ipc.GetSaveNameMessage, cts.Token);
+                string? response = await ipc.ReadStringAsync(cts.Token);
+                if (response != null && response.StartsWith($"{Ipc.GetSaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
+                {
+                    string? saveName = response[$"{Ipc.GetSaveNameMessage}:".Length..].Trim(['[', ']']);
+                    ServerEntry? serverMatch = servers?.FirstOrDefault(s => string.Equals(s.Name, saveName, StringComparison.Ordinal));
+                    if (serverMatch != null)
+                    {
+                        Log.Info($"Found running server \"{serverMatch.Name}\" (PID: {processId})");
+                        serverMatch.IsOnline = true;
+                        KnownServerProcessIds.Add(processId);
+                        serverMatch.Start(keyValueStore.GetSavesFolderDir(), processId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Debug($"Pipe scan error for {pipeName}: {ex.Message}");
+            }
+        }
+    }
+
+    private static List<string>? GetNitroxServerPipeNames()
+    {
+        try
+        {
+            DirectoryInfo? pipeDir = new(@"\\.\pipe\");
+            return pipeDir.GetFileSystemInfos()
+                .Select(f => f.Name)
+                .Where(n => n.StartsWith("NitroxServer_", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

@@ -206,7 +206,7 @@ public partial class ServerEntry : ObservableObject
         return true;
     }
 
-    public void Start(string savesDir)
+    public void Start(string savesDir, int existingProcessId = 0)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -223,7 +223,7 @@ public partial class ServerEntry : ObservableObject
         }
 
         // Start server and add notify when server closed.
-        Process = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync), IsEmbedded);
+        Process = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync), IsEmbedded, existingProcessId);
 
         IsNewServer = false;
         IsOnline = true;
@@ -270,50 +270,57 @@ public partial class ServerEntry : ObservableObject
         [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
         private static partial Regex OutputLineRegex { get; }
 
+        public int Id { get; private set; }
         public bool IsRunning { get; private set; }
         public AvaloniaList<OutputLine> Output { get; } = [];
 
-        private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
+        private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processID = 0)
         {
-            string saveName = Path.GetFileName(saveDir);
-            string serverExeName = "NitroxServer-Subnautica.exe";
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (processID == 0)
             {
-                serverExeName = "NitroxServer-Subnautica";
-            }
-            string launcherPath = NitroxUser.ExecutableRootPath;
-            if (string.IsNullOrWhiteSpace(launcherPath))
-            {
-                throw new Exception($"{nameof(launcherPath)} must be set");
-            }
-
-            string serverFile = Path.Combine(launcherPath, serverExeName);
-            ProcessStartInfo startInfo = new(serverFile)
-            {
-                WorkingDirectory = launcherPath,
-                ArgumentList =
+                string saveName = Path.GetFileName(saveDir);
+                string serverExeName = "NitroxServer-Subnautica.exe";
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    "--save",
-                    saveName
-                },
-                RedirectStandardOutput = isEmbeddedMode,
-                RedirectStandardError = isEmbeddedMode,
-                RedirectStandardInput = isEmbeddedMode,
-                WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
-                CreateNoWindow = isEmbeddedMode
-            };
-            if (isEmbeddedMode)
-            {
-                startInfo.ArgumentList.Add("--embedded");
-            }
-            Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
+                    serverExeName = "NitroxServer-Subnautica";
+                }
+                string launcherPath = NitroxUser.ExecutableRootPath;
+                if (string.IsNullOrWhiteSpace(launcherPath))
+                {
+                    throw new Exception($"{nameof(launcherPath)} must be set");
+                }
 
-            serverProcess = System.Diagnostics.Process.Start(startInfo); // Only used for starting and disposing
-            if (serverProcess != null)
+                string serverFile = Path.Combine(launcherPath, serverExeName);
+                ProcessStartInfo startInfo = new(serverFile)
+                {
+                    WorkingDirectory = launcherPath,
+                    ArgumentList =
+                    {
+                        "--save",
+                        saveName
+                    },
+                    RedirectStandardOutput = isEmbeddedMode,
+                    RedirectStandardError = isEmbeddedMode,
+                    RedirectStandardInput = isEmbeddedMode,
+                    WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
+                    CreateNoWindow = isEmbeddedMode
+                };
+                if (isEmbeddedMode)
+                {
+                    startInfo.ArgumentList.Add("--embedded");
+                }
+                Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
+
+                serverProcess = System.Diagnostics.Process.Start(startInfo); // Only used for starting and disposing
+            }
+
+            if (serverProcess != null || processID != 0)
             {
+                Id = serverProcess?.Id ?? processID;
+                
                 IsRunning = true;
                 ipcCts = new CancellationTokenSource();
-                ipc = new Ipc.ClientIpc(serverProcess.Id, ipcCts);
+                ipc = new Ipc.ClientIpc(Id, ipcCts);
                 ipc.StartReadingServerOutput(
                     output =>
                     {
@@ -367,7 +374,7 @@ public partial class ServerEntry : ObservableObject
             }
         }
 
-        public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded) => new(saveDir, onExited, isEmbedded);
+        public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processID) => new(saveDir, onExited, isEmbedded, processID);
 
         /// <summary>
         ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.

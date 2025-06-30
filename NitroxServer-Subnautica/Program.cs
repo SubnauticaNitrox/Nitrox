@@ -157,6 +157,11 @@ public class Program
             ConsoleCommandProcessor commandProcessor = null;
             return submit =>
             {
+                if (submit == Ipc.GetSaveNameMessage)
+                {
+                    _ = ipc.SendOutput($"{Ipc.GetSaveNameMessage}:{Log.SaveName}");
+                    return;
+                }
                 try
                 {
                     commandProcessor ??= NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();

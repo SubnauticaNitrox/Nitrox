@@ -13,6 +13,7 @@ public static class Ipc
 {
     private static string PipeName(int processId) => $"NitroxServer_{processId}";
     private static string StopMessage => "__SERVER_STOPPED__";
+    public static string GetSaveNameMessage => "__GET_SAVE_NAME__";
 
     public class ServerIpc : IDisposable
     {
@@ -234,7 +235,7 @@ public static class Ipc
             thread.Start();
         }
 
-        private async Task<string> ReadStringAsync(CancellationToken cancellationToken = default)
+        public async Task<string> ReadStringAsync(CancellationToken cancellationToken = default)
         {
             if (!await WaitForConnection(cancellationToken))
             {
