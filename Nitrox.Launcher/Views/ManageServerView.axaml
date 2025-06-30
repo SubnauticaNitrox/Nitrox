@@ -1,6 +1,6 @@
 <UserControl
     d:DesignWidth="700"
-    d:DesignHeight="700"
+    d:DesignHeight="1400"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.ManageServerView"
     x:DataType="vm:ManageServerViewModel"
@@ -345,6 +345,20 @@
                                 Classes="switch"
                                 HorizontalAlignment="Right"
                                 IsChecked="{Binding ServerAllowCommands}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock Text="Enable PvP" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAllowPvP}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock Text="Enable Keep Inventory" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAllowKeepInventory}" />
                         </Grid>
                     </StackPanel>
                 </StackPanel>

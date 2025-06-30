@@ -31,7 +31,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private readonly string[] advancedSettingsDeniedFields =
     [
         "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
-        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm), nameof(Config.IsEmbedded)
+        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm), nameof(Config.IsEmbedded), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvPEnabled)
     ];
 
     private readonly DialogService dialogService;
@@ -42,10 +42,18 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowCommands;
+    
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
+    private bool serverAllowKeepInventory;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowLanDiscovery;
+    
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
+    private bool serverAllowPvP;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -166,6 +174,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
+        ServerAllowPvP = Server.AllowPvP;
+        ServerAllowKeepInventory = Server.AllowKeepInventory;
         ServerEmbedded = Server.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
     }
 
@@ -181,7 +191,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerPort != Server.Port ||
                                  ServerAutoPortForward != Server.AutoPortForward ||
                                  ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
-                                 ServerAllowCommands != Server.AllowCommands;
+                                 ServerAllowCommands != Server.AllowCommands ||
+                                 ServerAllowPvP != Server.AllowPvP ||
+                                 ServerAllowKeepInventory != Server.AllowKeepInventory;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private void Back() => ChangeViewToPrevious<ServersViewModel>();
@@ -221,6 +233,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
+        Server.AllowPvP = ServerAllowPvP;
+        Server.AllowKeepInventory = ServerAllowKeepInventory;
 
         Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))
@@ -235,6 +249,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
             config.AutoPortForward = Server.AutoPortForward;
             config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
             config.DisableConsole = !Server.AllowCommands;
+            config.PvPEnabled = Server.AllowPvP;
+            config.KeepInventoryOnDeath = Server.AllowKeepInventory;
         }
 
         Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
@@ -264,6 +280,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
+        ServerAllowPvP = Server.AllowPvP;
+        ServerAllowKeepInventory = Server.AllowKeepInventory;
     }
 
     private bool CanUndo() => !ServerIsOnline && HasChanges();

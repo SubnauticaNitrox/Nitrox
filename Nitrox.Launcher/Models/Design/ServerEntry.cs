@@ -37,7 +37,13 @@ public partial class ServerEntry : ObservableObject
     private bool allowCommands = !serverDefaults.DisableConsole;
 
     [ObservableProperty]
+    private bool allowKeepInventory = serverDefaults.KeepInventoryOnDeath;
+
+    [ObservableProperty]
     private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
+
+    [ObservableProperty]
+    private bool allowPvP = serverDefaults.PvPEnabled;
 
     [ObservableProperty]
     private bool autoPortForward = serverDefaults.AutoPortForward;
