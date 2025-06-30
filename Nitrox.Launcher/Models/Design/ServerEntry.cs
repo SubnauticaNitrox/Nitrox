@@ -191,6 +191,8 @@ public partial class ServerEntry : ObservableObject
         AutoPortForward = config.AutoPortForward;
         AllowLanDiscovery = config.LANDiscoveryEnabled;
         AllowCommands = !config.DisableConsole;
+        AllowPvP = config.PvPEnabled;
+        AllowKeepInventory = config.KeepInventoryOnDeath;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
         Version = serverVersion;
         IsEmbedded = config.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
