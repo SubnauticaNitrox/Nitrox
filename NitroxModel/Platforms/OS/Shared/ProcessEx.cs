@@ -162,6 +162,10 @@ public class ProcessEx : IDisposable
     public static ProcessEx? GetFirstProcess(string procName, Func<ProcessEx, bool>? predicate = null)
     {
         ProcessEx found = null;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && procName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        {
+            procName = Path.GetFileNameWithoutExtension(procName);
+        }
         foreach (Process proc in Process.GetProcessesByName(procName))
         {
             // Already found, dispose all other process handles.
