@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -76,6 +78,21 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public async Task<bool> StartServerAsync(ServerEntry server)
     {
+        int serverPort = server.Port;
+        IPEndPoint endPoint = IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().FirstOrDefault(ip => ip.Port == serverPort);
+        if (endPoint != null)
+        {
+            bool proceed = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+            {
+                model.Title = $"Port {serverPort} is currently in use. It is recommended to change the port before starting this server. Would you like to continue anyway?";
+                model.ButtonOptions = ButtonOptions.YesNo;
+            });
+            if (!proceed)
+            {
+                return false;
+            }
+        }
+
         // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
         if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server))
         {
