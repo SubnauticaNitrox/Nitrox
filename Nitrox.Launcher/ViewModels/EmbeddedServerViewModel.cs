@@ -76,7 +76,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
         }
         if (!string.Equals(ServerCommand, "stop", StringComparison.OrdinalIgnoreCase))
         {
-            await ServerEntry.Process.SendCommandAsync(ServerCommand);
+            await ServerEntry.Process.SendCommandAsync(ServerCommand.TrimStart('/'));
         }
         else
         {
