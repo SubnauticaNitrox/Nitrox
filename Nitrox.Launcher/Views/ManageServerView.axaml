@@ -118,13 +118,13 @@
                                 <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
                             </StackPanel>
                         </Panel>
-                        <TextBlock Text="{Binding ServerGameMode, Converter={converters:ToStringConverter}}" />
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding ServerPlayers}" />
-                            <TextBlock Text="/" />
-                            <TextBlock Text="{Binding ServerMaxPlayers}" />
-                            <TextBlock Margin="6,0,0,0" Text="playing" />
-                        </StackPanel>
+                        <TextBlock Text="{Binding Server.GameMode, Converter={converters:ToStringConverter}, FallbackValue=Survival}" />
+                        <TextBlock TextWrapping="NoWrap">
+                            <Run Text="{Binding Server.Players, FallbackValue=0}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding Server.MaxPlayers, FallbackValue=100}" />
+                            <Run Text="playing" />
+                        </TextBlock>
                     </StackPanel>
 
                     <Grid ColumnDefinitions="*,200">

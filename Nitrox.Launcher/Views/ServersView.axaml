@@ -72,7 +72,8 @@
                                         Width="56"
                                         ClipToBounds="True"
                                         CornerRadius="12"
-                                        DockPanel.Dock="Left">
+                                        DockPanel.Dock="Left"
+                                        ToolTip.Tip="{Binding Name}">
                                         <Grid>
                                             <Image IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" Source="/Assets/Images/subnautica-icon.png" />
                                             <Border>
@@ -95,8 +96,7 @@
                                             HorizontalAlignment="Stretch"
                                             Margin="16 0 0 0"
                                             VerticalAlignment="Center"
-                                            Background="Transparent"
-                                            ToolTip.Tip="{Binding Name}">
+                                            Background="Transparent">
                                             <TextBlock
                                                 FontSize="16"
                                                 FontWeight="600"
@@ -117,12 +117,12 @@
                                                         <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
                                                     </StackPanel>
                                                 </Panel>
-                                                <TextBlock TextWrapping="NoWrap" MaxLines="2">
-                                                    <Run Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
+                                                <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
+                                                <TextBlock TextWrapping="NoWrap">
                                                     <Run Text="{Binding Players}" />
                                                     <Run Text="/" />
                                                     <Run Text="{Binding MaxPlayers}" />
-                                                    <Run Text=" playing" />
+                                                    <Run Text="playing" />
                                                 </TextBlock>
                                             </WrapPanel>
                                         </StackPanel>

@@ -225,6 +225,11 @@ public partial class ServerEntry : ObservableObject
         // Start server and add notify when server closed.
         Process = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync), IsEmbedded, existingProcessId);
 
+        if (Process != null)
+        {
+            Process.PlayerCountChanged += count => Dispatcher.UIThread.Post(() => Players = count);
+        }
+
         IsNewServer = false;
         IsOnline = true;
     }
@@ -270,9 +275,10 @@ public partial class ServerEntry : ObservableObject
         [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
         private static partial Regex OutputLineRegex { get; }
 
-        public int Id { get; private set; }
+        public int Id { get; }
         public bool IsRunning { get; private set; }
         public AvaloniaList<OutputLine> Output { get; } = [];
+        public event Action<int> PlayerCountChanged;
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processID = 0)
         {
@@ -311,7 +317,7 @@ public partial class ServerEntry : ObservableObject
                 }
                 Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
-                serverProcess = System.Diagnostics.Process.Start(startInfo); // Only used for starting and disposing
+                serverProcess = System.Diagnostics.Process.Start(startInfo);
             }
 
             if (serverProcess != null || processID != 0)
@@ -329,10 +335,18 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
 
+                        if (output.StartsWith($"{Ipc.PlayerCountMessage}:", StringComparison.Ordinal))
+                        {
+                            if (int.TryParse(output[$"{Ipc.PlayerCountMessage}:".Length..].Trim('[', ']'), out int playerCount))
+                            {
+                                PlayerCountChanged?.Invoke(playerCount);
+                            }
+                            return;
+                        }
+
                         using (StringReader reader = new(output))
                         {
-                            string line;
-                            while ((line = reader.ReadLine()) != null)
+                            while (reader.ReadLine() is { } line)
                             {
                                 Match match = OutputLineRegex.Match(line);
                                 if (match.Success)

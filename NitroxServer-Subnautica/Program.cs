@@ -105,6 +105,10 @@ public class Program
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
+            server.PlayerCountChanged += count =>
+            {
+                _ = ipc.SendOutput($"{Ipc.PlayerCountMessage}:[{count}]");
+            };
             string serverSaveName = Server.GetSaveName(args, "My World");
             Log.SaveName = serverSaveName;
 
@@ -157,9 +161,9 @@ public class Program
             ConsoleCommandProcessor commandProcessor = null;
             return submit =>
             {
-                if (submit == Ipc.GetSaveNameMessage)
+                if (submit == Ipc.SaveNameMessage)
                 {
-                    _ = ipc.SendOutput($"{Ipc.GetSaveNameMessage}:{Log.SaveName}");
+                    _ = ipc.SendOutput($"{Ipc.SaveNameMessage}:{Log.SaveName}");
                     return;
                 }
                 try

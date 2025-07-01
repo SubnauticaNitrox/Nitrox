@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Design;
@@ -305,11 +304,11 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                 }
                 using CancellationTokenSource? cts = new(1000);
                 using Ipc.ClientIpc ipc = new(processId, cts);
-                await ipc.SendCommand(Ipc.GetSaveNameMessage, cts.Token);
+                await ipc.SendCommand(Ipc.SaveNameMessage, cts.Token);
                 string? response = await ipc.ReadStringAsync(cts.Token);
-                if (response != null && response.StartsWith($"{Ipc.GetSaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
+                if (response != null && response.StartsWith($"{Ipc.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
                 {
-                    string? saveName = response[$"{Ipc.GetSaveNameMessage}:".Length..].Trim(['[', ']']);
+                    string? saveName = response[$"{Ipc.SaveNameMessage}:".Length..].Trim('[', ']');
                     ServerEntry? serverMatch = servers?.FirstOrDefault(s => string.Equals(s.Name, saveName, StringComparison.Ordinal));
                     if (serverMatch != null)
                     {
