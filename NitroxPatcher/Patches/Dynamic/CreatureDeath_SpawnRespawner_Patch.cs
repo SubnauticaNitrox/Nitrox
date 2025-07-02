@@ -20,7 +20,8 @@ public sealed partial class CreatureDeath_SpawnRespawner_Patch : NitroxPatch, ID
     public static bool Prefix(CreatureDeath __instance)
     {
         if (__instance.TryGetNitroxId(out NitroxId creatureId) &&
-            Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+            Resolve<SimulationOwnership>().HasAnyLockType(creatureId) &&
+            !Resolve<LiveMixinManager>().IsRemoteHealthChanging)
         {
             return true;
         }
