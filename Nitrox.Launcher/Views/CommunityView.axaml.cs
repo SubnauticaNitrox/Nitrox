@@ -3,7 +3,7 @@ using Nitrox.Launcher.Views.Abstract;
 
 namespace Nitrox.Launcher.Views;
 
-public partial class CommunityView : RoutableViewBase<CommunityViewModel>
+internal partial class CommunityView : RoutableViewBase<CommunityViewModel>
 {
     public CommunityView()
     {

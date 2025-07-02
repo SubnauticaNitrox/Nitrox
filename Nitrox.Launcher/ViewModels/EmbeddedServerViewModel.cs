@@ -17,13 +17,13 @@ namespace Nitrox.Launcher.ViewModels;
 /// <summary>
 ///     Each (embedded) running server should have its own ViewModel.
 /// </summary>
-public partial class EmbeddedServerViewModel : RoutableViewModelBase
+internal partial class EmbeddedServerViewModel : RoutableViewModelBase
 {
     private readonly CircularBuffer<string> commandHistory = new(1000);
     private int? selectedHistoryIndex;
 
     [ObservableProperty]
-    private string serverCommand;
+    private string? serverCommand;
 
     [ObservableProperty]
     private ServerEntry serverEntry;
@@ -31,11 +31,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process.Output;
-
-    public EmbeddedServerViewModel()
-    {
-    }
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
@@ -46,15 +42,16 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
             {
                 return;
             }
-            if (!status.IsOnline && model.HostScreen.ActiveViewModel is EmbeddedServerViewModel)
+            // TODO: Verify correctness - model.HostScreen.BackToAsync<ServersViewModel>().ConfigureAwait(false);
+            if (!status.Server.IsOnline)
             {
-                model.HostScreen.BackAsync().ConfigureAwait(false);
+                model.Back();
             }
         });
     }
     
     [RelayCommand]
-    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
+    private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
@@ -77,7 +74,14 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
                 LogText = $"> {ServerCommand}"
             });
         }
-        await ServerEntry.Process.SendCommandAsync(ServerCommand);
+        if (!string.Equals(ServerCommand, "stop", StringComparison.OrdinalIgnoreCase))
+        {
+            await ServerEntry.Process.SendCommandAsync(ServerCommand.TrimStart('/'));
+        }
+        else
+        {
+            await StopServerAsync();
+        }
         ClearInput(textBox);
     }
     

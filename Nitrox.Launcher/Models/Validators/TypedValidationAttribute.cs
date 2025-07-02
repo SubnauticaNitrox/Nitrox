@@ -5,11 +5,11 @@ namespace Nitrox.Launcher.Models.Validators;
 
 public abstract class TypedValidationAttribute<T> : ValidationAttribute
 {
-    protected abstract ValidationResult IsValid(T value, ValidationContext context);
+    protected abstract ValidationResult IsValid(T? value, ValidationContext context);
 
-    protected override ValidationResult IsValid(object value, ValidationContext context)
+    protected override ValidationResult IsValid(object? value, ValidationContext context)
     {
-        if (value == default)
+        if (value == null)
         {
             return IsValid(default, context);
         }

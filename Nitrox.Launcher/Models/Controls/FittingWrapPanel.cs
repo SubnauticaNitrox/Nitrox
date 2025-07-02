@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Utilities;
 using static System.Math;
 
 namespace Nitrox.Launcher.Models.Controls;
@@ -47,12 +46,12 @@ public class FittingWrapPanel : Panel, INavigableContainer
 
             UVSize sz = new(adjustedWidth, child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.Width + sz.Width, uvConstraint.Width)) // Need to switch to another line
+            if (curLineSize.Width + sz.Width > uvConstraint.Width) // Need to switch to another line
             {
                 panelSize = new UVSize { Width = Max(curLineSize.Width, panelSize.Width), Height = panelSize.Height + curLineSize.Height };
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.Width, uvConstraint.Width)) // The element is wider then the constraint - give it a separate line
+                if (sz.Width > uvConstraint.Width) // The element is wider then the constraint - give it a separate line
                 {
                     panelSize = new UVSize { Width = Max(sz.Width, panelSize.Width), Height = panelSize.Height + sz.Height };
                     curLineSize = new UVSize();
@@ -85,14 +84,14 @@ public class FittingWrapPanel : Panel, INavigableContainer
             Control child = Children[i];
             UVSize sz = new(adjustedWidth, child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.Width + sz.Width, uvFinalSize.Width)) // Need to switch to another line
+            if (curLineSize.Width + sz.Width > uvFinalSize.Width) // Need to switch to another line
             {
                 ArrangeLine(accumulatedV, curLineSize.Height, firstInLine, i, adjustedWidth);
 
                 accumulatedV += curLineSize.Height;
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.Width, uvFinalSize.Width)) // The element is wider then the constraint - give it a separate line
+                if (sz.Width > uvFinalSize.Width) // The element is wider then the constraint - give it a separate line
                 {
                     ArrangeLine(accumulatedV, sz.Height, i, ++i, adjustedWidth);
 
@@ -122,7 +121,7 @@ public class FittingWrapPanel : Panel, INavigableContainer
     /// <param name="from">The control from which movement begins.</param>
     /// <param name="wrap">Whether to wrap around when the first or last item is reached.</param>
     /// <returns>The control.</returns>
-    IInputElement INavigableContainer.GetControl(NavigationDirection direction, IInputElement from, bool wrap)
+    IInputElement? INavigableContainer.GetControl(NavigationDirection direction, IInputElement? from, bool wrap)
     {
         Avalonia.Controls.Controls children = Children;
         int index = from is not null ? Children.IndexOf((Control)from) : -1;

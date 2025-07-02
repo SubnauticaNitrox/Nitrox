@@ -16,11 +16,11 @@ public sealed class BackupAttribute : TypedValidationAttribute<BackupItem>
         {
             return new ValidationResult($"{context.DisplayName} must not be null.");
         }
-        if (value.BackupFileName == null || value.BackupFileName.AsSpan().Trim().IsEmpty)
+        if (value.BackupFilePath == null || value.BackupFilePath.AsSpan().Trim().IsEmpty)
         {
             return new ValidationResult($"{context.DisplayName} must have a backup path assigned");
         }
-        if (!File.Exists(value.BackupFileName))
+        if (!File.Exists(value.BackupFilePath))
         {
             return new ValidationResult($"{context.DisplayName} must point to a valid file.");
         }

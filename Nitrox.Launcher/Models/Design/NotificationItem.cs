@@ -15,11 +15,7 @@ public partial class NotificationItem : ObservableObject
     [ObservableProperty]
     private bool dismissed;
 
-    public NotificationItem()
-    {
-    }
-
-    public NotificationItem(string message, NotificationType type = NotificationType.Information, ICommand closeCommand = null)
+    public NotificationItem(string message, NotificationType type = NotificationType.Information, ICommand? closeCommand = null)
     {
         Message = message;
         Type = type;

@@ -11,9 +11,9 @@ public sealed class NitroxUniqueSaveName : TypedValidationAttribute<string>
 {
     public string SavesFolderDirPropertyName { get; }
     public bool AllowCaseInsensitiveName { get; }
-    public string OriginalValuePropertyName { get; }
+    public string? OriginalValuePropertyName { get; }
 
-    public NitroxUniqueSaveName(string savesFolderDirPropertyName, bool allowCaseInsensitiveName = false, string originalValuePropertyName = null)
+    public NitroxUniqueSaveName(string savesFolderDirPropertyName, bool allowCaseInsensitiveName = false, string? originalValuePropertyName = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(savesFolderDirPropertyName);
         SavesFolderDirPropertyName = savesFolderDirPropertyName;

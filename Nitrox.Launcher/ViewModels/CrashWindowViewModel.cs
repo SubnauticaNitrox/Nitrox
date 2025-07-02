@@ -6,24 +6,24 @@ using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class CrashWindowViewModel : ViewModelBase
+internal partial class CrashWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string title;
+    private string? title;
     [ObservableProperty]
-    private string message;
+    private string? message;
 
     [RelayCommand(CanExecute = nameof(CanRestart))]
     private void Restart()
     {
-        ProcessUtils.StartSelf();
+        ProcessEx.StartSelf("--allow-instances");
         Environment.Exit(0);
     }
 
@@ -50,7 +50,7 @@ public partial class CrashWindowViewModel : ViewModelBase
             _ => "Other"
         };
         string createGithubIssueUrl = $"https://github.com/SubnauticaNitrox/Nitrox/issues/new?assignees=&labels=Type%3A+bug%2CStatus%3A+to+verify&projects=&template=bug_report.yaml&title={HttpUtility.UrlEncode(issueTitle)}&what_happened={HttpUtility.UrlEncode(whatHappened)}&os_type={HttpUtility.UrlEncode(GetOsType())}&store_type={HttpUtility.UrlEncode(storeType)}";
-        ProcessUtils.OpenUrl(createGithubIssueUrl);
+        OpenUri(createGithubIssueUrl);
 
         static string GetOsType()
         {
@@ -71,9 +71,9 @@ public partial class CrashWindowViewModel : ViewModelBase
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task CopyToClipboard(ContentControl commandControl)
+    private async Task CopyToClipboard(ContentControl? commandControl)
     {
-        IClipboard clipboard = commandControl?.GetWindow().Clipboard;
+        IClipboard clipboard = commandControl?.GetWindow()?.Clipboard;
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(Message);

@@ -104,7 +104,7 @@
             <Style Selector="^ /template/ Border">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
             </Style>
-            <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+            <Setter Property="Foreground" Value="{Binding $parent[TextBox].Foreground}" />
         </Style>
 
         <!--  Reveal Password Button syle  -->

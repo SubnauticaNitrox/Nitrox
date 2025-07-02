@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
@@ -15,20 +15,16 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class ServersViewModel : RoutableViewModelBase
+internal partial class ServersViewModel : RoutableViewModelBase
 {
     private readonly IKeyValueStore keyValueStore;
-    private readonly IDialogService dialogService;
+    private readonly DialogService dialogService;
     private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
     [ObservableProperty]
-    private AvaloniaList<ServerEntry> servers;
+    private AvaloniaList<ServerEntry>? servers;
 
-    public ServersViewModel()
-    {
-    }
-
-    public ServersViewModel(IKeyValueStore keyValueStore, IDialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
+    public ServersViewModel(IKeyValueStore keyValueStore, DialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
     {
         this.keyValueStore = keyValueStore;
         this.dialogService = dialogService;
@@ -46,15 +42,16 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
     }
 
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         Servers = [..await serverService.GetServersAsync()];
+        await serverService.DetectAndAttachRunningServersAsync();
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task CreateServerAsync()
     {
-        CreateServerViewModel result = await dialogService.ShowAsync<CreateServerViewModel>();
+        CreateServerViewModel? result = await dialogService.ShowAsync<CreateServerViewModel>();
         if (!result)
         {
             return;
@@ -62,7 +59,7 @@ public partial class ServersViewModel : RoutableViewModelBase
 
         try
         {
-            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result.Name)));
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result!.Name)));
             if (serverEntry == null)
             {
                 throw new Exception("Failed to create save file");
@@ -79,7 +76,12 @@ public partial class ServersViewModel : RoutableViewModelBase
     [RelayCommand]
     public async Task<bool> StartServerAsync(ServerEntry server)
     {
-        return await serverService.StartServerAsync(server);
+        bool started = await serverService.StartServerAsync(server);
+        if (started && server.Process is { Id: > 0 })
+        {
+            serverService.KnownServerProcessIds.Add(server.Process.Id);
+        }
+        return started;
     }
 
     [RelayCommand]
@@ -87,7 +89,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         if (server.IsOnline && server.IsEmbedded)
         {
-            await HostScreen.ShowAsync(new EmbeddedServerViewModel(server));
+            ChangeView(new EmbeddedServerViewModel(server));
             return;
         }
         if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server))
@@ -96,6 +98,6 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
 
         manageServerViewModel.LoadFrom(server);
-        await HostScreen.ShowAsync(manageServerViewModel);
+        ChangeView(manageServerViewModel);
     }
 }

@@ -1,0 +1,12 @@
+using Avalonia.Controls;
+using NitroxModel.Platforms.OS.Shared;
+
+namespace Nitrox.Launcher;
+
+internal static class GlobalStatic
+{
+    public static bool IsDesignMode => Design.IsDesignMode;
+
+    /// <inheritdoc cref="ProcessEx.OpenUri" />
+    public static void OpenUri(string url) => ProcessEx.OpenUri(url);
+}
