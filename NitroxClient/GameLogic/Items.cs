@@ -37,22 +37,29 @@ public class Items
         this.entityMetadataManager = entityMetadataManager;
     }
 
-    public void PickedUp(GameObject gameObject, TechType techType)
+    public void PickedUpByPlayer(GameObject gameObject, TechType techType)
+    {
+        // Newly created objects are normally placed into the player's inventory.
+        // PickedUp was designed for this, but also works when an item is being moved into e.g. a vehicle's storage.
+        // Consider making a new packet type if PickedUp is found to be impractical for this case.
+
+        if (!Player.main.TryGetNitroxId(out NitroxId playerId))
+        {
+            Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
+            return;
+        }
+
+        PickedUp(gameObject, techType, playerId);
+    }
+
+    public void PickedUp(GameObject gameObject, TechType techType, NitroxId containerId)
     {
         PickingUpObject = gameObject;
 
         // Try catch to avoid blocking PickingUpObject with a non null value outside of the current context
         try
         {
-            // Newly created objects are always placed into the player's inventory.
-            if (!Player.main.TryGetNitroxId(out NitroxId playerId))
-            {
-                Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
-                PickingUpObject = null;
-                return;
-            }
-
-            InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, playerId);
+            InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, containerId);
 
             if (inventoryItemEntity.TechType.ToUnity() != techType)
             {
