@@ -85,6 +85,10 @@
                     <Setter Property="IsVisible" Value="{Binding UpdateAvailableOrUnofficial}" />
                 </Style>
 
+                <Style Selector="^:pointerover">
+                    <Setter Property="Opacity" Value="0.4" />
+                </Style>
+
                 <Style Selector="^[IsChecked=True]">
                     <Setter Property="Opacity" Value="1" />
                     <Setter Property="FontWeight" Value="Bold" />

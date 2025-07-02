@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
@@ -213,7 +214,23 @@ public class App : Application
         }
     }
 
-    private void ApplyAppDefaults() => RequestedThemeVariant = ThemeVariant.Dark;
+    private void ApplyAppDefaults()
+    {
+        RequestedThemeVariant = ThemeVariant.Dark;
+
+        // April Fools: Switch to Comic Sans on April 1st (only works on OSes with Comic Sans installed).
+        if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1)
+        {
+            Style? windowStyle = new(x => x.OfType<Window>())
+            {
+                Setters =
+                {
+                    new Setter(Window.FontFamilyProperty, FontFamily.Parse("Comic Sans MS"))
+                }
+            };
+            Styles.Add(windowStyle);
+        }
+    }
 
     internal class InstantLaunchData
     {
