@@ -186,7 +186,7 @@ public class RecolorImage : Control
             }
             SKImage img = SKImage.FromBitmap(bitmap);
             paint.ImageFilter = SKImageFilter.CreateColorFilter(SKColorFilter.CreateBlendMode(color.ToSKColor(), SKBlendMode.Modulate));
-            canvas.DrawImage(img, dest.ToSKRect(), Bounds.ToSKRect(), paint);
+            canvas.DrawImage(img, dest.ToSKRect(), Bounds.ToSKRect(), new SKSamplingOptions(SKCubicResampler.Mitchell), paint);
         }
 
         public bool Equals(ICustomDrawOperation other) => false;
