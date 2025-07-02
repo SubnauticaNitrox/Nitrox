@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -12,3 +13,4 @@ public class EscapePodMetadataExtractor : EntityMetadataExtractor<EscapePod, Esc
         return new EscapePodMetadata(entity.liveMixin.IsFullHealth(), radio.liveMixin.IsFullHealth());
     }
 }
+#endif

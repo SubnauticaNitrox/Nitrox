@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
@@ -18,3 +19,4 @@ public sealed partial class EscapePod_RespawnPlayer_Patch : NitroxPatch, IDynami
         Resolve<LocalPlayer>().BroadcastEscapePodChange(id);
     }
 }
+#endif

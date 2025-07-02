@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
@@ -73,3 +74,4 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
         }
     }
 }
+#endif
