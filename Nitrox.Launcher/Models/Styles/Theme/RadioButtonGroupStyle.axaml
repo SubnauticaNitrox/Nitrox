@@ -58,6 +58,9 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
         <Setter Property="BorderBrush" Value="{Binding $parent[Button].BorderBrush}" />
     </Style>
