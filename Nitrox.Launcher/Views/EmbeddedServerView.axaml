@@ -56,9 +56,10 @@
         </Grid>
         <ScrollViewer
             Grid.Row="1" BringIntoViewOnFocusChange="False"
+            HorizontalScrollBarVisibility="Visible"
             Margin="0,20,0,20"
             x:Name="ScrollViewer">
-            <!--  Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something)  -->
+            <!--  Transparent background for improved QoL selecting text (otherwise, putting the cursor between lines won't allow for text selection)  -->
             <ItemsControl Background="Transparent" ItemsSource="{Binding ServerOutput}">
                 <ItemsControl.Styles>
                     <Style Selector="Run.command">
