@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -35,7 +36,8 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     private FileSystemWatcher? watcher;
     private readonly CancellationTokenSource serverRefreshCts = new();
     private readonly HashSet<string> loggedErrorDirectories = [];
-    public readonly HashSet<int> KnownServerProcessIds = [];
+    private readonly HashSet<int> knownServerProcessIds = [];
+    private readonly Lock knownServerProcessIdsLock = new();
     private volatile bool hasUpdatedAtLeastOnce;
 
     public ServerService(DialogService dialogService, IKeyValueStore keyValueStore, Func<IRoutingScreen> screenProvider)
@@ -106,10 +108,23 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         try
         {
             server.Version = NitroxEnvironment.Version;
-            server.Start(keyValueStore.GetSavesFolderDir());
+            server.Start(keyValueStore.GetSavesFolderDir(), onExited: () =>
+            {
+                lock (knownServerProcessIdsLock)
+                {
+                    knownServerProcessIds.Remove(server.Process?.Id ?? 0);
+                }
+            });
             if (server.IsEmbedded)
             {
                 await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));
+            }
+            if (server.Process is { Id: > 0 })
+            {
+                lock (knownServerProcessIdsLock)
+                {
+                    knownServerProcessIds.Add(server.Process.Id);
+                }
             }
             return true;
         }
@@ -315,15 +330,18 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                     continue;
                 }
                 int processId = int.Parse(match.Groups[1].Value);
-                if (KnownServerProcessIds.Contains(processId))
+                lock (knownServerProcessIdsLock)
                 {
-                    continue;
+                    if (knownServerProcessIds.Contains(processId))
+                    {
+                        continue;
+                    }
                 }
                 using CancellationTokenSource? cts = new(1000);
                 using Ipc.ClientIpc ipc = new(processId, cts);
                 await ipc.SendCommand(Ipc.SaveNameMessage, cts.Token);
-                string? response = await ipc.ReadStringAsync(cts.Token);
-                if (response != null && response.StartsWith($"{Ipc.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
+                string response = await ipc.ReadStringAsync(cts.Token);
+                if (response.StartsWith($"{Ipc.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
                 {
                     string? saveName = response[$"{Ipc.SaveNameMessage}:".Length..].Trim('[', ']');
                     ServerEntry? serverMatch = servers?.FirstOrDefault(s => string.Equals(s.Name, saveName, StringComparison.Ordinal));
@@ -331,7 +349,10 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                     {
                         Log.Info($"Found running server \"{serverMatch.Name}\" (PID: {processId})");
                         serverMatch.IsOnline = true;
-                        KnownServerProcessIds.Add(processId);
+                        lock (knownServerProcessIdsLock)
+                        {
+                            knownServerProcessIds.Add(processId);
+                        }
                         serverMatch.Start(keyValueStore.GetSavesFolderDir(), processId);
                     }
                 }

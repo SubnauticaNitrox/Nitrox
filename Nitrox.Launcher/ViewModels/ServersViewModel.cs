@@ -87,15 +87,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public async Task<bool> StartServerAsync(ServerEntry server)
-    {
-        bool started = await serverService.StartServerAsync(server);
-        if (started && server.Process is { Id: > 0 })
-        {
-            serverService.KnownServerProcessIds.Add(server.Process.Id);
-        }
-        return started;
-    }
+    public async Task<bool> StartServerAsync(ServerEntry server) => await serverService.StartServerAsync(server);
 
     [RelayCommand]
     public async Task ManageServer(ServerEntry server)

@@ -206,7 +206,7 @@ public partial class ServerEntry : ObservableObject
         return true;
     }
 
-    public void Start(string savesDir, int existingProcessId = 0)
+    public void Start(string savesDir, int existingProcessId = 0, Action? onExited = null)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -223,7 +223,11 @@ public partial class ServerEntry : ObservableObject
         }
 
         // Start server and add notify when server closed.
-        Process = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync), IsEmbedded, existingProcessId);
+        Process = ServerProcess.Start(Path.Combine(savesDir, Name), () =>
+        {
+            onExited?.Invoke();
+            Dispatcher.UIThread.InvokeAsync(StopAsync);
+        }, IsEmbedded, existingProcessId);
 
         if (Process != null)
         {
@@ -339,37 +343,35 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
 
-                        using (StringReader reader = new(output))
+                        using StringReader reader = new(output);
+                        while (reader.ReadLine() is { } line)
                         {
-                            while (reader.ReadLine() is { } line)
+                            Match match = OutputLineRegex.Match(line);
+                            if (match.Success)
                             {
-                                Match match = OutputLineRegex.Match(line);
-                                if (match.Success)
+                                OutputLine outputLine = new()
                                 {
-                                    OutputLine outputLine = new()
+                                    Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
+                                    LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
+                                    Type = match.Groups["level"].ValueSpan switch
                                     {
-                                        Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
-                                        LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
-                                        Type = match.Groups["level"].ValueSpan switch
-                                        {
-                                            "DBG" => OutputLineType.DEBUG_LOG,
-                                            "WRN" => OutputLineType.WARNING_LOG,
-                                            "ERR" => OutputLineType.ERROR_LOG,
-                                            _ => OutputLineType.INFO_LOG
-                                        }
-                                    };
-                                    lastOutputType = outputLine.Type;
-                                    Output.Add(outputLine);
-                                }
-                                else
+                                        "DBG" => OutputLineType.DEBUG_LOG,
+                                        "WRN" => OutputLineType.WARNING_LOG,
+                                        "ERR" => OutputLineType.ERROR_LOG,
+                                        _ => OutputLineType.INFO_LOG
+                                    }
+                                };
+                                lastOutputType = outputLine.Type;
+                                Output.Add(outputLine);
+                            }
+                            else
+                            {
+                                Output.Add(new OutputLine
                                 {
-                                    Output.Add(new OutputLine
-                                    {
-                                        Timestamp = "",
-                                        LogText = line,
-                                        Type = lastOutputType
-                                    });
-                                }
+                                    Timestamp = "",
+                                    LogText = line,
+                                    Type = lastOutputType
+                                });
                             }
                         }
                     },
