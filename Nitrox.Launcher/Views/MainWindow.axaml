@@ -291,7 +291,7 @@
                 Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}"
                 Grid.Column="1">
                 <ContentControl.ContentTemplate>
-                    <design:MultiDataTemplate>
+                    <design:MultiDataTemplate UseCache="False">
                         <!--  Null view (which will be a string, see TargetNullValue)  -->
                         <DataTemplate x:DataType="system:String">
                             <TextBox

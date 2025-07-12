@@ -50,10 +50,10 @@ public static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AttributeFilter = typeof(ModalForViewModelAttribute), CustomHandler = nameof(AddDialog))]
     private static partial IServiceCollection AddDialogs(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(RoutableViewBase<>), ExcludeAssignableTo = typeof(MainWindow), AsSelf = true, Lifetime = ServiceLifetime.Singleton)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(RoutableViewBase<>), ExcludeAssignableTo = typeof(MainWindow), AsSelf = true)]
     private static partial IServiceCollection AddViews(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(ViewModelBase), ExcludeAssignableTo = typeof(MainWindowViewModel), AsSelf = true)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(ViewModelBase), ExcludeAssignableTo = typeof(MainWindowViewModel), AsSelf = true, Lifetime = ServiceLifetime.Singleton)]
     private static partial IServiceCollection AddViewModels(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(DelegatingHandler))]

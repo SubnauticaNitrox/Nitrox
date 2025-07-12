@@ -19,6 +19,8 @@ public class MultiDataTemplate : AvaloniaList<DataTemplate>, IRecyclingDataTempl
     [UsedImplicitly]
     public List<DataTemplate> Content { get; set; } = new();
 
+    public bool UseCache { get; set; } = true;
+
     private readonly Dictionary<Type, Control> typeToControlCache = [];
 
     public bool Match(object? data) => GetTemplateForType(data?.GetType()) != null;
@@ -26,7 +28,7 @@ public class MultiDataTemplate : AvaloniaList<DataTemplate>, IRecyclingDataTempl
     public Control Build(object? data, Control existing)
     {
         Type type = data?.GetType();
-        if (type != null && typeToControlCache.TryGetValue(type, out Control control))
+        if (UseCache && type != null && typeToControlCache.TryGetValue(type, out Control control))
         {
             return control;
         }

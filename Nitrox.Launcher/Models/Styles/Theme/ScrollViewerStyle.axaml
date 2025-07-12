@@ -95,7 +95,13 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="AllowAutoHide" Value="False" />
-        <Setter Property="behaviors:SmoothScrollBehavior.SmoothScroll" Value="True" />
+        <Setter Property="Interaction.Behaviors">
+            <BehaviorCollectionTemplate>
+                <BehaviorCollection>
+                    <behaviors:SmoothScrollBehavior ScrollStepSize="50" />
+                </BehaviorCollection>
+            </BehaviorCollectionTemplate>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">

@@ -28,10 +28,10 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 {
     public static Task<string>? LastFindSubnauticaTask;
     private static bool hasInstantLaunched;
+    private readonly DialogService dialogService = dialogService;
+    private readonly IKeyValueStore keyValueStore = keyValueStore;
 
     private readonly ServerService serverService = serverService;
-    private readonly IKeyValueStore keyValueStore = keyValueStore;
-    private readonly DialogService dialogService = dialogService;
 
     [ObservableProperty]
     private Platform gamePlatform;
@@ -39,7 +39,8 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     [ObservableProperty]
     private string? platformToolTip;
 
-    public Bitmap[] GalleryImageSources { get; } = [
+    public Bitmap[] GalleryImageSources { get; } =
+    [
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-1.png", static stream => new Bitmap(stream)),
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-2.png", static stream => new Bitmap(stream)),
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-3.png", static stream => new Bitmap(stream)),
@@ -173,7 +174,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode"));
         }
     }
-    
+
     [RelayCommand]
     private void OpenContributionsOfYear()
     {
@@ -236,7 +237,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         {
             throw new FileNotFoundException("Unable to find Subnautica executable");
         }
-        
+
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
 
         // Start game & gaming platform if needed.
