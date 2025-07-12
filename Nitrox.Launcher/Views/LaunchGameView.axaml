@@ -22,12 +22,12 @@
             Spacing="20">
 
             <Panel Height="535" Margin="-20,0">
-                <Image Source="/Assets/Images/banners/home.png" Stretch="UniformToFill" />
+                <Image Source="{Binding Converter={converters:BitmapAssetValueConverter}, ConverterParameter=/Assets/Images/banners/home.png}" Stretch="UniformToFill" />
                 <Image
                     Height="48"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Source="/Assets/Images/subnautica-name.png"
+                    Source="{Binding Converter={converters:BitmapAssetValueConverter}, ConverterParameter=/Assets/Images/subnautica-name.png}"
                     Stretch="Uniform" />
             </Panel>
 

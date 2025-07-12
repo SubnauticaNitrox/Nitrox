@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Automation.Peers;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Metadata;
@@ -38,6 +40,8 @@ public class RecolorImage : Control
     private readonly MemoryStream stream = new();
     private Rect dstRect;
     private Rect srcRect;
+    private readonly IDisposable boundsSubscription;
+    private readonly IDisposable sourceSubscription;
 
     public Color Color
     {
@@ -85,8 +89,15 @@ public class RecolorImage : Control
 
     public RecolorImage()
     {
-        BoundsProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<Rect>>(BoundsChanged));
-        SourceProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<Bitmap>>(SourceChanged));
+        boundsSubscription = BoundsProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<Rect>>(BoundsChanged));
+        sourceSubscription = SourceProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<Bitmap>>(SourceChanged));
+    }
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        boundsSubscription.Dispose();
+        sourceSubscription.Dispose();
+        base.OnDetachedFromLogicalTree(e);
     }
 
     /// <summary>
