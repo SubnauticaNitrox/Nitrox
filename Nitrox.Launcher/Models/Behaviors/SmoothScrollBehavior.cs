@@ -92,12 +92,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
             e.Handled = !scp?.IsScrollChainingEnabled ?? false;
             return;
         }
-
-        if (scp == null)
-        {
-            scp = AssociatedObject?.Presenter as ScrollContentPresenter;
-        }
-
+        scp ??= AssociatedObject?.Presenter as ScrollContentPresenter;
         if (scp == null)
         {
             e.Handled = !scp?.IsScrollChainingEnabled ?? false;
@@ -115,7 +110,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
                 }
 
                 if ((e.Delta.Y > 0 && scp2.Offset.Y == 0) ||
-                    (e.Delta.Y < 0 && scp2.Offset.Y == scp2!.Extent.Height - scp2!.Viewport.Height)) // scroll up or down & it's max
+                    (e.Delta.Y < 0 && Math.Abs(scp2.Offset.Y - (scp2!.Extent.Height - scp2!.Viewport.Height)) < 0.0002)) // scroll up or down & it's max
                 {
                     src = scp2.GetVisualParent(); // take next parent
                 }
@@ -130,10 +125,9 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
             }
         }
 
-        if (src != scp)
+        if (!ReferenceEquals(src, scp))
         {
             e.Handled = !(src as ScrollContentPresenter)?.IsScrollChainingEnabled ?? false;
-            //if (e.Handled)
             return;
         }
 
@@ -148,13 +142,12 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         {
             double height = isLogical ? scrollable!.ScrollSize.Height : ScrollStepSize;
             y += -delta.Y * height;
-            y = Math.Max(y, 0);
-            y = Math.Min(y, maxOffsetY);
+            y = double.Max(y, 0);
+            y = double.Min(y, maxOffsetY);
         }
 
         Vector newOffset = SnapOffset(new Vector(x, y), delta, true);
-        double step = Math.Abs(newOffset.Y - scp!.Offset.Y);
-        //var step = Math.Abs(y - scp!.Offset.Y);
+        double step = double.Abs(newOffset.Y - scp!.Offset.Y);
 
         if (delta.Y > 0) // Scroll up
         {
@@ -191,7 +184,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         {
             // Calculate elapsed time and progress of the current animation
             double elapsedTime = (currentTime - animationStartTime).TotalMilliseconds;
-            double progress = Math.Min(elapsedTime / ANIMATION_DURATION, 1.0);
+            double progress = double.Min(elapsedTime / ANIMATION_DURATION, 1.0);
 
             // Use easing for the current progress
             SineEaseOut? easing = new();
@@ -202,7 +195,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
 
             // Update _targetOffset with new delta
             targetOffset += delta;
-            targetOffset = double.Clamp(targetOffset, 0, double.Max(0, AssociatedObject!.Extent.Height - AssociatedObject!.Bounds.Height));
+            targetOffset = double.Clamp(targetOffset, 0, double.Max(0, AssociatedObject!.Extent.Height));
 
             animationStartTime = currentTime;
         }
@@ -212,7 +205,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
             startOffset = AssociatedObject!.Offset.Y;
             targetOffset = startOffset + delta;
 
-            targetOffset = double.Clamp(targetOffset, 0, double.Max(0, AssociatedObject!.Extent.Height - AssociatedObject!.Bounds.Height));
+            targetOffset = double.Clamp(targetOffset, 0, double.Max(0, AssociatedObject!.Extent.Height));
 
             animationStartTime = currentTime;
             _ = Animate();
@@ -248,8 +241,6 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         }
     }
 
-    #region ScrollContentPresenter
-
     private static (double previous, double next) FindNearestSnapPoint(IReadOnlyList<double> snapPoints, double value)
     {
         int point = snapPoints.BinarySearch(value, Comparer<double>.Default);
@@ -260,12 +251,12 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         {
             point = ~point;
 
-            previousSnapPoint = snapPoints[Math.Max(0, point - 1)];
-            nextSnapPoint = point >= snapPoints.Count ? snapPoints.Last() : snapPoints[Math.Max(0, point)];
+            previousSnapPoint = snapPoints[int.Max(0, point - 1)];
+            nextSnapPoint = point >= snapPoints.Count ? snapPoints.Last() : snapPoints[int.Max(0, point)];
         }
         else
         {
-            previousSnapPoint = nextSnapPoint = snapPoints[Math.Max(0, point)];
+            previousSnapPoint = nextSnapPoint = snapPoints[int.Max(0, point)];
         }
 
         return (previousSnapPoint, nextSnapPoint);
@@ -301,42 +292,40 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
 
         Vector diff = GetAlignmentDiff();
 
-        bool _areVerticalSnapPointsRegular = false;
-        bool _areHorizontalSnapPointsRegular = false;
-        IReadOnlyList<double>? _verticalSnapPoints = new List<double>();
-        double _verticalSnapPoint = 0;
-        double _verticalSnapPointOffset = 0;
+        bool areVerticalSnapPointsRegular = false;
+        IReadOnlyList<double>? verticalSnapPoints = new List<double>();
+        double verticalSnapPoint = 0;
+        double verticalSnapPointOffset = 0;
 
-        if (scrollable is IScrollSnapPointsInfo scrollSnapPointsInfo)
+        if (scrollable is { } scrollSnapPointsInfo)
         {
-            _areVerticalSnapPointsRegular = scrollSnapPointsInfo.AreVerticalSnapPointsRegular;
-            _areHorizontalSnapPointsRegular = scrollSnapPointsInfo.AreHorizontalSnapPointsRegular;
+            areVerticalSnapPointsRegular = scrollSnapPointsInfo.AreVerticalSnapPointsRegular;
 
-            if (!_areVerticalSnapPointsRegular)
+            if (!areVerticalSnapPointsRegular)
             {
-                _verticalSnapPoints = scrollSnapPointsInfo.GetIrregularSnapPoints(Orientation.Vertical, scp!.VerticalSnapPointsAlignment);
+                verticalSnapPoints = scrollSnapPointsInfo.GetIrregularSnapPoints(Orientation.Vertical, scp!.VerticalSnapPointsAlignment);
             }
             else
             {
-                _verticalSnapPoints = new List<double>();
-                _verticalSnapPoint = scrollSnapPointsInfo.GetRegularSnapPoints(Orientation.Vertical, scp!.VerticalSnapPointsAlignment, out _verticalSnapPointOffset);
+                verticalSnapPoints = new List<double>();
+                verticalSnapPoint = scrollSnapPointsInfo.GetRegularSnapPoints(Orientation.Vertical, scp!.VerticalSnapPointsAlignment, out verticalSnapPointOffset);
             }
         }
 
-        if (scp!.VerticalSnapPointsType != SnapPointsType.None && (_areVerticalSnapPointsRegular || _verticalSnapPoints?.Count > 0) && (!snapToNext || (snapToNext && direction.Y != 0)))
+        if (scp!.VerticalSnapPointsType != SnapPointsType.None && (areVerticalSnapPointsRegular || verticalSnapPoints?.Count > 0) && (!snapToNext || (snapToNext && direction.Y != 0)))
         {
             Vector estimatedOffset = new(offset.X, offset.Y + diff.Y);
             double previousSnapPoint = 0, nextSnapPoint = 0, midPoint = 0;
 
-            if (_areVerticalSnapPointsRegular)
+            if (areVerticalSnapPointsRegular)
             {
-                previousSnapPoint = (int)(estimatedOffset.Y / _verticalSnapPoint) * _verticalSnapPoint + _verticalSnapPointOffset;
-                nextSnapPoint = previousSnapPoint + _verticalSnapPoint;
+                previousSnapPoint = (int)(estimatedOffset.Y / verticalSnapPoint) * verticalSnapPoint + verticalSnapPointOffset;
+                nextSnapPoint = previousSnapPoint + verticalSnapPoint;
                 midPoint = (previousSnapPoint + nextSnapPoint) / 2;
             }
-            else if (_verticalSnapPoints?.Count > 0)
+            else if (verticalSnapPoints?.Count > 0)
             {
-                (previousSnapPoint, nextSnapPoint) = FindNearestSnapPoint(_verticalSnapPoints, estimatedOffset.Y);
+                (previousSnapPoint, nextSnapPoint) = FindNearestSnapPoint(verticalSnapPoints, estimatedOffset.Y);
                 midPoint = (previousSnapPoint + nextSnapPoint) / 2;
             }
 
@@ -378,6 +367,4 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
 
         return offset;
     }
-
-    #endregion
 }
