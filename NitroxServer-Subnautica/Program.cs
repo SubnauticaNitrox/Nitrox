@@ -107,7 +107,7 @@ public class Program
             server = NitroxServiceLocator.LocateService<Server>();
             server.PlayerCountChanged += count =>
             {
-                _ = ipc.SendOutput($"{Ipc.PlayerCountMessage}:[{count}]");
+                _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
             };
             string serverSaveName = Server.GetSaveName(args, "My World");
             Log.SaveName = serverSaveName;
@@ -161,9 +161,9 @@ public class Program
             ConsoleCommandProcessor commandProcessor = null;
             return submit =>
             {
-                if (submit == Ipc.SaveNameMessage)
+                if (submit == Ipc.Messages.SaveNameMessage)
                 {
-                    _ = ipc.SendOutput($"{Ipc.SaveNameMessage}:{Log.SaveName}");
+                    _ = ipc.SendOutput($"{Ipc.Messages.SaveNameMessage}:{Log.SaveName}");
                     return;
                 }
                 try

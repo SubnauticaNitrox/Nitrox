@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -339,11 +338,11 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                 }
                 using CancellationTokenSource? cts = new(1000);
                 using Ipc.ClientIpc ipc = new(processId, cts);
-                await ipc.SendCommand(Ipc.SaveNameMessage, cts.Token);
+                await ipc.SendCommand(Ipc.Messages.SaveNameMessage, cts.Token);
                 string response = await ipc.ReadStringAsync(cts.Token);
-                if (response.StartsWith($"{Ipc.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
+                if (response.StartsWith($"{Ipc.Messages.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
                 {
-                    string? saveName = response[$"{Ipc.SaveNameMessage}:".Length..].Trim('[', ']');
+                    string? saveName = response[$"{Ipc.Messages.SaveNameMessage}:".Length..].Trim('[', ']');
                     ServerEntry? serverMatch = servers?.FirstOrDefault(s => string.Equals(s.Name, saveName, StringComparison.Ordinal));
                     if (serverMatch != null)
                     {

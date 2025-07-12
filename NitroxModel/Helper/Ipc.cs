@@ -1,8 +1,10 @@
 ﻿#if NET5_0_OR_GREATER
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +14,22 @@ namespace NitroxModel.Helper;
 public static class Ipc
 {
     private static string PipeName(int processId) => $"NitroxServer_{processId}";
-    private static string StopMessage => "__SERVER_STOPPED__";
-    public static string SaveNameMessage => "__SAVE_NAME__";
-    public static string PlayerCountMessage => "__PLAYER_COUNT__";
+
+    public static class Messages
+    {
+        public static string StopMessage => "__SERVER_STOPPED__";
+        public static string SaveNameMessage => "__SAVE_NAME__";
+        public static string PlayerCountMessage => "__PLAYER_COUNT__";
+
+        public static List<string> GetMessages()
+        {
+            return
+            [
+                ..typeof(Messages).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                                  .Select(p => p.GetValue(null)?.ToString())
+            ];
+        }
+    }
 
     public class ServerIpc : IDisposable
     {
@@ -146,7 +161,7 @@ public static class Ipc
             {
                 if (serverPipe.IsConnected)
                 {
-                    byte[] stopMsg = Encoding.UTF8.GetBytes(StopMessage);
+                    byte[] stopMsg = Encoding.UTF8.GetBytes(Messages.StopMessage);
                     serverPipe.Write(BitConverter.GetBytes((uint)stopMsg.Length), 0, 4);
                     serverPipe.Write(stopMsg, 0, stopMsg.Length);
                     serverPipe.Flush();
@@ -200,7 +215,7 @@ public static class Ipc
                     while (!cancellationToken.IsCancellationRequested)
                     {
                         string output = await ReadStringAsync(cancellationToken);
-                        if (output == StopMessage)
+                        if (output == Messages.StopMessage)
                         {
                             onServerStopped?.Invoke();
                             break;

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -334,12 +335,18 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
 
-                        if (output.StartsWith($"{Ipc.PlayerCountMessage}:", StringComparison.Ordinal))
+                        if (output.StartsWith($"{Ipc.Messages.PlayerCountMessage}:", StringComparison.Ordinal))
                         {
-                            if (int.TryParse(output[$"{Ipc.PlayerCountMessage}:".Length..].Trim('[', ']'), out int playerCount))
+                            if (int.TryParse(output[$"{Ipc.Messages.PlayerCountMessage}:".Length..].Trim('[', ']'), out int playerCount))
                             {
                                 PlayerCountChanged?.Invoke(playerCount);
                             }
+                            return;
+                        }
+
+                        // Ignore any messages that are part of the IPC message protocol
+                        if (Ipc.Messages.GetMessages().Any(msg => msg != null && output.StartsWith($"{msg}:", StringComparison.Ordinal)))
+                        {
                             return;
                         }
 
