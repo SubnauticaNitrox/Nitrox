@@ -31,15 +31,6 @@ public class ServerOutputSelectableTextBlock : SelectableTextBlock
             ClearSelection();
         }
     }
-
-    public void ClearSelection()
-    {
-        if (SelectionStart != SelectionEnd)
-        {
-            SelectionStart = 0;
-            SelectionEnd = 0;
-        }
-    }
     
     protected override Type StyleKeyOverride { get; } = typeof(SelectableTextBlock);
 }
