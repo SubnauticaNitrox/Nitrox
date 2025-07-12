@@ -202,7 +202,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
 
             // Update _targetOffset with new delta
             targetOffset += delta;
-            targetOffset = Math.Clamp(targetOffset, 0, AssociatedObject!.Extent.Height - AssociatedObject!.Bounds.Height);
+            targetOffset = double.Clamp(targetOffset, 0, double.Max(0, AssociatedObject!.Extent.Height - AssociatedObject!.Bounds.Height));
 
             animationStartTime = currentTime;
         }
@@ -212,7 +212,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
             startOffset = AssociatedObject!.Offset.Y;
             targetOffset = startOffset + delta;
 
-            targetOffset = Math.Clamp(targetOffset, 0, AssociatedObject!.Extent.Height - AssociatedObject!.Bounds.Height);
+            targetOffset = double.Clamp(targetOffset, 0, double.Max(0, AssociatedObject!.Extent.Height - AssociatedObject!.Bounds.Height));
 
             animationStartTime = currentTime;
             _ = Animate();
