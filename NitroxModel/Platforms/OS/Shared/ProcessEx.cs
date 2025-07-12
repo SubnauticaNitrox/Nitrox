@@ -34,10 +34,21 @@ public class ProcessEx : IDisposable
         implementation = ProcessExFactory.Create(pid);
     }
 
-    public ProcessEx(Process process)
+    private ProcessEx(ProcessExBase implementation)
     {
-        implementation = ProcessExFactory.Create(process.Id);
+        this.implementation = implementation;
     }
+
+    public static ProcessEx? From(Process? process)
+    {
+        if (process == null || process.HasExited)
+        {
+            return null;
+        }
+        return new ProcessEx(ProcessExFactory.Create(process));
+    }
+
+    public static ProcessEx? From(ProcessStartInfo startInfo) => From(Process.Start(startInfo));
 
     public static bool ProcessExists(string procName, Func<ProcessEx, bool>? predicate = null)
     {
@@ -83,8 +94,7 @@ public class ProcessEx : IDisposable
             startInfo.Arguments = commandLine;
         }
 
-        Process process = Process.Start(startInfo);
-        return process != null ? new ProcessEx(process) : null;
+        return From(startInfo);
     }
 
 #if NET9_0_OR_GREATER
@@ -175,8 +185,8 @@ public class ProcessEx : IDisposable
                 continue;
             }
 
-            ProcessEx procEx = new(proc);
-            if (predicate != null && !predicate(procEx))
+            ProcessEx procEx = From(proc);
+            if (procEx != null && predicate != null && !predicate(procEx))
             {
                 procEx.Dispose();
                 continue;
@@ -243,6 +253,11 @@ public abstract class ProcessExBase : IDisposable
         }
     }
 
+    protected ProcessExBase(Process process)
+    {
+        Process = process;
+    }
+
     public abstract byte[] ReadMemory(IntPtr address, int size);
     public abstract int WriteMemory(IntPtr address, byte[] data);
     public abstract IEnumerable<ProcessModuleEx> GetModules();
@@ -270,6 +285,7 @@ public abstract class ProcessExBase : IDisposable
 
     public virtual void Dispose()
     {
+        Process?.Dispose();
     }
 }
 
@@ -326,6 +342,11 @@ public class WindowsProcessEx : ProcessExBase
         {
             throw new Win32Exception(Marshal.GetLastWin32Error());
         }
+    }
+
+    public WindowsProcessEx(Process process) : base(process.Id)
+    {
+        handle = process.Handle;
     }
 
     public new static bool IsElevated()
@@ -436,7 +457,7 @@ public class WindowsProcessEx : ProcessExBase
                 CloseHandle(handle);
                 handle = IntPtr.Zero;
             }
-            Process?.Dispose();
+            base.Dispose();
             disposed = true;
         }
         GC.SuppressFinalize(this);
@@ -558,6 +579,15 @@ public class LinuxProcessEx : ProcessExBase
     {
         this.pid = pid;
         if (!File.Exists($"/proc/{this.pid}/status"))
+        {
+            throw new ArgumentException("Process does not exist.", nameof(pid));
+        }
+    }
+
+    public LinuxProcessEx(Process process) : base(process)
+    {
+        pid = process.Id;
+        if (!File.Exists($"/proc/{pid}/status"))
         {
             throw new ArgumentException("Process does not exist.", nameof(pid));
         }
@@ -701,6 +731,10 @@ public class MacOSProcessEx : ProcessExBase
     {
     }
 
+    public MacOSProcessEx(Process process) : base(process)
+    {
+    }
+
     public new static bool IsElevated() => geteuid() == 0;
 
     public override byte[] ReadMemory(IntPtr address, int size)
@@ -773,6 +807,7 @@ public class MacOSProcessEx : ProcessExBase
         if (!disposed)
         {
             // In a real implementation, you'd release the task port here
+            base.Dispose();
             disposed = true;
         }
         GC.SuppressFinalize(this);
@@ -812,6 +847,23 @@ public static class ProcessExFactory
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             return new MacOSProcessEx(pid);
+        }
+        throw new PlatformNotSupportedException();
+    }
+
+    public static ProcessExBase Create(Process process)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return new WindowsProcessEx(process);
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return new LinuxProcessEx(process);
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return new MacOSProcessEx(process);
         }
         throw new PlatformNotSupportedException();
     }
