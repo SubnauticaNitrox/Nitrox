@@ -83,32 +83,7 @@
                             ToolTip.Tip="Direct the launcher to your game's install location"
                             Width="120" />
                     </Grid>
-
-                    <!-- <ItemsControl ItemsSource="{Binding KnownGames}"> -->
-                    <!--     <ItemsControl.ItemTemplate> -->
-                    <!--         <DataTemplate> -->
-                    <!--             <StackPanel Orientation="Horizontal" Spacing="16" Height="52"> -->
-                    <!--                 <RadioButton Margin="0 0 -5 0" /> -->
-                    <!--  <Image Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"  -->
-                    <!--  ToolTip.Tip="Welcome aboard, Captain!"  -->
-                    <!--  Stretch="Uniform"  -->
-                    <!--  Height="36"  -->
-                    <!--  Width="36" />  -->
-                    <!--                 <StackPanel Spacing="2" VerticalAlignment="Center"> -->
-                    <!--                     <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Platform, Converter={converters:ToStringConverter}}" /> -->
-                    <!--                     <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding PathToGame, FallbackValue='Unknown path'}" /> -->
-                    <!--                 </StackPanel> -->
-                    <!--             </StackPanel> -->
-                    <!--         </DataTemplate> -->
-                    <!--     </ItemsControl.ItemTemplate> -->
-                    <!-- </ItemsControl> -->
                 </Border>
-                <Grid>
-                    <!--  <Button Classes="icon" VerticalAlignment="Bottom"  -->
-                    <!--  Content="Manually add game installation"  -->
-                    <!--  Command="{Binding AddGameInstallationCommand}"/>  -->
-                    <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
-                </Grid>
             </StackPanel>
 
             <!--  Launch Arguments  -->

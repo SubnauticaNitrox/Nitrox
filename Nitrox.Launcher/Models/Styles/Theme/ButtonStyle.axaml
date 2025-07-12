@@ -166,7 +166,7 @@
             </Style>
         </Style>
 
-        <!--  Override button template to use properties from parent Button. DO NOT HARD CODE VALUES HERE.  -->
+        <!--  This overrides button template to use properties from parent Button. DO NOT HARD CODE VALUES HERE.  -->
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Opacity" Value="{Binding $parent[Button].Opacity}" />
             <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
