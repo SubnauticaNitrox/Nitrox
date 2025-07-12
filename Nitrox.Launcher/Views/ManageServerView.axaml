@@ -1,5 +1,6 @@
 <UserControl
     d:DesignWidth="700"
+    d:DesignHeight="1400"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.ManageServerView"
     x:DataType="vm:ManageServerViewModel"
@@ -12,9 +13,10 @@
     xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:ManageServerViewModel ServerName="My fun server" />
+        <designer:DesignManageServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
         <KeyBinding Command="{Binding ForceDeleteServerCommand}" Gesture="Shift+Delete" />
@@ -30,11 +32,9 @@
                 Cursor="Hand"
                 HotKey="Escape"
                 Margin="0,0,0,26">
-                <Image
-                    Height="24"
-                    HorizontalAlignment="Left"
-                    Source="/Assets/Images/world-manager/back.png"
-                    Width="24" />
+                <controls:RecolorImage Height="24" Width="24"
+                                       HorizontalAlignment="Left"
+                                       Source="/Assets/Images/world-manager/back.png" />
             </Button>
             <Grid ColumnDefinitions="Auto,*">
                 <StackPanel Margin="0,0,20,0">
@@ -118,13 +118,13 @@
                                 <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
                             </StackPanel>
                         </Panel>
-                        <TextBlock Text="{Binding ServerGameMode, Converter={converters:ToStringConverter}}" />
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding ServerPlayers}" />
-                            <TextBlock Text="/" />
-                            <TextBlock Text="{Binding ServerMaxPlayers}" />
-                            <TextBlock Margin="6,0,0,0" Text="playing" />
-                        </StackPanel>
+                        <TextBlock Text="{Binding Server.GameMode, Converter={converters:ToStringConverter}, FallbackValue=Survival}" />
+                        <TextBlock TextWrapping="NoWrap">
+                            <Run Text="{Binding Server.Players, FallbackValue=0}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding Server.MaxPlayers, FallbackValue=100}" />
+                            <Run Text="playing" />
+                        </TextBlock>
                     </StackPanel>
 
                     <Grid ColumnDefinitions="*,200">
@@ -134,7 +134,6 @@
                             design:NitroxAttached.PrimaryScrollWheelDirection="Horizontal">
                             <TextBlock
                                 Classes="header"
-                                Foreground="White"
                                 Text="{Binding ServerName}" />
                         </ScrollViewer>
 
@@ -347,6 +346,20 @@
                                 HorizontalAlignment="Right"
                                 IsChecked="{Binding ServerAllowCommands}" />
                         </Grid>
+                        <Grid>
+                            <TextBlock Text="Enable PvP" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAllowPvP}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock Text="Enable Keep Inventory" />
+                            <CheckBox
+                                Classes="switch"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding ServerAllowKeepInventory}" />
+                        </Grid>
                     </StackPanel>
                 </StackPanel>
 
@@ -367,19 +380,19 @@
 
                         <Button Classes="icon" Command="{Binding ShowAdvancedSettingsCommand}">
                             <StackPanel>
-                                <Image Source="/Assets/Images/world-manager/cog.png" />
+                                <controls:RecolorImage Source="/Assets/Images/world-manager/cog.png" />
                                 <TextBlock Text="Advanced settings" />
                             </StackPanel>
                         </Button>
                         <Button Classes="icon" Command="{Binding OpenWorldFolderCommand}">
                             <StackPanel>
-                                <Image Source="/Assets/Images/world-manager/window.png" />
+                                <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                                 <TextBlock Text="Open world folder" />
                             </StackPanel>
                         </Button>
                         <Button Classes="icon" Command="{Binding RestoreBackupCommand}">
                             <StackPanel>
-                                <Image Source="/Assets/Images/world-manager/export.png" />
+                                <controls:RecolorImage Source="/Assets/Images/world-manager/export.png" />
                                 <TextBlock Text="Restore a backup" />
                             </StackPanel>
                         </Button>

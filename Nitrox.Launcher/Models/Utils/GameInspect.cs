@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using HanumanInstitute.MvvmDialogs;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 
@@ -14,7 +13,7 @@ internal static class GameInspect
     /// <summary>
     ///     Check to ensure the Subnautica is not in legacy.
     /// </summary>
-    public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallDir, IDialogService dialogService = null)
+    public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallDir, DialogService? dialogService = null)
     {
         try
         {
@@ -51,12 +50,7 @@ internal static class GameInspect
     /// </summary>
     public static bool WarnIfGameProcessExists(GameInfo game)
     {
-        if (!NitroxEnvironment.IsReleaseMode)
-        {
-            return false;
-        }
-
-        if (!ProcessEx.ProcessExists(game.Name))
+        if (!ProcessEx.ProcessExists(game.ExeName))
         {
             return false;
         }

@@ -9,7 +9,7 @@ public static class ProcessExExtensions
 {
     public static void SetForegroundWindowAndRestore(this ProcessEx process)
     {
-        if (Avalonia.Controls.Design.IsDesignMode)
+        if (IsDesignMode)
         {
             return;
         }

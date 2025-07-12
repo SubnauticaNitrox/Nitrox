@@ -27,16 +27,16 @@ public static class NitroxEntryPatch
     /// <summary>
     /// Inject Nitrox entry point into Subnautica's Assembly-CSharp.dll
     /// </summary>
-    public static void Apply(string subnauticaBasePath)
+    public static async Task Apply(string subnauticaBasePath)
     {
         ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath, nameof(subnauticaBasePath));
-
-        Log.Debug("Adding Nitrox entry point to Subnautica");
 
         string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+
+        Log.Debug("Checking Subnautica code exists");
 
         if (File.Exists(modifiedAssemblyCSharp))
         {
@@ -56,6 +56,16 @@ public static class NitroxEntryPatch
                 }
             }
         }
+
+        byte[] cachedSha256ForFile = await Hashing.GetCachedSha256ByFilePath(assemblyCSharp);
+        byte[] currentCodeFileSha256 = await Hashing.GetSha256(assemblyCSharp);
+        if (cachedSha256ForFile.SequenceEqual(currentCodeFileSha256))
+        {
+            Log.Info("Subnautica already has Nitrox entry patch");
+            return;
+        }
+
+        Log.Debug($"Adding Nitrox entry point to Subnautica because code file hash mismatch [{Convert.ToHexStringLower(cachedSha256ForFile)}] != [{Convert.ToHexStringLower(currentCodeFileSha256)}]");
 
         /*
           	private void Awake()
@@ -104,7 +114,7 @@ public static class NitroxEntryPatch
 
         // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
         Log.Debug($"Deleting {GAME_ASSEMBLY_NAME}");
-        Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
+        Exception? error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
         if (error != null)
         {
             throw error;
@@ -112,6 +122,9 @@ public static class NitroxEntryPatch
 
         FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         Log.Debug("Added Nitrox entry point to Subnautica");
+
+        Log.Debug("Storing SHA256 of Nitrox-mutated code file in cache");
+        Log.Debug($"Code file SHA256: {Convert.ToHexStringLower(await Hashing.GetAndStoreSha256ForFile(assemblyCSharp))}");
     }
 
     /// <summary>
@@ -166,7 +179,7 @@ public static class NitroxEntryPatch
         return -1;
     }
 
-    private static Exception RetryWait(Action action, int interval, int retries = 0)
+    private static Exception? RetryWait(Action action, int interval, int retries = 0)
     {
         Exception lastException = null;
         while (retries >= 0)

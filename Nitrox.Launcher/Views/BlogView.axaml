@@ -36,7 +36,7 @@
             <StackPanel Spacing="15">
                 <TextBlock Classes="header" Text="Blog" />
                 <controls:RichTextBlock>
-                    Read the latest news from the Nitrox team ! You can view all our blogs [here](nitroxblog.rux.gg)
+                    Read the latest news from the Nitrox team! You can view all our blogs [here](nitroxblog.rux.gg)
                 </controls:RichTextBlock>
             </StackPanel>
 

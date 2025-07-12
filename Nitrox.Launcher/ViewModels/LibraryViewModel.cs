@@ -2,6 +2,4 @@
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class LibraryViewModel : RoutableViewModelBase
-{
-}
+internal class LibraryViewModel : RoutableViewModelBase;

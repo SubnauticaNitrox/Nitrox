@@ -14,7 +14,7 @@ public static class CloseByUserExtensions
     /// <summary>
     ///     Closes the window non-programmatically (by user).
     /// </summary>
-    public static void CloseByUser(this Window window)
+    public static void CloseByUser(this Window? window, object? dialogResult = null)
     {
         if (window == null)
         {
@@ -22,7 +22,7 @@ public static class CloseByUserExtensions
         }
         window.Closed += WindowOnClosed;
         isClosingByUser[window] = true;
-        window.Close();
+        window.Close(dialogResult);
 
         static void WindowOnClosed(object sender, EventArgs e)
         {
@@ -38,17 +38,17 @@ public static class CloseByUserExtensions
     /// <summary>
     ///     Closes the window programmatically.
     /// </summary>
-    public static void CloseByCode(this Window window)
+    public static void CloseByCode(this Window? window, object? dialogResult = null)
     {
         if (window == null)
         {
             return;
         }
         isClosingByUser[window] = false;
-        window.Close();
+        window.Close(dialogResult);
     }
 
-    public static bool IsClosingByUser(this Window closingWindow, WindowClosingEventArgs closingArgs = null)
+    public static bool IsClosingByUser(this Window? closingWindow, WindowClosingEventArgs? closingArgs = null)
     {
         if (closingWindow is not null && isClosingByUser.TryGetValue(closingWindow, out bool isByUser))
         {

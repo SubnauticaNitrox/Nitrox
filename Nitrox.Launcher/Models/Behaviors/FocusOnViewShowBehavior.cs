@@ -11,13 +11,13 @@ public class FocusOnViewShowBehavior : Behavior<Control>
 {
     protected override void OnAttached()
     {
-        WeakReferenceMessenger.Default.Register<ViewShownMessage>(this, static (obj, _) => (obj as FocusOnViewShowBehavior)?.Focus());
+        WeakReferenceMessenger.Default.Register<ShowViewMessage>(this, static (obj, _) => (obj as FocusOnViewShowBehavior)?.Focus());
         base.OnAttached();
     }
 
     protected override void OnDetaching()
     {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Unregister<ShowViewMessage>(this);
         base.OnDetaching();
     }
 

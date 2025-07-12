@@ -1,4 +1,6 @@
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
 
     <Design.PreviewWith>
         <StackPanel Spacing="10">
@@ -20,6 +22,14 @@
     <Style Selector="TextBlock.link">
         <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ToolTip.Tip" Value="{Binding $self.Tag, Converter={converters:ToStringConverter}, ConverterParameter=url}" />
+        <Setter Property="ContextMenu">
+            <ContextMenu>
+                <ContextMenu.Items>
+                    <MenuItem Header="Copy URL" Command="{x:Static design:StaticCommands.CopyToClipboardCommand}" CommandParameter="{Binding $parent[TextBlock].Tag, Converter={converters:ToStringConverter}, ConverterParameter=url}" />
+                </ContextMenu.Items>
+            </ContextMenu>
+        </Setter>
 
         <Style Selector="^:pointerover">
             <Setter Property="TextDecorations" Value="Underline" />

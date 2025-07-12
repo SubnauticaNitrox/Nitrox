@@ -13,7 +13,7 @@ namespace Nitrox.Launcher.Models.Behaviors;
 
 public abstract class SmoothScrollBehavior
 {
-    private static CancellationTokenSource animationTokenSource;
+    private static CancellationTokenSource? animationTokenSource;
     private static readonly Easing smoothScrollEasing = new ExponentialEaseOut();
     private static readonly Animation animation = new()
     {
@@ -21,16 +21,8 @@ public abstract class SmoothScrollBehavior
         Easing = smoothScrollEasing,
         Children =
         {
-            new KeyFrame
-            {
-                Cue = new Cue(0),
-                Setters = { new Setter(ScrollViewer.OffsetProperty, 0) }
-            },
-            new KeyFrame
-            {
-                Cue = new Cue(1),
-                Setters = { new Setter(ScrollViewer.OffsetProperty, 0) }
-            }
+            new KeyFrame { Cue = new Cue(0), Setters = { new Setter(ScrollViewer.OffsetProperty, new Vector(0, 0)) } },
+            new KeyFrame { Cue = new Cue(1), Setters = { new Setter(ScrollViewer.OffsetProperty, new Vector(0, 0)) } }
         }
     };
 

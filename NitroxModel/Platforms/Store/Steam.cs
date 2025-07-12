@@ -31,7 +31,7 @@ public sealed class Steam : IGamePlatform
             _ => false
         };
 
-    public async Task<ProcessEx> StartPlatformAsync()
+    public async Task<ProcessEx?> StartPlatformAsync()
     {
         // If steam is already running, do not start it.
         ProcessEx steam = ProcessEx.GetFirstProcess(SteamProcessName);
@@ -55,7 +55,7 @@ public sealed class Steam : IGamePlatform
             launchArgs = $@"-c ""nohup '{exe}' {launchArgs}"" &";
         }
         Stopwatch steamReadyStopwatch = Stopwatch.StartNew();
-        Process process = Process.Start(new ProcessStartInfo
+        ProcessEx process = ProcessEx.From(new ProcessStartInfo
         {
             WorkingDirectory = Path.GetDirectoryName(exe) ?? Directory.GetCurrentDirectory(),
             FileName = launchExe,
@@ -64,12 +64,12 @@ public sealed class Steam : IGamePlatform
             Arguments = launchArgs
         });
 
-        if (process is not { HasExited: false })
+        if (process is not { IsRunning: true })
         {
             return null;
         }
 
-        steam = new ProcessEx(process);
+        steam = process;
         // Wait for steam to write to its log file, which indicates it's ready to start games.
         using CancellationTokenSource steamReadyCts = new(TimeSpan.FromSeconds(30));
         try
@@ -100,7 +100,7 @@ public sealed class Steam : IGamePlatform
         return steam;
     }
 
-    public string GetExeFile()
+    public string? GetExeFile()
     {
         string steamExecutable = "";
 
@@ -133,7 +133,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId)
+    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool supportMultipleInstances)
     {
         try
         {
@@ -150,25 +150,30 @@ public sealed class Steam : IGamePlatform
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-#if DEBUG // Needed to start multiple SN instances, but Steam Overlay doesn't work this way so only active for devs
-            return ProcessEx.Start(
-                pathToGameExe,
-                [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
-                Path.GetDirectoryName(pathToGameExe),
-                launchArguments
-            );
-#else
-            return new ProcessEx(Process.Start(new ProcessStartInfo
+            if (supportMultipleInstances)
             {
-                FileName = GetExeFile(),
+                // Needed to start multiple SN instances, but note that Steam Overlay won't work on this instance
+                return ProcessEx.Start(
+                    pathToGameExe,
+                    [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
+                    Path.GetDirectoryName(pathToGameExe),
+                    launchArguments
+                );
+            }
+            return ProcessEx.From(new ProcessStartInfo
+            {
+                FileName = GetExeFile() ?? throw new FileNotFoundException("Steam was not found on your machine."),
                 Arguments = $"""-applaunch {steamAppId} --nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
-            }));
-#endif
+            });
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             string steamPath = Path.GetDirectoryName(GetExeFile());
+            if (steamPath == null)
+            {
+                throw new Exception("Steam was not found on your machine.");
+            }
             return StartGameWithProton(steamPath, pathToGameExe, steamAppId, launchArguments);
         }
 
@@ -185,89 +190,8 @@ public sealed class Steam : IGamePlatform
         throw new NotSupportedException("Your operating system is not supported by Nitrox");
     }
 
-    private static ProcessEx StartGameWithProton(string steamPath, string pathToGameExe, int steamAppId, string launchArguments)
+    private static ProcessEx? StartGameWithProton(string steamPath, string pathToGameExe, int steamAppId, string launchArguments)
     {
-        // function to get library path for given game id
-        static string GetLibraryPath(string steamPath, string gameId)
-        {
-            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
-            string content = File.ReadAllText(libraryFoldersPath);
-
-            // Regex to match library folder entries
-            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
-            MatchCollection matches = folderRegex.Matches(content);
-
-            foreach (Match match in matches)
-            {
-                string path = match.Groups[2].Value;
-                string apps = match.Groups[3].Value;
-
-                // Check if the gameId exists in the apps section
-                if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
-                {
-                    return path;
-                }
-            }
-
-            return ""; // Return empty string if not found
-        }
-
-        static List<string> GetAllLibraryPaths(string steamPath)
-        {
-            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
-            string content = File.ReadAllText(libraryFoldersPath);
-
-            // Regex to match library folder entries
-            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
-            MatchCollection matches = folderRegex.Matches(content);
-
-            List<string> libraryPaths = [];
-            foreach (Match match in matches)
-            {
-                string path = match.Groups[2].Value.Replace("\\\\", "\\");
-                if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
-                {
-                    libraryPaths.Add(path);
-                }
-            }
-            // Add the default Steam library path
-            string defaultLibraryPath = Path.Combine(steamPath);
-            if (!libraryPaths.Contains(defaultLibraryPath))
-            {
-                libraryPaths.Add(defaultLibraryPath);
-            }
-
-            return libraryPaths;
-        }
-
-        static string GetProtonVersionFromConfigVdf(string configVdfFile, string appId)
-        {
-            try
-            {
-                string fileContent = File.ReadAllText(configVdfFile);
-                Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
-
-                if (compatToolMatch.Success)
-                {
-                    string compatToolMapping = compatToolMatch.Groups[1].Value;
-                    string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
-                    Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
-
-                    if (appIdMatch.Success)
-                    {
-                        return appIdMatch.Groups[1].Value;
-                    }
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Log.Debug(ex);
-                return null;
-            }
-        }
-
         string compatdataPath = "";
         if (!string.IsNullOrEmpty(pathToGameExe))
         {
@@ -341,7 +265,88 @@ public sealed class Steam : IGamePlatform
                 ["STEAM_COMPAT_DATA_PATH"] = compatdataPath,
             }
         };
-        return new ProcessEx(Process.Start(startInfo));
+        return ProcessEx.From(startInfo);
+
+        // function to get library path for given game id
+        static string GetLibraryPath(string steamPath, string gameId)
+        {
+            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+            string content = File.ReadAllText(libraryFoldersPath);
+
+            // Regex to match library folder entries
+            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
+            MatchCollection matches = folderRegex.Matches(content);
+
+            foreach (Match match in matches)
+            {
+                string path = match.Groups[2].Value;
+                string apps = match.Groups[3].Value;
+
+                // Check if the gameId exists in the apps section
+                if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
+                {
+                    return path;
+                }
+            }
+
+            return ""; // Return empty string if not found
+        }
+
+        static List<string> GetAllLibraryPaths(string steamPath)
+        {
+            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+            string content = File.ReadAllText(libraryFoldersPath);
+
+            // Regex to match library folder entries
+            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
+            MatchCollection matches = folderRegex.Matches(content);
+
+            List<string> libraryPaths = [];
+            foreach (Match match in matches)
+            {
+                string path = match.Groups[2].Value.Replace("\\\\", "\\");
+                if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
+                {
+                    libraryPaths.Add(path);
+                }
+            }
+            // Add the default Steam library path
+            string defaultLibraryPath = Path.Combine(steamPath);
+            if (!libraryPaths.Contains(defaultLibraryPath))
+            {
+                libraryPaths.Add(defaultLibraryPath);
+            }
+
+            return libraryPaths;
+        }
+
+        static string? GetProtonVersionFromConfigVdf(string configVdfFile, string appId)
+        {
+            try
+            {
+                string fileContent = File.ReadAllText(configVdfFile);
+                Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
+
+                if (compatToolMatch.Success)
+                {
+                    string compatToolMapping = compatToolMatch.Groups[1].Value;
+                    string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
+                    Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
+
+                    if (appIdMatch.Success)
+                    {
+                        return appIdMatch.Groups[1].Value;
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex);
+                return null;
+            }
+        }
     }
 
     private static DateTime GetSteamConsoleLogLastWrite(string steamExePath)
