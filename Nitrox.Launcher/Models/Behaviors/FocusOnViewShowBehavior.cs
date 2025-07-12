@@ -17,7 +17,7 @@ public class FocusOnViewShowBehavior : Behavior<Control>
 
     protected override void OnDetaching()
     {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Unregister<ShowViewMessage>(this);
         base.OnDetaching();
     }
 

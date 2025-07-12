@@ -49,7 +49,7 @@ public class RecolorImage : Control
     ///     Gets or sets the image that will be displayed.
     /// </summary>
     [Content]
-    public Bitmap Source
+    public Bitmap? Source
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
@@ -176,14 +176,13 @@ public class RecolorImage : Control
 
             using ISkiaSharpApiLease lease = leaseFeature.Lease();
             SKCanvas canvas = lease.SkCanvas;
-
             using SKBitmap bitmap = SKBitmap.Decode(data.ToArray());
-            using SKPaint paint = new();
-            paint.IsAntialias = true;
             if (bitmap == null)
             {
                 return;
             }
+            using SKPaint paint = new();
+            paint.IsAntialias = true;
             SKImage img = SKImage.FromBitmap(bitmap);
             paint.ImageFilter = SKImageFilter.CreateColorFilter(SKColorFilter.CreateBlendMode(color.ToSKColor(), SKBlendMode.Modulate));
             canvas.DrawImage(img, dest.ToSKRect(), Bounds.ToSKRect(), new SKSamplingOptions(SKCubicResampler.Mitchell), paint);

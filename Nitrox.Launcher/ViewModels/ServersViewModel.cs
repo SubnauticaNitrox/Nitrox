@@ -1,11 +1,13 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
@@ -30,6 +32,17 @@ internal partial class ServersViewModel : RoutableViewModelBase
         this.dialogService = dialogService;
         this.serverService = serverService;
         this.manageServerViewModel = manageServerViewModel;
+
+        this.RegisterMessageListener<ServerStatusMessage, ServersViewModel>((message, model) =>
+        {
+            ServerEntry entry = model.Servers?.FirstOrDefault(s => s.Process?.Id == message.ProcessId);
+            if (entry == null)
+            {
+                return;
+            }
+            entry.Players = message.PlayerCount;
+            entry.IsOnline = message.IsOnline;
+        });
 
         serverService.PropertyChanged += ServerServiceOnPropertyChanged;
     }
@@ -74,15 +87,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public async Task<bool> StartServerAsync(ServerEntry server)
-    {
-        bool started = await serverService.StartServerAsync(server);
-        if (started && server.Process is { Id: > 0 })
-        {
-            serverService.KnownServerProcessIds.Add(server.Process.Id);
-        }
-        return started;
-    }
+    public async Task<bool> StartServerAsync(ServerEntry server) => await serverService.StartServerAsync(server);
 
     [RelayCommand]
     public async Task ManageServer(ServerEntry server)

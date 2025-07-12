@@ -51,10 +51,7 @@ public class Server
 
         Instance = this;
 
-        if (server is not null && server.playerManager is not null)
-        {
-            server.playerManager.PlayerCountChanged += count => PlayerCountChanged?.Invoke(count);
-        }
+        server.playerManager.PlayerCountChanged += count => PlayerCountChanged?.Invoke(count);
 
         saveTimer = new Timer();
         saveTimer.Interval = serverConfig.SaveInterval;

@@ -20,4 +20,4 @@ internal record ShowViewMessage
 
 internal record ShowPreviousViewMessage(Type? RoutableViewModelType = null);
 
-internal record ServerStatusMessage(ServerEntry Server);
+internal record ServerStatusMessage(int ProcessId, bool IsOnline, int PlayerCount = 0);

@@ -108,8 +108,8 @@ public partial class ServerEntry : ObservableObject
     {
         switch (e.PropertyName)
         {
-            case nameof(IsOnline):
-                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(this));
+            case nameof(IsOnline) when Process is { Id: var processId and > 0 }:
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(processId, IsOnline, Players));
                 break;
         }
         base.OnPropertyChanged(e);
@@ -285,18 +285,13 @@ public partial class ServerEntry : ObservableObject
             if (processID == 0)
             {
                 string saveName = Path.GetFileName(saveDir);
-                string serverExeName = "NitroxServer-Subnautica.exe";
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    serverExeName = "NitroxServer-Subnautica";
-                }
                 string launcherPath = NitroxUser.ExecutableRootPath;
                 if (string.IsNullOrWhiteSpace(launcherPath))
                 {
                     throw new Exception($"{nameof(launcherPath)} must be set");
                 }
 
-                string serverFile = Path.Combine(launcherPath, serverExeName);
+                string serverFile = Path.Combine(launcherPath, GetServerExeName());
                 ProcessStartInfo startInfo = new(serverFile)
                 {
                     WorkingDirectory = launcherPath,

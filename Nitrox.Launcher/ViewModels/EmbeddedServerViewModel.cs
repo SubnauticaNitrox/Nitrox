@@ -38,12 +38,11 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
         this.serverEntry = serverEntry;
         this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
-            if (status.Server != model.ServerEntry)
+            if (status.ProcessId != model.ServerEntry.Process?.Id)
             {
                 return;
             }
-            // TODO: Verify correctness - model.HostScreen.BackToAsync<ServersViewModel>().ConfigureAwait(false);
-            if (!status.Server.IsOnline)
+            if (!status.IsOnline)
             {
                 model.Back();
             }
@@ -74,9 +73,10 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
                 LogText = $"> {ServerCommand}"
             });
         }
-        if (!string.Equals(ServerCommand, "stop", StringComparison.OrdinalIgnoreCase))
+        string command = ServerCommand.TrimStart('/');
+        if (!string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase))
         {
-            await ServerEntry.Process.SendCommandAsync(ServerCommand.TrimStart('/'));
+            await ServerEntry.Process.SendCommandAsync(command);
         }
         else
         {

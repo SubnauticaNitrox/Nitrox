@@ -42,8 +42,6 @@ public class NitroxAttached : AvaloniaObject
 
     public static void SetAutoScrollToHome(AvaloniaObject obj, bool value)
     {
-        static void VisualAttached(object sender, VisualTreeAttachmentEventArgs e) => (sender as ScrollViewer)?.ScrollToHome();
-
         obj.SetValue(AutoScrollToHomeProperty, value);
         if (obj is not Visual visual)
         {
@@ -58,6 +56,8 @@ public class NitroxAttached : AvaloniaObject
         {
             visual.AttachedToVisualTree -= VisualAttached;
         }
+
+        static void VisualAttached(object sender, VisualTreeAttachmentEventArgs e) => (sender as ScrollViewer)?.ScrollToHome();
     }
 
     public static bool GetAutoScrollToHome(AvaloniaObject element) => element.GetValue(AutoScrollToHomeProperty);
@@ -65,10 +65,26 @@ public class NitroxAttached : AvaloniaObject
     public static Orientation GetPrimaryScrollWheelDirection(AvaloniaObject obj) => obj.GetValue(PrimaryScrollWheelDirectionProperty);
 
     /// <summary>
-    ///     Changes scroll wheel input to move scroll viewer left and right if set to <see cref="Orientation.Horizontal"/>.
+    ///     Changes scroll wheel input to move scroll viewer left and right if set to <see cref="Orientation.Horizontal" />.
     /// </summary>
     public static void SetPrimaryScrollWheelDirection(AvaloniaObject obj, Orientation orientation)
     {
+        obj.SetValue(PrimaryScrollWheelDirectionProperty, orientation);
+        if (obj is not ScrollViewer scrollViewer)
+        {
+            return;
+        }
+
+        switch (orientation)
+        {
+            case Orientation.Horizontal:
+                scrollViewer.PointerWheelChanged += RotatedOrientationWheelHandler;
+                break;
+            case Orientation.Vertical:
+                scrollViewer.PointerWheelChanged -= RotatedOrientationWheelHandler;
+                break;
+        }
+
         static void RotatedOrientationWheelHandler(object sender, PointerWheelEventArgs e)
         {
             ScrollViewer scrollViewer = sender as ScrollViewer;
@@ -97,26 +113,24 @@ public class NitroxAttached : AvaloniaObject
             }
             e.Handled = true;
         }
-
-        obj.SetValue(PrimaryScrollWheelDirectionProperty, orientation);
-        if (obj is not ScrollViewer scrollViewer)
-        {
-            return;
-        }
-
-        switch (orientation)
-        {
-            case Orientation.Horizontal:
-                scrollViewer.PointerWheelChanged += RotatedOrientationWheelHandler;
-                break;
-            case Orientation.Vertical:
-                scrollViewer.PointerWheelChanged -= RotatedOrientationWheelHandler;
-                break;
-        }
     }
 
     public static void SetIsNumericInput(AvaloniaObject obj, bool value)
     {
+        if (obj is not InputElement inputElement)
+        {
+            return;
+        }
+
+        if (value)
+        {
+            inputElement.KeyDown += OnKeyDown;
+        }
+        else
+        {
+            inputElement.KeyDown -= OnKeyDown;
+        }
+
         static void OnKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -141,27 +155,13 @@ public class NitroxAttached : AvaloniaObject
                     break;
             }
         }
-
-        if (obj is not InputElement inputElement)
-        {
-            return;
-        }
-
-        if (value)
-        {
-            inputElement.KeyDown += OnKeyDown;
-        }
-        else
-        {
-            inputElement.KeyDown -= OnKeyDown;
-        }
     }
 
     public static bool GetHasUserInteracted(InputElement input) => input.GetValue(HasUserInteractedProperty);
-    
+
     public static void SetHasUserInteracted(InputElement input, bool value) => input.SetValue(HasUserInteractedProperty, value);
-    
+
     public static bool GetUseCustomTitleBar(Window window) => window.GetValue(UseCustomTitleBarProperty);
-    
+
     public static void SetUseCustomTitleBar(Window window, bool value) => window.SetValue(UseCustomTitleBarProperty, value);
 }

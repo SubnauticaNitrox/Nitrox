@@ -139,19 +139,20 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
         this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {
-            if (vm.server != status.Server)
+            if (vm.server?.Process?.Id != status.ProcessId)
             {
                 return;
             }
-            vm.ServerIsOnline = status.Server.IsOnline;
+            vm.ServerIsOnline = status.IsOnline;
+            vm.ServerPlayers = status.PlayerCount;
         });
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public async Task StartServerAsync() => await serverService.StartServerAsync(Server);
+    public async Task StartServerAsync() => await serverService.StartServerAsync(Server!);
 
     [RelayCommand]
-    public async Task StopServerAsync() => await Server.StopAsync();
+    public async Task StopServerAsync() => await Server!.StopAsync();
 
     public void LoadFrom(ServerEntry serverEntry)
     {

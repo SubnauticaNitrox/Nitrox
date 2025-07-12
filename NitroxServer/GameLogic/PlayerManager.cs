@@ -208,7 +208,7 @@ namespace NitroxServer.GameLogic
                     serverConfig.DefaultPlayerStats,
                     serverConfig.GameMode,
                     new List<NitroxTechType>(),
-                    Array.Empty<Optional<NitroxId>>(),
+                    [],
                     new Dictionary<string, NitroxId>(),
                     new Dictionary<string, float>(),
                     new Dictionary<string, PingInstancePreference>(),
