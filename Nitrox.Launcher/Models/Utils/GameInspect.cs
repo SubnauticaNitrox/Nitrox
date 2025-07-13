@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
 using NitroxModel.Logger;
@@ -24,12 +25,12 @@ internal static class GameInspect
             {
                 if (dialogService != null)
                 {
-                    await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                    await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                     {
                         model.Title = "Legacy Game Detected";
                         model.Description = $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
                         model.ButtonOptions = ButtonOptions.Ok;
-                    });
+                    }));
                 }
                 return true;
             }
