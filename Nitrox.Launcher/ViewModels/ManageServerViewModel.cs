@@ -154,9 +154,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     public async Task StopServerAsync() => await Server!.StopAsync();
 
-    public void LoadFrom(ServerEntry serverEntry)
+    public void LoadFrom(ServerEntry serverEntry, bool restoringBackup = false)
     {
-        if (Server == serverEntry)
+        if (Server == serverEntry && !restoringBackup)
         {
             return;
         }
@@ -366,9 +366,15 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     throw new FileNotFoundException("Selected backup file not found.", backupFile);
                 }
 
+                bool isEmbedded = ServerEmbedded;
+                foreach (string file in Directory.GetFiles(SaveFolderDirectory, "*"))
+                {
+                    File.Delete(file);
+                }
                 ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
                 Server.RefreshFromDirectory(SaveFolderDirectory);
-                LoadFrom(Server);
+                LoadFrom(Server, true);
+                ServerEmbedded = isEmbedded; // Preserve the original IsEmbedded value
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)
