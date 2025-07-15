@@ -30,9 +30,12 @@ internal sealed class DialogService(Func<Window> dialogOwnerProvider, IEnumerabl
                     throw new Exception($"No dialog known for {typeof(TViewModel).Name}");
                 }
             }
-            Window dialog = mapping.WindowFactory(typeof(TViewModel));
-            viewModelSetup?.Invoke((TViewModel)dialog.DataContext);
-            return await Dispatcher.UIThread.InvokeAsync(() => dialog.ShowDialog<TViewModel>(dialogOwnerProvider()));
+            return await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                Window dialog = mapping.WindowFactory(typeof(TViewModel));
+                viewModelSetup?.Invoke((TViewModel)dialog.DataContext);
+                return dialog.ShowDialog<TViewModel>(dialogOwnerProvider());
+            });
         }
         catch (Exception ex)
         {
