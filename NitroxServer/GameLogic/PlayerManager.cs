@@ -255,6 +255,7 @@ namespace NitroxServer.GameLogic
                 Player player = assetPackage.Player;
                 reservedPlayerNames.Remove(player.Name);
                 connectedPlayersById.Remove(player.Id);
+                Log.Info($"{player.Name} left the game");
             }
 
             assetsByConnection.Remove(connection);
