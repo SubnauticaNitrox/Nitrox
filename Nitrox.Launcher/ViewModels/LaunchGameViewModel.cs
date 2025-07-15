@@ -171,7 +171,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in multiplayer mode:");
-            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode"));
+            await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode");
         }
     }
 

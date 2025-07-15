@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -31,7 +32,7 @@ internal sealed class DialogService(Func<Window> dialogOwnerProvider, IEnumerabl
             }
             Window dialog = mapping.WindowFactory(typeof(TViewModel));
             viewModelSetup?.Invoke((TViewModel)dialog.DataContext);
-            return await dialog.ShowDialog<TViewModel>(dialogOwnerProvider());
+            return await Dispatcher.UIThread.InvokeAsync(() => dialog.ShowDialog<TViewModel>(dialogOwnerProvider()));
         }
         catch (Exception ex)
         {
