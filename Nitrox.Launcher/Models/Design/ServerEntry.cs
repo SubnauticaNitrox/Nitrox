@@ -247,7 +247,7 @@ public partial class ServerEntry : ObservableObject
         {
             // Force shutdown if server doesn't respond to close command.
             Log.Warn($"Server '{Name}' didn't respond to close command. Forcing shutdown.");
-            Process.Dispose();
+            Process.Kill();
         }
         
         IsOnline = false;
@@ -447,6 +447,12 @@ public partial class ServerEntry : ObservableObject
                 // ignored - "broken pipe" or "socket shutdown"
             }
             return false;
+        }
+
+        public void Kill()
+        {
+            serverProcess?.Kill();
+            Dispose();
         }
 
         public void Dispose()
