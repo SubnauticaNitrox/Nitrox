@@ -35,14 +35,17 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     ];
 
     private readonly DialogService dialogService;
-    private readonly StorageService storageService;
     private readonly IKeyValueStore keyValueStore;
     private readonly ServerService serverService;
+    private readonly StorageService storageService;
+
+    [ObservableProperty]
+    private ServerEntry? server;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowCommands;
-    
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowKeepInventory;
@@ -50,7 +53,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowLanDiscovery;
-    
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private bool serverAllowPvP;
@@ -70,6 +73,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private Perms serverDefaultPlayerPerm;
 
     [ObservableProperty]
+    private bool serverEmbedded = true;
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     private NitroxGameMode serverGameMode;
 
@@ -78,6 +84,10 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private Bitmap? serverIcon;
 
     private string? serverIconDir;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
+    private bool serverIsOnline;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -113,19 +123,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
     private string? serverSeed;
-    
-    [ObservableProperty]
-    private bool serverEmbedded = true;
 
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string? OriginalServerName => Server?.Name;
-
-    [ObservableProperty]
-    private ServerEntry? server;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
-    private bool serverIsOnline;
 
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server?.Name ?? throw new Exception($"{nameof(Server)} is not set"));
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
@@ -154,14 +154,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     public async Task StopServerAsync() => await Server!.StopAsync();
 
-    public void LoadFrom(ServerEntry serverEntry, bool restoringBackup = false)
+    public void LoadFrom(ServerEntry serverEntry)
     {
-        if (Server == serverEntry && !restoringBackup)
-        {
-            return;
-        }
         Server = serverEntry;
 
+        ServerIsOnline = Server.IsOnline;
         ServerName = Server.Name;
         ServerIcon = Server.ServerIcon;
         ServerPassword = Server.Password;
@@ -180,21 +177,22 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerEmbedded = Server.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
     }
 
-    private bool HasChanges() => ServerName != Server.Name ||
-                                 ServerIcon != Server.ServerIcon ||
-                                 ServerPassword != Server.Password ||
-                                 ServerGameMode != Server.GameMode ||
-                                 ServerSeed != Server.Seed ||
-                                 ServerDefaultPlayerPerm != Server.PlayerPermissions ||
-                                 ServerAutoSaveInterval != Server.AutoSaveInterval ||
-                                 ServerMaxPlayers != Server.MaxPlayers ||
-                                 ServerPlayers != Server.Players ||
-                                 ServerPort != Server.Port ||
-                                 ServerAutoPortForward != Server.AutoPortForward ||
-                                 ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
-                                 ServerAllowCommands != Server.AllowCommands ||
-                                 ServerAllowPvP != Server.AllowPvP ||
-                                 ServerAllowKeepInventory != Server.AllowKeepInventory;
+    private bool HasChanges() => Server != null &&
+                                 (ServerName != Server.Name ||
+                                  ServerIcon != Server.ServerIcon ||
+                                  ServerPassword != Server.Password ||
+                                  ServerGameMode != Server.GameMode ||
+                                  ServerSeed != Server.Seed ||
+                                  ServerDefaultPlayerPerm != Server.PlayerPermissions ||
+                                  ServerAutoSaveInterval != Server.AutoSaveInterval ||
+                                  ServerMaxPlayers != Server.MaxPlayers ||
+                                  ServerPlayers != Server.Players ||
+                                  ServerPort != Server.Port ||
+                                  ServerAutoPortForward != Server.AutoPortForward ||
+                                  ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
+                                  ServerAllowCommands != Server.AllowCommands ||
+                                  ServerAllowPvP != Server.AllowPvP ||
+                                  ServerAllowKeepInventory != Server.AllowKeepInventory);
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private void Back() => ChangeViewToPrevious<ServersViewModel>();
@@ -358,7 +356,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
         if (result)
         {
-            string backupFile = result.SelectedBackup.BackupFilePath;
+            string backupFile = result!.SelectedBackup?.BackupFilePath;
             try
             {
                 if (!File.Exists(backupFile))
@@ -372,8 +370,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     File.Delete(file);
                 }
                 ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
-                Server.RefreshFromDirectory(SaveFolderDirectory);
-                LoadFrom(Server, true);
+                Server!.RefreshFromDirectory(SaveFolderDirectory);
+                LoadFrom(Server);
                 ServerEmbedded = isEmbedded; // Preserve the original IsEmbedded value
                 LauncherNotifier.Success("Backup restored successfully.");
             }

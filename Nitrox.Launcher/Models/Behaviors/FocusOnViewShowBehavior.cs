@@ -25,11 +25,7 @@ public class FocusOnViewShowBehavior : Behavior<Control>
 
     private void Focus()
     {
-        if (AssociatedObject == null)
-        {
-            return;
-        }
-        if (!AssociatedObject.IsEffectivelyVisible)
+        if (AssociatedObject is not { IsEffectivelyVisible: true })
         {
             return;
         }
