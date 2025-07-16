@@ -9,6 +9,13 @@ public class LiteNetLibLogger : INetLogger
     {
         string message = $"[LiteNetLib]  {string.Format(str, args)}";
 
+        // Hide this error on release mode: [LiteNetLib]  [B]Bind exception: System.Net.Sockets.SocketException (10048): Only one usage of each socket address (protocol/network address/port) is normally permitted.
+        if (level == NetLogLevel.Error && message.Contains("Bind exception") && message.Contains("10048"))
+        {
+            Log.Debug(message);
+            return;
+        }
+
         switch (level)
         {
             case NetLogLevel.Error:
