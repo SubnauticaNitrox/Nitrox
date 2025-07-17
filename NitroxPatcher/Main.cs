@@ -114,7 +114,7 @@ public static class Main
             }
         };
 
-        Log.Info($"Using Nitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version} built on {NitroxEnvironment.BuildDate}");
+        Log.Info($"Using Nitrox {NitroxEnvironment.VersionInfo} built on {NitroxEnvironment.BuildDate:F}");
         try
         {
             Patcher.Initialize();
