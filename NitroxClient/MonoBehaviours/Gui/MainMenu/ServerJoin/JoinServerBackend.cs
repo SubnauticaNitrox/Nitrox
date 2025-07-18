@@ -161,7 +161,7 @@ public static class JoinServerBackend
         IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
         UWE.CoroutineHost.StartCoroutine(startNewGame);
-        LoadingScreenVersionText.Initialize();
+        TopRightWatermarkText.Initialize();
     }
 
     public static void StopMultiplayerClient()

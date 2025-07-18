@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -234,6 +235,20 @@ public static class Extensions
                 yield return arg;
             }
         }
+    }
+
+    public static string? GetMetaData(this Assembly assembly, string key)
+    {
+        AssemblyMetadataAttribute first = null;
+        foreach (AssemblyMetadataAttribute attr in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
+        {
+            if (attr.Key == key)
+            {
+                first = attr;
+                break;
+            }
+        }
+        return first?.Value;
     }
 
     public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;

@@ -20,8 +20,6 @@
 
     <!-- Nitrox specific properties -->
     <PropertyGroup>
-        <!-- Fix for dotnet build CLI ; MSBuildThisFileDirectory refers to the folder where Directory.Build.props is defined -->
-        <NitroxRootDir>$(MSBuildThisFileDirectory)</NitroxRootDir>
         <Authors>Nitrox</Authors>
         <Company>Nitrox</Company>
         <NitroxProject>false</NitroxProject>
