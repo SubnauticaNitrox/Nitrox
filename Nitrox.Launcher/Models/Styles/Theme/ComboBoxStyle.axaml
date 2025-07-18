@@ -1,6 +1,5 @@
 ﻿<Styles
     xmlns="https://github.com/avaloniaui"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
@@ -180,7 +179,7 @@
         </Style>
 
         <Style Selector="^:disabled">
-            <Setter Property="Background" Value="{TemplateBinding Background}" />
+            <Setter Property="Background" Value="{Binding $parent[ComboBox].Background}" />
         </Style>
     </Style>
 </Styles>

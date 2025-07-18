@@ -12,10 +12,10 @@ public class RadioButtonGroup : ItemsControl
 
     public static readonly DirectProperty<RadioButtonGroup, RelayCommand<Button>> ItemClickCommandProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, RelayCommand<Button>>(nameof(ItemClickCommand), o => o.ItemClickCommand, (o, v) => o.ItemClickCommand = v);
 
-    private Type @enum;
+    private Type? @enum;
     private RelayCommand<Button> itemClickCommand;
 
-    public Type Enum
+    public Type? Enum
     {
         get => @enum;
         set
@@ -36,7 +36,7 @@ public class RadioButtonGroup : ItemsControl
         private set => SetAndRaise(ItemClickCommandProperty, ref itemClickCommand, value);
     }
 
-    public object SelectedItem
+    public object? SelectedItem
     {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);

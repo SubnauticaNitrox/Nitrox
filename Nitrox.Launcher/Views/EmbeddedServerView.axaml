@@ -1,5 +1,6 @@
 <UserControl
     d:DesignWidth="700"
+    d:DesignHeight="400"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.EmbeddedServerView"
     x:DataType="vm:EmbeddedServerViewModel"
@@ -11,9 +12,10 @@
     xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:EmbeddedServerViewModel />
+        <designer:DesignEmbeddedServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
         <KeyBinding
@@ -36,7 +38,7 @@
                 Command="{Binding BackCommand}"
                 Cursor="Hand"
                 HorizontalAlignment="Left">
-                <Image
+                <controls:RecolorImage
                     Height="24"
                     HorizontalAlignment="Left"
                     Source="/Assets/Images/world-manager/back.png"
@@ -45,7 +47,7 @@
             <TextBlock
                 Classes="header"
                 HorizontalAlignment="Center"
-                Text="{Binding ServerEntry.Name}" />
+                Text="{Binding ServerEntry.Name, FallbackValue=Server Name}" />
             <CheckBox
                 Content="Auto scroll"
                 HorizontalAlignment="Right"
@@ -56,8 +58,10 @@
             Grid.Row="1" BringIntoViewOnFocusChange="False"
             Margin="0,20,0,20"
             x:Name="ScrollViewer">
-            <!--  Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something)  -->
-            <ItemsControl Background="Transparent" ItemsSource="{Binding ServerOutput}">
+            <!--  Transparent background for improved QoL selecting text (otherwise, putting the cursor between lines won't allow for text selection)  -->
+            <ItemsControl x:Name="ItemsControl" Background="Transparent" HorizontalAlignment="Left"
+                          SizeChanged="ItemsControl_OnSizeChanged"
+                          ItemsSource="{Binding ServerOutput}">
                 <ItemsControl.Styles>
                     <Style Selector="Run.command">
                         <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
@@ -88,7 +92,7 @@
                 <ItemsControl.ItemTemplate>
                     <!--  TODO: Fix highlighting only happening one line at a time  -->
                     <DataTemplate x:DataType="design:OutputLine">
-                        <SelectableTextBlock Focusable="False">
+                        <controls:ServerOutputSelectableTextBlock Focusable="False" FontFamily="/Assets/Fonts#Roboto Mono">
                             <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
                             <Run Text="" />
                             <Run Text="{Binding LogText}"
@@ -97,7 +101,7 @@
                                  Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.WARNING_LOG}}"
                                  Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.ERROR_LOG}}"
                                  />
-                        </SelectableTextBlock>
+                        </controls:ServerOutputSelectableTextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -107,7 +111,8 @@
                 Grid.Column="0"
                 Text="{Binding ServerCommand}"
                 Watermark="A server command here"
-                x:Name="ServerCommandTextBox">
+                x:Name="ServerCommandTextBox"
+                IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                 <Interaction.Behaviors>
                     <behaviors:FocusOnViewShowBehavior />
                 </Interaction.Behaviors>
@@ -129,9 +134,10 @@
                     CommandParameter="{Binding #ServerCommandTextBox}"
                     Cursor="Hand"
                     HotKey="Enter"
-                    ToolTip.Tip="Send command">
+                    ToolTip.Tip="Send command"
+                    IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                     <Svg
-                        Classes="theme"
+                        Css="* { fill: #fff; stroke: #fff; }"
                         Height="20"
                         Path="/Assets/Icons/send.svg" />
                 </Button>

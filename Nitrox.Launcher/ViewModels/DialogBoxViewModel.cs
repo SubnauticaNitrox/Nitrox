@@ -17,13 +17,13 @@ namespace Nitrox.Launcher.ViewModels;
 /// </summary>
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
-    [ObservableProperty] private string windowTitle;
+    [ObservableProperty] private string? windowTitle;
 
-    [ObservableProperty] private string title;
+    [ObservableProperty] private string title = "";
     [ObservableProperty] private double titleFontSize = 24;
     [ObservableProperty] private FontWeight titleFontWeight = FontWeight.Bold;
 
-    [ObservableProperty] private string description;
+    [ObservableProperty] private string description = "";
     [ObservableProperty] private double descriptionFontSize = 14;
     [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 
@@ -62,16 +62,13 @@ public partial class DialogBoxViewModel : ModalViewModelBase
         {
             await clipboard.SetTextAsync(text);
 
-            if (commandControl != null)
+            object previousContent = commandControl.Content;
+            commandControl.Content = "Copied!";
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                object previousContent = commandControl.Content;
-                commandControl.Content = "Copied!";
-                await Dispatcher.UIThread.InvokeAsync(async () =>
-                {
-                    await Task.Delay(3000);
-                    commandControl.Content = previousContent;
-                });
-            }
+                await Task.Delay(3000);
+                commandControl.Content = previousContent;
+            });
         }
     }
 }

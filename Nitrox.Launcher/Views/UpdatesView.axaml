@@ -1,4 +1,5 @@
 ﻿<UserControl
+    d:DesignHeight="700"
     d:DesignWidth="1000"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.UpdatesView"
@@ -10,9 +11,10 @@
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:UpdatesViewModel />
+        <designer:DesignUpdatesViewModel />
     </Design.DataContext>
     <ScrollViewer Classes="main">
         <StackPanel
@@ -96,7 +98,7 @@
                     <!--  Unofficial Version only text  -->
                     <StackPanel IsVisible="{Binding !UsingOfficialVersion, Mode=OneWay}" Spacing="10">
                         <!--  TODO: Better Icon here  -->
-                        <Image
+                        <controls:RecolorImage
                             Height="56"
                             HorizontalAlignment="Center"
                             Source="/Assets/Images/store-icons/pirated.png"

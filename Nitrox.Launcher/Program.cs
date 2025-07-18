@@ -47,12 +47,12 @@ internal static class Program
 
     private static class AssemblyResolver
     {
-        private static string currentExecutableDirectory;
+        private static string? currentExecutableDirectory;
         private static readonly Dictionary<string, Assembly> cache = [];
 
-        public static Assembly Handler(object sender, ResolveEventArgs args)
+        public static Assembly? Handler(object sender, ResolveEventArgs args)
         {
-            static Assembly ResolveFromLib(ReadOnlySpan<char> dllName)
+            static Assembly? ResolveFromLib(ReadOnlySpan<char> dllName)
             {
                 dllName = dllName.Slice(0, dllName.IndexOf(','));
                 if (!dllName.EndsWith(".dll"))

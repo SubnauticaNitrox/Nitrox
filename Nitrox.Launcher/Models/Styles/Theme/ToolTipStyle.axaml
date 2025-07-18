@@ -15,6 +15,9 @@
     </Design.PreviewWith>
 
     <Style Selector="ToolTip">
+        <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorder}" />
+        
         <Setter Property="IsHitTestVisible" Value="False" />
         <Style Selector="^ Border">
             <Setter Property="Opacity" Value="0.9" />
