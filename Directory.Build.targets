@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    
+
+    <Target Name="_NitroxEmbedAssemblyInfo" AfterTargets="GetAssemblyAttributes" DependsOnTargets="PrepareForBuild">
+        <ItemGroup>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitHash</_Parameter1>
+                <_Parameter2>$(_GitHash)</_Parameter2>
+            </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>BuildDate</_Parameter1>
+                <_Parameter2>$([System.DateTimeOffset]::Now.ToString("O"))</_Parameter2>
+            </AssemblyAttribute>
+        </ItemGroup>
+    </Target>
+
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">
         <DiscoverGame GameName="Subnautica" IntermediateOutputPath="$(IntermediateOutputPath)">
             <Output TaskParameter="GamePath" PropertyName="GameDir" />

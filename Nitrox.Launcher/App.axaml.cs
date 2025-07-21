@@ -62,6 +62,7 @@ public class App : Application
     {
         CultureManager.ConfigureCultureInfo();
         Log.Setup();
+        Log.Info($"Starting Nitrox Launcher V{NitroxEnvironment.Version}+{NitroxEnvironment.GitHash} built on {NitroxEnvironment.BuildDate:F}");
 
         // Handle command line arguments.
         ConsoleApp.ConsoleAppBuilder cliParser = ConsoleApp.Create();
