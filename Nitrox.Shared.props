@@ -24,4 +24,11 @@
         <_IsMacOSTarget Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">true</_IsMacOSTarget>
     </PropertyGroup>
 
+    <!-- Git info properties -->
+    <PropertyGroup>
+        <_GitRootPath>$(MSBuildThisFileDirectory)\.git\</_GitRootPath>
+        <_GitRefFilePath>$(_GitRootPath)HEAD</_GitRefFilePath>
+        <_GitRefHashFilePath Condition="Exists('$(_GitRefFilePath)')">$(_GitRootPath)$([System.IO.File]::ReadAllText('$(_GitRefFilePath)').Trim().Substring(5))</_GitRefHashFilePath>
+        <_GitHash Condition="Exists('$(_GitRefHashFilePath)')">$([System.IO.File]::ReadAllText('$(_GitRefHashFilePath)').Trim())</_GitHash>
+    </PropertyGroup>
 </Project>

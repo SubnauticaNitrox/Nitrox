@@ -1,60 +1,93 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 
-namespace NitroxModel.Helper
+namespace NitroxModel.Helper;
+
+/// <summary>
+///     Environment helper for getting meta data about where and how Nitrox is running.
+/// </summary>
+public static class NitroxEnvironment
 {
-    /// <summary>
-    ///     Environment helper for getting meta data about where and how Nitrox is running.
-    /// </summary>
-    public static class NitroxEnvironment
+    private static bool hasSet;
+    public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
+    public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
+
+    public static string VersionInfo
     {
-        public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
-        public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
-        public static DateTime BuildDate => File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location);
-
-        public static Types Type { get; private set; } = Types.NORMAL;
-        public static bool IsTesting => Type == Types.TESTING;
-        public static bool IsNormal => Type == Types.NORMAL;
-
-        public static int CurrentProcessId
+        get
         {
-            get
+            if (IsReleaseMode)
             {
-                using Process process = Process.GetCurrentProcess();
-                return process.Id;
+                return $"{ReleasePhase} V{Version}{GitShortHash}";
             }
+            return $"{ReleasePhase}{GitShortHash}";
         }
+    }
 
-        public static bool IsReleaseMode
+    public static DateTimeOffset BuildDate
+    {
+        get
         {
-            get
+            string buildDateText = Assembly.GetExecutingAssembly().GetMetaData("BuildDate");
+            return DateTimeOffset.TryParse(buildDateText, out DateTimeOffset result) ? result : default;
+        }
+    }
+
+    public static string GitShortHash
+    {
+        get
+        {
+            string gitHash = GitHash;
+            if (gitHash is { Length: > 0 })
             {
+                gitHash = $" {gitHash.Substring(0, Math.Min(10, gitHash.Length))}";
+            }
+            return gitHash;
+        }
+    }
+
+    public static string GitHash => Assembly.GetExecutingAssembly().GetMetaData("GitHash") ?? "";
+
+    public static Types Type { get; private set; } = Types.NORMAL;
+    public static bool IsTesting => Type == Types.TESTING;
+    public static bool IsNormal => Type == Types.NORMAL;
+
+    public static int CurrentProcessId
+    {
+        get
+        {
+            using Process process = Process.GetCurrentProcess();
+            return process.Id;
+        }
+    }
+
+    public static bool IsReleaseMode
+    {
+        get
+        {
 #if RELEASE
                 return true;
 #else
-                return false;
+            return false;
 #endif
-            }
         }
+    }
 
-        private static bool hasSet;
-        public static void Set(Types value)
+    public static void Set(Types value)
+    {
+        if (hasSet)
         {
-            if (hasSet)
-            {
-                throw new Exception("Environment type can only be set once");
-            }
-
-            Type = value;
-            hasSet = true;
+            throw new Exception("Environment type can only be set once");
         }
 
-        public enum Types
-        {
-            NORMAL,
-            TESTING
-        }
+        Type = value;
+        hasSet = true;
+    }
+
+    public enum Types
+    {
+        NORMAL,
+        TESTING
     }
 }
