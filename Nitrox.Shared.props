@@ -30,5 +30,7 @@
         <_GitRefFilePath>$(_GitRootPath)HEAD</_GitRefFilePath>
         <_GitRefHashFilePath Condition="Exists('$(_GitRefFilePath)')">$(_GitRootPath)$([System.IO.File]::ReadAllText('$(_GitRefFilePath)').Trim().Substring(5))</_GitRefHashFilePath>
         <_GitHash Condition="Exists('$(_GitRefHashFilePath)')">$([System.IO.File]::ReadAllText('$(_GitRefHashFilePath)').Trim())</_GitHash>
+        <!-- If detached head, hash is in .git/HEAD file. -->
+        <_GitHash Condition="'$(_GitHash)' == ''">$([System.IO.File]::ReadAllText('$(_GitRefFilePath)').Trim())</_GitHash>
     </PropertyGroup>
 </Project>
