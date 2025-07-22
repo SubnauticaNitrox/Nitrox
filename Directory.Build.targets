@@ -5,7 +5,7 @@
         <_GitShortHashFilePath>$(IntermediateOutputPath)git_short_hash.cache</_GitShortHashFilePath>
     </PropertyGroup>
 
-    <Target Name="_CreateGitShortHashCacheFile" Inputs="$(_GitRefFilePath)" Outputs="$(_GitShortHashFilePath)">
+    <Target Name="_CreateGitShortHashCacheFile" Inputs="$(_GitRefHashFilePath)" Outputs="$(_GitShortHashFilePath)">
         <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true" EchoOff="true" StandardOutputImportance="low" StandardErrorImportance="low">
             <Output TaskParameter="ConsoleOutput" PropertyName="_GitShortHash" />
         </Exec>
