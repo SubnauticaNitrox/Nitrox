@@ -79,6 +79,8 @@ public static class NitroxEnvironment
         }
     }
 
+    public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
+
     public static void Set(Types value)
     {
         if (hasSet)
