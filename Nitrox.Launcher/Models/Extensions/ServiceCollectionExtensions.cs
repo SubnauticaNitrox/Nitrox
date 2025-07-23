@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading;
 using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -63,7 +64,12 @@ public static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AttributeFilter = typeof(HttpServiceAttribute), CustomHandler = nameof(InternalAddHttpClient))]
     private static partial IServiceCollection AddHttpClients(this IServiceCollection services);
 
-    private static void InternalAddHttpClient<T>(this IServiceCollection services) where T : class => services.AddHttpClient<T>();
+    /// <remarks>
+    ///    <a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#using-ihttpclientfactory-together-with-socketshttphandler">This code is from MSDN.</a>
+    /// </remarks>
+    private static void InternalAddHttpClient<T>(this IServiceCollection services) where T : class => services.AddHttpClient<T>()
+                                                                                                              .UseSocketsHttpHandler((handler, _) => handler.PooledConnectionLifetime = TimeSpan.FromMinutes(2)) // Recreate connection every 2 minutes (refreshes DNS)
+                                                                                                              .SetHandlerLifetime(Timeout.InfiniteTimeSpan); // Disable rotation, as it is handled by PooledConnectionLifetime.
 
     private static void AddDialog<TDialog>(this IServiceCollection services) where TDialog : ModalBase
     {
