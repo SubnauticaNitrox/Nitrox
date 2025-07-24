@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -18,18 +18,12 @@ namespace NitroxModel.DataStructures.Util
     [DataContract]
     public struct Optional<T> : ISerializable, IEquatable<Optional<T>> where T : class
     {
-        private delegate bool HasValueDelegate(T value);
-
         /// <summary>
         ///     List of <see cref="HasValue" /> condition checks for current type (due to being a static on generic class).
         /// </summary>
-        private static List<Func<object, bool>> valueChecks;
+        private static List<Func<object, bool>>? valueChecks;
 
-        /// <summary>
-        ///     Has value check that can be replaced and defaults to generating a value check for current <see cref="T" /> based on
-        ///     global filter conditions that were set.
-        /// </summary>
-        private static HasValueDelegate valueChecksForT = value =>
+        private static HasValueDelegate originalValueChecksForT = value =>
         {
             // Generate new HasValue check based on global filters for types.
             Type type = typeof(T);
@@ -55,7 +49,7 @@ namespace NitroxModel.DataStructures.Util
                     {
                         return false;
                     }
-                    foreach (Func<object, bool> check in valueChecks)
+                    foreach (Func<object, bool> check in valueChecks ?? [])
                     {
                         if (!check(val))
                         {
@@ -74,14 +68,40 @@ namespace NitroxModel.DataStructures.Util
             return valueChecksForT(value);
         };
 
+        /// <summary>
+        ///     Has value check that can be replaced and defaults to generating a value check for current <see cref="T" /> based on
+        ///     global filter conditions that were set.
+        /// </summary>
+        private static HasValueDelegate valueChecksForT = originalValueChecksForT;
+
+        static Optional()
+        {
+            Optional.ValueChecksRefreshListeners.TryAdd(typeof(T), () => valueChecksForT = originalValueChecksForT);
+        }
+
+        private Optional(T value)
+        {
+            Value = value;
+        }
+
+        private Optional(SerializationInfo info, StreamingContext context)
+        {
+            Value = (T)info.GetValue("value", typeof(T));
+        }
+
         [DataMember(Order = 1)]
         public T Value { get; private set; }
 
         public bool HasValue => valueChecksForT(Value);
 
-        private Optional(T value)
+        public bool Equals(Optional<T> other)
         {
-            Value = value;
+            return EqualityComparer<T>.Default.Equals(Value, other.Value);
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("value", Value);
         }
 
         public T OrElse(T elseValue)
@@ -91,7 +111,7 @@ namespace NitroxModel.DataStructures.Util
 
         public Optional<T> OrElse(Func<T> elseValue) => HasValue ? Value : elseValue();
 
-        public T OrNull() => HasValue ? Value : null;
+        public T? OrNull() => HasValue ? Value : null;
 
         internal static Optional<T> Of(T value)
         {
@@ -114,16 +134,6 @@ namespace NitroxModel.DataStructures.Util
             return $"Optional Contains: {str}";
         }
 
-        private Optional(SerializationInfo info, StreamingContext context)
-        {
-            Value = (T)info.GetValue("value", typeof(T));
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("value", Value);
-        }
-
 #pragma warning disable CS0618 // OptionalEmpty is only allowed to be used internally
         public static implicit operator Optional<T>(OptionalEmpty none)
         {
@@ -131,7 +141,7 @@ namespace NitroxModel.DataStructures.Util
         }
 #pragma warning restore CS0618
 
-        public static implicit operator Optional<T>?(T obj)
+        public static implicit operator Optional<T>?(T? obj)
         {
             if (obj == null)
             {
@@ -149,12 +159,8 @@ namespace NitroxModel.DataStructures.Util
         {
             return value.Value;
         }
-        public bool Equals(Optional<T> other)
-        {
-            return EqualityComparer<T>.Default.Equals(Value, other.Value);
-        }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Optional<T> other && Equals(other);
         }
@@ -173,8 +179,9 @@ namespace NitroxModel.DataStructures.Util
         {
             return !left.Equals(right);
         }
-    }
 
+        private delegate bool HasValueDelegate(T? value);
+    }
 
     [Obsolete("Use Optional.Empty instead. This struct is required to trick the compiler for the lack of reverse type inference.")]
     public struct OptionalEmpty
@@ -187,6 +194,13 @@ namespace NitroxModel.DataStructures.Util
     public static class Optional
     {
         internal static readonly Dictionary<Type, Func<object, bool>> ValueConditions = new();
+        /// <summary>
+        ///     Invalidates the check conditions cache.
+        /// </summary>
+        /// <remarks>
+        ///     This is necessary when the conditions are changed again after any Optional are made.
+        /// </remarks>
+        internal static readonly ConcurrentDictionary<Type, Action> ValueChecksRefreshListeners = [];
 #pragma warning disable CS0618 // OptionalEmpty is only allowed to be used internally
         public static OptionalEmpty Empty { get; } = new();
 #pragma warning restore CS0618
@@ -207,6 +221,10 @@ namespace NitroxModel.DataStructures.Util
         {
             // Add to global so that the Optional<T> can lazily evaluate which conditions it should add to its checks based on its type.
             ValueConditions.Add(typeof(T), o => hasValueCondition(o as T));
+            foreach (KeyValuePair<Type, Action> valueChecksRefreshListener in ValueChecksRefreshListeners)
+            {
+                valueChecksRefreshListener.Value();
+            }
         }
     }
 
