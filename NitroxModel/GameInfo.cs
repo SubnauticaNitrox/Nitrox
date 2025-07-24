@@ -3,23 +3,23 @@ using System.Runtime.InteropServices;
 
 namespace NitroxModel;
 
-public sealed class GameInfo
+public sealed record GameInfo
 {
     public static readonly GameInfo Subnautica;
 
     public static readonly GameInfo SubnauticaBelowZero;
 
-    public string Name { get; private set; }
+    public required string Name { get; init; }
 
-    public string FullName { get; private set; }
+    public required string FullName { get; init; }
 
-    public string DataFolder { get; private set; }
+    public required string DataFolder { get; init; }
 
-    public string ExeName { get; private set; }
+    public required string ExeName { get; init; }
 
-    public int SteamAppId { get; private set; }
+    public required int SteamAppId { get; init; }
 
-    public string MsStoreStartUrl { get; private set; }
+    public required string MsStoreStartUrl { get; init; }
 
     static GameInfo()
     {
@@ -46,8 +46,11 @@ public sealed class GameInfo
         // Fixup for OSX
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            Subnautica.ExeName = "Subnautica";
-            Subnautica.DataFolder = Path.Combine("Resources", "Data");
+            Subnautica = Subnautica with
+            {
+                ExeName = "Subnautica",
+                DataFolder = Path.Combine("Resources", "Data")
+            };
         }
     }
 

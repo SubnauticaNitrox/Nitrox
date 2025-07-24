@@ -310,16 +310,11 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public async Task DetectAndAttachRunningServersAsync()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
         {
             return;
         }
-        List<string>? pipeNames = GetNitroxServerPipeNames();
-        if (pipeNames == null)
-        {
-            return;
-        }
-        foreach (string? pipeName in pipeNames)
+        foreach (string pipeName in GetNitroxServerPipeNames())
         {
             try
             {
@@ -363,7 +358,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         }
     }
 
-    private static List<string>? GetNitroxServerPipeNames()
+    private static List<string> GetNitroxServerPipeNames()
     {
         try
         {
@@ -375,7 +370,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         }
         catch
         {
-            return null;
+            return [];
         }
     }
 }

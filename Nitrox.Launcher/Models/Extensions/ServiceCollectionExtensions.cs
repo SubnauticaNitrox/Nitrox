@@ -21,9 +21,7 @@ namespace Nitrox.Launcher.Models.Extensions;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAppServices(this IServiceCollection services)
-    {
-        // Add Avalonia (and related frameworks) services
+    public static IServiceCollection AddAppServices(this IServiceCollection services) =>
         services.AddHttp()
                 // Domain APIs
                 .AddSingleton(_ => KeyValueStore.Instance)
@@ -45,9 +43,6 @@ public static partial class ServiceCollectionExtensions
                 .AddViews()
                 .AddViewModels();
 
-        return services;
-    }
-
     [GenerateServiceRegistrations(AttributeFilter = typeof(ModalForViewModelAttribute), CustomHandler = nameof(AddDialog))]
     private static partial IServiceCollection AddDialogs(this IServiceCollection services);
 
@@ -65,11 +60,16 @@ public static partial class ServiceCollectionExtensions
     private static partial IServiceCollection AddHttpClients(this IServiceCollection services);
 
     /// <remarks>
-    ///    <a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#using-ihttpclientfactory-together-with-socketshttphandler">This code is from MSDN.</a>
+    ///     <a
+    ///         href="https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#using-ihttpclientfactory-together-with-socketshttphandler">
+    ///         This code is from MSDN.
+    ///     </a>
     /// </remarks>
-    private static void InternalAddHttpClient<T>(this IServiceCollection services) where T : class => services.AddHttpClient<T>()
-                                                                                                              .UseSocketsHttpHandler((handler, _) => handler.PooledConnectionLifetime = TimeSpan.FromMinutes(2)) // Recreate connection every 2 minutes (refreshes DNS)
-                                                                                                              .SetHandlerLifetime(Timeout.InfiniteTimeSpan); // Disable rotation, as it is handled by PooledConnectionLifetime.
+    private static void InternalAddHttpClient<T>(this IServiceCollection services) where T : class =>
+        services.AddHttpClient<T>()
+                .UseSocketsHttpHandler((handler, _) => handler.PooledConnectionLifetime =
+                                           TimeSpan.FromMinutes(2)) // Recreate connection every 2 minutes (refreshes DNS)
+                .SetHandlerLifetime(Timeout.InfiniteTimeSpan); // Disable rotation, as it is handled by PooledConnectionLifetime.
 
     private static void AddDialog<TDialog>(this IServiceCollection services) where TDialog : ModalBase
     {
