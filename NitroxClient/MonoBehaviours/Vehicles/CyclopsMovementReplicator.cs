@@ -1,4 +1,6 @@
+using FMOD.Studio;
 using NitroxClient.GameLogic;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -11,6 +13,9 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
 
     private SubControl subControl;
 
+    private FMOD_CustomLoopingEmitter rpmSound;
+    private float radiusRpmSound;
+
     private RemotePlayer drivingPlayer;
     private bool throttleApplied;
     private float steeringWheelYaw;
@@ -18,6 +23,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     public void Awake()
     {
         subControl = GetComponent<SubControl>();
+        SetupSound();
     }
 
     public new void Update()
@@ -75,7 +81,23 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
             }
         }
 
+        // Adjusting volume for the engine Sound
+        float distanceToPlayer = Vector3.Distance(Player.main.transform.position, transform.position);
+        float volumeRpmSound = SoundHelper.CalculateVolume(distanceToPlayer, radiusRpmSound, 1f);
+        rpmSound.GetEventInstance().setVolume(volumeRpmSound);
+
         throttleApplied = vehicleMovementData.ThrottleApplied;
+    }
+    
+    private void SetupSound()
+    {
+        rpmSound = subControl.engineRPMManager.engineRpmSFX;
+
+        rpmSound.followParent = true;
+
+        this.Resolve<FMODWhitelist>().IsWhitelisted(rpmSound.asset.path, out radiusRpmSound);
+        rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusRpmSound);
     }
     
     public override void Enter(RemotePlayer drivingPlayer)
