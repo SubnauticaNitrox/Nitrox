@@ -19,10 +19,13 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
         if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
         {
             RemotePlayerVitals vitals = remotePlayer.vitals;
-            vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
-            vitals.SetHealth(playerStats.Health);
-            vitals.SetFood(playerStats.Food);
-            vitals.SetWater(playerStats.Water);
+            if (vitals)
+            {
+                vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
+                vitals.SetHealth(playerStats.Health);
+                vitals.SetFood(playerStats.Food);
+                vitals.SetWater(playerStats.Water);
+            }
             remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
         }
     }

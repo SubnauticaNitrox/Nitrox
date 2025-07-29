@@ -53,6 +53,7 @@ public class RemotePlayerVitals : MonoBehaviour
 
     public void SetStatsVisible(bool visible)
     {
+        EnsureBars();
         oxygenBar.SetVisible(visible);
         healthBar.SetVisible(visible);
         foodBar.SetVisible(visible);
@@ -61,27 +62,32 @@ public class RemotePlayerVitals : MonoBehaviour
 
     public void SetOxygen(float oxygen, float maxOxygen)
     {
+        EnsureBars();
         oxygenBar.SetTargetValue(oxygen);
         oxygenBar.SetMaxValue(maxOxygen);
     }
 
     public void SetHealth(float health)
     {
+        EnsureBars();
         healthBar.SetTargetValue(health);
     }
 
     public void SetFood(float food)
     {
+        EnsureBars();
         foodBar.SetTargetValue(food);
     }
 
     public void SetWater(float water)
     {
+        EnsureBars();
         waterBar.SetTargetValue(water);
     }
 
     public void LateUpdate()
     {
+        EnsureBars();
         oxygenBar.UpdateVisual();
         healthBar.UpdateVisual();
         foodBar.UpdateVisual();
@@ -92,6 +98,19 @@ public class RemotePlayerVitals : MonoBehaviour
         if (canvas && camera)
         {
             canvas.transform.forward = camera.transform.forward;
+        }
+    }
+
+    private void EnsureBars()
+    {
+        // TODO: find what causes bars to become disposed while the player still exists
+        if (oxygenBar.IsDisposed() || healthBar.IsDisposed() || foodBar.IsDisposed() || waterBar.IsDisposed())
+        {
+            oxygenBar.Dispose();
+            healthBar.Dispose();
+            foodBar.Dispose();
+            waterBar.Dispose();
+            CreateStats(canvas);
         }
     }
 
@@ -274,6 +293,11 @@ public class RemotePlayerVitals : MonoBehaviour
             }
             isDisposed = true;
             Destroy(gameObject);
+        }
+
+        public bool IsDisposed()
+        {
+            return isDisposed;
         }
 
         private void ThrowIfDisposed()
