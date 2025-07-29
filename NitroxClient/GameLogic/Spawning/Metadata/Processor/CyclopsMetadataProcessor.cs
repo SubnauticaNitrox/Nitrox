@@ -65,7 +65,7 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
 
     private void SetEngineMode(GameObject cyclops, CyclopsMotorMode.CyclopsMotorModes mode)
     {
-        CyclopsMotorMode.CyclopsMotorModes oldMode = cyclops.GetComponentsInChildren<SubControl>(true)[0].cyclopsMotorMode.cyclopsMotorMode;
+        CyclopsMotorMode.CyclopsMotorModes oldMode = cyclops.GetComponentInChildren<SubControl>(true).cyclopsMotorMode.cyclopsMotorMode;
         if (oldMode == mode)
         {
             return;
