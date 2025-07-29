@@ -22,6 +22,12 @@ public static class BuildingPostSpawner
             SetupWaterPark(waterPark, objectId);
             return null;
         }
+        else if (gameObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
+        {
+            // TODO: remove once scanner rooms are properly synced
+            Log.InGame(Language.main.Get("Nitrox_ScannerRoomWarn"));
+            return null;
+        }
 
         return null;
     }
