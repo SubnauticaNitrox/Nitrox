@@ -65,6 +65,12 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
 
     private void SetEngineMode(GameObject cyclops, CyclopsMotorMode.CyclopsMotorModes mode)
     {
+        CyclopsMotorMode.CyclopsMotorModes oldMode = cyclops.GetComponentsInChildren<SubControl>(true)[0].cyclopsMotorMode.cyclopsMotorMode;
+        if (oldMode == mode)
+        {
+            return;
+        }
+
         foreach (CyclopsMotorModeButton button in cyclops.GetComponentsInChildren<CyclopsMotorModeButton>(true))
         {
             // At initial sync, this kind of processor is executed before the Start()
