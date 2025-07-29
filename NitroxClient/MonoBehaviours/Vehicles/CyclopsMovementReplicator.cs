@@ -16,7 +16,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     private FMOD_CustomLoopingEmitter rpmSound;
     private float radiusRpmSound;
 
-    private RemotePlayer drivingPlayer;
+    private RemotePlayer? drivingPlayer;
     private bool throttleApplied;
     private float steeringWheelYaw;
 
@@ -30,7 +30,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     {
         base.Update();
 
-        if (subControl.canAccel && throttleApplied)
+        if (subControl.canAccel && throttleApplied && drivingPlayer != null)
         {
             // See SubControl.Update
             var topClamp = subControl.useThrottleIndex switch
