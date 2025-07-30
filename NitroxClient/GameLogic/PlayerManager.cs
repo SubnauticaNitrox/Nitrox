@@ -52,7 +52,10 @@ public class PlayerManager
 
     public HashSet<GameObject> GetAllPlayerObjects()
     {
-        HashSet<GameObject> remotePlayerObjects = GetAll().Select(player => player.Body).ToSet();
+        HashSet<GameObject> remotePlayerObjects = GetAll()
+                                                  .Select(player => player.Body)
+                                                  .Where(body => body != null)
+                                                  .ToSet();
         remotePlayerObjects.Add(Player.mainObject);
         return remotePlayerObjects;
     }
