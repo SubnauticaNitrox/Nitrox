@@ -31,7 +31,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     {
         base.Update();
 
-        if (throttleApplied && drivingPlayer != null)
+        if (throttleApplied && seaMoth.IsPowered() && drivingPlayer != null)
         {
             seaMoth.engineSound.AccelerateInput(1);
         }
