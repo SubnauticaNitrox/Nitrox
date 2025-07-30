@@ -104,6 +104,13 @@ public class CyclopsPawn
 
     public void MaintainPosition()
     {
+        if (RealObject == null)
+        {
+            Log.Warn($"CyclopsPawn for player '{player.PlayerName}' has a null RealObject. Unregistering stale pawn.");
+            Unregister();
+            return;
+        }
+        
         RealObject.transform.localPosition = Handle.transform.localPosition;
         RealObject.transform.rotation = realCyclopsTransform.rotation;
         if (!isLocalPlayer)

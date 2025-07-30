@@ -107,12 +107,6 @@ public class RemotePlayer : INitroxPlayer
         vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
 
-        PlayerDisconnectEvent.AddHandler(Body, _ =>
-        {
-            Pawn?.Unregister();
-            Pawn = null;
-        });
-
         PlayerDeathEvent.AddHandler(Body, _ =>
         {
             ResetStates();

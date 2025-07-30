@@ -110,6 +110,7 @@ public class NitroxCyclops : MonoBehaviour
     /// </summary>
     public void OnPlayerEnter(RemotePlayer remotePlayer)
     {
+        remotePlayer.PlayerDisconnectEvent.AddHandler(this, OnPlayerExit);
         remotePlayer.Pawn = AddPawnForPlayer(remotePlayer);
     }
 
@@ -118,6 +119,7 @@ public class NitroxCyclops : MonoBehaviour
     /// </summary>
     public void OnPlayerExit(RemotePlayer remotePlayer)
     {
+        remotePlayer.PlayerDisconnectEvent.RemoveHandler(this, OnPlayerExit);
         RemovePawnForPlayer(remotePlayer);
         remotePlayer.Pawn = null;
     }
