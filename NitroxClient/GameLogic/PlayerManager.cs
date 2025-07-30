@@ -56,7 +56,10 @@ public class PlayerManager
                                                   .Select(player => player.Body)
                                                   .Where(body => body != null)
                                                   .ToSet();
-        remotePlayerObjects.Add(Player.mainObject);
+        if (Player.mainObject != null)
+        {
+            remotePlayerObjects.Add(Player.mainObject);    
+        }
         return remotePlayerObjects;
     }
 
