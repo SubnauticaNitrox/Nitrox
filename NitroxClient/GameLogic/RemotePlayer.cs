@@ -551,6 +551,7 @@ public class RemotePlayer : INitroxPlayer
     {
         if (vitals)
         {
+            // TODO: only show health and oxygen in freedom mode
             bool visible = PlayerContext.GameMode != NitroxGameMode.CREATIVE;
             vitals.SetStatsVisible(visible);
         }
