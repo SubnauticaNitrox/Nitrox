@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class TimeCapsule_Open_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((TimeCapsule t) => t.Open());
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((TimeCapsule t) => t.Open());
     
     public static void Postfix(TimeCapsule __instance)
     {
@@ -21,7 +21,7 @@ public sealed partial class TimeCapsule_Open_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         
-        var packet = new EntityDestroyed(timeCapsuleId);
+        EntityDestroyed packet = new(timeCapsuleId);
         Resolve<IPacketSender>().Send(packet);
     }
 }
