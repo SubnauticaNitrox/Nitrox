@@ -38,7 +38,7 @@ public class Server
     public string Name { get; private set; } = "My World";
     public int Port => serverConfig?.ServerPort ?? -1;
 
-    public event Action<int> PlayerCountChanged;
+    public event Action<int>? PlayerCountChanged;
 
     public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
     {

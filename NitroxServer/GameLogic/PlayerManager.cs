@@ -182,7 +182,7 @@ namespace NitroxServer.GameLogic
             JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
         }
 
-        public event Action<int> PlayerCountChanged;
+        public event Action<int>? PlayerCountChanged;
 
         public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {

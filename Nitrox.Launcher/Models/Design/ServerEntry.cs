@@ -65,6 +65,9 @@ public partial class ServerEntry : ObservableObject
     private bool isOnline;
 
     [ObservableProperty]
+    private bool isServerClosing;
+
+    [ObservableProperty]
     private DateTime lastAccessedTime = DateTime.Now;
 
     [ObservableProperty]
@@ -94,26 +97,12 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
 
-    [ObservableProperty]
-    private bool isServerClosing;
-
     internal ServerProcess? Process { get; private set; }
 
     public static ServerEntry? FromDirectory(string saveDir)
     {
         ServerEntry result = new();
         return result.RefreshFromDirectory(saveDir) ? result : null;
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(IsOnline) when Process is { Id: var processId and > 0 }:
-                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(processId, IsOnline, Players));
-                break;
-        }
-        base.OnPropertyChanged(e);
     }
 
     public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
@@ -249,33 +238,41 @@ public partial class ServerEntry : ObservableObject
             Log.Warn($"Server '{Name}' didn't respond to close command. Forcing shutdown.");
             Process.Kill();
         }
-        
+
         IsOnline = false;
         IsServerClosing = false;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
     public void OpenSaveFolder()
     {
-        if (string.IsNullOrWhiteSpace(Name))
-        {
-            throw new Exception($"Server {nameof(Name)} is not set");
-        }
-
         System.Diagnostics.Process.Start(new ProcessStartInfo
         {
-            FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name),
+            FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name!),
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
     }
 
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(IsOnline) when Process is { Id: var processId and > 0 }:
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(processId, IsOnline, Players));
+                break;
+        }
+        base.OnPropertyChanged(e);
+    }
+
+    private bool CanOpenSaveFolder() => !string.IsNullOrWhiteSpace(Name);
+
     internal partial class ServerProcess : IDisposable
     {
-        private OutputLineType lastOutputType;
-        private Process? serverProcess;
         private readonly Ipc.ClientIpc ipc;
         private readonly CancellationTokenSource ipcCts;
+        private OutputLineType lastOutputType;
+        private Process? serverProcess;
 
         [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
         private static partial Regex OutputLineRegex { get; }
@@ -283,7 +280,6 @@ public partial class ServerEntry : ObservableObject
         public int Id { get; }
         public bool IsRunning { get; private set; }
         public AvaloniaList<OutputLine> Output { get; } = [];
-        public event Action<int> PlayerCountChanged;
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processId = 0)
         {
@@ -323,7 +319,7 @@ public partial class ServerEntry : ObservableObject
             if (serverProcess != null || processId != 0)
             {
                 Id = serverProcess?.Id ?? processId;
-                
+
                 IsRunning = true;
                 ipcCts = new CancellationTokenSource();
                 ipc = new Ipc.ClientIpc(Id, ipcCts);
@@ -393,6 +389,7 @@ public partial class ServerEntry : ObservableObject
         }
 
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processId) => new(saveDir, onExited, isEmbedded, processId);
+        public event Action<int>? PlayerCountChanged;
 
         /// <summary>
         ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.

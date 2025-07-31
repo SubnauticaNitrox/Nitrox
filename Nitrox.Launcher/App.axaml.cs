@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -220,13 +221,13 @@ public class App : Application
         RequestedThemeVariant = ThemeVariant.Dark;
 
         // April Fools: Switch to Comic Sans on April 1st (only works on OSes with Comic Sans installed).
-        if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1)
+        if (DateTime.Now is { Month: 4, Day: 1 })
         {
             Style? windowStyle = new(x => x.OfType<Window>())
             {
                 Setters =
                 {
-                    new Setter(Window.FontFamilyProperty, FontFamily.Parse("Comic Sans MS"))
+                    new Setter(TemplatedControl.FontFamilyProperty, FontFamily.Parse("Comic Sans MS"))
                 }
             };
             Styles.Add(windowStyle);

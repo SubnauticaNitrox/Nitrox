@@ -12,8 +12,8 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>
         value = value switch
         {
             not string when parameter is string => parameter,
-            not (null or string) => value.ToString(),
-            string s when string.IsNullOrWhiteSpace(s) => parameter,
+            string valueStr when string.IsNullOrWhiteSpace(valueStr) => parameter,
+            not string and not null => value.ToString(),
             _ => value
         };
 

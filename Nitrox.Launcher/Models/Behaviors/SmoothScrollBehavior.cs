@@ -241,7 +241,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         }
     }
 
-    private static (double previous, double next) FindNearestSnapPoint(IReadOnlyList<double> snapPoints, double value)
+    private static (double previous, double next) FindNearestSnapPoint(List<double> snapPoints, double value)
     {
         int point = snapPoints.BinarySearch(value, Comparer<double>.Default);
 
@@ -293,7 +293,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         Vector diff = GetAlignmentDiff();
 
         bool areVerticalSnapPointsRegular = false;
-        IReadOnlyList<double> verticalSnapPoints = new List<double>();
+        List<double> verticalSnapPoints = [];
         double verticalSnapPoint = 0;
         double verticalSnapPointOffset = 0;
 
@@ -303,7 +303,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
 
             if (!areVerticalSnapPointsRegular)
             {
-                verticalSnapPoints = scrollSnapPointsInfo.GetIrregularSnapPoints(Orientation.Vertical, scp!.VerticalSnapPointsAlignment);
+                verticalSnapPoints = [..scrollSnapPointsInfo.GetIrregularSnapPoints(Orientation.Vertical, scp!.VerticalSnapPointsAlignment)];
             }
             else
             {
