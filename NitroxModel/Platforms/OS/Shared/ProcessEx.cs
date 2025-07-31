@@ -198,6 +198,32 @@ public class ProcessEx : IDisposable
         return found;
     }
 
+    public static IEnumerable<T> GetProcessesByName<T>(string procName, Func<ProcessEx, T> selector)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && procName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        {
+            procName = Path.GetFileNameWithoutExtension(procName);
+        }
+        foreach (Process proc in Process.GetProcessesByName(procName))
+        {
+            ProcessEx procEx = From(proc);
+            T result;
+            try
+            {
+                result = selector(procEx);
+                if (result is not Process or ProcessEx)
+                {
+                    procEx?.Dispose();
+                }
+            }
+            catch
+            {
+                continue;
+            }
+            yield return result;
+        }
+    }
+
     public byte[] ReadMemory(IntPtr address, int size) => implementation.ReadMemory(address, size);
 
     public int WriteMemory(IntPtr address, byte[] data) => implementation.WriteMemory(address, data);

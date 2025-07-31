@@ -17,6 +17,7 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Server;
 
 namespace Nitrox.Launcher.Models.Services;
@@ -311,10 +312,6 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public async Task DetectAndAttachRunningServersAsync()
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            return;
-        }
         foreach (string pipeName in GetNitroxServerPipeNames())
         {
             try
@@ -363,11 +360,18 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         try
         {
-            DirectoryInfo? pipeDir = new(@"\\.\pipe\");
-            return pipeDir.GetFileSystemInfos()
-                .Select(f => f.Name)
-                .Where(n => n.StartsWith("NitroxServer_", StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            if (OperatingSystem.IsWindows())
+            {
+                DirectoryInfo? pipeDir = new(@"\\.\pipe\");
+                return pipeDir.GetFileSystemInfos()
+                              .Select(f => f.Name)
+                              .Where(n => n.StartsWith("NitroxServer_", StringComparison.OrdinalIgnoreCase))
+                              .ToList();
+            }
+
+            return ProcessEx.GetProcessesByName(GetServerExeName(), p => $"NitroxServer_{p.Id}")
+                            .Where(s => s != null)
+                            .ToList();
         }
         catch
         {
