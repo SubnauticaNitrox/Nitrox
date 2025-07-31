@@ -186,6 +186,19 @@ namespace NitroxClient.MonoBehaviours
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             OnAfterMultiplayerEnd?.Invoke();
         }
+        
+        public void OnDestroy()
+        {
+            if (multiplayerSession != null && multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
+            {
+                multiplayerSession.Disconnect();
+            }
+
+            if (Main == this)
+            {
+                Main = null;
+            }
+        }
 
         private static void SetLoadingComplete()
         {
