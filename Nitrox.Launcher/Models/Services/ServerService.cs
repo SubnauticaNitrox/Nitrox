@@ -85,7 +85,8 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         {
             bool proceed = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
             {
-                model.Title = $"Port {serverPort} is currently in use. It is recommended to change the port before starting this server. Would you like to continue anyway?";
+                model.Title = $"Port {serverPort} is unavailable";
+                model.Description = "It is recommended to change the port before starting this server. Would you like to continue anyway?";
                 model.ButtonOptions = ButtonOptions.YesNo;
             });
             if (!proceed)
