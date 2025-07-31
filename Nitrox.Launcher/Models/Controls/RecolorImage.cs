@@ -20,7 +20,7 @@ namespace Nitrox.Launcher.Models.Controls;
 /// <summary>
 ///     Displays a <see cref="Bitmap" /> as a recolored image given a <see cref="Color" />.
 /// </summary>
-public class RecolorImage : Control
+public sealed class RecolorImage : Control
 {
     /// <summary>
     ///     Defines the <see cref="Source" /> property.
@@ -203,6 +203,7 @@ public class RecolorImage : Control
 
         public void Dispose()
         {
+            // ignored - we got no caches to dispose
         }
     }
 }

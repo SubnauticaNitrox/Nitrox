@@ -147,7 +147,7 @@ public partial class ServerEntry : ObservableObject
             return false;
         }
 
-        Bitmap icon = null;
+        Bitmap? icon = null;
         string serverIconPath = Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME);
         if (File.Exists(serverIconPath))
         {
@@ -239,7 +239,7 @@ public partial class ServerEntry : ObservableObject
         IsOnline = true;
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task StopAsync()
     {
         IsServerClosing = true;
@@ -285,9 +285,9 @@ public partial class ServerEntry : ObservableObject
         public AvaloniaList<OutputLine> Output { get; } = [];
         public event Action<int> PlayerCountChanged;
 
-        private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processID = 0)
+        private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processId = 0)
         {
-            if (processID == 0)
+            if (processId == 0)
             {
                 string saveName = Path.GetFileName(saveDir);
                 string launcherPath = NitroxUser.ExecutableRootPath;
@@ -320,9 +320,9 @@ public partial class ServerEntry : ObservableObject
                 serverProcess = System.Diagnostics.Process.Start(startInfo);
             }
 
-            if (serverProcess != null || processID != 0)
+            if (serverProcess != null || processId != 0)
             {
-                Id = serverProcess?.Id ?? processID;
+                Id = serverProcess?.Id ?? processId;
                 
                 IsRunning = true;
                 ipcCts = new CancellationTokenSource();
@@ -345,7 +345,7 @@ public partial class ServerEntry : ObservableObject
                         }
 
                         // Ignore any messages that are part of the IPC message protocol
-                        if (Ipc.Messages.GetMessages().Any(msg => msg != null && output.StartsWith($"{msg}:", StringComparison.Ordinal)))
+                        if (Ipc.Messages.AllMessages.Any(msg => output.StartsWith($"{msg}:", StringComparison.Ordinal)))
                         {
                             return;
                         }
@@ -392,7 +392,7 @@ public partial class ServerEntry : ObservableObject
             }
         }
 
-        public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processID) => new(saveDir, onExited, isEmbedded, processID);
+        public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processId) => new(saveDir, onExited, isEmbedded, processId);
 
         /// <summary>
         ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.

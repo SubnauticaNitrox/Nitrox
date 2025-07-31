@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,24 +20,17 @@ public static class Ipc
         public static string SaveNameMessage => "__SAVE_NAME__";
         public static string PlayerCountMessage => "__PLAYER_COUNT__";
 
-        public static List<string> GetMessages()
-        {
-            return
-            [
-                ..typeof(Messages).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
-                                  .Select(p => p.GetValue(null)?.ToString())
-            ];
-        }
+        public static List<string> AllMessages { get; } = [StopMessage, SaveNameMessage, PlayerCountMessage];
     }
 
-    public class ServerIpc : IDisposable
+    public sealed class ServerIpc : IDisposable
     {
-        public readonly int ProcessId;
-        private readonly NamedPipeServerStream serverPipe;
         private readonly CancellationTokenSource cancellationTokenSource;
         private readonly ConcurrentQueue<(string Output, CancellationToken Token)> outputBuffer = new();
         private readonly SemaphoreSlim outputSemaphore = new(1, 1);
-        private bool isProcessingBuffer = false;
+        public readonly int ProcessId;
+        private readonly NamedPipeServerStream serverPipe;
+        private bool isProcessingBuffer;
 
         public ServerIpc(int processId, CancellationTokenSource cancellationTokenSource)
         {
@@ -54,6 +46,49 @@ public static class Ipc
             outputBuffer.Enqueue((output, cancellationToken));
             ProcessBuffer();
             return Task.FromResult(true);
+        }
+
+        public void StartReadingCommands(Action<string> onCommandReceived, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(onCommandReceived);
+
+            Thread thread = new(async void () =>
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        string command = await ReadStringAsync(cancellationToken);
+                        onCommandReceived(command);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // ignored
+                    }
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                if (serverPipe.IsConnected)
+                {
+                    byte[] stopMsg = Encoding.UTF8.GetBytes(Messages.StopMessage);
+                    serverPipe.Write(BitConverter.GetBytes((uint)stopMsg.Length), 0, 4);
+                    serverPipe.Write(stopMsg, 0, stopMsg.Length);
+                    serverPipe.Flush();
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+            cancellationTokenSource.Cancel();
+            serverPipe.Dispose();
         }
 
         private async void ProcessBuffer()
@@ -83,29 +118,6 @@ public static class Ipc
                 isProcessingBuffer = false;
                 outputSemaphore.Release();
             }
-        }
-
-        public void StartReadingCommands(Action<string> onCommandReceived, CancellationToken cancellationToken = default)
-        {
-            ArgumentNullException.ThrowIfNull(onCommandReceived);
-
-            Thread thread = new(async void () =>
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    try
-                    {
-                        string command = await ReadStringAsync(cancellationToken);
-                        onCommandReceived(command);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // ignored
-                    }
-                }
-            });
-            thread.IsBackground = true;
-            thread.Start();
         }
 
         private async Task<string> ReadStringAsync(CancellationToken cancellationToken = default)
@@ -154,39 +166,19 @@ public static class Ipc
             }
             return false;
         }
-
-        public void Dispose()
-        {
-            try
-            {
-                if (serverPipe.IsConnected)
-                {
-                    byte[] stopMsg = Encoding.UTF8.GetBytes(Messages.StopMessage);
-                    serverPipe.Write(BitConverter.GetBytes((uint)stopMsg.Length), 0, 4);
-                    serverPipe.Write(stopMsg, 0, stopMsg.Length);
-                    serverPipe.Flush();
-                }
-            }
-            catch
-            {
-                  // ignore
-            }
-            cancellationTokenSource.Cancel();
-            serverPipe.Dispose();
-        }
     }
 
-    public class ClientIpc : IDisposable
+    public sealed class ClientIpc : IDisposable
     {
-        public readonly int ProcessId;
-        private readonly NamedPipeClientStream clientPipe;
         private readonly CancellationTokenSource cancellationTokenSource;
+        private readonly NamedPipeClientStream clientPipe;
+        public readonly int ProcessId;
 
         public ClientIpc(int processId, CancellationTokenSource cancellationTokenSource)
         {
             ProcessId = processId;
             this.cancellationTokenSource = cancellationTokenSource;
-            
+
             clientPipe = new NamedPipeClientStream(".", PipeName(ProcessId), PipeDirection.InOut, PipeOptions.Asynchronous);
         }
 
@@ -273,6 +265,12 @@ public static class Ipc
             }
         }
 
+        public void Dispose()
+        {
+            cancellationTokenSource.Cancel();
+            clientPipe.Dispose();
+        }
+
         private async Task<bool> WaitForConnection(CancellationToken cancellationToken = default)
         {
             if (clientPipe.IsConnected)
@@ -296,12 +294,6 @@ public static class Ipc
                 }
             }
             return false;
-        }
-
-        public void Dispose()
-        {
-            cancellationTokenSource.Cancel();
-            clientPipe.Dispose();
         }
     }
 }

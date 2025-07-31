@@ -15,13 +15,16 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public class MultiDataTemplate : AvaloniaList<DataTemplate>, IRecyclingDataTemplate
 {
+    private readonly Dictionary<Type, Control> typeToControlCache = [];
+
     [Content]
     [UsedImplicitly]
     public List<DataTemplate> Content { get; set; } = new();
 
+    /// <summary>
+    ///     If true, caches the control objects generated from the data templates.
+    /// </summary>
     public bool UseCache { get; set; } = true;
-
-    private readonly Dictionary<Type, Control> typeToControlCache = [];
 
     public bool Match(object? data) => GetTemplateForType(data?.GetType()) != null;
 

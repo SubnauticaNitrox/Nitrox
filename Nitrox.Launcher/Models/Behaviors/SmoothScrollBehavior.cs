@@ -293,7 +293,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
         Vector diff = GetAlignmentDiff();
 
         bool areVerticalSnapPointsRegular = false;
-        IReadOnlyList<double>? verticalSnapPoints = new List<double>();
+        IReadOnlyList<double> verticalSnapPoints = new List<double>();
         double verticalSnapPoint = 0;
         double verticalSnapPointOffset = 0;
 
@@ -312,7 +312,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
             }
         }
 
-        if (scp!.VerticalSnapPointsType != SnapPointsType.None && (areVerticalSnapPointsRegular || verticalSnapPoints?.Count > 0) && (!snapToNext || (snapToNext && direction.Y != 0)))
+        if (scp!.VerticalSnapPointsType != SnapPointsType.None && (areVerticalSnapPointsRegular || verticalSnapPoints.Count > 0) && (!snapToNext || (snapToNext && direction.Y != 0)))
         {
             Vector estimatedOffset = new(offset.X, offset.Y + diff.Y);
             double previousSnapPoint = 0, nextSnapPoint = 0, midPoint = 0;
@@ -323,7 +323,7 @@ public class SmoothScrollBehavior : StyledElementBehavior<ScrollViewer>
                 nextSnapPoint = previousSnapPoint + verticalSnapPoint;
                 midPoint = (previousSnapPoint + nextSnapPoint) / 2;
             }
-            else if (verticalSnapPoints?.Count > 0)
+            else if (verticalSnapPoints.Count > 0)
             {
                 (previousSnapPoint, nextSnapPoint) = FindNearestSnapPoint(verticalSnapPoints, estimatedOffset.Y);
                 midPoint = (previousSnapPoint + nextSnapPoint) / 2;
