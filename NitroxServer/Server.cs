@@ -177,8 +177,6 @@ public class Server
 
     public bool Start(string saveName, CancellationTokenSource ct)
     {
-        Debug.Assert(serverCancelSource == null);
-
         Validate.NotNull(ct);
         if (ct.IsCancellationRequested)
         {
@@ -192,6 +190,7 @@ public class Server
         serverCancelSource = ct;
         IsRunning = true;
 
+        Save(); // Ensures save files exist when server is running
         if (!serverConfig.DisableAutoBackup)
         {
             worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName));
