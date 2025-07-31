@@ -12,9 +12,9 @@ internal partial class CommunityViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void TwitterLink()
+    private void XLink()
     {
-        OpenUri("twitter.com/modnitrox");
+        OpenUri("x.com/modnitrox");
     }
 
     [RelayCommand]
