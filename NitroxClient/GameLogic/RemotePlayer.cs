@@ -357,7 +357,7 @@ public class RemotePlayer : INitroxPlayer
     {
         Log.Info($"{PlayerName} left the game");
         Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName));
-        SetVehicle(null);
+        ResetStates();
         NitroxEntity.RemoveFrom(Body);
         Object.DestroyImmediate(Body);
     }
