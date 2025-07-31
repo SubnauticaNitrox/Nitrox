@@ -359,6 +359,7 @@ public class RemotePlayer : INitroxPlayer
         Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName));
         NitroxEntity.RemoveFrom(Body);
         Object.DestroyImmediate(Body);
+        SetVehicle(null);
     }
 
     public void UpdateAnimationAndCollider(AnimChangeType type, AnimChangeState state)
