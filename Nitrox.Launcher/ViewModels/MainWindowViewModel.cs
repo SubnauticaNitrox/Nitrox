@@ -88,6 +88,8 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 
             if (!NitroxEnvironment.IsReleaseMode)
             {
+                // Set debug default options here.
+                keyValueStore.SetIsMultipleGameInstancesAllowed(true);
                 LauncherNotifier.Info("You're now using Nitrox DEV build");
             }
 

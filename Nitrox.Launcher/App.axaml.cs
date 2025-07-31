@@ -97,14 +97,6 @@ public class App : Application
                 CheckForRunningInstance();
             }
             ServiceProvider services = new ServiceCollection().AddAppServices().BuildServiceProvider();
-
-            // TODO: Use .NET Host API to pass options instead of direct reference to KeyValueStore.
-            if (!NitroxEnvironment.IsReleaseMode)
-            {
-                // Set debug default options here.
-                services.GetRequiredService<IKeyValueStore>().SetIsMultipleGameInstancesAllowed(true);
-            }
-
             StartupWindowFactory = services.GetRequiredService<Func<Window>>();
         }
 
