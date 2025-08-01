@@ -25,7 +25,17 @@ public class VehicleMovements : Packet
 public abstract record class MovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation) { }
 
 [Serializable]
-public record class SimpleMovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation) : MovementData(Id, Position, Rotation) { }
+public record class SimpleMovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation)
+    : MovementData(Id, Position, Rotation) { }
 
 [Serializable]
-public record class DrivenVehicleMovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation, sbyte SteeringWheelYaw, sbyte SteeringWheelPitch, bool ThrottleApplied) : MovementData(Id, Position, Rotation) { }
+public record class DrivenVehicleMovementData(
+    NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation,
+    sbyte SteeringWheelYaw, sbyte SteeringWheelPitch, bool ThrottleApplied)
+    : MovementData(Id, Position, Rotation) { }
+
+[Serializable]
+public record class ExosuitMovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation, 
+    NitroxVector3 AimTargetLeft, NitroxVector3 AimTargetRight, sbyte SteeringWheelYaw,
+    sbyte SteeringWheelPitch, bool ThrottleApplied, bool IKEnabled)
+    : DrivenVehicleMovementData(Id, Position, Rotation, SteeringWheelYaw, SteeringWheelPitch, ThrottleApplied) { }

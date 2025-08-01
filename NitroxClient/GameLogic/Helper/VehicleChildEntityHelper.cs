@@ -30,6 +30,13 @@ public static class VehicleChildEntityHelper
         typeof(CyclopsLightingPanel)
     };
 
+    // The seamoth and exosuit both have an EnergyMixin at the top level, the exosuit has a second one under BatterySlot2
+    private static readonly HashSet<string> batteryRelativePaths = new HashSet<string>
+    {
+        "",
+        "BatterySlot2"
+    };
+
     public static void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)
     {
         string currentPath = current.GetFullHierarchyPath();
@@ -55,9 +62,9 @@ public static class VehicleChildEntityHelper
                 }
             }
         }
-        else
+
+        if (batteryRelativePaths.Contains(relativePathName))
         {
-            // both seamoth and exosuit have energymixin as a direct component. populate the battery if it exists
             BatteryChildEntityHelper.TryPopulateInstalledBattery(current, toPopulate, vehicleId);
         }
 
