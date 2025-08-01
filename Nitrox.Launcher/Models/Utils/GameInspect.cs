@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using HanumanInstitute.MvvmDialogs;
+using Avalonia.Threading;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 
@@ -14,7 +14,7 @@ internal static class GameInspect
     /// <summary>
     ///     Check to ensure the Subnautica is not in legacy.
     /// </summary>
-    public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallDir, IDialogService dialogService = null)
+    public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallDir, DialogService? dialogService = null)
     {
         try
         {
@@ -28,7 +28,8 @@ internal static class GameInspect
                     await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                     {
                         model.Title = "Legacy Game Detected";
-                        model.Description = $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
+                        model.Description =
+                            $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
                         model.ButtonOptions = ButtonOptions.Ok;
                     });
                 }
@@ -51,12 +52,7 @@ internal static class GameInspect
     /// </summary>
     public static bool WarnIfGameProcessExists(GameInfo game)
     {
-        if (!NitroxEnvironment.IsReleaseMode)
-        {
-            return false;
-        }
-
-        if (!ProcessEx.ProcessExists(game.Name))
+        if (!ProcessEx.ProcessExists(game.ExeName))
         {
             return false;
         }

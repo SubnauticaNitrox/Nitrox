@@ -1,21 +1,19 @@
 ﻿<UserControl
+    d:DesignHeight="500"
     d:DesignWidth="1000"
     mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     x:Class="Nitrox.Launcher.Views.OptionsView"
     x:DataType="vm:OptionsViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:OptionsViewModel>
-            <vm:OptionsViewModel.SelectedGame>
-                <design:KnownGame PathToGame="C:\Users\Me\Games\Subnautica" Platform="STEAM" />
-            </vm:OptionsViewModel.SelectedGame>
-        </vm:OptionsViewModel>
+        <designer:DesignOptionsViewModel />
     </Design.DataContext>
     <UserControl.Resources>
         <StackPanel Orientation="Vertical" x:Key="InfoIconTooltipText">
@@ -53,13 +51,13 @@
                     CornerRadius="12"
                     Padding="22,15">
                     <Grid ColumnDefinitions=" Auto, *, Auto">
-                        <Image
-                            Height="36"
+                        <controls:RecolorImage
+                            Grid.Column="0"
+                            Height="36" Width="36"
                             Margin="0,0,22,0"
                             Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
                             Stretch="Uniform"
-                            ToolTip.Tip="Welcome aboard, Captain!"
-                            Width="36" />
+                            ToolTip.Tip="Welcome aboard, Captain!" />
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Left"
@@ -71,7 +69,8 @@
                                 Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
                             <SelectableTextBlock
                                 FontSize="14"
-                                Foreground="#BFFFFFFF"
+                                Foreground="{DynamicResource BrandBlack}"
+                                Opacity="0.75"
                                 Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
                         </StackPanel>
                         <Button
@@ -84,32 +83,7 @@
                             ToolTip.Tip="Direct the launcher to your game's install location"
                             Width="120" />
                     </Grid>
-
-                    <!-- <ItemsControl ItemsSource="{Binding KnownGames}"> -->
-                    <!--     <ItemsControl.ItemTemplate> -->
-                    <!--         <DataTemplate> -->
-                    <!--             <StackPanel Orientation="Horizontal" Spacing="16" Height="52"> -->
-                    <!--                 <RadioButton Margin="0 0 -5 0" /> -->
-                    <!--  <Image Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"  -->
-                    <!--  ToolTip.Tip="Welcome aboard, Captain!"  -->
-                    <!--  Stretch="Uniform"  -->
-                    <!--  Height="36"  -->
-                    <!--  Width="36" />  -->
-                    <!--                 <StackPanel Spacing="2" VerticalAlignment="Center"> -->
-                    <!--                     <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Platform, Converter={converters:ToStringConverter}}" /> -->
-                    <!--                     <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding PathToGame, FallbackValue='Unknown path'}" /> -->
-                    <!--                 </StackPanel> -->
-                    <!--             </StackPanel> -->
-                    <!--         </DataTemplate> -->
-                    <!--     </ItemsControl.ItemTemplate> -->
-                    <!-- </ItemsControl> -->
                 </Border>
-                <Grid>
-                    <!--  <Button Classes="icon" VerticalAlignment="Bottom"  -->
-                    <!--  Content="Manually add game installation"  -->
-                    <!--  Command="{Binding AddGameInstallationCommand}"/>  -->
-                    <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
-                </Grid>
             </StackPanel>
 
             <!--  Launch Arguments  -->
@@ -158,10 +132,9 @@
                             <Button.Styles>
                                 <Style Selector="Button:pointerover">
                                     <Setter Property="Effect">
-                                        <!--  TODO: Figure out how to dynamically bind color property to change with active theme  -->
                                         <DropShadowDirectionEffect
                                             BlurRadius="20"
-                                            Color="White"
+                                            Color="{DynamicResource BrandBlack}"
                                             ShadowDepth="0" />
                                     </Setter>
                                 </Style>
@@ -177,6 +150,60 @@
                             ToolTip.Tip="Save launch arguments" />
                     </Grid>
                 </Border>
+            </StackPanel>
+            
+            <!--  Launcher Settings  -->
+            <StackPanel Spacing="12">
+                <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="Launcher Settings" />
+                <TextBlock
+                    FontSize="12"
+                    HorizontalAlignment="Left"
+                    Text="Configure the launcher with these settings" />
+                
+                <WrapPanel Margin="-5">
+                    <WrapPanel.Styles>
+                        <Style Selector="WrapPanel > Border">
+                            <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+                            <Setter Property="CornerRadius" Value="12" />
+                            <Setter Property="Margin" Value="5" />
+                            <Setter Property="Padding" Value="22,15" />
+                            <Style Selector="^ > StackPanel">
+                                <Setter Property="Spacing" Value="10" />
+                                <Setter Property="Orientation" Value="Horizontal" />
+                                <Style Selector="^ > TextBlock">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </Style>
+                        </Style>
+                    </WrapPanel.Styles>
+                    
+                    <Border>
+                        <StackPanel>
+                            <TextBlock Text="Enable light mode" />
+                            <CheckBox Classes="switch" IsChecked="{Binding LightModeEnabled}"
+                                      ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
+                        </StackPanel>
+                    </Border>
+                    <Border>
+                        <StackPanel>
+                            <TextBlock Text="Allow multiple game instances" />
+                            <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
+                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time" />
+                        </StackPanel>
+                    </Border>
+                    <!--<Border>
+                        <StackPanel>
+                            <TextBlock Text="Example setting name" />
+                            <CheckBox Classes="switch" IsChecked="{Binding LightModeEnabled}"
+                                      ToolTip.Tip="" />
+                        </StackPanel>
+                    </Border>-->
+                </WrapPanel>
+                
             </StackPanel>
 
             <!--  Saves Folder Location  -->
@@ -195,9 +222,10 @@
                     CornerRadius="12"
                     Padding="22,15">
                     <Grid ColumnDefinitions="*,Auto">
-                        <TextBlock
+                        <SelectableTextBlock
                             FontSize="15"
-                            Foreground="#BFFFFFFF"
+                            Foreground="{DynamicResource BrandBlack}"
+                            Opacity="0.75"
                             Text="{Binding SavesFolderDir}"
                             VerticalAlignment="Center" />
                         <Button

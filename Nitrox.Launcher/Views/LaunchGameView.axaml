@@ -8,11 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
     d:DesignWidth="1000"
     x:DataType="vm:LaunchGameViewModel"
     mc:Ignorable="d">
     <Design.DataContext>
-        <vm:LaunchGameViewModel />
+        <designer:DesignLaunchGameViewModel />
     </Design.DataContext>
     <ScrollViewer Classes="main">
         <StackPanel
@@ -21,12 +22,12 @@
             Spacing="20">
 
             <Panel Height="535" Margin="-20,0">
-                <Image Source="/Assets/Images/banners/home.png" Stretch="UniformToFill" />
+                <Image Source="{Binding Converter={converters:BitmapAssetValueConverter}, ConverterParameter=/Assets/Images/banners/home.png}" Stretch="UniformToFill" />
                 <Image
                     Height="48"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Source="/Assets/Images/subnautica-name.png"
+                    Source="{Binding Converter={converters:BitmapAssetValueConverter}, ConverterParameter=/Assets/Images/subnautica-name.png}"
                     Stretch="Uniform" />
             </Panel>
 
@@ -59,7 +60,7 @@
                                             <TextBlock Foreground="{DynamicResource BrandSubText}" Text="PLAY NITROX" />
                                             <TextBlock Text="{Binding Version, FallbackValue='PHASE x.x.x.x'}" />
                                         </StackPanel>
-                                        <Image
+                                        <controls:RecolorImage
                                             Width="19"
                                             Height="19"
                                             Margin="3,0"
@@ -91,7 +92,6 @@
                                             Padding="0,4,0,0"
                                             HorizontalAlignment="Center"
                                             FontSize="14"
-                                            Foreground="White"
                                             Text="SINGLEPLAYER" />
                                     </Button>
                                 </StackPanel>
@@ -141,7 +141,7 @@
                     <!--  Active contributors which have higher role than junior.  -->
                     <TextBlock Text="CONTRIBUTORS" />
                     <WrapPanel>
-                        <TextBlock Margin="0 0 12 0" VerticalAlignment="Center" Text="Tornac, iCleeem, Jannify, _HeN_, spacemonkeyy, Ohm, NinjaPedroX, Meas" />
+                        <TextBlock Margin="0 0 12 0" VerticalAlignment="Center" Text="Tornac, Clément, Jannify, _HeN_, spacemonkeyy, Ohm, NinjaPedroX, Meas" />
                         <Button Padding="5 2" Content="See contributions made in the last year" Command="{Binding OpenContributionsOfYearCommand}" />
                     </WrapPanel>
                     <TextBlock Text="STAFF" />
