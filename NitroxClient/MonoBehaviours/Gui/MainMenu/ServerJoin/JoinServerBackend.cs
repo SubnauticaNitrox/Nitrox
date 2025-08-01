@@ -170,17 +170,21 @@ public static class JoinServerBackend
         {
             return;
         }
-
-        if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
+        
+        if (multiplayerSession != null)
         {
-            multiplayerSession.Disconnect();
+            multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
         }
-        multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
-
+    
         Multiplayer.Main.StopCurrentSession();
-        NitroxServiceLocator.EndCurrentLifetimeScope(); //Always do this last.
+        NitroxServiceLocator.EndCurrentLifetimeScope();
 
         Object.Destroy(multiplayerClient);
         multiplayerClient = null;
+
+        if (MainMenuServerListPanel.Main != null)
+        {
+            MainMenuServerListPanel.Main.RefreshServerEntries();
+        }
     }
 }

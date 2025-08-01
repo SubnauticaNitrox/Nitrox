@@ -36,8 +36,11 @@ public class VirtualCyclops : MonoBehaviour
 
     public static void Dispose()
     {
-        Destroy(Instance.gameObject);
-        Instance = null;
+        if (Instance != null)
+        {
+            Destroy(Instance.gameObject);
+            Instance = null;
+        }
         Multiplayer.OnAfterMultiplayerEnd -= Dispose;
     }
 

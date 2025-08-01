@@ -86,7 +86,7 @@ public class LiteNetLibClient : IClient
     public void Stop()
     {
         IsConnected = false;
-        client.Stop();
+        client.Stop(true);
     }
 
     /// <summary>

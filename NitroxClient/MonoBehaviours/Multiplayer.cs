@@ -186,6 +186,19 @@ namespace NitroxClient.MonoBehaviours
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             OnAfterMultiplayerEnd?.Invoke();
         }
+        
+        public void OnDestroy()
+        {
+            if (multiplayerSession != null && multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
+            {
+                multiplayerSession.Disconnect();
+            }
+
+            if (Main == this)
+            {
+                Main = null;
+            }
+        }
 
         private static void SetLoadingComplete()
         {
@@ -226,7 +239,6 @@ namespace NitroxClient.MonoBehaviours
                 // If we just disconnected from a multiplayer session, then we need to kill the connection here.
                 // Maybe a better place for this, but here works in a pinch.
                 JoinServerBackend.StopMultiplayerClient();
-                SceneCleaner.Open();
             }
         }
     }
