@@ -42,9 +42,17 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
     {
+        ToggleLights toggleLights = seamoth.toggleLights;
+
+        if (lightsOn == toggleLights.GetLightsActive())
+        {
+            // Lights are already in the desired state, nothing to do.
+            return;
+        }
+
+        // In the future, maybe do a patch for all ToggleLights.SetLightsActive() to handle all cases of lights toggling (i.e. powercell being inserted, etc.)
         using (FMODSystem.SuppressSendingSounds())
         {
-            ToggleLights toggleLights = seamoth.toggleLights;
             FMODAsset soundAsset;
 
             using (FMODSystem.SuppressSubnauticaSounds())

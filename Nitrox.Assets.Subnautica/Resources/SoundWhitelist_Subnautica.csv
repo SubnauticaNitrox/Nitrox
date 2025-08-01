@@ -565,11 +565,11 @@ event:/sub/cyclops/creature_attack_sfx;false;false;0
 event:/sub/cyclops/cyclops_door_close;true;true;20
 event:/sub/cyclops/cyclops_door_open;true;true;20
 event:/sub/cyclops/cyclops_helm_door_open;true;true;20
-event:/sub/cyclops/cyclops_loop_epic_fast;false;false;0
-event:/sub/cyclops/cyclops_loop_fast;false;false;0
-event:/sub/cyclops/cyclops_loop_normal;false;false;0
-event:/sub/cyclops/cyclops_loop_rpm;false;false;0
-event:/sub/cyclops/cyclops_loop_slow;false;false;0
+event:/sub/cyclops/cyclops_loop_epic_fast;false;false;90
+event:/sub/cyclops/cyclops_loop_fast;false;false;90
+event:/sub/cyclops/cyclops_loop_normal;false;false;90
+event:/sub/cyclops/cyclops_loop_rpm;false;false;90
+event:/sub/cyclops/cyclops_loop_slow;false;false;90
 event:/sub/cyclops/decoy_loop;false;false;0
 event:/sub/cyclops/docking_doors_close;false;false;0
 event:/sub/cyclops/docking_doors_open;false;false;0
