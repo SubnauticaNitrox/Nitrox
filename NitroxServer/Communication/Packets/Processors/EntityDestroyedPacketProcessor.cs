@@ -32,14 +32,7 @@ public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<Entit
                 worldEntityManager.MovePlayerChildrenToRoot(vehicleWorldEntity);
             }
 
-            foreach (Player player in playerManager.GetConnectedPlayers())
-            {
-                bool isOtherPlayer = player != destroyingPlayer;
-                if (isOtherPlayer && player.CanSee(entity))
-                {
-                    player.SendPacket(packet);
-                }
-            }
+            playerManager.SendPacketToOtherPlayers(packet, destroyingPlayer);
         }
     }
 }
