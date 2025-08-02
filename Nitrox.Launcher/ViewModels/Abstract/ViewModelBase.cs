@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class ViewModelBase : ObservableValidator, IMessageReceiver
+internal abstract class ViewModelBase : ObservableValidator, IMessageReceiver
 {
-    protected Window MainWindow => AppViewLocator.MainWindow;
-
     protected ViewModelBase()
     {
         ThrowIfViewModelCtorWasEmptyWhileNonEmptyExists();
@@ -24,7 +21,7 @@ public abstract class ViewModelBase : ObservableValidator, IMessageReceiver
     [Conditional("DEBUG")]
     private static void ThrowIfViewModelCtorWasEmptyWhileNonEmptyExists()
     {
-        if (Design.IsDesignMode)
+        if (IsDesignMode)
         {
             return;
         }

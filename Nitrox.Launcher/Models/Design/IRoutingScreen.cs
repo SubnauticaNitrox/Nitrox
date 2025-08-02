@@ -1,6 +1,6 @@
 namespace Nitrox.Launcher.Models.Design;
 
-public interface IRoutingScreen
+internal interface IRoutingScreen
 {
-    object ActiveViewModel { get; set; }
+    object? ActiveViewModel { get; set; }
 }

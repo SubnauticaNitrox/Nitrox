@@ -19,9 +19,9 @@ public static class NitroxEnvironment
         {
             if (IsReleaseMode)
             {
-                return $"{ReleasePhase} V{Version}{GitShortHash}";
+                return $"{ReleasePhase} V{Version} {GitShortHash}";
             }
-            return $"{ReleasePhase}{GitShortHash}";
+            return $"{ReleasePhase} {GitShortHash}";
         }
     }
 
@@ -38,10 +38,15 @@ public static class NitroxEnvironment
     {
         get
         {
+            if (Assembly.GetExecutingAssembly().GetMetaData("GitShortHash") is { Length: > 0 } shortHash)
+            {
+                return shortHash;
+            }
+
             string gitHash = GitHash;
             if (gitHash is { Length: > 0 })
             {
-                gitHash = $" {gitHash.Substring(0, Math.Min(10, gitHash.Length))}";
+                gitHash = gitHash.Substring(0, Math.Min(10, gitHash.Length));
             }
             return gitHash;
         }
@@ -73,6 +78,8 @@ public static class NitroxEnvironment
 #endif
         }
     }
+
+    public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
 
     public static void Set(Types value)
     {

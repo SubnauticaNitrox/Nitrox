@@ -3,10 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Input;
+using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery;
@@ -16,9 +20,10 @@ using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class OptionsViewModel : RoutableViewModelBase
+internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageService storageService) : RoutableViewModelBase
 {
-    private readonly IKeyValueStore keyValueStore;
+    private readonly IKeyValueStore keyValueStore = keyValueStore;
+    private readonly StorageService storageService = storageService;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
@@ -33,25 +38,31 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool showResetArgsBtn;
 
+    [ObservableProperty]
+    private bool lightModeEnabled;
+    
+    [ObservableProperty]
+    private bool allowMultipleGameInstances;
+    
+    [ObservableProperty]
+    private bool isInReleaseMode;
+    
+    [ObservableProperty]
+    private string multipleInstancesTooltip;
+
     private static string DefaultLaunchArg => "-vrmode none";
 
-    public OptionsViewModel()
-    {
-    }
-
-    public OptionsViewModel(IKeyValueStore keyValueStore)
-    {
-        this.keyValueStore = keyValueStore;
-    }
-
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
         {
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
             SavesFolderDir = keyValueStore.GetSavesFolderDir();
-        });
+            LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+            AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+            IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
+        }, cancellationToken);
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
@@ -84,10 +95,6 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
-            if (NitroxEntryPatch.IsPatchApplied(NitroxUser.GamePath))
-            {
-                NitroxEntryPatch.Remove(NitroxUser.GamePath);
-            }
 
             return path;
         });
@@ -98,7 +105,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task SetGamePath()
     {
-        string selectedDirectory = await MainWindow.StorageProvider.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
+        string selectedDirectory = await storageService.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
         if (selectedDirectory == "")
         {
             return;
@@ -119,7 +126,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void ResetArguments(IInputElement focusTargetAfterReset = null)
+    private void ResetArguments(IInputElement? focusTargetAfterReset = null)
     {
         LaunchArgs = DefaultLaunchArg;
         ShowResetArgsBtn = false;
@@ -150,5 +157,16 @@ public partial class OptionsViewModel : RoutableViewModelBase
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
+    }
+    
+    partial void OnLightModeEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsLightModeEnabled(value);
+        Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
+    }
+    
+    partial void OnAllowMultipleGameInstancesChanged(bool value)
+    {
+        keyValueStore.SetIsMultipleGameInstancesAllowed(value);
     }
 }

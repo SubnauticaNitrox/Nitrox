@@ -182,6 +182,8 @@ namespace NitroxServer.GameLogic
             JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
         }
 
+        public event Action<int>? PlayerCountChanged;
+
         public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
@@ -206,7 +208,7 @@ namespace NitroxServer.GameLogic
                     serverConfig.DefaultPlayerStats,
                     serverConfig.GameMode,
                     new List<NitroxTechType>(),
-                    Array.Empty<Optional<NitroxId>>(),
+                    [],
                     new Dictionary<string, NitroxId>(),
                     new Dictionary<string, float>(),
                     new Dictionary<string, PingInstancePreference>(),
@@ -227,6 +229,8 @@ namespace NitroxServer.GameLogic
             assetPackage.Player = player;
             assetPackage.ReservationKey = null;
             reservations.Remove(reservationKey);
+
+            PlayerCountChanged?.Invoke(connectedPlayersById.Count);
 
             return player;
         }
@@ -251,9 +255,12 @@ namespace NitroxServer.GameLogic
                 Player player = assetPackage.Player;
                 reservedPlayerNames.Remove(player.Name);
                 connectedPlayersById.Remove(player.Id);
+                Log.Info($"{player.Name} left the game");
             }
 
             assetsByConnection.Remove(connection);
+
+            PlayerCountChanged?.Invoke(connectedPlayersById.Count);
 
             if (!ConnectedPlayers().Any())
             {

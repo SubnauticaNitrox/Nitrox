@@ -13,17 +13,17 @@ public static class AssetHelper
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Uri> assetPathCache = [];
 
-    public static Uri GetFullAssetPath(string assetPath)
+    public static Uri? GetFullAssetPath(string assetPath)
     {
-        if (assetPathCache.TryGetValue(assetPath, out Uri fullPath))
+        if (assetPathCache.TryGetValue(assetPath, out Uri? fullPath))
         {
             return fullPath;
         }
 
         Uri uri = assetPath.StartsWith("avares://") ? new Uri(assetPath) : new Uri($"avares://{assemblyName}{assetPath}");
-        if (!AssetLoader.Exists(uri) && !Avalonia.Controls.Design.IsDesignMode)
+        if (!AssetLoader.Exists(uri) && !IsDesignMode)
         {
-            return assetPathCache[assetPath] = default;
+            return assetPathCache[assetPath] = null;
         }
         return assetPathCache[assetPath] = uri;
     }
@@ -46,14 +46,14 @@ public static class AssetHelper
                 }
             }
             // In design mode, resource aren't yet embedded.
-            if (Avalonia.Controls.Design.IsDesignMode)
+            if (IsDesignMode && TryGetPathFromLocalFileSystem(rawUri) is { } localPath)
             {
-                using Stream stream = File.OpenRead(TryGetPathFromLocalFileSystem(rawUri));
+                using Stream stream = File.OpenRead(localPath);
                 data = streamToDataFactory(stream);
             }
-            if (data == null)
+            if (data == null && GetFullAssetPath(rawUri) is { } embeddedPath)
             {
-                using Stream stream = AssetLoader.Open(GetFullAssetPath(rawUri));
+                using Stream stream = AssetLoader.Open(embeddedPath);
                 data = streamToDataFactory(stream);
             }
             lock (assetCacheLock)
@@ -63,7 +63,7 @@ public static class AssetHelper
             return data;
         }
 
-        private static string TryGetPathFromLocalFileSystem(string fileUri)
+        private static string? TryGetPathFromLocalFileSystem(string fileUri)
         {
             string targetedProject = Path.GetDirectoryName(Environment.GetCommandLineArgs().FirstOrDefault(part => !part.Contains("Designer", StringComparison.Ordinal) && part.EndsWith("dll", StringComparison.OrdinalIgnoreCase) && File.Exists(part)));
             while (targetedProject != null && !Directory.EnumerateFileSystemEntries(targetedProject, "*.csproj", SearchOption.TopDirectoryOnly).Any())

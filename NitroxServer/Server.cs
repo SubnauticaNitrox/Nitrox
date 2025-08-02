@@ -38,6 +38,8 @@ public class Server
     public string Name { get; private set; } = "My World";
     public int Port => serverConfig?.ServerPort ?? -1;
 
+    public event Action<int>? PlayerCountChanged;
+
     public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
     {
         this.worldPersistence = worldPersistence;
@@ -48,6 +50,8 @@ public class Server
         this.entityRegistry = entityRegistry;
 
         Instance = this;
+
+        server.playerManager.PlayerCountChanged += count => PlayerCountChanged?.Invoke(count);
 
         saveTimer = new Timer();
         saveTimer.Interval = serverConfig.SaveInterval;
@@ -173,8 +177,6 @@ public class Server
 
     public bool Start(string saveName, CancellationTokenSource ct)
     {
-        Debug.Assert(serverCancelSource == null);
-
         Validate.NotNull(ct);
         if (ct.IsCancellationRequested)
         {
@@ -188,6 +190,7 @@ public class Server
         serverCancelSource = ct;
         IsRunning = true;
 
+        Save(); // Ensures save files exist when server is running
         if (!serverConfig.DisableAutoBackup)
         {
             worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName));

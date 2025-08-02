@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <Target Name="_NitroxEmbedAssemblyInfo" AfterTargets="GetAssemblyAttributes" DependsOnTargets="PrepareForBuild">
+    <PropertyGroup>
+        <_GitShortHashFilePath>$(IntermediateOutputPath)git_short_hash.cache</_GitShortHashFilePath>
+    </PropertyGroup>
+
+    <Target Name="_CreateGitShortHashCacheFile" Inputs="$(_GitRefHashFilePath)" Outputs="$(_GitShortHashFilePath)">
+        <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true" EchoOff="true" StandardOutputImportance="low" StandardErrorImportance="low">
+            <Output TaskParameter="ConsoleOutput" PropertyName="_GitShortHash" />
+        </Exec>
+        <WriteLinesToFile Lines="$(_GitShortHash)" File="$(_GitShortHashFilePath)" Overwrite="True" WriteOnlyWhenDifferent="True" />
         <ItemGroup>
+            <FileWrites Include="$(_GitShortHashFilePath)" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="_NitroxEmbedAssemblyInfo" AfterTargets="GetAssemblyAttributes" DependsOnTargets="PrepareForBuild;_CreateGitShortHashCacheFile">
+        <PropertyGroup>
+            <_GitShortHash Condition="'$(_GitShortHash)' == ''">$([System.IO.File]::ReadAllText('$(_GitShortHashFilePath)').Trim())</_GitShortHash>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>BuildDate</_Parameter1>
+                <_Parameter2>$([System.DateTimeOffset]::Now.ToString("O"))</_Parameter2>
+            </AssemblyAttribute>
             <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
                 <_Parameter1>GitHash</_Parameter1>
                 <_Parameter2>$(_GitHash)</_Parameter2>
             </AssemblyAttribute>
             <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-                <_Parameter1>BuildDate</_Parameter1>
-                <_Parameter2>$([System.DateTimeOffset]::Now.ToString("O"))</_Parameter2>
+                <_Parameter1>GitShortHash</_Parameter1>
+                <_Parameter2>$(_GitShortHash)</_Parameter2>
             </AssemblyAttribute>
         </ItemGroup>
+
+        <ItemGroup>
+            <_AllHexAttributes Include="@(AssemblyAttribute)" Condition="$([System.String]::new('%(AssemblyAttribute._Parameter1)').EndsWith('Hash'))" />
+        </ItemGroup>
+        <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(_AllHexAttributes._Parameter2)', '^[0-9a-fA-F]+$'))" Text="'Metadata attribute %(_AllHexAttributes._Parameter1) must be a suitable hexidecimal hash value but is '%(_AllHexAttributes._Parameter2)'" />
     </Target>
 
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">

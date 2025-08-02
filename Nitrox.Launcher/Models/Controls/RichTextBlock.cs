@@ -17,7 +17,7 @@ namespace Nitrox.Launcher.Models.Controls;
 ///     [i][/i] - Italicize <br />
 ///     [u][/u] - Underline <br />
 ///     [#colorHex][/#colorHex] - Change text color <br />
-///     [Flavor text](example.com) <br />
+///     [Flavor text](example.com) - Link text <br />
 /// </remarks>
 /// <example>
 ///     [b]Text[/b] => <b>Text</b> <br />
@@ -49,7 +49,7 @@ public partial class RichTextBlock : TextBlock
     [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
     private static partial Regex TagParserRegex { get; }
 
-    public static void ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection inlines)
+    public static void ParseTextAndAddInlines(ReadOnlySpan<char> text, InlineCollection? inlines)
     {
         if (inlines == null)
         {
@@ -95,7 +95,8 @@ public partial class RichTextBlock : TextBlock
                     TextBlock textBlock = new();
                     textBlock.Classes.Add("link");
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
-                    textBlock.Tag = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
+                    string link = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
+                    textBlock.Tag = link;
                     inlines.Add(textBlock);
                     break;
                 case ['[', '#', ..]:

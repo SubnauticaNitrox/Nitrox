@@ -1,18 +1,20 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
 using Microsoft.Extensions.DependencyInjection;
-using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
@@ -25,8 +27,8 @@ namespace Nitrox.Launcher;
 public class App : Application
 {
     internal const string CRASH_REPORT_FILE_NAME = "Nitrox.Launcher-crash.txt";
-    internal static Func<Window> StartupWindowFactory;
-    internal static InstantLaunchData InstantLaunch;
+    internal static Func<Window>? StartupWindowFactory;
+    internal static InstantLaunchData? InstantLaunch;
     internal static bool IsCrashReport;
 
     /// <summary>
@@ -48,7 +50,7 @@ public class App : Application
                 case ISingleViewApplicationLifetime singleViewPlatform:
                     singleViewPlatform.MainView = value;
                     break;
-                case null when Design.IsDesignMode:
+                case null when IsDesignMode:
                     Log.Info("Running in design previewer!");
                     break;
                 default:
@@ -95,7 +97,7 @@ public class App : Application
                 CheckForRunningInstance();
             }
             ServiceProvider services = new ServiceCollection().AddAppServices().BuildServiceProvider();
-            StartupWindowFactory = () => new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
+            StartupWindowFactory = services.GetRequiredService<Func<Window>>();
         }
 
         AppBuilder builder = AppBuilder.Configure<App>()
@@ -127,6 +129,8 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Debug.Assert(StartupWindowFactory != null, $"{nameof(StartupWindowFactory)} != null");
+
         FixAvaloniaPlugins();
         ApplyAppDefaults();
 
@@ -154,7 +158,7 @@ public class App : Application
             {
                 string crashReportFile = Path.Combine(executableRoot, CRASH_REPORT_FILE_NAME);
                 File.WriteAllText(crashReportFile, ex.ToString());
-                ProcessUtils.StartSelf("--crash-report");
+                ProcessEx.StartSelf("--crash-report");
             }
             else
             {
@@ -204,7 +208,23 @@ public class App : Application
         }
     }
 
-    private void ApplyAppDefaults() => RequestedThemeVariant = ThemeVariant.Dark;
+    private void ApplyAppDefaults()
+    {
+        RequestedThemeVariant = ThemeVariant.Dark;
+
+        // April Fools: Switch to Comic Sans on April 1st (only works on OSes with Comic Sans installed).
+        if (DateTime.Now is { Month: 4, Day: 1 })
+        {
+            Style? windowStyle = new(x => x.OfType<Window>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.FontFamilyProperty, FontFamily.Parse("Comic Sans MS"))
+                }
+            };
+            Styles.Add(windowStyle);
+        }
+    }
 
     internal class InstantLaunchData
     {

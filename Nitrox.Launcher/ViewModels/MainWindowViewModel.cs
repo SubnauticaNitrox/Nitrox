@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
@@ -18,55 +20,51 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 {
     private readonly BlogViewModel blogViewModel;
     private readonly CommunityViewModel communityViewModel;
+    private readonly DialogService dialogService;
     private readonly LaunchGameViewModel launchGameViewModel;
+    private readonly Func<Window> mainWindowProvider;
     private readonly OptionsViewModel optionsViewModel;
+    private readonly ServerService serverService;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
-    private readonly IDialogService dialogService;
-    private readonly ServerService serverService;
+
+    [ObservableProperty]
+    private object? activeViewModel;
 
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
 
     public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
-    [ObservableProperty]
-    private IRoutingScreen routingScreen;
-
-    [ObservableProperty]
-    private object activeViewModel;
-
-    public MainWindowViewModel()
-    {
-    }
-
     public MainWindowViewModel(
-        IRoutingScreen routingScreen,
+        Func<Window> mainWindowProvider,
+        DialogService dialogService,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
         CommunityViewModel communityViewModel,
         BlogViewModel blogViewModel,
         UpdatesViewModel updatesViewModel,
         OptionsViewModel optionsViewModel,
-        IDialogService dialogService,
-        ServerService serverService
+        ServerService serverService,
+        IKeyValueStore keyValueStore
     )
     {
+        this.mainWindowProvider = mainWindowProvider;
+        this.dialogService = dialogService;
         this.launchGameViewModel = launchGameViewModel;
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
         this.blogViewModel = blogViewModel;
         this.updatesViewModel = updatesViewModel;
         this.optionsViewModel = optionsViewModel;
-        this.routingScreen = routingScreen;
-        this.dialogService = dialogService;
         this.serverService = serverService;
 
-        this.RegisterMessageListener<ViewShownMessage, MainWindowViewModel>(static (message, vm) => vm.ActiveViewModel = message.ViewModel);
+        this.RegisterMessageListener<ShowViewMessage, MainWindowViewModel>(static (message, vm) => vm.ShowAsync(message.ViewModel));
+        this.RegisterMessageListener<ShowPreviousViewMessage, MainWindowViewModel>(static (message, vm) => vm.BackToAsync(message.RoutableViewModelType));
         this.RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
         {
             vm.Notifications.Add(message.Item);
@@ -77,16 +75,21 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             message.Item.Dismissed = true;
             await Task.Delay(1000); // Wait for animations
-            if (!Design.IsDesignMode) // Prevent design preview crashes
+            if (!IsDesignMode) // Prevent design preview crashes
             {
                 vm.Notifications.Remove(message.Item);
             }
         });
 
-        if (!Design.IsDesignMode)
+        if (!IsDesignMode)
         {
+            bool lightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+            Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = lightModeEnabled ? ThemeVariant.Light : ThemeVariant.Dark);
+
             if (!NitroxEnvironment.IsReleaseMode)
             {
+                // Set debug default options here.
+                keyValueStore.SetIsMultipleGameInstancesAllowed(true);
                 LauncherNotifier.Info("You're now using Nitrox DEV build");
             }
 
@@ -99,47 +102,28 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 UpdateAvailableOrUnofficial = await updatesViewModel.IsNitroxUpdateAvailableAsync();
             });
+
+            _ = this.ShowAsync(launchGameViewModel).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
         }
-
-        ActiveViewModel = this.launchGameViewModel;
-        _ = RoutingScreen.ShowAsync(launchGameViewModel).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    public async Task OpenLaunchGameViewAsync()
-    {
-        await RoutingScreen.ShowAsync(launchGameViewModel);
-    }
+    public async Task OpenLaunchGameViewAsync() => await this.ShowAsync(launchGameViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    public async Task OpenServersViewAsync()
-    {
-        await RoutingScreen.ShowAsync(serversViewModel);
-    }
+    public async Task OpenServersViewAsync() => await this.ShowAsync(serversViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    public async Task OpenCommunityViewAsync()
-    {
-        await RoutingScreen.ShowAsync(communityViewModel);
-    }
+    public async Task OpenCommunityViewAsync() => await this.ShowAsync(communityViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    public async Task OpenBlogViewAsync()
-    {
-        await RoutingScreen.ShowAsync(blogViewModel);
-    }
+    public async Task OpenBlogViewAsync() => await this.ShowAsync(blogViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    public async Task OpenUpdatesViewAsync()
-    {
-        await RoutingScreen.ShowAsync(updatesViewModel);
-    }
+    public async Task OpenUpdatesViewAsync() => await this.ShowAsync(updatesViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    public async Task OpenOptionsViewAsync()
-    {
-        await RoutingScreen.ShowAsync(optionsViewModel);
-    }
+    public async Task OpenOptionsViewAsync() => await this.ShowAsync(optionsViewModel);
 
     [RelayCommand]
     public async Task ClosingAsync(WindowClosingEventArgs args)
@@ -147,23 +131,23 @@ public partial class MainWindowViewModel : ViewModelBase
         ServerEntry[] embeddedServers = serverService.Servers.Where(s => s.IsOnline && s.IsEmbedded).ToArray();
         if (embeddedServers.Length > 0)
         {
-            DialogBoxViewModel result = await ShowDialogAsync(dialogService, args, $"{embeddedServers.Length} embedded server(s) will stop, continue?");
+            DialogBoxViewModel? result = await ShowDialogAsync(dialogService, args, $"{embeddedServers.Length} embedded server(s) will stop, continue?");
             if (!result)
             {
                 args.Cancel = true;
                 return;
             }
 
-            await HideWindowAndStopServersAsync(MainWindow, embeddedServers);
+            await HideWindowAndStopServersAsync(mainWindowProvider(), embeddedServers);
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
-        if (args.Cancel == false && MainWindow.IsClosingByUser(args))
+        if (args.Cancel == false && mainWindowProvider().IsClosingByUser(args))
         {
-            MainWindow.CloseByCode();
+            mainWindowProvider().CloseByCode();
         }
 
-        static async Task<DialogBoxViewModel> ShowDialogAsync(IDialogService dialogService, WindowClosingEventArgs args, string title)
+        static async Task<DialogBoxViewModel?> ShowDialogAsync(DialogService dialogService, WindowClosingEventArgs args, string title)
         {
             // Showing dialogs doesn't work if closing isn't set as 'cancelled'.
             bool prevCancelFlag = args.Cancel;
