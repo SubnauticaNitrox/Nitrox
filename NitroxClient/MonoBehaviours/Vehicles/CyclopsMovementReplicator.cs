@@ -30,7 +30,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     {
         base.Update();
 
-        if (subControl.canAccel && throttleApplied && drivingPlayer != null)
+        if (subControl.canAccel && throttleApplied)
         {
             // See SubControl.Update
             var topClamp = subControl.useThrottleIndex switch
@@ -86,7 +86,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
         float volumeRpmSound = SoundHelper.CalculateVolume(distanceToPlayer, radiusRpmSound, 1f);
         rpmSound.GetEventInstance().setVolume(volumeRpmSound);
 
-        throttleApplied = vehicleMovementData.ThrottleApplied;
+        throttleApplied = vehicleMovementData.ThrottleApplied && drivingPlayer != null;
     }
     
     private void SetupSound()
