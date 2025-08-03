@@ -63,8 +63,8 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
             return;
         }
 
-        steeringWheelYaw = vehicleMovementData.SteeringWheelYaw;
-        float steeringWheelPitch = vehicleMovementData.SteeringWheelPitch;
+        steeringWheelYaw = drivingPlayer != null ? vehicleMovementData.SteeringWheelYaw : 0f;
+        float steeringWheelPitch = drivingPlayer != null ? vehicleMovementData.SteeringWheelPitch : 0f;
 
         // See SubControl.UpdateAnimation
         subControl.steeringWheelYaw = steeringWheelYaw;
@@ -87,6 +87,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
         rpmSound.GetEventInstance().setVolume(volumeRpmSound);
 
         throttleApplied = vehicleMovementData.ThrottleApplied && drivingPlayer != null;
+        //Log.Debug($"(Cyclops) Throttle applied: {throttleApplied}");
     }
     
     private void SetupSound()
@@ -109,5 +110,6 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     {
         drivingPlayer = null;
         throttleApplied = false;
+        //Log.Debug($"(Cyclops) Throttle applied on exit: {throttleApplied}");
     }
 }
