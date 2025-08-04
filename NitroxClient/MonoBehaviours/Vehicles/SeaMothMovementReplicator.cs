@@ -18,7 +18,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     private float radiusRevSound;
     private float radiusEnterSound;
     
-    private RemotePlayer? drivingPlayer;
+    private RemotePlayer drivingPlayer;
     private bool throttleApplied;
 
     public void Awake()

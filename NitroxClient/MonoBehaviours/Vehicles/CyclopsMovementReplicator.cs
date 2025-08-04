@@ -16,7 +16,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     private FMOD_CustomLoopingEmitter rpmSound;
     private float radiusRpmSound;
 
-    private RemotePlayer? drivingPlayer;
+    private RemotePlayer drivingPlayer;
     private bool throttleApplied;
     private float steeringWheelYaw;
 
@@ -87,7 +87,6 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
         rpmSound.GetEventInstance().setVolume(volumeRpmSound);
 
         throttleApplied = vehicleMovementData.ThrottleApplied && drivingPlayer != null;
-        //Log.Debug($"(Cyclops) Throttle applied: {throttleApplied}");
     }
     
     private void SetupSound()
@@ -110,6 +109,5 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     {
         drivingPlayer = null;
         throttleApplied = false;
-        //Log.Debug($"(Cyclops) Throttle applied on exit: {throttleApplied}");
     }
 }
