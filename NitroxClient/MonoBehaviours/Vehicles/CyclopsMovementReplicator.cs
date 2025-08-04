@@ -16,7 +16,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     private FMOD_CustomLoopingEmitter rpmSound;
     private float radiusRpmSound;
 
-    private RemotePlayer drivingPlayer;
+    private RemotePlayer? drivingPlayer;
     private bool throttleApplied;
     private float steeringWheelYaw;
 

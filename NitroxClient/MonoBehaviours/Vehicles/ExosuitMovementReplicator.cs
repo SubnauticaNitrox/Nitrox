@@ -17,7 +17,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     private bool jetsActive;
     private float timeJetsActiveChanged;
 
-    private RemotePlayer drivingPlayer;
+    private RemotePlayer? drivingPlayer;
     
     public void Awake()
     {
