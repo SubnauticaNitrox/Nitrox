@@ -201,7 +201,7 @@ public class RemotePlayer : INitroxPlayer
             }
             else
             {
-                cyclopsMovementReplicator = SubRoot.GetComponent<CyclopsMovementReplicator>();
+                cyclopsMovementReplicator = SubRoot.gameObject.EnsureComponent<CyclopsMovementReplicator>();
             }
 
             if (PilotingChair)
