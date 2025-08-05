@@ -27,6 +27,8 @@ public class PlayerManager
 
     private ushort currentPlayerId;
 
+    public event Action<int>? PlayerCountChanged;
+
     public PlayerManager(List<Player> players, SubnauticaServerConfig serverConfig)
     {
         allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
@@ -171,6 +173,8 @@ public class PlayerManager
         assetPackage.ReservationKey = null;
         reservations.Remove(reservationKey);
 
+        PlayerCountChanged?.Invoke(connectedPlayersById.Count);
+
         return player;
     }
 
@@ -193,9 +197,12 @@ public class PlayerManager
             Player player = assetPackage.Player;
             reservedPlayerNames.Remove(player.Name);
             connectedPlayersById.Remove(player.Id);
+            Log.Info($"{player.Name} left the game");
         }
 
         assetsByConnection.Remove(connection);
+
+        PlayerCountChanged?.Invoke(connectedPlayersById.Count);
 
         if (!ConnectedPlayers().Any())
         {

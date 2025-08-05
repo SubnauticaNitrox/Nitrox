@@ -5,7 +5,7 @@ using UnityEngine.XR;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
 
-public static class LoadingScreenVersionText
+public static class TopRightWatermarkText
 {
     private static GameObject buildWatermark => uGUI.main.overlays.transform.parent.GetComponentInChildren<uGUI_BuildWatermark>().gameObject;
 
@@ -14,7 +14,7 @@ public static class LoadingScreenVersionText
 
     public static void Initialize()
     {
-        versionText = AddTextToLoadingScreen("LoadingScreenVersionText", $"\nNitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version}");
+        versionText = AddTextToLoadingScreen("LoadingScreenVersionText", $"\nNitrox {NitroxEnvironment.VersionInfo}");
         loadingScreenWarning = AddTextToLoadingScreen("LoadingScreenWarnText", $"\n\n{Language.main.Get("Nitrox_LoadingScreenWarn")}");
     }
 
@@ -33,8 +33,9 @@ public static class LoadingScreenVersionText
         return textFade;
     }
 
-    public static void DisableWarningText()
+    public static void ApplyChangesForInGame()
     {
+        versionText.text.fontSize = 18;
         loadingScreenWarning.FadeOut(1f, null);
         if (XRSettings.enabled)
         {

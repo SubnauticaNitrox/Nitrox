@@ -5,7 +5,7 @@ using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public abstract class WindowEx<T> : Window where T : ViewModelBase
+internal abstract class WindowEx<T> : Window where T : ViewModelBase
 {
     protected override void OnInitialized()
     {

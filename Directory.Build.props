@@ -10,7 +10,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Prefer32Bit>false</Prefer32Bit>
         <DebugType>embedded</DebugType>
-        <Nullable>disable</Nullable>
+        <Nullable>annotations</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -20,8 +20,6 @@
 
     <!-- Nitrox specific properties -->
     <PropertyGroup>
-        <!-- Fix for dotnet build CLI ; MSBuildThisFileDirectory refers to the folder where Directory.Build.props is defined -->
-        <NitroxRootDir>$(MSBuildThisFileDirectory)</NitroxRootDir>
         <Authors>Nitrox</Authors>
         <Company>Nitrox</Company>
         <NitroxProject>false</NitroxProject>
@@ -52,13 +50,10 @@
         <PackageReference Include="JetBrains.Annotations" Version="2024.3.0">
             <Aliases>JB</Aliases>
         </PackageReference>
-        <PackageReference Include="IsExternalInit" Version="1.0.3">
+        <PackageReference Include="PolySharp" Version="1.15.0">
             <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="IndexRange" Version="1.0.3" />
-        <PackageReference Include="System.Memory" Version="4.6.3" />
-        <PackageReference Include="System.ValueTuple" Version="4.6.1" />
     </ItemGroup>
 
     <Choose>

@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 public class FruitPlantMetadata : EntityMetadata
 {
     [DataMember(Order = 1)]
-    public bool[] PickedStates { get; }
+    public bool[] PickedStates { get; } = [];
 
     [DataMember(Order = 2)]
     public float TimeNextFruit { get; }

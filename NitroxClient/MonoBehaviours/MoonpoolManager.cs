@@ -51,10 +51,13 @@ public class MoonpoolManager : MonoBehaviour
     public void LateAssignNitroxEntity(NitroxId baseId)
     {
         this.baseId = baseId;
+        NitroxId nextId = baseId.Increment(); // To be recognizable, we need it to be deterministic
         foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
             moonpoolEntity.ParentId = baseId;
-            moonpoolEntity.Id = new(); // Generate a new id in case
+            moonpoolEntity.Id = nextId;
+            
+            nextId = nextId.Increment();
         }
     }
 
@@ -84,7 +87,11 @@ public class MoonpoolManager : MonoBehaviour
 
     public Optional<GameObject> RegisterMoonpool(Transform constructableTransform, NitroxId moonpoolId)
     {
-        Int3 absoluteCell = Absolute(constructableTransform.position);
+        return RegisterMoonpool(Absolute(constructableTransform.position), moonpoolId);
+    }
+
+    public Optional<GameObject> RegisterMoonpool(Int3 absoluteCell, NitroxId moonpoolId)
+    {
         moonpoolsByCell[absoluteCell] = new(moonpoolId, baseId, absoluteCell.ToDto());
         TaskResult<Optional<GameObject>> resultObject = new();
         AssignNitroxEntityToMoonpool(absoluteCell, moonpoolId, resultObject);

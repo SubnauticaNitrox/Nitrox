@@ -14,6 +14,7 @@ using Serilog.Configuration;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Formatting.Display;
 
 namespace NitroxModel.Logger
 {
@@ -91,7 +92,7 @@ namespace NitroxModel.Logger
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName; // TODO: Filter by servername ( .Where(f => f.Name.Contains($"[{SaveName}]")) )
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true, Action<string>? logOutputCallback = null)
         {
             if (isSetup)
             {
@@ -108,7 +109,7 @@ namespace NitroxModel.Logger
             LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug().Enrich.With<NitroxPropEnricher>();
             if (useConsoleLogging)
             {
-                loggerConfig = loggerConfig.WriteTo.AppendConsoleSink(asyncConsoleWriter, isConsoleApp);
+                loggerConfig = loggerConfig.WriteTo.AppendConsoleSink(asyncConsoleWriter, isConsoleApp, logOutputCallback);
             }
             if (useFileLogging)
             {
@@ -170,7 +171,7 @@ namespace NitroxModel.Logger
                }, e => LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)) || GetLogFileName() is "launcher");
         });
 
-        private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate) => sinkConfig.Logger(cnf =>
+        private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate, Action<string>? logOutputCallback = null) => sinkConfig.Logger(cnf =>
         {
             string consoleTemplate = useShorterTemplate switch
             {
@@ -178,7 +179,11 @@ namespace NitroxModel.Logger
                 _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
             };
 
-            if (makeAsync)
+            if (logOutputCallback != null)
+            {
+                cnf.WriteTo.Sink(new DelegateSink(logOutputCallback, consoleTemplate));
+            }
+            else if (makeAsync)
             {
                 cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
             }
@@ -396,6 +401,27 @@ namespace NitroxModel.Logger
             {
                 logEvent.AddOrUpdateProperty(propCache.GetOrAdd((nameof(SaveName), SaveName), static (key, factory) => factory.CreateProperty(key.Item1, SaveName), propertyFactory));
                 logEvent.AddOrUpdateProperty(propCache.GetOrAdd((nameof(PlayerName), PlayerName), static (key, factory) => factory.CreateProperty(key.Item1, PlayerName), propertyFactory));
+            }
+        }
+
+        private class DelegateSink(Action<string> callback, string? outputTemplate = null) : ILogEventSink
+        {
+            private readonly Action<string?> callback = callback;
+
+            public void Emit(LogEvent logEvent)
+            {
+                string rendered = outputTemplate != null
+                    ? FormatLogEvent(logEvent, outputTemplate)
+                    : logEvent.RenderMessage();
+                callback(rendered);
+            }
+
+            private static string FormatLogEvent(LogEvent logEvent, string template)
+            {
+                MessageTemplateTextFormatter? formatter = new(template);
+                using StringWriter? sw = new();
+                formatter.Format(logEvent, sw);
+                return sw.ToString();
             }
         }
     }

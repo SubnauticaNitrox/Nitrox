@@ -1,5 +1,6 @@
 <Window
     CanResize="False"
+    MaxHeight="1080"
     MaxWidth="1000"
     MinWidth="400"
     SizeToContent="WidthAndHeight"

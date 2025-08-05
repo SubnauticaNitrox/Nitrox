@@ -9,7 +9,7 @@ namespace NitroxServer.Serialization.World
     public class WorldData
     {
         [DataMember(Order = 1)]
-        public List<NitroxInt3> ParsedBatchCells { get; set; }
+        public List<NitroxInt3> ParsedBatchCells { get; set; } = [];
 
         [DataMember(Order = 2)]
         public GameData GameData { get; set; }
@@ -19,8 +19,9 @@ namespace NitroxServer.Serialization.World
 
         public bool IsValid()
         {
-            return ParsedBatchCells != null && // Always returns false on empty saves (sometimes also if never entered the ocean)
-                   GameData != null;
+            return ParsedBatchCells != null &&
+                   GameData != null &&
+                   Seed != null;
         }
     }
 }

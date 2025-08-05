@@ -21,7 +21,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer;
-using NitroxServer_Subnautica.Communication;
 using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer_Subnautica;
@@ -33,6 +32,7 @@ public class Program
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
     private static readonly CancellationTokenSource serverCts = new();
+    private static Ipc.ServerIpc ipc;
 
     private static async Task Main(string[] args)
     {
@@ -52,8 +52,15 @@ public class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static async Task StartServer(string[] args)
     {
-        // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
-        Log.Setup(true, isConsoleApp: !args.Contains("--embedded", StringComparer.OrdinalIgnoreCase));
+        // Start ServerIpc for log output to launcher
+        ipc = new Ipc.ServerIpc(Environment.ProcessId, CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token));
+        bool isConsoleApp = !args.Contains("--embedded", StringComparer.OrdinalIgnoreCase);
+        Log.Setup(
+            asyncConsoleWriter: true,
+            isConsoleApp: isConsoleApp,
+            logOutputCallback: isConsoleApp ? null : msg => _ = ipc.SendOutput(msg)
+        );
+
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         PosixSignalRegistration.Create(PosixSignal.SIGTERM, CloseWindowHandler);
         PosixSignalRegistration.Create(PosixSignal.SIGQUIT, CloseWindowHandler);
@@ -66,7 +73,7 @@ public class Program
             Console.TreatControlCAsInput = true;
         }
 
-        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
+        Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
         Log.Debug($@"Process start args: ""{string.Join(@""", """, Environment.GetCommandLineArgs())}""");
 
         Task handleConsoleInputTask;
@@ -98,6 +105,10 @@ public class Program
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
+            server.PlayerCountChanged += count =>
+            {
+                _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
+            };
             string serverSaveName = Server.GetSaveName(args, "My World");
             Log.SaveName = serverSaveName;
 
@@ -129,6 +140,7 @@ public class Program
 
         await handleConsoleInputTask;
         server.Stop(true);
+        ipc.Dispose();
 
         try
         {
@@ -149,6 +161,11 @@ public class Program
             ConsoleCommandProcessor commandProcessor = null;
             return submit =>
             {
+                if (submit == Ipc.Messages.SaveNameMessage)
+                {
+                    _ = ipc.SendOutput($"{Ipc.Messages.SaveNameMessage}:{Log.SaveName}");
+                    return;
+                }
                 try
                 {
                     commandProcessor ??= NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
@@ -373,7 +390,7 @@ public class Program
             }, ct);
         }
 
-        using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
+        ipc.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
         
         if (!Console.IsInputRedirected)
         {

@@ -1,3 +1,5 @@
+using NitroxModel.DataStructures;
+
 namespace Nitrox.Test.Helper.Faker;
 
 public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
@@ -8,7 +10,8 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
         ARRAY,
         LIST,
         DICTIONARY,
-        SET
+        SET,
+        QUEUE
     }
 
     private const int DEFAULT_SIZE = 2;
@@ -45,6 +48,13 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
                 collectionType = CollectionType.SET;
                 return true;
             }
+
+            Type genericTypeDefinition = t.GetGenericTypeDefinition();
+            if (genericTypeDefinition == typeof(Queue<>) || genericTypeDefinition == typeof(ThreadSafeQueue<>)) // Queue has no defining interface
+            {
+                collectionType = CollectionType.QUEUE;
+                return true;
+            }
         }
 
         collectionType = CollectionType.NONE;
@@ -55,13 +65,13 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
     {
         if (!IsCollection(type, out CollectionType collectionType))
         {
-            types = Array.Empty<Type>();
+            types = [];
             return false;
         }
 
         if (collectionType == CollectionType.ARRAY)
         {
-            types = new[] { type.GetElementType() };
+            types = [type.GetElementType()];
             return true;
         }
 
@@ -85,7 +95,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
             case CollectionType.ARRAY:
                 Type arrayType = OutputType = type.GetElementType();
                 elementFaker = GetOrCreateFaker(arrayType);
-                subFakers = new[] { elementFaker };
+                subFakers = [elementFaker];
 
                 generateAction = typeTree =>
                 {
@@ -105,7 +115,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
             case CollectionType.SET:
                 Type listType = OutputType = type.GenericTypeArguments[0];
                 elementFaker = GetOrCreateFaker(listType);
-                subFakers = new[] { elementFaker };
+                subFakers = [elementFaker];
 
                 generateAction = typeTree =>
                 {
@@ -115,7 +125,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
                     for (int i = 0; i < GenerateSize; i++)
                     {
                         MethodInfo castMethod = CastMethodBase.MakeGenericMethod(OutputType);
-                        dynamic castedObject = castMethod.Invoke(null, new[] { elementFaker.GenerateUnsafe(typeTree) });
+                        dynamic castedObject = castMethod.Invoke(null, [elementFaker.GenerateUnsafe(typeTree)]);
                         list.Add(castedObject);
                     }
 
@@ -128,7 +138,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
                 OutputType = dicType[1]; // A little hacky but should work as we don't use circular dependencies as keys
                 INitroxFaker keyFaker = GetOrCreateFaker(dicType[0]);
                 INitroxFaker valueFaker = GetOrCreateFaker(dicType[1]);
-                subFakers = new[] { keyFaker, valueFaker };
+                subFakers = [keyFaker, valueFaker];
 
                 generateAction = typeTree =>
                 {
@@ -157,6 +167,27 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
                     typeTree.Remove(dicType[0]);
                     typeTree.Remove(dicType[1]);
                     return dict;
+                };
+                break;
+            case CollectionType.QUEUE:
+                Type queueType = OutputType = type.GenericTypeArguments[0];
+                elementFaker = GetOrCreateFaker(queueType);
+                subFakers = [elementFaker];
+
+                generateAction = typeTree =>
+                {
+                    typeTree.Add(queueType);
+                    dynamic queue = Activator.CreateInstance(type);
+
+                    for (int i = 0; i < GenerateSize; i++)
+                    {
+                        MethodInfo castMethod = CastMethodBase.MakeGenericMethod(OutputType);
+                        dynamic castedObject = castMethod.Invoke(null, [elementFaker.GenerateUnsafe(typeTree)]);
+                        queue!.Enqueue(castedObject);
+                    }
+
+                    typeTree.Remove(queueType);
+                    return queue;
                 };
                 break;
             case CollectionType.NONE:

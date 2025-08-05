@@ -65,6 +65,7 @@
     "Nitrox_PlayerKicked": "Expulsado del servidor",
     "Nitrox_PlayerLeft": "{PLAYER} se ha ido.",
     "Nitrox_PlayerListTabName": "Lista de Jugadores",
+    "Nitrox_QueueInfo": "Estás en posición #{POSITION} en la cola de iniciación. Tiempo máximo de espera: {TIME}",
     "Nitrox_RejectedSessionPolicy": "Reservación rechazada…",
     "Nitrox_RemotePlayerObstacle": "Otro jugador está dentro o demasiado cerca del objetivo para destruirlo.",
     "Nitrox_RequestingSessionPolicy": "Conectando con el servidor…",

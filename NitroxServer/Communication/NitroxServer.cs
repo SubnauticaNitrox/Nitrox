@@ -25,7 +25,7 @@ namespace NitroxServer.Communication
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
         protected readonly Dictionary<int, INitroxConnection> connectionsByRemoteIdentifier = new();
-        protected readonly PlayerManager playerManager;
+        protected internal readonly PlayerManager playerManager;
         protected readonly JoiningManager joiningManager;
 
         public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig)
