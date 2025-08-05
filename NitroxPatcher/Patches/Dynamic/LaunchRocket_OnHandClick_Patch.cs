@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -13,41 +12,31 @@ public sealed partial class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynam
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
 
-    internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-    internal static readonly object INJECTION_OPERAND = Reflect.Method(() => LaunchRocket.SetLaunchStarted());
-
-    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    /*
+     * 
+     * LaunchRocket.SetLaunchStarted();
+     * LaunchRocket_OnHandClick_Patch.BroadcastRocketLaunch(this);   <--- [INSERTED LINE]
+     * [Removed all lines after]
+     */
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        Validate.NotNull(INJECTION_OPERAND);
-        /* We replace
-         *
-         * LaunchRocket.SetLaunchStarted();
-         *
-         * by
-         *
-         * LaunchRocket_OnHandClick_Patch.RequestRocketLaunch()
-         * return; (by just removing the following instructions)
-         */
-        foreach (CodeInstruction instruction in instructions)
-        {
-            if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
-            {
-                // We must transfer the labels from the previous instruction
-                yield return new CodeInstruction(OpCodes.Ldarg_0)
-                {
-                    labels = instruction.labels
-                };
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => RequestRocketLaunch(default)));
-                yield return new CodeInstruction(OpCodes.Ret);
-                break;
-            }
-            yield return instruction;
-        }
+        return new CodeMatcher(instructions).MatchEndForward([
+                                                new CodeMatch(OpCodes.Call, Reflect.Method(() => LaunchRocket.SetLaunchStarted()))
+                                            ])
+                                            .Advance(1) // Skip the SetLaunchStarted because we don't want to manage all the jump labels that forward to it
+                                            // Also this instruction doesn't block Rockets.RocketLaunch(GameObject) since that function doesn't check for LaunchRocket.launchStarted
+                                            .RemoveInstructions(10)
+                                            .InsertAndAdvance([
+                                                new CodeInstruction(OpCodes.Ldarg_0),
+                                                new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastRocketLaunch(default)))
+                                            ]).InstructionEnumeration();
     }
 
-    private static void RequestRocketLaunch(LaunchRocket launchRocket)
+    private static void BroadcastRocketLaunch(LaunchRocket launchRocket)
     {
         Rocket rocket = launchRocket.RequireComponentInParent<Rocket>();
-        Resolve<Rockets>().RequestRocketLaunch(rocket);
+        Rockets rockets = Resolve<Rockets>();
+        rockets.RequestRocketLaunch(rocket);
+        rockets.RocketLaunch(rocket.gameObject);
     }
 }
