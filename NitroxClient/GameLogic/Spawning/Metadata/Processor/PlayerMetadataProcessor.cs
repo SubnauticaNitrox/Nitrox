@@ -38,7 +38,7 @@ public class PlayerMetadataProcessor : EntityMetadataProcessor<PlayerMetadata>
         }
     }
 
-    private void UpdateForLocalPlayer(PlayerMetadata metadata)
+    private static void UpdateForLocalPlayer(PlayerMetadata metadata)
     {
         ItemsContainer currentItems = Inventory.Get().container;
         Equipment equipment = Inventory.main.equipment;
@@ -66,9 +66,8 @@ public class PlayerMetadataProcessor : EntityMetadataProcessor<PlayerMetadata>
         }
     }
 
-    private void UpdateForRemotePlayer(GameObject gameObject, PlayerMetadata metadata)
+    private static void UpdateForRemotePlayer(GameObject gameObject, PlayerMetadata metadata)
     {
-        Log.Info("Calling UpdateForRemotePlayer");
         RemotePlayerIdentifier remotePlayerId = gameObject.RequireComponent<RemotePlayerIdentifier>();
 
         List<TechType> equippedTechTypes = metadata.EquippedItems.Select(x => x.TechType.ToUnity()).ToList();
