@@ -20,12 +20,14 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
 {
     private static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((uGUI_MainMenu t) => t.Start()));
 
+#if DEBUG
     private static bool applied;
     private static string playerName;
+#endif
 
     public static void Postfix()
     {
-        if (true || EndCreditsManager_OnLateUpdate_Patch.EndCreditsTriggered)
+        if (EndCreditsManager_OnLateUpdate_Patch.EndCreditsTriggered)
         {
             SpawnThankDialog();
         }
