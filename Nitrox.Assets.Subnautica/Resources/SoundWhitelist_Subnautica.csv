@@ -686,8 +686,8 @@ event:/sub/seamoth/interior_loop;false;false;0
 event:/sub/seamoth/pulse;false;false;0
 event:/sub/seamoth/pulse_charge_loop;false;false;0
 event:/sub/seamoth/seaglide_equip;true;true;10
-event:/sub/seamoth/seaglide_light_off;true;true;30
-event:/sub/seamoth/seaglide_light_on;true;true;30
+event:/sub/seamoth/seaglide_light_off;true;true;15
+event:/sub/seamoth/seaglide_light_on;true;true;15
 event:/sub/seamoth/seaglide_loop_rpm;false;false;60
 event:/sub/seamoth/seaglide_rev_up;false;false;60
 event:/sub/seamoth/seamoth_light_off;false;false;30
@@ -752,8 +752,8 @@ event:/tools/flare/on_loop;false;false;20
 event:/tools/flare/throw;false;false;20
 event:/tools/flashlight/deploy;false;false;20
 event:/tools/flashlight/fist_use;false;false;20
-event:/tools/flashlight/turn_off;false;false;30
-event:/tools/flashlight/turn_on;false;false;30
+event:/tools/flashlight/turn_off;false;false;15
+event:/tools/flashlight/turn_on;false;false;15
 event:/tools/floating_locker/close;false;false;20
 event:/tools/floating_locker/deploy;false;false;20
 event:/tools/floating_locker/open;false;false;20
