@@ -17,6 +17,8 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     private bool jetsActive;
     private float timeJetsActiveChanged;
 
+    private RemotePlayer? drivingPlayer;
+    
     public void Awake()
     {
         exosuit = GetComponent<Exosuit>();
@@ -97,7 +99,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         // See Exosuit.jetsActive setter
         if (jetsActive != vehicleMovementData.ThrottleApplied)
         {
-            jetsActive = vehicleMovementData.ThrottleApplied;
+            jetsActive = vehicleMovementData.ThrottleApplied && drivingPlayer != null;
             timeJetsActiveChanged = Time.time;
         }
     }
@@ -119,6 +121,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     public override void Enter(RemotePlayer remotePlayer)
     {
+        drivingPlayer = remotePlayer;
         exosuit.SetIKEnabled(true);
         exosuit.thrustIntensity = 0;
     }
@@ -129,6 +132,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         exosuit.loopingJetSound.Stop(STOP_MODE.ALLOWFADEOUT);
         exosuit.fxcontrol.Stop(0);
 
+        drivingPlayer = null;
         jetsActive = false;
     }
 }

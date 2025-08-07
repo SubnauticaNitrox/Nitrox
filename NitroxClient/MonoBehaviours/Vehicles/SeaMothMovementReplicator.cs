@@ -18,6 +18,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     private float radiusRevSound;
     private float radiusEnterSound;
     
+    private RemotePlayer? drivingPlayer;
     private bool throttleApplied;
 
     public void Awake()
@@ -30,7 +31,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     {
         base.Update();
 
-        if (throttleApplied)
+        if (throttleApplied && seaMoth.IsPowered())
         {
             seaMoth.engineSound.AccelerateInput(1);
         }
@@ -62,7 +63,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
         rpmSound.GetEventInstance().setVolume(volumeRpmSound);
         revSound.GetEventInstance().setVolume(volumeRevSound);
 
-        throttleApplied = vehicleMovementData.ThrottleApplied;
+        throttleApplied = vehicleMovementData.ThrottleApplied && drivingPlayer != null;
     }
 
     private void SetupSound()
@@ -95,6 +96,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
 
     public override void Enter(RemotePlayer remotePlayer)
     {
+        drivingPlayer = remotePlayer;
         seaMoth.bubbles.Play();
         if (enterSeamoth)
         {
@@ -115,6 +117,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     {
         seaMoth.bubbles.Stop();
 
+        drivingPlayer = null;
         throttleApplied = false;
     }
 }
