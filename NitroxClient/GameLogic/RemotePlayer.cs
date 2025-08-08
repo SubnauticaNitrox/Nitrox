@@ -249,7 +249,7 @@ public class RemotePlayer : INitroxPlayer
             if (newSubRoot)
             {
                 Attach(newSubRoot.transform, true);
-                
+
                 // Register in new cyclops
                 if (newSubRoot.TryGetComponent(out NitroxCyclops nitroxCyclops))
                 {
@@ -490,20 +490,6 @@ public class RemotePlayer : INitroxPlayer
         else
         {
             Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(BreathingSound)} but linked sound is not whitelisted: ({breathingSoundCustomEmitter.asset.path})");
-        }
-
-        // Diving
-        WaterAmbience waterAmbience = Player.main.GetComponentInChildren<WaterAmbience>(true);
-        FMOD_CustomEmitter diveStartCustomEmitter = remotePlayerSoundsRoot.AddComponent<FMOD_CustomEmitter>();
-        CopyEmitter(waterAmbience.diveStartSplash, diveStartCustomEmitter);
-
-        if (fmodWhitelist.IsWhitelisted(diveStartCustomEmitter.asset.path, out float diveSoundRadius))
-        {
-            emitterController.AddEmitter(diveStartCustomEmitter.asset.path, diveStartCustomEmitter, diveSoundRadius);
-        }
-        else
-        {
-            Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(WaterAmbience)} but linked sound is not whitelisted: ({diveStartCustomEmitter.asset.path})");
         }
     }
 
