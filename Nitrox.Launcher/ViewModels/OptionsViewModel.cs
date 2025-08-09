@@ -30,7 +30,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private string launchArgs;
 
     [ObservableProperty]
-    private string savesFolderDir;
+    private string logsFolderDir;
 
     [ObservableProperty]
     private KnownGame selectedGame;
@@ -58,7 +58,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         {
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
+            LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
             LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
             IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
@@ -149,11 +149,11 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     }
 
     [RelayCommand]
-    private void OpenSavesFolder()
+    private void OpenLogsFolder()
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = SavesFolderDir,
+            FileName = LogsFolderDir,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
