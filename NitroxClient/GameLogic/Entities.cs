@@ -119,24 +119,17 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator SpawnNewEntities()
         {
-            bool restarted = false;
-            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
+            // The coroutine waits a frame after SpawnBatchAsync finishes, and another entity may be enqueued then, so a loop is needed
+            while (EntitiesToSpawn.Count > 0)
             {
-                Log.Error(exception);
-                if (EntitiesToSpawn.Count > 0)
-                {
-                    restarted = true;
-                    // It's safe to run a new time because the processed entity is removed first so it won't infinitely throw errors
-                    CoroutineHost.StartCoroutine(SpawnNewEntities());
-                }
-            });
-            spawningEntities = restarted;
-            if (!spawningEntities)
-            {
-                entityMetadataManager.ClearNewerMetadata();
-                deletedEntitiesIds.Clear();
-                simulationOwnership.ClearNewerSimulations();
+                yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
             }
+
+            spawningEntities = false;
+
+            entityMetadataManager.ClearNewerMetadata();
+            deletedEntitiesIds.Clear();
+            simulationOwnership.ClearNewerSimulations();
         }
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
