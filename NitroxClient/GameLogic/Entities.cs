@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -275,6 +274,14 @@ namespace NitroxClient.GameLogic
             {
                 grownPlant.seed.AliveOrNull()?.FreeSpot();
                 return;
+            }
+
+            if (gameObject.TryGetComponent(out Pickupable pickupable))
+            {
+                using (PacketSuppressor<ModuleRemoved>.Suppress())
+                {
+                    pickupable.SetInventoryItem(null);
+                }
             }
 
             UnityEngine.Object.Destroy(gameObject);
