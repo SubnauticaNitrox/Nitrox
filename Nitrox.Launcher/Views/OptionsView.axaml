@@ -1,5 +1,5 @@
 ﻿<UserControl
-    d:DesignHeight="500"
+    d:DesignHeight="1000"
     d:DesignWidth="1000"
     mc:Ignorable="d"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -211,11 +211,11 @@
                 <TextBlock
                     FontSize="20"
                     FontWeight="Bold"
-                    Text="Save File Location" />
+                    Text="Nitrox Logs Location" />
                 <TextBlock
                     FontSize="12"
                     HorizontalAlignment="Left"
-                    Text="This is the location where your Nitrox server save files are stored" />
+                    Text="This is the location where your Nitrox logs are stored" />
 
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
@@ -226,11 +226,11 @@
                             FontSize="15"
                             Foreground="{DynamicResource BrandBlack}"
                             Opacity="0.75"
-                            Text="{Binding SavesFolderDir}"
+                            Text="{Binding LogsFolderDir}"
                             VerticalAlignment="Center" />
                         <Button
                             Classes="primary"
-                            Command="{Binding OpenSavesFolderCommand}"
+                            Command="{Binding OpenLogsFolderCommand}"
                             Content="Open"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
