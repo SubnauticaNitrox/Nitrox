@@ -273,6 +273,7 @@ namespace NitroxClient.GameLogic
             {
                 using (PacketSuppressor<ModuleRemoved>.Suppress())
                 {
+                    // Running this now means it won't get ran in OnDestroy() at the end of the frame, so no packets get sent
                     pickupable.SetInventoryItem(null);
                 }
             }
