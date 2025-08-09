@@ -25,7 +25,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
     {        
         if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
         {
-            Log.Info(errorLog);
+            Log.Error(errorLog);
             result.Set(Optional.Empty);
             yield break;
         }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -120,24 +119,17 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator SpawnNewEntities()
         {
-            bool restarted = false;
-            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
+            // The coroutine waits a frame after SpawnBatchAsync finishes, and another entity may be enqueued then, so a loop is needed
+            while (EntitiesToSpawn.Count > 0)
             {
-                Log.Error(exception);
-                if (EntitiesToSpawn.Count > 0)
-                {
-                    restarted = true;
-                    // It's safe to run a new time because the processed entity is removed first so it won't infinitely throw errors
-                    CoroutineHost.StartCoroutine(SpawnNewEntities());
-                }
-            });
-            spawningEntities = restarted;
-            if (!spawningEntities)
-            {
-                entityMetadataManager.ClearNewerMetadata();
-                deletedEntitiesIds.Clear();
-                simulationOwnership.ClearNewerSimulations();
+                yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
             }
+
+            spawningEntities = false;
+
+            entityMetadataManager.ClearNewerMetadata();
+            deletedEntitiesIds.Clear();
+            simulationOwnership.ClearNewerSimulations();
         }
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
@@ -275,6 +267,15 @@ namespace NitroxClient.GameLogic
             {
                 grownPlant.seed.AliveOrNull()?.FreeSpot();
                 return;
+            }
+
+            if (gameObject.TryGetComponent(out Pickupable pickupable))
+            {
+                using (PacketSuppressor<ModuleRemoved>.Suppress())
+                {
+                    // Running this now means it won't get ran in OnDestroy() at the end of the frame, so no packets get sent
+                    pickupable.SetInventoryItem(null);
+                }
             }
 
             UnityEngine.Object.Destroy(gameObject);
