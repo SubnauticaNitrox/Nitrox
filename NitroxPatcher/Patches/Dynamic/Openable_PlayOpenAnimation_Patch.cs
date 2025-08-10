@@ -18,7 +18,7 @@ public sealed partial class Openable_PlayOpenAnimation_Patch : NitroxPatch, IDyn
     {
         if (__instance.TryGetComponentInParent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
         {
-            nitroxCyclops.Virtual.ReplicateOpening(__instance, openState);
+            nitroxCyclops.Virtual.ReplicateOpening(__instance, openState, duration);
         }
 
         // Do not try to sync
