@@ -110,6 +110,15 @@ public class WorldEntityManager
                 return false;
             }
 
+            // Return early because a GlobalRootEntity doesn't have an AbsoluteEntityCell, thus it would throw an exception
+            if (worldEntity is GlobalRootEntity)
+            {
+                worldEntity.Transform.Position = position;
+                worldEntity.Transform.Rotation = rotation;
+                newCell = null;
+                return true;
+            }
+
             AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
 
             worldEntity.Transform.Position = position;
