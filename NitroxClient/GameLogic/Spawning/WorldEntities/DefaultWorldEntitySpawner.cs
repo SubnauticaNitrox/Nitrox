@@ -44,13 +44,19 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
             Items.TryGetParentWaterPark(parent.Value.transform.parent, out parentWaterPark);
         }
 
+        LargeWorldEntity largeWorldEntity = gameObject.GetComponent<LargeWorldEntity>();
+        if (largeWorldEntity)
+        {
+            largeWorldEntity.cellLevel = (LargeWorldEntity.CellLevel)entity.Level;
+        }
+
         if (!parentWaterPark)
         {
             if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }
-            else if (gameObject.GetComponent<LargeWorldEntity>() && !gameObject.transform.parent && cellRoot.liveRoot)
+            else if (largeWorldEntity && !gameObject.transform.parent && cellRoot.liveRoot)
             {
                 gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
                 LargeWorldEntity.Register(gameObject);

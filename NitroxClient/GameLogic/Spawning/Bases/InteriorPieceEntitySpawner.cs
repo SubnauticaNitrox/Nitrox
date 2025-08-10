@@ -117,6 +117,8 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
     public static InteriorPieceEntity From(IBaseModule module, EntityMetadataManager entityMetadataManager)
     {
         InteriorPieceEntity interiorPiece = InteriorPieceEntity.MakeEmpty();
+        interiorPiece.Level = (int)LargeWorldEntity.CellLevel.Global;
+
         GameObject gameObject = (module as Component).gameObject;
         if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
         {

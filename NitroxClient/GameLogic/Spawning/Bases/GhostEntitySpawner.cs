@@ -34,6 +34,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
     public static GhostEntity From(ConstructableBase constructableBase)
     {
         GhostEntity ghost = GhostEntity.MakeEmpty();
+        ghost.Level = (int)LargeWorldEntity.CellLevel.Global;
         ModuleEntitySpawner.FillObject(ghost, constructableBase);
 
         if (constructableBase.moduleFace.HasValue)

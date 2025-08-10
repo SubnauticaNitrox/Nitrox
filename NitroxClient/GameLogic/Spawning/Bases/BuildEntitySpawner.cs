@@ -82,6 +82,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
     public static BuildEntity From(Base targetBase, EntityMetadataManager entityMetadataManager)
     {
         BuildEntity buildEntity = BuildEntity.MakeEmpty();
+        buildEntity.Level = (int)LargeWorldEntity.CellLevel.Global;
         if (targetBase.TryGetNitroxId(out NitroxId baseId))
         {
             buildEntity.Id = baseId;
