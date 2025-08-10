@@ -396,8 +396,8 @@ public class WorldPersistenceTest
                                     case BuildEntity buildEntity when globalRootEntityAfter is BuildEntity buildEntityAfter:
                                         Assert.AreEqual(buildEntity.BaseData, buildEntityAfter.BaseData);
                                         break;
-                                    case EscapePodWorldEntity escapePodWorldEntity when globalRootEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
-                                        Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
+                                    case EscapePodEntity escapePodEntity when globalRootEntityAfter is EscapePodEntity escapePodEntityAfter:
+                                        Assert.IsTrue(escapePodEntity.Players.SequenceEqual(escapePodEntityAfter.Players));
                                         break;
                                     case InteriorPieceEntity interiorPieceEntity when globalRootEntityAfter is InteriorPieceEntity interiorPieceEntityAfter:
                                         Assert.AreEqual(interiorPieceEntity.BaseFace, interiorPieceEntityAfter.BaseFace);
@@ -430,9 +430,9 @@ public class WorldPersistenceTest
                                         break;
                                     case PlayerEntity when globalRootEntityAfter is PlayerEntity:
                                         break;
-                                    case VehicleWorldEntity vehicleWorldEntity when globalRootEntityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
-                                        Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
-                                        Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                                    case VehicleEntity vehicleEntity when globalRootEntityAfter is VehicleEntity vehicleWorldEntityAfter:
+                                        Assert.AreEqual(vehicleEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
+                                        Assert.AreEqual(vehicleEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
                                         break;
                                     case RadiationLeakEntity radiationLeakEntity when globalRootEntityAfter is RadiationLeakEntity radiationLeakEntityAfter:
                                         Assert.AreEqual(radiationLeakEntity.ObjectIndex, radiationLeakEntityAfter.ObjectIndex);

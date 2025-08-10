@@ -123,7 +123,7 @@ public class MoonpoolManager : MonoBehaviour
     {
         foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
-            VehicleWorldEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleWorldEntity>().FirstOrFallback(null);
+            VehicleEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleEntity>().FirstOrFallback(null);
             if (moonpoolVehicleEntity != null)
             {
                 yield return entities.SpawnEntityAsync(moonpoolVehicleEntity);

@@ -8,7 +8,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 public class WorldEntitySpawnerResolver
 {
     private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new();
-    private readonly VehicleWorldEntitySpawner vehicleWorldEntitySpawner;
 
     private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner;
     private readonly PlaceholderGroupWorldEntitySpawner placeholderGroupWorldEntitySpawner;
@@ -25,7 +24,6 @@ public class WorldEntitySpawnerResolver
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
-        vehicleWorldEntitySpawner = new VehicleWorldEntitySpawner(entities);
         prefabPlaceholderEntitySpawner = new PrefabPlaceholderEntitySpawner(defaultEntitySpawner);
         placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, entityMetadataManager, prefabPlaceholderEntitySpawner);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
@@ -43,8 +41,6 @@ public class WorldEntitySpawnerResolver
                 return prefabPlaceholderEntitySpawner;
             case PlaceholderGroupWorldEntity:
                 return placeholderGroupWorldEntitySpawner;
-            case VehicleWorldEntity:
-                return vehicleWorldEntitySpawner;
             case SerializedWorldEntity:
                 return serializedWorldEntitySpawner;
             case GeyserWorldEntity:
