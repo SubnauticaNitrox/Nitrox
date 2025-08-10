@@ -11,12 +11,12 @@ public class PlayerJoinedMultiplayerSession : Packet
 {
     public PlayerContext PlayerContext { get; }
     public Optional<NitroxId> SubRootId { get; }
-    public PlayerWorldEntity PlayerWorldEntity { get; }
+    public PlayerEntity PlayerEntity { get; }
 
-    public PlayerJoinedMultiplayerSession(PlayerContext playerContext, Optional<NitroxId> subRootId, PlayerWorldEntity playerWorldEntity)
+    public PlayerJoinedMultiplayerSession(PlayerContext playerContext, Optional<NitroxId> subRootId, PlayerEntity playerEntity)
     {
         PlayerContext = playerContext;
         SubRootId = subRootId;
-        PlayerWorldEntity = playerWorldEntity;
+        PlayerEntity = playerEntity;
     }
 }

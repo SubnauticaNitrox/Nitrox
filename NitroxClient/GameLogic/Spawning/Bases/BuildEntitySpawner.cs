@@ -50,7 +50,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 #if DEBUG
         Log.Verbose($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
 #endif
-        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>());
+        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerEntity>().ToList<Entity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
 
         TaskResult<Optional<GameObject>> childResult = new();

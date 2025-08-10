@@ -428,7 +428,7 @@ public class WorldPersistenceTest
                                         break;
                                     case PlanterEntity when globalRootEntityAfter is PlanterEntity:
                                         break;
-                                    case PlayerWorldEntity when globalRootEntityAfter is PlayerWorldEntity:
+                                    case PlayerEntity when globalRootEntityAfter is PlayerEntity:
                                         break;
                                     case VehicleWorldEntity vehicleWorldEntity when globalRootEntityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
                                         Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);

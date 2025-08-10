@@ -17,7 +17,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [ProtoInclude(54, typeof(ModuleEntity))]
 [ProtoInclude(55, typeof(MoonpoolEntity))]
 [ProtoInclude(56, typeof(PlanterEntity))]
-[ProtoInclude(57, typeof(PlayerWorldEntity))]
+[ProtoInclude(57, typeof(PlayerEntity))]
 [ProtoInclude(58, typeof(VehicleWorldEntity))]
 [ProtoInclude(59, typeof(RadiationLeakEntity))]
 public class GlobalRootEntity : WorldEntity
