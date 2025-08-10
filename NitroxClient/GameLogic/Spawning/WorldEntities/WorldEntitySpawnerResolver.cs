@@ -24,7 +24,6 @@ public class WorldEntitySpawnerResolver
     public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
-        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(localPlayer);
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
         vehicleWorldEntitySpawner = new VehicleWorldEntitySpawner(entities);

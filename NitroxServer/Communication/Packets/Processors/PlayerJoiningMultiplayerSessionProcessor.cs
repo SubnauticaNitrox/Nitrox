@@ -43,7 +43,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
-            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
 
             if (wasBrandNewPlayer)
             {
