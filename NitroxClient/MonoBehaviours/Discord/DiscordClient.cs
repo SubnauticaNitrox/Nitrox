@@ -16,9 +16,9 @@ public class DiscordClient : MonoBehaviour
     private const long CLIENT_ID = 405122994348752896;
     private const int RETRY_INTERVAL = 60;
 
-    private static DiscordClient main;
-    private static DiscordGameSDKWrapper.Discord discord;
-    private static ActivityManager activityManager;
+    private static DiscordClient? main;
+    private static DiscordGameSDKWrapper.Discord? discord;
+    private static ActivityManager? activityManager;
     private static Activity activity;
     private static bool showingWindow;
 
@@ -29,7 +29,13 @@ public class DiscordClient : MonoBehaviour
             Log.Error($"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
             return;
         }
-        activity = new();
+
+        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WINEPREFIX"))) // Is wine environment
+        {
+            Log.Warn("Discord RPC does not work inside wine. Sorry for the inconvenience");
+            return;
+        }
+
         main = this;
         DontDestroyOnLoad(gameObject);
         Log.Info("[Discord] Starting Discord client");
@@ -42,11 +48,12 @@ public class DiscordClient : MonoBehaviour
         {
             discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
             discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
-            activityManager = discord.GetActivityManager();
 
-            activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
+            activityManager = discord.GetActivityManager();
+            activityManager!.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;
+
             if (!string.IsNullOrEmpty(activity.State))
             {
                 UpdateActivity();
