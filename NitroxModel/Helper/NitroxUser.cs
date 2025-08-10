@@ -92,6 +92,8 @@ public static class NitroxUser
         }
     }
 
+    public static string CachePath => Path.Combine(AppDataPath, "cache");
+
     /// <summary>
     ///     Tries to get the launcher path that was previously saved by other Nitrox code.
     /// </summary>

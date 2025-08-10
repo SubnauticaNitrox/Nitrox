@@ -109,7 +109,7 @@
         <Message Importance="High"
                  Text="Running NitroxClean on $(MSBuildProjectName)" />
 
-         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder);$(TargetDir)\runtimes;$(TargetDir)\screenshots"
+         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder);$(TargetDir)\runtimes"
                     ContinueOnError="WarnAndContinue" />
     </Target>
 

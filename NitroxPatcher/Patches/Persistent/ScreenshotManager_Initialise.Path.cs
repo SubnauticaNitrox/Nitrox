@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System;
+using System.IO;
 using System.Reflection;
 using NitroxModel.Helper;
 
@@ -10,7 +11,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Prefix(ScreenshotManager __instance, ref string _savePath)
         {
-            _savePath = Path.GetFullPath(NitroxUser.LauncherPath ?? ".");
+            _savePath = Path.GetFullPath(NitroxUser.AppDataPath ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
         }
     }
 }
