@@ -13,10 +13,10 @@ namespace NitroxModel.Packets
 
         public bool ForceRespawn { get; }
 
-        public SpawnEntities(List<Entity> entities)
+        public SpawnEntities(List<Entity> entities, bool forceRespawn = false)
         {
             Entities = entities;
-            ForceRespawn = false;
+            ForceRespawn = forceRespawn;
         }
 
         public SpawnEntities(Entity entity, SimulatedEntity simulatedEntity = null, bool forceRespawn = false)

@@ -117,8 +117,13 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity, requireRespawn));
         }
 
-        private IEnumerator SpawnNewEntities()
+        private IEnumerator SpawnNewEntities(bool coldStart = false)
         {
+            if (coldStart)
+            {
+                yield return null;
+            }
+
             // The coroutine waits a frame after SpawnBatchAsync finishes, and another entity may be enqueued then, so a loop is needed
             while (EntitiesToSpawn.Count > 0)
             {
@@ -132,13 +137,13 @@ namespace NitroxClient.GameLogic
             simulationOwnership.ClearNewerSimulations();
         }
 
-        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
+        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue, bool coldStart = false)
         {
             EntitiesToSpawn.InsertRange(0, entitiesToEnqueue);
             if (!spawningEntities)
             {
                 spawningEntities = true;
-                CoroutineHost.StartCoroutine(SpawnNewEntities());
+                CoroutineHost.StartCoroutine(SpawnNewEntities(coldStart));
             }
         }
 
