@@ -54,6 +54,7 @@ public static class Main
     });
 
     private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
+    private static bool initialized;
 
     /// <summary>
     ///     Entrypoint of Nitrox. Code in this method cannot use other dependencies (DLLs) without crashing
@@ -64,6 +65,12 @@ public static class Main
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Execute()
     {
+        if (initialized)
+        {
+            return;
+        }
+        initialized = true;
+
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 

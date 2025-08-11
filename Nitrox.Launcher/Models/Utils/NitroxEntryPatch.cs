@@ -99,7 +99,7 @@ public static class NitroxEntryPatch
 
             Instruction callNitroxExecuteInstruction = OpCodes.Call.ToInstruction(executeMethodReference);
 
-            if (awakeMethod.Body.Instructions[0].Operand == callNitroxExecuteInstruction.Operand)
+            if (awakeMethod.Body.Instructions[0].Operand is MemberRef refA && callNitroxExecuteInstruction.Operand is MemberRef refB && refA.FullName == refB.FullName)
             {
                 Log.Warn("Nitrox entry point already patched.");
                 return;
@@ -147,14 +147,15 @@ public static class NitroxEntryPatch
 
             IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
             int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
-
             if (nitroxExecuteInstructionIndex == -1)
             {
                 Log.Debug($"Nitrox entry point not found in {GAME_INPUT_TYPE_NAME}:{GAME_INPUT_METHOD_NAME}");
                 return;
             }
-
-            methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+            do
+            {
+                methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+            } while ((nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions)) >= 0);
             module.Write(modifiedAssemblyCSharp);
 
             File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
