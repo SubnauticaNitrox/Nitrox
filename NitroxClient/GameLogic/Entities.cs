@@ -121,7 +121,7 @@ namespace NitroxClient.GameLogic
         {
             if (coldStart)
             {
-                yield return null;
+                yield return null; // Skips a frame
             }
 
             // The coroutine waits a frame after SpawnBatchAsync finishes, and another entity may be enqueued then, so a loop is needed

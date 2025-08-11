@@ -30,15 +30,15 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
 
     protected override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        bool found = TryFindAwakeParentCell(entity, out EntityCell parentCell);
-        if (found)
+        bool foundParentCell = TryFindAwakeParentCell(entity, out EntityCell parentCell);
+        if (foundParentCell)
         {
             parentCell.EnsureRoot();
         }
         Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
         // No place to spawn the entity
-        if (!found && !parent.HasValue)
+        if (!foundParentCell && !parent.HasValue)
         {
             return null;
         }
@@ -62,15 +62,15 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
 
     protected override bool SpawnSync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        bool found = TryFindAwakeParentCell(entity, out EntityCell parentCell);
-        if (found)
+        bool foundParentCell = TryFindAwakeParentCell(entity, out EntityCell parentCell);
+        if (foundParentCell)
         {
             parentCell.EnsureRoot();
         }
         Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
         // No place to spawn the entity
-        if (!found && !parent.HasValue)
+        if (!foundParentCell && !parent.HasValue)
         {
             return true;
         }

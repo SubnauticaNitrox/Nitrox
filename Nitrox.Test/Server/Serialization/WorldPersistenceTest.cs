@@ -430,9 +430,9 @@ public class WorldPersistenceTest
                                         break;
                                     case PlayerEntity when globalRootEntityAfter is PlayerEntity:
                                         break;
-                                    case VehicleEntity vehicleEntity when globalRootEntityAfter is VehicleEntity vehicleWorldEntityAfter:
-                                        Assert.AreEqual(vehicleEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
-                                        Assert.AreEqual(vehicleEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                                    case VehicleEntity vehicleEntity when globalRootEntityAfter is VehicleEntity vehicleEntityAfter:
+                                        Assert.AreEqual(vehicleEntity.SpawnerId, vehicleEntityAfter.SpawnerId);
+                                        Assert.AreEqual(vehicleEntity.ConstructionTime, vehicleEntityAfter.ConstructionTime);
                                         break;
                                     case RadiationLeakEntity radiationLeakEntity when globalRootEntityAfter is RadiationLeakEntity radiationLeakEntityAfter:
                                         Assert.AreEqual(radiationLeakEntity.ObjectIndex, radiationLeakEntityAfter.ObjectIndex);
