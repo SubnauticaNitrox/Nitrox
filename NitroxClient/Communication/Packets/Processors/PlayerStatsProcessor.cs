@@ -1,27 +1,33 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.HUD;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
 {
-    class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
+    private readonly PlayerManager playerManager;
+
+    public PlayerStatsProcessor(PlayerManager playerManager)
     {
-        private readonly PlayerVitalsManager vitalsManager;
+        this.playerManager = playerManager;
+    }
 
-        public PlayerStatsProcessor(PlayerVitalsManager vitalsManager)
+    public override void Process(PlayerStats playerStats)
+    {
+        if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
         {
-            this.vitalsManager = vitalsManager;
-        }
-
-        public override void Process(PlayerStats playerStats)
-        {
-            RemotePlayerVitals vitals = vitalsManager.CreateForPlayer(playerStats.PlayerId);
-
+            RemotePlayerVitals vitals = remotePlayer.vitals;
             vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
             vitals.SetHealth(playerStats.Health);
             vitals.SetFood(playerStats.Food);
             vitals.SetWater(playerStats.Water);
+#if SUBNAUTICA
+            remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
+#elif BELOWZERO
+            remotePlayer.UpdateHealth(playerStats.Health);
+#endif
         }
     }
 }

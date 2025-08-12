@@ -31,23 +31,27 @@ namespace NitroxServer.Communication.Packets.Processors
             // may have an item in their inventory (that the registry knows about) then wants to spawn it into the world.
             entityRegistry.AddOrUpdate(entity);
 
+            SimulatedEntity simulatedEntity = null;
             if (entity is WorldEntity worldEntity)
             {
                 worldEntityManager.TrackEntityInTheWorld(worldEntity);
 
-                SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
+                if (packet.RequireSimulation)
+                {
+                    simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
 
-                SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
-                playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+                    SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
+                    playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+                }
             }
 
+            SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != playerWhoSpawned;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    SpawnEntities cellEntities = new SpawnEntities(entity);
-                    player.SendPacket(cellEntities);
+                    player.SendPacket(spawnEntities);
                 }
             }
         }

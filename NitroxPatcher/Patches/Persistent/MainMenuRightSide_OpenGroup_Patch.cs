@@ -1,28 +1,20 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Persistent
+namespace NitroxPatcher.Patches.Persistent;
+
+public partial class MainMenuRightSide_OpenGroup_Patch : NitroxPatch, IPersistentPatch
 {
-    public class MainMenuRightSide_OpenGroup_Patch : NitroxPatch, IPersistentPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((MainMenuRightSide t) => t.OpenGroup(default(string)));
+
+    public static void Prefix(string target)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((MainMenuRightSide t) => t.OpenGroup(default(string)));
-
-        public static void Prefix(string target)
+        // Stopping the client if we leave the joining process
+        if (target is not (MainMenuJoinServerPanel.NAME or MainMenuEnterPasswordPanel.NAME or MainMenuNotificationPanel.NAME))
         {
-            // Don't stop the client if the client is trying to connect (in the case: target = "Join Server")
-            // We can detect that the Join Server tab is still available because the gameobject is activated only when the tab is opened
-            if (MainMenuMultiplayerPanel.Main.JoinServer.gameObject.activeSelf && !target.Equals(MainMenuMultiplayerPanel.Main.JoinServer.MenuName))
-            {
-                MainMenuMultiplayerPanel.Main.JoinServer.StopMultiplayerClient();
-            }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
+            JoinServerBackend.StopMultiplayerClient();
         }
     }
 }
-

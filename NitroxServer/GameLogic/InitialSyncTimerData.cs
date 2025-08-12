@@ -11,7 +11,7 @@ namespace NitroxServer.GameLogic
     /// </summary>
     internal class InitialSyncTimerData
     {
-        public readonly NitroxConnection Connection;
+        public readonly INitroxConnection Connection;
         public readonly AuthenticationContext Context;
         public readonly int MaxCounter;
 
@@ -25,7 +25,7 @@ namespace NitroxServer.GameLogic
         /// </summary>
         public bool Disposing = false;
 
-        public InitialSyncTimerData(NitroxConnection connection, AuthenticationContext context, int initialSyncTimeout)
+        public InitialSyncTimerData(INitroxConnection connection, AuthenticationContext context, int initialSyncTimeout)
         {
             Connection = connection;
             Context = context;

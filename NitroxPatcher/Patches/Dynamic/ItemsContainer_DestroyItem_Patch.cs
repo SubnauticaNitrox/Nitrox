@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -16,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// from their inventory and delete it.  We want to let the server know that the item
 /// was successfully deleted.
 /// </summary>
-public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.DestroyItem(default(TechType)));
 
@@ -40,15 +39,9 @@ public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 
     private static void Callback(Pickupable pickupable)
     {
-        if (pickupable)
+        if (pickupable.TryGetIdOrWarn(out NitroxId id))
         {
-            NitroxId id = NitroxEntity.GetId(pickupable.gameObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

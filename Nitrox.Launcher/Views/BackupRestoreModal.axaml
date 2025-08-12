@@ -1,0 +1,91 @@
+<Window
+    MaxWidth="1000"
+    MinHeight="200"
+    MinWidth="500"
+    SizeToContent="WidthAndHeight"
+    Title="{Binding Title}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
+    x:DataType="vm:BackupRestoreViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <vm:BackupRestoreViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto, *, Auto">
+        <controls:CustomTitlebar CanMinimize="False" Grid.Row="0" />
+
+        <TextBlock
+            Classes="modalHeader"
+            Grid.Row="0"
+            Margin="24,24,24,0"
+            Text="{Binding Title}" />
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+            <Panel>
+                <!--  Backups Don't Exist  -->
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding !Backups.Count}"
+                    Spacing="50"
+                    VerticalAlignment="Center">
+                    <Image
+                        Margin="-25,0,0,0"
+                        Source="/Assets/Images/world-manager/server.png"
+                        Stretch="None"
+                        Width="300" />
+                    <TextBlock
+                        FontSize="32"
+                        FontWeight="600"
+                        Margin="0,0,0,40"
+                        Text="No backups here yet"
+                        TextAlignment="Center" />
+                </StackPanel>
+
+                <!--  Backups Exist  -->
+                <ListBox
+                    IsVisible="{Binding Backups.Count}"
+                    ItemsSource="{Binding Backups}"
+                    Margin="24"
+                    SelectedItem="{Binding SelectedBackup, Mode=TwoWay}"
+                    VerticalAlignment="Top">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="14" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding BackupFileName}">
+                                <TextBlock Text="Backup " />
+                                <TextBlock Text="{Binding BackupDate}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </Panel>
+        </ScrollViewer>
+
+        <Border Classes="footer" Grid.Row="2">
+            <Panel>
+                <Button
+                    Command="{Binding CloseCommand}"
+                    Content="Back"
+                    FontWeight="Bold"
+                    HotKey="Escape" />
+                <Button
+                    Classes="primary"
+                    Command="{Binding RestoreBackupCommand}"
+                    Content="Restore"
+                    HorizontalAlignment="Right"
+                    HotKey="Enter" />
+            </Panel>
+        </Border>
+    </Grid>
+</Window>

@@ -1,19 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <RootNamespace>NitroxModel_Subnautica</RootNamespace>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net472;net9.0</TargetFrameworks>
+        <RootNamespace>NitroxModel_Subnautica</RootNamespace>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="LitJson" Version="0.19.0" />
+    </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="LitJson" Version="0.16.0" />
+    <PackageReference Update="Nitrox.Discovery.MSBuild" Version="0.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

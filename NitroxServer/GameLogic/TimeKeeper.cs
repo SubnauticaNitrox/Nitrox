@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Timers;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 using static NitroxServer.GameLogic.StoryManager;
 
@@ -9,13 +10,21 @@ namespace NitroxServer.GameLogic;
 public class TimeKeeper
 {
     private readonly PlayerManager playerManager;
+    private readonly NtpSyncer ntpSyncer;
 
     private readonly Stopwatch stopWatch = new();
+
+    /// <summary>
+    ///     Default time in Base SN is 480s
+    /// </summary>
+    public const int DEFAULT_TIME = 480;
 
     /// <summary>
     /// Latest registered time without taking the current stopwatch time in account.
     /// </summary>
     private double elapsedTimeOutsideStopWatchMs;
+
+    private readonly double realTimeElapsed;
 
     /// <summary>
     /// Total elapsed time in milliseconds (adding the current stopwatch time with the latest registered time <see cref="elapsedTimeOutsideStopWatchMs"/>).
@@ -37,6 +46,8 @@ public class TimeKeeper
         get => ElapsedMilliseconds * 0.001;
         set => ElapsedMilliseconds = value * 1000;
     }
+
+    public double RealTimeElapsed => stopWatch.ElapsedMilliseconds * 0.001 + realTimeElapsed;
 
     /// <summary>
     /// Subnautica's equivalent of days.
@@ -61,12 +72,31 @@ public class TimeKeeper
     /// </remarks>
     private const int RESYNC_INTERVAL = 60;
 
-    public TimeKeeper(PlayerManager playerManager, double elapsedSeconds)
+    public TimeSkippedEventHandler TimeSkipped;
+
+    /// <summary>
+    /// Time in seconds between each ntp connection attempt.
+    /// </summary>
+    private const int NTP_RETRY_INTERVAL = 60;
+
+    public TimeKeeper(PlayerManager playerManager, NtpSyncer ntpSyncer, double elapsedSeconds, double realTimeElapsed)
     {
         this.playerManager = playerManager;
+        this.ntpSyncer = ntpSyncer;
 
-        // Default time in Base SN is 480s
-        elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
+        // We only need the correction offset to be calculated once
+        ntpSyncer.Setup(true, (onlineMode, _) => // TODO: set to false after tests
+        {
+            if (!onlineMode)
+            {
+                // until we get online even once, we'll retry the ntp sync sequence every NTP_RETRY_INTERVAL
+                StartNtpTimer();
+            }
+        });
+        ntpSyncer.RequestNtpService();
+
+        elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(DEFAULT_TIME).TotalMilliseconds : elapsedSeconds * 1000;
+        this.realTimeElapsed = realTimeElapsed;
         ResyncTimer = MakeResyncTimer();
     }
 
@@ -85,6 +115,30 @@ public class TimeKeeper
             playerManager.SendPacketToAllPlayers(MakeTimePacket());
         };
         return resyncTimer;
+    }
+
+    private void StartNtpTimer()
+    {
+        Timer retryTimer = new(TimeSpan.FromSeconds(NTP_RETRY_INTERVAL).TotalMilliseconds)
+        {
+            AutoReset = true,
+        };
+        
+        retryTimer.Elapsed += delegate
+        {
+            // Reset the syncer before starting another round of it
+            ntpSyncer.Dispose();
+            ntpSyncer.Setup(true, (onlineMode, _) =>  // TODO: set to false after tests
+            {
+                if (onlineMode)
+                {
+                    retryTimer.Close();
+                }
+            });
+            ntpSyncer.RequestNtpService();
+        };
+
+        retryTimer.Start();
     }
 
     public void StartCounting()
@@ -111,24 +165,33 @@ public class TimeKeeper
     /// <param name="type">Time to which you want to get to.</param>
     public void ChangeTime(TimeModification type)
     {
+        double skipAmount = 0;
         switch (type)
         {
             case TimeModification.DAY:
-                ElapsedSeconds += 1200 - ElapsedSeconds % 1200 + 600;
+                skipAmount = 1200 - (ElapsedSeconds % 1200) + 600;
                 break;
             case TimeModification.NIGHT:
-                ElapsedSeconds += 1200 - ElapsedSeconds % 1200;
+                skipAmount = 1200 - (ElapsedSeconds % 1200);
                 break;
             case TimeModification.SKIP:
-                ElapsedSeconds += 600 - ElapsedSeconds % 600;
+                skipAmount = 600 - (ElapsedSeconds % 600);
                 break;
         }
+        
+        if (skipAmount > 0)
+        {
+            ElapsedSeconds += skipAmount;
+            TimeSkipped?.Invoke(skipAmount);
 
-        playerManager.SendPacketToAllPlayers(MakeTimePacket());
+            playerManager.SendPacketToAllPlayers(MakeTimePacket());
+        }
     }
 
     public TimeChange MakeTimePacket()
     {
-        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), RealTimeElapsed, ntpSyncer.OnlineMode, ntpSyncer.CorrectionOffset.Ticks);
     }
+
+    public delegate void TimeSkippedEventHandler(double skipAmount);
 }

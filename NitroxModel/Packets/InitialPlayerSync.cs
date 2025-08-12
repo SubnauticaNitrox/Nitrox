@@ -12,12 +12,13 @@ namespace NitroxModel.Packets
 {
     [Serializable]
     public class InitialPlayerSync : Packet
-    { 
+    {
+#if SUBNAUTICA
         public NitroxId AssignedEscapePodId { get; }
-        public List<EquippedItemData> EquippedItems { get; }
-        public List<BasePiece> BasePieces { get; }
+#endif
+        public Dictionary<string, NitroxId> EquippedItems { get; }
         public List<NitroxTechType> UsedItems { get; }
-        public NitroxId[] QuickSlotsBindingIds { get; }
+        public Optional<NitroxId>[] QuickSlotsBindingIds { get; }
         public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
@@ -28,19 +29,26 @@ namespace NitroxModel.Packets
         public PlayerStatsData PlayerStatsData { get; }
         public List<PlayerContext> OtherPlayers { get; }
         public List<Entity> GlobalRootEntities { get; }
-        public List<NitroxId> InitialSimulationOwnerships { get; }
-        public ServerGameMode GameMode { get; }
+        public List<SimulatedEntity> InitialSimulationOwnerships { get; }
+        public NitroxGameMode GameMode { get; }
         public Perms Permissions { get; }
+        public IntroCinematicMode IntroCinematicMode { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
         public TimeData TimeData { get; }
+        public bool IsFirstPlayer { get; }
+        public Dictionary<NitroxId, int> BuildOperationIds { get; }
+
+        public bool KeepInventoryOnDeath { get; }
+        public SessionSettings SessionSettings { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
+#if SUBNAUTICA
             NitroxId assignedEscapePodId,
-            IEnumerable<EquippedItemData> equipment,
-            IEnumerable<BasePiece> basePieces,
+#endif
+            IDictionary<string, NitroxId> equipment,
             IEnumerable<NitroxTechType> usedItems,
-            NitroxId[] quickSlotsBindingIds,
+            Optional<NitroxId>[] quickSlotsBindingIds,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
             NitroxVector3 playerSpawnData,
@@ -49,17 +57,23 @@ namespace NitroxModel.Packets
             PlayerStatsData playerStatsData,
             IEnumerable<PlayerContext> otherPlayers,
             IEnumerable<Entity> globalRootEntities,
-            IEnumerable<NitroxId> initialSimulationOwnerships,
-            ServerGameMode gameMode,
+            IEnumerable<SimulatedEntity> initialSimulationOwnerships,
+            NitroxGameMode gameMode,
             Perms perms,
+            IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
-            TimeData timeData)
+            TimeData timeData,
+            bool isFirstPlayer,
+            Dictionary<NitroxId, int> buildOperationIds,
+            bool keepInventoryOnDeath,
+            SessionSettings sessionSettings)
         {
+#if SUBNAUTICA
             AssignedEscapePodId = assignedEscapePodId;
+#endif
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
-            EquippedItems = equipment.ToList();
-            BasePieces = basePieces.ToList();
+            EquippedItems = new(equipment);
             UsedItems = usedItems.ToList();
             QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
@@ -73,17 +87,23 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
+            IntroCinematicMode = introCinematicMode;
             Preferences = preferences;
             TimeData = timeData;
+            IsFirstPlayer = isFirstPlayer;
+            BuildOperationIds = buildOperationIds;
+            KeepInventoryOnDeath = keepInventoryOnDeath;
+            SessionSettings = sessionSettings;
         }
 
         /// <remarks>Used for deserialization</remarks>
         public InitialPlayerSync(
+#if SUBNAUTICA
             NitroxId assignedEscapePodId,
-            List<EquippedItemData> equippedItems,
-            List<BasePiece> basePieces,
+#endif
+            Dictionary<string, NitroxId> equippedItems,
             List<NitroxTechType> usedItems,
-            NitroxId[] quickSlotsBindingIds,
+            Optional<NitroxId>[] quickSlotsBindingIds,
             NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             InitialPDAData pdaData,
@@ -94,17 +114,23 @@ namespace NitroxModel.Packets
             PlayerStatsData playerStatsData,
             List<PlayerContext> otherPlayers,
             List<Entity> globalRootEntities,
-            List<NitroxId> initialSimulationOwnerships,
-            ServerGameMode gameMode,
+            List<SimulatedEntity> initialSimulationOwnerships,
+            NitroxGameMode gameMode,
             Perms permissions,
+            IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
-            TimeData timeData)
+            TimeData timeData,
+            bool isFirstPlayer,
+            Dictionary<NitroxId, int> buildOperationIds,
+            bool keepInventoryOnDeath,
+            SessionSettings sessionSettings)
         {
+#if SUBNAUTICA
             AssignedEscapePodId = assignedEscapePodId;
+#endif
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equippedItems;
-            BasePieces = basePieces;
             UsedItems = usedItems;
             QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
@@ -118,8 +144,13 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships;
             GameMode = gameMode;
             Permissions = permissions;
+            IntroCinematicMode = introCinematicMode;
             Preferences = preferences;
             TimeData = timeData;
+            IsFirstPlayer = isFirstPlayer;
+            BuildOperationIds = buildOperationIds;
+            KeepInventoryOnDeath = keepInventoryOnDeath;
+            SessionSettings = sessionSettings;
         }
     }
 }

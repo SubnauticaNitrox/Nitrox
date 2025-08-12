@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 
-public class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersistentPatch
+public partial class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersistentPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GameInput.SetupDefaultKeyboardBindings());
 
@@ -23,10 +22,5 @@ public class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersis
                 GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, GameInput.BindingSet.Secondary, keyBinding.SecondaryKey);
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

@@ -9,7 +9,7 @@ public static class AssetsFileMetadataExtension
     {
         foreach (AssetFileInfo assetInfo in assetsFile.GetAssetsOfType(classID))
         {
-            if (AssetHelper.GetAssetNameFast(assetsFile, assetsManager.classDatabase, assetInfo).Equals(assetName))
+            if (AssetHelper.GetAssetNameFast(assetsFile, assetsManager.ClassDatabase, assetInfo).Equals(assetName))
             {
                 return assetInfo;
             }

@@ -1,10 +1,10 @@
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.Helper;
-﻿using NitroxModel.DataStructures.GameLogic.Entities;
 
-namespace NitroxServer.GameLogic.Entities.Spawning
+namespace NitroxServer.GameLogic.Entities.Spawning;
+
+public interface IEntityBootstrapper
 {
-    public interface IEntityBootstrapper
-    {
-        void Prepare(WorldEntity spawnedEntity, DeterministicGenerator idGenerator);
-    }
+    public void Prepare(ref WorldEntity spawnedEntity, DeterministicGenerator generator);
 }
+

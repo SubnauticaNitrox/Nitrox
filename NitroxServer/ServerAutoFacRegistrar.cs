@@ -1,15 +1,15 @@
 global using NitroxModel.Logger;
+using System;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
+using NitroxModel.Networking;
 using NitroxServer.Communication.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
-using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 
@@ -28,26 +28,27 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => Server.ServerStartHandler()).SingleInstance();
+            // TODO: Remove this once .NET Generic Host is implemented
+            containerBuilder.Register(c => Server.CreateOrLoadConfig()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
-            containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketHandler>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
             containerBuilder.RegisterType<LiteNetLibServer>()
                             .As<Communication.NitroxServer>()
                             .SingleInstance();
+
+            containerBuilder.RegisterType<NtpSyncer>().SingleInstance();
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<WorldPersistence>().SingleInstance();
 
-            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load()).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().BaseManager).SingleInstance();
+            // TODO: Remove this once .NET Generic Host is implemented
+            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load(Server.GetSaveName(Environment.GetCommandLineArgs(), "My World"))).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().BuildingManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().StoryManager).SingleInstance();
@@ -55,11 +56,16 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().WorldEntityManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().EntityRegistry).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().EntitySimulation).SingleInstance();
+#if SUBNAUTICA
+            containerBuilder.Register(c => c.Resolve<World>().EscapePodManager).SingleInstance();
+#endif
             containerBuilder.Register(c => c.Resolve<World>().BatchEntitySpawner).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.PDAState).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.StoryGoals).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.StoryTiming).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().SessionSettings).SingleInstance();
         }
 
         private void RegisterGameSpecificServices(ContainerBuilder containerBuilder, Assembly assembly)

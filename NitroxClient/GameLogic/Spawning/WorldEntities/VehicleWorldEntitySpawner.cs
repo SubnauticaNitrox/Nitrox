@@ -1,9 +1,9 @@
 using System.Collections;
-using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Overrides;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
@@ -13,13 +13,20 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 {
+    private readonly Entities entities;
+
+    public VehicleWorldEntitySpawner(Entities entities)
+    {
+        this.entities = entities;
+    }
+
     // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
     // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
     // distance - anything more will simply use world spawning (no need to play the animation anyways).
     private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
-    { 
+    {
         VehicleWorldEntity vehicleEntity = (VehicleWorldEntity)entity;
 
         bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < GetCraftDuration(vehicleEntity.TechType.ToUnity());
@@ -48,7 +55,8 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         TechType techType = vehicleEntity.TechType.ToUnity();
         GameObject gameObject = null;
 
-        if (techType == TechType.Cyclops)
+        bool isCyclops = techType == TechType.Cyclops;
+        if (isCyclops)
         {
             GameObject prefab = null;
             LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => prefab = go);
@@ -88,9 +96,17 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
         yield return Yielders.WaitForEndOfFrame;
 
-        Vehicles.RemoveNitroxEntityTagging(gameObject);
+        Vehicles.RemoveNitroxEntitiesTagging(gameObject);
 
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
+
+        if (vehicleEntity.Metadata is CyclopsMetadata cyclopsMetadata && cyclopsMetadata.IsDestroyed)
+        {
+            // Swap to destroyed look without triggering animations / effects
+            gameObject.BroadcastMessage("SwapToDamagedModels");
+            gameObject.BroadcastMessage("OnKill");
+            gameObject.BroadcastMessage("CyclopsDeathEvent", SendMessageOptions.DontRequireReceiver);
+        }
 
         if (parent.HasValue)
         {
@@ -134,7 +150,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             return;
         }
 
-        PlayerCinematicController[] controllers = gameObject.GetComponentsInChildren<PlayerCinematicController>();
+        PlayerCinematicController[] controllers = gameObject.GetComponentsInChildren<PlayerCinematicController>(true);
 
         if (controllers.Length == 0)
         {
@@ -164,7 +180,11 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
     private void DockVehicle(GameObject gameObject, GameObject parent)
     {
+#if SUBNAUTICA
         Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+#elif BELOWZERO
+        Dockable vehicle = gameObject.GetComponent<Dockable>();
+#endif
 
         if (!vehicle)
         {
@@ -172,15 +192,18 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             return;
         }
 
-        VehicleDockingBay dockingBay = parent.GetComponentInChildren<VehicleDockingBay>();
+        VehicleDockingBay dockingBay = parent.GetComponentInChildren<VehicleDockingBay>(true);
 
         if (!dockingBay)
         {
             Log.Info($"Could not find VehicleDockingBay component on dock object {parent.name}");
             return;
         }
-
-        dockingBay.DockVehicle(vehicle);        
+#if SUBNAUTICA
+        dockingBay.DockVehicle(vehicle);
+#elif BELOWZERO
+        dockingBay.Dock(vehicle);
+#endif
     }
 
     public bool SpawnsOwnChildren()

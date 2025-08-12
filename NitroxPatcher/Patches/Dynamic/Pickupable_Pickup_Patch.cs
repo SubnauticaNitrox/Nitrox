@@ -1,25 +1,16 @@
-﻿using System.Reflection;
-using HarmonyLib;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class Pickupable_Pickup_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Pickupable_Pickup_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Pickupable p) => p.Pickup(default));
+
+    public static void Prefix(Pickupable __instance)
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Pickupable p) => p.Pickup(default(bool)));
-
-        public static bool Prefix(Pickupable __instance)
-        {
-            NitroxServiceLocator.LocateService<Items>().PickedUp(__instance.gameObject, __instance.GetTechType());
-            return true;
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
-        }
+        Resolve<Items>().PickedUp(__instance.gameObject, __instance.GetTechType());
     }
 }
 

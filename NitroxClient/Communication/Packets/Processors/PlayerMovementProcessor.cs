@@ -1,11 +1,7 @@
-﻿using System.Collections;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -20,21 +16,12 @@ public class PlayerMovementProcessor : ClientPacketProcessor<PlayerMovement>
 
     public override void Process(PlayerMovement movement)
     {
-        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.PlayerId);
-        if (!remotePlayer.HasValue)
+        if (remotePlayerManager.TryFind(movement.PlayerId, out RemotePlayer remotePlayer))
         {
-            return;
+            remotePlayer.UpdatePosition(movement.Position.ToUnity(),
+                                        movement.Velocity.ToUnity(),
+                                        movement.BodyRotation.ToUnity(),
+                                        movement.AimingRotation.ToUnity());
         }
-
-        Multiplayer.Main.StartCoroutine(QueueForFixedUpdate(remotePlayer.Value, movement));
-    }
-
-    private IEnumerator QueueForFixedUpdate(RemotePlayer player, PlayerMovement movement)
-    {
-        yield return Yielders.WaitForFixedUpdate;
-        player.UpdatePosition(movement.Position.ToUnity(),
-                              movement.Velocity.ToUnity(),
-                              movement.BodyRotation.ToUnity(),
-                              movement.AimingRotation.ToUnity());
     }
 }

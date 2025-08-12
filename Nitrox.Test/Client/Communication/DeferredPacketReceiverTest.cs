@@ -1,61 +1,27 @@
-﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nitrox.Test;
 using Nitrox.Test.Client.Communication;
-using NitroxClient.Map;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication
+namespace NitroxClient.Communication;
+
+[TestClass]
+public class DeferredPacketReceiverTest
 {
-    [TestClass]
-    public class DeferredPacketReceiverTest
+    [TestMethod]
+    public void NonActionPacket()
     {
-        private readonly VisibleCells visibleCells = new VisibleCells();
-        private PacketReceiver packetReceiver;
+        // Arrange
+        const ushort PLAYER_ID = 1;
+        TestNonActionPacket packet = new(PLAYER_ID);
+        PacketReceiver packetReceiver = new();
 
-        // Test Data
-        private const ushort PLAYER_ID = 1;
-        private const int CELL_LEVEL = 3;
-        private readonly NitroxVector3 loadedActionPosition = new NitroxVector3(50, 50, 50);
-        private readonly NitroxVector3 unloadedActionPosition = new NitroxVector3(200, 200, 200);
-        private AbsoluteEntityCell loadedCell;
-        private AbsoluteEntityCell unloadedCell;
-        private Int3 cellId = Int3.zero;
+        // Act
+        packetReceiver.Add(packet);
+        Packet storedPacket = packetReceiver.GetNextPacket();
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new TestAutoFacRegistrar());
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
-            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-
-            loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
-            unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
-
-            visibleCells.Add(loadedCell);
-        }
-
-        [TestMethod]
-        public void NonActionPacket()
-        {
-            TestNonActionPacket packet = new TestNonActionPacket(PLAYER_ID);
-            packetReceiver.PacketReceived(packet);
-
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
-
-            Assert.AreEqual(1, packets.Count);
-            Assert.AreEqual(packet, packets.Dequeue());
-            Assert.AreEqual(packet.PlayerId, PLAYER_ID);
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            NitroxServiceLocator.EndCurrentLifetimeScope();
-        }
+        // Assert
+        storedPacket.Should().NotBeNull();
+        packetReceiver.GetNextPacket().Should().BeNull();
+        storedPacket.Should().Be(packet);
+        packet.PlayerId.Should().Be(PLAYER_ID);
     }
 }

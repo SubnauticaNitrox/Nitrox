@@ -23,16 +23,23 @@ public class AuroraEventData
     [DataMember(Order = 2)]
     public float TimeToStartWarning;
 
+    /// <summary>
+    /// Real time in seconds at which Aurora's considered exploded
+    /// </summary>
+    [DataMember(Order = 3)]
+    public float AuroraRealExplosionTime;
+
     [IgnoreConstructor]
     protected AuroraEventData()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public AuroraEventData(float timeToStartCountdown, float timeToStartWarning)
+    public AuroraEventData(float timeToStartCountdown, float timeToStartWarning, float auroraRealExplosionTime)
     {
         TimeToStartCountdown = timeToStartCountdown;
         TimeToStartWarning = timeToStartWarning;
+        AuroraRealExplosionTime = auroraRealExplosionTime;
     }
 
     [NonSerialized]

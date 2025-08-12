@@ -1,4 +1,6 @@
+using System;
 using System.Buffers;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
@@ -6,7 +8,7 @@ using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 
@@ -14,45 +16,57 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 
 public class LiteNetLibClient : IClient
 {
-    public bool IsConnected { get; private set; }
+    private readonly NetManager client;
 
     private readonly AutoResetEvent connectedEvent = new(false);
     private readonly NetDataWriter dataWriter = new();
-    private readonly PacketReceiver packetReceiver;
     private readonly INetworkDebugger networkDebugger;
+    private readonly PacketReceiver packetReceiver;
+    private readonly FieldInfo manualModeFieldInfo = typeof(NetManager).GetField("_manualMode", BindingFlags.Instance | BindingFlags.NonPublic);
 
-    private NetManager client;
+    public bool IsConnected { get; private set; }
+    public int PingInterval
+    {
+        get => client.PingInterval;
+        set => client.PingInterval = value;
+    }
+    public Action<long> LatencyUpdateCallback;
 
     public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
     {
         this.packetReceiver = packetReceiver;
         this.networkDebugger = networkDebugger;
+        EventBasedNetListener listener = new();
+        listener.PeerConnectedEvent += Connected;
+        listener.PeerDisconnectedEvent += Disconnected;
+        listener.NetworkReceiveEvent += ReceivedNetworkData;
+        listener.NetworkLatencyUpdateEvent += (peer, _) =>
+        {
+            LatencyUpdateCallback?.Invoke(peer.RemoteTimeDelta);
+        };
+
+
+        client = new NetManager(listener)
+        {
+            UpdateTime = 15,
+            ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
+#if DEBUG
+            DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+#endif
+        };
     }
 
     public async Task StartAsync(string ipAddress, int serverPort)
     {
         Log.Info("Initializing LiteNetLibClient...");
 
-        SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-
-        EventBasedNetListener listener = new EventBasedNetListener();
-        listener.PeerConnectedEvent += Connected;
-        listener.PeerDisconnectedEvent += Disconnected;
-        listener.NetworkReceiveEvent += ReceivedNetworkData;
-
-        client = new NetManager(listener)
-        {
-            UpdateTime = 15,
-#if DEBUG
-            DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
-#endif
-        };
-
+        // ConfigureAwait(false) is needed because Unity uses a custom "UnitySynchronizationContext". Which makes async/await work like Unity coroutines.
+        // Because this Task.Run is async-over-sync this would otherwise blocks the main thread as it wants to, without ConfigureAwait(false), continue on the same thread (i.e. main thread).
         await Task.Run(() =>
         {
             client.Start();
             client.Connect(ipAddress, serverPort, "nitrox");
-        });
+        }).ConfigureAwait(false);
 
         connectedEvent.WaitOne(2000);
         connectedEvent.Reset();
@@ -66,7 +80,7 @@ public class LiteNetLibClient : IClient
         dataWriter.Put(packetData);
 
         networkDebugger?.PacketSent(packet, dataWriter.Length);
-        client.SendToAll(dataWriter, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
+        client.SendToAll(dataWriter, (byte)packet.UdpChannel, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
     }
 
     public void Stop()
@@ -76,7 +90,7 @@ public class LiteNetLibClient : IClient
     }
 
     /// <summary>
-    /// This should be called <b>once</b> each game tick
+    ///     This should be called <b>once</b> each game tick
     /// </summary>
     public void PollEvents() => client.PollEvents();
 
@@ -88,7 +102,7 @@ public class LiteNetLibClient : IClient
         {
             reader.GetBytes(packetData, packetDataLength);
             Packet packet = Packet.Deserialize(packetData);
-            packetReceiver.PacketReceived(packet);
+            packetReceiver.Add(packet);
             networkDebugger?.PacketReceived(packet, packetDataLength);
         }
         finally
@@ -115,5 +129,18 @@ public class LiteNetLibClient : IClient
 
         IsConnected = false;
         Log.Info("Disconnected from server");
+    }
+
+    internal void ForceUpdate()
+    {
+        int pingInterval = PingInterval;
+        // Set PingInterval to 0 so another ping is sent immediately
+        PingInterval = 0;
+        // ManualUpdate requires the client to have _manualMode set to true so we temporarily do so
+        manualModeFieldInfo.SetValue(client, true);
+        client.ManualUpdate(0);
+        manualModeFieldInfo.SetValue(client, false);
+        // We set it back to its high value so another ping isn't sent while we're waiting for the previous one
+        PingInterval = pingInterval;
     }
 }

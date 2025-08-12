@@ -1,0 +1,218 @@
+﻿<UserControl
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.OptionsView"
+    x:DataType="vm:OptionsViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <vm:OptionsViewModel>
+            <vm:OptionsViewModel.SelectedGame>
+                <design:KnownGame PathToGame="C:\Users\Me\Games\Subnautica" Platform="STEAM" />
+            </vm:OptionsViewModel.SelectedGame>
+        </vm:OptionsViewModel>
+    </Design.DataContext>
+    <UserControl.Resources>
+        <StackPanel Orientation="Vertical" x:Key="InfoIconTooltipText">
+            <TextBlock>
+                Virtual Reality mode (VR) is disabled by default, but you can edit this line if you want to use it.<LineBreak />
+                <LineBreak />
+                Possible values : oculus, openvr, none</TextBlock>
+            <Border
+                BorderBrush="Silver"
+                BorderThickness="0,1,0,0"
+                Margin="0,8" />
+            <TextBlock FontStyle="Italic">Contact our support for more information.</TextBlock>
+        </StackPanel>
+    </UserControl.Resources>
+
+    <ScrollViewer Classes="main">
+        <StackPanel
+            Background="{DynamicResource BrandWhite}"
+            Classes="viewPadding"
+            Orientation="Vertical"
+            Spacing="22">
+            <TextBlock Classes="header" Text="Options" />
+
+            <!--  Subnautica Runtime Selection  -->
+            <StackPanel Spacing="12">
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="Subnautica Installation" />
+                    <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
+                </StackPanel>
+                <Border
+                    Background="{DynamicResource BrandPanelBackground}"
+                    CornerRadius="12"
+                    Padding="22,15">
+                    <Grid ColumnDefinitions=" Auto, *, Auto">
+                        <Image
+                            Height="36"
+                            Margin="0,0,22,0"
+                            Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
+                            Stretch="Uniform"
+                            ToolTip.Tip="Welcome aboard, Captain!"
+                            Width="36" />
+                        <StackPanel
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            Spacing="2"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
+                            <SelectableTextBlock
+                                FontSize="14"
+                                Foreground="#BFFFFFFF"
+                                Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
+                        </StackPanel>
+                        <Button
+                            Classes="primary"
+                            Command="{Binding SetGamePathCommand}"
+                            Content="Change"
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            Margin="22,0,0,0"
+                            ToolTip.Tip="Direct the launcher to your game's install location"
+                            Width="120" />
+                    </Grid>
+
+                    <!-- <ItemsControl ItemsSource="{Binding KnownGames}"> -->
+                    <!--     <ItemsControl.ItemTemplate> -->
+                    <!--         <DataTemplate> -->
+                    <!--             <StackPanel Orientation="Horizontal" Spacing="16" Height="52"> -->
+                    <!--                 <RadioButton Margin="0 0 -5 0" /> -->
+                    <!--  <Image Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"  -->
+                    <!--  ToolTip.Tip="Welcome aboard, Captain!"  -->
+                    <!--  Stretch="Uniform"  -->
+                    <!--  Height="36"  -->
+                    <!--  Width="36" />  -->
+                    <!--                 <StackPanel Spacing="2" VerticalAlignment="Center"> -->
+                    <!--                     <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Platform, Converter={converters:ToStringConverter}}" /> -->
+                    <!--                     <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding PathToGame, FallbackValue='Unknown path'}" /> -->
+                    <!--                 </StackPanel> -->
+                    <!--             </StackPanel> -->
+                    <!--         </DataTemplate> -->
+                    <!--     </ItemsControl.ItemTemplate> -->
+                    <!-- </ItemsControl> -->
+                </Border>
+                <Grid>
+                    <!--  <Button Classes="icon" VerticalAlignment="Bottom"  -->
+                    <!--  Content="Manually add game installation"  -->
+                    <!--  Command="{Binding AddGameInstallationCommand}"/>  -->
+                    <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
+                </Grid>
+            </StackPanel>
+
+            <!--  Launch Arguments  -->
+            <StackPanel Spacing="12">
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="Subnautica Launch Arguments" />
+                    <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
+                </StackPanel>
+                <Border
+                    Background="{DynamicResource BrandPanelBackground}"
+                    CornerRadius="12"
+                    Padding="22,15">
+                    <Grid ColumnDefinitions="*, Auto, 120">
+                        <Panel>
+                            <TextBox
+                                FontSize="15"
+                                MaxLines="1"
+                                Padding="13,12"
+                                Text="{Binding LaunchArgs}"
+                                x:Name="LaunchArgsInput" />
+                            <Button
+                                Classes="abort"
+                                Command="{Binding ResetArgumentsCommand}"
+                                CommandParameter="{Binding #LaunchArgsInput}"
+                                Content="Reset"
+                                FontSize="12"
+                                Height="28"
+                                HorizontalAlignment="Right"
+                                IsVisible="{Binding ShowResetArgsBtn}"
+                                Margin="0,0,12,0"
+                                Padding="0"
+                                ToolTip.Tip="Reset arguments"
+                                Width="72" />
+                        </Panel>
+
+                        <Button
+                            Classes="icon"
+                            Grid.Column="1"
+                            Margin="10,0"
+                            ToolTip.Tip="{StaticResource InfoIconTooltipText}">
+                            <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="{DynamicResource BrandBlack}" />
+
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Effect">
+                                        <!--  TODO: Figure out how to dynamically bind color property to change with active theme  -->
+                                        <DropShadowDirectionEffect
+                                            BlurRadius="20"
+                                            Color="White"
+                                            ShadowDepth="0" />
+                                    </Setter>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+
+                        <Button
+                            Classes="primary"
+                            Command="{Binding SetArgumentsCommand}"
+                            Content="Apply"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            ToolTip.Tip="Save launch arguments" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!--  Saves Folder Location  -->
+            <StackPanel Spacing="12">
+                <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="Save File Location" />
+                <TextBlock
+                    FontSize="12"
+                    HorizontalAlignment="Left"
+                    Text="This is the location where your Nitrox server save files are stored" />
+
+                <Border
+                    Background="{DynamicResource BrandPanelBackground}"
+                    CornerRadius="12"
+                    Padding="22,15">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock
+                            FontSize="15"
+                            Foreground="#BFFFFFFF"
+                            Text="{Binding SavesFolderDir}"
+                            VerticalAlignment="Center" />
+                        <Button
+                            Classes="primary"
+                            Command="{Binding OpenSavesFolderCommand}"
+                            Content="Open"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Margin="22,0,0,0"
+                            ToolTip.Tip="Open saves folder"
+                            Width="120" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

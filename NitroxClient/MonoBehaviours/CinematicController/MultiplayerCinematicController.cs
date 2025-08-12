@@ -2,7 +2,7 @@
 using NitroxClient.GameLogic;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours.Overrides;
+namespace NitroxClient.MonoBehaviours.CinematicController;
 
 public class MultiplayerCinematicController : MonoBehaviour
 {

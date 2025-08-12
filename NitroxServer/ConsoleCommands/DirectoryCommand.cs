@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             Log.InfoSensitive("Opening directory {path}", path);
-            Process.Start(path);
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true, Verb = "open" })?.Dispose();
         }
     }
 }

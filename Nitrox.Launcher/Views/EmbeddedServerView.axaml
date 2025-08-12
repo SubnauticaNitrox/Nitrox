@@ -1,0 +1,152 @@
+<UserControl
+    d:DesignWidth="700"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.EmbeddedServerView"
+    x:DataType="vm:EmbeddedServerViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.DataContext>
+        <vm:EmbeddedServerViewModel />
+    </Design.DataContext>
+    <UserControl.KeyBindings>
+        <KeyBinding
+            Command="{Binding ClearInputCommand}"
+            CommandParameter="{Binding #ServerCommandTextBox}"
+            Gesture="Escape" />
+        <KeyBinding
+            Command="{Binding CommandHistoryGoForwardCommand}"
+            CommandParameter="{Binding #ServerCommandTextBox}"
+            Gesture="Down" />
+        <KeyBinding
+            Command="{Binding CommandHistoryGoBackCommand}"
+            CommandParameter="{Binding #ServerCommandTextBox}"
+            Gesture="Up" />
+    </UserControl.KeyBindings>
+    <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0">
+            <Button
+                Background="Transparent"
+                Command="{Binding BackCommand}"
+                Cursor="Hand"
+                HorizontalAlignment="Left">
+                <Image
+                    Height="24"
+                    HorizontalAlignment="Left"
+                    Source="/Assets/Images/world-manager/back.png"
+                    Width="24" />
+            </Button>
+            <TextBlock
+                Classes="header"
+                HorizontalAlignment="Center"
+                Text="{Binding ServerEntry.Name}" />
+            <CheckBox
+                Content="Auto scroll"
+                HorizontalAlignment="Right"
+                IsChecked="{Binding ShouldAutoScroll}"
+                VerticalAlignment="Center" />
+        </Grid>
+        <ScrollViewer
+            Grid.Row="1" BringIntoViewOnFocusChange="False"
+            Margin="0,20,0,20"
+            x:Name="ScrollViewer">
+            <!--  Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something)  -->
+            <ItemsControl Background="Transparent" ItemsSource="{Binding ServerOutput}">
+                <ItemsControl.Styles>
+                    <Style Selector="Run.command">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                    <Style Selector="Run.debug">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandSubText}" />
+                    </Style>
+                    <Style Selector="Run.warning">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandWarning}" />
+                    </Style>
+                    <Style Selector="Run.error">
+                        <Setter Property="Foreground" Value="{DynamicResource BrandError}" />
+                    </Style>
+                </ItemsControl.Styles>
+                <Interaction.Behaviors>
+                    <BehaviorCollection>
+                        <EventTriggerBehavior EventName="SizeChanged">
+                            <InvokeCommandAction Command="{Binding OutputSizeChangedCommand}" PassEventArgsToCommand="True" />
+                        </EventTriggerBehavior>
+                    </BehaviorCollection>
+                </Interaction.Behaviors>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <!--  TODO: Fix highlighting only happening one line at a time  -->
+                    <DataTemplate x:DataType="design:OutputLine">
+                        <SelectableTextBlock Focusable="False">
+                            <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
+                            <Run Text="" />
+                            <Run Text="{Binding LogText}"
+                                 Classes.command="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.COMMAND}}"
+                                 Classes.debug="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.DEBUG_LOG}}"
+                                 Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.WARNING_LOG}}"
+                                 Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.ERROR_LOG}}"
+                                 />
+                        </SelectableTextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid ColumnDefinitions="*,Auto" Grid.Row="2">
+            <TextBox
+                Grid.Column="0"
+                Text="{Binding ServerCommand}"
+                Watermark="A server command here"
+                x:Name="ServerCommandTextBox">
+                <Interaction.Behaviors>
+                    <behaviors:FocusOnViewShowBehavior />
+                </Interaction.Behaviors>
+            </TextBox>
+            <StackPanel
+                Grid.Column="1"
+                Margin="12,0,0,0"
+                Orientation="Horizontal"
+                Spacing="12">
+                <StackPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="Width" Value="60" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                    </Style>
+                </StackPanel.Styles>
+                <Button
+                    Classes="primary"
+                    Command="{Binding SendServerCommand}"
+                    CommandParameter="{Binding #ServerCommandTextBox}"
+                    Cursor="Hand"
+                    HotKey="Enter"
+                    ToolTip.Tip="Send command">
+                    <Svg
+                        Classes="theme"
+                        Height="20"
+                        Path="/Assets/Icons/send.svg" />
+                </Button>
+                <Button
+                    Classes="abort"
+                    Command="{Binding StopServerCommand}"
+                    CommandParameter="{Binding #ServerCommandTextBox}"
+                    Cursor="Hand"
+                    ToolTip.Tip="Stop the server">
+                    <Rectangle
+                        Fill="White"
+                        Height="20"
+                        Width="20" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

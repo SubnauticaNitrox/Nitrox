@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFramework>net9.0</TargetFramework>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,13 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="GameLogic\Vehicles\" />
-    </ItemGroup>
-
 </Project>

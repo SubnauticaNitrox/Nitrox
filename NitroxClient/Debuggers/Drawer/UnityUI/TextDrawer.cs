@@ -1,28 +1,27 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class TextDrawer : IDrawer
+public class TextDrawer : IDrawer<Text>
 {
+    private readonly ColorDrawer colorDrawer;
+    private readonly MaterialDrawer materialDrawer;
     private const float LABEL_WIDTH = 150;
     private const float VALUE_WIDTH = 200;
 
-    public Type[] ApplicableTypes { get; } = { typeof(Text) };
-
-    public void Draw(object target)
+    public TextDrawer(ColorDrawer colorDrawer, MaterialDrawer materialDrawer)
     {
-        switch (target)
-        {
-            case Text text:
-                DrawText(text);
-                break;
-        }
+        Validate.NotNull(colorDrawer);
+        Validate.NotNull(materialDrawer);
+
+        this.colorDrawer = colorDrawer;
+        this.materialDrawer = materialDrawer;
     }
 
-    private static void DrawText(Text text)
+    public void Draw(Text text)
     {
         GUILayout.Label("Text");
         text.text = GUILayout.TextArea(text.text, GUILayout.MaxHeight(100));
@@ -106,14 +105,14 @@ public class TextDrawer : IDrawer
         {
             GUILayout.Label("Color", GUILayout.Width(LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            text.color = ColorDrawer.Draw(text.color);
+            text.color = colorDrawer.Draw(text.color);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Material", GUILayout.Width(LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            text.material = MaterialDrawer.Draw(text.material);
+            text.material = materialDrawer.Draw(text.material);
         }
 
         using (new GUILayout.HorizontalScope())

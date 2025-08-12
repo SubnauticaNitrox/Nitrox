@@ -1,45 +1,40 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FMOD.Studio;
-using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class FMOD_CustomEmitter_OnStop_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMOD_CustomEmitter_OnStop_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.OnStop());
+
+    public static void Postfix(FMOD_CustomEmitter __instance)
     {
-        private static FMODSystem fmodSystem;
-
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.OnStop());
-
-        public static void Postfix(FMOD_CustomEmitter __instance)
+        if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path))
         {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path))
-            {
-                __instance.GetEventInstance().getDescription(out EventDescription description);
-                description.is3D(out bool is3D);
-
-                if (is3D)
-                {
-                    __instance.TryGetComponent(out NitroxEntity nitroxEntity);
-                    if (!nitroxEntity)
-                    {
-                        nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
-                    }
-                    if (nitroxEntity)
-                    {
-                        fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, false);
-                    }
-                }
-            }
+            return;
         }
 
-        public override void Patch(Harmony harmony)
+        if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
         {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchPostfix(harmony, TARGET_METHOD);
+            EventInstance evt = __instance.GetEventInstance();
+            evt.getVolume(out float volume, out float _);
+            evt.getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+
+            if (is3D)
+            {
+                Resolve<FMODSystem>().SendCustomEmitterStop(nitroxEntity.Id, __instance.asset.path);
+            }
+            else
+            {
+                Resolve<FMODSystem>().SendEventInstanceStop(nitroxEntity.Id, __instance.asset.path, __instance.transform.position.ToDto(), volume);
+            }
         }
     }
 }

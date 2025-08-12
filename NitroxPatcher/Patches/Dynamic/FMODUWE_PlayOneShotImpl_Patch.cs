@@ -1,36 +1,26 @@
-﻿using System.Reflection;
-using HarmonyLib;
+using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel.Core;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.GameLogic.FMOD;
+using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class FMODUWE_PlayOneShotImpl_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMODUWE_PlayOneShotImpl_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FMODUWE.PlayOneShotImpl(default(string), default(Vector3), default(float)));
+
+    public static bool Prefix()
     {
-        private static FMODSystem fmodSystem;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
+    }
 
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FMODUWE.PlayOneShotImpl(default(string), default(Vector3), default(float)));
-
-        public static bool Prefix()
+    public static void Postfix(string eventPath, Vector3 position, float volume)
+    {
+        if (Resolve<FMODWhitelist>().IsWhitelisted(eventPath))
         {
-            return !FMODSuppressor.SuppressFMODEvents;
-        }
-
-        public static void Postfix(string eventPath, Vector3 position, float volume)
-        {
-            if (fmodSystem.IsWhitelisted(eventPath, out bool isGlobal, out float radius))
-            {
-                fmodSystem.PlayAsset(eventPath, position.ToDto(), volume, radius, isGlobal);
-            }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
+            Resolve<FMODSystem>().SendAssetPlay(eventPath, position.ToDto(), volume);
         }
     }
 }

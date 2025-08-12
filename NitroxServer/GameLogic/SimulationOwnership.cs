@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic
 {
     public class SimulationOwnershipData
     {
-        struct PlayerLock
+        public struct PlayerLock
         {
             public Player Player { get; }
             public SimulationLockType LockType { get; set; }
@@ -106,6 +106,14 @@ namespace NitroxServer.GameLogic
                 }
             }
             return null;
+        }
+
+        public bool TryGetLock(NitroxId id, out PlayerLock playerLock)
+        {
+            lock (playerLocksById)
+            {
+                return playerLocksById.TryGetValue(id, out playerLock);
+            }
         }
     }
 }

@@ -1,28 +1,27 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ButtonDrawer : IDrawer
+public class ButtonDrawer : IDrawer<Button>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Button) };
+    private readonly SelectableDrawer selectableDrawer;
+    private readonly UnityEventDrawer unityEventDrawer;
 
-    public void Draw(object target)
+    public ButtonDrawer(SelectableDrawer selectableDrawer, UnityEventDrawer unityEventDrawer)
     {
-        switch (target)
-        {
-            case Button button:
-                DrawButton(button);
-                break;
-        }
+        Validate.NotNull(selectableDrawer);
+        Validate.NotNull(unityEventDrawer);
+        this.selectableDrawer = selectableDrawer;
+        this.unityEventDrawer = unityEventDrawer;
     }
 
-    private static void DrawButton(Button button)
+    public void Draw(Button button)
     {
-        SelectableDrawer.DrawSelectable(button);
+        selectableDrawer.Draw(button);
         GUILayout.Space(10);
-        UnityEventDrawer.DrawUnityEvent(button.onClick, "OnClick()");
+        unityEventDrawer.Draw(button.onClick, new UnityEventDrawer.DrawOptions("OnClick()"));
     }
 }

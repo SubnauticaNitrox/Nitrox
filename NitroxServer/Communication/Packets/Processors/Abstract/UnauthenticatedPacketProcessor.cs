@@ -7,9 +7,9 @@ namespace NitroxServer.Communication.Packets.Processors.Abstract
     {
         public override void ProcessPacket(Packet packet, IProcessorContext connection)
         {
-            Process((T)packet, (NitroxConnection)connection);
+            Process((T)packet, (INitroxConnection)connection);
         }
 
-        public abstract void Process(T packet, NitroxConnection connection);
+        public abstract void Process(T packet, INitroxConnection connection);
     }
 }

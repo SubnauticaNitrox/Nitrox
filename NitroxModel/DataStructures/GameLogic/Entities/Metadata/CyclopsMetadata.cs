@@ -26,13 +26,16 @@ public class CyclopsMetadata : EntityMetadata
     [DataMember(Order = 6)]
     public float Health { get; set; }
 
+    [DataMember(Order = 7)]
+    public bool IsDestroyed { get; set; }
+
     [IgnoreConstructor]
     protected CyclopsMetadata()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public CyclopsMetadata(bool silentRunningOn, bool shieldOn, bool sonarOn, bool engineOn, int engineMode, float health)
+    public CyclopsMetadata(bool silentRunningOn, bool shieldOn, bool sonarOn, bool engineOn, int engineMode, float health, bool isDestroyed)
     {
         SilentRunningOn = silentRunningOn;
         ShieldOn = shieldOn;
@@ -40,10 +43,11 @@ public class CyclopsMetadata : EntityMetadata
         EngineOn = engineOn;
         EngineMode = engineMode;
         Health = health;
+        IsDestroyed = isDestroyed;
     }
 
     public override string ToString()
     {
-        return $"[CyclopsMetadata SilentRunningOn: {SilentRunningOn}, ShieldOn: {ShieldOn}, SonarOn: {SonarOn}, EngineOn: {EngineOn}, EngineMode: {EngineMode}, Health: {Health}]";
+        return $"[CyclopsMetadata SilentRunningOn: {SilentRunningOn}, ShieldOn: {ShieldOn}, SonarOn: {SonarOn}, EngineOn: {EngineOn}, EngineMode: {EngineMode}, Health: {Health}, IsDestroyed: {IsDestroyed}]";
     }
 }

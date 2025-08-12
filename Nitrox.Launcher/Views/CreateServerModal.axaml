@@ -1,0 +1,64 @@
+<Window
+    CanResize="False"
+    SizeToContent="WidthAndHeight"
+    Title="Create a server"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.CreateServerModal"
+    x:DataType="vm:CreateServerViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
+    <Design.DataContext>
+        <vm:CreateServerViewModel Name="My Server Name" SelectedGameMode="CREATIVE" />
+    </Design.DataContext>
+    <Grid>
+        <controls:CustomTitlebar CanMinimize="False" />
+        <StackPanel>
+            <StackPanel Classes="form" Margin="24">
+                <TextBlock Classes="modalHeader" Text="Create a server" />
+                <StackPanel Classes="form">
+                    <TextBlock Text="SERVER NAME" />
+                    <TextBox
+                        MaxLength="120"
+                        MaxWidth="400"
+                        Text="{Binding Name, Converter={converters:TrimConverter}}"
+                        Watermark="My server">
+                        <Interaction.Behaviors>
+                            <behaviors:FocusOnViewShowBehavior />
+                        </Interaction.Behaviors>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Classes="form">
+                    <TextBlock Text="GAMEMODE" />
+                    <controls:RadioButtonGroup
+                        Classes="radioGroup"
+                        Enum="{x:Type server:NitroxGameMode}"
+                        SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
+                </StackPanel>
+            </StackPanel>
+            <Border Classes="footer">
+                <Panel>
+                    <Button
+                        Command="{Binding CloseCommand}"
+                        Content="Back"
+                        FontWeight="Bold"
+                        HotKey="Escape" />
+                    <Button
+                        Classes="primary"
+                        Command="{Binding CreateCommand}"
+                        Content="Create"
+                        HorizontalAlignment="Right"
+                        HotKey="Enter" />
+                </Panel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>

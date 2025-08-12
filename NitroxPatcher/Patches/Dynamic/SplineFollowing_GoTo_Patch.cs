@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// Whenever a NitroxEntity receives a MoveTo action, we'll let the EntityPositionBroadcaster know (internally,
 /// it will check if it is an entity we are watching an broadcast when applicable).
 /// </summary>
-public class SplineFollowing_GoTo_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class SplineFollowing_GoTo_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SplineFollowing t) => t.GoTo(default(Vector3), default(Vector3), default(float)));
 
@@ -23,10 +22,5 @@ public class SplineFollowing_GoTo_Patch : NitroxPatch, IDynamicPatch
         {
             EntityPositionBroadcaster.RegisterSplineMovementChange(nitroxEntity.Id, __instance.gameObject, targetPos, targetDir, velocity);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

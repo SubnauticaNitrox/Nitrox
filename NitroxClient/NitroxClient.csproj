@@ -1,30 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFrameworks>net472;net9.0</TargetFrameworks>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='BelowZero'">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="FMODUnity">
-            <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
         <Reference Include="LitJson">
             <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1" />
+        <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Nitrox.Discovery.MSBuild" Version="0.1.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>

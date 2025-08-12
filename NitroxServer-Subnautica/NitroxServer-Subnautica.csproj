@@ -1,11 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
-        <Nullable>disable</Nullable>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='BelowZero'">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,19 +17,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
+        <PackageReference Include="AssetsTools.NET" Version="3.0.1" />
+        <PackageReference Include="AssetsTools.NET.MonoCecil" Version="1.0.1" />
+        <PackageReference Include="AssetsTools.NET.Texture" Version="1.1.0-preview1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="[2.1.10]" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
 
-  <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <ItemGroup>
-      <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
+        <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
-    <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
-  </Target>
+
+    <Import Project="..\Nitrox.Shared.targets" />
 </Project>

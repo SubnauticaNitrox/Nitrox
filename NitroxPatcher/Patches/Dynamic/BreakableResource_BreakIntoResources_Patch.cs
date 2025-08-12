@@ -1,36 +1,36 @@
-using HarmonyLib;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class BreakableResource_BreakIntoResources_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class BreakableResource_BreakIntoResources_Patch : NitroxPatch, IDynamicPatch
 {
     private static MethodInfo TARGET_METHOD = Reflect.Method((BreakableResource t) => t.BreakIntoResources());
 
     public static void Prefix(BreakableResource __instance)
     {
-        if (!NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity destroyedEntity))
+        if (!__instance.TryGetNitroxId(out NitroxId destroyedId))
         {
             Log.Warn($"[{nameof(BreakableResource_BreakIntoResources_Patch)}] Could not find {nameof(NitroxEntity)} for breakable entity {__instance.gameObject.GetFullHierarchyPath()}.");
             return;
         }
-        // Send packet to destroy the entity
-        Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntity.Id));
-    }
 
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
+        // Case by case handling
+
+        // Sea Treaders spawn resource chunks but we don't register them on server-side as they're auto destroyed after 60s
+        // So we need to broadcast their deletion differently
+        if (__instance.GetComponent<SinkingGroundChunk>())
+        {
+            Resolve<IPacketSender>().Send(new SeaTreaderChunkPickedUp(destroyedId));
+        }
+        // Generic case
+        else
+        {
+            Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedId));
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -10,45 +11,30 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Entity cells will go sleep when the player gets out of range.  This needs to be reported to the server so they can lose simulation locks.
 /// </summary>
-public class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((EntityCell t) => t.SleepAsync(default(ProtobufSerializer)));
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
+    internal static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((EntityCell t) => t.SleepAsync(default)));
 
-    public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
-    public static readonly object INJECTION_OPERAND = Reflect.Field((EntityCell entityCell) => entityCell.state);
-
-    public static int INJECTION_POSITION = 2;
-
-    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    /*
+     * this.state = EntityCell.State.InSleepAsync;
+     * EntityCell_SleepAsync_Patch.Callback(this); <--- INSERTED LINE
+     */
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        int validSpotsSeen = 0;
-
-        foreach (CodeInstruction instruction in instructions)
-        {
-            yield return instruction;
-
-            bool validInjectionInstruction = instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND);
-
-            if (validInjectionInstruction && ++validSpotsSeen == INJECTION_POSITION)
-            {
-                /*
-                 * Injects:  Callback(this);
-                 */
-                yield return TranspilerHelper.Ldloc<EntityCell>(original);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(EntityCell))));                
-            }
-        }
+        return new CodeMatcher(instructions).MatchEndForward([
+                                                new CodeMatch(OpCodes.Ldloc_1),
+                                                new CodeMatch(OpCodes.Ldc_I4_7),
+                                                new CodeMatch(OpCodes.Stfld, Reflect.Field((EntityCell t) => t.state))
+                                            ])
+                                            .Advance(1)
+                                            .InsertAndAdvance([
+                                                new CodeInstruction(OpCodes.Ldloc_1),
+                                                new CodeInstruction(OpCodes.Call, ((Action<EntityCell>)Callback).Method)
+                                            ]).InstructionEnumeration();
     }
 
     public static void Callback(EntityCell entityCell)
     {
         Resolve<Terrain>().CellUnloaded(entityCell.BatchId, entityCell.CellId, entityCell.Level);
     }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
-    }
 }
-

@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 ///     Prevent uSkyManager from "freezing" the clouds when FreezeTime is active (game paused).
 ///     Also sets skybox's rotation depending on the real server time.
 /// </summary>
-public class uSkyManager_SetVaryingMaterialProperties_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class uSkyManager_SetVaryingMaterialProperties_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((uSkyManager t) => t.SetVaryingMaterialProperties(default));
 
@@ -40,9 +40,4 @@ public class uSkyManager_SetVaryingMaterialProperties_Patch : NitroxPatch, IDyna
     /// </summary>
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) => instructions
         .ChangeAtMarker(ModifyInstructionPattern, "Modify", instruction => instruction.operand = Reflect.Property(() => CurrentTime).GetMethod);
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
-    }
 }

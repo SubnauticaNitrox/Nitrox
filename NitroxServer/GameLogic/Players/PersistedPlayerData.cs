@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -5,6 +6,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Server;
 
 namespace NitroxServer.GameLogic.Players;
 
@@ -15,28 +17,28 @@ public class PersistedPlayerData
     public string Name { get; set; }
 
     [DataMember(Order = 2)]
-    public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
+    public List<NitroxTechType> UsedItems { get; set; } = [];
 
     [DataMember(Order = 3)]
-    public NitroxId[] QuickSlotsBindingIds { get; set; } = new NitroxId[0];
+    public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; } = [];
 
     [DataMember(Order = 4)]
-    public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
+    public Dictionary<string, NitroxId> EquippedItems { get; set; } = [];
 
     [DataMember(Order = 5)]
-    public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
-
-    [DataMember(Order = 6)]
     public ushort Id { get; set; }
 
-    [DataMember(Order = 7)]
+    [DataMember(Order = 6)]
     public NitroxVector3 SpawnPosition { get; set; }
 
-    [DataMember(Order = 8)]
+    [DataMember(Order = 7)]
     public NitroxQuaternion SpawnRotation { get; set; }
 
-    [DataMember(Order = 9)]
+    [DataMember(Order = 8)]
     public PlayerStatsData CurrentStats { get; set; }
+
+    [DataMember(Order = 9)]
+    public NitroxGameMode GameMode { get; set; }
 
     [DataMember(Order = 10)]
     public NitroxId SubRootId { get; set; }
@@ -53,10 +55,10 @@ public class PersistedPlayerData
     /// <summary>
     /// Those goals are unlocked individually (e.g. opening PDA, eating, picking up a fire extinguisher for the first time)
     /// </summary>
-    [DataMember(Order = 14)]
-    public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = new Dictionary<string, float>();
-
     [DataMember(Order = 15)]
+    public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = [];
+
+    [DataMember(Order = 16)]
     public SubnauticaPlayerPreferences PlayerPreferences { get; set; }
 
     public Player ToPlayer()
@@ -72,10 +74,10 @@ public class PersistedPlayerData
                           Optional.OfNullable(SubRootId),
                           Permissions,
                           CurrentStats,
+                          GameMode,
                           UsedItems,
                           QuickSlotsBindingIds,
                           EquippedItems,
-                          Modules,
                           PersonalCompletedGoalsWithTimestamp,
                           PlayerPreferences.PingPreferences,
                           PlayerPreferences.PinnedTechTypes);
@@ -88,12 +90,12 @@ public class PersistedPlayerData
             Name = player.Name,
             UsedItems = player.UsedItems?.ToList(),
             QuickSlotsBindingIds = player.QuickSlotsBindingIds,
-            EquippedItems = player.GetEquipment(),
-            Modules = player.GetModules(),
+            EquippedItems = new(player.EquippedItems),
             Id = player.Id,
             SpawnPosition = player.Position,
             SpawnRotation = player.Rotation,
             CurrentStats = player.Stats,
+            GameMode = player.GameMode,
             SubRootId = player.SubRootId.OrNull(),
             Permissions = player.Permissions,
             NitroxId = player.GameObjectId,

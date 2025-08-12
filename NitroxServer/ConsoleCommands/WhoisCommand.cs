@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -23,7 +23,9 @@ namespace NitroxServer.ConsoleCommands
             builder.AppendLine($"Oxygen: {player.Stats.Oxygen}/{player.Stats.MaxOxygen}");
             builder.AppendLine($"Food: {player.Stats.Food}");
             builder.AppendLine($"Water: {player.Stats.Water}");
+#if SUBNAUTICA
             builder.AppendLine($"Infection: {player.Stats.InfectionAmount}");
+#endif
 
             SendMessage(args.Sender, builder.ToString());
         }

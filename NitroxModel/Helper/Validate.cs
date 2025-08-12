@@ -21,35 +21,19 @@ public static class Validate
         throw new ArgumentNullException(argumentExpression);
     }
 
-    public static void IsTrue(bool b)
+    public static void IsTrue(bool b, [CallerArgumentExpression("b")] string argumentExpression = null)
     {
         if (!b)
         {
-            throw new ArgumentException();
+            throw new ArgumentException(argumentExpression);
         }
     }
 
-    public static void IsTrue(bool b, string message)
-    {
-        if (!b)
-        {
-            throw new ArgumentException(message);
-        }
-    }
-
-    public static void IsFalse(bool b)
+    public static void IsFalse(bool b, [CallerArgumentExpression("b")] string argumentExpression = null)
     {
         if (b)
         {
-            throw new ArgumentException();
-        }
-    }
-
-    public static void IsFalse(bool b, string message)
-    {
-        if (b)
-        {
-            throw new ArgumentException(message);
+            throw new ArgumentException(argumentExpression);
         }
     }
 

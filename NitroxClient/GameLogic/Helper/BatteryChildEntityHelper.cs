@@ -32,6 +32,6 @@ public static class BatteryChildEntityHelper
         InstalledBatteryEntity installedBattery = new(new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, new List<Entity>());
         toPopulate.Add(installedBattery);
 
-        CoroutineHost.StartCoroutine(entities.Value.SpawnAsync(installedBattery));
+        CoroutineHost.StartCoroutine(entities.Value.SpawnEntityAsync(installedBattery));
     }
 }

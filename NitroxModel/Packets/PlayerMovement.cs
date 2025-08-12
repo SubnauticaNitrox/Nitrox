@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Networking;
 
@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
             BodyRotation = bodyRotation;
             AimingRotation = aimingRotation;
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
-            UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
+            UdpChannel = UdpChannelId.MOVEMENTS;
         }
     }
 }

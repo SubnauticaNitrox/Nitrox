@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+    <!-- Task names, make sure that they match the real name in <Target /> since Name doesn't allow expressions -->
+    <PropertyGroup>
+        <_NitroxBeforePublishTaskName>_NitroxBeforePublish</_NitroxBeforePublishTaskName>
+        <_NitroxBeforeBuildTaskName>_NitroxBeforeBuild</_NitroxBeforeBuildTaskName>
+        <_NitroxBuildTaskName>_NitroxBuild</_NitroxBuildTaskName>
+        <_NitroxAfterBuildTaskName>_NitroxAfterBuild</_NitroxAfterBuildTaskName>
+        <_NitroxReleaseTaskName>_NitroxRelease</_NitroxReleaseTaskName>
+
+        <_NitroxMoveDependenciesToLibTaskName>_NitroxMoveDependenciesToLib</_NitroxMoveDependenciesToLibTaskName>
+
+        <_ReleaseMacOSTaskName>_NitroxMacOSRelease</_ReleaseMacOSTaskName>
+        <_VerifyMacOSFilesTaskName>_VerifyMacOSFiles</_VerifyMacOSFilesTaskName>
+        <_CreateMacOSAppBundleTaskName>_CreateMacOSAppBundle</_CreateMacOSAppBundleTaskName>
+
+        <_NitroxOutputFolder>lib\</_NitroxOutputFolder>
+        <_NitroxResourcesFolder>Resources\</_NitroxResourcesFolder>
+    </PropertyGroup>
+    
+    <!-- Overridable properties -->
+    <PropertyGroup>
+        <CreateAppBundle Condition="'$(CreateAppBundle)' == ''">false</CreateAppBundle>
+        <AppBundleName Condition="'$(AppBundleName)' == ''">Nitrox.app</AppBundleName>
+        <MacOSAssetsPath Condition="'$(MacOSAssetsPath)' == ''" />
+    </PropertyGroup>
+
+    <!-- Common targets -->
+    <Target Name="_NitroxBeforeBuild" AfterTargets="Build;Rebuild" />
+
+    <Target Name="_NitroxBuild" AfterTargets="$(_NitroxBeforeBuildTaskName)" />
+
+    <Target Name="_NitroxAfterBuild" AfterTargets="$(_NitroxBuildTaskName)" />
+
+    <Target Name="_NitroxBeforePublish" BeforeTargets="BeforePublish">
+        <Error Code="NX-001"
+               Text="Nitrox does not support publishing"
+               ContinueOnError="ErrorAndStop" />
+    </Target>
+    
+    <!-- Windows specific properties -->
+    <PropertyGroup Condition="$(_IsWindowsTarget)">
+
+    </PropertyGroup>
+    
+    <!-- Linux specific properties -->
+    <PropertyGroup Condition="$(_IsLinuxTarget)">
+        
+    </PropertyGroup>
+    
+    <!-- MacOS specific properties -->
+    <PropertyGroup Condition="$(_IsMacOSTarget)">
+        <UseAppHost>true</UseAppHost>
+        <PlatformAssetsPath>$(MSBuildProjectDirectory)\Assets\MacOS</PlatformAssetsPath>
+    </PropertyGroup>
+
+    <!-- *************** BUILD *************** -->
+    
+    <Target Name="_NitroxMoveDependenciesToLib" AfterTargets="$(_NitroxBuildTaskName)">
+        <Message Importance="High"
+                 Text="Running $(_NitroxMoveDependenciesToLibTaskName) on $(MSBuildProjectName)" />
+        
+        <PropertyGroup>
+            <OutputDirectory>$(TargetDir)$(_NitroxOutputFolder)</OutputDirectory>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <AllFiles Include="$(TargetDir)*" />
+
+            <ExecutablesBaseName Include="%(AllFiles.Filename)"
+                                 KeepDuplicates="False"
+                                 Condition="'%(Extension)' == '.dll' And Exists('$(TargetDir)%(Filename).runtimeconfig.json') And Exists('$(TargetDir)%(Filename).deps.json')"  />
+
+            <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity);$(TargetDir)%(ExecutablesBaseName.Identity).exe" />
+            <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).dll;$(TargetDir)%(ExecutablesBaseName.Identity).dll.config" />
+            <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).runtimeconfig.json" />
+            <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).deps.json" />
+            <ExcludeFiles Include="$(TargetDir)*.dylib;$(TargetDir)*.so" />
+
+            <FilesToMove Include="@(AllFiles)" Exclude="@(ExcludeFiles)" />
+        </ItemGroup>
+
+        <!-- Create directory if it doesn't exist -->
+        <MakeDir Directories="$(OutputDirectory)"
+                 Condition="!Exists('$(OutputDirectory)')"
+                 ContinueOnError="WarnAndContinue" />
+
+        <!-- Copy in debug because some systems break when they don't use our assembly resolve to look inside lib folder -->
+        <Copy SourceFiles="@(FilesToMove)"
+              DestinationFolder="$(OutputDirectory)"
+              OverwriteReadOnlyFiles="True"
+              SkipUnchangedFiles="True"
+              Retries="3"
+              RetryDelayMilliseconds="100"
+              Condition="'$(Configuration)' == 'Debug'"
+              ContinueOnError="ErrorAndContinue" />
+
+        <!-- Move every matching files to OutputDirectory -->
+        <Move SourceFiles="@(FilesToMove)"
+              DestinationFolder="$(OutputDirectory)"
+              OverwriteReadOnlyFiles="True" 
+              Condition="'$(Configuration)' == 'Release'"
+              ContinueOnError="ErrorAndContinue" />
+    </Target>
+
+    <!-- Remove our lib folder when we're using the solution/project clean -->
+    <Target Name="_NitroxClean" AfterTargets="Clean">
+        <Message Importance="High"
+                 Text="Running NitroxClean on $(MSBuildProjectName)" />
+
+         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder);$(TargetDir)\runtimes;$(TargetDir)\screenshots"
+                    ContinueOnError="WarnAndContinue" />
+    </Target>
+
+    <!-- *************** RELEASE *************** -->
+
+    <Target Name="_NitroxRelease" Condition="$(_IsRelease)" AfterTargets="$(_NitroxAfterBuildTaskName)" />
+
+    <Target Name="_NitroxMacOSRelease" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_NitroxReleaseTaskName)" />
+    
+    <Target Name="_NitroxMacOSGenerateInfoPlist" BeforeTargets="BeforeBuild;BeforeRebuild" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)">
+        <PropertyGroup>
+            <InfoPlistContent>
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleIconFile</key>
+        <string>Nitrox.icns</string>
+        <key>CFBundleIdentifier</key>
+        <string>com.$(RootNamespace.ToLower())</string>
+        <key>CFBundleName</key>
+        <string>Nitrox</string>
+        <key>CFBundleDisplayName</key>
+        <string>Nitrox</string>
+        <key>CFBundleVersion</key>
+        <string>$([System.Version]::Parse($(Version)).ToString(3))</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>12.0</string>
+        <key>CFBundleExecutable</key>
+        <string>$(AssemblyName)</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>$([System.Version]::Parse($(Version)).ToString(2))</string>
+        <key>NSPrincipalClass</key>
+        <string>NSApplication</string>
+        <key>NSHighResolutionCapable</key>
+        <true/>
+    </dict>
+</plist>
+]]>
+            </InfoPlistContent>
+        </PropertyGroup>
+
+        <WriteLinesToFile File="$(PlatformAssetsPath)\Info.plist" Lines="$(InfoPlistContent)" Overwrite="true" />
+    </Target>
+
+    <Target Name="_VerifyMacOSFiles" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_ReleaseMacOSTaskName)" DependsOnTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+
+        <Message Importance="High"
+                 Text="Running $(_VerifyMacOSFilesTaskName) on $(MSBuildProjectName)" />
+
+        <Error Code="NX-201"
+               Condition="'$(AppBundleName.Trim())' == ''"
+               Text="AppBundleName cannot be null or empty, project must specify it in order to produce a bundle" />
+
+        <Error Code="NX-202"
+               Condition="!Exists($(PlatformAssetsPath))"
+               Text="Folder '$(PlatformAssetsPath)' must exist in the project, in order to produce a MacOS bundle" />
+    </Target>
+
+    <Target Name="_CreateMacOSAppBundle" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_VerifyMacOSFilesTaskName)">
+        
+        <Message Importance="High"
+                 Text="Running $(_CreateMacOSAppBundleTaskName) on $(MSBuildProjectName)" />
+        
+        <PropertyGroup>
+            <_ZipDir>$(TargetDir)bundle\</_ZipDir>
+            <_AppBundleDir>$(_ZipDir)$(AppBundleName)\</_AppBundleDir>
+            <_ContentDir>$(_AppBundleDir)Contents\</_ContentDir>
+            <_MacOSDir>$(_ContentDir)MacOS\</_MacOSDir>
+            <_ResourcesDir>$(_ContentDir)Resources\</_ResourcesDir>
+
+            <_ZipFilePath>$(TargetDir)$(AppBundleName).zip</_ZipFilePath>
+        </PropertyGroup>
+        
+        <ItemGroup>
+            <_AllFiles Include="$(TargetDir)\**\*" Exclude="$(_ZipFilePath);$(_AppBundleDir)\**\*" />
+            <_BundleFolders Include="$(_ContentDir);$(_MacOSDir);$(_ResourcesDir)" />
+            <_PlatformFiles Include="$(PlatformAssetsPath)\**\*" />
+        </ItemGroup>
+        
+        <!-- Create the whole OSX bundle tree -->
+        <MakeDir Directories="@(_BundleFolders)"
+                 ContinueOnError="WarnAndContinue" />
+
+        <!-- Copy custom nitrox ressources -->
+        <Copy SourceFiles="@(_PlatformFiles)"
+              DestinationFiles="@(_PlatformFiles->'$(_ContentDir)%(RecursiveDir)%(Filename)%(Extension)')"
+              Retries="3"
+              RetryDelayMilliseconds="150"
+              SkipUnchangedFiles="True"
+              ContinueOnError="ErrorAndStop" />
+
+        <!-- Copy whole app -->
+        <Copy SourceFiles="@(_AllFiles)"
+              DestinationFiles="@(_AllFiles->'$(_MacOSDir)%(RecursiveDir)%(Filename)%(Extension)')"
+              Retries="3"
+              RetryDelayMilliseconds="150"
+              SkipUnchangedFiles="True"
+              ContinueOnError="ErrorAndStop" />
+
+        <!-- Remove quarantine that prevents app from being run after download -->
+        <Exec Condition="$(_IsMacOS)" Command="xattr -r -d com.apple.quarantine $(_AppBundleDir)" />
+
+        <ZipDirectory SourceDirectory="$(_ZipDir)"
+                      DestinationFile="$(_ZipFilePath)"
+                      Overwrite="True" />
+    </Target>
+
+</Project>

@@ -1,21 +1,32 @@
-﻿using System.Reflection;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitSubscreen());
+    private static readonly MethodInfo targetMethod = Reflect.Method((IngameMenu t) => t.QuitSubscreen());
 
-    public static bool Prefix()
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        IngameMenu.main.QuitGame(false);
-        return false;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
+        bool foundRet = false;
+        foreach (CodeInstruction instruction in instructions)
+        {
+            if (foundRet)
+            {
+                yield return instruction;
+            }
+#if SUBNAUTICA
+            if (instruction.opcode == OpCodes.Ret)
+#elif BELOWZERO
+            if (instruction.opcode == OpCodes.Br)
+#endif
+            {
+                foundRet = true;
+            }
+        }
     }
 }

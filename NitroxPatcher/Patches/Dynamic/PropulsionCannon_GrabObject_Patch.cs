@@ -1,66 +1,77 @@
-﻿using System.Reflection;
-using HarmonyLib;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.HUD.Components;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDynamicPatch
 {
-    public class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.GrabObject(default(GameObject)));
+
+    private static bool skipPrefixPatch;
+
+    public static bool Prefix(PropulsionCannon __instance, GameObject target)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.GrabObject(default(GameObject)));
-
-        private static bool skipPrefixPatch;
-
-        public static bool Prefix(PropulsionCannon __instance, GameObject target)
+        if (skipPrefixPatch)
         {
-            if (skipPrefixPatch)
-            {
-                return true;
-            }
+            return true;
+        }
 
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+        if (!target.TryGetIdOrWarn(out NitroxId id))
+        {
+            return true;
+        }
 
-            NitroxId id = NitroxEntity.GetId(target);
+        if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
+        {
+            Log.Debug($"Already have an exclusive lock on the grabbed propulsion cannon object: {id}");
+            return true;
+        }
 
-            if (simulationOwnership.HasExclusiveLock(id))
-            {
-                Log.Debug($"Already have an exclusive lock on the grabbed propulsion cannon object: {id}");
-                return true;
-            }
-
-            PropulsionGrab context = new(__instance, target);
-            LockRequest<PropulsionGrab> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
-
-            simulationOwnership.RequestSimulationLock(lockRequest);
-
+        if (IsInvalidGrabTarget(target))
+        {
             return false;
         }
 
-        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, PropulsionGrab context)
+        PropulsionGrab context = new(__instance, target);
+        LockRequest<PropulsionGrab> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+
+        Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
+
+        return false;
+    }
+
+    private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, PropulsionGrab context)
+    {
+        if (lockAquired)
         {
-            if (lockAquired)
+            // In case what we grabbed wasn't a vehicle, we'll be watching it with the regular entity position broadcast system
+            if (!Resolve<SimulationOwnership>().TreatVehicleEntity(id, true, SimulationLockType.EXCLUSIVE))
             {
                 EntityPositionBroadcaster.WatchEntity(id);
+            }
 
-                skipPrefixPatch = true;
-                context.Cannon.GrabObject(context.GrabbedObject);
-                skipPrefixPatch = false;
-            }
-            else
-            {
-                context.GrabbedObject.AddComponent<DenyOwnershipHand>();
-            }
+            skipPrefixPatch = true;
+            context.Cannon.GrabObject(context.GrabbedObject);
+            skipPrefixPatch = false;
         }
-
-        public override void Patch(Harmony harmony)
+        else
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            context.GrabbedObject.AddComponent<DenyOwnershipHand>();
         }
+    }
+
+    /// <summary>
+    /// Prevents certain entities like players from being grabbed
+    /// </summary>
+    private static bool IsInvalidGrabTarget(GameObject target)
+    {
+        return target.GetComponent<RemotePlayerIdentifier>();
     }
 }

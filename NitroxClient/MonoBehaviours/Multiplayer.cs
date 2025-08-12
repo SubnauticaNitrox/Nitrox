@@ -6,12 +6,14 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
-using NitroxClient.Helpers;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -36,7 +38,12 @@ namespace NitroxClient.MonoBehaviours
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
         /// </summary>
-        public static bool Active => Main != null && Main.multiplayerSession.Client.IsConnected;
+        public static bool Active => Main && Main.multiplayerSession.Client.IsConnected;
+
+        /// <summary>
+        ///     True if multiplayer is loaded and player has successfully joined a server.
+        /// </summary>
+        public static bool Joined => Main && Main.multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED;
 
         public void Awake()
         {
@@ -50,6 +57,7 @@ namespace NitroxClient.MonoBehaviours
             Main = this;
             DontDestroyOnLoad(gameObject);
 
+            Log.Info("Multiplayer client loaded…");
             Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
         }
 
@@ -62,13 +70,16 @@ namespace NitroxClient.MonoBehaviours
                 ProcessPackets();
                 throttledPacketSender.Update();
 
-                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+                // Loading up shouldn't be bothered by entities spawning in the surroundings
+                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED &&
+                    InitialSyncCompleted)
                 {
                     terrain.UpdateVisibility();
                 }
             }
         }
 
+        public static event Action OnLoadingComplete;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
 
@@ -87,6 +98,7 @@ namespace NitroxClient.MonoBehaviours
             else
             {
                 SetLoadingComplete();
+                OnLoadingComplete?.Invoke();
             }
         }
 
@@ -108,14 +120,15 @@ namespace NitroxClient.MonoBehaviours
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
 
             SetLoadingComplete();
+            OnLoadingComplete?.Invoke();
         }
 
         public void ProcessPackets()
         {
-            PacketProcessor ResolveProcessor(Packet packet)
+            static PacketProcessor ResolveProcessor(Packet packet, Dictionary<Type, PacketProcessor> processorCache)
             {
                 Type packetType = packet.GetType();
-                if (packetProcessorCache.TryGetValue(packetType, out PacketProcessor processor))
+                if (processorCache.TryGetValue(packetType, out PacketProcessor processor))
                 {
                     return processor;
                 }
@@ -123,7 +136,7 @@ namespace NitroxClient.MonoBehaviours
                 try
                 {
                     Type packetProcessorType = typeof(ClientPacketProcessor<>).MakeGenericType(packetType);
-                    return packetProcessorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
+                    return processorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                 }
                 catch (Exception ex)
                 {
@@ -133,17 +146,17 @@ namespace NitroxClient.MonoBehaviours
                 return null;
             }
 
-            foreach (Packet packet in packetReceiver.GetReceivedPackets())
+            packetReceiver.ConsumePackets(static (packet, processorCache) =>
             {
                 try
                 {
-                    ResolveProcessor(packet)?.ProcessPacket(packet, null);
+                    ResolveProcessor(packet, processorCache)?.ProcessPacket(packet, null);
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, $"Error while processing packet {packet}");
                 }
-            }
+            }, packetProcessorCache);
         }
 
         public IEnumerator StartSession()
@@ -163,29 +176,26 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
-            gameObject.AddComponent<ThrottledBuilder>();
+            gameObject.AddComponent<BuildingHandler>();
+            gameObject.AddComponent<MovementBroadcaster>();
+            VirtualCyclops.Initialize();
         }
 
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
-            {
-                multiplayerSession.Disconnect();
-            }
-
             OnAfterMultiplayerEnd?.Invoke();
-
-            //Always do this last.
-            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
 
         private static void SetLoadingComplete()
         {
+#if SUBNAUTICA
             WaitScreen.main.isWaiting = false;
             WaitScreen.main.stageProgress.Clear();
             FreezeTime.End(FreezeTime.Id.WaitScreen);
+#elif BELOWZERO
+            WaitScreen.main.Hide();
+#endif
             WaitScreen.main.items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
@@ -219,7 +229,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 // If we just disconnected from a multiplayer session, then we need to kill the connection here.
                 // Maybe a better place for this, but here works in a pinch.
-                StopCurrentSession();
+                JoinServerBackend.StopMultiplayerClient();
                 SceneCleaner.Open();
             }
         }

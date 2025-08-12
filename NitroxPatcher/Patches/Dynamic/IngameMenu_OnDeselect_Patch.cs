@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
-using HarmonyLib;
-using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -8,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Disable the possibility of escaping a modal by clicking outside of its box or pressing the escape for the modals that want it
 /// </summary>
-public class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
 {
     private static MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.OnDeselect());
 
@@ -27,10 +26,5 @@ public class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
         }
         Modal.CurrentModal = null;
         return true;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

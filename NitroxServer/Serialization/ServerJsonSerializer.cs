@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NitroxModel.Platforms.OS.Shared;
@@ -8,6 +8,8 @@ namespace NitroxServer.Serialization;
 
 public class ServerJsonSerializer : IServerSerializer
 {
+    public const string FILE_ENDING = ".json";
+
     private readonly JsonSerializer serializer;
 
     public ServerJsonSerializer()
@@ -28,7 +30,7 @@ public class ServerJsonSerializer : IServerSerializer
         serializer.Converters.Add(new StringEnumConverter());
     }
 
-    public string FileEnding => ".json";
+    public string FileEnding => FILE_ENDING;
 
     public void Serialize(Stream stream, object o)
     {
@@ -51,7 +53,7 @@ public class ServerJsonSerializer : IServerSerializer
     {
         stream.Position = 0;
         using JsonTextReader reader = new(new StreamReader(stream));
-        return (T)serializer.Deserialize(reader, typeof(T));
+        return serializer.Deserialize<T>(reader);
     }
 
     public T Deserialize<T>(string filePath)

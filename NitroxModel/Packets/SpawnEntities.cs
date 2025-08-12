@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -8,6 +9,7 @@ namespace NitroxModel.Packets
     public class SpawnEntities : Packet
     {
         public List<Entity> Entities { get; }
+        public List<SimulatedEntity> Simulations { get; }
 
         public bool ForceRespawn { get; }
 
@@ -17,30 +19,23 @@ namespace NitroxModel.Packets
             ForceRespawn = false;
         }
 
-        public SpawnEntities(Entity entity)
+        public SpawnEntities(Entity entity, SimulatedEntity simulatedEntity = null, bool forceRespawn = false)
         {
-            Entities = new List<Entity>
+            Entities = [entity];
+            Simulations = [];
+            if (simulatedEntity != null)
             {
-                entity
-            };
-
-            ForceRespawn = false;
-        }
-
-        public SpawnEntities(Entity entity, bool forceRespawn)
-        {
-            Entities = new List<Entity>
-            {
-                entity
-            };
+                Simulations.Add(simulatedEntity);
+            }
 
             ForceRespawn = forceRespawn;
         }
 
         // Constructor for serialization. 
-        public SpawnEntities(List<Entity> entities, bool forceRespawn)
+        public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulations, bool forceRespawn)
         {
             Entities = entities;
+            Simulations = simulations;
             ForceRespawn = forceRespawn;
         }
     }

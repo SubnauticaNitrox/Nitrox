@@ -23,6 +23,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         entities.RemoveEntity(packet.Id);
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
         {
+            entities.MarkForDeletion(packet.Id);
             Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
             return;
         }
@@ -40,23 +41,25 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
             }
             else
             {
-                DefaultDestroyAction(gameObject);
+                Entities.DestroyObject(gameObject);
             }
         }
     }
 
     private void DestroySubroot(SubRoot subRoot)
     {
+        DamageInfo damageInfo = new() { type = DAMAGE_TYPE_RUN_ORIGINAL };
         if (subRoot.live.health > 0f)
         {
             // oldHPPercent must be in the interval [0; 0.25[ because else, SubRoot.OnTakeDamage will end up in the wrong else condition
             subRoot.oldHPPercent = 0f;
             subRoot.live.health = 0f;
+            subRoot.live.NotifyAllAttachedDamageReceivers(damageInfo);
             subRoot.live.Kill();
         }
 
         // We use a specific DamageType so that the Prefix on this method will accept this call
-        subRoot.OnTakeDamage(new() { type = DAMAGE_TYPE_RUN_ORIGINAL });
+        subRoot.OnTakeDamage(damageInfo);
     }
 
     private void DestroyVehicle(Vehicle vehicle)
@@ -88,10 +91,5 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
 
             Object.Destroy(vehicle.gameObject);
         }
-    }
-
-    private void DefaultDestroyAction(GameObject gameObject)
-    {
-        Object.Destroy(gameObject);
     }
 }

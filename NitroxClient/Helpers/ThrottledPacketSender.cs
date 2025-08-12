@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -50,6 +50,11 @@ namespace NitroxClient.Helpers
             throttledPackets.Add(dedupeKey, new ThrottledPacket(packet, throttleTime));
             packetSender.Send(packet);
             return true;
+        }
+
+        public bool RemovePendingPackets(object dedupeKey)
+        {
+            return throttledPackets.Remove(dedupeKey);
         }
 
         private class ThrottledPacket

@@ -1,40 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxModel.DataStructures;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class PdaInitialSyncProcessor : InitialSyncProcessor
+public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
 {
-    private readonly IPacketSender packetSender;
-
-    public PdaInitialSyncProcessor(IPacketSender packetSender)
+    public PdaInitialSyncProcessor()
     {
-        this.packetSender = packetSender;
+        AddDependency<ClockSyncInitialSyncProcessor>();
     }
 
     // The steps are ordered like their call order in Player.OnProtoDeserialize
-    public override List<IEnumerator> GetSteps(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
-    {
-        return new List<IEnumerator> {
-            RestoreKnownTech(packet),
-            RestorePDALog(packet),
-            RestoreEncyclopediaEntries(packet),
-            RestorePDAScanner(packet)
-        };
-    }
+    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } =
+    [
+        RestoreKnownTech,
+        RestorePDALog,
+        RestoreEncyclopediaEntries,
+        RestorePDAScanner
+    ];
 
-    private IEnumerator RestoreKnownTech(InitialPlayerSync packet)
+    private static IEnumerator RestoreKnownTech(InitialPlayerSync packet)
     {
         List<TechType> knownTech = packet.PDAData.KnownTechTypes.Select(techType => techType.ToUnity()).ToList();
-        HashSet<TechType> analyzedTech = packet.PDAData.AnalyzedTechTypes.Select(techType => techType.ToUnity()).ToHashSet();
+        HashSet<TechType> analyzedTech = new(packet.PDAData.AnalyzedTechTypes.Select(techType => techType.ToUnity()));
         Log.Info($"Received initial sync packet with {knownTech.Count} KnownTech.knownTech types and {analyzedTech.Count} KnownTech.analyzedTech types.");
 
         using (PacketSuppressor<KnownTechEntryAdd>.Suppress())
@@ -44,7 +40,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator RestorePDALog(InitialPlayerSync packet)
+    private static IEnumerator RestorePDALog(InitialPlayerSync packet)
     {
         List<PDALogEntry> logEntries = packet.PDAData.PDALogEntries;
         Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
@@ -57,7 +53,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator RestoreEncyclopediaEntries(InitialPlayerSync packet)
+    private static IEnumerator RestoreEncyclopediaEntries(InitialPlayerSync packet)
     {
         List<string> entries = packet.PDAData.EncyclopediaEntries;
         Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
@@ -67,13 +63,17 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
             // We don't do as in PDAEncyclopedia.Deserialize because we don't persist the entry's fields which are useless
             foreach (string entry in entries)
             {
+#if SUBNAUTICA
                 PDAEncyclopedia.Add(entry, false);
+#elif BELOWZERO
+                PDAEncyclopedia.Add(entry, false, false);
+#endif
             }
         }
         yield break;
     }
 
-    private IEnumerator RestorePDAScanner(InitialPlayerSync packet)
+    private static IEnumerator RestorePDAScanner(InitialPlayerSync packet)
     {
         InitialPDAData pdaData = packet.PDAData;
 
@@ -81,7 +81,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         {
             fragments = pdaData.ScannerFragments.ToDictionary(m => m.ToString(), m => 1f),
             partial = pdaData.ScannerPartial.Select(entry => entry.ToUnity()).ToList(),
-            complete = pdaData.ScannerComplete.Select(techType => techType.ToUnity()).ToHashSet()
+            complete = new HashSet<TechType>(pdaData.ScannerComplete.Select(techType => techType.ToUnity()))
         };
         PDAScanner.Deserialize(data);
         yield break;

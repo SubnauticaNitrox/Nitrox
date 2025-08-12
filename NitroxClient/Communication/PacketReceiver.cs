@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication;
 
-// TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
 public class PacketReceiver
 {
+    private readonly Queue<Packet> receivedPackets = new(16);
     private readonly object receivedPacketsLock = new();
-    private readonly Queue<Packet> receivedPackets = new();
 
-    public void PacketReceived(Packet packet)
+    public void Add(Packet packet)
     {
         lock (receivedPacketsLock)
         {
@@ -17,18 +17,24 @@ public class PacketReceiver
         }
     }
 
-    public Queue<Packet> GetReceivedPackets()
+    public Packet GetNextPacket()
     {
-        Queue<Packet> packets = new();
-
         lock (receivedPacketsLock)
         {
-            while (receivedPackets.Count > 0)
-            {
-                packets.Enqueue(receivedPackets.Dequeue());
-            }
+            return receivedPackets.Count == 0 ? null : receivedPackets.Dequeue();
         }
+    }
 
-        return packets;
+    /// <summary>
+    ///     Applies an operation on each packet waiting to be processed and removes it from the queue.
+    /// </summary>
+    public void ConsumePackets<TExtra>(Action<Packet, TExtra> consumer, TExtra extraParameter)
+    {
+        Packet packet = GetNextPacket();
+        while (packet != null)
+        {
+            consumer(packet, extraParameter);
+            packet = GetNextPacket();
+        }
     }
 }

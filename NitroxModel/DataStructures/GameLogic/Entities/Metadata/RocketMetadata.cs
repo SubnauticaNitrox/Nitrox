@@ -22,7 +22,7 @@ public class RocketMetadata : EntityMetadata
     public float ElevatorPosition { get; set; }
 
     [DataMember(Order = 5)]
-    public List<int> PreflightChecks { get; set; } = new();
+    public List<int> PreflightChecks { get; set; } = [];
 
     [IgnoreConstructor]
     protected RocketMetadata()
@@ -41,6 +41,6 @@ public class RocketMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[RocketMetadata CurrentStage: {CurrentStage}, LastStageTransitionTime: {LastStageTransitionTime}, ElevatorState: {ElevatorState}, ElevatorPosition: {ElevatorPosition}, PreflightChecks: {string.Join(",", PreflightChecks)}]";
+        return $"[{nameof(RocketMetadata)} CurrentStage: {CurrentStage}, LastStageTransitionTime: {LastStageTransitionTime}, ElevatorState: {ElevatorState}, ElevatorPosition: {ElevatorPosition}, PreflightChecks: {string.Join(",", PreflightChecks)}]";
     }
 }

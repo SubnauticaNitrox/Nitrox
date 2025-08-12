@@ -1,27 +1,26 @@
-﻿using System;
-using NitroxModel.Core;
+﻿using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class SliderDrawer : IDrawer
+public class SliderDrawer : IDrawer<Slider>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Slider) };
+    private readonly SceneDebugger sceneDebugger;
+    private readonly SelectableDrawer selectableDrawer;
 
-    public void Draw(object target)
+    public SliderDrawer(SceneDebugger sceneDebugger, SelectableDrawer selectableDrawer)
     {
-        switch (target)
-        {
-            case Slider slider:
-                DrawSlider(slider);
-                break;
-        }
+        Validate.NotNull(sceneDebugger);
+        Validate.NotNull(selectableDrawer);
+
+        this.sceneDebugger = sceneDebugger;
+        this.selectableDrawer = selectableDrawer;
     }
 
-    private static void DrawSlider(Slider slider)
+    public void Draw(Slider slider)
     {
-        SelectableDrawer.DrawSelectable(slider);
+        selectableDrawer.Draw(slider);
 
         GUILayout.Space(10);
 
@@ -31,7 +30,7 @@ public class SliderDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(slider.fillRect);
+                sceneDebugger.JumpToComponent(slider.fillRect);
             }
         }
 
@@ -41,7 +40,7 @@ public class SliderDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(slider.handleRect);
+                sceneDebugger.JumpToComponent(slider.handleRect);
             }
         }
 

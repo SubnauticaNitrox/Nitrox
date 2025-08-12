@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using HarmonyLib;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
 
@@ -10,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Provide Subnautica with the new PDA tabs' names
 /// </summary>
-public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.CacheToolbarTooltips());
 
@@ -35,10 +34,5 @@ public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
             TooltipFactory.Label(toolbarTooltip, stringBuilder);
             __instance.toolbarTooltips[__instance.toolbarTooltips.Count - i - 1] = stringBuilder.ToString();
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

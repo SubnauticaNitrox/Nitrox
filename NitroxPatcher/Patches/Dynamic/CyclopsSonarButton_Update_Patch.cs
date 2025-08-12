@@ -3,7 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Cyclops;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -11,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Prevents sonar from turning off automatically for the player that isn't currently piloting the Cyclops.
 /// </summary>
-public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.Update());
 
@@ -55,17 +56,9 @@ public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
         }
     }
 
+    /// <returns>true (sonar should be turned off) if local player is simulating the cyclops (there's no replicator in this case)</returns>
     public static bool ShouldTurnoff(CyclopsSonarButton cyclopsSonarButton)
     {
-        if (cyclopsSonarButton.subRoot.TryGetComponent(out MultiplayerCyclops multiplayerCyclops))
-        {
-            return !multiplayerCyclops.enabled;
-        }
-        return true;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
+        return !cyclopsSonarButton.subRoot.GetComponent<CyclopsMovementReplicator>();
     }
 }

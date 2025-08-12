@@ -26,19 +26,20 @@ public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem
 
     public override void Process(PickupItem packet, Player player)
     {
-        if (simulationOwnershipData.RevokeOwnerOfId(packet.Id))
+        NitroxId id = packet.Item.Id;
+        if (simulationOwnershipData.RevokeOwnerOfId(id))
         {
             ushort serverId = ushort.MaxValue;
-            SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, SimulationLockType.TRANSIENT);
+            SimulationOwnershipChange simulationOwnershipChange = new(id, serverId, SimulationLockType.TRANSIENT);
             playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
         }
 
-        StopTrackingExistingWorldEntity(packet.Id);
+        StopTrackingExistingWorldEntity(id);
 
         entityRegistry.AddOrUpdate(packet.Item);
 
         // Have other players respawn the item inside the inventory.
-        playerManager.SendPacketToOtherPlayers(new SpawnEntities(packet.Item, true), player);
+        playerManager.SendPacketToOtherPlayers(new SpawnEntities(packet.Item, forceRespawn: true), player);
     }
 
     private void StopTrackingExistingWorldEntity(NitroxId id)

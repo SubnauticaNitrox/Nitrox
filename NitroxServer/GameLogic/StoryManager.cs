@@ -11,7 +11,7 @@ namespace NitroxServer.GameLogic;
 /// <summary>
 /// Keeps track of time and Aurora-related events.
 /// </summary>
-public class StoryManager
+public class StoryManager : IDisposable
 {
     private readonly PlayerManager playerManager;
     private readonly PDAStateData pdaStateData;
@@ -31,21 +31,54 @@ public class StoryManager
     /// </summary>
     public double AuroraWarningTimeMs;
 
+    /// <summary>
+    /// In seconds
+    /// </summary>
+    public double AuroraRealExplosionTime;
+
     private double ElapsedMilliseconds => timeKeeper.ElapsedMilliseconds;
     private double ElapsedSeconds => timeKeeper.ElapsedSeconds;
 
-    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed, double? auroraExplosionTime, double? auroraWarningTime)
+#if SUBNAUTICA
+    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed, double? auroraExplosionTime, double? auroraWarningTime, double? auroraRealExplosionTime)
+#elif BELOWZERO
+    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed)
+#endif
     {
         this.playerManager = playerManager;
         this.pdaStateData = pdaStateData;
         this.storyGoalData = storyGoalData;
         this.timeKeeper = timeKeeper;
         this.seed = seed;
-        
+
+#if SUBNAUTICA
         AuroraCountdownTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
         AuroraWarningTimeMs = auroraWarningTime ?? ElapsedMilliseconds;
+        // +27 is from CrashedShipExploder.IsExploded, -480 is from the default time (see TimeKeeper)
+        AuroraRealExplosionTime = auroraRealExplosionTime ?? AuroraCountdownTimeMs * 0.001 + 27 - TimeKeeper.DEFAULT_TIME;
+
+        timeKeeper.TimeSkipped += ReadjustAuroraRealExplosionTime;
     }
 
+    public void ReadjustAuroraRealExplosionTime(double skipAmount)
+    {
+        // Readjust the aurora real explosion time when time skipping because it's based on in-game time
+        if (AuroraRealExplosionTime > timeKeeper.RealTimeElapsed)
+        {
+            double newTime = timeKeeper.RealTimeElapsed + skipAmount;
+            if (newTime > AuroraRealExplosionTime)
+            {
+                AuroraRealExplosionTime = timeKeeper.RealTimeElapsed;
+            }
+            else
+            {
+                AuroraRealExplosionTime -= skipAmount;
+            }
+        }
+#endif
+    }
+
+#if SUBNAUTICA
     /// <param name="instantaneous">Whether we should make Aurora explode instantly or after a short countdown</param>
     public void BroadcastExplodeAurora(bool instantaneous)
     {
@@ -53,6 +86,7 @@ public class StoryManager
         // We add 3 seconds to the cooldown (Subnautica adds only 1) so that players have enough time to receive the packet and process it
         AuroraCountdownTimeMs = ElapsedMilliseconds + 3000;
         AuroraWarningTimeMs = AuroraCountdownTimeMs;
+        AuroraRealExplosionTime = timeKeeper.RealTimeElapsed + 30; // 27 + 3
 
         if (instantaneous)
         {
@@ -61,6 +95,7 @@ public class StoryManager
             AuroraCountdownTimeMs -= 25000;
             // Is 1 second less than countdown time to have the game understand that we only want the explosion.
             AuroraWarningTimeMs = AuroraCountdownTimeMs - 1000;
+            AuroraRealExplosionTime -= 25;
             Log.Info("Aurora's explosion initiated");
         }
         else
@@ -75,6 +110,8 @@ public class StoryManager
     {
         AuroraWarningTimeMs = ElapsedMilliseconds;
         AuroraCountdownTimeMs = GenerateDeterministicAuroraTime(seed);
+        // Current time + deltaTime before countdown + 27 seconds before explosion
+        AuroraRealExplosionTime = timeKeeper.RealTimeElapsed + (AuroraCountdownTimeMs - timeKeeper.ElapsedMilliseconds) * 0.001 + 27;
 
         // We need to clear these entries from PdaLog and CompletedGoals to make sure that the client, when reconnecting, doesn't have false information
         foreach (string eventKey in AuroraEventData.GoalNames)
@@ -159,12 +196,24 @@ public class StoryManager
 
     public AuroraEventData MakeAuroraData()
     {
-        return new((float)AuroraCountdownTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f);
+        return new((float)AuroraCountdownTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f, (float)AuroraRealExplosionTime);
     }
-
+#endif
     public TimeData GetTimeData()
     {
+#if SUBNAUTICA
         return new(timeKeeper.MakeTimePacket(), MakeAuroraData());
+#elif BELOWZERO
+        return new(timeKeeper.MakeTimePacket());
+#endif
+    }
+
+    public void Dispose()
+    {
+#if SUBNAUTICA
+        timeKeeper.TimeSkipped -= ReadjustAuroraRealExplosionTime;
+#endif
+        GC.SuppressFinalize(this);
     }
 
     public enum TimeModification

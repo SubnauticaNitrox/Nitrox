@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -10,6 +10,8 @@ namespace NitroxServer.Serialization;
 
 public class ServerProtoBufSerializer : IServerSerializer
 {
+    public const string FILE_ENDING = ".nitrox";
+
     protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
     public ServerProtoBufSerializer(params string[] assemblies)
@@ -20,7 +22,7 @@ public class ServerProtoBufSerializer : IServerSerializer
         }
     }
 
-    public string FileEnding => ".nitrox";
+    public string FileEnding => FILE_ENDING;
 
     public void Serialize(Stream stream, object o)
     {
@@ -40,7 +42,7 @@ public class ServerProtoBufSerializer : IServerSerializer
 
     public T Deserialize<T>(Stream stream)
     {
-        T t = (T)Activator.CreateInstance(typeof(T));
+        T t = Activator.CreateInstance<T>();
         Model.DeserializeWithLengthPrefix(stream, t, typeof(T), PrefixStyle.Base128, 0);
         return t;
     }

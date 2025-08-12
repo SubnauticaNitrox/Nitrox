@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NitroxModel.DataStructures
 {
@@ -27,7 +27,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return $"[SimulatedEntity Id: '{Id}' PlayerId: {PlayerId} IsEntity: {ChangesPosition} LockType: {LockType}]";
+            return $"[SimulatedEntity Id: {Id}, PlayerId: {PlayerId}, ChangesPosition: {ChangesPosition}, LockType: {LockType}]";
         }
     }
 }

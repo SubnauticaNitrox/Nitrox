@@ -9,8 +9,10 @@ public class NitroxScheduledGoal
 {
     [DataMember(Order = 1)]
     public float TimeExecute { get; set; }
+
     [DataMember(Order = 2)]
     public string GoalKey { get; set; }
+
     [DataMember(Order = 3)]
     public int GoalType { get; set; }
     

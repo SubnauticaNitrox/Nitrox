@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -7,9 +8,15 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class InventoryEntitySpawner : EntitySpawner<InventoryEntity>
+public class InventoryEntitySpawner : SyncEntitySpawner<InventoryEntity>
 {
-    public override IEnumerator SpawnAsync(InventoryEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(InventoryEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        SpawnSync(entity, result);
+        yield break;
+    }
+
+    protected override bool SpawnSync(InventoryEntity entity, TaskResult<Optional<GameObject>> result)
     {
         GameObject parent = NitroxEntity.RequireObjectFrom(entity.ParentId);
         StorageContainer container = parent.GetAllComponentsInChildren<StorageContainer>()
@@ -25,12 +32,8 @@ public class InventoryEntitySpawner : EntitySpawner<InventoryEntity>
             Log.Error($"Unable to find {nameof(StorageContainer)} for: {entity}");
             result.Set(Optional.Empty);
         }
+        return true;
+    }
 
-        yield break;
-    }
- 
-    public override bool SpawnsOwnChildren(InventoryEntity entity)
-    {
-        return false;
-    }
+    protected override bool SpawnsOwnChildren(InventoryEntity entity) => false;
 }

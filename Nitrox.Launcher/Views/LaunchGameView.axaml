@@ -1,0 +1,160 @@
+﻿<UserControl
+    x:Class="Nitrox.Launcher.Views.LaunchGameView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    d:DesignWidth="1000"
+    x:DataType="vm:LaunchGameViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:LaunchGameViewModel />
+    </Design.DataContext>
+    <ScrollViewer Classes="main">
+        <StackPanel
+            Margin="20,0,20,20"
+            Background="{DynamicResource BrandWhite}"
+            Spacing="20">
+
+            <Panel Height="535" Margin="-20,0">
+                <Image Source="/Assets/Images/banners/home.png" Stretch="UniformToFill" />
+                <Image
+                    Height="48"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Source="/Assets/Images/subnautica-name.png"
+                    Stretch="Uniform" />
+            </Panel>
+
+            <Grid ColumnDefinitions="*,*">
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="0,0,20,0"
+                    FontSize="14"
+                    Text="Start your Subnautica adventure in multiplayer mode together with your friends, powered by the Nitrox mod: An open-source, modification for the game Subnautica. The project is maintained by the community with regular support and updates from its contributors." />
+                <!--  Play buttons - Negative offset to add some overlap with the background image  -->
+                <StackPanel Grid.Column="1" Margin="0,-110,0,0">
+                    <Border ClipToBounds="True" CornerRadius="10">
+                        <controls:BlurControl BlurStrength="7">
+                            <Border Background="{DynamicResource BrandPanelBackground}" Opacity=".90">
+                                <StackPanel
+                                    Margin="24,20"
+                                    Orientation="Vertical"
+                                    Spacing="9">
+                                    <Grid
+                                        Height="26"
+                                        Margin="0,0,0,9"
+                                        HorizontalAlignment="Stretch">
+                                        <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+                                            <StackPanel.Styles>
+                                                <Style Selector="TextBlock">
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                    <Setter Property="FontSize" Value="10" />
+                                                </Style>
+                                            </StackPanel.Styles>
+                                            <TextBlock Foreground="{DynamicResource BrandSubText}" Text="PLAY NITROX" />
+                                            <TextBlock Text="{Binding Version, FallbackValue='PHASE x.x.x.x'}" />
+                                        </StackPanel>
+                                        <Image
+                                            Width="19"
+                                            Height="19"
+                                            Margin="3,0"
+                                            HorizontalAlignment="Right"
+                                            Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}}"
+                                            ToolTip.Tip="{Binding PlatformToolTip}" />
+                                    </Grid>
+                                    <Button
+                                        HorizontalAlignment="Stretch"
+                                        Classes="big primary"
+                                        Command="{Binding StartMultiplayerCommand}"
+                                        ToolTip.Tip="Launch Subnautica with multiplayer enabled">
+                                        <Interaction.Behaviors>
+                                            <behaviors:FocusOnViewShowBehavior />
+                                        </Interaction.Behaviors>
+                                        <StackPanel>
+                                            <TextBlock Text="PLAY" />
+                                            <TextBlock Text="MULTIPLAYER" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button
+                                        Height="48"
+                                        HorizontalAlignment="Stretch"
+                                        Classes="big"
+                                        Command="{Binding StartSingleplayerCommand}"
+                                        ToolTip.Tip="Launch Subnautica">
+                                        <TextBlock
+                                            Margin="0,-4,0,0"
+                                            Padding="0,4,0,0"
+                                            HorizontalAlignment="Center"
+                                            FontSize="14"
+                                            Foreground="White"
+                                            Text="SINGLEPLAYER" />
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </controls:BlurControl>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding GalleryImageSources, Mode=OneTime}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="{Binding GalleryImageSources, Converter={converters:ToIntConverter}}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="6,0"
+                            ClipToBounds="True"
+                            CornerRadius="12">
+                            <Image Source="{Binding}" Stretch="UniformToFill" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock
+                    Margin="0,11,0,12"
+                    FontWeight="Bold"
+                    Text="Contributors" />
+                <StackPanel Margin="0,11,0,0" Spacing="6">
+                    <StackPanel.Styles>
+                        <Style Selector="StackPanel > TextBlock:nth-child(2n+1)">
+                            <Setter Property="FontSize" Value="10" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrandSubText}" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Style>
+                        <Style Selector="StackPanel > TextBlock:nth-child(2n)">
+                            <Setter Property="LineHeight" Value="24" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <TextBlock Text="AUTHOR" />
+                    <controls:RichTextBlock>[Sunrunner](github.com/Sunrunner37)</controls:RichTextBlock>
+                    <!--  Active contributors which have higher role than junior.  -->
+                    <TextBlock Text="CONTRIBUTORS" />
+                    <WrapPanel>
+                        <TextBlock Margin="0 0 12 0" VerticalAlignment="Center" Text="Tornac, iCleeem, Jannify, _HeN_, spacemonkeyy, Ohm, NinjaPedroX, Meas" />
+                        <Button Padding="5 2" Content="See contributions made in the last year" Command="{Binding OpenContributionsOfYearCommand}" />
+                    </WrapPanel>
+                    <TextBlock Text="STAFF" />
+                    <TextBlock>
+                        Werewolfs, Shalix, SavageJay, and a big thanks to the discord support team (Arctic-Peepers, Peepers)
+                    </TextBlock>
+                    <TextBlock Text="DESIGN" />
+                    <controls:RichTextBlock>
+                        [Rux](rux.gg)
+                    </controls:RichTextBlock>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

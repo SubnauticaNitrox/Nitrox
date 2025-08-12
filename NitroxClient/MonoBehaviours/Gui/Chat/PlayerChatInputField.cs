@@ -82,9 +82,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
-                if (!string.IsNullOrEmpty(InputField.text))
+                if (!string.IsNullOrWhiteSpace(InputField.text))
                 {
-                    ResetTimer();
                     if (UnityEngine.Input.GetKey(KeyCode.Return))
                     {
                         if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
@@ -113,10 +112,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                             sentMessages.Add(InputField.text);
                             _sentMessagesIndex = sentMessages.Count;
                             playerChatManager.SendMessage();
+                            playerChatManager.DeselectChat(); // return to game after message sent
                         }
                     }
                 }
-                
+                else
+                {
+                    if (UnityEngine.Input.GetKey(KeyCode.Return))
+                    {
+                        ResetTimer();
+                        playerChatManager.DeselectChat();
+                    }
+                }
+
                 // Chat history stuff
                 // GetKeyDown means it's only getting executed once per press
                 if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow))

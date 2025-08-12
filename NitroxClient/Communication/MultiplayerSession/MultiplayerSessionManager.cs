@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -63,11 +62,17 @@ namespace NitroxClient.Communication.MultiplayerSession
             switch (nitroxVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
                 case -1:
-                    Log.InGame($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    Log.Error($"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
+                    Log.InGame(Language.main.Get("Nitrox_OutOfDateClient")
+                                           .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
+                                           .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
                     return;
                 case 1:
-                    Log.InGame($"The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
+                    Log.InGame(Language.main.Get("Nitrox_OutOfDateServer")
+                                           .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
+                                           .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
                     return;
             }
@@ -80,6 +85,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             // If a reservation has already been sent (in which case the client is enqueued in the join queue)
             if (CurrentState.CurrentStage == MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION)
             {
+                Log.Info("Waiting in join queue…");
                 Log.InGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }
@@ -93,6 +99,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             if (reservation.ReservationState == MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE)
             {
+                Log.Info("Waiting in join queue…");
                 Log.InGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
@@ -18,7 +18,7 @@ public class EntitySignMetadata : EntityMetadata
     public int ScaleIndex { get; }
 
     [DataMember(Order = 4)]
-    public bool[] Elements { get; }
+    public bool[] Elements { get; } = [];
 
     [DataMember(Order = 5)]
     public bool Background { get; }

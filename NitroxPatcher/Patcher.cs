@@ -17,6 +17,7 @@ using UnityEngine;
 
 namespace NitroxPatcher;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 internal static class Patcher
 {
     /// <summary>

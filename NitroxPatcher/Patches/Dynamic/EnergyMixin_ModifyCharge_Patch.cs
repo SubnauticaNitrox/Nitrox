@@ -1,15 +1,13 @@
 using System;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.ModifyCharge(default(float)));
 
@@ -17,18 +15,11 @@ public class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
     {
         GameObject batteryGo = __instance.GetBatteryGameObject();
 
-        if (batteryGo && batteryGo.TryGetComponent(out Battery battery))
+        if (batteryGo && batteryGo.TryGetComponent(out Battery battery) &&
+            Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0 && //Send package if power changed to next natural number
+            batteryGo.TryGetIdOrWarn(out NitroxId id))
         {
-            if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number
-            {
-                NitroxId id = NitroxEntity.GetId(batteryGo);
-                Resolve<Entities>().EntityMetadataChanged(battery, id);
-            }
+            Resolve<Entities>().EntityMetadataChanged(battery, id);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable]
 [DataContract]
-public class PlayerWorldEntity : WorldEntity
+public class PlayerWorldEntity : GlobalRootEntity
 {
     [IgnoreConstructor]
     protected PlayerWorldEntity()
@@ -17,21 +17,12 @@ public class PlayerWorldEntity : WorldEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    /// <remarks>Used for deserialization</remarks>
-    public PlayerWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
-    {
-        Id = id;
-        TechType = techType;
-        Metadata = metadata;
-        ParentId = parentId;
-        Transform = transform;
-        ChildEntities = childEntities;
-        Level = level;
-        ClassId = classId;
-        SpawnedByServer = spawnedByServer;
-        WaterParkId = waterParkId;
-        ExistsInGlobalRoot = existsInGlobalRoot;
-    }
+    /// <remarks>
+    /// Used for deserialization.
+    /// <see cref="WorldEntity.SpawnedByServer"/> is set to true because this entity is meant to receive simulation locks
+    /// </remarks>
+    public PlayerWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        base(transform, level, classId, true, id, techType, metadata, parentId, childEntities) {}
 
     public override string ToString()
     {

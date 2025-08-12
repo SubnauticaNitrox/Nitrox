@@ -22,9 +22,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
-        NitroxId localPlayer = NitroxEntity.GetId(Player.main.gameObject);
-
-        if (localPlayer == entity.Id)
+        if (Player.main.TryGetNitroxId(out NitroxId localPlayerId) && localPlayerId == entity.Id)
         {
             // No special setup for the local player.  Simply return saying it is spawned.
             result.Set(Player.main.gameObject);
@@ -35,12 +33,12 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
         // The server may send us a player entity but they are not guarenteed to be actively connected at the moment - don't spawn them.  In the
         // future, we could make this configurable to be able to spawn disconnected players in the world.
-        if (remotePlayer.HasValue)
+        if (remotePlayer.HasValue && !remotePlayer.Value.Body)
         {
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
 
             remotePlayer.Value.InitializeGameObject(remotePlayerBody);
-            
+
             if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
             {
                 remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
@@ -77,6 +75,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             Log.Debug($"Found sub root for {remotePlayer.PlayerName}. Will add him and update animation.");
             remotePlayer.SetSubRoot(subRoot);
         }
+#if SUBNAUTICA
         else if (parent.TryGetComponent(out EscapePod escapePod))
         {
             Log.Debug($"Found EscapePod for {remotePlayer.PlayerName}.");
@@ -85,7 +84,13 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
         else
         {
             Log.Error($"Found neither SubRoot component nor EscapePod on {parent.name} for {remotePlayer.PlayerName}.");
-        }        
+        }
+#elif BELOWZERO
+        else
+        {
+            Log.Error($"Could not find SubRoot component on {parent.name} for {remotePlayer.PlayerName}.");
+        }
+#endif
     }
 
     private bool IsSwimming(Vector3 playerPosition, Optional<GameObject> parent)
@@ -95,7 +100,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             parent.Value.TryGetComponent<SubRoot>(out SubRoot subroot);
 
             // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
-            // or in a waterpark                            
+            // or in a waterpark
             if (subroot)
             {
                 if (subroot.IsUnderwater(playerPosition))
@@ -122,7 +127,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
                     return false;
                 }
             }
-
+#if SUBNAUTICA
             Log.Debug($"Trying to find escape pod for {parent}.");
             parent.Value.TryGetComponent<EscapePod>(out EscapePod escapePod);
             if (escapePod)
@@ -130,6 +135,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
                 Log.Debug("Found escape pod for player. Will add him and update animation.");
                 return false;
             }
+#endif
         }
 
         // Player can be above ocean level.

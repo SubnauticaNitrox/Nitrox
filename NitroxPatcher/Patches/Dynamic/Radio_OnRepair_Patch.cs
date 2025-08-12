@@ -1,28 +1,26 @@
+#if SUBNAUTICA
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class Radio_OnRepair_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Radio_OnRepair_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Radio t) => t.OnRepair());
+
+    public static void Prefix(Radio __instance)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Radio t) => t.OnRepair());
-
-        public static bool Prefix(Radio __instance)
+        if (__instance.TryGetComponentInParent(out EscapePod pod) &&
+            pod.TryGetIdOrWarn(out NitroxId id) &&
+            Resolve<EntityMetadataManager>().TryExtract(pod, out EntityMetadata metadata))
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.Radio.ToDto()));
-            return true;
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
+            Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);
         }
     }
 }
+#endif

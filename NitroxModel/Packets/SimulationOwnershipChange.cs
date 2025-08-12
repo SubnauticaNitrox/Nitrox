@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 
@@ -9,11 +9,11 @@ namespace NitroxModel.Packets
     {
         public List<SimulatedEntity> Entities { get; }
 
-        public SimulationOwnershipChange(NitroxId id, ushort owningPlayerId, SimulationLockType lockType)
+        public SimulationOwnershipChange(NitroxId id, ushort owningPlayerId, SimulationLockType lockType, bool changesPosition = false)
         {
             Entities = new List<SimulatedEntity>
             {
-                new(id, owningPlayerId, false, lockType)
+                new(id, owningPlayerId, changesPosition, lockType)
             };
         }
 

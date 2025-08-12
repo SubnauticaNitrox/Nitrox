@@ -1,36 +1,33 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.HUD
+namespace NitroxClient.GameLogic.HUD;
+
+public class PlayerVitalsManager
 {
-    public class PlayerVitalsManager
+    private readonly Dictionary<ushort, RemotePlayerVitals> vitalsByPlayerId = new();
+
+    public RemotePlayerVitals CreateOrFindForPlayer(RemotePlayer remotePlayer)
     {
-        private readonly Dictionary<ushort, RemotePlayerVitals> vitalsByPlayerId = new Dictionary<ushort, RemotePlayerVitals>();
-        private PlayerManager PlayerManager { get; }
-
-        public PlayerVitalsManager(PlayerManager playerManager)
+        if (!vitalsByPlayerId.TryGetValue(remotePlayer.PlayerId, out RemotePlayerVitals vitals))
         {
-            PlayerManager = playerManager;
+            vitalsByPlayerId[remotePlayer.PlayerId] = vitals = RemotePlayerVitals.CreateForPlayer(remotePlayer);
         }
+        return vitals;
+    }
 
-        public void RemoveForPlayer(ushort playerId)
+    public void RemoveForPlayer(ushort playerId)
+    {
+        if (vitalsByPlayerId.TryGetValue(playerId, out RemotePlayerVitals vitals))
         {
-            RemotePlayerVitals removedPlayerVitals = CreateForPlayer(playerId);
             vitalsByPlayerId.Remove(playerId);
-
-            Object.Destroy(removedPlayerVitals);
+            Object.Destroy(vitals.gameObject);
         }
+    }
 
-        public RemotePlayerVitals CreateForPlayer(ushort playerId)
-        {
-            if (!vitalsByPlayerId.TryGetValue(playerId, out RemotePlayerVitals vitals))
-            {
-                vitals = RemotePlayerVitals.CreateForPlayer(playerId);
-                vitalsByPlayerId[playerId] = vitals;
-            }
-
-            return vitals;
-        }
+    public bool TryFindForPlayer(ushort playerId, out RemotePlayerVitals vitals)
+    {
+        return vitalsByPlayerId.TryGetValue(playerId, out vitals);
     }
 }

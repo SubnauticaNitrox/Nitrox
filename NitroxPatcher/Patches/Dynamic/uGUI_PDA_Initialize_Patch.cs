@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Add custom tabs to the PDA by injecting them in the regular list before the actual initialization.
 /// </summary>
-public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.Initialize());
 
@@ -36,7 +37,7 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
                  * foreach (KeyValuePair<PDATab, uGUI_PDATab> keyValuePair in this.tabs)
                  */
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => InjectNitroxTabs(default)));
+                yield return new CodeInstruction(OpCodes.Call, ((Action<uGUI_PDA>)InjectNitroxTabs).Method);
             }
         }
     }
@@ -51,10 +52,5 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
             uGUI_PDA.regularTabs.Add(nitroxTab.Key);
             __instance.tabs.Add(nitroxTab.Key, nitroxTab.Value.uGUI_PDATab);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

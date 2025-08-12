@@ -1,50 +1,43 @@
-﻿using System.Reflection;
-using HarmonyLib;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+/// <summary>
+/// For players without lock: apply remote creature actions and prevent the original call.
+/// For players with lock: broadcast new creature actions
+/// </summary>
+public sealed partial class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default));
+
+    public static bool Prefix(Creature __instance, out NitroxId __state, ref CreatureAction __result)
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
-
-        private static CreatureAction previousAction;
-
-        public static bool Prefix(Creature __instance, ref CreatureAction __result)
+        if (!__instance.TryGetIdOrWarn(out __state) || Resolve<SimulationOwnership>().HasAnyLockType(__state))
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
-            {
-                previousAction = __instance.prevBestAction;
-                return true;
-            }
-
-            // CreatureActionChangedProcessor.ActionById.TryGetValue(id, out __result);
-
-            return false;
+            return true;
         }
 
-        public static void Postfix(Creature __instance, ref CreatureAction __result)
+        // If we have received any order
+        if (Resolve<AI>().TryGetActionForCreature(__instance, out CreatureAction action))
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            __result = action;
+        }
+        return false;
+    }
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
-            {
-                if (previousAction != __result)
-                {
-                    // Multiplayer.Logic.AI.CreatureActionChanged(id, __result);
-                }
-            }
+    public static void Postfix(Creature __instance, bool __runOriginal, NitroxId __state, ref CreatureAction __result)
+    {
+        if (!__runOriginal || __state == null)
+        {
+            return;
         }
 
-        public override void Patch(Harmony harmony)
+        if (Resolve<SimulationOwnership>().HasAnyLockType(__state))
         {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
+            Resolve<AI>().BroadcastNewAction(__state, __instance, __result);
         }
     }
 }

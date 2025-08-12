@@ -1,23 +1,34 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class EntityMetadataUpdateProcessor : ClientPacketProcessor<EntityMetadataUpdate>
 {
-    public class EntityMetadataUpdateProcessor : ClientPacketProcessor<EntityMetadataUpdate>
+    private readonly EntityMetadataManager entityMetadataManager;
+
+    public EntityMetadataUpdateProcessor(EntityMetadataManager entityMetadataManager)
     {
-        public override void Process(EntityMetadataUpdate update)
+        this.entityMetadataManager = entityMetadataManager;
+    }
+
+    public override void Process(EntityMetadataUpdate update)
+    {
+        if (!NitroxEntity.TryGetObjectFrom(update.Id, out GameObject gameObject))
         {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(update.Id);
-
-            Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(update.NewValue);
-            Validate.IsTrue(metadataProcessor.HasValue, $"No processor found for EntityMetadata of type {update.NewValue.GetType()}");
-
-            metadataProcessor.Value.ProcessMetadata(gameObject, update.NewValue);
+            entityMetadataManager.RegisterNewerMetadata(update.Id, update.NewValue);
+            return;
         }
+
+        Optional<IEntityMetadataProcessor> metadataProcessor = entityMetadataManager.FromMetaData(update.NewValue);
+        Validate.IsTrue(metadataProcessor.HasValue, $"No processor found for EntityMetadata of type {update.NewValue.GetType()}");
+
+        metadataProcessor.Value.ProcessMetadata(gameObject, update.NewValue);
     }
 }

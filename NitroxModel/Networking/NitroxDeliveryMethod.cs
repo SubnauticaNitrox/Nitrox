@@ -1,12 +1,22 @@
-﻿namespace NitroxModel.Networking
+namespace NitroxModel.Networking
 {
 
     public class NitroxDeliveryMethod
     {
-        public enum DeliveryMethod
+        public enum DeliveryMethod : byte
         {
-            UNRELIABLE_SEQUENCED,
-            RELIABLE_ORDERED
+            /// <summary>
+            /// <inheritdoc cref="LiteNetLib.DeliveryMethod.Sequenced"/>
+            /// </summary>
+            UNRELIABLE_SEQUENCED = LiteNetLib.DeliveryMethod.Sequenced,
+            /// <summary>
+            /// <inheritdoc cref="LiteNetLib.DeliveryMethod.ReliableOrdered"/>
+            /// </summary>
+            RELIABLE_ORDERED = LiteNetLib.DeliveryMethod.ReliableOrdered,
+            /// <summary>
+            /// <inheritdoc cref="LiteNetLib.DeliveryMethod.ReliableSequenced"/>
+            /// </summary>
+            RELIABLE_ORDERED_LAST = LiteNetLib.DeliveryMethod.ReliableSequenced,
         }
 
         public static LiteNetLib.DeliveryMethod ToLiteNetLib(DeliveryMethod deliveryMethod)
@@ -14,9 +24,10 @@
             switch (deliveryMethod)
             {
                 case DeliveryMethod.UNRELIABLE_SEQUENCED:
-                    return LiteNetLib.DeliveryMethod.Sequenced;
+                case DeliveryMethod.RELIABLE_ORDERED_LAST:
                 case DeliveryMethod.RELIABLE_ORDERED:
-                    return LiteNetLib.DeliveryMethod.ReliableOrdered;
+                    return (LiteNetLib.DeliveryMethod)deliveryMethod;
+
                 default:
                     return LiteNetLib.DeliveryMethod.ReliableOrdered;
             }

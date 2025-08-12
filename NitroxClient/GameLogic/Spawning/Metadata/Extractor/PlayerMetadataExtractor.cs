@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel_Subnautica.DataStructures;
@@ -7,7 +7,7 @@ using static NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetada
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class PlayerMetadataExtractor : GenericEntityMetadataExtractor<Player, PlayerMetadata>
+public class PlayerMetadataExtractor : EntityMetadataExtractor<Player, PlayerMetadata>
 {
     public override PlayerMetadata Extract(Player player)
     {
@@ -24,11 +24,10 @@ public class PlayerMetadataExtractor : GenericEntityMetadataExtractor<Player, Pl
         {
             InventoryItem item = slotWithItem.Value;
 
-            // not every slot will always contain an item. 
-            if(item != null)
+            // not every slot will always contain an item.
+            if (item != null && item.item.TryGetIdOrWarn(out NitroxId itemId))
             {
-                NitroxId nitroxId = NitroxEntity.GetId(item.item.gameObject);
-                equipped.Add(new EquippedItem(nitroxId, slotWithItem.Key, item.techType.ToDto()));
+                equipped.Add(new EquippedItem(itemId, slotWithItem.Key, item.techType.ToDto()));
             }
         }
 

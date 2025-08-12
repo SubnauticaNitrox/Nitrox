@@ -1,0 +1,27 @@
+<Application x:Class="Nitrox.Launcher.App"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Name="Nitrox">
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="/Models/Styles/Palette/Nitrox.axaml" />
+                <MergeResourceInclude Source="/Models/Controls/CustomTitlebar.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+    
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="/Models/Styles/Nitrox.axaml" />
+    </Application.Styles>
+    
+    <!-- Menu that is used on macOS and some Linux distributions -->
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="You are the best captain on this planet" />
+        </NativeMenu>
+    </NativeMenu.Menu>
+    
+</Application>

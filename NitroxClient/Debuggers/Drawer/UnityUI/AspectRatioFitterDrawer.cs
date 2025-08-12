@@ -1,24 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class AspectRatioFitterDrawer : IDrawer
+public class AspectRatioFitterDrawer : IDrawer<AspectRatioFitter>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(AspectRatioFitter) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case AspectRatioFitter aspectRatioFitter:
-                DrawAspectRatioFitter(aspectRatioFitter);
-                break;
-        }
-    }
-
-    private static void DrawAspectRatioFitter(AspectRatioFitter aspectRatioFitter)
+    public void Draw(AspectRatioFitter aspectRatioFitter)
     {
         using (new GUILayout.HorizontalScope())
         {

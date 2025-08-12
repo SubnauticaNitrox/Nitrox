@@ -1,7 +1,9 @@
 using System.Collections;
+#if SUBNAUTICA
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.InitialSync.Base;
+#endif
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -10,96 +12,124 @@ using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using Math = System.Math;
 
-namespace NitroxClient.GameLogic.InitialSync
+namespace NitroxClient.GameLogic.InitialSync;
+
+public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 {
-    public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
+    private static readonly Vector3 spawnRelativeToEscapePod = new(0.9f, 2.1f, 0);
+
+    public PlayerPositionInitialSyncProcessor()
     {
-        private static readonly Vector3 spawnRelativeToEscapePod = new Vector3(0.9f, 2.1f, 0);
+        AddDependency<PlayerInitialSyncProcessor>();
+        AddDependency<GlobalRootInitialSyncProcessor>();
+    }
 
-        private readonly IPacketSender packetSender;
+    public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+    {
+        // We freeze the player so that he doesn't fall before the cells around him have loaded
+        // Is disabled manually or in Terrain.WaitForWorldLoad()
+        Player.main.cinematicModeActive = true;
 
-        public PlayerPositionInitialSyncProcessor(IPacketSender packetSender)
+#if SUBNAUTICA
+        AttachPlayerToEscapePod(packet.AssignedEscapePodId);
+#endif
+
+        Vector3 position = packet.PlayerSpawnData.ToUnity();
+        Quaternion rotation = packet.PlayerSpawnRotation.ToUnity();
+        if (Math.Abs(position.x) < 0.0002 && Math.Abs(position.y) < 0.0002 && Math.Abs(position.z) < 0.0002)
         {
-            this.packetSender = packetSender;
+            position = Player.mainObject.transform.position;
+        }
+        Player.main.SetPosition(position, rotation);
 
-            DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // Make sure the player is configured
-            DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Players can be spawned in buildings
-            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Players can be spawned in entities in the global root (such as vehicles/escape pod)
+        // Player.ValidateEscapePod is setting currentEscapePod to null if player is not inside EscapePod
+#if SUBNAUTICA
+        // Player.ValidateEscapePod is setting currentEscapePod to null if player is not inside EscapePod
+        using (PacketSuppressor<EscapePodChanged>.Suppress())
+        {
+            Player.main.ValidateEscapePod();
+        }
+#endif
+
+        Optional<NitroxId> subRootId = packet.PlayerSubRootId;
+        if (!subRootId.HasValue)
+        {
+            yield return Terrain.WaitForWorldLoad();
+            yield break;
         }
 
-        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+        Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Value);
+        if (!sub.HasValue)
         {
-            // We freeze the player so that he doesn't fall before the cells around him have loaded
-            Player.main.cinematicModeActive = true;
+            Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
+            yield return Terrain.WaitForWorldLoad();
+            yield break;
+        }
 
-            AttachPlayerToEscapePod(packet.AssignedEscapePodId);
-
-            Vector3 position = packet.PlayerSpawnData.ToUnity();
-            Quaternion rotation = packet.PlayerSpawnRotation.ToUnity();
-            if (Math.Abs(position.x) < 0.0002 && Math.Abs(position.y) < 0.0002 && Math.Abs(position.z) < 0.0002)
-            {
-                position = Player.mainObject.transform.position;
-            }
-            Player.main.SetPosition(position, rotation);
-
-            // Player.Update is setting SubRootID to null after Player position is set
-            using (PacketSuppressor<EscapePodChanged>.Suppress())
-            {
-                Player.main.ValidateEscapePod();
-            }
-
-            // Player position is relative to a subroot if in a subroot
-            Optional<NitroxId> subRootId = packet.PlayerSubRootId;
-            if (!subRootId.HasValue)
-            {
-                yield return Terrain.WaitForWorldLoad();
-                yield break;
-            }
-
-            Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Value);
-            if (!sub.HasValue)
-            {
-                Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
-                yield return Terrain.WaitForWorldLoad();
-                yield break;
-            }
-
-            if (!sub.Value.TryGetComponent(out SubRoot subRoot))
-            {
-                Log.Debug("SubRootId-GameObject has no SubRoot component, so it's assumed to be the EscapePod");
-                yield return Terrain.WaitForWorldLoad();
-                yield break;
-            }
-
+        if (sub.Value.TryGetComponent(out SubRoot subRoot))
+        {
+#if SUBNAUTICA
             Player.main.SetCurrentSub(subRoot, true);
-            if (subRoot.isBase)
+#elif BELOWZERO
+            Player.main.SetCurrentSub(subRoot);
+#endif
+            if (subRoot.TryGetComponent(out Base @base))
             {
-                // If the player's in a base, we don't need to wait for the world to load
-                Player.main.cinematicModeActive = false;
-                yield break;
+                SetupPlayerIfInWaterPark(@base);
+            }
+        }
+#if SUBNAUTICA
+        else if (sub.Value.GetComponent<EscapePod>())
+        {
+            Player.main.escapePod.Update(true);
+        }
+#endif
+        else
+        {
+            Log.Error("SubRootId-GameObject has no SubRoot or EscapePod component");
+        }
+
+        // If the player's in a base/cyclops we don't need to wait for the world to load
+        Player.main.UpdateIsUnderwater();
+        Player.main.cinematicModeActive = false;
+    }
+
+#if SUBNAUTICA
+    private static void AttachPlayerToEscapePod(NitroxId escapePodId)
+    {
+        GameObject escapePod = NitroxEntity.RequireObjectFrom(escapePodId);
+
+        EscapePod.main.transform.position = escapePod.transform.position;
+        EscapePod.main.playerSpawn.position = escapePod.transform.position + spawnRelativeToEscapePod;
+
+        Player.main.transform.position = EscapePod.main.playerSpawn.position;
+        Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+        Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
+    }
+#endif
+
+    private static void SetupPlayerIfInWaterPark(Base @base)
+    {
+        foreach (Transform baseChild in @base.transform)
+        {
+            if (baseChild.TryGetComponent(out WaterPark waterPark))
+            {
+                if (waterPark is LargeRoomWaterPark)
+                {
+                    // LargeRoomWaterPark.VerifyPlayerWaterPark sets Player.main.currentWaterPark to the right value
+                    waterPark.VerifyPlayerWaterPark(Player.main);
+                }
+                else if (waterPark.IsPointInside(Player.main.transform.position))
+                {
+                    Player.main.currentWaterPark = waterPark;
+                }
             }
 
-            Transform rootTransform = subRoot.transform;
-            Quaternion vehicleAngle = rootTransform.rotation;
-            // "position" is a relative position and "positionInVehicle" an absolute position
-            Vector3 positionInVehicle = vehicleAngle * position + rootTransform.position;
-            Player.main.SetPosition(positionInVehicle, rotation * vehicleAngle);
-            Player.main.cinematicModeActive = false;
-            Player.main.UpdateIsUnderwater();
+            if (Player.main.currentWaterPark)
+            {
+                return;
+            }
         }
-
-        private void AttachPlayerToEscapePod(NitroxId escapePodId)
-        {
-            GameObject escapePod = NitroxEntity.RequireObjectFrom(escapePodId);
-
-            EscapePod.main.transform.position = escapePod.transform.position;
-            EscapePod.main.playerSpawn.position = escapePod.transform.position + spawnRelativeToEscapePod;
-
-            Player.main.transform.position = EscapePod.main.playerSpawn.position;
-            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
-
-            Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
-        }
-
     }
 }

@@ -19,7 +19,7 @@ public class CellRootEntity : WorldEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public CellRootEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, bool existsInGlobalRoot, NitroxId waterParkId)
+    public CellRootEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id)
     {
         Transform = new NitroxTransform(localPosition, localRotation, scale);
         TechType = techType;
@@ -27,12 +27,10 @@ public class CellRootEntity : WorldEntity
         Level = level;
         ClassId = classId;
         SpawnedByServer = spawnedByServer;
-        WaterParkId = waterParkId;
-        ExistsInGlobalRoot = existsInGlobalRoot;
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public CellRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public CellRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Id = id;
         TechType = techType;
@@ -43,8 +41,6 @@ public class CellRootEntity : WorldEntity
         Level = level;
         ClassId = classId;
         SpawnedByServer = spawnedByServer;
-        WaterParkId = waterParkId;
-        ExistsInGlobalRoot = existsInGlobalRoot;
     }
 
     public override string ToString()

@@ -1,11 +1,12 @@
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 using static NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGameObject, CyclopsMetadata>
+public class CyclopsMetadataExtractor : EntityMetadataExtractor<CyclopsGameObject, CyclopsMetadata>
 {
     public override CyclopsMetadata Extract(CyclopsGameObject cyclops)
     {
@@ -27,7 +28,10 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
         LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>();
         float health = liveMixin.health;
 
-        return new(silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health);
+        SubRoot subRoot = gameObject.RequireComponentInChildren<SubRoot>();
+        bool isDestroyed = subRoot.subDestroyed || health <= 0f;
+
+        return new(silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health, isDestroyed);
     }
 
     public struct CyclopsGameObject

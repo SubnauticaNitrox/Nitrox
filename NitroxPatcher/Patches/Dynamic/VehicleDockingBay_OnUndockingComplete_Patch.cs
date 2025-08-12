@@ -1,23 +1,27 @@
-﻿using System.Reflection;
-using HarmonyLib;
-using NitroxClient.GameLogic;
+using System.Reflection;
+using NitroxClient.Communication.Abstract;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class VehicleDockingBay_OnUndockingComplete_Patch : NitroxPatch, IDynamicPatch
 {
-    class VehicleDockingBay_OnUndockingComplete_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo targetMethod = Reflect.Method((VehicleDockingBay t) => t.OnUndockingComplete(default(Player)));
+
+    public static void Prefix(VehicleDockingBay __instance)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((VehicleDockingBay t) => t.OnUndockingComplete(default(Player)));
-
-        public static void Prefix(VehicleDockingBay __instance, Player player)
+        if (!__instance.TryGetIdOrWarn(out NitroxId dockId) ||
+#if SUBNAUTICA
+            !__instance.GetDockedVehicle().TryGetIdOrWarn(out NitroxId vehicleId))
+#elif BELOWZERO
+            !__instance.GetDockedObject().TryGetIdOrWarn(out NitroxId vehicleId))
+#endif
         {
-            Vehicle vehicle = __instance.GetDockedVehicle();
-            Resolve<Vehicles>().BroadcastVehicleUndocking(__instance, vehicle, false);
+            return;
         }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
-        }
+        Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId, false));
     }
 }

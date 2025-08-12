@@ -1,0 +1,12 @@
+{
+    "Nitrox_AddServer": "додати сервер",
+    "Nitrox_AddServer_AddressDescription": "домаћин:",
+    "Nitrox_AddServer_AddressPlaceholder": "Унеси ИП или адресу сервера",
+    "Nitrox_AddServer_Confirm": "Направи сервер",
+    "Nitrox_AddServer_CreatedSuccessful": "Успешно направљен нови сервер.",
+    "Nitrox_AddServer_InvalidInput": "Ваш инпут је неуспешан. Молим вас проверите да ли су сва поља испуњена.",
+    "Nitrox_AddServer_NameDescription": "Име:",
+    "Nitrox_AddServer_NamePlaceholder": "Унесите име за сервер",
+    "Nitrox_AddServer_PortDescription": "Порт:",
+    "Nitrox_AddServer_PortPlaceholder": "Унесите нумерички порт за сервер"
+}

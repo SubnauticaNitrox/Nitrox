@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Decide whether or not we want to render the pings on the screen
 /// </summary>
-public class uGUI_Pings_IsVisibleNow_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class uGUI_Pings_IsVisibleNow_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TargetMethod = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
 
@@ -34,10 +34,5 @@ public class uGUI_Pings_IsVisibleNow_Patch : NitroxPatch, IDynamicPatch
         }
 
         return Resolve<NitroxPDATabManager>().CustomTabs.TryGetValue(uGUI_PDA.main.currentTabType, out NitroxPDATab nitroxTab) && nitroxTab.KeepPingsVisible;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TargetMethod);
     }
 }

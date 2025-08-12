@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -48,7 +48,6 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         guid = new Guid(bytes);
     }
 
-    [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         info.AddValue("id", guid.ToByteArray());

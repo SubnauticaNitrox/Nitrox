@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -10,7 +9,7 @@ using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class KnownTech_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class KnownTech_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => KnownTech.NotifyAdd(default, default));
 
@@ -29,10 +28,5 @@ public class KnownTech_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
             verbose,
             partialEntries.Select(entry => entry.techType.ToDto()).ToList()
         ));
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

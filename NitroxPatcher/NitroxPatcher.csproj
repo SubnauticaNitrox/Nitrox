@@ -1,26 +1,38 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFrameworks>net472;net9.0</TargetFrameworks>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='BelowZero'">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="HarmonyX" Version="2.10.0" />
+        <PackageReference Include="HarmonyX" Version="2.10.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
-      <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Reference Include="FMODUnity">
-          <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
-        </Reference>
-        <Reference Include="Sentry">
-          <HintPath>$(GameManagedDir)\Sentry.dll</HintPath>
-        </Reference>
+        <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
+        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Update="Nitrox.Discovery.MSBuild" Version="0.1.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <Target Name="IncludeGameReferences" AfterTargets="FindGameAndIncludeReferences">
+        <ItemGroup>
+            <Reference Include="FMODUnity">
+                <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
+            </Reference>
+            <Reference Include="Sentry">
+                <HintPath>$(GameManagedDir)\Sentry.dll</HintPath>
+            </Reference>
+        </ItemGroup>
+    </Target>
 </Project>

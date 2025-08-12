@@ -1,0 +1,121 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.PreviewWith>
+        <StackPanel Width="200">
+            <controls:CustomTitlebar
+                Background="IndianRed"
+                CanMaximize="False"
+                CanMinimize="False" />
+            <controls:CustomTitlebar
+                Background="ForestGreen"
+                CanMaximize="True"
+                CanMinimize="False" />
+            <controls:CustomTitlebar Background="CornflowerBlue" CanMaximize="False" />
+            <controls:CustomTitlebar Background="Violet" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type controls:CustomTitlebar}" TargetType="controls:CustomTitlebar">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel Background="Transparent">
+                    <Border
+                        Padding="5,2"
+                        HorizontalAlignment="Left"
+                        IsVisible="{TemplateBinding ShowTitle}">
+                        <TextBlock
+                            VerticalAlignment="Stretch"
+                            Text="{Binding $parent[Window].Title}"
+                            TextAlignment="Center" />
+                    </Border>
+                    <StackPanel>
+                        <Button
+                            x:Name="PART_MinimizeButton"
+                            Classes.leftOff1="{x:True}"
+                            Classes.leftOff2="{x:True}"
+                            Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{TemplateBinding CanMinimize}">
+                            <Svg Classes="theme" Path="/Assets/Icons/minimize.svg" />
+                        </Button>
+                        <Button
+                            x:Name="PART_MaximizeButton"
+                            Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}"
+                            Classes.leftOff2="{x:True}"
+                            Command="{Binding ToggleMaximizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Button.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <TemplateBinding Property="CanMaximize" />
+                                    <Binding Path="$parent[Window].CanResize" />
+                                </MultiBinding>
+                            </Button.IsVisible>
+                            <Svg
+                                Classes="theme"
+                                Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}"
+                                Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
+                        </Button>
+                        <Button
+                            x:Name="PART_CloseButton"
+                            Classes="close"
+                            Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}"
+                            Classes.leftOff2="{Binding !#PART_MaximizeButton.IsVisible}"
+                            Command="{Binding CloseCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Svg Classes="theme" Path="/Assets/Icons/close.svg" />
+                        </Button>
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!--  Default template values  -->
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ZIndex" Value="100" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ShowTitle" Value="False" />
+
+        <Style Selector="^ /template/ StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+
+            <Style Selector="^ >  Button">
+                <Setter Property="Width" Value="46" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Opacity" Value="1" />
+
+                <!--  This selector force overrides button style. TODO: fix ButtonStyle.axaml so this isn't necessary and move setters out of this selector.  -->
+                <Style Selector="^:nth-child(1n)">
+                    <Setter Property="CornerRadius" Value="0" />
+                    <Setter Property="Background" Value="{TemplateBinding Background}" />
+                </Style>
+
+                <!--  Button[IsVisible=True]:nth-child(1) doesn't work to filter only visible buttons. Here, leftOff1 is used to check if previous button is on and leftOff2 is the next one over that.  -->
+                <Style Selector="^.leftOff1.leftOff2">
+                    <Setter Property="CornerRadius" Value="0 0 0 5" />
+                </Style>
+
+                <Style Selector="^ >  :is(Control)">
+                    <Setter Property="Height" Value="11" />
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                    <Setter Property="Opacity" Value="1" />
+                </Style>
+
+                <Style Selector="^.close:pointerover">
+                    <Setter Property="Background" Value="Red" />
+                </Style>
+            </Style>
+
+            <Style Selector="^ Svg.maximize">
+                <Setter Property="Path" Value="/Assets/Icons/maximize.svg" />
+            </Style>
+            <Style Selector="^ Svg.restore">
+                <Setter Property="Path" Value="/Assets/Icons/restore.svg" />
+            </Style>
+        </Style>
+
+    </ControlTheme>
+</ResourceDictionary>

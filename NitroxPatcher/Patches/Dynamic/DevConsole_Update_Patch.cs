@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 ///     Keeps DevConsole disabled when enter is pressed.
 /// </summary>
-internal class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly InstructionsPattern devConsoleSetStateTruePattern = new()
     {
@@ -30,10 +30,5 @@ internal class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         return instructions.ChangeAtMarker(devConsoleSetStateTruePattern, "ConsoleEnableFlag", i => i.opcode = Ldc_I4_0);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

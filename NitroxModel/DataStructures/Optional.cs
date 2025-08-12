@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -16,7 +16,7 @@ namespace NitroxModel.DataStructures.Util
     /// <typeparam name="T"></typeparam>
     [Serializable]
     [DataContract]
-    public struct Optional<T> : ISerializable where T : class
+    public struct Optional<T> : ISerializable, IEquatable<Optional<T>> where T : class
     {
         private delegate bool HasValueDelegate(T value);
 
@@ -41,7 +41,7 @@ namespace NitroxModel.DataStructures.Util
                     // Only create the list in memory when required.
                     valueChecks ??= new List<Func<object, bool>>();
 
-                    // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always be null for `o as T`) 
+                    // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always be null for `o as T`)
                     valueChecks.Add(isObj ? o => !filter.Key.IsInstanceOfType(o) || filter.Value(o) : filter.Value);
                 }
             }
@@ -119,16 +119,17 @@ namespace NitroxModel.DataStructures.Util
             Value = (T)info.GetValue("value", typeof(T));
         }
 
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("value", Value);
         }
 
+#pragma warning disable CS0618 // OptionalEmpty is only allowed to be used internally
         public static implicit operator Optional<T>(OptionalEmpty none)
         {
             return new Optional<T>();
         }
+#pragma warning restore CS0618
 
         public static implicit operator Optional<T>?(T obj)
         {
@@ -148,16 +149,47 @@ namespace NitroxModel.DataStructures.Util
         {
             return value.Value;
         }
+        public bool Equals(Optional<T> other)
+        {
+            return EqualityComparer<T>.Default.Equals(Value, other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Optional<T> other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return EqualityComparer<T>.Default.GetHashCode(Value);
+        }
+
+        public static bool operator ==(Optional<T> left, Optional<T> right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Optional<T> left, Optional<T> right)
+        {
+            return !left.Equals(right);
+        }
     }
 
+
+    [Obsolete("Use Optional.Empty instead. This struct is required to trick the compiler for the lack of reverse type inference.")]
     public struct OptionalEmpty
     {
+        public OptionalEmpty()
+        {
+        }
     }
 
     public static class Optional
     {
         internal static readonly Dictionary<Type, Func<object, bool>> ValueConditions = new();
+#pragma warning disable CS0618 // OptionalEmpty is only allowed to be used internally
         public static OptionalEmpty Empty { get; } = new();
+#pragma warning restore CS0618
 
         public static Optional<T> Of<T>(T value) where T : class => Optional<T>.Of(value);
         public static Optional<T> OfNullable<T>(T value) where T : class => Optional<T>.OfNullable(value);

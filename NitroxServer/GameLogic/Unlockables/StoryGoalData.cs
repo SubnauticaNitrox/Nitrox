@@ -3,43 +3,43 @@ using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
-namespace NitroxServer.GameLogic.Unlockables
+namespace NitroxServer.GameLogic.Unlockables;
+
+[DataContract]
+public class StoryGoalData
 {
-    [DataContract]
-    public class StoryGoalData
+    [DataMember(Order = 1)]
+    public ThreadSafeSet<string> CompletedGoals { get; } = [];
+
+    [DataMember(Order = 2)]
+    public ThreadSafeQueue<string> RadioQueue { get; } = [];
+
+    [DataMember(Order = 3)]
+    public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = [];
+
+    public bool RemovedLatestRadioMessage()
     {
-        [DataMember(Order = 1)]
-        public ThreadSafeSet<string> CompletedGoals { get; } = new();
-
-        [DataMember(Order = 2)]
-        public ThreadSafeList<string> RadioQueue { get; } = new();
-
-        [DataMember(Order = 3)]
-        public ThreadSafeSet<string> GoalUnlocks { get; } = new();
-
-        [DataMember(Order = 4)]
-        public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = new();
-
-        public bool RemovedLatestRadioMessage()
+        if (RadioQueue.Count <= 0)
         {
-            if (RadioQueue.Count <= 0)
-            {
-                return false;
-            }
-
-            RadioQueue.RemoveAt(0);
-            return true;
+            return false;
         }
 
-        public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
-        {
-            storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
-            return storyGoals;
-        }
+        string message = RadioQueue.Dequeue();
 
-        public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper, Player player)
-        {
-            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks), scheduleKeeper.GetScheduledGoals(), new(player.PersonalCompletedGoalsWithTimestamp));
-        }
+        // Just like StoryGoalManager.ExecutePendingRadioMessage
+        CompletedGoals.Add($"OnPlay{message}");
+
+        return true;
+    }
+
+    public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
+    {
+        storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
+        return storyGoals;
+    }
+
+    public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper, Player player)
+    {
+        return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), scheduleKeeper.GetScheduledGoals(), new(player.PersonalCompletedGoalsWithTimestamp));
     }
 }

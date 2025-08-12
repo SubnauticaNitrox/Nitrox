@@ -1,25 +1,18 @@
-using System;
-using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ScrollRectDrawer : IDrawer
+public class ScrollRectDrawer : IDrawer<ScrollRect>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(ScrollRect) };
+    private readonly SceneDebugger sceneDebugger;
 
-    public void Draw(object target)
+    public ScrollRectDrawer(SceneDebugger sceneDebugger)
     {
-        switch (target)
-        {
-            case ScrollRect scrollRect:
-                DrawScrollRect(scrollRect);
-                break;
-        }
+        this.sceneDebugger = sceneDebugger;
     }
 
-    private static void DrawScrollRect(ScrollRect scrollRect)
+    public void Draw(ScrollRect scrollRect)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -27,7 +20,7 @@ public class ScrollRectDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(scrollRect.content);
+                sceneDebugger.JumpToComponent(scrollRect.content);
             }
         }
 
@@ -94,7 +87,7 @@ public class ScrollRectDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(scrollRect.viewport);
+                sceneDebugger.JumpToComponent(scrollRect.viewport);
             }
         }
 
@@ -104,7 +97,7 @@ public class ScrollRectDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(scrollRect.horizontalScrollbar);
+                sceneDebugger.JumpToComponent(scrollRect.horizontalScrollbar);
             }
         }
 
@@ -114,7 +107,7 @@ public class ScrollRectDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(scrollRect.verticalScrollbar);
+                sceneDebugger.JumpToComponent(scrollRect.verticalScrollbar);
             }
         }
 

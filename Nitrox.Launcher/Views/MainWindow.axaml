@@ -1,0 +1,405 @@
+<Window
+    Height="720"
+    MinHeight="600"
+    MinWidth="800"
+    Title="Nitrox Launcher"
+    Width="1200"
+    WindowStartupLocation="CenterScreen"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.MainWindow"
+    x:DataType="vm:MainWindowViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:views="clr-namespace:Nitrox.Launcher.Views"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="Border.nav">
+            <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+
+            <Style Selector="^ TextBlock.header">
+                <Setter Property="Margin" Value="34 28 0 20" />
+                <Setter Property="FontFamily" Value="Barlow" />
+                <Setter Property="FontStyle" Value="Italic" />
+            </Style>
+
+            <Style Selector="^ TextBlock.subheader">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="Margin" Value="34 20 0 10" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+
+            <Style Selector="^ RadioButton">
+                <Setter Property="GroupName" Value="nav" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Padding" Value="34 10 10 10" />
+                <!--  Scale to max horizontal so user can more easily click the navigation.  -->
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Opacity" Value="0.7" />
+                <Setter Property="ToolTip.Placement" Value="Pointer" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel Background="{TemplateBinding Background}"
+                               HorizontalAlignment="Stretch">
+                            <Grid Margin="{TemplateBinding Padding}"
+                                  ColumnDefinitions="48,*">
+                                <Image Grid.Column="0"
+                                       Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}"
+                                       Stretch="UniformToFill" />
+                                <TextBlock Grid.Column="1"
+                                           TextAlignment="Start"
+                                           VerticalAlignment="Center"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           Text="{TemplateBinding Content}" />
+                            </Grid>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+
+                <Style Selector="^ Image">
+                    <Setter Property="Width" Value="24" />
+                    <Setter Property="Height" Value="24" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+
+                <Style Selector="^[IsChecked=True]">
+                    <Setter Property="Opacity" Value="1" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Style>
+            </Style>
+        </Style>
+
+        <Style Selector=".notifications Border">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Duration="0:0:.2" Property="Opacity" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^.info">
+                <Setter Property="Background" Value="{DynamicResource BrandInformation}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/info.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^.success">
+                <Setter Property="Background" Value="{DynamicResource BrandSuccess}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/success.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^.warning">
+                <Setter Property="Background" Value="{DynamicResource BrandWarning}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/warning.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^.error">
+                <Setter Property="Background" Value="{DynamicResource BrandError}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/error.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^:not(.dismiss)">
+                <Style Selector="^:not(:pointerover)">
+                    <Setter Property="Opacity" Value=".98" />
+                </Style>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Opacity" Value=".9" />
+                </Style>
+                <Style.Animations>
+                    <Animation Duration="0:0:0:.2">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="0.0" />
+                            <Setter Property="TranslateTransform.X" Value="280" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="1.0" />
+                            <Setter Property="TranslateTransform.X" Value="0" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+            <Style Selector="^.dismiss">
+                <Style.Animations>
+                    <Animation Duration="0:0:0:.2" FillMode="Forward">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="1.0" />
+                            <Setter Property="TranslateTransform.X" Value="0" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="0.0" />
+                            <Setter Property="TranslateTransform.X" Value="280" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+        </Style>
+    </Window.Styles>
+    <Interaction.Behaviors>
+        <BehaviorCollection>
+            <EventTriggerBehavior EventName="Closing">
+                <InvokeCommandAction Command="{Binding ClosingCommand}" PassEventArgsToCommand="True" />
+            </EventTriggerBehavior>
+        </BehaviorCollection>
+    </Interaction.Behaviors>
+
+    <Panel>
+        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
+
+        <Grid ColumnDefinitions="274,*" RowDefinitions="*">
+            <!--  Navigation (left side)  -->
+            <Border Classes="nav" Grid.Column="0">
+                <Grid RowDefinitions="80,*">
+                    <TextBlock Classes="header">NITROX</TextBlock>
+                    <Panel Grid.Row="1">
+                        <StackPanel Classes="nav">
+                            <TextBlock Classes="subheader">PLAY</TextBlock>
+                            <RadioButton
+                                Command="{Binding OpenLaunchGameViewCommand}"
+                                Content="Play game"
+                                Tag="/Assets/Images/tabs-icons/play.png"
+                                ToolTip.Tip="Play game">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:LaunchGameViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <RadioButton
+                                Command="{Binding OpenServersViewCommand}"
+                                Content="Servers"
+                                Tag="/Assets/Images/tabs-icons/server.png"
+                                ToolTip.Tip="Configure and start servers">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:ServersViewModel" />
+                                                <x:Type TypeName="vm:ManageServerViewModel" />
+                                                <x:Type TypeName="vm:EmbeddedServerViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <TextBlock Classes="subheader">EXPLORE</TextBlock>
+                            <RadioButton
+                                Command="{Binding OpenCommunityViewCommand}"
+                                Content="Community"
+                                Tag="/Assets/Images/tabs-icons/community.png"
+                                ToolTip.Tip="Join Nitrox community">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:CommunityViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <RadioButton
+                                Command="{Binding OpenBlogViewCommand}"
+                                Content="Blog"
+                                Tag="/Assets/Images/tabs-icons/blog.png"
+                                ToolTip.Tip="Read latest news from the Dev Blog">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:BlogViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                        </StackPanel>
+                        <StackPanel
+                            Classes="nav"
+                            Margin="0,0,0,20"
+                            VerticalAlignment="Bottom">
+                            <RadioButton
+                                Command="{Binding OpenUpdatesViewCommand}"
+                                Content="Updates"
+                                Tag="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}"
+                                ToolTip.Tip="Check latest updates from Nitrox">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:UpdatesViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <RadioButton
+                                Command="{Binding OpenOptionsViewCommand}"
+                                Content="Options"
+                                Tag="/Assets/Images/tabs-icons/options.png"
+                                ToolTip.Tip="Configure your Nitrox setup">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:OptionsViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                        </StackPanel>
+                    </Panel>
+                </Grid>
+            </Border>
+
+            <!--  Navigated content (right side)  -->
+            <ContentControl
+                Classes="content"
+                Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}"
+                Grid.Column="1">
+                <ContentControl.ContentTemplate>
+                    <design:MultiDataTemplate>
+                        <!--  Null view (which will be a string, see TargetNullValue)  -->
+                        <DataTemplate x:DataType="system:String">
+                            <TextBox
+                                Focusable="False"
+                                FontSize="24"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                IsHitTestVisible="False"
+                                IsReadOnly="True"
+                                Text="{Binding}"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center" />
+                        </DataTemplate>
+                        <!-- Loading view -->
+                        <DataTemplate x:DataType="system:Uri">
+                            <Svg Path="{Binding AbsolutePath}" Classes="theme" Height="50"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Svg.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform/>
+                                    </TransformGroup>
+                                </Svg.RenderTransform>
+                                <Svg.Styles>
+                                    <Style Selector="Svg">
+                                        <Style.Animations>
+                                            <Animation Duration="0:0:.5" IterationCount="INFINITE">
+                                                <KeyFrame Cue="0%">
+                                                    <Setter Property="RotateTransform.Angle" Value="0" />
+                                                </KeyFrame>
+                                                <KeyFrame Cue="100%">
+                                                    <Setter Property="RotateTransform.Angle" Value="360" />
+                                                </KeyFrame>
+                                            </Animation>
+                                        </Style.Animations>
+                                    </Style>
+                                </Svg.Styles>
+                            </Svg>
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:LaunchGameViewModel">
+                            <views:LaunchGameView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:ServersViewModel">
+                            <views:ServersView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:ManageServerViewModel">
+                            <views:ManageServerView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:EmbeddedServerViewModel">
+                            <views:EmbeddedServerView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:CommunityViewModel">
+                            <views:CommunityView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:BlogViewModel">
+                            <views:BlogView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:UpdatesViewModel">
+                            <views:UpdatesView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:OptionsViewModel">
+                            <views:OptionsView />
+                        </DataTemplate>
+                        <!--  Fallback view. This DataTemplate must be kept at the bottom.  -->
+                        <DataTemplate x:DataType="system:Object">
+                            <TextBlock>
+                                <Run Text="No view for" />
+                                <Run Text="{Binding}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </design:MultiDataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </Grid>
+
+        <!--  Notifications  -->
+        <Grid Classes="notifications" ColumnDefinitions="*,280">
+            <ItemsControl
+                Grid.Column="1"
+                ItemsSource="{Binding Notifications}"
+                Margin="0,10,10,10"
+                Opacity="0.95"
+                VerticalAlignment="Bottom">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Classes.dismiss="{Binding Dismissed}"
+                            Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
+                            Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
+                            Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"
+                            Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Warning}}"
+                            CornerRadius="5"
+                            Margin="5"
+                            MinHeight="60"
+                            Padding="5,10,10,10">
+                            <Grid ColumnDefinitions="50,*,20">
+                                <Svg
+                                    Classes="theme icon"
+                                    Grid.Column="0"
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    Width="25" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding Message}"
+                                    VerticalAlignment="Center" />
+                                <Button
+                                    Classes="anycontent"
+                                    Command="{Binding CloseCommand}"
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top">
+                                    <Svg
+                                        Classes="theme"
+                                        Path="/Assets/Icons/close.svg"
+                                        VerticalAlignment="Top"
+                                        Width="10" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Panel>
+</Window>
