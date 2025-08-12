@@ -59,7 +59,7 @@ public static class Main
     /// <summary>
     ///     Entrypoint of Nitrox. Code in this method cannot use other dependencies (DLLs) without crashing
     ///     due to <see cref="AppDomain.AssemblyResolve" /> not being called.
-    ///     Use the <see cref="Init" /> method or later before using dependency code.
+    ///     Use the <see cref="InitWithDependencies" /> method or later before using dependency code.
     /// </summary>
     [UsedImplicitly]
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -151,7 +151,7 @@ public static class Main
         if (!File.Exists(dllPath))
         {
             Console.Write($"Did not find '{dllFileName}' at '{dllPath}'");
-            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
+            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, dllFileName);
             Console.WriteLine($", looking at {dllPath}");
         }
 

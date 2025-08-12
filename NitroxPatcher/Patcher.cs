@@ -92,12 +92,13 @@ internal static class Patcher
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Initialize()
     {
-        Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
-
         if (container != null)
         {
             throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
+
+        Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
+
         Log.Info("Registering dependencies");
         container = CreatePatchingContainer();
         try
