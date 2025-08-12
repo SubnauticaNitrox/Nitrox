@@ -80,7 +80,7 @@ public class BuildingManager
             Log.Error($"Trying to add a module to a build that isn't registered (ParentId: {moduleEntity.ParentId})");
             return false;
         }
-        if (parentEntity is not BuildEntity && parentEntity is not VehicleWorldEntity)
+        if (parentEntity is not BuildEntity && parentEntity is not VehicleEntity)
         {
             Log.Error($"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
             return false;

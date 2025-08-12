@@ -153,6 +153,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
     public static ModuleEntity From(Constructable constructable)
     {
         ModuleEntity module = ModuleEntity.MakeEmpty();
+        module.Level = (int)LargeWorldEntity.CellLevel.Global;
         FillObject(module, constructable);
         return module;
     }

@@ -47,7 +47,7 @@ public class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
 
         if (totalEntities.Count > 0)
         {
-            SpawnEntities batchEntities = new(totalEntities);
+            SpawnEntities batchEntities = new(totalEntities, true);
             player.SendPacket(batchEntities);
         }
     }

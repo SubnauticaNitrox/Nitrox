@@ -9,18 +9,18 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable]
 [DataContract]
-public class EscapePodWorldEntity : GlobalRootEntity
+public class EscapePodEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
     public List<ushort> Players { get; set; } = [];
 
     [IgnoreConstructor]
-    protected EscapePodWorldEntity()
+    protected EscapePodEntity()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public EscapePodWorldEntity(NitroxVector3 position, NitroxId id, EntityMetadata metadata)
+    public EscapePodEntity(NitroxVector3 position, NitroxId id, EntityMetadata metadata)
     {
         Transform = new NitroxTransform(position, NitroxQuaternion.Identity, NitroxVector3.One);
         Id = id;
@@ -33,7 +33,7 @@ public class EscapePodWorldEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public EscapePodWorldEntity(List<ushort> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public EscapePodEntity(List<ushort> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         Players = players;
@@ -41,6 +41,6 @@ public class EscapePodWorldEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[EscapePodWorldEntity Players: [{string.Join(", ", Players)}] {base.ToString()}]";
+        return $"[EscapePodEntity Players: [{string.Join(", ", Players)}] {base.ToString()}]";
     }
 }

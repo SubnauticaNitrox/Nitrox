@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
@@ -11,26 +12,18 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class VehicleWorldEntitySpawner : IWorldEntitySpawner
+public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
 {
-    private readonly Entities entities;
-
-    public VehicleWorldEntitySpawner(Entities entities)
-    {
-        this.entities = entities;
-    }
-
     // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
     // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
     // distance - anything more will simply use world spawning (no need to play the animation anyways).
     private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
 
-    public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(VehicleEntity vehicleEntity, TaskResult<Optional<GameObject>> result)
     {
-        VehicleWorldEntity vehicleEntity = (VehicleWorldEntity)entity;
-
         bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < GetCraftDuration(vehicleEntity.TechType.ToUnity());
         Optional<GameObject> spawnerObj = NitroxEntity.GetObjectFrom(vehicleEntity.SpawnerId);
+        Optional<GameObject> parent = vehicleEntity.ParentId != null ? NitroxEntity.GetObjectFrom(vehicleEntity.ParentId) : Optional.Empty;
 
         if (withinConstructorSpawnWindow && spawnerObj.HasValue)
         {
@@ -47,10 +40,12 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             }
         }
 
-        yield return SpawnInWorld(vehicleEntity, result, parent);            
+        yield return SpawnInWorld(vehicleEntity, result, parent);
     }
 
-    private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
+    protected override bool SpawnsOwnChildren(VehicleEntity entity) => false;
+
+    private IEnumerator SpawnInWorld(VehicleEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
     {
         TechType techType = vehicleEntity.TechType.ToUnity();
         GameObject gameObject = null;
@@ -70,7 +65,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             yield return techPrefabCoroutine;
             GameObject techPrefab = techPrefabCoroutine.GetResult();
             gameObject = Utils.SpawnPrefabAt(techPrefab, null, vehicleEntity.Transform.Position.ToUnity());
-            Validate.NotNull(gameObject, $"{nameof(VehicleWorldEntitySpawner)}: No prefab for tech type: {techType}");
+            Validate.NotNull(gameObject, $"{nameof(VehicleEntitySpawner)}: No prefab for tech type: {techType}");
             Vehicle vehicle = gameObject.GetComponent<Vehicle>();
 
             if (vehicle)
@@ -116,7 +111,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         result.Set(gameObject);
     }
 
-    private IEnumerator SpawnViaConstructor(VehicleWorldEntity vehicleEntity, Constructor constructor, TaskResult<Optional<GameObject>> result)
+    private IEnumerator SpawnViaConstructor(VehicleEntity vehicleEntity, Constructor constructor, TaskResult<Optional<GameObject>> result)
     {
         if (!constructor.deployed)
         {
@@ -197,11 +192,6 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         }
 
         dockingBay.DockVehicle(vehicle);        
-    }
-
-    public bool SpawnsOwnChildren()
-    {
-        return false;
     }
     
     private float GetCraftDuration(TechType techType)

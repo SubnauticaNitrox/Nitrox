@@ -15,8 +15,8 @@ public class EscapePodManager
     private const int PLAYERS_PER_ESCAPEPOD = 50;
 
     private readonly EntityRegistry entityRegistry;
-    private readonly ThreadSafeDictionary<ushort, EscapePodWorldEntity> escapePodsByPlayerId = new();
-    private EscapePodWorldEntity podForNextPlayer;
+    private readonly ThreadSafeDictionary<ushort, EscapePodEntity> escapePodsByPlayerId = new();
+    private EscapePodEntity podForNextPlayer;
     private readonly string seed;
 
     private readonly RandomStartGenerator randomStart;
@@ -27,17 +27,17 @@ public class EscapePodManager
         this.randomStart = randomStart;
         this.entityRegistry = entityRegistry;
 
-        List<EscapePodWorldEntity> escapePods = entityRegistry.GetEntities<EscapePodWorldEntity>();
+        List<EscapePodEntity> escapePods = entityRegistry.GetEntities<EscapePodEntity>();
 
         InitializePodForNextPlayer(escapePods);
         InitializeEscapePodsByPlayerId(escapePods);
     }
 
-    public NitroxId AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodWorldEntity> newlyCreatedPod)
+    public NitroxId AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodEntity> newlyCreatedPod)
     {
         newlyCreatedPod = Optional.Empty;
 
-        if (escapePodsByPlayerId.TryGetValue(playerId, out EscapePodWorldEntity podEntity))
+        if (escapePodsByPlayerId.TryGetValue(playerId, out EscapePodEntity podEntity))
         {
             return podEntity.Id;
         }
@@ -54,9 +54,9 @@ public class EscapePodManager
         return podForNextPlayer.Id;
     }
 
-    private EscapePodWorldEntity CreateNewEscapePod()
+    private EscapePodEntity CreateNewEscapePod()
     {
-        EscapePodWorldEntity escapePod = new(GetStartPosition(), new NitroxId(), new EscapePodMetadata(false, false));
+        EscapePodEntity escapePod = new(GetStartPosition(), new NitroxId(), new EscapePodMetadata(false, false));
 
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "5c06baec-0539-4f26-817d-78443548cc52", new NitroxTechType("Radio"), 0, null, escapePod.Id));
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "c0175cf7-0b6a-4a1d-938f-dad0dbb6fa06", new NitroxTechType("MedicalCabinet"), 0, null, escapePod.Id));
@@ -70,7 +70,7 @@ public class EscapePodManager
 
     private NitroxVector3 GetStartPosition()
     {
-        List<EscapePodWorldEntity> escapePods = entityRegistry.GetEntities<EscapePodWorldEntity>();
+        List<EscapePodEntity> escapePods = entityRegistry.GetEntities<EscapePodEntity>();
 
         Random rnd = new(seed.GetHashCode());
         NitroxVector3 position = randomStart.GenerateRandomStartPosition(rnd);
@@ -80,7 +80,7 @@ public class EscapePodManager
             return position;
         }
 
-        foreach (EscapePodWorldEntity escapePodModel in escapePods)
+        foreach (EscapePodEntity escapePodModel in escapePods)
         {
             if (position == NitroxVector3.Zero)
             {
@@ -122,9 +122,9 @@ public class EscapePodManager
         return new NitroxVector3(lastEscapePodPosition.X + x, 0, lastEscapePodPosition.Z + z);
     }
 
-    private void InitializePodForNextPlayer(List<EscapePodWorldEntity> escapePods)
+    private void InitializePodForNextPlayer(List<EscapePodEntity> escapePods)
     {
-        foreach (EscapePodWorldEntity pod in escapePods)
+        foreach (EscapePodEntity pod in escapePods)
         {
             if (!IsPodFull(pod))
             {
@@ -136,10 +136,10 @@ public class EscapePodManager
         podForNextPlayer = CreateNewEscapePod();
     }
 
-    private void InitializeEscapePodsByPlayerId(List<EscapePodWorldEntity> escapePods)
+    private void InitializeEscapePodsByPlayerId(List<EscapePodEntity> escapePods)
     {
         escapePodsByPlayerId.Clear();
-        foreach (EscapePodWorldEntity pod in escapePods)
+        foreach (EscapePodEntity pod in escapePods)
         {
             foreach (ushort playerId in pod.Players)
             {
@@ -148,7 +148,7 @@ public class EscapePodManager
         }
     }
 
-    private static bool IsPodFull(EscapePodWorldEntity pod)
+    private static bool IsPodFull(EscapePodEntity pod)
     {
         return pod.Players.Count >= PLAYERS_PER_ESCAPEPOD;
     }

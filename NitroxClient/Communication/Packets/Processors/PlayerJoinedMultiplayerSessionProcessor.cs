@@ -25,7 +25,7 @@ public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<Pla
     private IEnumerator SpawnRemotePlayer(PlayerJoinedMultiplayerSession packet)
     {
         playerManager.Create(packet.PlayerContext);
-        yield return entities.SpawnEntityAsync(packet.PlayerWorldEntity, true, true);
+        yield return entities.SpawnEntityAsync(packet.PlayerEntity, true, true);
 
         Log.Info($"{packet.PlayerContext.PlayerName} joined the game");
         Log.InGame(Language.main.Get("Nitrox_PlayerJoined").Replace("{PLAYER}", packet.PlayerContext.PlayerName));

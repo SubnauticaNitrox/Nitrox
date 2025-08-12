@@ -40,7 +40,7 @@ namespace NitroxServer
         public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set ;}
         public ThreadSafeSet<NitroxId> OutOfCellVisibleEntities { get; set; } = [];
 
-        public PlayerWorldEntity Entity { get; set; }
+        public PlayerEntity Entity { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,

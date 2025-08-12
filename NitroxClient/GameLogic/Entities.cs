@@ -58,9 +58,9 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this, simulationOwnership);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(EscapePodEntity)] = new EscapePodEntitySpawner(localPlayer);
+            entitySpawnersByType[typeof(PlayerEntity)] = new PlayerEntitySpawner(playerManager, localPlayer);
+            entitySpawnersByType[typeof(VehicleEntity)] = new VehicleEntitySpawner();
             entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BaseLeakEntity)] = new BaseLeakEntitySpawner(liveMixinManager);
@@ -117,8 +117,13 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity, requireRespawn));
         }
 
-        private IEnumerator SpawnNewEntities()
+        private IEnumerator SpawnNewEntities(bool coldStart = false)
         {
+            if (coldStart)
+            {
+                yield return null; // Skips a frame
+            }
+
             // The coroutine waits a frame after SpawnBatchAsync finishes, and another entity may be enqueued then, so a loop is needed
             while (EntitiesToSpawn.Count > 0)
             {
@@ -132,13 +137,13 @@ namespace NitroxClient.GameLogic
             simulationOwnership.ClearNewerSimulations();
         }
 
-        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
+        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue, bool coldStart = false)
         {
             EntitiesToSpawn.InsertRange(0, entitiesToEnqueue);
             if (!spawningEntities)
             {
                 spawningEntities = true;
-                CoroutineHost.StartCoroutine(SpawnNewEntities());
+                CoroutineHost.StartCoroutine(SpawnNewEntities(coldStart));
             }
         }
 

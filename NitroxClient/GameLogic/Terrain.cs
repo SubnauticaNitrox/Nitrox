@@ -34,6 +34,7 @@ public class Terrain
 
         if (!visibleCells.Contains(cell))
         {
+            removedCells.Remove(cell);
             visibleCells.Add(cell);
             addedCells.Add(cell);
             cellsPendingSync = true;

@@ -43,7 +43,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
-            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
 
             if (wasBrandNewPlayer)
             {
@@ -105,19 +105,19 @@ namespace NitroxServer.Communication.Packets.Processors
                                                       .Select(p => p.PlayerContext);
         }
 
-        private PlayerWorldEntity SetupPlayerEntity(Player player)
+        private PlayerEntity SetupPlayerEntity(Player player)
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerEntity playerEntity = new PlayerEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddOrUpdate(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
         }
 
-        private PlayerWorldEntity RespawnExistingEntity(Player player)
+        private PlayerEntity RespawnExistingEntity(Player player)
         {
-            if (entityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerWorldEntity playerWorldEntity))
+            if (entityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerEntity playerWorldEntity))
             {
                 return playerWorldEntity;
             }

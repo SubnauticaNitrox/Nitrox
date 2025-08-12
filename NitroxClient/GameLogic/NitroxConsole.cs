@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
 
-            VehicleWorldEntity vehicleEntity = Vehicles.BuildVehicleWorldEntity(gameObject, id, techType);
+            VehicleEntity vehicleEntity = Vehicles.BuildVehicleEntity(gameObject, id, techType);
             
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 

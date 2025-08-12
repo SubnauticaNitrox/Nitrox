@@ -110,6 +110,15 @@ public class WorldEntityManager
                 return false;
             }
 
+            // Return early because a GlobalRootEntity doesn't have an AbsoluteEntityCell, thus it would throw an exception
+            if (worldEntity is GlobalRootEntity)
+            {
+                worldEntity.Transform.Position = position;
+                worldEntity.Transform.Rotation = rotation;
+                newCell = null;
+                return true;
+            }
+
             AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
 
             worldEntity.Transform.Position = position;
@@ -148,8 +157,8 @@ public class WorldEntityManager
 
     public void MovePlayerChildrenToRoot(GlobalRootEntity globalRootEntity)
     {
-        List<PlayerWorldEntity> playerEntities = FindPlayerEntitiesInChildren(globalRootEntity);
-        foreach (PlayerWorldEntity childPlayerEntity in playerEntities)
+        List<PlayerEntity> playerEntities = FindPlayerEntitiesInChildren(globalRootEntity);
+        foreach (PlayerEntity childPlayerEntity in playerEntities)
         {
             // Reparent the entity on top of GlobalRoot
             globalRootEntity.ChildEntities.Remove(childPlayerEntity);
@@ -357,9 +366,9 @@ public class WorldEntityManager
     /// <summary>
     /// Iterative breadth-first search which gets all children player entities in <paramref name="parentEntity"/>'s hierarchy.
     /// </summary>
-    private List<PlayerWorldEntity> FindPlayerEntitiesInChildren(Entity parentEntity)
+    private List<PlayerEntity> FindPlayerEntitiesInChildren(Entity parentEntity)
     {
-        List<PlayerWorldEntity> playerWorldEntities = [];
+        List<PlayerEntity> playerEntities = [];
         List<Entity> entitiesToSearch = [parentEntity];
 
         while (entitiesToSearch.Count > 0)
@@ -367,15 +376,15 @@ public class WorldEntityManager
             Entity currentEntity = entitiesToSearch[^1];
             entitiesToSearch.RemoveAt(entitiesToSearch.Count - 1);
 
-            if (currentEntity is PlayerWorldEntity playerWorldEntity)
+            if (currentEntity is PlayerEntity playerEntity)
             {
-                playerWorldEntities.Add(playerWorldEntity);
+                playerEntities.Add(playerEntity);
             }
             else
             {
                 entitiesToSearch.InsertRange(0, currentEntity.ChildEntities);
             }
         }
-        return playerWorldEntities;
+        return playerEntities;
     }
 }

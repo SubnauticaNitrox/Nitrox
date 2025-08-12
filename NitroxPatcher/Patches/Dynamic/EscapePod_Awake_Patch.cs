@@ -1,5 +1,5 @@
 using System.Reflection;
-using NitroxClient.GameLogic.Spawning.WorldEntities;
+using NitroxClient.GameLogic.Spawning;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -10,6 +10,6 @@ public sealed partial class EscapePod_Awake_Patch : NitroxPatch, IDynamicPatch
 
     public static bool Prefix(EscapePod __instance)
     {
-        return !EscapePodWorldEntitySpawner.SuppressEscapePodAwakeMethod;
+        return !EscapePodEntitySpawner.SuppressEscapePodAwakeMethod;
     }
 }

@@ -34,7 +34,8 @@ public class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
             }
 
             // Packet processing is done in the main thread so there's no issue calling this
-            entities.EnqueueEntitiesToSpawn(packet.Entities);
+            // We need a cold start so that all cleaned up entities (if force respawn is true) have time to be fully destroyed
+            entities.EnqueueEntitiesToSpawn(packet.Entities, packet.ForceRespawn);
         }
     }
 }

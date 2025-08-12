@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerMovement packet, Player player)
         {
-            Optional<PlayerWorldEntity> playerEntity = entityRegistry.GetEntityById<PlayerWorldEntity>(player.PlayerContext.PlayerNitroxId);
+            Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(player.PlayerContext.PlayerNitroxId);
 
             if (playerEntity.HasValue)
             {

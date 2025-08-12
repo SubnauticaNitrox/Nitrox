@@ -1,20 +1,21 @@
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.FMOD;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Spawning.WorldEntities;
+namespace NitroxClient.GameLogic.Spawning;
 
-public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
+public class EscapePodEntitySpawner : SyncEntitySpawner<EscapePodEntity>
 {
     /*
      * When creating additional escape pods (multiple users with multiple pods)
@@ -25,30 +26,32 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
 
     private readonly LocalPlayer localPlayer;
 
-    public EscapePodWorldEntitySpawner(LocalPlayer localPlayer)
+    public EscapePodEntitySpawner(LocalPlayer localPlayer)
     {
         this.localPlayer = localPlayer;
     }
 
-    public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(EscapePodEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        if (entity is not EscapePodWorldEntity escapePodEntity)
-        {
-            result.Set(Optional.Empty);
-            Log.Error($"Received incorrect entity type: {entity.GetType()}");
-            yield break;
-        }
+        SpawnSync(entity, result);
+        return null;
+    }
 
+    protected override bool SpawnSync(EscapePodEntity entity, TaskResult<Optional<GameObject>> result)
+    {
         SuppressEscapePodAwakeMethod = true;
 
-        GameObject escapePod = CreateNewEscapePod(escapePodEntity);
+        GameObject escapePod = CreateNewEscapePod(entity);
 
         SuppressEscapePodAwakeMethod = false;
 
         result.Set(Optional.Of(escapePod));
+        return true;
     }
 
-    private GameObject CreateNewEscapePod(EscapePodWorldEntity escapePodEntity)
+    protected override bool SpawnsOwnChildren(EscapePodEntity entity) => false;
+
+    private GameObject CreateNewEscapePod(EscapePodEntity escapePodEntity)
     {
         // TODO: When we want to implement multiple escape pods, instantiate the prefab. Backlog task: #1945
         //       This will require some work as instantiating the prefab as-is will not make it visible.
@@ -111,6 +114,4 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
             reference.AddController(controller);
         }
     }
-
-    public bool SpawnsOwnChildren() => false;
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -9,57 +10,61 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class PlayerWorldEntitySpawner : IWorldEntitySpawner
+public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
 {
     private readonly PlayerManager playerManager;
     private readonly ILocalNitroxPlayer localPlayer;
 
-    public PlayerWorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+    public PlayerEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
     {
         this.playerManager = playerManager;
         this.localPlayer = localPlayer;
     }
 
-    public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(PlayerEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        SpawnSync(entity, result);
+        return null;
+    }
+
+    protected override bool SpawnSync(PlayerEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (Player.main.TryGetNitroxId(out NitroxId localPlayerId) && localPlayerId == entity.Id)
         {
             // No special setup for the local player.  Simply return saying it is spawned.
             result.Set(Player.main.gameObject);
-            yield break;
+            return true;
         }
 
         Optional<RemotePlayer> remotePlayer = playerManager.Find(entity.Id);
+        Optional<GameObject> parent = entity.ParentId != null ? NitroxEntity.GetObjectFrom(entity.Id) : Optional.Empty;
 
         // The server may send us a player entity but they are not guarenteed to be actively connected at the moment - don't spawn them.  In the
         // future, we could make this configurable to be able to spawn disconnected players in the world.
-        if (remotePlayer.HasValue && !remotePlayer.Value.Body)
+        if (!remotePlayer.HasValue || remotePlayer.Value.Body)
         {
-            GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-
-            remotePlayer.Value.InitializeGameObject(remotePlayerBody);
-
-            if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
-            {
-                remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
-            }
-
-            if (parent.HasValue)
-            {
-                AttachToParent(remotePlayer.Value, parent.Value);
-            }
-
-            result.Set(Optional.Of(remotePlayerBody));
-            yield break;
+            result.Set(Optional.Empty);
+            return true;
         }
 
-        result.Set(Optional.Empty);
+        GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
+        remotePlayer.Value.InitializeGameObject(remotePlayerBody);
+
+        if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
+        {
+            remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
+        }
+
+        if (parent.HasValue)
+        {
+            AttachToParent(remotePlayer.Value, parent.Value);
+        }
+
+        result.Set(Optional.Of(remotePlayerBody));
+        return true;
     }
 
-    public bool SpawnsOwnChildren()
-    {
-        return false;
-    }
+    protected override bool SpawnsOwnChildren(PlayerEntity entity) => false;
 
     private GameObject CloneLocalPlayerBodyPrototype()
     {
@@ -90,11 +95,9 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
     {
         if (parent.HasValue)
         {
-            parent.Value.TryGetComponent<SubRoot>(out SubRoot subroot);
-
             // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
             // or in a waterpark
-            if (subroot)
+            if (parent.Value.TryGetComponent(out SubRoot subroot))
             {
                 if (subroot.IsUnderwater(playerPosition))
                 {

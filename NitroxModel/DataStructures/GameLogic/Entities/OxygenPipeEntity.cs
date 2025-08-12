@@ -33,4 +33,9 @@ public class OxygenPipeEntity : WorldEntity
         RootPipeId = rootPipeId;
         ParentPosition = parentPosition;
     }
+
+    public override string ToString()
+    {
+        return $"[{nameof(OxygenPipeEntity)} ParentPipeId: {ParentPipeId}, RootPipeId: {RootPipeId}, ParentPosition: {ParentPosition} {base.ToString()}]";
+    }
 }
