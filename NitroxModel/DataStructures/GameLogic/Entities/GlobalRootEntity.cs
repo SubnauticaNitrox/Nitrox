@@ -22,6 +22,9 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [ProtoInclude(59, typeof(RadiationLeakEntity))]
 public class GlobalRootEntity : WorldEntity
 {
+    [IgnoreDataMember]
+    public const int GLOBAL_ROOT_LEVEL = 100;
+
     [IgnoreConstructor]
     protected GlobalRootEntity()
     {
