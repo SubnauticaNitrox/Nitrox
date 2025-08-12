@@ -62,7 +62,11 @@ public class PatchesTranspilerTest
         [typeof(Player_TriggerInfectionRevealAsync_Patch), 1],
 #endif
         [typeof(IngameMenu_OnSelect_Patch), -2],
+#if SUBNAUTICA
         [typeof(IngameMenu_QuitGameAsync_Patch), 2],
+#elif BELOWZERO
+        [typeof(IngameMenu_QuitGameAsync_Patch), 2],
+#endif
 #if SUBNAUTICA
         [typeof(IngameMenu_QuitSubscreen_Patch), -24],
 #elif BELOWZERO
@@ -81,7 +85,7 @@ public class PatchesTranspilerTest
 #if SUBNAUTICA
         [typeof(Player_OnKill_Patch), -1],
 #elif BELOWZERO
-        [typeof(Player_OnKill_Patch), 0],
+        [typeof(Player_OnKill_Patch), -2],
 #endif
         [typeof(Respawn_Start_Patch), 3],
         [typeof(RocketConstructor_StartRocketConstruction_Patch), 3],

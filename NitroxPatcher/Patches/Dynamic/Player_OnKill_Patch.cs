@@ -13,9 +13,7 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
 
 #if SUBNAUTICA
     private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeUtils.IsPermadeath());
-#elif BELOWZERO
-    private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeManager.GetOption<bool>(GameOption.PermanentDeath));
-#endif
+
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> instructionList = instructions.ToList();
@@ -24,8 +22,6 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
         * if (GameModeUtils.IsPermadeath())
         * {
         *      SaveLoadManager.main.ClearSlotAsync(SaveLoadManager.main.GetCurrentSlot());
-        *      this.EndGame();
-        *      return;
         * }
         */
         for (int i = 0; i < instructionList.Count; i++)
@@ -44,4 +40,45 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
             }
         }
     }
+
+#elif BELOWZERO          
+    private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeManager.GetOption<bool>(GameOption.PermanentDeath));
+
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    {
+        List<CodeInstruction> instructionList = instructions.ToList();
+        /**
+        * Skips
+        * if (GameModeManager.GetOption<bool>(GameOption.PermanentDeath))
+        * {
+        *      SaveLoadManager.main.ClearSlotAsync(SaveLoadManager.main.GetCurrentSlot());
+		*	IngameMenu.main.canBeOpen = false;
+		*	if (MusicManager.main != null)
+		*	{
+		*		MusicManager.main.StopMusic();
+		*	}
+        * }
+        */
+        CodeInstruction lastInstr = null;
+        for (int i = 0; i < instructionList.Count; i++)
+        {
+            CodeInstruction instr = instructionList[i];
+            if (instr.opcode == OpCodes.Ldc_I4_M1 && instr.operand.Equals(SKIP_METHOD))
+            {
+                CodeInstruction newInstr = new(OpCodes.Ldc_I4_0);
+                newInstr.labels = instr.labels;
+                yield return newInstr;
+            }
+            else if (lastInstr?.opcode == OpCodes.Ldc_I4_M1 && instr.opcode == OpCodes.Ldc_I4_M1 && instr.operand.Equals(SKIP_METHOD))
+            {
+                continue;
+            }
+            else
+            {
+                yield return instr;
+            }
+            lastInstr = instr;
+        }
+    }
+#endif
 }
