@@ -32,7 +32,7 @@ public class DiscordClient : MonoBehaviour
 
         if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WINEPREFIX"))) // Is wine environment
         {
-            Log.Warn("Discord RPC does not work inside wine. Sorry for the inconvenience");
+            Log.Warn("[Discord] Unable to start RPC inside wine environment");
             return;
         }
 
@@ -50,7 +50,14 @@ public class DiscordClient : MonoBehaviour
             discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
 
             activityManager = discord.GetActivityManager();
-            activityManager!.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
+
+            if (activityManager == null)
+            {
+                Log.Error("[Discord] Failed to get activity manager from Discord");
+                return;
+            }
+
+            activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;
 
