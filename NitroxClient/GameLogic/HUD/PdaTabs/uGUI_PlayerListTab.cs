@@ -75,7 +75,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             {
                 if (asset.name.Equals("player_list_tab@3x"))
                 {
-                    nitroxPDATabManager.AddTabSprite(asset.name, new Atlas.Sprite(sprite));
+                    nitroxPDATabManager.AddTabSprite(asset.name, Sprite.Create(sprite.texture, sprite.rect, sprite.pivot, sprite.pixelsPerUnit));
                 }
                 assets.Add(asset.name, sprite);
             }
