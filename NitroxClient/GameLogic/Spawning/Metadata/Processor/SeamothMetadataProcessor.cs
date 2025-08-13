@@ -11,12 +11,8 @@ namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata>
 {
-    private readonly FMODWhitelist fmodWhitelist;
-
-    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager, FMODWhitelist fmodWhitelist) : base(liveMixinManager)
-    {
-        this.fmodWhitelist = fmodWhitelist;
-    }
+    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager) : base(liveMixinManager)
+    { }
 
     public override void ProcessMetadata(GameObject gameObject, SeamothMetadata metadata)
     {
@@ -50,29 +46,9 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
             return;
         }
 
-        // In the future, maybe do a patch for all ToggleLights.SetLightsActive() to handle all cases of lights toggling (i.e. powercell being inserted, etc.)
         using (FMODSystem.SuppressSendingSounds())
         {
-            FMODAsset soundAsset;
-
-            using (FMODSystem.SuppressSubnauticaSounds())
-            {
-                toggleLights.SetLightsActive(lightsOn);
-            }
-
-            if (lightsOn)
-            {
-                soundAsset = toggleLights.lightsOnSound ? toggleLights.lightsOnSound.asset : toggleLights.onSound;
-            }
-            else
-            {
-                soundAsset = toggleLights.lightsOffSound ? toggleLights.lightsOffSound.asset : toggleLights.offSound;
-            }
-
-            if (soundAsset && fmodWhitelist.TryGetSoundData(soundAsset.path, out SoundData soundData))
-            {
-                FMODEmitterController.PlayEventOneShot(soundAsset, soundData.Radius, toggleLights.transform.position);
-            }
+            seamoth.toggleLights.SetLightsActive(lightsOn);
         }
     }
 }
