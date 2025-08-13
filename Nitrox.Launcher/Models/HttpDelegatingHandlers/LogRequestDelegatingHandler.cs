@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Utils;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.HttpDelegatingHandlers;
@@ -33,7 +34,14 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         }
         catch (Exception ex)
         {
-            LauncherNotifier.Error(ex.Message);
+            if (!await NetHelper.HasInternetConnectivityAsync())
+            {
+                LauncherNotifier.Error("No internet connection available");
+            }
+            else
+            {
+                LauncherNotifier.Error(ex.Message);
+            }
             throw;
         }
     }

@@ -119,7 +119,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static IPAddress GetHamachiIp()
+        public static IPAddress? GetHamachiIp()
         {
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -139,15 +139,22 @@ namespace NitroxModel.Helper
             return null;
         }
 
+        private static bool? hasInternet;
+
         public static async Task<bool> HasInternetConnectivityAsync()
         {
+            if (hasInternet.HasValue)
+            {
+                return hasInternet.Value;
+            }
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
                 return false;
             }
             using Ping ping = new();
             PingReply reply = await ping.SendPingAsync(new IPAddress([8, 8, 8, 8]),2000);
-            return reply.Status == IPStatus.Success;
+            hasInternet = reply.Status == IPStatus.Success;
+            return hasInternet.Value;
         }
 
         /// <summary>

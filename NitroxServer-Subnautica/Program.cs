@@ -513,9 +513,7 @@ public class Program
         if (mostRecentLogFile == null)
         {
             return;
-        }
-
-        Log.Info("Press L to open log file before closing. Press any other key to close . . .");*/
+        }*/
         Log.Info("Press L to open log folder before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 
