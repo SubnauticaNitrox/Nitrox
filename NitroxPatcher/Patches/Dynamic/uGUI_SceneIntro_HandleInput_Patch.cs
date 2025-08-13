@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -6,7 +6,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -63,6 +62,8 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
     // Partial copied from GameInput.GetInputStateForButton()
     private static void ResetTimeDownForButton(GameInput.Button button)
     {
+        // TODO: rewrite this for new input system
+        /*
         for (int index1 = 0; index1 < GameInput.numDevices; ++index1)
         {
             for (int index2 = 0; index2 < GameInput.numBindingSets; ++index2)
@@ -77,5 +78,6 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
                 }
             }
         }
+        */
     }
 }

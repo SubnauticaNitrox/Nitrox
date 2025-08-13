@@ -49,7 +49,6 @@ public class PatchesTranspilerTest
         [typeof(FireExtinguisherHolder_TryStoreTank_Patch), 3],
         [typeof(Flare_Update_Patch), 0],
         [typeof(FootstepSounds_OnStep_Patch), 6],
-        [typeof(GameInput_Initialize_Patch), 5],
         [typeof(GrowingPlant_SpawnGrownModelAsync_Patch), -1],
         [typeof(Player_TriggerInfectionRevealAsync_Patch), 1],
         [typeof(IngameMenu_OnSelect_Patch), -2],
