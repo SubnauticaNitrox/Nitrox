@@ -23,6 +23,7 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
             else
             {
                 Log.Error($"HTTP response status:{response.StatusCode} from {url}");
+                LauncherNotifier.Error($"Failed to fetch data from {request.RequestUri?.Host}");
             }
             return response;
         }
