@@ -20,7 +20,7 @@ public static class NitroxEntryPatch
     private const string NITROX_ENTRY_METHOD_NAME = "Execute";
 
     private const string GAME_INPUT_TYPE_NAME = "GameInput";
-    private const string GAME_INPUT_METHOD_NAME = "Awake";
+    private const string GAME_INPUT_METHOD_NAME = "Initialize";
 
     private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
 
@@ -68,22 +68,19 @@ public static class NitroxEntryPatch
         Log.Debug($"Adding Nitrox entry point to Subnautica because code file hash mismatch [{Convert.ToHexStringLower(cachedSha256ForFile)}] != [{Convert.ToHexStringLower(currentCodeFileSha256)}]");
 
         /*
-          	private void Awake()
-	        {
-		        NitroxPatcher.Main.Execute(); <----------- Insert this line inside subnautica's code
-		        if (GameInput.instance != null)
-		        {
-			        global::UnityEngine.Object.Destroy(base.gameObject);
-			        return;
-		        }
-		        GameInput.instance = this;
-		        GameInput.instance.Initialize();
-		        for (int i = 0; i < GameInput.numDevices; i++)
-		        {
-			        GameInput.SetupDefaultBindings((GameInput.Device)i);
-		        }
-		        DevConsole.RegisterConsoleCommand(this, "debuginput", false, false);
-	        }
+            public static void Initialize(IGameInput value)
+            {
+                NitroxPatcher.Main.Execute(); <----------- Insert this line inside subnautica's code
+                GameInput.Deinitialize();
+                if (value == null)
+                {
+                    return;
+                }
+                value.Initialize();
+                GameInput.input = value;
+                ManagedUpdate.Subscribe(ManagedUpdate.Queue.UpdateInput, new ManagedUpdate.OnUpdate(GameInput.OnUpdate));
+                DevConsole.RegisterConsoleCommand("debuginput", new DevConsole.Callback(GameInput.OnConsoleCommand_debuginput), false, false);
+            }
         */
         // TODO: Find a better way to inject Nitrox entrypoint instead of using file swapping
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
