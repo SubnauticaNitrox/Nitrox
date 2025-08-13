@@ -1,24 +1,23 @@
 using System;
 using NitroxModel.DataStructures;
 
-namespace NitroxModel.Packets
+namespace NitroxModel.Packets;
+
+[Serializable]
+public sealed class CoffeeMachineUse : Packet
 {
-    [Serializable]
-    public class CoffeeMachineUse : Packet
-    {
-        public NitroxId Id { get; }
-        public CoffeeMachineSlot Slot { get; }
+    public NitroxId Id { get; }
+    public CoffeeMachineSlot Slot { get; }
 
-        public CoffeeMachineUse(NitroxId id, CoffeeMachineSlot slot)
-        {
-            Id = id;
-            Slot = slot;
-        }
-    }
-
-    public enum CoffeeMachineSlot
+    public CoffeeMachineUse(NitroxId id, CoffeeMachineSlot slot)
     {
-        ONE,
-        TWO
+        Id = id;
+        Slot = slot;
     }
+}
+
+public enum CoffeeMachineSlot
+{
+    ONE,
+    TWO
 }
