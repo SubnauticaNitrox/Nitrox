@@ -19,8 +19,8 @@ public static class NitroxEntryPatch
     private const string NITROX_ENTRY_TYPE_NAME = "Main";
     private const string NITROX_ENTRY_METHOD_NAME = "Execute";
 
-    private const string GAME_INPUT_TYPE_NAME = "GameInput";
-    private const string GAME_INPUT_METHOD_NAME = "Awake";
+    private const string TARGET_TYPE_NAME = "StartScreen";
+    private const string TARGET_METHOD_NAME = "Awake";
 
     private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
 
@@ -68,22 +68,13 @@ public static class NitroxEntryPatch
         Log.Debug($"Adding Nitrox entry point to Subnautica because code file hash mismatch [{Convert.ToHexStringLower(cachedSha256ForFile)}] != [{Convert.ToHexStringLower(currentCodeFileSha256)}]");
 
         /*
-          	private void Awake()
-	        {
-		        NitroxPatcher.Main.Execute(); <----------- Insert this line inside subnautica's code
-		        if (GameInput.instance != null)
-		        {
-			        global::UnityEngine.Object.Destroy(base.gameObject);
-			        return;
-		        }
-		        GameInput.instance = this;
-		        GameInput.instance.Initialize();
-		        for (int i = 0; i < GameInput.numDevices; i++)
-		        {
-			        GameInput.SetupDefaultBindings((GameInput.Device)i);
-		        }
-		        DevConsole.RegisterConsoleCommand(this, "debuginput", false, false);
-	        }
+            private void Awake()
+            {
+                NitroxPatcher.Main.Execute(); <----------- Insert this line inside subnautica's code
+                startScreenFade = mainMenuFaderRef.GetComponent<StartScreenFade>();
+                startScreenFade.enabled = false;
+                TryToShowDisclaimer();
+            }
         */
         // TODO: Find a better way to inject Nitrox entrypoint instead of using file swapping
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
@@ -94,8 +85,8 @@ public static class NitroxEntryPatch
 
             MemberRef executeMethodReference = module.Import(executeMethodDefinition);
 
-            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == TARGET_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == TARGET_METHOD_NAME);
 
             Instruction callNitroxExecuteInstruction = OpCodes.Call.ToInstruction(executeMethodReference);
 
@@ -142,14 +133,14 @@ public static class NitroxEntryPatch
 
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
         {
-            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == TARGET_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == TARGET_METHOD_NAME);
 
             IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
             int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
             if (nitroxExecuteInstructionIndex == -1)
             {
-                Log.Debug($"Nitrox entry point not found in {GAME_INPUT_TYPE_NAME}:{GAME_INPUT_METHOD_NAME}");
+                Log.Debug($"Nitrox entry point not found in {TARGET_TYPE_NAME}:{TARGET_METHOD_NAME}");
                 return;
             }
             do
@@ -207,8 +198,8 @@ public static class NitroxEntryPatch
 
         using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
         {
-            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == TARGET_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == TARGET_METHOD_NAME);
 
             return awakeMethod.Body.Instructions[0]?.ToString() == NITROX_EXECUTE_INSTRUCTION;
         }
