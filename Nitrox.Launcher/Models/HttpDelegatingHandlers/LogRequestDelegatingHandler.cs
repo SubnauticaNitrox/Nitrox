@@ -15,7 +15,16 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         Log.Info($"{request.Method} request to {url}");
         try
         {
-            return await base.SendAsync(request, cancellationToken);
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            if ((int)response.StatusCode is >= 200 and < 400)
+            {
+                Log.Debug($"HTTP response status:{response.StatusCode} from {url}");
+            }
+            else
+            {
+                Log.Error($"HTTP response status:{response.StatusCode} from {url}");
+            }
+            return response;
         }
         catch (OperationCanceledException)
         {
