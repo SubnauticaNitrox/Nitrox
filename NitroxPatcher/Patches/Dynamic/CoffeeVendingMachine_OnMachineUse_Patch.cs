@@ -48,11 +48,9 @@ public sealed partial class CoffeeVendingMachine_OnMachineUse_Patch : NitroxPatc
 
     private static void UseCoffeeMachine(CoffeeVendingMachine __instance, CoffeeMachineSlot slot)
     {
-        if (!__instance.TryGetComponent<NitroxEntity>(out NitroxEntity machineEntity))
+        if (__instance.TryGetIdOrWarn(out NitroxId nitroxId))
         {
-            Debug.LogWarning("Failed to get NitroxEntity of vending machine when trying to send CoffeeMachineUse packet");
-            return;
+            Resolve<IPacketSender>().Send(new CoffeeMachineUse(nitroxId, slot));
         }
-        Resolve<IPacketSender>().Send(new CoffeeMachineUse(machineEntity.Id, slot));
     }
 }
