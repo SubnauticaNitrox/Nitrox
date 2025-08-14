@@ -19,7 +19,7 @@ public static class NitroxEntryPatch
     private const string NITROX_ENTRY_TYPE_NAME = "Main";
     private const string NITROX_ENTRY_METHOD_NAME = "Execute";
 
-    private const string TARGET_TYPE_NAME = "StartScreen";
+    private const string TARGET_TYPE_NAME = "PlatformUtils";
     private const string TARGET_METHOD_NAME = "Awake";
 
     private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
