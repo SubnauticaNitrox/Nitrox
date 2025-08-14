@@ -14,10 +14,11 @@ public sealed class CoffeeMachineUse : Packet
         Id = id;
         Slot = slot;
     }
+
+  public enum CoffeeMachineSlot
+  {
+      ONE,
+      TWO
+  }
 }
 
-public enum CoffeeMachineSlot
-{
-    ONE,
-    TWO
-}
