@@ -1,7 +1,6 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -20,10 +19,10 @@ public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMach
         soundWhitelist.TryGetSoundData("event:/sub/base/make_coffee", out SoundData coffeeSoundData);
         machineSoundRange = coffeeSoundData.Radius;
     }
-    
+
     public override void Process(CoffeeMachineUse packet)
     {
-        if(NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject machineGO))
+        if (NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject machineGO))
         {
             Log.Warn("Failed to get CoffeeVendingMachine gameobject while processing CoffeeMachineUse packet");
             return;
