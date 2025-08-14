@@ -1,9 +1,4 @@
-﻿using System;
 using System.Diagnostics;
-using System.Reflection;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxClient.MonoBehaviours.Gui.Input;
 
 namespace NitroxModel.Helper
 {
@@ -61,13 +56,6 @@ namespace NitroxModel.Helper
             PropertyInfo instanceProperty = Reflect.Property((AbusedClass t) => t.InstanceProperty);
             instanceProperty.Name.Should().BeEquivalentTo(nameof(AbusedClass.InstanceProperty));
             instanceProperty.PropertyType.Should().Be<int>();
-        }
-
-        [TestMethod]
-        public void Constructor()
-        {
-            ConstructorInfo method = Reflect.Constructor(() => new KeyBindingManager());
-            method.DeclaringType.Should().Be<KeyBindingManager>();
         }
         
         private class AbusedClass

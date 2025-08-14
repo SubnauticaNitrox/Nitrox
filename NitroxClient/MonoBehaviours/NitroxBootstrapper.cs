@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine;
@@ -9,7 +8,8 @@ public class NitroxBootstrapper : MonoBehaviour
 {
     internal static NitroxBootstrapper Instance;
 
-    private void Awake()
+    // Awake is too early in Subnautica's lifecycle to access PlatformUtils
+    private void Start()
     {
         DontDestroyOnLoad(gameObject);
         Instance = this;
