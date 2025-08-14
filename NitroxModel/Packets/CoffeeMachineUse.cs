@@ -15,10 +15,10 @@ public sealed class CoffeeMachineUse : Packet
         Slot = slot;
     }
 
-  public enum CoffeeMachineSlot
-  {
-      ONE,
-      TWO
-  }
+    public enum CoffeeMachineSlot
+    {
+        ONE,
+        TWO
+    }
 }
 
