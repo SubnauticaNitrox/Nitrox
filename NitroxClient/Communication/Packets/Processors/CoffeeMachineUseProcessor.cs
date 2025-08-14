@@ -23,7 +23,7 @@ public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMach
     public override void Process(CoffeeMachineUse packet)
     {
         if(NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject machineGO)){
-            Debug.LogWarning("Failed to get CoffeeVendingMachine GameObject while processing CoffeeMachineUse packet");
+            Log.Warn("Failed to get CoffeeVendingMachine gameobject while processing CoffeeMachineUse packet");
             return;
         }
         if (!machineGO.TryGetComponent<CoffeeVendingMachine>(out CoffeeVendingMachine machine))
