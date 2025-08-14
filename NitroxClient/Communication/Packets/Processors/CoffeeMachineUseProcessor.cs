@@ -5,6 +5,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using UnityEngine;
+using static NitroxModel.Packets.CoffeeMachineUse;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

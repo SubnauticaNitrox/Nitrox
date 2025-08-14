@@ -3,10 +3,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using UnityEngine;
+using static NitroxModel.Packets.CoffeeMachineUse;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -23,27 +23,19 @@ public sealed partial class CoffeeVendingMachine_OnMachineUse_Patch : NitroxPatc
             )
             .Insert(
                 new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Call, Reflect.Method(() => UseCoffeeMachineSlot1(default)))
+                new CodeInstruction(OpCodes.Ldc_I4_0), // CoffeeMachineSlot.ONE
+                new CodeInstruction(OpCodes.Call, Reflect.Method(() => UseCoffeeMachine(default, default)))
             )
             .MatchStartForward(
                 new CodeMatch(OpCodes.Ldc_I4_1),
+                new CodeMatch(OpCodes.Ldc_I4_1), // CoffeeMachineSlot.TWO
                 new CodeMatch(OpCodes.Callvirt, Reflect.Method((VFXController t) => t.Play(default)))
             )
             .Insert(
                 new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Call, Reflect.Method(() => UseCoffeeMachineSlot2(default)))
+                new CodeInstruction(OpCodes.Call, Reflect.Method(() => UseCoffeeMachine(default, default)))
             )
             .InstructionEnumeration();
-    }
-
-    private static void UseCoffeeMachineSlot1(CoffeeVendingMachine __instance)
-    {
-        UseCoffeeMachine(__instance, CoffeeMachineSlot.ONE);
-    }
-
-    private static void UseCoffeeMachineSlot2(CoffeeVendingMachine __instance)
-    {
-        UseCoffeeMachine(__instance, CoffeeMachineSlot.TWO);
     }
 
     private static void UseCoffeeMachine(CoffeeVendingMachine __instance, CoffeeMachineSlot slot)
