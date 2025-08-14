@@ -28,7 +28,7 @@ public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMach
         }
         if (!machineGO.TryGetComponent<CoffeeVendingMachine>(out CoffeeVendingMachine machine))
         {
-            Debug.LogWarning("Failed to get CoffeeVendingMachine component while processing CoffeeMachineUse packet");
+            Log.Warn("Failed to get CoffeeVendingMachine component while processing CoffeeMachineUse packet");
             return;
         }
         bool bPlaySound = Vector3.Distance(machineGO.transform.position, localPlayer.Body.transform.position) < machineSoundRange;
