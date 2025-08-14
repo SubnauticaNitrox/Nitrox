@@ -28,11 +28,11 @@ public sealed partial class CoffeeVendingMachine_OnMachineUse_Patch : NitroxPatc
             )
             .MatchStartForward(
                 new CodeMatch(OpCodes.Ldc_I4_1),
-                new CodeMatch(OpCodes.Ldc_I4_1), // CoffeeMachineSlot.TWO
                 new CodeMatch(OpCodes.Callvirt, Reflect.Method((VFXController t) => t.Play(default)))
             )
             .Insert(
                 new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Ldc_I4_1), // CoffeeMachineSlot.TWO
                 new CodeInstruction(OpCodes.Call, Reflect.Method(() => UseCoffeeMachine(default, default)))
             )
             .InstructionEnumeration();
