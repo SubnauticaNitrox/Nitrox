@@ -21,9 +21,16 @@ public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMach
     }
     public override void Process(CoffeeMachineUse packet)
     {
-        GameObject coffeeMachine = NitroxEntity.RequireObjectFrom(packet.Id);
-        CoffeeVendingMachine machine = coffeeMachine.RequireComponent<CoffeeVendingMachine>();
-        bool bPlaySound = Vector3.Distance(coffeeMachine.transform.position, localPlayer.Body.transform.position) < machineSoundRange;
+        if(NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject machineGO)){
+            Debug.LogWarning("Failed to get CoffeeVendingMachine GameObject while processing CoffeeMachineUse packet");
+            return;
+        }
+        if (!machineGO.TryGetComponent<CoffeeVendingMachine>(out CoffeeVendingMachine machine))
+        {
+            Debug.LogWarning("Failed to get CoffeeVendingMachine component while processing CoffeeMachineUse packet");
+            return;
+        }
+        bool bPlaySound = Vector3.Distance(machineGO.transform.position, localPlayer.Body.transform.position) < machineSoundRange;
 
         if (packet.Slot == CoffeeMachineSlot.ONE)
         {
