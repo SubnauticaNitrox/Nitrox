@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const float TOGGLED_TRANSPARENCY = 0.4f;
         public const float CHAT_VISIBILITY_TIME_LENGTH = 6f;
 
-        private static readonly Queue<ChatLogEntry> entries = new Queue<ChatLogEntry>();
+        private static readonly Queue<ChatLogEntry> entries = [];
         private Image[] backgroundImages;
         private CanvasGroup canvasGroup;
         private InputField inputField;

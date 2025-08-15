@@ -11,20 +11,25 @@ namespace NitroxClient.GameLogic.ChatUI;
 
 public class PlayerChatManager
 {
-    public static readonly PlayerChatManager Instance = new();
+    public delegate void PlayerChatDelegate(string message);
+
+    public delegate void PlayerCommandDelegate(string message);
 
     private const char SERVER_COMMAND_PREFIX = '/';
+    public static readonly PlayerChatManager Instance = new();
+    private GameObject chatKeyHint;
+
+    public PlayerChatDelegate OnPlayerChat;
+    public PlayerCommandDelegate OnPlayerCommand;
+
+    private PlayerChat playerChat;
+
     public bool IsChatSelected
     {
         get => PlayerChat.IsReady && playerChat.selected;
     }
 
-    private PlayerChat playerChat;
-    private GameObject chatKeyHint;
     public Transform PlayerChatTransform => playerChat.transform;
-
-    public PlayerChatDelegate OnPlayerChat;
-    public PlayerCommandDelegate OnPlayerCommand;
 
     public PlayerChatManager()
     {
@@ -32,48 +37,85 @@ public class PlayerChatManager
         {
             CoroutineHost.StartCoroutine(LoadChatLogAsset());
         }
-    }
 
-    public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
-    private IEnumerator ShowChatAsync()
-    {
-        yield return new WaitUntil(() => PlayerChat.IsReady);
-        playerChat.Show();
-    }
-
-    public void HideChat() => Player.main.StartCoroutine(HideChatAsync());
-    private IEnumerator HideChatAsync()
-    {
-        yield return new WaitUntil(() => PlayerChat.IsReady);
-        playerChat.Deselect();
-        playerChat.Hide();
-    }
-
-    public void SelectChat() => Player.main.StartCoroutine(SelectChatAsync());
-    private IEnumerator SelectChatAsync()
-    {
-        yield return new WaitUntil(() => PlayerChat.IsReady);
-        playerChat.Show();
-        playerChat.Select();
-
-        if (!NitroxPrefs.ChatUsed.Value)
+        IEnumerator LoadChatLogAsset()
         {
-            DisableChatKeyHint();
+            yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
+
+            GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
+            playerChat = playerChatGameObject.AddComponent<PlayerChat>();
+
+            yield return playerChat.SetupChatComponents();
         }
     }
 
-    public void DeselectChat() => Player.main.StartCoroutine(DeselectChatAsync());
-    private IEnumerator DeselectChatAsync()
+    public void ShowChat()
     {
-        yield return new WaitUntil(() => PlayerChat.IsReady);
-        playerChat.Deselect();
+        Player.main.StartCoroutine(ShowChatAsync());
+
+        IEnumerator ShowChatAsync()
+        {
+            yield return new WaitUntil(() => PlayerChat.IsReady);
+            playerChat.Show();
+        }
     }
 
-    public void AddMessage(string playerName, string message, Color color) => Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
-    private IEnumerator AddMessageAsync(string playerName, string message, Color color)
+    public void HideChat()
     {
-        yield return new WaitUntil(() => PlayerChat.IsReady);
-        yield return playerChat.WriteLogEntry(playerName, message, color);
+        Player.main.StartCoroutine(HideChatAsync());
+
+        IEnumerator HideChatAsync()
+        {
+            yield return new WaitUntil(() => PlayerChat.IsReady);
+            playerChat.Deselect();
+            playerChat.Hide();
+        }
+    }
+
+    public void SelectChat()
+    {
+        Player.main.StartCoroutine(SelectChatAsync());
+
+        IEnumerator SelectChatAsync()
+        {
+            yield return new WaitUntil(() => PlayerChat.IsReady);
+            playerChat.Show();
+            playerChat.Select();
+
+            if (!NitroxPrefs.ChatUsed.Value)
+            {
+                DisableChatKeyHint();
+            }
+        }
+
+        void DisableChatKeyHint()
+        {
+            chatKeyHint.GetComponentInChildren<Text>().CrossFadeAlpha(0, 1, false);
+            chatKeyHint.GetComponentInChildren<Image>().CrossFadeAlpha(0, 1, false);
+            NitroxPrefs.ChatUsed.Value = true;
+        }
+    }
+
+    public void DeselectChat()
+    {
+        Player.main.StartCoroutine(DeselectChatAsync());
+
+        IEnumerator DeselectChatAsync()
+        {
+            yield return new WaitUntil(() => PlayerChat.IsReady);
+            playerChat.Deselect();
+        }
+    }
+
+    public void AddMessage(string playerName, string message, Color color)
+    {
+        Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
+
+        IEnumerator AddMessageAsync(string playerName, string message, Color color)
+        {
+            yield return new WaitUntil(() => PlayerChat.IsReady);
+            yield return playerChat.WriteLogEntry(playerName, message, color);
+        }
     }
 
     public void SendMessage()
@@ -100,16 +142,6 @@ public class PlayerChatManager
         OnPlayerChat?.Invoke(trimmedInput);
     }
 
-    private IEnumerator LoadChatLogAsset()
-    {
-        yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
-        
-        GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
-        playerChat = playerChatGameObject.AddComponent<PlayerChat>();
-        
-        yield return playerChat.SetupChatComponents();
-    }
-
     public IEnumerator LoadChatKeyHint()
     {
         if (!NitroxPrefs.ChatUsed.Value)
@@ -118,14 +150,4 @@ public class PlayerChatManager
             chatKeyHint = NitroxAssetBundle.CHAT_KEY_HINT.LoadedAssets[0] as GameObject;
         }
     }
-
-    private void DisableChatKeyHint()
-    {
-        chatKeyHint.GetComponentInChildren<Text>().CrossFadeAlpha(0, 1, false);
-        chatKeyHint.GetComponentInChildren<Image>().CrossFadeAlpha(0, 1, false);
-        NitroxPrefs.ChatUsed.Value = true;
-    }
-
-    public delegate void PlayerChatDelegate(string message);
-    public delegate void PlayerCommandDelegate(string message);
 }
