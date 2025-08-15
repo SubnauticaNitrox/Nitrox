@@ -188,6 +188,10 @@
                 <HintPath>$(GameManagedDir)UnityEngine.InputModule.dll</HintPath>
                 <Private>$(TestLibrary)</Private>
             </Reference>
+            <Reference Include="UnityEngine.InputSystem">
+                <HintPath>$(GameManagedDir)Unity.InputSystem.dll</HintPath>
+                <Private>$(TestLibrary)</Private>
+            </Reference>
             <Reference Include="UnityEngine.JSONSerializeModule">
                 <HintPath>$(GameManagedDir)UnityEngine.JSONSerializeModule.dll</HintPath>
                 <Private>$(TestLibrary)</Private>
