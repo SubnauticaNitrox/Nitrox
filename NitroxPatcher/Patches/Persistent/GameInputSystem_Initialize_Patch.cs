@@ -20,9 +20,10 @@ public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistent
     {
         CachedEnumString<GameInput.Button> actionNames = GameInput.ActionNames;
 
+        int buttonId = KeyBindingManager.NITROX_BASE_ID;
         foreach (KeyBinding keyBinding in KeyBindingManager.KeyBindings)
         {
-            GameInput.Button button = (GameInput.Button)KeyBindingManager.CurrentBaseId++;
+            GameInput.Button button = (GameInput.Button)buttonId++;
             actionNames.valueToString[button] = keyBinding.ButtonLabel;
 
             if (!string.IsNullOrEmpty(keyBinding.DefaultKeyboardKey))
