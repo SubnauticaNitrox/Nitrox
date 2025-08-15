@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
-using NitroxClient.Unity.Helper;
 using NitroxModel.GameLogic.FMOD;
 using UnityEngine;
 
@@ -15,7 +14,7 @@ public class FMODEmitterController : MonoBehaviour
     private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new();
     private readonly Dictionary<string, Tuple<FMOD_CustomLoopingEmitter, bool, float>> loopingEmitters = new(); // Tuple<emitter, is3D, radius>
     private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new();
-    private readonly Dictionary<string, EventInstance> eventInstances = new(); // 2D Sounds
+    private readonly Dictionary<string, Tuple<EventInstance, float>> eventInstances = new(); // 2D Sounds Tuple<evt, radius>
 
     /// <summary>
     /// When <see cref="GameObject"/>s are copied their Start()/Awake() functions don't get called again.
@@ -28,17 +27,17 @@ public class FMODEmitterController : MonoBehaviour
         {
             switch (behaviour)
             {
-                case FMOD_CustomEmitter customEmitter when this.Resolve<FMODWhitelist>().IsWhitelisted(customEmitter.asset.path, out float maxDistance):
-                    AddEmitter(customEmitter.asset.path, customEmitter, maxDistance);
+                case FMOD_CustomEmitter customEmitter when this.Resolve<FMODWhitelist>().IsWhitelisted(customEmitter.asset.path, out float radius):
+                    AddEmitter(customEmitter.asset.path, customEmitter, radius);
                     break;
-                case FMOD_StudioEventEmitter studioEmitter when this.Resolve<FMODWhitelist>().IsWhitelisted(studioEmitter.asset.path, out float maxDistance):
-                    AddEmitter(studioEmitter.asset.path, studioEmitter, maxDistance);
+                case FMOD_StudioEventEmitter studioEmitter when this.Resolve<FMODWhitelist>().IsWhitelisted(studioEmitter.asset.path, out float radius):
+                    AddEmitter(studioEmitter.asset.path, studioEmitter, radius);
                     break;
             }
         }
     }
 
-    public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float maxDistance)
+    public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float radius)
     {
         if (customEmitters.ContainsKey(path))
         {
@@ -50,29 +49,28 @@ public class FMODEmitterController : MonoBehaviour
         evt.getDescription(out EventDescription description);
         description.is3D(out bool is3D);
 
-        if (is3D)
+        if (!is3D)
         {
-            evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
-
-            customEmitters.Add(path, customEmitter);
-
-            if (customEmitter is FMOD_CustomLoopingEmitter loopingEmitter)
-            {
-                if (loopingEmitter.assetStart && this.Resolve<FMODWhitelist>().IsWhitelisted(loopingEmitter.assetStart.path, out float radiusStart))
-                {
-                    AddEmitter(loopingEmitter.assetStart.path, loopingEmitter, radiusStart);
-                }
-
-                if (loopingEmitter.assetStop && this.Resolve<FMODWhitelist>().IsWhitelisted(loopingEmitter.assetStop.path, out float radiusStop))
-                {
-                    AddEmitter(loopingEmitter.assetStop.path, loopingEmitter, radiusStop);
-                }
-            }
+            eventInstances.TryAdd(customEmitter.asset.path, new(evt, radius));
+            return;
         }
-        else
+
+        evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
+
+        customEmitters.Add(path, customEmitter);
+
+        if (customEmitter is FMOD_CustomLoopingEmitter loopingEmitter)
         {
-            AddEventInstance(customEmitter.asset.path, evt);
+            if (loopingEmitter.assetStart && this.Resolve<FMODWhitelist>().IsWhitelisted(loopingEmitter.assetStart.path, out float radiusStart))
+            {
+                AddEmitter(loopingEmitter.assetStart.path, loopingEmitter, radiusStart);
+            }
+
+            if (loopingEmitter.assetStop && this.Resolve<FMODWhitelist>().IsWhitelisted(loopingEmitter.assetStop.path, out float radiusStop))
+            {
+                AddEmitter(loopingEmitter.assetStop.path, loopingEmitter, radiusStop);
+            }
         }
     }
 
@@ -85,25 +83,23 @@ public class FMODEmitterController : MonoBehaviour
             loopingEmitter.evt.getDescription(out EventDescription description);
             description.is3D(out bool is3D);
 
-            loopingEmitters.Add(path, new Tuple<FMOD_CustomLoopingEmitter, bool, float>(loopingEmitter, is3D, radius));
+            loopingEmitters.Add(path, new(loopingEmitter, is3D, radius));
         }
     }
 
-    public void AddEmitter(string path, FMOD_StudioEventEmitter studioEmitter, float maxDistance)
+    public void AddEmitter(string path, FMOD_StudioEventEmitter studioEmitter, float radius)
     {
-        if (!customEmitters.ContainsKey(path))
-        {
-            studioEmitter.CacheEventInstance();
+        studioEmitter.CacheEventInstance();
+        studioEmitter.evt.getDescription(out EventDescription description);
+        description.is3D(out bool is3D);
 
-            studioEmitters.Add(path, studioEmitter);
+        if (is3D)
+        {
+            studioEmitters.TryAdd(path, studioEmitter);
         }
-    }
-
-    private void AddEventInstance(string path, EventInstance eventInstance)
-    {
-        if (!eventInstances.ContainsKey(path))
+        else
         {
-            eventInstances.Add(path, eventInstance);
+            eventInstances.TryAdd(path, new(studioEmitter.evt, radius));
         }
     }
 
@@ -111,8 +107,34 @@ public class FMODEmitterController : MonoBehaviour
     public void SetParameterCustomEmitter(string path, string paramString, float value) => customEmitters[path].AliveOrNull()?.SetParameterValue(paramString, value);
     public void StopCustomEmitter(string path) => customEmitters[path].AliveOrNull()?.Stop();
 
-    public void PlayStudioEmitter(string path) => studioEmitters[path].AliveOrNull()?.PlayUI();
-    public void StopStudioEmitter(string path, bool allowFadeout) => studioEmitters[path].AliveOrNull()?.Stop(allowFadeout);
+    public void PlayStudioEmitter(string path, Vector3 position)
+    {
+        if (studioEmitters.TryGetValue(path, out FMOD_StudioEventEmitter studioEmitter) && studioEmitter)
+        {
+            studioEmitter.PlayUI();
+        }
+        else if (eventInstances.TryGetValue(path, out Tuple<EventInstance, float> tuple))
+        {
+            float volume = FMODSystem.CalculateVolume(position, Player.main.transform.position, tuple.Item2, 1f);
+            if (volume > 0)
+            {
+                tuple.Item1.setVolume(volume);
+                tuple.Item1.start();
+            }
+        }
+    }
+
+    public void StopStudioEmitter(string path, bool allowFadeout)
+    {
+        if (studioEmitters.TryGetValue(path, out FMOD_StudioEventEmitter studioEmitter) && studioEmitter)
+        {
+            studioEmitter.Stop(allowFadeout);
+        }
+        else if (eventInstances.TryGetValue(path, out Tuple<EventInstance, float> tuple))
+        {
+            tuple.Item1.stop(allowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
+    }
 
     public void PlayCustomLoopingEmitter(string path)
     {
@@ -137,15 +159,19 @@ public class FMODEmitterController : MonoBehaviour
 
     public void PlayEventInstance(string path, float volume)
     {
-        EventInstance eventInstance = eventInstances[path];
-        eventInstance.setVolume(volume);
-        eventInstance.start();
+        if (eventInstances.TryGetValue(path, out Tuple<EventInstance, float> tuple))
+        {
+            tuple.Item1.setVolume(volume);
+            tuple.Item1.start();
+        }
     }
 
     public void StopEventInstance(string path)
     {
-        EventInstance eventInstance = eventInstances[path];
-        eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        if (eventInstances.TryGetValue(path, out Tuple<EventInstance, float> tuple))
+        {
+            tuple.Item1.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
     }
 
     public static void PlayEventOneShot(FMODAsset asset, float radius, Vector3 origin, float volume = 1f) => PlayEventOneShot(asset.path, radius, origin, volume);
