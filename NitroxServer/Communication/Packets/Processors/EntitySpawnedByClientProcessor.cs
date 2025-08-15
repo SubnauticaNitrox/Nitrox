@@ -35,14 +35,14 @@ namespace NitroxServer.Communication.Packets.Processors
             if (entity is WorldEntity worldEntity)
             {
                 worldEntityManager.TrackEntityInTheWorld(worldEntity);
+            }
 
-                if (packet.RequireSimulation)
-                {
-                    simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
+            if (packet.RequireSimulation)
+            {
+                simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
 
-                    SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
-                    playerManager.SendPacketToAllPlayers(ownershipChangePacket);
-                }
+                SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
+                playerManager.SendPacketToAllPlayers(ownershipChangePacket);
             }
 
             SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);

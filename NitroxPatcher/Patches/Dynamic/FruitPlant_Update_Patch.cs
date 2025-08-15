@@ -35,12 +35,12 @@ public sealed partial class FruitPlant_Update_Patch : NitroxPatch, IDynamicPatch
         // If the NitroxEntity is on the distant Plantable object (e.g. fruit tree in a plant pot)
         if (PickPrefab_SetPickedUp_Patch.TryGetPlantable(__instance, out Plantable plantable) &&
             plantable.TryGetNitroxId(out entityId) &&
-            plantable.currentPlanter && plantable.currentPlanter.TryGetNitroxId(out NitroxId planterId))
+            Planter_ResetStorage_Patch.TryGetOwnerNitroxId(plantable.currentPlanter, out NitroxId ownerNitroxId))
         {
             __state = (__instance.timeNextFruit, entityId, plantable);
             // In this precise case, we look for ownership over the planter and not the plant
             // This simplifies a lot simulation ownership distribution
-            return Resolve<SimulationOwnership>().HasAnyLockType(planterId);
+            return Resolve<SimulationOwnership>().HasAnyLockType(ownerNitroxId);
         }
 
         __state = (__instance.timeNextFruit, null, null);
