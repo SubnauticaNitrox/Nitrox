@@ -87,7 +87,7 @@ public class App : Application
         {
             InstantLaunch = new InstantLaunchData(save, players);
         });
-        cliParser.Run(Environment.GetCommandLineArgs().Skip(1).ToArray());
+        cliParser.Run(NitroxEnvironment.CommandLineArgs);
 
         // Fallback to normal startup.
         if (StartupWindowFactory == null)
