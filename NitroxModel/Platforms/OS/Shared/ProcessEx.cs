@@ -144,7 +144,7 @@ public class ProcessEx : IDisposable
     /// <summary>
     ///     Starts the current app as a new instance, passing the same command line arguments.
     /// </summary>
-    public static void StartSelfCopyArgs() => StartSelf(Environment.GetCommandLineArgs().Skip(1).ToArray());
+    public static void StartSelfCopyArgs() => StartSelf(NitroxEnvironment.CommandLineArgs);
 #endif
 
     /// <summary>

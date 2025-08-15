@@ -63,7 +63,7 @@ public class App : Application
     {
         CultureManager.ConfigureCultureInfo();
         Log.Setup();
-        Log.Info($"Starting Nitrox Launcher V{NitroxEnvironment.Version}+{NitroxEnvironment.GitHash} built on {NitroxEnvironment.BuildDate:F}");
+        Log.Info($@"Starting Nitrox Launcher V{NitroxEnvironment.Version}+{NitroxEnvironment.GitHash} with args ""{string.Join(" ", NitroxEnvironment.CommandLineArgs)}"" built on {NitroxEnvironment.BuildDate:F}");
 
         // Handle command line arguments.
         ConsoleApp.ConsoleAppBuilder cliParser = ConsoleApp.Create();
@@ -75,8 +75,8 @@ public class App : Application
 
             if (IsCrashReport)
             {
-                string executableRootPath = Path.GetDirectoryName(Environment.ProcessPath ?? NitroxUser.ExecutableRootPath);
-                if (executableRootPath != null)
+                string executableRootPath = NitroxUser.AppDataPath;
+                if (!string.IsNullOrWhiteSpace(executableRootPath))
                 {
                     string crashReportContent = File.ReadAllText(Path.Combine(executableRootPath, CRASH_REPORT_FILE_NAME));
                     StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashReportContent } };
@@ -87,7 +87,7 @@ public class App : Application
         {
             InstantLaunch = new InstantLaunchData(save, players);
         });
-        cliParser.Run(Environment.GetCommandLineArgs().Skip(1).ToArray());
+        cliParser.Run(NitroxEnvironment.CommandLineArgs);
 
         // Fallback to normal startup.
         if (StartupWindowFactory == null)
@@ -152,11 +152,10 @@ public class App : Application
         // Write crash report if we're not reporting one right now.
         try
         {
-            string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
-            string executableRoot = Path.GetDirectoryName(executableFilePath);
-            if (executableFilePath != null && executableRoot != null)
+            string crashFolderPath = NitroxUser.AppDataPath;
+            if (!string.IsNullOrWhiteSpace(crashFolderPath))
             {
-                string crashReportFile = Path.Combine(executableRoot, CRASH_REPORT_FILE_NAME);
+                string crashReportFile = Path.Combine(crashFolderPath, CRASH_REPORT_FILE_NAME);
                 File.WriteAllText(crashReportFile, ex.ToString());
                 ProcessEx.StartSelf("--crash-report");
             }

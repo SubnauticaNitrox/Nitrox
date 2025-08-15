@@ -222,7 +222,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         LauncherNotifier.Info("Starting game");
         string subnauticaPath = NitroxUser.GamePath;
-        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? Environment.GetCommandLineArgs())}";
+        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
         string subnauticaExe;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -232,15 +232,13 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         {
             subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
         }
-
         if (!File.Exists(subnauticaExe))
         {
             throw new FileNotFoundException("Unable to find Subnautica executable");
         }
 
-        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
-
         // Start game & gaming platform if needed.
+        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
             Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ProcessEx.ProcessExists(GameInfo.Subnautica.ExeName) && keyValueStore.GetIsMultipleGameInstancesAllowed()),

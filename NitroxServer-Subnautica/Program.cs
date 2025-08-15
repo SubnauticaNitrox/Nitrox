@@ -74,7 +74,7 @@ public class Program
         }
 
         Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
-        Log.Debug($@"Process start args: ""{string.Join(@""", """, Environment.GetCommandLineArgs())}""");
+        Log.Debug($@"Process start args: ""{string.Join(@""", """, NitroxEnvironment.CommandLineArgs)}""");
 
         Task handleConsoleInputTask;
         Server server;
@@ -513,9 +513,7 @@ public class Program
         if (mostRecentLogFile == null)
         {
             return;
-        }
-
-        Log.Info("Press L to open log file before closing. Press any other key to close . . .");*/
+        }*/
         Log.Info("Press L to open log folder before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 

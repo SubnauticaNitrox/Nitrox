@@ -53,6 +53,7 @@ internal sealed class FileCacheDelegatingHandler : DelegatingHandler
         {
             throw new Exception($"{nameof(request.RequestUri)} must not be null");
         }
+        Directory.CreateDirectory(NitroxUser.CachePath);
         return Path.Combine(NitroxUser.CachePath, $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().AsMd5Hash())}.cache");
     }
 }

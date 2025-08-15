@@ -96,7 +96,7 @@ public class Server
     public static SubnauticaServerConfig CreateOrLoadConfig()
     {
         string? saveDir = null;
-        if (GetSaveName(Environment.GetCommandLineArgs()) is { } saveName)
+        if (GetSaveName(NitroxEnvironment.CommandLineArgs) is { } saveName)
         {
             saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName);
         }
