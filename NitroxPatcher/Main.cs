@@ -23,7 +23,7 @@ public static class Main
     private static readonly Lazy<string> nitroxLauncherDir = new(() =>
     {
         // Get path from command args.
-        string[] args = NitroxEnvironment.CommandLineArgs;
+        string[] args = Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length - 1; i++)
         {
             if (args[i].Equals("--nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
