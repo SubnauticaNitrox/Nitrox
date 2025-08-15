@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
@@ -16,15 +16,14 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly PlayerManager remotePlayerManager;
         private readonly LocalPlayer localPlayer;
-        private readonly PlayerChatManager playerChatManager;
+        private readonly PlayerChatManager playerChatManager = PlayerChatManager.Instance;
 
         private readonly Color32 serverMessageColor = new Color32(0x8c, 0x00, 0xFF, 0xFF);
 
-        public ChatMessageProcessor(PlayerManager remotePlayerManager, LocalPlayer localPlayer, PlayerChatManager playerChatManager)
+        public ChatMessageProcessor(PlayerManager remotePlayerManager, LocalPlayer localPlayer)
         {
             this.remotePlayerManager = remotePlayerManager;
             this.localPlayer = localPlayer;
-            this.playerChatManager = playerChatManager;
         }
 
         public override void Process(ChatMessage message)

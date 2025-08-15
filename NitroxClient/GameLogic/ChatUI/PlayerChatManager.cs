@@ -1,131 +1,131 @@
-﻿using System.Collections;
-using NitroxClient.Communication.Abstract;
+using System.Collections;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;
 using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
-namespace NitroxClient.GameLogic.ChatUI
+namespace NitroxClient.GameLogic.ChatUI;
+
+public class PlayerChatManager
 {
-    public class PlayerChatManager
+    public static readonly PlayerChatManager Instance = new();
+
+    private const char SERVER_COMMAND_PREFIX = '/';
+    public bool IsChatSelected
     {
-        private readonly IMultiplayerSession multiplayerSession;
+        get => PlayerChat.IsReady && playerChat.selected;
+    }
 
-        private const char SERVER_COMMAND_PREFIX = '/';
+    private PlayerChat playerChat;
+    private GameObject chatKeyHint;
+    public Transform PlayerChatTransform => playerChat.transform;
 
-        public bool IsChatSelected
+    public PlayerChatDelegate OnPlayerChat;
+    public PlayerCommandDelegate OnPlayerCommand;
+
+    public PlayerChatManager()
+    {
+        if (NitroxEnvironment.IsNormal) //Testing would fail because it's trying to access runtime MonoBehaviours.
         {
-            get => PlayerChat.IsReady && playerChat.selected;
-        }
-
-        public PlayerChatManager(IMultiplayerSession multiplayerSession)
-        {
-            this.multiplayerSession = multiplayerSession;
-
-            if (NitroxEnvironment.IsNormal) //Testing would fail because it's trying to access runtime MonoBehaviours.
-            {
-                CoroutineHost.StartCoroutine(LoadChatLogAsset());
-            }
-        }
-
-        private PlayerChat playerChat;
-        private GameObject chatKeyHint;
-        public Transform PlayerChaTransform => playerChat.transform;
-
-        public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
-        private IEnumerator ShowChatAsync()
-        {
-            yield return new WaitUntil(() => PlayerChat.IsReady);
-            playerChat.Show();
-        }
-
-        public void HideChat() => Player.main.StartCoroutine(HideChatAsync());
-        private IEnumerator HideChatAsync()
-        {
-            yield return new WaitUntil(() => PlayerChat.IsReady);
-            playerChat.Deselect();
-            playerChat.Hide();
-        }
-
-        public void SelectChat() => Player.main.StartCoroutine(SelectChatAsync());
-        private IEnumerator SelectChatAsync()
-        {
-            yield return new WaitUntil(() => PlayerChat.IsReady);
-            playerChat.Show();
-            playerChat.Select();
-
-            if (!NitroxPrefs.ChatUsed.Value)
-            {
-                DisableChatKeyHint();
-            }
-        }
-
-        public void DeselectChat() => Player.main.StartCoroutine(DeselectChatAsync());
-        private IEnumerator DeselectChatAsync()
-        {
-            yield return new WaitUntil(() => PlayerChat.IsReady);
-            playerChat.Deselect();
-        }
-
-        public void AddMessage(string playerName, string message, Color color) => Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
-        private IEnumerator AddMessageAsync(string playerName, string message, Color color)
-        {
-            yield return new WaitUntil(() => PlayerChat.IsReady);
-            playerChat.WriteLogEntry(playerName, message, color);
-        }
-
-        public void SendMessage()
-        {
-            if (string.IsNullOrWhiteSpace(playerChat.InputText))
-            {
-                playerChat.Select();
-                return;
-            }
-
-            string trimmedInput = playerChat.InputText.Trim();
-            if (trimmedInput[0] == SERVER_COMMAND_PREFIX)
-            {
-                // Server command
-                multiplayerSession.Send(new ServerCommand(trimmedInput.Substring(1)));
-                playerChat.InputText = "";
-                playerChat.Select();
-                return;
-            }
-
-            // We shouldn't add the message to the local chat instantly but instead let the server tell us if this message is added or not
-            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
-            playerChat.InputText = "";
-            playerChat.Select();
-        }
-
-        private IEnumerator LoadChatLogAsset()
-        {
-            yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
-            
-            GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
-            playerChat = playerChatGameObject.AddComponent<PlayerChat>();
-            
-            yield return playerChat.SetupChatComponents();
-        }
-
-        public IEnumerator LoadChatKeyHint()
-        {
-            if (!NitroxPrefs.ChatUsed.Value)
-            {
-                yield return LoadUIAsset(NitroxAssetBundle.CHAT_KEY_HINT, false);
-                chatKeyHint = NitroxAssetBundle.CHAT_KEY_HINT.LoadedAssets[0] as GameObject;
-            }
-        }
-
-        private void DisableChatKeyHint()
-        {
-            chatKeyHint.GetComponentInChildren<Text>().CrossFadeAlpha(0, 1, false);
-            chatKeyHint.GetComponentInChildren<Image>().CrossFadeAlpha(0, 1, false);
-            NitroxPrefs.ChatUsed.Value = true;
+            CoroutineHost.StartCoroutine(LoadChatLogAsset());
         }
     }
+
+    public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
+    private IEnumerator ShowChatAsync()
+    {
+        yield return new WaitUntil(() => PlayerChat.IsReady);
+        playerChat.Show();
+    }
+
+    public void HideChat() => Player.main.StartCoroutine(HideChatAsync());
+    private IEnumerator HideChatAsync()
+    {
+        yield return new WaitUntil(() => PlayerChat.IsReady);
+        playerChat.Deselect();
+        playerChat.Hide();
+    }
+
+    public void SelectChat() => Player.main.StartCoroutine(SelectChatAsync());
+    private IEnumerator SelectChatAsync()
+    {
+        yield return new WaitUntil(() => PlayerChat.IsReady);
+        playerChat.Show();
+        playerChat.Select();
+
+        if (!NitroxPrefs.ChatUsed.Value)
+        {
+            DisableChatKeyHint();
+        }
+    }
+
+    public void DeselectChat() => Player.main.StartCoroutine(DeselectChatAsync());
+    private IEnumerator DeselectChatAsync()
+    {
+        yield return new WaitUntil(() => PlayerChat.IsReady);
+        playerChat.Deselect();
+    }
+
+    public void AddMessage(string playerName, string message, Color color) => Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
+    private IEnumerator AddMessageAsync(string playerName, string message, Color color)
+    {
+        yield return new WaitUntil(() => PlayerChat.IsReady);
+        yield return playerChat.WriteLogEntry(playerName, message, color);
+    }
+
+    public void SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(playerChat.InputText))
+        {
+            playerChat.Select();
+            return;
+        }
+
+        string trimmedInput = playerChat.InputText.Trim();
+        if (trimmedInput[0] == SERVER_COMMAND_PREFIX)
+        {
+            // Server command
+            playerChat.InputText = "";
+            playerChat.Select();
+            OnPlayerCommand?.Invoke(trimmedInput.Substring(1));
+            return;
+        }
+
+        // We shouldn't add the message to the local chat instantly but instead let the server tell us if this message is added or not
+        playerChat.InputText = "";
+        playerChat.Select();
+        OnPlayerChat?.Invoke(trimmedInput);
+    }
+
+    private IEnumerator LoadChatLogAsset()
+    {
+        yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
+        
+        GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
+        playerChat = playerChatGameObject.AddComponent<PlayerChat>();
+        
+        yield return playerChat.SetupChatComponents();
+    }
+
+    public IEnumerator LoadChatKeyHint()
+    {
+        if (!NitroxPrefs.ChatUsed.Value)
+        {
+            yield return LoadUIAsset(NitroxAssetBundle.CHAT_KEY_HINT, false);
+            chatKeyHint = NitroxAssetBundle.CHAT_KEY_HINT.LoadedAssets[0] as GameObject;
+        }
+    }
+
+    private void DisableChatKeyHint()
+    {
+        chatKeyHint.GetComponentInChildren<Text>().CrossFadeAlpha(0, 1, false);
+        chatKeyHint.GetComponentInChildren<Image>().CrossFadeAlpha(0, 1, false);
+        NitroxPrefs.ChatUsed.Value = true;
+    }
+
+    public delegate void PlayerChatDelegate(string message);
+    public delegate void PlayerCommandDelegate(string message);
 }
