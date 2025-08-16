@@ -30,32 +30,22 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 
-    public static readonly InstructionsPattern InstructionsPattern = new()
-    {
-        Div,
-        Stfld,
-        Ldc_I4_0,
-        Ret,
-        Ldarg_0,
-        { InstructionPattern.Call(nameof(Constructable), nameof(Constructable.UpdateMaterial)), "Insert" }
-    };
-
-    public static readonly List<CodeInstruction> InstructionsToAdd = new()
-    {
-        new(Ldarg_0),
-        new(Ldc_I4_1), // True for "constructing"
-        new(Call, Reflect.Method(() => ConstructionAmountModified(default, default)))
-    };
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
-        instructions.Transform(InstructionsPattern, (label, instruction) =>
-        {
-            if (label.Equals("Insert"))
-            {
-                return InstructionsToAdd;
-            }
-            return null;
-        });
+        instructions.RewriteOnPattern(
+            [
+                Div,
+                Stfld,
+                Ldc_I4_0,
+                Ret,
+                Ldarg_0,
+                Reflect.Method((Constructable c) => c.UpdateMaterial()),
+                [
+                    Ldarg_0,
+                    Ldc_I4_1, // True for "constructing"
+                    Reflect.Method(() => ConstructionAmountModified(default, default))
+                ]
+            ]
+        );
 
     public static void ConstructionAmountModified(Constructable constructable, bool constructing)
     {
@@ -90,7 +80,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
                 return;
             }
             IEnumerator postSpawner = BuildingPostSpawner.ApplyPostSpawner(constructable.gameObject, entityId);
-    
+
             // Can be null if no post spawner is set for the constructable's techtype
             if (postSpawner != null)
             {
