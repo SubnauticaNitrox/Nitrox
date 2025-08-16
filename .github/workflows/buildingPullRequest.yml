@@ -1,0 +1,54 @@
+name: Building Pull Request
+on:
+  pull_request:
+    paths-ignore:
+      - '**/PirateDetection.cs'
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v5
+
+    - name: Install dependencies for Nitrox
+      run: dotnet restore
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Build
+      run: dotnet build Nitrox.sln -c ${{ matrix.configuration }} --no-restore
+
+  test:
+    needs: build
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Run Tests
+      continue-on-error: true
+      run: dotnet test Nitrox.Test/bin/Debug/net9.0/Nitrox.Test.dll --logger trx --no-build --results-directory "TestResults"
+
+    - name: Upload Test Results
+      uses: EnricoMi/publish-unit-test-result-action/linux@v2
+      if: (!cancelled())
+      with:
+        files: |
+          TestResults/*.trx
+
+  upload:
+    - name: Declare env variables
+      shell: bash
+      run: |
+        echo "PR_NUMBER=$(echo ${github.event.pull_request.number || github.event.issue.number})" >> "$GITHUB_ENV"
+        echo "COMMIT_HASH=$(echo git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_ENV"
+
+    - name: Upload Launcher
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: "DebugLauncher_#${{ env.PR_NUMBER }}_${{ env.COMMIT_HASH }}"
+        path: 'Nitrox.Launcher/bin/Debug/net9.0/'

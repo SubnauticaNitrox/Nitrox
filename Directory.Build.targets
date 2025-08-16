@@ -45,9 +45,8 @@
         <DiscoverGame GameName="Subnautica" IntermediateOutputPath="$(IntermediateOutputPath)">
             <Output TaskParameter="GamePath" PropertyName="GameDir" />
         </DiscoverGame>
-        <Error Condition="'$(GameDir)' == ''" Text="Failed to find the game 'Subnautica' on your machine" />
         <PropertyGroup>
-            <GameDir>$(GameDir)\</GameDir>
+            <GameDir>/home/docker/Subnautica/</GameDir>
             <GameDataFolder>Subnautica_Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">

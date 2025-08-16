@@ -1,0 +1,38 @@
+name: Building Master
+on:
+  push:
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v5
+
+    - name: Install dependencies for Nitrox
+      run: dotnet restore
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Build
+      run: dotnet build Nitrox.sln -c ${{ matrix.configuration }} --no-restore
+
+  test:
+    needs: build
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Run Tests
+      continue-on-error: true
+      run: dotnet test Nitrox.Test/bin/Debug/net9.0/Nitrox.Test.dll --logger trx --no-build --results-directory "TestResults"
+
+    - name: Upload Test Results
+      uses: EnricoMi/publish-unit-test-result-action/linux@v2
+      if: (!cancelled())
+      with:
+        files: |
+          TestResults/*.trx
