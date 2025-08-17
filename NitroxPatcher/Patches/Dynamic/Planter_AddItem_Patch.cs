@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.Helpers;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -20,7 +21,7 @@ public sealed partial class Planter_AddItem_Patch : NitroxPatch, IDynamicPatch
 
         // When the planter accepts the new incoming seed, we want to send out metadata about what time the seed was planted.
         if (plantable.TryGetNitroxId(out NitroxId plantableId) &&
-            Planter_ResetStorage_Patch.TryGetOwnerNitroxId(__instance, out NitroxId ownerNitroxId) &&
+            __instance.TryGetOwnerNitroxId(out NitroxId? ownerNitroxId) &&
             Resolve<SimulationOwnership>().HasAnyLockType(ownerNitroxId))
         {
             Resolve<Entities>().EntityMetadataChanged(plantable, plantableId);
