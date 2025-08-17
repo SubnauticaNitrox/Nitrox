@@ -2,7 +2,7 @@
 using System.Numerics;
 using NitroxModel.DataStructures.Unity;
 
-namespace NitroxModel.Helper;
+namespace NitroxModel.Extensions;
 
 // ReSharper disable once InconsistentNaming
 public static class Matrix4x4Extension

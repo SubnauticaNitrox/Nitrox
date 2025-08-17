@@ -2,9 +2,9 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.Helpers;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -34,8 +34,7 @@ public sealed partial class FruitPlant_Update_Patch : NitroxPatch, IDynamicPatch
 
         // If the NitroxEntity is on the distant Plantable object (e.g. fruit tree in a plant pot)
         if (PickPrefab_SetPickedUp_Patch.TryGetPlantable(__instance, out Plantable plantable) &&
-            plantable.TryGetNitroxId(out entityId) &&
-            Planter_ResetStorage_Patch.TryGetOwnerNitroxId(plantable.currentPlanter, out NitroxId ownerNitroxId))
+            plantable.TryGetNitroxId(out entityId) && plantable.currentPlanter.TryGetOwnerNitroxId(out NitroxId ownerNitroxId))
         {
             __state = (__instance.timeNextFruit, entityId, plantable);
             // In this precise case, we look for ownership over the planter and not the plant
