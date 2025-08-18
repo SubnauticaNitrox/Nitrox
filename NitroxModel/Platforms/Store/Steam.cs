@@ -150,7 +150,9 @@ public sealed class Steam : IGamePlatform
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (!isGameRunning && !isVRMode) // TODO: Fix this applaunch method to work with the VR argument flag. Currently, Steam puts "-vrmode none" in launch arguments for some reason
+            bool isInstantLaunch = launchArguments.Contains("-instantlaunch");
+
+            if (!isGameRunning && !isVRMode && !isInstantLaunch) // TODO: Fix this applaunch method to work with the VR argument flag. Currently, Steam puts "-vrmode none" in launch arguments by default
             {
                 return ProcessEx.From(new ProcessStartInfo
                 {
