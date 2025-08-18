@@ -51,7 +51,7 @@ public class PlayerChatManager
 
     public void ShowChat()
     {
-        Player.main.StartCoroutine(ShowChatAsync());
+        CoroutineHost.StartCoroutine(ShowChatAsync());
 
         IEnumerator ShowChatAsync()
         {
@@ -62,7 +62,7 @@ public class PlayerChatManager
 
     public void HideChat()
     {
-        Player.main.StartCoroutine(HideChatAsync());
+        CoroutineHost.StartCoroutine(HideChatAsync());
 
         IEnumerator HideChatAsync()
         {
@@ -74,7 +74,7 @@ public class PlayerChatManager
 
     public void SelectChat()
     {
-        Player.main.StartCoroutine(SelectChatAsync());
+        CoroutineHost.StartCoroutine(SelectChatAsync());
 
         IEnumerator SelectChatAsync()
         {
@@ -98,7 +98,7 @@ public class PlayerChatManager
 
     public void DeselectChat()
     {
-        Player.main.StartCoroutine(DeselectChatAsync());
+        CoroutineHost.StartCoroutine(DeselectChatAsync());
 
         IEnumerator DeselectChatAsync()
         {
@@ -109,7 +109,7 @@ public class PlayerChatManager
 
     public void AddMessage(string playerName, string message, Color color)
     {
-        Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
+        CoroutineHost.StartCoroutine(AddMessageAsync(playerName, message, color));
 
         IEnumerator AddMessageAsync(string playerName, string message, Color color)
         {
