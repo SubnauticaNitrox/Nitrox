@@ -51,6 +51,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private string multipleInstancesTooltip;
 
     private static string DefaultLaunchArg => "-vrmode none";
+    private bool isResettingArgs;
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
@@ -128,9 +129,11 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     [RelayCommand]
     private void ResetArguments(IInputElement? focusTargetAfterReset = null)
     {
+        isResettingArgs = true;
         LaunchArgs = DefaultLaunchArg;
-        ShowResetArgsBtn = false;
-        SetArgumentsCommand.NotifyCanExecuteChanged();
+        SetArguments();
+        isResettingArgs = false;
+
         focusTargetAfterReset?.Focus();
     }
 
@@ -145,7 +148,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
-        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg) && !isResettingArgs;
     }
 
     [RelayCommand]
