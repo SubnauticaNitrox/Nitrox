@@ -71,6 +71,7 @@ public class PatchesTranspilerTest
         [typeof(SpawnConsoleCommand_SpawnAsync_Patch), 2],
         [typeof(SpawnOnKill_OnKill_Patch), 3],
         [typeof(SubConsoleCommand_OnConsoleCommand_sub_Patch), 0],
+        [typeof(ToggleLights_SetLightsActive_Patch), 0],
         [typeof(Trashcan_Update_Patch), 4],
         [typeof(uGUI_OptionsPanel_AddAccessibilityTab_Patch), -10],
         [typeof(uGUI_PDA_Initialize_Patch), 2],
@@ -150,7 +151,7 @@ public class PatchesTranspilerTest
         }
 
         List<CodeInstruction> transformedIl = (transpilerMethod.Invoke(null, injectionParameters.ToArray()) as IEnumerable<CodeInstruction>)?.ToList();
-        
+
         if (logInstructions)
         {
             Console.WriteLine(transformedIl.ToPrettyString());
