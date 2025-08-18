@@ -30,6 +30,15 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private string launchArgs;
 
     [ObservableProperty]
+    private string appDataFolderDir;
+    
+    [ObservableProperty]
+    private string screenshotsFolderDir;
+    
+    [ObservableProperty]
+    private string savesFolderDir;
+    
+    [ObservableProperty]
     private string logsFolderDir;
 
     [ObservableProperty]
@@ -59,6 +68,9 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         {
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+            AppDataFolderDir = NitroxUser.AppDataPath ?? "";
+            ScreenshotsFolderDir = Path.Combine(NitroxUser.AppDataPath ?? "", "screenshots"); // TODO: Change this to use a NitroxUser variable. Also create check to ensure the directory exists.
+            SavesFolderDir = keyValueStore.GetSavesFolderDir();
             LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
             LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
@@ -152,14 +164,26 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     }
 
     [RelayCommand]
-    private void OpenLogsFolder()
+    private void OpenFolder(string? dir = null)
     {
-        Process.Start(new ProcessStartInfo
+        if (string.IsNullOrEmpty(dir))
         {
-            FileName = LogsFolderDir,
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+            LauncherNotifier.Error("Failed to open folder: Directory is null or empty.");
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = dir,
+                Verb = "open",
+                UseShellExecute = true
+            })?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            LauncherNotifier.Error($"Failed to open folder: {ex.Message}");
+        }
     }
     
     partial void OnLightModeEnabledChanged(bool value)

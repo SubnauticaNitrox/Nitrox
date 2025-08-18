@@ -207,16 +207,16 @@
                 
             </StackPanel>
 
-            <!--  Saves Folder Location  -->
+            <!--  AppData Location  -->
             <StackPanel Spacing="12">
                 <TextBlock
                     FontSize="20"
                     FontWeight="Bold"
-                    Text="Nitrox Logs Location" />
+                    Text="Nitrox AppData Location" />
                 <TextBlock
                     FontSize="12"
                     HorizontalAlignment="Left"
-                    Text="This is the location where your Nitrox logs are stored" />
+                    Text="This is the location where files used by Nitrox are stored, including your screenshots, saves, and logs" />
 
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
@@ -227,19 +227,45 @@
                             FontSize="15"
                             Foreground="{DynamicResource BrandBlack}"
                             Opacity="0.75"
-                            Text="{Binding LogsFolderDir}"
+                            Text="{Binding AppDataFolderDir}"
                             VerticalAlignment="Center" />
                         <Button
                             Classes="primary"
-                            Command="{Binding OpenLogsFolderCommand}"
+                            Command="{Binding OpenFolderCommand}"
+                            CommandParameter="{Binding AppDataFolderDir}"
                             Content="Open"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             Margin="22,0,0,0"
-                            ToolTip.Tip="Open saves folder"
+                            ToolTip.Tip="Open AppData folder"
                             Width="120" />
                     </Grid>
                 </Border>
+                
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding ScreenshotsFolderDir}"
+                        ToolTip.Tip="{Binding ScreenshotsFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Screenshots folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding SavesFolderDir}"
+                        ToolTip.Tip="{Binding SavesFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Saves folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding LogsFolderDir}"
+                        ToolTip.Tip="{Binding LogsFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Logs folder" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>
