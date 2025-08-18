@@ -237,11 +237,16 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             throw new FileNotFoundException("Unable to find Subnautica executable");
         }
 
+        bool isVRModeEnabled = subnauticaLaunchArguments.Contains("-vrmode oculus", StringComparison.OrdinalIgnoreCase)
+                            || subnauticaLaunchArguments.Contains("-vrmode openvr", StringComparison.OrdinalIgnoreCase);
+        bool isMultipleGameInstancesAllowed = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        bool isGameRunning = ProcessEx.ProcessExists(GameInfo.Subnautica.ExeName);
+
         // Start game & gaming platform if needed.
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ProcessEx.ProcessExists(GameInfo.Subnautica.ExeName) && keyValueStore.GetIsMultipleGameInstancesAllowed()),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, isVRModeEnabled, isMultipleGameInstancesAllowed, isGameRunning),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),

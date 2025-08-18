@@ -133,7 +133,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool supportMultipleInstances)
+    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool isVRMode, bool isMultipleGameInstancesAllowed, bool isGameRunning)
     {
         try
         {
@@ -150,9 +150,17 @@ public sealed class Steam : IGamePlatform
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (supportMultipleInstances)
+            if (!isGameRunning && !isVRMode) // TODO: Fix this applaunch method to work with the VR argument flag. Currently, Steam puts "-vrmode none" in launch arguments for some reason
             {
-                // Needed to start multiple SN instances, but note that Steam Overlay won't work on this instance
+                return ProcessEx.From(new ProcessStartInfo
+                {
+                    FileName = GetExeFile() ?? throw new FileNotFoundException("Steam was not found on your machine."),
+                    Arguments = $"""-applaunch {steamAppId} --nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
+                });
+            }
+            if (!isGameRunning || isMultipleGameInstancesAllowed)
+            {
+                // Needed to start multiple SN instances or VR, but note that Steam Overlay won't work on this instance
                 return ProcessEx.Start(
                     pathToGameExe,
                     [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
@@ -160,11 +168,6 @@ public sealed class Steam : IGamePlatform
                     launchArguments
                 );
             }
-            return ProcessEx.From(new ProcessStartInfo
-            {
-                FileName = GetExeFile() ?? throw new FileNotFoundException("Steam was not found on your machine."),
-                Arguments = $"""-applaunch {steamAppId} --nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
-            });
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
