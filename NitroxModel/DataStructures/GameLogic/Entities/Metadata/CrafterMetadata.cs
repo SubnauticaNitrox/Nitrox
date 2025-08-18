@@ -12,9 +12,12 @@ public class CrafterMetadata : EntityMetadata
     public NitroxTechType TechType { get; }
 
     [DataMember(Order = 2)]
-    public float StartTime { get; }
+    public int Amount { get; }
 
     [DataMember(Order = 3)]
+    public float StartTime { get; }
+
+    [DataMember(Order = 4)]
     public float Duration { get; }
 
     [IgnoreConstructor]
@@ -23,15 +26,16 @@ public class CrafterMetadata : EntityMetadata
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public CrafterMetadata(NitroxTechType techType, float startTime, float duration)
+    public CrafterMetadata(NitroxTechType techType, int amount, float startTime, float duration)
     {
         TechType = techType;
+        Amount = amount;
         StartTime = startTime;
         Duration = duration;
     }
 
     public override string ToString()
     {
-        return $"[CrafterMetadata TechType: {TechType} StartTime: {StartTime}  Duration: {Duration} {base.ToString()}]";
+        return $"[{nameof(CrafterMetadata)} TechType: {TechType}, Amount: {Amount}, StartTime: {StartTime}, Duration: {Duration}]";
     }
 }
