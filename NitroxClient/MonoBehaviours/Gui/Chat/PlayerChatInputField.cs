@@ -1,7 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -50,7 +49,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void Awake()
         {
-            playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+            playerChatManager = PlayerChatManager.Instance;
             sentMessages = new();
             sentMessagesIndex = -1;
         }

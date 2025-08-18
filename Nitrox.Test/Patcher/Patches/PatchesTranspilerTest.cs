@@ -50,6 +50,7 @@ public class PatchesTranspilerTest
         [typeof(Flare_Update_Patch), 0],
         [typeof(FootstepSounds_OnStep_Patch), 6],
         [typeof(GrowingPlant_SpawnGrownModelAsync_Patch), -1],
+        [typeof(GameInputSystem_Initialize_Patch), 2],
         [typeof(Player_TriggerInfectionRevealAsync_Patch), 1],
         [typeof(IngameMenu_OnSelect_Patch), -2],
         [typeof(IngameMenu_QuitGameAsync_Patch), 2],

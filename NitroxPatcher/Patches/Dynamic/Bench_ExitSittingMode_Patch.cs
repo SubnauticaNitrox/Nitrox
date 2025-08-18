@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
@@ -15,7 +15,7 @@ public sealed partial class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicP
 
     public static void Prefix(ref bool __runOriginal)
     {
-        __runOriginal = !Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected;
+        __runOriginal = !PlayerChatManager.Instance.IsChatSelected && !DevConsole.instance.selected;
     }
 
     public static void Postfix(Bench __instance, bool __runOriginal)
