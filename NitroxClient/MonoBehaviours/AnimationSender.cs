@@ -1,42 +1,52 @@
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours;
+
+public class AnimationSender : MonoBehaviour
 {
-    public class AnimationSender : MonoBehaviour
+    private LocalPlayer localPlayer;
+    private AnimChangeState lastUnderwaterState = AnimChangeState.UNSET;
+
+    public void Awake()
     {
-        private LocalPlayer localPlayer;
+        localPlayer = this.Resolve<LocalPlayer>();
+        enabled = false;
 
-        AnimChangeState lastUnderwaterState = AnimChangeState.UNSET;
+        Multiplayer.OnLoadingComplete += Enable;
+    }
 
-        public void Awake()
+    public void OnDestroy()
+    {
+        Multiplayer.OnLoadingComplete -= Enable;
+    }
+
+    private void Enable()
+    {
+        enabled = true;
+    }
+
+    public void Update()
+    {
+        AnimChangeState underwaterState = (AnimChangeState)(Player.main.IsUnderwaterForSwimming() ? 1 : 0);
+        if (lastUnderwaterState != underwaterState)
         {
-            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-        }
-
-        public void Update()
-        {
-            AnimChangeState underwaterState = (AnimChangeState)(Player.main.IsUnderwater() ? 1 : 0);
-            if (lastUnderwaterState != underwaterState)
-            {
-                localPlayer.AnimationChange(AnimChangeType.UNDERWATER, underwaterState);
-                lastUnderwaterState = underwaterState;
-            }
+            localPlayer.AnimationChange(AnimChangeType.UNDERWATER, underwaterState);
+            lastUnderwaterState = underwaterState;
         }
     }
+}
 
-    public enum AnimChangeState
-    {
-        OFF,
-        ON,
-        UNSET
-    }
+public enum AnimChangeState
+{
+    OFF,
+    ON,
+    UNSET
+}
 
-    public enum AnimChangeType
-    {
-        UNDERWATER,
-        BENCH,
-        INFECTION_REVEAL
-    }
+public enum AnimChangeType
+{
+    UNDERWATER,
+    BENCH,
+    INFECTION_REVEAL
 }

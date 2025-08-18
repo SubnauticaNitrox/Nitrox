@@ -174,6 +174,7 @@ namespace NitroxClient.MonoBehaviours
         {
             // Gameplay.
             gameObject.AddComponent<AnimationSender>();
+            gameObject.AddComponent<InPrecursorTracker>();
             gameObject.AddComponent<PlayerMovementBroadcaster>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();

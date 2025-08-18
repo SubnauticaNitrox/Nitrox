@@ -44,6 +44,8 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
             Player.main.ValidateEscapePod();
         }
 
+        Player.main.precursorOutOfWater = packet.InPrecursor;
+
         Optional<NitroxId> subRootId = packet.PlayerSubRootId;
         if (!subRootId.HasValue)
         {

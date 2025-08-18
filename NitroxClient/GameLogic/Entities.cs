@@ -36,10 +36,9 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
         public List<Entity> EntitiesToSpawn { get; private init; }
-        private bool spawningEntities;
+        public bool SpawningEntities { get; private set; }
 
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
-        private readonly List<SimulatedEntity> pendingSimulatedEntities = new();
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
         {
@@ -130,7 +129,7 @@ namespace NitroxClient.GameLogic
                 yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
             }
 
-            spawningEntities = false;
+            SpawningEntities = false;
 
             entityMetadataManager.ClearNewerMetadata();
             deletedEntitiesIds.Clear();
@@ -140,9 +139,9 @@ namespace NitroxClient.GameLogic
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue, bool coldStart = false)
         {
             EntitiesToSpawn.InsertRange(0, entitiesToEnqueue);
-            if (!spawningEntities)
+            if (!SpawningEntities)
             {
-                spawningEntities = true;
+                SpawningEntities = true;
                 CoroutineHost.StartCoroutine(SpawnNewEntities(coldStart));
             }
         }

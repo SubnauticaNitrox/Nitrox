@@ -9,6 +9,7 @@ using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Server;
@@ -103,6 +104,9 @@ public class RemotePlayer : INitroxPlayer
         SetupSkyAppliers();
         SetupPlayerSounds();
         SetupMixins();
+        
+        PlayerAnimation animation = PlayerContext.Animation;
+        UpdateAnimationAndCollider((AnimChangeType)animation.Type, (AnimChangeState)animation.State);
 
         vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();

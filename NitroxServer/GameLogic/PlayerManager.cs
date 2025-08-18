@@ -9,8 +9,8 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxModel.Server;
 using NitroxModel.Serialization;
+using NitroxModel.Server;
 using NitroxServer.Communication;
 
 namespace NitroxServer.GameLogic
@@ -123,9 +123,10 @@ namespace NitroxServer.GameLogic
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
             NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
             IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
+            PlayerAnimation animation = new(0, 1);
 
             // TODO: At some point, store the muted state of a player
-            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode);
+            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);
             string reservationKey = Guid.NewGuid().ToString();
 
             reservations.Add(reservationKey, playerContext);
@@ -212,7 +213,8 @@ namespace NitroxServer.GameLogic
                     new Dictionary<string, NitroxId>(),
                     new Dictionary<string, float>(),
                     new Dictionary<string, PingInstancePreference>(),
-                    new List<int>()
+                    new List<int>(),
+                    false
                 );
                 allPlayersByName[playerContext.PlayerName] = player;
             }

@@ -71,7 +71,15 @@ public class LocalPlayer : ILocalNitroxPlayer
     {
         if (PlayerId.HasValue)
         {
-            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, (int)type, (int)state));
+            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, new((int)type, (int)state)));
+        }
+    }
+
+    public void InPrecursorChange(bool inPrecursor)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new UpdateInPrecursor(inPrecursor));
         }
     }
 

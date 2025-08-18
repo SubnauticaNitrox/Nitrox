@@ -39,13 +39,14 @@ namespace NitroxServer
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
         public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set ;}
         public ThreadSafeSet<NitroxId> OutOfCellVisibleEntities { get; set; } = [];
+        public bool InPrecursor { get; set; }
 
         public PlayerEntity Entity { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
-                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
+                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor)
         {
             Id = id;
             Name = name;
@@ -68,6 +69,7 @@ namespace NitroxServer
             PersonalCompletedGoalsWithTimestamp = new ThreadSafeDictionary<string, float>(personalCompletedGoalsWithTimestamp);
             PingInstancePreferences = new(pingInstancePreferences);
             PinnedRecipePreferences = new(pinnedRecipePreferences);
+            InPrecursor = inPrecursor;
         }
 
         public static bool operator ==(Player left, Player right)
