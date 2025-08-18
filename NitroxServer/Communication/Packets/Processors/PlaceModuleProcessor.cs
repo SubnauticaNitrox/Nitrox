@@ -13,7 +13,7 @@ public class PlaceModuleProcessor : BuildingProcessor<PlaceModule>
     {
         if (buildingManager.AddModule(packet))
         {
-            if (packet.ModuleEntity.ParentId == null)
+            if (packet.ModuleEntity.ParentId == null || !packet.ModuleEntity.IsInside)
             {
                 ClaimBuildPiece(packet.ModuleEntity, player);
             }
