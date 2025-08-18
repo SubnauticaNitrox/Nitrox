@@ -64,18 +64,15 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        await Task.Run(() =>
-        {
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            AppDataFolderDir = NitroxUser.AppDataPath ?? "";
-            ScreenshotsFolderDir = Path.Combine(NitroxUser.AppDataPath ?? "", "screenshots"); // TODO: Change this to use a NitroxUser variable. Also create check to ensure the directory exists.
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
-            LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
-            LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
-            AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
-            IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-        }, cancellationToken);
+        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        AppDataFolderDir = NitroxUser.AppDataPath;
+        ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
+        SavesFolderDir = keyValueStore.GetSavesFolderDir();
+        LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
+        LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+        AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
@@ -173,6 +170,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
         try
         {
+            Directory.CreateDirectory(dir);
             Process.Start(new ProcessStartInfo
             {
                 FileName = dir,
