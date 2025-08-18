@@ -25,7 +25,7 @@ public sealed partial class DevConsole_Submit_Patch : NitroxPatch, IDynamicPatch
             return true; 
         }
 
-        Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", Perms.MODERATOR.ToString()));
+        Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", nameof(Perms.MODERATOR)));
         return false;
     }
 }

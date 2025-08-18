@@ -1,3 +1,4 @@
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 
@@ -7,12 +8,12 @@ public class CheatCommandProcessor : AuthenticatedPacketProcessor<CheatCommand>
 {
     public override void Process(CheatCommand packet, Player player)
     {
-        if (player.Permissions < NitroxModel.DataStructures.GameLogic.Perms.MODERATOR)
+        if (player.Permissions < Perms.MODERATOR)
         {
             Log.Warn($"{player.Name} used cheat command: '{packet.Command}' without sufficient permissions.");
             return;
         }
 
-        Log.Info($"{player.Name} used cheat command : '{packet.Command}'");
+        Log.Info($"{player.Name} used cheat command: '{packet.Command}'");
     }
 }
