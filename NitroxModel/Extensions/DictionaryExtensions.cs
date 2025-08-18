@@ -29,4 +29,17 @@ public static class DictionaryExtensions
             ArrayPool<TKey>.Shared.Return(toRemove, true);
         }
     }
+
+#if NETFRAMEWORK
+    public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
+    {
+        if (key == null || dict.ContainsKey(key))
+        {
+            return false;
+        }
+
+        dict.Add(key, value);
+        return true;
+    }
+#endif
 }
