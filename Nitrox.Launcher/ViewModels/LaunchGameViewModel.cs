@@ -94,6 +94,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
     }
 
+    /// <summary>
+    ///     Prepares Subnautica to load Nitrox, then starts Subnautica.
+    /// </summary>
     [RelayCommand]
     private async Task StartMultiplayerAsync(string[]? args = null)
     {
@@ -237,16 +240,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             throw new FileNotFoundException("Unable to find Subnautica executable");
         }
 
-        bool isVRModeEnabled = subnauticaLaunchArguments.Contains("-vrmode oculus", StringComparison.OrdinalIgnoreCase)
-                            || subnauticaLaunchArguments.Contains("-vrmode openvr", StringComparison.OrdinalIgnoreCase);
-        bool isMultipleGameInstancesAllowed = keyValueStore.GetIsMultipleGameInstancesAllowed();
-        bool isGameRunning = ProcessEx.ProcessExists(GameInfo.Subnautica.ExeName);
-
         // Start game & gaming platform if needed.
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, isVRModeEnabled, isMultipleGameInstancesAllowed, isGameRunning),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
@@ -257,6 +255,23 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         {
             throw new Exception($"Game failed to start through {platform.Name}");
         }
+    }
+
+    private bool ShouldSkipSteam(string args)
+    {
+        if (App.InstantLaunch != null)
+        {
+            return true;
+        }
+        if (args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
+        {
+            if (keyValueStore.GetIsMultipleGameInstancesAllowed())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void UpdateGamePlatform()
