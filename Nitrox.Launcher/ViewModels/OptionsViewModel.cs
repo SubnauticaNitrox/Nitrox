@@ -55,9 +55,6 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     
     [ObservableProperty]
     private bool isInReleaseMode;
-    
-    [ObservableProperty]
-    private string multipleInstancesTooltip;
 
     private static string DefaultLaunchArg => "-vrmode none";
     private bool isResettingArgs;
@@ -158,6 +155,15 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
         return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg) && !isResettingArgs;
+    }
+
+    [RelayCommand]
+    private void DisplaySteamOverlayNotification()
+    {
+        if (AllowMultipleGameInstances && SelectedGame.Platform == Platform.STEAM)
+        {
+            LauncherNotifier.Warning("Note: Enabling this option will disable Steam's in-game overlay. Disable this option to use Steam's overlay");
+        }
     }
 
     [RelayCommand]

@@ -193,7 +193,13 @@
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
-                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time" />
+                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time. NOTE: Enabling this will disable Steam's in-game overlay">
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="Click">
+                                        <InvokeCommandAction Command="{Binding DisplaySteamOverlayNotificationCommand}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </CheckBox>
                         </StackPanel>
                     </Border>
                     <!--<Border>
