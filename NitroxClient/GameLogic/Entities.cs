@@ -29,6 +29,7 @@ namespace NitroxClient.GameLogic
         private readonly ThrottledPacketSender throttledPacketSender;
         private readonly EntityMetadataManager entityMetadataManager;
         private readonly SimulationOwnership simulationOwnership;
+        private readonly Terrain terrain;
 
         private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
@@ -36,17 +37,21 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
         public List<Entity> EntitiesToSpawn { get; private init; }
+        public List<AbsoluteEntityCell> CellsToSpawn { get; private init; }
         public bool SpawningEntities { get; private set; }
 
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership, Terrain terrain)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
             this.entityMetadataManager = entityMetadataManager;
             this.simulationOwnership = simulationOwnership;
-            EntitiesToSpawn = new();
+            this.terrain = terrain;
+
+            EntitiesToSpawn = [];
+            CellsToSpawn = [];
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(PathBasedChildEntity)] = new PathBasedChildEntitySpawner();
@@ -134,11 +139,18 @@ namespace NitroxClient.GameLogic
             entityMetadataManager.ClearNewerMetadata();
             deletedEntitiesIds.Clear();
             simulationOwnership.ClearNewerSimulations();
+
+            foreach (AbsoluteEntityCell absoluteEntityCell in CellsToSpawn)
+            {
+                terrain.AddFullySpawnedCell(absoluteEntityCell);
+            }
+            CellsToSpawn.Clear();
         }
 
-        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue, bool coldStart = false)
+        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue, List<AbsoluteEntityCell> cellsToSpawn, bool coldStart = false)
         {
             EntitiesToSpawn.InsertRange(0, entitiesToEnqueue);
+            CellsToSpawn.AddRange(cellsToSpawn);
             if (!SpawningEntities)
             {
                 SpawningEntities = true;
@@ -338,12 +350,7 @@ namespace NitroxClient.GameLogic
 
         public bool IsParentReady(NitroxId id)
         {
-            return WasParentSpawned(id) || NitroxEntity.TryGetObjectFrom(id, out GameObject _);
-        }
-
-        public bool WasParentSpawned(NitroxId id)
-        {
-            return spawnedAsType.ContainsKey(id);
+            return NitroxEntity.TryGetObjectFrom(id, out _);
         }
 
         public void MarkAsSpawned(Entity entity)

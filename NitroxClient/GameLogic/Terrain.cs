@@ -17,6 +17,8 @@ public class Terrain
     private readonly HashSet<AbsoluteEntityCell> visibleCells = [];
     private readonly List<AbsoluteEntityCell> addedCells = [];
     private readonly List<AbsoluteEntityCell> removedCells = [];
+    // We use a tuple rather than AbsoluteEntityCell for lightweight fetching by IsCellFullySpawned
+    private readonly HashSet<(Int3, Int3, int)> fullySpawnedCells = [];
 
     private bool cellsPendingSync;
     private float bufferedTime = 0f;
@@ -50,7 +52,21 @@ public class Terrain
             visibleCells.Remove(cell);
             removedCells.Add(cell);
             cellsPendingSync = true;
+            fullySpawnedCells.Remove((batchId, cellId, level));
         }
+    }
+
+    public void AddFullySpawnedCell(AbsoluteEntityCell cell)
+    {
+        if (visibleCells.Contains(cell))
+        {
+            fullySpawnedCells.Add((cell.BatchId.ToUnity(), cell.CellId.ToUnity(), cell.Level));
+        }
+    }
+
+    public bool IsCellFullySpawned(Int3 batchId, Int3 cellId, int level)
+    {
+        return fullySpawnedCells.Contains((batchId, cellId, level));
     }
 
     public void UpdateVisibility()
@@ -60,7 +76,7 @@ public class Terrain
         {
             if (cellsPendingSync)
             {
-                CellVisibilityChanged cellsChanged = new(multiplayerSession.Reservation.PlayerId, addedCells.ToArray(), removedCells.ToArray());
+                CellVisibilityChanged cellsChanged = new(multiplayerSession.Reservation.PlayerId, addedCells, removedCells);
                 packetSender.Send(cellsChanged);
 
                 addedCells.Clear();
@@ -88,5 +104,16 @@ public class Terrain
 
         yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
         Player.main.cinematicModeActive = false;
+    }
+
+    public static void UnfreezeExosuits()
+    {
+        foreach (Transform globalRootChild in LargeWorldStreamer.main.globalRoot.transform)
+        {
+            if (globalRootChild.TryGetComponent(out Exosuit exosuit))
+            {
+                exosuit.teleporting = false;
+            }
+        }
     }
 }
