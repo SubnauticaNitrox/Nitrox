@@ -92,6 +92,8 @@ public static class NitroxUser
         }
     }
 
+    public static string CrashLogsPath => Path.Combine(AppDataPath, "crashes");
+
     public static string ScreenshotsPath => Path.Combine(AppDataPath, "screenshots");
 
     public static string CachePath => Path.Combine(AppDataPath, "cache");
