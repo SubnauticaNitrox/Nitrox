@@ -216,7 +216,7 @@
                 <TextBlock
                     FontSize="12"
                     HorizontalAlignment="Left"
-                    Text="This is the location where files used by Nitrox are stored, including your screenshots, saves, and logs" />
+                    Text="This is the location where files used by Nitrox are stored, including your screenshots, saves and logs" />
 
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
