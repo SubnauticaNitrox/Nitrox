@@ -71,12 +71,9 @@ public class App : Application
             preferredRenderingMode = rendering;
             App.allowInstances = allowInstances;
 
-            if (isCrashReport)
+            if (isCrashReport && CrashReporter.GetLastReport() is {} crashLog)
             {
-                if (CrashReporter.GetLastReport() is {} crashLog)
-                {
-                    StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashLog } };
-                }
+                StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashLog } };
             }
         });
         cliParser.Add("instantlaunch", ([SaveName] string save, [MinLength(1)] params string[] players) =>
@@ -200,15 +197,5 @@ public class App : Application
         }
     }
 
-    internal class InstantLaunchData
-    {
-        public string SaveName { get; private set; }
-        public string[] PlayerNames { get; private set; }
-
-        public InstantLaunchData(string saveName, string[] playerNames)
-        {
-            SaveName = saveName;
-            PlayerNames = playerNames;
-        }
-    }
+    internal record InstantLaunchData(string SaveName, string[] PlayerNames);
 }
