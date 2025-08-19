@@ -105,15 +105,4 @@ public class Terrain
         yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
         Player.main.cinematicModeActive = false;
     }
-
-    public static void UnfreezeExosuits()
-    {
-        foreach (Transform globalRootChild in LargeWorldStreamer.main.globalRoot.transform)
-        {
-            if (globalRootChild.TryGetComponent(out Exosuit exosuit))
-            {
-                exosuit.teleporting = false;
-            }
-        }
-    }
 }

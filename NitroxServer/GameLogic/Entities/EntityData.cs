@@ -53,6 +53,11 @@ public class EntityData
             if (entity.ParentId != null && entitiesById.TryGetValue(entity.ParentId, out Entity parentEntity))
             {
                 parentEntity.ChildEntities.Add(entity);
+
+                if (entity is WorldEntity worldEntity && parentEntity is WorldEntity parentWorldEntity)
+                {
+                    worldEntity.Transform.SetParent(parentWorldEntity.Transform, false);
+                }
             }
         }
     }
