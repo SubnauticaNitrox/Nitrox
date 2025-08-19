@@ -163,14 +163,13 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     [RelayCommand]
     private void OpenFolder(string? dir = null)
     {
-        if (string.IsNullOrEmpty(dir))
+        if (!Directory.Exists(dir))
         {
-            LauncherNotifier.Error("Failed to open folder: Directory is null or empty.");
+            LauncherNotifier.Error("Can't open. Directory does not exist.");
             return;
         }
         try
         {
-            Directory.CreateDirectory(dir);
             Process.Start(new ProcessStartInfo
             {
                 FileName = dir,
