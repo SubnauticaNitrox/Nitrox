@@ -1,9 +1,5 @@
 using System;
-using System.Threading.Tasks;
 using System.Web;
-using Avalonia.Controls;
-using Avalonia.Input.Platform;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;

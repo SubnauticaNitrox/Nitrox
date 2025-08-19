@@ -1,13 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Input.Platform;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.ViewModels;
