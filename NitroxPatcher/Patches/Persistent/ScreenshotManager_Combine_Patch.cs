@@ -10,7 +10,7 @@ public partial class ScreenshotManager_Combine_Patch : NitroxPatch, IPersistentP
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => ScreenshotManager.Combine(default(string), default(string)));
 
-    public static bool Prefix(ref string? __result, string path1, string path2)
+    public static bool Prefix(string path1, string path2, ref string? __result)
     {
         __result = path2 switch
         {
