@@ -30,7 +30,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private string launchArgs;
 
     [ObservableProperty]
-    private string appDataFolderDir;
+    private string programDataFolderDir;
     
     [ObservableProperty]
     private string screenshotsFolderDir;
@@ -66,7 +66,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-        AppDataFolderDir = NitroxUser.AppDataPath;
+        ProgramDataFolderDir = NitroxUser.AppDataPath;
         ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
         SavesFolderDir = keyValueStore.GetSavesFolderDir();
         LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;

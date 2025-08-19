@@ -13,7 +13,7 @@ internal class DesignOptionsViewModel : OptionsViewModel
             Platform = Platform.STEAM
         };
         LaunchArgs = "-vrmode none";
-        AppDataFolderDir = @"C:\Users\Me\AppData\Roaming\Nitrox";
+        ProgramDataFolderDir = @"C:\Users\Me\AppData\Roaming\Nitrox";
         ScreenshotsFolderDir = @"C:\Users\Me\AppData\Roaming\Nitrox\screenshots";
         SavesFolderDir = @"C:\Users\Me\AppData\Roaming\Nitrox\saves";
         LogsFolderDir = @"C:\Users\Me\AppData\Roaming\Nitrox\logs";
