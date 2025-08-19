@@ -163,7 +163,7 @@ public sealed class Steam : IGamePlatform
         {
             throw new Exception("Steam was not found on your machine.");
         }
-        // Start game through Steam so VR and Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
+        // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
             return new()
@@ -173,7 +173,8 @@ public sealed class Steam : IGamePlatform
             };
         }
 
-        // Start through game executable. Starting the game this way allows for multiple instances to run, but also stops Steam integrations from working (e.g. Steam Input, Steam Overlay, VR).
+        // Start through game executable. This allows custom args so that VR mode can be on with Nitrox (Subnautica hard codes '-vrmode none' as default launch option and starting game through Steam from command line always uses default launch option).
+        // This way allows for multiple instances to run, but also stops some Steam integrations from working (e.g. Steam Input, Steam Overlay).
         ProcessStartInfo result = new()
         {
             FileName = gameFilePath,

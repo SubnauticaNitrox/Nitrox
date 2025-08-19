@@ -261,7 +261,8 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         if (App.InstantLaunch != null)
         {
-            return true;
+            // Running through Steam is fine if first/single instance.
+            return App.InstantLaunch is { PlayerNames.Length: > 1 };
         }
         if (args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
         {
@@ -269,6 +270,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             {
                 return true;
             }
+        }
+        if (args.Contains("-vrmode", StringComparison.OrdinalIgnoreCase) && !args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
+        {
+            // VR Mode. Can only work if NOT going through Steam as it will always add '-vrmode none' due to hard coded default Steam "launch option" args. See: https://steamdb.info/app/264710/config/
+            return true;
         }
 
         return false;
