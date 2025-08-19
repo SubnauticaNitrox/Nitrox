@@ -1,5 +1,6 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
     {
         CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
 
-        if (metadata.TechType == null)
+        if (metadata.TechType == NitroxTechType.None || metadata.Amount == 0)
         {
             EnsureCrafterReset(crafterLogic);
         }
@@ -39,7 +40,20 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
         // when an item is being crafted or not picked up yet. 
         float duration = Mathf.Max(metadata.Duration - elapsedFromStart + ANTI_GRIEF_DURATION_BUFFER, 0.01f);
 
-        crafterLogic.Craft(metadata.TechType.ToUnity(), duration);
+        crafterLogic.linkedIndex = metadata.LinkedIndex;
+        if (metadata.LinkedIndex == -1)
+        {
+            crafterLogic.Craft(metadata.TechType.ToUnity(), duration);
+        }
+        else
+        {
+            // Ensure craft is finished and has the right data
+            crafterLogic.craftingTechType = metadata.TechType.ToUnity();
+            crafterLogic.timeCraftingBegin = metadata.StartTime;
+            crafterLogic.timeCraftingEnd = DayNightCycle.main.timePassedAsFloat;
+            crafterLogic.NotifyChanged(crafterLogic.currentTechType);
+            crafterLogic.NotifyProgress(1f);
+        }
         // Override this value in case some of the crafted items were already picked up
         crafterLogic.numCrafted = metadata.Amount;
     }
