@@ -26,6 +26,7 @@ public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetHealth(gameObject, metadata.Health);
+            SetInPrecursor(exosuit, metadata.InPrecursor);
             SetNameAndColors(subName, metadata.Name, metadata.Colors);
         }
     }

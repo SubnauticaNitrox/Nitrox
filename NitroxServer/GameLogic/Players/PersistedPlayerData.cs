@@ -64,6 +64,9 @@ public class PersistedPlayerData
     [DataMember(Order = 17)]
     public bool InPrecursor { get; set; }
 
+    [DataMember(Order = 18)]
+    public bool DisplaySurfaceWater { get; set; }
+
     public Player ToPlayer()
     {
         return new Player(Id,
@@ -84,7 +87,8 @@ public class PersistedPlayerData
                           PersonalCompletedGoalsWithTimestamp,
                           PlayerPreferences.PingPreferences,
                           PlayerPreferences.PinnedTechTypes,
-                          InPrecursor);
+                          InPrecursor,
+                          DisplaySurfaceWater);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)
@@ -106,7 +110,8 @@ public class PersistedPlayerData
             IsPermaDeath = player.IsPermaDeath,
             PersonalCompletedGoalsWithTimestamp = new(player.PersonalCompletedGoalsWithTimestamp),
             PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList()),
-            InPrecursor = player.InPrecursor
+            InPrecursor = player.InPrecursor,
+            DisplaySurfaceWater = player.DisplaySurfaceWater
         };
     }
 }

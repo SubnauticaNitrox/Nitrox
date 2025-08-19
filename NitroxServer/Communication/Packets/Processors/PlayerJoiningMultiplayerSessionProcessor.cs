@@ -94,7 +94,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 BuildingManager.GetEntitiesOperations(globalRootEntities),
                 serverConfig.KeepInventoryOnDeath,
                 sessionSettings,
-                player.InPrecursor
+                player.InPrecursor,
+                player.DisplaySurfaceWater
             );
 
             player.SendPacket(initialPlayerSync);

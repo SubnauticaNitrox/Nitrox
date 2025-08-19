@@ -83,6 +83,14 @@ public class LocalPlayer : ILocalNitroxPlayer
         }
     }
 
+    public void DisplaySurfaceWaterChange(bool displaySurfaceWater)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new UpdateDisplaySurfaceWater(displaySurfaceWater));
+        }
+    }
+
     public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
     {
         if (PlayerId.HasValue)

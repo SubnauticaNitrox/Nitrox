@@ -38,6 +38,7 @@ namespace NitroxModel.Packets
         public bool KeepInventoryOnDeath { get; }
         public SessionSettings SessionSettings { get; }
         public bool InPrecursor { get; }
+        public bool DisplaySurfaceWater { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -63,7 +64,8 @@ namespace NitroxModel.Packets
             Dictionary<NitroxId, int> buildOperationIds,
             bool keepInventoryOnDeath,
             SessionSettings sessionSettings,
-            bool inPrecursor)
+            bool inPrecursor,
+            bool displaySurfaceWater)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -90,6 +92,7 @@ namespace NitroxModel.Packets
             KeepInventoryOnDeath = keepInventoryOnDeath;
             SessionSettings = sessionSettings;
             InPrecursor = inPrecursor;
+            DisplaySurfaceWater = displaySurfaceWater;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -118,7 +121,8 @@ namespace NitroxModel.Packets
             Dictionary<NitroxId, int> buildOperationIds,
             bool keepInventoryOnDeath,
             SessionSettings sessionSettings,
-            bool inPrecursor)
+            bool inPrecursor,
+            bool displaySurfaceWater)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -145,6 +149,7 @@ namespace NitroxModel.Packets
             KeepInventoryOnDeath = keepInventoryOnDeath;
             SessionSettings = sessionSettings;
             InPrecursor = inPrecursor;
+            DisplaySurfaceWater = displaySurfaceWater;
         }
     }
 }

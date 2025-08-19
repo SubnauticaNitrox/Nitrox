@@ -66,6 +66,8 @@ public class PatchesTranspilerTest
         [typeof(PDAScanner_Scan_Patch), 3],
         [typeof(PickPrefab_AddToContainerAsync_Patch), 4],
         [typeof(Player_OnKill_Patch), 0],
+        [typeof(PrecursorDoorMotorModeSetter_OnTriggerEnter_Patch), 3],
+        [typeof(PrecursorMoonPoolTrigger_Update_Patch), 3],
         [typeof(Respawn_Start_Patch), 3],
         [typeof(RocketConstructor_StartRocketConstruction_Patch), 3],
         [typeof(SpawnConsoleCommand_SpawnAsync_Patch), 2],

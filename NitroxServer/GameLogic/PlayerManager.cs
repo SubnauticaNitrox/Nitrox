@@ -214,7 +214,8 @@ namespace NitroxServer.GameLogic
                     new Dictionary<string, float>(),
                     new Dictionary<string, PingInstancePreference>(),
                     new List<int>(),
-                    false
+                    false,
+                    true
                 );
                 allPlayersByName[playerContext.PlayerName] = player;
             }

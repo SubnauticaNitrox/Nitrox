@@ -11,6 +11,6 @@ public class SeamothMetadataExtractor : EntityMetadataExtractor<SeaMoth, Seamoth
         LiveMixin liveMixin = seamoth.liveMixin;
         SubName subName = seamoth.subName;
 
-        return new(lightsOn, liveMixin.health, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
+        return new(lightsOn, liveMixin.health, seamoth.precursorOutOfWater, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
     }
 }

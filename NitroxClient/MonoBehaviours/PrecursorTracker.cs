@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-// TODO: add this in Multiplayer
-public class InPrecursorTracker : MonoBehaviour
+public class PrecursorTracker : MonoBehaviour
 {
     private LocalPlayer localPlayer;
-    private bool lastValue;
+    private bool lastInPrecursor;
+    private bool lastDisplaySurfaceWater;
 
     public void Awake()
     {
@@ -25,16 +25,24 @@ public class InPrecursorTracker : MonoBehaviour
     private void Enable()
     {
         enabled = true;
-        lastValue = Player.main.precursorOutOfWater;
+        lastInPrecursor = Player.main.precursorOutOfWater;
+        lastDisplaySurfaceWater = Player.main.displaySurfaceWater;
     }
 
     public void Update()
     {
         bool inPrecursor = Player.main.precursorOutOfWater;
-        if (inPrecursor != lastValue)
+        if (inPrecursor != lastInPrecursor)
         {
-            lastValue = inPrecursor;
+            lastInPrecursor = inPrecursor;
             localPlayer.InPrecursorChange(inPrecursor);
+        }
+
+        bool displaySurfaceWater = Player.main.displaySurfaceWater;
+        if (displaySurfaceWater != lastDisplaySurfaceWater)
+        {
+            lastDisplaySurfaceWater = displaySurfaceWater;
+            localPlayer.DisplaySurfaceWaterChange(displaySurfaceWater);
         }
     }
 }
