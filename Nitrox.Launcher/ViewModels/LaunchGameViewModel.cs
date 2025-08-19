@@ -261,7 +261,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         if (App.InstantLaunch != null)
         {
-            // Running through Steam is fine if first/single instance.
+            // Running through Steam is fine if single instance.
             return App.InstantLaunch is { PlayerNames.Length: > 1 };
         }
         if (args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
