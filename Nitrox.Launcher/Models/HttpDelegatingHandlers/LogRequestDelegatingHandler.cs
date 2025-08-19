@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,13 +18,9 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         try
         {
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
-            if ((int)response.StatusCode is >= 200 and < 400)
+            LogResponseStatus(response, url);
+            if (IsErrorStatus(response.StatusCode))
             {
-                Log.Debug($"HTTP response status:{response.StatusCode} from {url}");
-            }
-            else
-            {
-                Log.Error($"HTTP response status:{response.StatusCode} from {url}");
                 LauncherNotifier.Error($"Failed to fetch data from {request.RequestUri?.Host}");
             }
             return response;
@@ -34,15 +31,23 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         }
         catch (Exception ex)
         {
-            if (!await NetHelper.HasInternetConnectivityAsync())
+            LauncherNotifier.Error(NetHelper.HasInternetConnectivityAsync() ? ex.Message : "No internet connection available");
+            throw;
+        }
+
+        static void LogResponseStatus(HttpResponseMessage response, string url)
+        {
+            string message = $"HTTP response status:{response.StatusCode} from {url}";
+            if (IsErrorStatus(response.StatusCode))
             {
-                LauncherNotifier.Error("No internet connection available");
+                Log.Error(message);
             }
             else
             {
-                LauncherNotifier.Error(ex.Message);
+                Log.Debug(message);
             }
-            throw;
         }
+
+        static bool IsErrorStatus(HttpStatusCode statusCode) => (int)statusCode is < 200 or >= 400;
     }
 }
