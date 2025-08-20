@@ -31,7 +31,7 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         }
         catch (Exception ex)
         {
-            LauncherNotifier.Error(NetHelper.HasInternetConnectivityAsync() ? ex.Message : "No internet connection available");
+            LauncherNotifier.Error(NetHelper.HasInternetConnectivity() ? ex.Message : "No internet connection available");
             throw;
         }
 

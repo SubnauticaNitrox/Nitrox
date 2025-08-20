@@ -95,7 +95,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 
             Task.Run(async () =>
             {
-                if (!NetHelper.HasInternetConnectivityAsync())
+                if (!NetHelper.HasInternetConnectivity())
                 {
                     Log.Warn("Launcher may not be connected to internet");
                     LauncherNotifier.Warning("Launcher may not be connected to internet");

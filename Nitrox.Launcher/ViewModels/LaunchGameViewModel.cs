@@ -271,7 +271,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 return true;
             }
         }
-        if (args.Contains("-vrmode", StringComparison.OrdinalIgnoreCase) && !args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
+        else if (args.Contains("-vrmode", StringComparison.OrdinalIgnoreCase))
         {
             // VR Mode. Can only work if NOT going through Steam as it will always add '-vrmode none' due to hard coded default Steam "launch option" args. See: https://steamdb.info/app/264710/config/
             return true;
@@ -283,6 +283,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private void UpdateGamePlatform()
     {
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>().Description;
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
     }
 }

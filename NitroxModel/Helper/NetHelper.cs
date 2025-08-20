@@ -143,7 +143,7 @@ public static class NetHelper
 
     private static bool? hasInternet;
 
-    public static bool HasInternetConnectivityAsync()
+    public static bool HasInternetConnectivity()
     {
         lock (connectivityLock)
         {

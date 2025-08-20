@@ -21,10 +21,7 @@ internal static class CrashReporter
             if (!string.IsNullOrWhiteSpace(crashPath))
             {
                 Directory.CreateDirectory(crashPath);
-                string crashDate = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd");
-                string crashFilePath = Path.Combine(
-                    crashPath, $"{Path.GetFileNameWithoutExtension(CRASH_REPORT_FILE_NAME)}_{crashDate}_{(Directory.EnumerateFiles(crashPath).Count(f => f.Contains(crashDate)) + 1).ToString().PadLeft(3, '0')}{Path.GetExtension(CRASH_REPORT_FILE_NAME)}");
-                File.WriteAllText(crashFilePath, ex.ToString());
+                File.WriteAllText(GetNewCrashFilePath(crashPath), ex.ToString());
                 ProcessEx.StartSelf("--crash-report");
             }
             else
@@ -34,18 +31,26 @@ internal static class CrashReporter
         }
         catch (Exception exception)
         {
-            Console.WriteLine(exception);
+            Log.Error(exception);
         }
         finally
         {
             Environment.Exit(1);
+        }
+
+        static string GetNewCrashFilePath(string crashPath)
+        {
+            string crashDate = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd");
+            int fileInDayCount = Directory.EnumerateFiles(crashPath).Count(f => f.Contains(crashDate));
+            string crashFileName = Path.GetFileNameWithoutExtension(CRASH_REPORT_FILE_NAME);
+            return Path.Combine(crashPath, $"{crashFileName}_{crashDate}_{(fileInDayCount + 1).ToString().PadLeft(3, '0')}{Path.GetExtension(CRASH_REPORT_FILE_NAME)}");
         }
     }
 
     public static string? GetLastReport()
     {
         string crashLogsPath = NitroxUser.CrashLogsPath;
-        if (Directory.Exists(crashLogsPath) && Directory.EnumerateFiles(crashLogsPath).OrderDescending().FirstOrDefault() is {} crashLog)
+        if (Directory.Exists(crashLogsPath) && Directory.EnumerateFiles(crashLogsPath).OrderDescending().FirstOrDefault() is { } crashLog)
         {
             return File.ReadAllText(crashLog);
         }
