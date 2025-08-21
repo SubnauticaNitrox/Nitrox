@@ -7,6 +7,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.GameLogic.PlayerAnimation;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -71,7 +72,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     {
         if (PlayerId.HasValue)
         {
-            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, new((int)type, (int)state)));
+            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, new(type, state)));
         }
     }
 

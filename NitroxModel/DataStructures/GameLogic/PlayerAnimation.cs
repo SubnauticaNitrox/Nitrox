@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using NitroxModel.GameLogic.PlayerAnimation;
 
 namespace NitroxModel.DataStructures.GameLogic;
 
@@ -8,10 +9,10 @@ namespace NitroxModel.DataStructures.GameLogic;
 public class PlayerAnimation
 {
     [DataMember(Order = 1)]
-    public int Type { get; set; }
+    public AnimChangeType Type { get; set; }
 
     [DataMember(Order = 2)]
-    public int State { get; }
+    public AnimChangeState State { get; }
 
     [IgnoreConstructor]
     protected PlayerAnimation()
@@ -19,7 +20,7 @@ public class PlayerAnimation
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public PlayerAnimation(int type, int state)
+    public PlayerAnimation(AnimChangeType type, AnimChangeState state)
     {
         Type = type;
         State = state;

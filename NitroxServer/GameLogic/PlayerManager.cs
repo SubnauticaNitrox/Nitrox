@@ -7,6 +7,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.GameLogic.PlayerAnimation;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
@@ -123,7 +124,7 @@ namespace NitroxServer.GameLogic
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
             NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
             IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
-            PlayerAnimation animation = new(0, 1);
+            PlayerAnimation animation = new(AnimChangeType.UNDERWATER, AnimChangeState.ON);
 
             // TODO: At some point, store the muted state of a player
             PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);

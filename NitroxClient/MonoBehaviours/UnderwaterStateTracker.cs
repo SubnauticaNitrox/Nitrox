@@ -1,9 +1,10 @@
 using NitroxClient.GameLogic;
+using NitroxModel.GameLogic.PlayerAnimation;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class AnimationSender : MonoBehaviour
+public class UnderwaterStateTracker : MonoBehaviour
 {
     private LocalPlayer localPlayer;
     private AnimChangeState lastUnderwaterState = AnimChangeState.UNSET;
@@ -35,18 +36,4 @@ public class AnimationSender : MonoBehaviour
             lastUnderwaterState = underwaterState;
         }
     }
-}
-
-public enum AnimChangeState
-{
-    OFF,
-    ON,
-    UNSET
-}
-
-public enum AnimChangeType
-{
-    UNDERWATER,
-    BENCH,
-    INFECTION_REVEAL
 }

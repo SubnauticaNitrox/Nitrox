@@ -1,6 +1,5 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -22,7 +21,7 @@ public class AnimationChangeEventProcessor : ClientPacketProcessor<AnimationChan
         if (opPlayer.HasValue)
         {
             PlayerAnimation playerAnimation = animEvent.Animation;
-            opPlayer.Value.UpdateAnimationAndCollider((AnimChangeType)playerAnimation.Type, (AnimChangeState)playerAnimation.State);
+            opPlayer.Value.UpdateAnimationAndCollider(playerAnimation.Type, playerAnimation.State);
         }
     }
 }

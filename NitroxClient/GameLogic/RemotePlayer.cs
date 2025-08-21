@@ -11,6 +11,7 @@ using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.GameLogic.FMOD;
+using NitroxModel.GameLogic.PlayerAnimation;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Server;
 using UnityEngine;

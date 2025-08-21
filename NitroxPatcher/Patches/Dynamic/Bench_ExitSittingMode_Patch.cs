@@ -2,9 +2,8 @@ using System.Collections;
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using NitroxModel.GameLogic.PlayerAnimation;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

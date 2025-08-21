@@ -59,7 +59,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
             // Check if Player might fall through the map
             if (packet.InPrecursor || !Player.main.IsUnderwaterForSwimming())
             {
-                // This coroutine must be started in a different thread to release the current one
+                // This coroutine must be started fresh to release the current one
                 CoroutineHost.StartCoroutine(FreezePlayerWhileEntitiesSpawn());
             }
             
@@ -134,7 +134,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         }
     }
 
-    public IEnumerator FreezePlayerWhileEntitiesSpawn()
+    private IEnumerator FreezePlayerWhileEntitiesSpawn()
     {
         Player.main.cinematicModeActive = true;
 
