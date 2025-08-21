@@ -18,6 +18,7 @@ namespace NitroxModel.Packets
         public SpawnEntities(List<Entity> entities, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn = false)
         {
             Entities = entities;
+            Simulations = [];
             SpawnedCells = spawnedCells;
             ForceRespawn = forceRespawn;
         }
@@ -26,6 +27,7 @@ namespace NitroxModel.Packets
         {
             Entities = [entity];
             Simulations = [];
+            SpawnedCells = [];
             if (simulatedEntity != null)
             {
                 Simulations.Add(simulatedEntity);
