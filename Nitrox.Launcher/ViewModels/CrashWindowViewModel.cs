@@ -1,9 +1,5 @@
 using System;
-using System.Threading.Tasks;
 using System.Web;
-using Avalonia.Controls;
-using Avalonia.Input.Platform;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -42,7 +38,7 @@ internal partial class CrashWindowViewModel : ViewModelBase
         // TODO: Fill in more issue details (is latest release or commit, last view, last clicked button, etc).
         string issueTitle = $"Launcher v{NitroxEnvironment.Version} crashed with {errorTitle}";
         string whatHappened = $"```\n{Message}\n```";
-        string storeType = NitroxUser.GamePlatform.Platform switch
+        string storeType = NitroxUser.GamePlatform?.Platform switch
         {
             Platform.STEAM => "Steam",
             Platform.EPIC => "Epic",
@@ -67,24 +63,6 @@ internal partial class CrashWindowViewModel : ViewModelBase
                 return "Linux";
             }
             return "Windows"; // No "Other" option in issue template so "Windows" is default.
-        }
-    }
-
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task CopyToClipboard(ContentControl? commandControl)
-    {
-        IClipboard clipboard = commandControl?.GetWindow()?.Clipboard;
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(Message);
-
-            object previousContent = commandControl.Content;
-            commandControl.Content = "Copied!";
-            await Dispatcher.UIThread.InvokeAsync(async () =>
-            {
-                await Task.Delay(3000);
-                commandControl.Content = previousContent;
-            });
         }
     }
 

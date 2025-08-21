@@ -1,8 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -15,6 +13,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
 using Microsoft.Extensions.DependencyInjection;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
@@ -26,17 +25,16 @@ namespace Nitrox.Launcher;
 
 public class App : Application
 {
-    internal const string CRASH_REPORT_FILE_NAME = "Nitrox.Launcher-crash.txt";
     internal static Func<Window>? StartupWindowFactory;
     internal static InstantLaunchData? InstantLaunch;
-    internal static bool IsCrashReport;
+    private static bool isCrashReport;
 
     /// <summary>
     ///     If true, allows duplicate instances of the app to be active.
     /// </summary>
-    internal static bool AllowInstances;
+    private static bool allowInstances;
 
-    internal static X11RenderingMode? PreferredRenderingMode;
+    private static X11RenderingMode? preferredRenderingMode;
 
     public Window AppWindow
     {
@@ -63,36 +61,31 @@ public class App : Application
     {
         CultureManager.ConfigureCultureInfo();
         Log.Setup();
-        Log.Info($"Starting Nitrox Launcher V{NitroxEnvironment.Version}+{NitroxEnvironment.GitHash} built on {NitroxEnvironment.BuildDate:F}");
+        Log.Info($@"Starting Nitrox Launcher V{NitroxEnvironment.Version}+{NitroxEnvironment.GitHash} with args ""{string.Join(" ", NitroxEnvironment.CommandLineArgs)}"" built on {NitroxEnvironment.BuildDate:F}");
 
         // Handle command line arguments.
         ConsoleApp.ConsoleAppBuilder cliParser = ConsoleApp.Create();
         cliParser.Add("", (bool crashReport, X11RenderingMode? rendering = null, bool allowInstances = false) =>
         {
-            IsCrashReport = crashReport;
-            PreferredRenderingMode = rendering;
-            AllowInstances = allowInstances;
+            isCrashReport = crashReport;
+            preferredRenderingMode = rendering;
+            App.allowInstances = allowInstances;
 
-            if (IsCrashReport)
+            if (isCrashReport && CrashReporter.GetLastReport() is {} crashLog)
             {
-                string executableRootPath = Path.GetDirectoryName(Environment.ProcessPath ?? NitroxUser.ExecutableRootPath);
-                if (executableRootPath != null)
-                {
-                    string crashReportContent = File.ReadAllText(Path.Combine(executableRootPath, CRASH_REPORT_FILE_NAME));
-                    StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashReportContent } };
-                }
+                StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashLog } };
             }
         });
         cliParser.Add("instantlaunch", ([SaveName] string save, [MinLength(1)] params string[] players) =>
         {
             InstantLaunch = new InstantLaunchData(save, players);
         });
-        cliParser.Run(Environment.GetCommandLineArgs().Skip(1).ToArray());
+        cliParser.Run(NitroxEnvironment.CommandLineArgs);
 
         // Fallback to normal startup.
         if (StartupWindowFactory == null)
         {
-            if (!AllowInstances)
+            if (!allowInstances)
             {
                 CheckForRunningInstance();
             }
@@ -104,7 +97,7 @@ public class App : Application
                                        .UsePlatformDetect()
                                        .LogToTrace()
                                        .With(new SkiaOptions { UseOpacitySaveLayer = true });
-        builder = WithRenderingMode(builder, PreferredRenderingMode);
+        builder = WithRenderingMode(builder, preferredRenderingMode);
         return builder;
 
         static AppBuilder WithRenderingMode(AppBuilder builder, X11RenderingMode? rendering)
@@ -141,35 +134,13 @@ public class App : Application
 
     internal static void HandleUnhandledException(Exception ex)
     {
-        if (IsCrashReport)
+        if (isCrashReport)
         {
             Log.Error(ex, "Error while trying to show crash report");
             return;
         }
 
-        Log.Error(ex, "!!!Nitrox Launcher Crash!!!");
-
-        // Write crash report if we're not reporting one right now.
-        try
-        {
-            string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
-            string executableRoot = Path.GetDirectoryName(executableFilePath);
-            if (executableFilePath != null && executableRoot != null)
-            {
-                string crashReportFile = Path.Combine(executableRoot, CRASH_REPORT_FILE_NAME);
-                File.WriteAllText(crashReportFile, ex.ToString());
-                ProcessEx.StartSelf("--crash-report");
-            }
-            else
-            {
-                Log.Error(ex, "Unable to get executable file path for writing crash report.");
-            }
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-        }
-        Environment.Exit(1);
+        CrashReporter.ReportAndExit(ex);
     }
 
     private static void CheckForRunningInstance()
@@ -226,15 +197,5 @@ public class App : Application
         }
     }
 
-    internal class InstantLaunchData
-    {
-        public string SaveName { get; private set; }
-        public string[] PlayerNames { get; private set; }
-
-        public InstantLaunchData(string saveName, string[] playerNames)
-        {
-            SaveName = saveName;
-            PlayerNames = playerNames;
-        }
-    }
+    internal record InstantLaunchData(string SaveName, string[] PlayerNames);
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Avalonia.Platform;
+using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.Models.Utils;
 
@@ -65,7 +66,7 @@ public static class AssetHelper
 
         private static string? TryGetPathFromLocalFileSystem(string fileUri)
         {
-            string targetedProject = Path.GetDirectoryName(Environment.GetCommandLineArgs().FirstOrDefault(part => !part.Contains("Designer", StringComparison.Ordinal) && part.EndsWith("dll", StringComparison.OrdinalIgnoreCase) && File.Exists(part)));
+            string targetedProject = Path.GetDirectoryName(NitroxEnvironment.CommandLineArgs.FirstOrDefault(part => !part.Contains("Designer", StringComparison.Ordinal) && part.EndsWith("dll", StringComparison.OrdinalIgnoreCase) && File.Exists(part)));
             while (targetedProject != null && !Directory.EnumerateFileSystemEntries(targetedProject, "*.csproj", SearchOption.TopDirectoryOnly).Any())
             {
                 targetedProject = Path.GetDirectoryName(targetedProject);

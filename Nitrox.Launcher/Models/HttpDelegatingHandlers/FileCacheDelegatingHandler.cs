@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
+using Serilog;
 
 namespace Nitrox.Launcher.Models.HttpDelegatingHandlers;
 
@@ -18,8 +19,8 @@ internal sealed class FileCacheDelegatingHandler : DelegatingHandler
             return await base.SendAsync(request, cancellationToken);
         }
 
-        string cacheFilePath = GetCacheFilePathForRequest(request);
-        if (request.Headers.CacheControl is { MaxAge: { } cacheMaxAge })
+        string? cacheFilePath = GetCacheFilePathForRequest(request);
+        if (cacheFilePath is not null && request.Headers.CacheControl is { MaxAge: { } cacheMaxAge })
         {
             // Try load data from cache file, if applicable.
             try
@@ -40,19 +41,28 @@ internal sealed class FileCacheDelegatingHandler : DelegatingHandler
             }
         }
         HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
-        if (response is { StatusCode: HttpStatusCode.OK, Content: { } content })
+        if (cacheFilePath is not null && response is { StatusCode: HttpStatusCode.OK, Content: { } content })
         {
             await File.WriteAllBytesAsync(cacheFilePath, await content.ReadAsByteArrayAsync(cancellationToken), cancellationToken);
         }
         return response;
     }
 
-    private static string GetCacheFilePathForRequest(HttpRequestMessage request)
+    private static string? GetCacheFilePathForRequest(HttpRequestMessage request)
     {
         if (request.RequestUri is not { } uri)
         {
             throw new Exception($"{nameof(request.RequestUri)} must not be null");
         }
-        return Path.Combine(NitroxUser.CachePath, $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().AsMd5Hash())}.cache");
+        try
+        {
+            Directory.CreateDirectory(NitroxUser.CachePath);
+            return Path.Combine(NitroxUser.CachePath, $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().AsMd5Hash())}.cache");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Failed to generate cache file for request: {uri}");
+            return null;
+        }
     }
 }

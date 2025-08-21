@@ -115,7 +115,8 @@
                                 FontSize="12"
                                 Height="28"
                                 HorizontalAlignment="Right"
-                                IsVisible="{Binding ShowResetArgsBtn}"
+                                IsHitTestVisible="{Binding ShowResetArgsBtn}"
+                                Opacity="{Binding ShowResetArgsBtn, Converter={converters:BoolToDoubleConverter}}"
                                 Margin="0,0,12,0"
                                 Padding="0"
                                 ToolTip.Tip="Reset arguments"
@@ -192,7 +193,13 @@
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
-                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time" />
+                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time. NOTE: Enabling this will disable Steam's in-game overlay">
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="Click">
+                                        <InvokeCommandAction Command="{Binding DisplaySteamOverlayNotificationCommand}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </CheckBox>
                         </StackPanel>
                     </Border>
                     <!--<Border>
@@ -206,16 +213,16 @@
                 
             </StackPanel>
 
-            <!--  Saves Folder Location  -->
+            <!--  AppData Location  -->
             <StackPanel Spacing="12">
                 <TextBlock
                     FontSize="20"
                     FontWeight="Bold"
-                    Text="Nitrox Logs Location" />
+                    Text="Nitrox Program Data Location" />
                 <TextBlock
                     FontSize="12"
                     HorizontalAlignment="Left"
-                    Text="This is the location where your Nitrox logs are stored" />
+                    Text="This is the location where files used by Nitrox are stored, including your screenshots, saves and logs" />
 
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
@@ -226,19 +233,45 @@
                             FontSize="15"
                             Foreground="{DynamicResource BrandBlack}"
                             Opacity="0.75"
-                            Text="{Binding LogsFolderDir}"
+                            Text="{Binding ProgramDataFolderDir}"
                             VerticalAlignment="Center" />
                         <Button
                             Classes="primary"
-                            Command="{Binding OpenLogsFolderCommand}"
+                            Command="{Binding OpenFolderCommand}"
+                            CommandParameter="{Binding ProgramDataFolderDir}"
                             Content="Open"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             Margin="22,0,0,0"
-                            ToolTip.Tip="Open saves folder"
+                            ToolTip.Tip="Open Program Data folder"
                             Width="120" />
                     </Grid>
                 </Border>
+                
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding ScreenshotsFolderDir}"
+                        ToolTip.Tip="{Binding ScreenshotsFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Screenshots folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding SavesFolderDir}"
+                        ToolTip.Tip="{Binding SavesFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Saves folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding LogsFolderDir}"
+                        ToolTip.Tip="{Binding LogsFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Logs folder" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

@@ -37,8 +37,8 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
         }
         applied = true;
 
-        string[] args = Environment.GetCommandLineArgs();
-        Log.Info($"CommandLineArgs: {string.Join(" ", args)}");
+        string[] args = NitroxEnvironment.CommandLineArgs;
+        Log.Info($"CommandLineArgs: '{string.Join(" ", args)}'");
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) && args.Length > i + 1)
