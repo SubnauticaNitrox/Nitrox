@@ -14,7 +14,7 @@ public abstract class VehicleMetadata : NamedColoredMetadata
     [DataMember(Order = 1)]
     public float Health { get; init; }
 
-    [DataMember(Order = 3)]
+    [DataMember(Order = 2)]
     public bool InPrecursor { get; init; }
 
     [IgnoreConstructor]
