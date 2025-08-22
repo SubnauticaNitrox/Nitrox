@@ -5,7 +5,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -50,11 +49,6 @@ public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
         GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
         remotePlayer.Value.InitializeGameObject(remotePlayerBody);
 
-        if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
-        {
-            remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
-        }
-
         if (parent.HasValue)
         {
             AttachToParent(remotePlayer.Value, parent.Value);
@@ -89,52 +83,5 @@ public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
         {
             Log.Error($"Found neither SubRoot component nor EscapePod on {parent.name} for {remotePlayer.PlayerName}.");
         }
-    }
-
-    private bool IsSwimming(Vector3 playerPosition, Optional<GameObject> parent)
-    {
-        if (parent.HasValue)
-        {
-            // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
-            // or in a waterpark
-            if (parent.Value.TryGetComponent(out SubRoot subroot))
-            {
-                if (subroot.IsUnderwater(playerPosition))
-                {
-                    return true;
-                }
-                if (subroot.isCyclops)
-                {
-                    return false;
-                }
-
-                // We know that we are in a subroot. But we can also be in a waterpark in a subroot, where we would swim
-                BaseRoot baseRoot = subroot.GetComponentInParent<BaseRoot>();
-                if (baseRoot)
-                {
-                    WaterPark[] waterParks = baseRoot.GetComponentsInChildren<WaterPark>();
-                    foreach (WaterPark waterPark in waterParks)
-                    {
-                        if (waterPark.IsPointInside(playerPosition))
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
-
-            Log.Debug($"Trying to find escape pod for {parent}.");
-            parent.Value.TryGetComponent<EscapePod>(out EscapePod escapePod);
-            if (escapePod)
-            {
-                Log.Debug("Found escape pod for player. Will add him and update animation.");
-                return false;
-            }
-        }
-
-        // Player can be above ocean level.
-        float oceanLevel = Ocean.GetOceanLevel();
-        return playerPosition.y < oceanLevel;
     }
 }

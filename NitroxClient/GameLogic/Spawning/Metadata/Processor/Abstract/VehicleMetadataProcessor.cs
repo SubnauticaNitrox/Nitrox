@@ -20,5 +20,10 @@ public abstract class VehicleMetadataProcessor<T> : EntityMetadataProcessor<T> w
         liveMixinManager.SyncRemoteHealth(liveMixin, health);
     }
 
+    protected void SetInPrecursor(Vehicle vehicle, bool inPrecursor)
+    {
+        vehicle.precursorOutOfWater = inPrecursor;
+    }
+
     protected void SetNameAndColors(SubName subName, string text, NitroxVector3[] nitroxColor) => SubNameInputMetadataProcessor.SetNameAndColors(subName, text, nitroxColor);
 }
