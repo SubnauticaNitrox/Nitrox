@@ -4,12 +4,8 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -19,8 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Broadcasts creature death consequences:<br/>
 /// - Converted to a cooked item<br/>
-/// - Dead but still has its corpse floating in the water<br/>
-/// - Eatable decomposition metadata
+/// - Converted to a corpse, which is destroyed on next cell load so we broadcast it accordingly<br/>
 /// </summary>
 public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDynamicPatch
 {
@@ -32,16 +27,12 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
      * 1st injection:
      * gameObject.GetComponent<Rigidbody>().angularDrag = base.gameObject.GetComponent<Rigidbody>().angularDrag * 3f;
      * UnityEngine.Object.Destroy(base.gameObject);
-     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject, cookedData); <---- INSERTED LINE
+     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject, processed); <---- INSERTED LINE
      * result = null;
      * 
      * 2nd injection:
-     * base.Invoke("RemoveCorpse", this.removeCorpseAfterSeconds);
-     * CreatureDeath_OnKillAsync_Patch.BroadcastRemoveCorpse(this); <---- INSERTED LINE
-     * 
-     * 3rd injection:
-     * this.eatable.SetDecomposes(true);
-     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this.eatable); <---- INSERTED LINE
+     * this.SyncFixedUpdatingState();
+     * CreatureDeath_OnKillAsync_Patch.BroadcastRemoveCorpse(this, processed);  <---- INSERTED LINE
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -54,48 +45,46 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
                                             ])
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1))
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_2))
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_3))
-                                            .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastCookedSpawned(default, default, default))))
+                                            .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastCookedSpawned(default, default))))
                                             // Second injection
                                             .MatchEndForward([
                                                 new CodeMatch(OpCodes.Ldloc_1),
-                                                new CodeMatch(OpCodes.Ldfld, Reflect.Field((CreatureDeath t) => t.removeCorpseAfterSeconds)),
-                                                new CodeMatch(OpCodes.Call),
+                                                new CodeMatch(OpCodes.Call, Reflect.Method((CreatureDeath t) => t.SyncFixedUpdatingState())),
                                             ])
                                             .Advance(1)
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1))
+                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1)) // this (CreatureDeath)
                                             .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastRemoveCorpse(default))))
-                                            // Third injection
-                                            .MatchEndForward([
-                                                new CodeMatch(OpCodes.Ldloc_1),
-                                                new CodeMatch(OpCodes.Ldfld, Reflect.Field((CreatureDeath t) => t.eatable)),
-                                                new CodeMatch(OpCodes.Ldc_I4_1),
-                                                new CodeMatch(OpCodes.Callvirt),
-                                            ])
-                                            .Advance(1)
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1))
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldfld, Reflect.Field((CreatureDeath t) => t.eatable)))
-                                            .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastEatableMetadata(default))))
                                             .InstructionEnumeration();
     }
 
-    public static void BroadcastCookedSpawned(CreatureDeath creatureDeath, GameObject gameObject, TechType cookedTechType)
+    public static void BroadcastCookedSpawned(CreatureDeath creatureDeath, GameObject gameObject)
     {
         if (creatureDeath.TryGetNitroxId(out NitroxId creatureId))
         {
             NitroxEntity.SetNewId(gameObject, creatureId);
         }
 
+        TechType processed = TechData.GetProcessed(CraftData.GetTechType(creatureDeath.gameObject));
+
         if (!IsRemotelyCalled)
         {
-            Resolve<Items>().Dropped(gameObject, cookedTechType);
+            Resolve<Items>().Dropped(gameObject, processed);
         }
     }
 
     public static void BroadcastRemoveCorpse(CreatureDeath creatureDeath)
     {
-        // This case is expected when CreatureDeath.Spawn happens (calling this) after a metadata processor has already called this
+        // This case is expected when CreatureDeath.Start happens (calling this) after a metadata processor has already called this
         if (!creatureDeath.TryGetNitroxId(out NitroxId creatureId))
+        {
+            return;
+        }
+
+        TechType processed = TechData.GetProcessed(CraftData.GetTechType(creatureDeath.gameObject));
+
+        // We only need to avoid the case in which there's cooked food spawning instead
+        // This check corresponds to the one in CreatureDeath.OnKillAsync
+        if (processed != TechType.None && creatureDeath.lastDamageWasHeat)
         {
             return;
         }
@@ -106,20 +95,6 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
         if (!IsRemotelyCalled)
         {
             Resolve<IPacketSender>().Send(new RemoveCreatureCorpse(creatureId, creatureDeath.transform.localPosition.ToDto(), creatureDeath.transform.localRotation.ToDto()));
-        }
-    }
-
-    public static void BroadcastEatableMetadata(Eatable eatable)
-    {
-        if (IsRemotelyCalled || !eatable.TryGetNitroxId(out NitroxId eatableId))
-        {
-            return;
-        }
-
-        Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(eatable);
-        if (metadata.HasValue)
-        {
-            Resolve<Entities>().BroadcastMetadataUpdate(eatableId, metadata.Value);
         }
     }
 }

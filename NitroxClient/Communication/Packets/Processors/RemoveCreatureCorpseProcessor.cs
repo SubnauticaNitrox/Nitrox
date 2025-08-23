@@ -24,9 +24,14 @@ public class RemoveCreatureCorpseProcessor : ClientPacketProcessor<RemoveCreatur
     public override void Process(RemoveCreatureCorpse packet)
     {
         entities.RemoveEntity(packet.CreatureId);
-        if (!NitroxEntity.TryGetComponentFrom(packet.CreatureId, out CreatureDeath creatureDeath))
+
+        if (entities.SpawningEntities)
         {
             entities.MarkForDeletion(packet.CreatureId);
+        }
+
+        if (!NitroxEntity.TryGetComponentFrom(packet.CreatureId, out CreatureDeath creatureDeath))
+        {
             Log.Warn($"[{nameof(RemoveCreatureCorpseProcessor)}] Could not find entity with id: {packet.CreatureId} to remove corpse from.");
             return;
         }
@@ -66,7 +71,6 @@ public class RemoveCreatureCorpseProcessor : ClientPacketProcessor<RemoveCreatur
 
         using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
         using (PacketSuppressor<RemoveCreatureCorpse>.Suppress())
-        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             CoroutineUtils.PumpCoroutine(creatureDeath.OnKillAsync());
         }
