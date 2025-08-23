@@ -17,7 +17,7 @@
 
     <Target Name="_NitroxEmbedAssemblyInfo" AfterTargets="GetAssemblyAttributes" DependsOnTargets="PrepareForBuild;_CreateGitShortHashCacheFile">
         <PropertyGroup>
-            <_GitShortHash Condition="'$(_GitShortHash)' == '' AND Exists('$(_GitShortHashFilePath)')">$([System.IO.File]::ReadAllText('$(_GitShortHashFilePath)').Trim())</_GitShortHash>
+            <_GitShortHash Condition="'$(_GitShortHash)' == '' and Exists('$(_GitShortHashFilePath)')">$([System.IO.File]::ReadAllText('$(_GitShortHashFilePath)').Trim())</_GitShortHash>
         </PropertyGroup>
 
         <ItemGroup>
@@ -38,7 +38,7 @@
         <ItemGroup>
             <_AllHexAttributes Include="@(AssemblyAttribute)" Condition="$([System.String]::new('%(AssemblyAttribute._Parameter1)').EndsWith('Hash'))" />
         </ItemGroup>
-        <Error Condition="'%(_AllHexAttributes._Parameter2)' != '' AND !$([System.Text.RegularExpressions.Regex]::IsMatch('%(_AllHexAttributes._Parameter2)', '^[0-9a-fA-F]+$'))" Text="'Metadata attribute %(_AllHexAttributes._Parameter1) must be a suitable hexidecimal hash value but is '%(_AllHexAttributes._Parameter2)'" />
+        <Error Condition="'%(_AllHexAttributes._Parameter2)' != '' and !$([System.Text.RegularExpressions.Regex]::IsMatch('%(_AllHexAttributes._Parameter2)', '^[0-9a-fA-F]+$'))" Text="'Metadata attribute %(_AllHexAttributes._Parameter1) must be a suitable hexidecimal hash value but is '%(_AllHexAttributes._Parameter2)'" />
     </Target>
 
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">
