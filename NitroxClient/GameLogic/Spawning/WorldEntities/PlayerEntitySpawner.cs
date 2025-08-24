@@ -36,7 +36,7 @@ public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
         }
 
         Optional<RemotePlayer> remotePlayer = playerManager.Find(entity.Id);
-        Optional<GameObject> parent = entity.ParentId != null ? NitroxEntity.GetObjectFrom(entity.Id) : Optional.Empty;
+        Optional<GameObject> parent = entity.ParentId != null ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
         // The server may send us a player entity but they are not guarenteed to be actively connected at the moment - don't spawn them.  In the
         // future, we could make this configurable to be able to spawn disconnected players in the world.
