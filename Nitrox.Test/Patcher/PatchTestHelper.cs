@@ -49,20 +49,6 @@ namespace NitroxTest.Patcher
             return new DynamicMethod(method.Name, method.ReturnType, method.GetParameters().Types()).GetILGenerator();
         }
 
-        public static void TestPattern(MethodInfo targetMethod, InstructionsPattern pattern, out IEnumerable<CodeInstruction> originalIl, out IEnumerable<CodeInstruction> transformedIl)
-        {
-            bool shouldHappen = false;
-            originalIl = PatchProcessor.GetCurrentInstructions(targetMethod);
-            transformedIl = originalIl
-                            .Transform(pattern, (_, _) =>
-                            {
-                                shouldHappen = true;
-                            })
-                            .ToArray(); // Required, otherwise nothing happens.
-
-            shouldHappen.Should().BeTrue();
-        }
-
         /// <summary>
         ///     Clones the instructions so that the returned instructions are not the same reference.
         /// </summary>
