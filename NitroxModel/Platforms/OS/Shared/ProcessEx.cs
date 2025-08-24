@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
-using NitroxModel.Helper;
 
 namespace NitroxModel.Platforms.OS.Shared;
 
@@ -45,6 +44,7 @@ public class ProcessEx : IDisposable
         {
             return null;
         }
+
         return new ProcessEx(ProcessExFactory.Create(process));
     }
 
@@ -125,7 +125,7 @@ public class ProcessEx : IDisposable
     /// </summary>
     public static void StartSelf(params string[] arguments)
     {
-        string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
+        string executableFilePath = Helper.NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
         // On Linux, entry assembly is .dll file but real executable is without extension.
         string temp = Path.ChangeExtension(executableFilePath, null);
         if (File.Exists(temp))
@@ -144,7 +144,7 @@ public class ProcessEx : IDisposable
     /// <summary>
     ///     Starts the current app as a new instance, passing the same command line arguments.
     /// </summary>
-    public static void StartSelfCopyArgs() => StartSelf(NitroxEnvironment.CommandLineArgs);
+    public static void StartSelfCopyArgs() => StartSelf(Helper.NitroxEnvironment.CommandLineArgs);
 #endif
 
     /// <summary>
@@ -242,6 +242,7 @@ public class ProcessEx : IDisposable
 public abstract class ProcessExBase : IDisposable
 {
     protected readonly Process? Process;
+
     public virtual int Id => Process?.Id ?? -1;
     public virtual string? Name => Process?.ProcessName;
     public virtual IntPtr Handle => Process?.Handle ?? IntPtr.Zero;
@@ -312,6 +313,7 @@ public abstract class ProcessExBase : IDisposable
     public virtual void Dispose()
     {
         Process?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
 
@@ -326,13 +328,8 @@ public class ProcessModuleEx
 #if NET9_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
-public class WindowsProcessEx : ProcessExBase
+public sealed class WindowsProcessEx : ProcessExBase
 {
-    private bool disposed;
-    private IntPtr handle;
-
-    public override IntPtr Handle => handle;
-
     public override ProcessModuleEx? MainModule
     {
         get
@@ -358,21 +355,12 @@ public class WindowsProcessEx : ProcessExBase
 
     public WindowsProcessEx(int id) : base(id)
     {
-        if (!IsElevated())
-        {
-            throw new UnauthorizedAccessException("Elevated privileges required.");
-        }
 
-        handle = OpenProcess(0x1F0FFF, false, id);
-        if (handle == IntPtr.Zero)
-        {
-            throw new Win32Exception(Marshal.GetLastWin32Error());
-        }
     }
 
     public WindowsProcessEx(Process process) : base(process.Id)
     {
-        handle = process.Handle;
+
     }
 
     public new static bool IsElevated()
@@ -400,20 +388,32 @@ public class WindowsProcessEx : ProcessExBase
 
     public override byte[] ReadMemory(IntPtr address, int size)
     {
+        if (Handle == IntPtr.Zero)
+        {
+            throw new ObjectDisposedException("Process handle is not valid.");
+        }
+
         byte[] buffer = new byte[size];
-        if (!ReadProcessMemory(handle, address, buffer, size, out int bytesRead) || bytesRead != size)
+        if (!ReadProcessMemory(Handle, address, buffer, size, out int bytesRead) || bytesRead != size)
         {
             throw new Win32Exception(Marshal.GetLastWin32Error());
         }
+
         return buffer;
     }
 
     public override int WriteMemory(IntPtr address, byte[] data)
     {
-        if (!WriteProcessMemory(handle, address, data, data.Length, out int bytesWritten))
+        if (Handle == IntPtr.Zero)
+        {
+            throw new ObjectDisposedException("Process handle is not valid.");
+        }
+
+        if (!WriteProcessMemory(Handle, address, data, data.Length, out int bytesWritten))
         {
             throw new Win32Exception(Marshal.GetLastWin32Error());
         }
+
         return bytesWritten;
     }
 
@@ -474,31 +474,16 @@ public class WindowsProcessEx : ProcessExBase
 
     public override void Terminate() => Process?.Kill();
 
-    public override void Dispose()
-    {
-        if (!disposed)
-        {
-            if (handle != IntPtr.Zero)
-            {
-                CloseHandle(handle);
-                handle = IntPtr.Zero;
-            }
-            base.Dispose();
-            disposed = true;
-        }
-        GC.SuppressFinalize(this);
-    }
-
     [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
-
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool CloseHandle(IntPtr hObject);
 
     [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
 
     [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
 
     [DllImport("kernel32.dll", SetLastError = true)]
@@ -511,7 +496,10 @@ public class WindowsProcessEx : ProcessExBase
     private static extern int ResumeThread(IntPtr hThread);
 }
 
-public class LinuxProcessEx : ProcessExBase
+#if NET9_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("linux")]
+#endif
+public sealed class LinuxProcessEx : ProcessExBase
 {
     private readonly int pid;
 
@@ -737,7 +725,11 @@ public class LinuxProcessEx : ProcessExBase
     }
 }
 
-public class MacOSProcessEx : ProcessExBase
+#if NET9_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("maccatalyst")]
+[System.Runtime.Versioning.SupportedOSPlatform("macos")]
+#endif
+public sealed class MacOSProcessEx : ProcessExBase
 {
     private bool disposed;
     public override IntPtr Handle => IntPtr.Zero;
