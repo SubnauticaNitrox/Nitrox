@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -102,7 +103,16 @@ public class Terrain
         streamerV2.lowDetailOctreesStreamer.UpdateCenter(streamerV2.streamingCenter);
         streamerV2.clipmapStreamer.UpdateCenter(streamerV2.streamingCenter);
 
-        yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
+        yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
         Player.main.cinematicModeActive = false;
+    }
+
+    public static IEnumerator SafeWaitForWorldLoad()
+    {
+        yield return WaitForWorldLoad().OnYieldError(e =>
+        {
+            Player.main.cinematicModeActive = false;
+            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
+        });
     }
 }

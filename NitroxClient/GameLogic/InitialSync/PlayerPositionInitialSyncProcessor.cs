@@ -53,7 +53,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         Optional<NitroxId> subRootId = packet.PlayerSubRootId;
         if (!subRootId.HasValue)
         {
-            yield return Terrain.WaitForWorldLoad();
+            yield return Terrain.SafeWaitForWorldLoad();
             Player.main.UpdateIsUnderwater();
 
             // Check if Player might fall through the map
@@ -70,7 +70,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         if (!sub.HasValue)
         {
             Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
-            yield return Terrain.WaitForWorldLoad();
+            yield return Terrain.SafeWaitForWorldLoad();
             yield break;
         }
 
