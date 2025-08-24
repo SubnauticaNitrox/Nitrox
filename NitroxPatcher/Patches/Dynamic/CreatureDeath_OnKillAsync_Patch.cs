@@ -27,12 +27,12 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
      * 1st injection:
      * gameObject.GetComponent<Rigidbody>().angularDrag = base.gameObject.GetComponent<Rigidbody>().angularDrag * 3f;
      * UnityEngine.Object.Destroy(base.gameObject);
-     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject, processed); <---- INSERTED LINE
+     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject); <---- INSERTED LINE
      * result = null;
      * 
      * 2nd injection:
      * this.SyncFixedUpdatingState();
-     * CreatureDeath_OnKillAsync_Patch.BroadcastRemoveCorpse(this, processed);  <---- INSERTED LINE
+     * CreatureDeath_OnKillAsync_Patch.BroadcastRemoveCorpse(this);  <---- INSERTED LINE
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -43,8 +43,8 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
                                                 new CodeMatch(OpCodes.Stfld),
                                                 new CodeMatch(OpCodes.Br),
                                             ])
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1))
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_2))
+                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_1)) // this (CreatureDeath)
+                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_2)) // gameObject (GameObject)
                                             .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastCookedSpawned(default, default))))
                                             // Second injection
                                             .MatchEndForward([
@@ -64,10 +64,9 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
             NitroxEntity.SetNewId(gameObject, creatureId);
         }
 
-        TechType processed = TechData.GetProcessed(CraftData.GetTechType(creatureDeath.gameObject));
-
         if (!IsRemotelyCalled)
         {
+            TechType processed = TechData.GetProcessed(CraftData.GetTechType(creatureDeath.gameObject));
             Resolve<Items>().Dropped(gameObject, processed);
         }
     }
