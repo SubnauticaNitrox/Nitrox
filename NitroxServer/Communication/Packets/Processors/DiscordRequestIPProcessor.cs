@@ -44,7 +44,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
     }
 
     /// <summary>
-    /// Get the WAN IP address or the Hamachi IP address if the WAN IP address is not available.
+    /// Get the WAN IP address or the VPN IP address if the WAN IP address is not available.
     /// </summary>
     /// <returns>Found IP or blank string if none found</returns>
     private static async Task<string> GetIpAsync()
