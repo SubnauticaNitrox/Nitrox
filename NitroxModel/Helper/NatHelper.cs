@@ -11,7 +11,7 @@ namespace NitroxModel.Helper;
 
 public static class NatHelper
 {
-    public static async Task<IPAddress> GetExternalIpAsync() => await MonoNatHelper.GetFirstAsync(static async device =>
+    public static async Task<IPAddress?> GetExternalIpAsync() => await MonoNatHelper.GetFirstAsync(static async device =>
     {
         try
         {
@@ -175,7 +175,7 @@ public static class NatHelper
                 return default;
             }
 
-            // Progressively handle devices until first not-null/false result or when discovery times out.
+            // Progressively handle devices until first not-null/true result or when discovery times out.
             ConcurrentDictionary<EndPoint, INatDevice> handledDevices = new();
             do
             {

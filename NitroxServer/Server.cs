@@ -278,21 +278,16 @@ public class Server
     {
         Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
-        Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
-        Task<IPAddress> radminIp = Task.Run(NetHelper.GetRadminIp);
+        Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(NetHelper.GetVpnIps);
 
         List<string> options = ["127.0.0.1 - You (Local)"];
         if (await wanIp != null)
         {
             options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
         }
-        if (await hamachiIp != null)
+        foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIps)
         {
-            options.Add($"{hamachiIp.Result} - Friends using Hamachi (VPN)");
-        }
-        if (await radminIp != null)
-        {
-            options.Add($"{radminIp.Result} - Friends using Radmin (VPN)");
+            options.Add($"{vpnAddress} - Friends using {vpnName} (VPN)");
         }
         // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
         if (await localIp != null)
