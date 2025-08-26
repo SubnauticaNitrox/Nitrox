@@ -279,6 +279,7 @@ public class Server
         Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
         Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
+        Task<IPAddress> radminIp = Task.Run(NetHelper.GetRadminIp);
 
         List<string> options = ["127.0.0.1 - You (Local)"];
         if (await wanIp != null)
@@ -288,6 +289,10 @@ public class Server
         if (await hamachiIp != null)
         {
             options.Add($"{hamachiIp.Result} - Friends using Hamachi (VPN)");
+        }
+        if (await radminIp != null)
+        {
+            options.Add($"{radminIp.Result} - Friends using Radmin (VPN)");
         }
         // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
         if (await localIp != null)

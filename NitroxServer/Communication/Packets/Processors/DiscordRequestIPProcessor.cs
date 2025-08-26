@@ -52,6 +52,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
     {
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
         Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
+        Task<IPAddress> radminIp = Task.Run(NetHelper.GetRadminIp);
         if (await wanIp != null)
         {
             return wanIp.Result.ToString();
@@ -61,6 +62,12 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
         {
             return hamachiIp.Result.ToString();
         }
+
+        if (await radminIp != null)
+        {
+            return radminIp.Result.ToString();
+        }
+
         return "";
     }
 }

@@ -121,11 +121,11 @@ public static class NetHelper
         }
     }
 
-    public static IPAddress? GetHamachiIp()
+    public static IPAddress? GetVPNIp(string vpnNetworkName)
     {
         foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
         {
-            if (ni.Name != "Hamachi")
+            if (ni.Name != vpnNetworkName)
             {
                 continue;
             }
@@ -139,6 +139,16 @@ public static class NetHelper
             }
         }
         return null;
+    }
+
+    public static IPAddress? GetHamachiIp()
+    {
+        return GetVPNIp("Hamachi");
+    }
+
+    public static IPAddress? GetRadminIp()
+    {
+        return GetVPNIp("Radmin VPN");
     }
 
     private static bool? hasInternet;
