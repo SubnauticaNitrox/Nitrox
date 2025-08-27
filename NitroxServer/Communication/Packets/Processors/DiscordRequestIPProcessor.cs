@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -45,22 +44,22 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
     }
 
     /// <summary>
-    /// Get the WAN IP address or the Hamachi IP address if the WAN IP address is not available.
+    /// Get the WAN IP address or the VPN IP address if the WAN IP address is not available.
     /// </summary>
     /// <returns>Found IP or blank string if none found</returns>
     private static async Task<string> GetIpAsync()
     {
-        Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
-        Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
-        if (await wanIp != null)
+        Task<IPAddress> wanIpTask = NetHelper.GetWanIpAsync();
+        Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIpsTask = Task.Run(NetHelper.GetVpnIps);
+        if (await wanIpTask is {} wanIp)
         {
-            return wanIp.Result.ToString();
+            return wanIp.ToString();
+        }
+        foreach ((IPAddress vpnAddress, string _) in await vpnIpsTask)
+        {
+            return vpnAddress.ToString();
         }
 
-        if (await hamachiIp != null)
-        {
-            return hamachiIp.Result.ToString();
-        }
         return "";
     }
 }

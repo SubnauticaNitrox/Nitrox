@@ -46,7 +46,7 @@ public static class NetHelper
                         .OrderBy(n => n.NetworkInterfaceType is NetworkInterfaceType.Ethernet ? 1 : 0)
                         .ThenBy(n => n.Name);
 
-    public static IPAddress GetLanIp()
+    public static IPAddress? GetLanIp()
     {
         lock (lanIpLock)
         {
@@ -73,7 +73,7 @@ public static class NetHelper
         return null;
     }
 
-    public static async Task<IPAddress> GetWanIpAsync()
+    public static async Task<IPAddress?> GetWanIpAsync()
     {
         lock (wanIpLock)
         {
@@ -121,11 +121,11 @@ public static class NetHelper
         }
     }
 
-    public static IPAddress? GetHamachiIp()
+    public static IEnumerable<(IPAddress Address, string NetworkName)> GetVpnIps(params string[] vpnNetworkNames)
     {
         foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
         {
-            if (ni.Name != "Hamachi")
+            if (!vpnNetworkNames.Contains(ni.Name, StringComparer.Ordinal))
             {
                 continue;
             }
@@ -134,12 +134,16 @@ public static class NetHelper
             {
                 if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    return ip.Address;
+                    yield return (ip.Address, ni.Name.Replace("VPN", "").Trim());
                 }
             }
         }
-        return null;
     }
+
+    /// <summary>
+    ///     Gets supported VPN address if known by current machine.
+    /// </summary>
+    public static IEnumerable<(IPAddress Address, string NetworkName)> GetVpnIps() => GetVpnIps("Hamachi", "Radmin VPN");
 
     private static bool? hasInternet;
 
