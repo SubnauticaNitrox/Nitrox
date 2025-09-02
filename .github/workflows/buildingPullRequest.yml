@@ -1,0 +1,46 @@
+name: Building Pull Request
+on:
+  pull_request:
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v5
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        runtime: [win-x64, linux-x64, linux-arm64]
+    steps:
+    - name: Declare env variables
+      shell: bash
+      run: |
+        echo "COMMIT_SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c 1-7)" >> $GITHUB_ENV &&
+        echo "PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')" >> $GITHUB_ENV
+    - name: Build
+      run: dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Debug -r ${{ matrix.runtime }}
+    - name: Upload Launcher
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: "Launcher_${{ matrix.runtime }}_#${{ env.PR_NUMBER }}_${{ env.COMMIT_SHA_SHORT }}"
+        path: 'Nitrox.Launcher/bin/Debug/net9.0/'
+
+  test:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Run Tests
+      continue-on-error: true
+      run: dotnet test Nitrox.Test/Nitrox.Test.csproj --logger trx --results-directory "test_results"
+
+    - name: Upload Test Results
+      uses: EnricoMi/publish-unit-test-result-action/linux@v2
+      if: (!cancelled())
+      with:
+        files: |
+          test_results/*.trx
