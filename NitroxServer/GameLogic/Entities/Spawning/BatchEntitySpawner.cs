@@ -136,7 +136,7 @@ public class BatchEntitySpawner : IEntitySpawner
     }
 
     /// <inheritdoc cref="CreateEntityWithChildren" />
-    private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicGenerator deterministicBatchGenerator, Entity parentEntity = null)
+    private List<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicGenerator deterministicBatchGenerator, Entity parentEntity = null)
     {
         // See CSVEntitySpawner.GetPrefabForSlot for reference
         List<UwePrefab> allowedPrefabs = FilterAllowedPrefabs(prefabs, entitySpawnPoint, out float fragmentProbability, out float completeFragmentProbability);
@@ -177,15 +177,16 @@ public class BatchEntitySpawner : IEntitySpawner
 
         if (chosenPrefab.Count == 0)
         {
-            yield break;
+            return [];
         }
 
+        List<Entity> spawnedEntities = [];
         if (worldEntityFactory.TryFind(chosenPrefab.ClassId, out UweWorldEntity uweWorldEntity))
         {
             for (int i = 0; i < chosenPrefab.Count; i++)
             {
                 // Random position in sphere is only possible after first spawn, see EntitySlot.Spawn
-                IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint,
+                List<Entity> entities = [.. CreateEntityWithChildren(entitySpawnPoint,
                                                                         chosenPrefab.ClassId,
                                                                         uweWorldEntity.TechType,
                                                                         uweWorldEntity.PrefabZUp,
@@ -193,13 +194,20 @@ public class BatchEntitySpawner : IEntitySpawner
                                                                         uweWorldEntity.LocalScale,
                                                                         deterministicBatchGenerator,
                                                                         parentEntity,
-                                                                        i > 0);
-                foreach (Entity entity in entities)
+                                                                        i > 0)];
+
+                // Unparenting the new entity because it's directly under the cell root
+                entities[0].ParentId = null;
+                if (entities[0] is WorldEntity worldEntity)
                 {
-                    yield return entity;
+                    worldEntity.Transform.SetParent(null, true);
                 }
+
+                spawnedEntities.AddRange(entities);
             }
         }
+
+        return spawnedEntities;
     }
 
     private List<UwePrefab> FilterAllowedPrefabs(List<UwePrefab> prefabs, EntitySpawnPoint entitySpawnPoint, out float fragmentProbability, out float completeFragmentProbability)
@@ -243,28 +251,26 @@ public class BatchEntitySpawner : IEntitySpawner
     /// Spawns the regular (can be children of PrefabPlaceholdersGroup) which are always the same thus context independent.
     /// </summary>
     /// <inheritdoc cref="CreateEntityWithChildren" />
-    private IEnumerable<Entity> SpawnEntitiesStaticly(EntitySpawnPoint entitySpawnPoint, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
+    private List<Entity> SpawnEntitiesStaticly(EntitySpawnPoint entitySpawnPoint, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
     {
         if (worldEntityFactory.TryFind(entitySpawnPoint.ClassId, out UweWorldEntity uweWorldEntity))
         {
             // prefabZUp should not be taken into account for statically spawned entities
-            IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint,
-                                                                    entitySpawnPoint.ClassId,
-                                                                    uweWorldEntity.TechType,
-                                                                    false,
-                                                                    uweWorldEntity.CellLevel,
-                                                                    entitySpawnPoint.Scale,
-                                                                    deterministicBatchGenerator,
-                                                                    parentEntity);
-            foreach (Entity entity in entities)
-            {
-                yield return entity;
-            }
+            return CreateEntityWithChildren(entitySpawnPoint,
+                                            entitySpawnPoint.ClassId,
+                                            uweWorldEntity.TechType,
+                                            false,
+                                            uweWorldEntity.CellLevel,
+                                            entitySpawnPoint.Scale,
+                                            deterministicBatchGenerator,
+                                            parentEntity);
         }
+
+        return [];
     }
 
     /// <returns>The first entity is a <see cref="WorldEntity"/> and the following are its children</returns>
-    private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, string classId, NitroxTechType techType, bool prefabZUp, int cellLevel, NitroxVector3 localScale, DeterministicGenerator deterministicBatchGenerator, Entity parentEntity = null, bool randomPosition = false)
+    private List<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, string classId, NitroxTechType techType, bool prefabZUp, int cellLevel, NitroxVector3 localScale, DeterministicGenerator deterministicBatchGenerator, Entity parentEntity = null, bool randomPosition = false)
     {
         WorldEntity spawnedEntity;
         NitroxVector3 position = entitySpawnPoint.LocalPosition;
@@ -312,33 +318,42 @@ public class BatchEntitySpawner : IEntitySpawner
 
         entityBootstrapperManager.PrepareEntityIfRequired(ref spawnedEntity, deterministicBatchGenerator);
 
-        yield return spawnedEntity;
+        // Order of addition is important, first, the created entity, then its children and the cell root children it created
+        // so that this output can always be used to get the created entity
+        List<Entity> spawnedEntities = [spawnedEntity];
 
-        if (parentEntity == null) // Ensures children are only returned at the top level
+        for (int i = spawnedEntity.ChildEntities.Count - 1; i >= 0; i--)
         {
-            // Children are yielded as well so they can be indexed at the top level (for use by simulation
-            // ownership and various other consumers).  The parent should always be yielded before the children
-            foreach (Entity childEntity in AllChildren(spawnedEntity))
+            Entity spawnedChildEntity = spawnedEntity.ChildEntities[i];
+            // Regular case in which a spawned child would actually need to be spawned under the cell root instead of the current entity
+            if (spawnedChildEntity.ParentId != spawnedEntity.Id)
             {
-                yield return childEntity;
+                spawnedEntity.ChildEntities.RemoveAt(i);
+                spawnedEntities.Add(spawnedChildEntity);
             }
         }
+
+        // Ensures children are only returned at the top level
+        if (parentEntity == null)
+        {
+            // Children are added as well so they can be indexed at the top level
+            // (for use by simulation ownership and various other consumers).
+            spawnedEntities.AddRange(AllChildren(spawnedEntity));
+        }
+
+        return spawnedEntities;
     }
 
-    private IEnumerable<Entity> AllChildren(Entity entity)
+    private static List<Entity> AllChildren(Entity entity)
     {
-        foreach (Entity child in entity.ChildEntities)
-        {
-            yield return child;
+        List<Entity> allChildren = [.. entity.ChildEntities];
 
-            if (child.ChildEntities.Count > 0)
-            {
-                foreach (Entity childOfChild in AllChildren(child))
-                {
-                    yield return childOfChild;
-                }
-            }
+        for (int i = 0; i < allChildren.Count; i++)
+        {
+            allChildren.AddRange(allChildren[i].ChildEntities);
         }
+
+        return allChildren;
     }
 
     private List<Entity> SpawnEntities(List<EntitySpawnPoint> entitySpawnPoints, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
@@ -403,10 +418,6 @@ public class BatchEntitySpawner : IEntitySpawner
                     if (placeholdersGroupsByClassId.ContainsKey(spawnedEntity.ClassId))
                     {
                         spawnedEntity = new PlaceholderGroupWorldEntity(spawnedEntity, i);
-                    }
-                    else
-                    {
-                        spawnedEntity = new PrefabPlaceholderEntity(spawnedEntity, i);
                     }
                     entity.ChildEntities.Add(spawnedEntity);
                 }
