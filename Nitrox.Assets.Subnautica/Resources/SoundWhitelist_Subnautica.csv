@@ -732,8 +732,8 @@ event:/sub/cyclops/climb_front_down;true;false;20
 event:/sub/cyclops/climb_front_up;true;false;20
 event:/sub/cyclops/control_room_ambience;false;false;0
 event:/sub/cyclops/creature_attack_sfx;false;false;0
-event:/sub/cyclops/cyclops_door_close;true;true;false;20
-event:/sub/cyclops/cyclops_door_open;true;true;false;20
+event:/sub/cyclops/cyclops_door_close;true;false;20
+event:/sub/cyclops/cyclops_door_open;true;false;20
 event:/sub/cyclops/cyclops_helm door_close;true;false;20
 event:/sub/cyclops/cyclops_helm_door_open;true;false;20
 event:/sub/cyclops/cyclops_loop_epic_fast;false;false;90
