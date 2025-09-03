@@ -1,6 +1,5 @@
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 using System.Reflection;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -15,6 +14,6 @@ public sealed partial class BaseDeconstructable_DeconstructionAllowed_Patch : Ni
         {
             return;
         }
-        Constructable_DeconstructionAllowed_Patch.DeconstructionAllowed(parentEntity.Id, ref __result, ref reason);
+        BuildUtils.DeconstructionAllowed(parentEntity.Id, ref __result, ref reason);
     }
 }
