@@ -136,6 +136,14 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public void BroadcastQuickSlotsBindingChanged(Optional<NitroxId>[] slotItemIds) => throttledPacketSender.SendThrottled(new PlayerQuickSlotsBindingChanged(slotItemIds), (packet) => 1);
 
+    public void BroadcastBenchChanged(NitroxId bench, BenchChanged.BenchChangeState changeState)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new BenchChanged(PlayerId.Value, bench, changeState));
+        }
+    }
+
     private GameObject CreateBodyPrototype()
     {
         GameObject prototype = Body;
