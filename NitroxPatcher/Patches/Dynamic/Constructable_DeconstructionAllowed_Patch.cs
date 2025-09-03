@@ -1,10 +1,7 @@
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -21,20 +18,6 @@ public sealed partial class Constructable_DeconstructionAllowed_Patch : NitroxPa
         {
             return;
         }
-        DeconstructionAllowed(parentEntity.Id, ref __result, ref reason);
-    }
-
-    public static void DeconstructionAllowed(NitroxId baseId, ref bool __result, ref string reason)
-    {
-        if (BuildingHandler.Main.BasesCooldown.ContainsKey(baseId))
-        {
-            __result = false;
-            reason = Language.main.Get("Nitrox_ErrorRecentBuildUpdate");
-        }
-        else if (BuildingHandler.Main.EnsureTracker(baseId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
-        {
-            __result = false;
-            reason = Language.main.Get("Nitrox_ErrorDesyncDetected");
-        }
+        BuildUtils.DeconstructionAllowed(parentEntity.Id, ref __result, ref reason);
     }
 }
