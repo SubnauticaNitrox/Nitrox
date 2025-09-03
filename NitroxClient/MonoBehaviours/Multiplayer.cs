@@ -166,12 +166,15 @@ namespace NitroxClient.MonoBehaviours
             InitMonoBehaviours();
             Utils.SetContinueMode(true);
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+
+            RegisterConnectedDelegates();
         }
 
         public void InitMonoBehaviours()
         {
             // Gameplay.
-            gameObject.AddComponent<AnimationSender>();
+            gameObject.AddComponent<UnderwaterStateTracker>();
+            gameObject.AddComponent<PrecursorTracker>();
             gameObject.AddComponent<PlayerMovementBroadcaster>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
@@ -185,6 +188,8 @@ namespace NitroxClient.MonoBehaviours
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             OnAfterMultiplayerEnd?.Invoke();
+
+            UnregisterConnectedDelegates();
         }
 
         private static void SetLoadingComplete()
@@ -198,7 +203,7 @@ namespace NitroxClient.MonoBehaviours
 
             TopRightWatermarkText.ApplyChangesForInGame();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
-            CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
+            CoroutineHost.StartCoroutine(PlayerChatManager.Instance.LoadChatKeyHint());
         }
 
         private IEnumerator InitializeLocalPlayerState()
@@ -227,6 +232,28 @@ namespace NitroxClient.MonoBehaviours
                 // Maybe a better place for this, but here works in a pinch.
                 JoinServerBackend.StopMultiplayerClient();
             }
+        }
+
+        private void OnPlayerChat(string message)
+        {
+            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, message));
+        }
+
+        private void OnPlayerCommand(string command)
+        {
+            multiplayerSession.Send(new ServerCommand(command));
+        }
+
+        public void RegisterConnectedDelegates()
+        {
+            PlayerChatManager.Instance.OnPlayerChat += OnPlayerChat;
+            PlayerChatManager.Instance.OnPlayerCommand += OnPlayerCommand;
+        }
+
+        public void UnregisterConnectedDelegates()
+        {
+            PlayerChatManager.Instance.OnPlayerChat -= OnPlayerChat;
+            PlayerChatManager.Instance.OnPlayerCommand -= OnPlayerCommand;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 
 namespace NitroxModel.Helper;
@@ -10,6 +10,8 @@ namespace NitroxModel.Helper;
 public static class NitroxEnvironment
 {
     private static bool hasSet;
+
+    private static string[]? commandLineArgs;
     public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
     public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -58,15 +60,6 @@ public static class NitroxEnvironment
     public static bool IsTesting => Type == Types.TESTING;
     public static bool IsNormal => Type == Types.NORMAL;
 
-    public static int CurrentProcessId
-    {
-        get
-        {
-            using Process process = Process.GetCurrentProcess();
-            return process.Id;
-        }
-    }
-
     public static bool IsReleaseMode
     {
         get
@@ -78,6 +71,11 @@ public static class NitroxEnvironment
 #endif
         }
     }
+
+    /// <summary>
+    ///     Gets the command line arguments as passed to the program on start.
+    /// </summary>
+    public static string[] CommandLineArgs => commandLineArgs ??= Environment.GetCommandLineArgs().Skip(1).ToArray();
 
     public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
 

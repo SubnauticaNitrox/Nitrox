@@ -20,9 +20,10 @@ public class PlayerContext
     /// </summary>
     public NitroxId DrivingVehicle { get; set; }
     public IntroCinematicMode IntroCinematicMode { get; set; }
+    public PlayerAnimation Animation { get; set; }
 
     public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
-                         NitroxGameMode gameMode, NitroxId drivingVehicle, IntroCinematicMode introCinematicMode)
+                         NitroxGameMode gameMode, NitroxId drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation)
     {
         PlayerName = playerName;
         PlayerId = playerId;
@@ -33,10 +34,11 @@ public class PlayerContext
         GameMode = gameMode;
         DrivingVehicle = drivingVehicle;
         IntroCinematicMode = introCinematicMode;
+        Animation = animation;
     }
 
     public override string ToString()
     {
-        return $"[PlayerContext - PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}, IntroCinematicMode: {IntroCinematicMode}]";
+        return $"[{nameof(PlayerContext)} PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}, IntroCinematicMode: {IntroCinematicMode}, Animation: {Animation}]";
     }
 }

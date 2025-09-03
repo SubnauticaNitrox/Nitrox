@@ -67,7 +67,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         this.RegisterMessageListener<ShowPreviousViewMessage, MainWindowViewModel>(static (message, vm) => vm.BackToAsync(message.RoutableViewModelType));
         this.RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
         {
-            vm.Notifications.Add(message.Item);
+            Dispatcher.UIThread.Invoke(() => vm.Notifications.Add(message.Item));
             await Task.Delay(7000);
             WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
         });
@@ -95,7 +95,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 
             Task.Run(async () =>
             {
-                if (!await NetHelper.HasInternetConnectivityAsync())
+                if (!NetHelper.HasInternetConnectivity())
                 {
                     Log.Warn("Launcher may not be connected to internet");
                     LauncherNotifier.Warning("Launcher may not be connected to internet");

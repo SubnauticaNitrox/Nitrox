@@ -21,6 +21,11 @@ public record EditorField
             {
                 description = null;
             }
+            // Ignore description if used as a header.
+            if (description?.StartsWith('\n') == true)
+            {
+                description = null;
+            }
             return description;
         }
     }

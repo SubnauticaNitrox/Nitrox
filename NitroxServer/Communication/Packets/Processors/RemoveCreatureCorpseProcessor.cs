@@ -1,5 +1,4 @@
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -22,8 +21,6 @@ public class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcessor<Remove
 
     public override void Process(RemoveCreatureCorpse packet, Player destroyingPlayer)
     {
-        // TODO: In the future, for more immersion (though that's a neglectable +), have a corpse entity on server-side or a dedicated metadata for this entity (CorpseMetadata)
-        // So that even players rejoining can see it (before it despawns)
         entitySimulation.EntityDestroyed(packet.CreatureId);
 
         if (worldEntityManager.TryDestroyEntity(packet.CreatureId, out Entity entity))
@@ -33,6 +30,7 @@ public class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcessor<Remove
                 bool isOtherPlayer = player != destroyingPlayer;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
+                    player.OutOfCellVisibleEntities.Remove(entity.Id);
                     player.SendPacket(packet);
                 }
             }

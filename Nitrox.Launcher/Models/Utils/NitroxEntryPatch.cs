@@ -19,7 +19,7 @@ public static class NitroxEntryPatch
     private const string NITROX_ENTRY_TYPE_NAME = "Main";
     private const string NITROX_ENTRY_METHOD_NAME = "Execute";
 
-    private const string TARGET_TYPE_NAME = "StartScreen";
+    private const string TARGET_TYPE_NAME = "PlatformUtils";
     private const string TARGET_METHOD_NAME = "Awake";
 
     private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
@@ -68,13 +68,20 @@ public static class NitroxEntryPatch
         Log.Debug($"Adding Nitrox entry point to Subnautica because code file hash mismatch [{Convert.ToHexStringLower(cachedSha256ForFile)}] != [{Convert.ToHexStringLower(currentCodeFileSha256)}]");
 
         /*
-            private void Awake()
-            {
-                NitroxPatcher.Main.Execute(); <----------- Insert this line inside subnautica's code
-                startScreenFade = mainMenuFaderRef.GetComponent<StartScreenFade>();
-                startScreenFade.enabled = false;
-                TryToShowDisclaimer();
-            }
+         * private void Awake()
+         * {
+         *     NitroxPatcher.Main.Execute(); <--- [INSERTED LINE]
+         *     if (PlatformUtils._main != null)
+         *     {
+         *         Debug.LogError("Multiple PlatformUtils instances found in scene!", this);
+         *         Debug.Break();
+         *         global::UnityEngine.Object.DestroyImmediate(base.gameObject);
+         *         return;
+         *     }
+         *     PlatformUtils._main = this;
+         *     global::UnityEngine.Object.DontDestroyOnLoad(base.gameObject);
+         *     base.StartCoroutine(this.PlatformInitAsync());
+         * }
         */
         // TODO: Find a better way to inject Nitrox entrypoint instead of using file swapping
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))

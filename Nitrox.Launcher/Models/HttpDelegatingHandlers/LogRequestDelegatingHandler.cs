@@ -1,8 +1,10 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Utils;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.HttpDelegatingHandlers;
@@ -15,7 +17,13 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         Log.Info($"{request.Method} request to {url}");
         try
         {
-            return await base.SendAsync(request, cancellationToken);
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            LogResponseStatus(response, url);
+            if (IsErrorStatus(response.StatusCode))
+            {
+                LauncherNotifier.Error($"Failed to fetch data from {request.RequestUri?.Host}");
+            }
+            return response;
         }
         catch (OperationCanceledException)
         {
@@ -23,8 +31,23 @@ internal sealed class LogRequestDelegatingHandler : DelegatingHandler
         }
         catch (Exception ex)
         {
-            LauncherNotifier.Error(ex.Message);
+            LauncherNotifier.Error(NetHelper.HasInternetConnectivity() ? ex.Message : "No internet connection available");
             throw;
         }
+
+        static void LogResponseStatus(HttpResponseMessage response, string url)
+        {
+            string message = $"HTTP response status:{response.StatusCode} from {url}";
+            if (IsErrorStatus(response.StatusCode))
+            {
+                Log.Error(message);
+            }
+            else
+            {
+                Log.Debug(message);
+            }
+        }
+
+        static bool IsErrorStatus(HttpStatusCode statusCode) => (int)statusCode is < 200 or >= 400;
     }
 }
