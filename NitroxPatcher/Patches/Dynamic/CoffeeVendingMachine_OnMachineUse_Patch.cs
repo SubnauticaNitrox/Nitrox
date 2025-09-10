@@ -16,6 +16,25 @@ public sealed partial class CoffeeVendingMachine_OnMachineUse_Patch : NitroxPatc
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
+        /*
+         * From:
+         * if(Time.time > this.timeLastUseSlot1 + this.useInterval){
+         *      this.vfxController.Play(0);
+         *  
+         * To:
+         * if(Time.time > this.timeLastUseSlot1 + this.useInterval){
+         *      UseCoffeeMachine(this, CoffeeMachineSlot.ONE);
+         *      this.vfxController.Play(0);
+         *     
+         * From:
+         * if(Time.time > this.timeLastUseSlot2 + this.useInterval){
+         *      this.vfxController.Play(1);
+         * 
+         * To:
+         * if(Time.time > this.timeLastUseSlot2 + this.useInterval){
+         *      UseCoffeeMachine(this, CoffeeMachineSlot.TWO);
+         *      this.vfxController.Play(1);
+        */
         return new CodeMatcher(instructions)
             .MatchStartForward(
                 new CodeMatch(OpCodes.Ldc_I4_0),
