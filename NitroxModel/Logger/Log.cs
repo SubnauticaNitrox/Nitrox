@@ -168,7 +168,7 @@ namespace NitroxModel.Logger
                            });
                        });
                    });
-               }, e => LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)) || GetLogFileName() is "launcher");
+               }, e => !NitroxEnvironment.IsReleaseMode || LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)) || GetLogFileName() is "launcher");
         });
 
         private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate, Action<string>? logOutputCallback = null) => sinkConfig.Logger(cnf =>

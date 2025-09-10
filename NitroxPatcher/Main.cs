@@ -5,10 +5,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using JB::JetBrains.Annotations;
-using Microsoft.Win32;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 
@@ -26,30 +23,24 @@ public static class Main
         string[] args = Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length - 1; i++)
         {
-            if (args[i].Equals("--nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
+            string path = (args[i], args[i + 1]) switch
             {
-                return Path.GetFullPath(args[i + 1]);
+                ("--nitrox", { } value) when Directory.Exists(value) => value,
+                _ => null
+            };
+            if (path is not null)
+            {
+                return Path.GetFullPath(path);
             }
         }
 
         // Get path from environment variable.
-        string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH", EnvironmentVariableTarget.Process);
+        string envPath = Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY, EnvironmentVariableTarget.Process);
         if (Directory.Exists(envPath))
         {
             return envPath;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // Get path from windows registry.
-            using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
-            if (nitroxRegKey == null)
-            {
-                return null;
-            }
-            string path = nitroxRegKey.GetValue("LauncherPath") as string;
-            return Directory.Exists(path) ? path : null;
-        }
         return null;
     });
 
@@ -74,11 +65,11 @@ public static class Main
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-        if (!Directory.Exists(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH")))
+        if (!Directory.Exists(Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY)))
         {
-            Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY, nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
         }
-        if (!Directory.Exists(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH")))
+        if (!Directory.Exists(Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY)))
         {
             Console.WriteLine("Nitrox will not load because launcher path was not provided.");
             return;

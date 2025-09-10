@@ -1,4 +1,3 @@
-global using NitroxModel.Logger;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -74,7 +73,7 @@ public class Program
         }
 
         Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
-        Log.Debug($@"Process start args: ""{string.Join(@""", """, Environment.GetCommandLineArgs())}""");
+        Log.Debug($@"Process start args: ""{string.Join(@""", """, NitroxEnvironment.CommandLineArgs)}""");
 
         Task handleConsoleInputTask;
         Server server;
@@ -508,22 +507,11 @@ public class Program
             return;
         }
 
-        // TODO: Implement log file opening by server name
-        /*string mostRecentLogFile = Log.GetMostRecentLogFile(); // Log.SaveName
-        if (mostRecentLogFile == null)
-        {
-            return;
-        }
-
-        Log.Info("Press L to open log file before closing. Press any other key to close . . .");*/
         Log.Info("Press L to open log folder before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 
         if (key.Key == ConsoleKey.L)
         {
-            // Log.Info($"Opening log file at: {mostRecentLogFile}..");
-            // using Process process = FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
-
             Process.Start(new ProcessStartInfo
             {
                 FileName = Log.LogDirectory,

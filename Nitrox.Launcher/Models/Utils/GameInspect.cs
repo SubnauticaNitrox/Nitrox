@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Threading;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
 using NitroxModel.Logger;

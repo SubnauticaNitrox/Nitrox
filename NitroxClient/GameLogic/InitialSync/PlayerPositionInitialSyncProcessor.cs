@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -8,6 +7,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 using Math = System.Math;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -15,9 +15,12 @@ namespace NitroxClient.GameLogic.InitialSync;
 public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 {
     private static readonly Vector3 spawnRelativeToEscapePod = new(0.9f, 2.1f, 0);
+    private readonly Entities entities;
 
-    public PlayerPositionInitialSyncProcessor()
+    public PlayerPositionInitialSyncProcessor(Entities entities)
     {
+        this.entities = entities;
+
         AddDependency<PlayerInitialSyncProcessor>();
         AddDependency<GlobalRootInitialSyncProcessor>();
     }
@@ -44,10 +47,22 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
             Player.main.ValidateEscapePod();
         }
 
+        Player.main.precursorOutOfWater = packet.InPrecursor;
+        Player.main.SetDisplaySurfaceWater(packet.DisplaySurfaceWater);
+
         Optional<NitroxId> subRootId = packet.PlayerSubRootId;
         if (!subRootId.HasValue)
         {
-            yield return Terrain.WaitForWorldLoad();
+            yield return Terrain.SafeWaitForWorldLoad();
+            Player.main.UpdateIsUnderwater();
+
+            // Check if Player might fall through the map
+            if (packet.InPrecursor || !Player.main.IsUnderwaterForSwimming())
+            {
+                // This coroutine must be started fresh to release the current one
+                CoroutineHost.StartCoroutine(FreezePlayerWhileEntitiesSpawn());
+            }
+            
             yield break;
         }
 
@@ -55,7 +70,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         if (!sub.HasValue)
         {
             Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
-            yield return Terrain.WaitForWorldLoad();
+            yield return Terrain.SafeWaitForWorldLoad();
             yield break;
         }
 
@@ -70,6 +85,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         else if (sub.Value.GetComponent<EscapePod>())
         {
             Player.main.escapePod.Update(true);
+            Player.main.ApplyEscapePodSkyIfNeeded();
         }
         else
         {
@@ -116,5 +132,19 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
                 return;
             }
         }
+    }
+
+    private IEnumerator FreezePlayerWhileEntitiesSpawn()
+    {
+        Player.main.cinematicModeActive = true;
+
+        float timeStartWait = DayNightCycle.main.timePassedAsFloat;
+
+        // Either wait for SpawnEntities packet to arrive or time out this freeze because we don't expect entities to arrive after that
+        yield return new WaitUntil(() => entities.SpawningEntities || DayNightCycle.main.timePassedAsFloat - timeStartWait > 5);
+
+        yield return new WaitUntil(() => !entities.SpawningEntities);
+
+        Player.main.cinematicModeActive = false;
     }
 }

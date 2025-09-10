@@ -18,7 +18,7 @@ public class SeamothMetadata : VehicleMetadata
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public SeamothMetadata(bool lightsOn, float health, string name, NitroxVector3[] colors) : base(health, name, colors)
+    public SeamothMetadata(bool lightsOn, float health, bool inPrecursor, string name, NitroxVector3[] colors) : base(health, inPrecursor, name, colors)
     {
         LightsOn = lightsOn;
     }

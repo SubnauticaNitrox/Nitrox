@@ -28,10 +28,9 @@ public class PatchesTranspilerTest
         [typeof(Constructable_DeconstructAsync_Patch), Constructable_DeconstructAsync_Patch.InstructionsToAdd.Count],
         [typeof(ConstructableBase_SetState_Patch), ConstructableBase_SetState_Patch.InstructionsToAdd.Count],
         [typeof(ConstructorInput_OnCraftingBegin_Patch), 7],
-        [typeof(CrafterLogic_TryPickupSingleAsync_Patch), 4],
         [typeof(CrashHome_Spawn_Patch), 2],
         [typeof(CrashHome_Update_Patch), -5],
-        [typeof(CreatureDeath_OnKillAsync_Patch), 9],
+        [typeof(CreatureDeath_OnKillAsync_Patch), 5],
         [typeof(CreatureDeath_SpawnRespawner_Patch), 2],
         [typeof(CyclopsDestructionEvent_DestroyCyclops_Patch), 3],
         [typeof(CyclopsDestructionEvent_SpawnLootAsync_Patch), 7],
@@ -51,6 +50,7 @@ public class PatchesTranspilerTest
         [typeof(Flare_Update_Patch), 0],
         [typeof(FootstepSounds_OnStep_Patch), 6],
         [typeof(GrowingPlant_SpawnGrownModelAsync_Patch), -1],
+        [typeof(GameInputSystem_Initialize_Patch), 2],
         [typeof(Player_TriggerInfectionRevealAsync_Patch), 1],
         [typeof(IngameMenu_OnSelect_Patch), -2],
         [typeof(IngameMenu_QuitGameAsync_Patch), 2],
@@ -66,11 +66,14 @@ public class PatchesTranspilerTest
         [typeof(PDAScanner_Scan_Patch), 3],
         [typeof(PickPrefab_AddToContainerAsync_Patch), 4],
         [typeof(Player_OnKill_Patch), 0],
+        [typeof(PrecursorDoorMotorModeSetter_OnTriggerEnter_Patch), 3],
+        [typeof(PrecursorMoonPoolTrigger_Update_Patch), 3],
         [typeof(Respawn_Start_Patch), 3],
         [typeof(RocketConstructor_StartRocketConstruction_Patch), 3],
         [typeof(SpawnConsoleCommand_SpawnAsync_Patch), 2],
         [typeof(SpawnOnKill_OnKill_Patch), 3],
         [typeof(SubConsoleCommand_OnConsoleCommand_sub_Patch), 0],
+        [typeof(ToggleLights_SetLightsActive_Patch), 0],
         [typeof(Trashcan_Update_Patch), 4],
         [typeof(uGUI_OptionsPanel_AddAccessibilityTab_Patch), -10],
         [typeof(uGUI_PDA_Initialize_Patch), 2],
@@ -150,7 +153,7 @@ public class PatchesTranspilerTest
         }
 
         List<CodeInstruction> transformedIl = (transpilerMethod.Invoke(null, injectionParameters.ToArray()) as IEnumerable<CodeInstruction>)?.ToList();
-        
+
         if (logInstructions)
         {
             Console.WriteLine(transformedIl.ToPrettyString());

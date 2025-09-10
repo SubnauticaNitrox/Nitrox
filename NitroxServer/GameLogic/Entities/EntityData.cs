@@ -46,19 +46,17 @@ public class EntityData
             // We will re-build the child hierarchy below and want to avoid duplicates.
             // TODO: Rework system to no longer persist children entities because they are duplicates.
             entity.ChildEntities.Clear();
+        }
 
-            if (entity.ParentId == null)
+        foreach (Entity entity in Entities)
+        {
+            if (entity.ParentId != null && entitiesById.TryGetValue(entity.ParentId, out Entity parentEntity))
             {
-                continue;
-            }
+                parentEntity.ChildEntities.Add(entity);
 
-            if (entitiesById.TryGetValue(entity.ParentId, out Entity parent))
-            {
-                parent.ChildEntities.Add(entity);
-
-                if (entity is WorldEntity we2 && parent is WorldEntity weParent)
+                if (entity is WorldEntity worldEntity && parentEntity is WorldEntity parentWorldEntity)
                 {
-                    we2.Transform.SetParent(weParent.Transform, false);
+                    worldEntity.Transform.SetParent(parentWorldEntity.Transform, false);
                 }
             }
         }

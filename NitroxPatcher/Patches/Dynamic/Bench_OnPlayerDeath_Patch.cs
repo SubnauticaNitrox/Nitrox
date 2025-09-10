@@ -1,8 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using NitroxModel.GameLogic.PlayerAnimation;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
