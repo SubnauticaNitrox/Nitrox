@@ -1,6 +1,6 @@
 name: Building Pull Request
 on:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   setup:
@@ -29,18 +29,3 @@ jobs:
       with:
         name: "Launcher_${{ matrix.runtime }}_#${{ env.PR_NUMBER }}_${{ env.COMMIT_SHA_SHORT }}"
         path: 'Nitrox.Launcher/bin/Debug/net9.0/'
-
-  test:
-    needs: build
-    runs-on: [self-hosted, linux]
-    steps:
-    - name: Run Tests
-      continue-on-error: true
-      run: dotnet test Nitrox.Test/Nitrox.Test.csproj --logger trx --results-directory "test_results"
-
-    - name: Upload Test Results
-      uses: EnricoMi/publish-unit-test-result-action/linux@3a74b2957438d0b6e2e61d67b05318aa25c9e6c6
-      if: (!cancelled())
-      with:
-        files: |
-          test_results/*.trx

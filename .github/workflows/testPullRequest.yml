@@ -1,0 +1,20 @@
+name: Test Pull Request
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v5
+
+    - name: Run Tests
+      run: dotnet test Nitrox.Test/Nitrox.Test.csproj --logger trx --results-directory "test_results"
+
+    - name: Upload Test Results
+      uses: EnricoMi/publish-unit-test-result-action/linux@3a74b2957438d0b6e2e61d67b05318aa25c9e6c6
+      if: (!cancelled())
+      with:
+        files: |
+          test_results/*.trx
