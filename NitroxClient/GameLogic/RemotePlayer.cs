@@ -105,7 +105,7 @@ public class RemotePlayer : INitroxPlayer
         SetupSkyAppliers();
         SetupPlayerSounds();
         SetupMixins();
-        
+
         PlayerAnimation animation = PlayerContext.Animation;
         UpdateAnimationAndCollider((AnimChangeType)animation.Type, (AnimChangeState)animation.State);
 
@@ -373,11 +373,6 @@ public class RemotePlayer : INitroxPlayer
         {
             case AnimChangeType.UNDERWATER:
                 AnimationController["is_underwater"] = state != AnimChangeState.OFF;
-                break;
-            case AnimChangeType.BENCH:
-                AnimationController["cinematics_enabled"] = state != AnimChangeState.UNSET;
-                AnimationController["bench_sit"] = state == AnimChangeState.ON;
-                AnimationController["bench_stand_up"] = state == AnimChangeState.OFF;
                 break;
             case AnimChangeType.INFECTION_REVEAL:
                 AnimationController["player_infected"] = state != AnimChangeState.UNSET;
