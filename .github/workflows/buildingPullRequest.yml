@@ -7,7 +7,7 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
     - name: Checking out repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
   build:
     needs: setup
@@ -23,8 +23,9 @@ jobs:
         echo "PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')" >> $GITHUB_ENV
     - name: Build
       run: dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Debug -r ${{ matrix.runtime }}
+
     - name: Upload Launcher
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       if: success()
       with:
         name: "Launcher_${{ matrix.runtime }}_#${{ env.PR_NUMBER }}_${{ env.COMMIT_SHA_SHORT }}"
