@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic;
@@ -13,6 +12,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
+using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -20,23 +20,21 @@ public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : Nitro
 {
     public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((CyclopsDestructionEvent t) => t.SpawnLootAsync()));
 
-    // Matches twice, once for scrap metal and once for computer chips
-    public static readonly InstructionsPattern PATTERN = new(expectedMatches: 2)
-    {
-        { Reflect.Method(() => UnityEngine.Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))), "SpawnObject" }
-    };
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         return new CodeMatcher(instructions)
-               .MatchStartForward(new CodeMatch(OpCodes.Switch))
-               .InsertAndAdvance(new CodeInstruction(OpCodes.Call, Reflect.Method(() => TrampolineCallback(default))))
+               .MatchStartForward(new CodeMatch(Switch))
+               .InsertAndAdvance(new CodeInstruction(Call, Reflect.Method(() => TrampolineCallback(default))))
                .InstructionEnumeration()
-               .InsertAfterMarker(PATTERN, "SpawnObject", [
-                    new(OpCodes.Dup),
-                    new(OpCodes.Ldloc_1),
-                    new(OpCodes.Call, ((Action<GameObject, CyclopsDestructionEvent>)SpawnObjectCallback).Method)
-                ]);
+               // Matches twice, once for scrap metal and once for computer chips
+               .RewriteOnPattern([
+                   Reflect.Method(() => UnityEngine.Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))),
+                   [
+                       Dup,
+                       Ldloc_1,
+                       ((Action<GameObject, CyclopsDestructionEvent>)SpawnObjectCallback).Method
+                   ]
+               ], 2);
     }
 
     public static void SpawnObjectCallback(GameObject gameObject, CyclopsDestructionEvent __instance)
