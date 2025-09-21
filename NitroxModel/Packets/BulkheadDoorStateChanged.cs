@@ -8,12 +8,10 @@ public sealed class BulkheadDoorStateChanged : Packet
 {
     public NitroxId Id { get; }
     public bool IsOpen { get; }
-    public ushort PlayerId { get; }
 
-    public BulkheadDoorStateChanged(NitroxId id, bool isOpen, ushort playerId)
+    public BulkheadDoorStateChanged(NitroxId id, bool isOpen)
     {
         Id = id;
         IsOpen = isOpen;
-        PlayerId = playerId;
     }
 }
