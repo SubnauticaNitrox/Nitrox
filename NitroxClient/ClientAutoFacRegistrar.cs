@@ -120,6 +120,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BulletManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NtpSyncer>().InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<BulkheadDoorStateChangedProcessor>().As<ClientPacketProcessor<BulkheadDoorStateChanged>>();
         }
 
         private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)

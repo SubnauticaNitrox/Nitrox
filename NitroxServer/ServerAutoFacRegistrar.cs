@@ -89,6 +89,8 @@ namespace NitroxServer
                 .AssignableTo<SaveDataUpgrade>()
                 .As<SaveDataUpgrade>()
                 .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<BulkheadDoorStateChangedProcessor>().As<AuthenticatedPacketProcessor<BulkheadDoorStateChanged>>();
         }
     }
 }
