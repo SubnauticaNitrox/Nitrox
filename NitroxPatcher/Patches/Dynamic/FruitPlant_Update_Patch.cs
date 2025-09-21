@@ -42,6 +42,7 @@ public sealed partial class FruitPlant_Update_Patch : NitroxPatch, IDynamicPatch
             return Resolve<SimulationOwnership>().HasAnyLockType(ownerNitroxId);
         }
 
+        Log.Error($"[{nameof(FruitPlant_Update_Patch)}] Could not find either the plantable id [{entityId}] or the planter's owner id for {__instance.name}");
         __state = (__instance.timeNextFruit, null, null);
         return true;
     }
@@ -50,6 +51,11 @@ public sealed partial class FruitPlant_Update_Patch : NitroxPatch, IDynamicPatch
     {
         // If no change was made
         if (__state.Item1 == __instance.timeNextFruit)
+        {
+            return;
+        }
+
+        if (__state.Item2 == null)
         {
             return;
         }

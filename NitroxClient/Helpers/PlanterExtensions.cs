@@ -28,11 +28,11 @@ public static class PlanterExtensions
 
         switch (planter.environment)
         {
-            // 2. indoor planter, not in waterpark, the base is responsible
+            // 2. indoor planter, not in waterpark, the SubRoot (Base or Cyclops) is responsible
             case Planter.PlantEnvironment.Air:
-                if (planter.TryGetComponentInParent(out Base parentBase))
+                if (planter.TryGetComponentInParent(out SubRoot parentSubRoot))
                 {
-                    return parentBase.TryGetNitroxId(out ownerNitroxId);
+                    return parentSubRoot.TryGetNitroxId(out ownerNitroxId);
                 }
                 break;
 
