@@ -1,5 +1,4 @@
 global using NitroxModel.Logger;
-using System;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
@@ -89,8 +88,6 @@ namespace NitroxServer
                 .AssignableTo<SaveDataUpgrade>()
                 .As<SaveDataUpgrade>()
                 .InstancePerLifetimeScope();
-
-            containerBuilder.RegisterType<BulkheadDoorStateChangedProcessor>().As<AuthenticatedPacketProcessor<BulkheadDoorStateChanged>>();
         }
     }
 }
