@@ -75,6 +75,7 @@
     "Nitrox_ResyncSettings": "Resynchronisation",
     "Nitrox_SafeBuilding": "Mode de construction sans erreur",
     "Nitrox_SafeBuildingLog": "Afficher les messages du mode de construction sans erreur",
+    "Nitrox_ScannerRoomWarn": "Attention : les salles de scanner ne fonctionnent pas correctement dans cette version de Nitrox. Attendez-vous à de nombreux bugs.",
     "Nitrox_ServerEntry_DeleteWarning": "Êtes-vous sûr(e) de vouloir supprimer ce serveur ?",
     "Nitrox_ServerStopped": "Le serveur a été arrêté",
     "Nitrox_Settings_Bandwidth": "Paramètres de la bande passante",

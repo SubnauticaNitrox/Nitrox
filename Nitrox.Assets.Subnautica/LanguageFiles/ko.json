@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "호스트:",
     "Nitrox_AddServer_AddressPlaceholder": "서버의 IP나 주소를 입력하세요",
     "Nitrox_AddServer_Confirm": "서버 생성",
+    "Nitrox_AddServer_CreatedSuccessful": ".새로운 서버 항목이 성공적으로 생성되었습니다.",
     "Nitrox_AddServer_InvalidInput": "입력한 내용이 유효하지 않습니다. 모든 텍스트 박스가 채워졌는지 다시 확인하세요.",
     "Nitrox_AddServer_NameDescription": "이름:",
     "Nitrox_AddServer_NamePlaceholder": "사용할 이름을 입력하세요",
