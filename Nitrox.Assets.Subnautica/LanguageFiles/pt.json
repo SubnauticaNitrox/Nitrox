@@ -1,5 +1,7 @@
 {
     "Nitrox_AddServer": "Adicionar Servidor",
+    "Nitrox_AddServer_AddressDescription": "Anfitrião:",
+    "Nitrox_AddServer_Confirm": "Criar servidor",
     "Nitrox_AddServer_NameDescription": "Nome:",
     "Nitrox_BuildingDesyncDetected": "O servidor detetou uma dessincronização com os edifícios locais do cliente (vá para as definições do Nitrox para solicitar uma ressincronização)",
     "Nitrox_BuildingSettings": "Construção de base",

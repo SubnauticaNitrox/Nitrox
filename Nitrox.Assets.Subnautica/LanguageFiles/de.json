@@ -75,6 +75,7 @@
     "Nitrox_ResyncSettings": "Resynchronisierung",
     "Nitrox_SafeBuilding": "Sicheres bauen",
     "Nitrox_SafeBuildingLog": "Sicheres bauen protokollieren",
+    "Nitrox_ScannerRoomWarn": "Bitte beachten Sie: Scannerräume funktionieren in dieser Version von Nitrox nicht richtig. Erwarten Sie viele Bugs.",
     "Nitrox_ServerEntry_DeleteWarning": "Willst du diesen Spielstand wirklich löschen?",
     "Nitrox_ServerStopped": "Der Server wurde gestoppt",
     "Nitrox_Settings_Bandwidth": "Bandbreiteneinstellungen",

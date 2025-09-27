@@ -75,6 +75,7 @@
     "Nitrox_ResyncSettings": "Újraszinkronizálás",
     "Nitrox_SafeBuilding": "Biztonságos építmény",
     "Nitrox_SafeBuildingLog": "Biztonságos épület napló",
+    "Nitrox_ScannerRoomWarn": "Megjegyzés: a szkenner szobák nem működnek megfelelően a Nitrox ezen verziójában. Számíts sok hibára.",
     "Nitrox_ServerEntry_DeleteWarning": "Biztos törölni kívánod ezt a szervert?",
     "Nitrox_ServerStopped": "A szerver leállt",
     "Nitrox_Settings_Bandwidth": "Sávszélesség Beállítása",

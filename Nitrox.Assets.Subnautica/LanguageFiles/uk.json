@@ -46,6 +46,7 @@
     "Nitrox_LoadingScreenWarn": "Можливі помилки, що порушують ігровий процес",
     "Nitrox_LostConnection": "Втрачено з'єднання з ігровим сервером",
     "Nitrox_LostConnectionWarn": "Більше не підключено до сервера",
+    "Nitrox_MissingPermission": "У вас немає дозволу на виконання цієї команди [{PERMISSION}]",
     "Nitrox_Multiplayer": "Багатокористувацька гра",
     "Nitrox_MultiplayerLoaded": "Клієнт багатокористувацької гри завантажено…",
     "Nitrox_Mute": "Вимкнути звук {PLAYER}",
