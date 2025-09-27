@@ -3,6 +3,8 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -15,11 +17,20 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
     {
         Log.Info("[BulkheadDoor_Patch] Postfix triggered");
 
-        if (!__instance.TryGetIdOrWarn(out NitroxId id))
+        // Look for NitroxEntity in parent hierarchy
+        if (!__instance.TryGetComponentInParent<NitroxEntity>(out NitroxEntity nitroxEntity, true))
         {
-            Log.Info("Could not find NitroxId");
+            Log.Info("Could not find NitroxEntity in parent hierarchy");
             return;
         }
+
+        NitroxId id = nitroxEntity.Id;
+
+        //if (!__instance.TryGetIdOrWarn(out NitroxId id))
+        //{
+        //    Log.Info("Could not find NitroxId");
+        //    return;
+        //}
 
         bool isDoorOpened = __instance.opened;
         Log.Info($"[BulkheadDoor_Patch] Door {id} state changed to: {(!isDoorOpened ? "OPEN" : "CLOSED")}");
