@@ -26,12 +26,6 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
 
         NitroxId id = nitroxEntity.Id;
 
-        //if (!__instance.TryGetIdOrWarn(out NitroxId id))
-        //{
-        //    Log.Info("Could not find NitroxId");
-        //    return;
-        //}
-
         bool isDoorOpened = __instance.opened;
         Log.Info($"[BulkheadDoor_Patch] Door {id} state changed to: {(!isDoorOpened ? "OPEN" : "CLOSED")}");
 
