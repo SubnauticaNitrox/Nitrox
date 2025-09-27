@@ -20,7 +20,7 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
         // Look for NitroxEntity in parent hierarchy
         if (!__instance.TryGetComponentInParent<NitroxEntity>(out NitroxEntity nitroxEntity, true))
         {
-            Log.Info("Could not find NitroxEntity in parent hierarchy");
+            Log.Info("[BulkheadDoor_Patch] Could not find NitroxEntity in parent hierarchy");
             return;
         }
 
