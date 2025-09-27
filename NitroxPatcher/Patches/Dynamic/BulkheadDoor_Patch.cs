@@ -2,13 +2,14 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((BulkheadDoor t) => t.StartCinematic(Player.main));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((BulkheadDoor t) => t.OnHandClick(default));
 
     public static void Postfix(BulkheadDoor __instance)
     {
@@ -16,17 +17,20 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
 
         if (!__instance.TryGetIdOrWarn(out NitroxId id))
         {
+            Log.Info("Could not find NitroxId");
             return;
         }
 
         bool isDoorOpened = __instance.opened;
         Log.Info($"[BulkheadDoor_Patch] Door {id} state changed to: {(!isDoorOpened ? "OPEN" : "CLOSED")}");
 
-        Resolve<IPacketSender>().Send(new BulkheadDoorStateChanged(id, isDoorOpened));
-    }
+        // get player id
+        LocalPlayer player = Resolve<LocalPlayer>();
 
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD, ((Action<BulkheadDoor>)Postfix).Method);
+        if (player.PlayerId.HasValue)
+        {
+            ushort playerId = player.PlayerId.Value;
+            Resolve<IPacketSender>().Send(new BulkheadDoorStateChanged(id, playerId, isDoorOpened));
+        }
     }
 }
