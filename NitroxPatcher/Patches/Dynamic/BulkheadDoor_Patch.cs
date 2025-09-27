@@ -26,8 +26,8 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
 
         NitroxId id = nitroxEntity.Id;
 
-        bool isDoorOpened = __instance.opened;
-        Log.Info($"[BulkheadDoor_Patch] Door {id} state changed to: {(!isDoorOpened ? "OPEN" : "CLOSED")}");
+        bool isDoorOpened = !__instance.opened;
+        Log.Info($"[BulkheadDoor_Patch] Door {id} state changed to: {(isDoorOpened ? "OPEN" : "CLOSED")}");
 
         // get player id
         LocalPlayer player = Resolve<LocalPlayer>();
