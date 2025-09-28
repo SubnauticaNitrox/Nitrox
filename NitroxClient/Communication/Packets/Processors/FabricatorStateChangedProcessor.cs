@@ -17,8 +17,6 @@ public class FabricatorStateChangedProcessor : ClientPacketProcessor<FabricatorS
 
     public override void Process(FabricatorStateChanged packet)
     {
-        Log.Info($"[FabricatorStateChangedProcessor] Process");
-
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject fabricatorObject))
         {
             Log.Error($"[FabricatorStateChangedProcessor] Couldn't find GameObject for {packet.Id}");
