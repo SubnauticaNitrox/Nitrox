@@ -32,23 +32,22 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
             return;
         }
 
-        if (bulkheadDoor.TryGetComponentInChildren(out BulkheadDoor door))
-        {
-            bool prevState = !packet.IsOpen;
-
-            door.animator.SetBool("player_in_front", packet.IsFacingDoor);
-
-            PlayerCinematicController cinematicController = GetPlayerCinematicController(door, prevState, packet.IsFacingDoor);
-            MultiplayerCinematicController multiPlayerCinematicController = MultiplayerCinematicController.Initialize(cinematicController);
-
-            multiPlayerCinematicController.CallStartCinematicMode(otherPlayer);
-
-            CoroutineHost.StartCoroutine(SetDoorStateAfterDelay(door, packet.IsOpen, 3.0f));
-        }
-        else
+        if (!bulkheadDoor.TryGetComponentInChildren(out BulkheadDoor door))
         {
             Log.Info("[BulkheadDoorStateChangedProcessor] Unable to find BulkheadDoor");
+            return;
         }
+
+        bool prevState = !packet.IsOpen;
+
+        door.animator.SetBool("player_in_front", packet.IsFacingDoor);
+
+        PlayerCinematicController cinematicController = GetPlayerCinematicController(door, prevState, packet.IsFacingDoor);
+        MultiplayerCinematicController multiPlayerCinematicController = MultiplayerCinematicController.Initialize(cinematicController);
+
+        multiPlayerCinematicController.CallStartCinematicMode(otherPlayer);
+
+        CoroutineHost.StartCoroutine(SetDoorStateAfterDelay(door, packet.IsOpen, 3.0f));
     }
 
     private IEnumerator SetDoorStateAfterDelay(BulkheadDoor door, bool isOpen, float delay)

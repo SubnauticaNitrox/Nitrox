@@ -3,6 +3,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -20,5 +21,8 @@ public sealed partial class BulkheadDoor_OnPlayerCinematicModeEnd_Patch : Nitrox
 
         NitroxId id = nitroxEntity.Id;
         Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+
+        BulkheadDoorMetadata metadata = new BulkheadDoorMetadata(__instance.opened);
+        Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);
     }
 }
