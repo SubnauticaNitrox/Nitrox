@@ -41,15 +41,14 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
 
         Log.Info($"[BulkheadDoorStateChangedProcessor] RemotePlayer PlayerName: {otherPlayer.PlayerName} PlayerId: {otherPlayer.PlayerId}");
 
-        otherPlayer.AnimationController["player_in_front"] = packet.IsFacingDoor;
-
-
         // Get the BulkheadDoor component
         if (bulkheadDoor.TryGetComponentInChildren(out BulkheadDoor door))
         {
             Log.Info("Found BulkheadDoor");
 
             bool prevState = !packet.IsOpen;
+
+            door.animator.SetBool("player_in_front", packet.IsFacingDoor);
 
             PlayerCinematicController cinematicController = GetPlayerCinematicController(door, prevState, packet.IsFacingDoor);
             MultiplayerCinematicController multiPlayerCinematicController = MultiplayerCinematicController.Initialize(cinematicController);
