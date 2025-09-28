@@ -3,6 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -23,6 +24,11 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
             Log.Info("[BulkheadDoor_Patch] Could not find NitroxEntity in parent hierarchy");
             return;
         }
+
+        int instanceId = __instance.GetInstanceID();
+
+        Log.Info($"[BulkheadDoor_Patch] instanceId={instanceId}");
+        
 
         NitroxId id = nitroxEntity.Id;
 
