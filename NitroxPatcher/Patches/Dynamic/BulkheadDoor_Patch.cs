@@ -26,8 +26,9 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
         }
 
         int instanceId = __instance.GetInstanceID();
+        bool isFacingDoor = __instance.GetSide();
 
-        Log.Info($"[BulkheadDoor_Patch] instanceId={instanceId}");
+        Log.Info($"[BulkheadDoor_Patch] instanceId={instanceId} isFacingDoor");
         
 
         NitroxId id = nitroxEntity.Id;
@@ -41,7 +42,7 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
         if (player.PlayerId.HasValue)
         {
             ushort playerId = player.PlayerId.Value;
-            Resolve<IPacketSender>().Send(new BulkheadDoorStateChanged(id, playerId, isDoorOpened));
+            Resolve<IPacketSender>().Send(new BulkheadDoorStateChanged(id, playerId, isDoorOpened, isFacingDoor));
         }
     }
 }

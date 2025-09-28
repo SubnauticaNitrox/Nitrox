@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Diagnostics.SymbolStore;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -44,7 +45,6 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
         //otherPlayer.AnimationController["door_closing"] = !packet.IsOpen;
 
         otherPlayer.AnimationController["opened"] = packet.IsOpen;
-        otherPlayer.AnimationController["player_in_front"] = packet.IsOpen;
 
 
         // Get the BulkheadDoor component
@@ -52,13 +52,30 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
         {
             Log.Info("Found BulkheadDoor");
 
-            MultiplayerCinematicController newController = MultiplayerCinematicController.Initialize(packet.IsOpen ? door.frontOpenCinematicController : door.frontCloseCinematicController);
+            otherPlayer.AnimationController["player_in_front"] = packet.IsFacingDoor;
+
+            MultiplayerCinematicController newController = MultiplayerCinematicController.Initialize(getPlayerCinematicController(door, packet.IsOpen, packet.IsFacingDoor));
             newController.CallStartCinematicMode(otherPlayer);
+
+            door.SetState(packet.IsOpen);
+
+
             Log.Info($"[BulkheadDoorStateChangedProcessor] Initialized and started/ended cinematic for remote player {otherPlayer.PlayerName}");
         }
         else
         {
             Log.Info("Did NOT find BulkheadDoor");
+        }
+    }
+
+    private PlayerCinematicController getPlayerCinematicController(BulkheadDoor door, bool isOpened, bool isFacingDoor)
+    {
+        if (isFacingDoor)
+        {
+            return isOpened ? door.frontOpenCinematicController : door.frontCloseCinematicController;
+        } else
+        {
+            return isOpened ? door.backOpenCinematicController : door.backCloseCinematicController;
         }
     }
 }

@@ -12,10 +12,13 @@ public sealed class BulkheadDoorStateChanged : Packet
 
     public bool IsOpen { get; }
 
-    public BulkheadDoorStateChanged(NitroxId id, ushort playerId, bool isOpen)
+    public bool IsFacingDoor { get; }
+
+    public BulkheadDoorStateChanged(NitroxId id, ushort playerId, bool isOpen, bool isFacingDoor)
     {
         Id = id;
         PlayerId = playerId;
         IsOpen = isOpen;
+        IsFacingDoor = isFacingDoor;
     }
 }
