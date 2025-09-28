@@ -1,5 +1,4 @@
 using System.Reflection;
-//using System.Runtime.CompilerServices;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
@@ -7,7 +6,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-//using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
