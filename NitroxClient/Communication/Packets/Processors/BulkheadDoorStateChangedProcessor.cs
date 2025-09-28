@@ -53,15 +53,7 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
             Log.Info("Found BulkheadDoor");
 
             MultiplayerCinematicController newController = MultiplayerCinematicController.Initialize(packet.IsOpen ? door.frontOpenCinematicController : door.frontCloseCinematicController);
-
-            if (packet.IsOpen)
-            {
-                newController.CallStartCinematicMode(otherPlayer);
-            }
-            else
-            {
-                newController.CallCinematicModeEnd(otherPlayer);
-            }
+            newController.CallStartCinematicMode(otherPlayer);
             Log.Info($"[BulkheadDoorStateChangedProcessor] Initialized and started/ended cinematic for remote player {otherPlayer.PlayerName}");
         }
         else
