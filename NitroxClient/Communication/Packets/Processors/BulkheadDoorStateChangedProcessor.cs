@@ -46,9 +46,37 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
         MultiplayerCinematicController multiPlayerCinematicController = MultiplayerCinematicController.Initialize(cinematicController);
 
         multiPlayerCinematicController.CallStartCinematicMode(otherPlayer);
+        PlayDoorSound(door, packet.IsOpen);
 
         CoroutineHost.StartCoroutine(SetDoorStateAfterDelay(door, packet.IsOpen, 3.0f));
     }
+
+    private void PlayDoorSound(BulkheadDoor door, bool isOpen)
+    {
+        bool isFacingDoor = door.GetSide();
+        string soundPath = GetDoorSoundPath(isOpen, isFacingDoor);
+        FMODAsset bulkheadOpenFrontAsset = Resources.Load<FMODAsset>(soundPath);
+        if (bulkheadOpenFrontAsset != null)
+        {
+            Utils.PlayFMODAsset(bulkheadOpenFrontAsset, door.transform, 1.0f);
+        }
+        else
+        {
+            Log.Error($"[BulkheadDoorStateChangedProcessor] FMODAsset '{soundPath}' not found.");
+        }
+    }
+
+    private string GetDoorSoundPath(bool isOpen, bool isFacingDoor)
+    {
+        string soundPath = "event:/sub/base/bulkhead_";
+
+        soundPath += isOpen ? "open" : "close";
+        soundPath += "_";
+        soundPath += isFacingDoor ? "front" : "back";
+
+        return soundPath;
+    }
+
 
     private IEnumerator SetDoorStateAfterDelay(BulkheadDoor door, bool isOpen, float delay)
     {
