@@ -39,12 +39,7 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
 
         Log.Info($"[BulkheadDoorStateChangedProcessor] RemotePlayer PlayerName: {otherPlayer.PlayerName} PlayerId: {otherPlayer.PlayerId}");
 
-        //otherPlayer.AnimationController["cinematics_enabled"] = true;
-        //otherPlayer.AnimationController["door_use"] = true;
-        //otherPlayer.AnimationController["door_opening"] = packet.IsOpen;
-        //otherPlayer.AnimationController["door_closing"] = !packet.IsOpen;
-
-        otherPlayer.AnimationController["opened"] = packet.IsOpen;
+        otherPlayer.AnimationController["player_in_front"] = packet.IsFacingDoor;
 
 
         // Get the BulkheadDoor component
@@ -52,10 +47,12 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
         {
             Log.Info("Found BulkheadDoor");
 
-            otherPlayer.AnimationController["player_in_front"] = packet.IsFacingDoor;
+            bool prevState = !packet.IsOpen;
 
-            MultiplayerCinematicController newController = MultiplayerCinematicController.Initialize(getPlayerCinematicController(door, packet.IsOpen, packet.IsFacingDoor));
-            newController.CallStartCinematicMode(otherPlayer);
+            PlayerCinematicController cinematicController = GetPlayerCinematicController(door, prevState, packet.IsFacingDoor);
+            MultiplayerCinematicController multiPlayerCinematicController = MultiplayerCinematicController.Initialize(cinematicController);
+
+            multiPlayerCinematicController.CallStartCinematicMode(otherPlayer);
 
             door.SetState(packet.IsOpen);
 
@@ -68,14 +65,14 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
         }
     }
 
-    private PlayerCinematicController getPlayerCinematicController(BulkheadDoor door, bool isOpened, bool isFacingDoor)
+    private PlayerCinematicController GetPlayerCinematicController(BulkheadDoor door, bool isOpened, bool isFacingDoor)
     {
         if (isFacingDoor)
         {
-            return isOpened ? door.frontOpenCinematicController : door.frontCloseCinematicController;
+            return isOpened ? door.frontCloseCinematicController : door.frontOpenCinematicController;
         } else
         {
-            return isOpened ? door.backOpenCinematicController : door.backCloseCinematicController;
+            return isOpened ? door.backCloseCinematicController : door.backOpenCinematicController;
         }
     }
 }

@@ -28,13 +28,13 @@ public sealed partial class BulkheadDoor_Patch : NitroxPatch, IDynamicPatch
         int instanceId = __instance.GetInstanceID();
         bool isFacingDoor = __instance.GetSide();
 
-        Log.Info($"[BulkheadDoor_Patch] instanceId={instanceId} isFacingDoor");
+        Log.Info($"[BulkheadDoor_Patch] instanceId={instanceId} isFacingDoor={isFacingDoor}");
         
 
         NitroxId id = nitroxEntity.Id;
 
         bool isDoorOpened = !__instance.opened;
-        Log.Info($"[BulkheadDoor_Patch] Door {id} state changed to: {(isDoorOpened ? "OPEN" : "CLOSED")}");
+        Log.Info($"[BulkheadDoor_Patch] Door {id} state: {(isDoorOpened ? "OPEN" : "CLOSED")}");
 
         // get player id
         LocalPlayer player = Resolve<LocalPlayer>();
