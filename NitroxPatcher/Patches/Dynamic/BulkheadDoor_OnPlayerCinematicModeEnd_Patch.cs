@@ -12,8 +12,6 @@ public sealed partial class BulkheadDoor_OnPlayerCinematicModeEnd_Patch : Nitrox
 
     public static void Postfix(BulkheadDoor __instance)
     {
-        Log.Info("[BulkheadDoor_OnPlayerCinematicModeEnd_Patch] Postfix called");
-
         if (!__instance.TryGetComponentInParent<NitroxEntity>(out NitroxEntity nitroxEntity, true))
         {
             Log.Info("[BulkheadDoor_OnPlayerCinematicModeEnd_Patch] Could not find NitroxEntity in parent hierarchy");
@@ -21,7 +19,6 @@ public sealed partial class BulkheadDoor_OnPlayerCinematicModeEnd_Patch : Nitrox
         }
 
         NitroxId id = nitroxEntity.Id;
-
         Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
     }
 }

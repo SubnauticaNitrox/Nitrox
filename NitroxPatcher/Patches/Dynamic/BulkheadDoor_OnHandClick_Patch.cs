@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
@@ -25,7 +26,7 @@ public sealed partial class BulkheadDoor_OnHandClick_Patch : NitroxPatch, IDynam
 
         if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
         {
-            Log.Debug($"Already have an exclusive lock on the Bulkhead door: {id}");
+            Log.Debug($"[BulkheadDoor_OnHandClick_Patch] Already have an exclusive lock on the Bulkhead door: {id}");
             return true;
         }
 
@@ -46,13 +47,8 @@ public sealed partial class BulkheadDoor_OnHandClick_Patch : NitroxPatch, IDynam
             door.OnHandClick(context.GuiHand);
 
             bool isFacingDoor = door.GetSide();
-
-            Log.Info($"[BulkheadDoor_OnHandClick_Patch] isFacingDoor={isFacingDoor}");
-
             bool isDoorOpened = !door.opened;
-            Log.Info($"[BulkheadDoor_OnHandClick_Patch] Door {id} state: {(isDoorOpened ? "OPEN" : "CLOSED")}");
 
-            // get player id
             LocalPlayer player = Resolve<LocalPlayer>();
 
             if (player.PlayerId.HasValue)
