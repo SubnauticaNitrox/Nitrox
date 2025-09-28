@@ -12,8 +12,6 @@ public sealed partial class Fabricator_OnStateChanged_Patch : NitroxPatch, IDyna
 
     public static void Postfix(Fabricator __instance, bool crafting)
     {
-        Log.Info($"[Fabricator_OnStateChanged_Patch] crafting: {crafting}");
-
         if (!__instance.TryGetIdOrWarn(out NitroxId id))
         {
             Log.Info("[Fabricator_OnStateChanged_Patch] Failed to get NitroxId");
