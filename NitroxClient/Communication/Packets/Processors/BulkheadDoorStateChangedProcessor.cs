@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Data.Common;
 using System.Diagnostics.SymbolStore;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -7,6 +8,7 @@ using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
+using UWE;
 
 public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadDoorStateChanged>
 {
@@ -54,14 +56,24 @@ public class BulkheadDoorStateChangedProcessor : ClientPacketProcessor<BulkheadD
 
             multiPlayerCinematicController.CallStartCinematicMode(otherPlayer);
 
-            door.SetState(packet.IsOpen);
-
+            CoroutineHost.StartCoroutine(SetDoorStateAfterDelay(door, packet.IsOpen, 3.0f));
 
             Log.Info($"[BulkheadDoorStateChangedProcessor] Initialized and started/ended cinematic for remote player {otherPlayer.PlayerName}");
         }
         else
         {
             Log.Info("Did NOT find BulkheadDoor");
+        }
+    }
+
+    private IEnumerator SetDoorStateAfterDelay(BulkheadDoor door, bool isOpen, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (door != null)
+        {
+            door.SetState(isOpen);
+            Log.Info($"[BulkheadDoorStateChangedProcessor] Set door state to {(isOpen ? "OPEN" : "CLOSED")} after cinematic delay");
         }
     }
 
