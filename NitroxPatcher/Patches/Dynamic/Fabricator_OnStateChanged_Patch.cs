@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
@@ -18,8 +17,7 @@ public sealed partial class Fabricator_OnStateChanged_Patch : NitroxPatch, IDyna
             return;
         }
 
-        LocalPlayer player = Resolve<LocalPlayer>();
-        Resolve<IPacketSender>().Send(new FabricatorStateChanged(id, player.PlayerId.Value, crafting));
+        Resolve<IPacketSender>().Send(new FabricatorStateChanged(id, crafting));
     }
 
 }

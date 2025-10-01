@@ -1,20 +1,18 @@
 using System;
 using NitroxModel.DataStructures;
 
-namespace NitroxModel.Packets
-{
-    [Serializable]
-    public class FabricatorStateChanged : Packet
-    {
-        public NitroxId Id { get; }
-        public ushort PlayerId { get; }
-        public bool IsCrafting { get; }
+namespace NitroxModel.Packets;
 
-        public FabricatorStateChanged(NitroxId id, ushort playerId, bool isCrafting)
-        {
-            Id = id;
-            PlayerId = playerId;
-            IsCrafting = isCrafting;
-        }
+[Serializable]
+public class FabricatorStateChanged : Packet
+{
+    public NitroxId Id { get; }
+
+    public bool IsCrafting { get; }
+
+    public FabricatorStateChanged(NitroxId id, bool isCrafting)
+    {
+        Id = id;
+        IsCrafting = isCrafting;
     }
 }
