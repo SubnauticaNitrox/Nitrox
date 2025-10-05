@@ -1,40 +1,37 @@
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public sealed class SeamothModuleActionProcessor : ClientPacketProcessor<SeamothModulesAction>
 {
-    public class SeamothModuleActionProcessor : ClientPacketProcessor<SeamothModulesAction>
+    public override void Process(SeamothModulesAction packet)
     {
-        private readonly IPacketSender packetSender;
-
-        public SeamothModuleActionProcessor(IPacketSender packetSender)
+        using (PacketSuppressor<SeamothModulesAction>.Suppress())
         {
-            this.packetSender = packetSender;
-        }
-        public override void Process(SeamothModulesAction packet)
-        {
-            using (PacketSuppressor<SeamothModulesAction>.Suppress())
+            if (!NitroxEntity.TryGetComponentFrom(packet.Id, out SeaMoth seamoth))
             {
-                GameObject _gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-                SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
-                if (seamoth != null)
-                {
-                    TechType techType = packet.TechType.ToUnity();
+                Log.Error($"[{nameof(SeamothModuleActionProcessor)}] Couldn't find SeaMoth component on {packet.Id}");
+                return;
+            }
 
-                    if (techType == TechType.SeamothElectricalDefense)
-                    {
-                        float[] chargearray = seamoth.quickSlotCharge;
-                        float charge = chargearray[packet.SlotID];
-                        float slotCharge = seamoth.GetSlotCharge(packet.SlotID);
-                        GameObject gameObject = global::Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform, false);
-                        ElectricalDefense component = gameObject.GetComponent<ElectricalDefense>();
-                        component.charge = charge;
-                        component.chargeScalar = slotCharge;
-                    }
+            switch (packet.TechType.ToUnity())
+            {
+                case TechType.SeamothElectricalDefense:
+                {
+                    float[] chargeArray = seamoth.quickSlotCharge;
+                    float charge = chargeArray[packet.SlotID];
+                    float slotCharge = seamoth.GetSlotCharge(packet.SlotID);
+
+                    GameObject gameObject = Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform, false);
+                    ElectricalDefense component = gameObject.GetComponent<ElectricalDefense>();
+                    component.charge = charge;
+                    component.chargeScalar = slotCharge;
+                    component.defenseSound = null; // Disable sound in Start(). Sound is synced over general Nitrox FMOD system.
+                    break;
                 }
             }
         }

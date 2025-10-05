@@ -893,11 +893,11 @@ event:/sub/seamoth/impact_solid_medium;false;false;0
 event:/sub/seamoth/impact_solid_soft;false;false;0
 event:/sub/seamoth/interior_loop;false;false;0
 event:/sub/seamoth/power_down;false;false;0
-event:/sub/seamoth/pulse;false;false;0
+event:/sub/seamoth/pulse;true;true;50
 event:/sub/seamoth/pulse_charge_loop;false;false;0
-event:/sub/seamoth/seaglide_equip;true;true;10
-event:/sub/seamoth/seaglide_light_off;true;true;15
-event:/sub/seamoth/seaglide_light_on;true;true;15
+event:/sub/seamoth/seaglide_equip;true;false;10
+event:/sub/seamoth/seaglide_light_off;true;false;15
+event:/sub/seamoth/seaglide_light_on;true;false;15
 event:/sub/seamoth/seaglide_loop;false;false;0
 event:/sub/seamoth/seaglide_loop_rpm;false;false;60
 event:/sub/seamoth/seaglide_rev_up;false;false;60
