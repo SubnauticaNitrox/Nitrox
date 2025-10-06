@@ -17,8 +17,19 @@ using NitroxServer.Resources;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
-public class PrefabPlaceholderGroupsParser : IDisposable
+public sealed class PrefabPlaceholderGroupsParser : IDisposable
 {
+    /// <summary>
+    /// The version of the cache supported by this parser
+    /// <para>
+    /// Developers should increment this value if any changes are made to the logic
+    /// that alter the output, in order to trigger cache invalidation and ensure
+    /// the cache is rebuilt
+    /// </para>
+    /// </summary>
+    private const int CACHE_VERSION = 1;
+    private const string CACHE_FILENAME = "PrefabPlaceholdersGroupAssetsCache.json";
+
     private readonly string prefabDatabasePath;
     private readonly string aaRootPath;
     private readonly AssetsBundleManager am;
@@ -64,22 +75,30 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         string nitroxCachePath = NitroxUser.CachePath;
         Directory.CreateDirectory(nitroxCachePath);
 
-        Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupPaths = null;
-        string prefabPlaceholdersGroupAssetCachePath = Path.Combine(nitroxCachePath, "PrefabPlaceholdersGroupAssetsCache.json");
+        Dictionary<string, PrefabPlaceholdersGroupAsset>? prefabPlaceholdersGroupPaths = null;
+        string prefabPlaceholdersGroupAssetCachePath = Path.Combine(nitroxCachePath, CACHE_FILENAME);
         if (File.Exists(prefabPlaceholdersGroupAssetCachePath))
         {
             Cache? cache = DeserializeCache(prefabPlaceholdersGroupAssetCachePath);
             if (cache.HasValue)
             {
-                prefabPlaceholdersGroupPaths = cache.Value.PrefabPlaceholdersGroupPaths;
-                RandomPossibilitiesByClassId = cache.Value.RandomPossibilitiesByClassId;
-                Log.Info($"Successfully loaded cache with {prefabPlaceholdersGroupPaths.Count} prefab placeholder groups and {RandomPossibilitiesByClassId.Count} random spawn behaviours.");
+                if (cache.Value.version != CACHE_VERSION)
+                {
+                    Log.Info($"Found outdated cache ({cache.Value.version}, expected {CACHE_VERSION})");
+                }
+                else
+                {
+                    prefabPlaceholdersGroupPaths = cache.Value.PrefabPlaceholdersGroupPaths;
+                    RandomPossibilitiesByClassId = cache.Value.RandomPossibilitiesByClassId;
+                    Log.Info($"Successfully loaded cache with {prefabPlaceholdersGroupPaths.Count} prefab placeholder groups and {RandomPossibilitiesByClassId.Count} random spawn behaviours.");
+                }
             }
         }
 
         // Fallback solution
-        if (prefabPlaceholdersGroupPaths == null)
+        if (prefabPlaceholdersGroupPaths is null)
         {
+            Log.Info("Building cache, this may take a while...");
             prefabPlaceholdersGroupPaths = MakeAndSerializeCache(prefabPlaceholdersGroupAssetCachePath);
             Log.Info($"Successfully built cache with {prefabPlaceholdersGroupPaths.Count} prefab placeholder groups and {RandomPossibilitiesByClassId.Count} random spawn behaviours. Future server starts will take less time.");
         }
@@ -96,8 +115,9 @@ public class PrefabPlaceholderGroupsParser : IDisposable
     {
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
         Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupAssets = new(GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths));
+
         using StreamWriter stream = File.CreateText(filePath);
-        serializer.Serialize(stream, new Cache(prefabPlaceholdersGroupAssets, RandomPossibilitiesByClassId));
+        serializer.Serialize(stream, new Cache(CACHE_VERSION, prefabPlaceholdersGroupAssets, RandomPossibilitiesByClassId));
 
         return prefabPlaceholdersGroupAssets;
     }
@@ -107,22 +127,22 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         try
         {
             using StreamReader reader = File.OpenText(filePath);
-
-            return (Cache)serializer.Deserialize(reader, typeof(Cache));
+            return (Cache?)serializer.Deserialize(reader, typeof(Cache));
         }
         catch (Exception exception)
         {
             Log.Error(exception, "An error occurred while deserializing the game Cache. Re-creating it.");
         }
+
         return null;
     }
 
     private static Dictionary<string, string> LoadPrefabDatabase(string fullFilename)
     {
-        Dictionary<string, string> prefabFiles = new();
+        Dictionary<string, string> prefabFiles = [];
         if (!File.Exists(fullFilename))
         {
-            return null;
+            return prefabFiles;
         }
 
         using FileStream input = File.OpenRead(fullFilename);
@@ -382,7 +402,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         {
             // See SpawnRandom.Start
             AssetTypeValueField spawnRandom = amInst.GetBaseField(assetFileInst, spawnRandomInfo);
-            List<string> classIds = new();
+            List<string> classIds = [];
             foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
             {
                 classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
@@ -432,5 +452,5 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         am.UnloadAll(true);
     }
 
-    record struct Cache(Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholdersGroupPaths, ConcurrentDictionary<string, string[]> RandomPossibilitiesByClassId);
+    record struct Cache(int version, Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholdersGroupPaths, ConcurrentDictionary<string, string[]> RandomPossibilitiesByClassId);
 }

@@ -1,4 +1,4 @@
-﻿using AssetsTools.NET;
+using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -10,13 +10,16 @@ using SixLabors.ImageSharp.Processing;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
-public class RandomStartParser : BundleFileParser<RandomStartGenerator>
+public sealed class RandomStartParser : BundleFileParser<RandomStartGenerator>
 {
-    public RandomStartParser() : base("essentials.unity_0ee8dd89ed55f05bc38a09cc77137d4e.bundle", 0) { }
+    private const string BUNDLE_NAME = "essentials.unity_0ee8dd89ed55f05bc38a09cc77137d4e.bundle";
+    private const string RANDOM_START_ASSET_NAME = "RandomStart";
 
-    public override RandomStartGenerator ParseFile()
+    public RandomStartParser() : base(BUNDLE_NAME, 0) { }
+
+    public override RandomStartGenerator? ParseFile()
     {
-        AssetFileInfo assetFile = bundleFile.GetAssetInfo(assetsManager, "RandomStart", AssetClassID.Texture2D);
+        AssetFileInfo assetFile = bundleFile.GetAssetInfo(assetsManager, RANDOM_START_ASSET_NAME, AssetClassID.Texture2D);
         AssetTypeValueField textureValueField = assetsManager.GetBaseField(assetFileInst, assetFile);
         TextureFile textureFile = TextureFile.ReadTextureFile(textureValueField);
         byte[] texDat = textureFile.GetTextureData(assetFileInst);
@@ -29,6 +32,7 @@ public class RandomStartParser : BundleFileParser<RandomStartGenerator>
 
         Image<Bgra32> texture = Image.LoadPixelData<Bgra32>(texDat, textureFile.m_Width, textureFile.m_Height);
         texture.Mutate(x => x.Flip(FlipMode.Vertical));
+
         return new RandomStartGenerator(new PixelProvider(texture));
     }
 

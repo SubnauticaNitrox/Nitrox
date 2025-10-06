@@ -7,11 +7,11 @@ using UWE;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
-public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, WorldEntityInfo>>
+public sealed class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, WorldEntityInfo>>
 {
     public override Dictionary<string, WorldEntityInfo> ParseFile()
     {
-        Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = new();
+        Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = [];
 
         AssetFileInfo assetFileInfo = resourceFile.GetAssetInfo(assetsManager, "WorldEntityData", AssetClassID.MonoBehaviour);
         AssetTypeValueField assetValue = assetsManager.GetBaseField(resourceInst, assetFileInfo);
@@ -32,6 +32,7 @@ public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, World
         }
 
         assetsManager.UnloadAll();
+
         return worldEntitiesByClassId;
     }
 }
