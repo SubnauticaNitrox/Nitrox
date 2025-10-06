@@ -61,7 +61,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         // Loading all prefabs by their classId and file paths (first the path to the prefab then the dependencies)
         LoadAddressableCatalog(prefabDatabase);
 
-        string nitroxCachePath = NitroxUser.CachePath;
+        string nitroxCachePath = Path.Combine(NitroxUser.CachePath, NitroxEnvironment.Version.ToString(3));
         Directory.CreateDirectory(nitroxCachePath);
 
         Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupPaths = null;
