@@ -1,11 +1,11 @@
-﻿using AssetsTools.NET;
+using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxServer_Subnautica.Resources.Parsers.Abstract;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
-public class EntityDistributionsParser : ResourceFileParser<string>
+public sealed class EntityDistributionsParser : ResourceFileParser<string>
 {
     public override string ParseFile()
     {
