@@ -20,7 +20,7 @@ public sealed partial class PrisonPredatorSwimToPlayer_Evaluate_Patch : NitroxPa
     /// Replace all the method with our custom <see cref="EvaluatePriority(PrisonPredatorSwimToPlayer, Creature, float)" />
     /// 
     /// Original method does hardcode Player.main usage and doesn't use any "GameObject" or Target abstraction as in other <see cref="CreatureAction"/>
-    /// So we need to rewrite <see cref="PrisonPredatorSwimToPlayer.Evaluate(Creature, float)"/> to use the same logic as <see cref="PrisonPredatorSwimToPlayer.Perform(Creature, float)"/>"/>
+    /// So we need to rewrite <see cref="PrisonPredatorSwimToPlayer.Evaluate(Creature, float)"/> to use the same logic as <see cref="PrisonPredatorSwimToPlayer.Perform(Creature, float, float)"/>"/>
     /// </summary>
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -81,7 +81,7 @@ public sealed partial class PrisonPredatorSwimToPlayer_Evaluate_Patch : NitroxPa
         return instance.GetEvaluatePriority();
     }
 
-    public static bool IsTargetValid(IEcoTarget ecoTarget)
+    private static bool IsTargetValid(IEcoTarget ecoTarget)
     {
         GameObject target = ecoTarget.GetGameObject();
         if (!target)
@@ -102,7 +102,7 @@ public sealed partial class PrisonPredatorSwimToPlayer_Evaluate_Patch : NitroxPa
         return true;
     }
 
-    public static IEcoTarget GetNearestTarget(PrisonPredatorSwimToPlayer creatureAction)
+    private static IEcoTarget GetNearestTarget(PrisonPredatorSwimToPlayer creatureAction)
     {
         IEcoTarget ecoTarget = EcoRegionManager.main.FindNearestTarget(
             RemotePlayer.PLAYER_ECO_TARGET_TYPE,
