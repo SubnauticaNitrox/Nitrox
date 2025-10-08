@@ -26,30 +26,30 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.3.4" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.4" />
-        <PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.4" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.4">
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Svg.Skia" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Diagnostics">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
-        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="ConsoleAppFramework" Version="5.5.0">
+        <PackageReference Include="Avalonia.Xaml.Interactions" />
+        <PackageReference Include="Avalonia.Xaml.Interactivity" />
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="ConsoleAppFramework">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dnlib" Version="4.4.0" />
-        <PackageReference Include="LitJson" Version="0.19.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
-        <PackageReference Include="ServiceScan.SourceGenerator" Version="2.3.2">
+        <PackageReference Include="dnlib" />
+        <PackageReference Include="LitJson" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="ServiceScan.SourceGenerator">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Update="Nitrox.Analyzers" Version="1.0.12">
+        <PackageReference Update="Nitrox.Analyzers">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -57,7 +57,7 @@
     
     <!-- Temp fix for Avalonia 11.3 bug: https://github.com/AvaloniaUI/Avalonia/discussions/18971#discussioncomment-13533852 -->
     <ItemGroup Condition="$(_IsLinux) or $(_IsLinuxTarget)">
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     </ItemGroup>
 
     <ItemGroup>

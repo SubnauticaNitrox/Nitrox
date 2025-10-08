@@ -5,21 +5,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="[4.9.4]" />
-        <PackageReference Include="LiteNetLib" Version="1.2.0" />
-        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-        <PackageReference Include="Mono.Nat" Version="3.0.4" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" NoWarn="NU1091;NU1092;NU1903;NU1904" />
-        <PackageReference Include="Nitrox.BinaryPack" Version="2.0.1" />
-        <PackageReference Include="Serilog" Version="4.2.0" />
-        <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-        <PackageReference Include="Serilog.Sinks.Map" Version="2.0.0" />
-        <PackageReference Include="System.Buffers" Version="4.6.1" />
-        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-        <PackageReference Include="System.Numerics.Vectors" Version="4.6.1" />
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-        <PackageReference Include="System.Text.Json" Version="9.0.4" />
+        <PackageReference Include="Autofac" />
+        <PackageReference Include="LiteNetLib" />
+        <PackageReference Include="Microsoft.Win32.Registry" />
+        <PackageReference Include="Mono.Nat" />
+        <PackageReference Include="Newtonsoft.Json" NoWarn="NU1091;NU1092;NU1903;NU1904" />
+        <PackageReference Include="Nitrox.BinaryPack" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.Sinks.Async" />
+        <PackageReference Include="Serilog.Sinks.File" />
+        <PackageReference Include="Serilog.Sinks.Map" />
+        <PackageReference Include="System.Buffers" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" />
+        <PackageReference Include="System.Numerics.Vectors" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
+        <PackageReference Include="System.Text.Json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,8 +33,8 @@
             <ItemGroup>
                 <!-- .NET Framework 4.7.2 specific references -->
                 <Reference Include="System.Net.Http" />
-                <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-                <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+                <PackageReference Include="System.ComponentModel" />
+                <PackageReference Include="System.IO.Compression" />
             </ItemGroup>
         </When>
         <Otherwise>
