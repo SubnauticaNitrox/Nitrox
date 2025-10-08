@@ -109,7 +109,7 @@ public class RemotePlayer : INitroxPlayer
         PlayerAnimation animation = PlayerContext.Animation;
         UpdateAnimationAndCollider((AnimChangeType)animation.Type, (AnimChangeState)animation.State);
 
-        vitals = playerVitalsManager.CreateOrFindForPlayer(this);
+        Vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
 
         PlayerDisconnectEvent.AddHandler(Body, _ =>

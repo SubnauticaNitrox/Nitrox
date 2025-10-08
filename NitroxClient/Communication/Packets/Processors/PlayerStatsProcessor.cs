@@ -19,7 +19,7 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
     {
         if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
         {
-            RemotePlayerVitals vitals = remotePlayer.vitals;
+            RemotePlayerVitals vitals = remotePlayer.Vitals;
             if (vitals)
             {
                 vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
