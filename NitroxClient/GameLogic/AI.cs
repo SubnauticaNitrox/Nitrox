@@ -30,7 +30,6 @@ public sealed class AI
         typeof(RangedAttackLastTarget),
         typeof(SwimToHeroPeeper),
         typeof(SwimToEnzymes),
-        typeof(SwimToEnzymeCloud),
         typeof(SwimToMeat)
     ];
 

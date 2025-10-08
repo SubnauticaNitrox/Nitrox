@@ -4,9 +4,8 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -14,6 +13,7 @@ public sealed partial class AvoidEscapePod_StopPerform_Patch : NitroxPatch, IDyn
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((AvoidEscapePod t) => t.StopPerform(default(Creature), default(float)));
 
+    // TODO: Rework this patch once we have many escape pods
     /**
      * if (EscapePod.main != null)
      * {

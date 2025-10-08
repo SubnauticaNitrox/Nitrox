@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -37,17 +35,12 @@ public sealed partial class PrisonPredatorSwimToPlayer_Perform_Patch : NitroxPat
         }
 
         Transform targetTransform = lastTarget.target ? lastTarget.target.transform : null;
-        if (!targetTransform)
+        if (targetTransform && time > instance.timeNextSwim)
         {
-            return;
-        }
-
-        if (time > instance.timeNextSwim)
-        {
+            instance.timeNextSwim = time + instance.swimInterval;
             instance.swimBehaviour.SwimTo(targetTransform.position, instance.swimVelocity);
-            creature.TryGetNitroxId(out NitroxId nitroxId);
-
-            Log.InGame($"[PrisonPredatorSwimTo Swim] {creature.name} {nitroxId?.ToString()} {lastTarget.target.name}");
         }
+
+        lastTarget.UnlockTarget();
     }
 }
