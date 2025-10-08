@@ -27,7 +27,7 @@ public sealed class PrefabPlaceholderGroupsParser : IDisposable
     /// the cache is rebuilt
     /// </para>
     /// </summary>
-    private const int CACHE_VERSION = 1;
+    private const int CACHE_VERSION = 2;
     private const string CACHE_FILENAME = "PrefabPlaceholdersGroupAssetsCache.json";
 
     private readonly string prefabDatabasePath;
@@ -342,6 +342,9 @@ public sealed class PrefabPlaceholderGroupsParser : IDisposable
         List<AssetTypeValueField> prefabPlaceholdersOnGroup = prefabPlaceholdersGroupScript["prefabPlaceholders"].Children;
 
         IPrefabAsset[] prefabPlaceholders = new IPrefabAsset[prefabPlaceholdersOnGroup.Count];
+        
+        AssetTypeValueField rootGameObjectField = amInst.GetBaseField(assetFileInst, rootGameObjectInfo);
+        string rootGameObjectName = rootGameObjectField["m_Name"].AsString;
 
         for (int index = 0; index < prefabPlaceholdersOnGroup.Count; index++)
         {
@@ -350,15 +353,16 @@ public sealed class PrefabPlaceholderGroupsParser : IDisposable
 
             AssetTypeValueField gameObjectPtr = prefabPlaceholder["m_GameObject"];
             AssetTypeValueField gameObjectField = amInst.GetExtAsset(assetFileInst, gameObjectPtr).baseField;
-            NitroxTransform transform = amInst.GetTransformFromGameObject(assetFileInst, gameObjectField);
+
             IPrefabAsset asset = GetAndCacheAsset(amInst, prefabPlaceholder["prefabClassId"].AsString);
+            bool isEntitySlotAsset = asset is PrefabPlaceholderAsset prefabPlaceholderAsset && prefabPlaceholderAsset.EntitySlot.HasValue;
+            NitroxTransform transform = amInst.GetTransformFromGameObject(assetFileInst, gameObjectField, rootGameObjectName, isEntitySlotAsset);
             asset.Transform = transform;
             prefabPlaceholders[index] = asset;
         }
 
         PrefabPlaceholdersGroupAsset prefabPlaceholdersGroup = new(classId, prefabPlaceholders);
-        AssetTypeValueField rootGameObjectField = amInst.GetBaseField(assetFileInst, rootGameObjectInfo);
-        NitroxTransform groupTransform = amInst.GetTransformFromGameObject(assetFileInst, rootGameObjectField);
+        NitroxTransform groupTransform = amInst.GetTransformFromGameObject(assetFileInst, rootGameObjectField, rootGameObjectName, false);
         prefabPlaceholdersGroup.Transform = groupTransform;
 
         groupsByClassId[classId] = prefabPlaceholdersGroup;
