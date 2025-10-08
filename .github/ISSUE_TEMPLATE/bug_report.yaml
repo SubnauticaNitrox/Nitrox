@@ -25,7 +25,7 @@ body:
     id: nitrox_version_details
     attributes:
       label: Details about version
-      description: If you answered `Latest commit` or `Other`, please provide commit or links to that version.
+      description: If you answered `Latest commit` or `Other`, please provide the commit hash or links to that version.
     validations:
       required: false
   - type: dropdown
@@ -73,7 +73,7 @@ body:
     attributes:
       label: Relevant log output
       description: |
-        Please upload your game logs if possible. The logs are located in application data folder (`%appdata%\Nitrox\Logs` or `C:\Users\[YOURUSER]\AppData\Roaming\Nitrox\logs` on **Windows**, `~/.config/Nitrox/logs` on **Linux**)
+        Please upload your game logs if possible. The logs are located in application data folder, accessible from inside the launcher (`Options` > `Open Logs folder` at the bottom of the page)
         Upload the most recent "game-XXXXXXXX.log" and if you hosted the server also "server-XXXXXXXX.log" to [Pastebin](https://pastebin.com/).
         After you created a paste for both files post their links into this box.
       placeholder: |
