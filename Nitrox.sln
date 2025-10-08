@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		Nitrox.Shared.props = Nitrox.Shared.props
 		Nitrox.Shared.targets = Nitrox.Shared.targets
 		.gitignore = .gitignore
+		Nitrox.sln.DotSettings = Nitrox.sln.DotSettings
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Launcher", "Nitrox.Launcher\Nitrox.Launcher.csproj", "{30493A43-7EB3-4898-A82F-98A387284EB2}"
