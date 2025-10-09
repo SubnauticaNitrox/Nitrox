@@ -23,7 +23,7 @@ internal static class Patcher
     /// <summary>
     ///     Dependency Injection container used by NitroxPatcher only.
     /// </summary>
-    private static IContainer container;
+    private static IContainer? container;
 
     private static readonly Harmony harmony = new("com.nitroxmod.harmony");
     private static bool isApplied;

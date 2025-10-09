@@ -11,7 +11,7 @@ public static class Validate
     // "where T : class" prevents non-nullable valuetypes from getting boxed to objects.
     // In other words: Error when trying to assert non-null on something that can't be null in the first place.
     [ContractAnnotation("o:null => halt")]
-    public static void NotNull<T>(T o, [CallerArgumentExpression("o")] string argumentExpression = null) where T : class
+    public static void NotNull<T>(T? o, [CallerArgumentExpression("o")] string argumentExpression = null) where T : class
     {
         if (o != null)
         {
