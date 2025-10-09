@@ -65,6 +65,7 @@ public static class Main
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
+        Console.WriteLine("Checking if Nitrox should run...");
         if (!Directory.Exists(Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY)))
         {
             Environment.SetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY, nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
@@ -75,6 +76,7 @@ public static class Main
             return;
         }
 
+        Console.WriteLine("Now initializing Nitrox...");
         InitWithDependencies();
     }
 
