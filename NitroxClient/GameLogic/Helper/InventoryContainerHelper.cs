@@ -14,9 +14,21 @@ namespace NitroxClient.GameLogic.Helper
         private const string LOCKER_BASE_NAME = "submarine_locker_01_0";
         private const string PLAYER_OBJECT_NAME = "Player";
         private const string ESCAPEPOD_OBJECT_NAME = "EscapePod";
-        
+
+        /// <summary>
+        ///     Gets inventory container of game object. Returns player inventory first, then child inventories.
+        /// </summary>
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
+            if (owner.name == PLAYER_OBJECT_NAME)
+            {
+                return Optional.Of(Inventory.Get().container);
+            }
+            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
+            if (remotePlayerId)
+            {
+                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
+            }
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
             if (seamothStorageContainer)
             {
@@ -31,15 +43,6 @@ namespace NitroxClient.GameLogic.Helper
             if (baseBioReactor)
             {
                 return Optional.Of(baseBioReactor.container);
-            }
-            if (owner.name == PLAYER_OBJECT_NAME)
-            {
-                return Optional.Of(Inventory.Get().container);
-            }
-            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
-            if (remotePlayerId)
-            {
-                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
             }
 
             return Optional.Empty;
