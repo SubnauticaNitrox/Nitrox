@@ -46,10 +46,10 @@
     </Target>
 
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">
-        <DiscoverGame GameName="Subnautica" IntermediateOutputPath="$(IntermediateOutputPath)">
+        <DiscoverGame GameName="$(GameName)" IntermediateOutputPath="$(IntermediateOutputPath)">
             <Output TaskParameter="GamePath" PropertyName="GameDir" />
         </DiscoverGame>
-        <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game 'Subnautica' on your machine" />
+        <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game '$(GameName)' on your machine" />
         <PropertyGroup>
             <GameDir Condition="Exists('$(GameDir)')">$(GameDir)\</GameDir>
             <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)\</GameDir>
@@ -65,7 +65,7 @@
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />
         </ReadLinesFromFile>
-        <Error Condition="@(GameVersion) &lt;= $(GameHigherThanVersionTarget)" Text="Subnautica version is outdated. Expected version &gt;$(GameHigherThanVersionTarget) but was @(GameVersion)" />
+        <Error Condition="@(GameVersion) &lt;= $(GameHigherThanVersionTarget)" Text="$(GameName) version is outdated. Expected version &gt;$(GameHigherThanVersionTarget) but was @(GameVersion)" />
         <Message Importance="high" Text="Game found at: '$(GameDir)' with version @(GameVersion)" />
 
         <ItemGroup>

@@ -26,6 +26,7 @@
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
+        <GameName>Subnautica</GameName>
         <GameHigherThanVersionTarget>71288</GameHigherThanVersionTarget>
     </PropertyGroup>
 
