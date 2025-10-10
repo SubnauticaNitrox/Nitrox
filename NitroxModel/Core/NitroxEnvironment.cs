@@ -54,15 +54,15 @@ public static class NitroxEnvironment
         }
     }
 
-    public static int GameHigherThanVersionTarget
+    public static int GameMinimumVersion
     {
         get
         {
-            if (!int.TryParse(Assembly.GetExecutingAssembly().GetMetaData("GameHigherThanVersionTarget"), out int gameHigherThanVersionTarget))
+            if (!int.TryParse(Assembly.GetExecutingAssembly().GetMetaData(nameof(GameMinimumVersion)), out int result))
             {
                 throw new Exception("Failed to extract compatible game version number from embedded metadata");
             }
-            return gameHigherThanVersionTarget;
+            return result;
         }
     }
 

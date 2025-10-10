@@ -21,7 +21,7 @@ internal static class GameInspect
             ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallDir);
             
             string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
-            if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= NitroxEnvironment.GameHigherThanVersionTarget)
+            if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion < NitroxEnvironment.GameMinimumVersion)
             {
                 if (dialogService != null)
                 {
@@ -29,7 +29,7 @@ internal static class GameInspect
                     {
                         model.Title = "Outdated Game Detected";
                         model.Description =
-                            $"Nitrox does not support the older {GameInfo.Subnautica.FullName} game version of {gameVersion}. Please update your game to the latest version.{Environment.NewLine}{Environment.NewLine}Version expected to be higher than: {NitroxEnvironment.GameHigherThanVersionTarget}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}{Environment.NewLine}";
+                            $"Nitrox does not support the older {GameInfo.Subnautica.FullName} game version of {gameVersion}. Please update your game to the latest version.{Environment.NewLine}{Environment.NewLine}Minimum game version: {NitroxEnvironment.GameMinimumVersion}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}{Environment.NewLine}";
                         model.ButtonOptions = ButtonOptions.Ok;
                     });
                 }
