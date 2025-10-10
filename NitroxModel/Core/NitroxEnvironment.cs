@@ -54,6 +54,18 @@ public static class NitroxEnvironment
         }
     }
 
+    public static int GameMinimumVersion
+    {
+        get
+        {
+            if (!int.TryParse(Assembly.GetExecutingAssembly().GetMetaData(nameof(GameMinimumVersion)), out int result))
+            {
+                throw new Exception("Failed to extract compatible game version number from embedded metadata");
+            }
+            return result;
+        }
+    }
+
     public static string GitHash => Assembly.GetExecutingAssembly().GetMetaData("GitHash") ?? "";
 
     public static Types Type { get; private set; } = Types.NORMAL;
