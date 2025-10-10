@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;

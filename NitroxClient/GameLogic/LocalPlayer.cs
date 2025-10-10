@@ -1,5 +1,6 @@
 using System;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;

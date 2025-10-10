@@ -11,7 +11,7 @@ namespace NitroxClient.Helpers
     public class NitroxProtobufSerializer
     {
         public readonly RuntimeTypeModel model;
-        public readonly Dictionary<Type, int> NitroxTypes = new Dictionary<Type, int>();
+        public readonly Dictionary<Type, int> NitroxTypes = [];
 
         protected RuntimeTypeModel Model => model;
 

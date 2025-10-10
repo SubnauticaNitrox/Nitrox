@@ -1,4 +1,5 @@
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Extensions;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;

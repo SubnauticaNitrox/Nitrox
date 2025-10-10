@@ -1,5 +1,6 @@
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;

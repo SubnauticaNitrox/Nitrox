@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NitroxClient.Debuggers.Drawer;
+using NitroxClient.Extensions;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using UnityEngine;

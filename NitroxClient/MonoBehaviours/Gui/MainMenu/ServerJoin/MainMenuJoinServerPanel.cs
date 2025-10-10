@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
+using NitroxClient.Extensions;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxClient.Unity.Helper;
 using TMPro;

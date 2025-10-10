@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;

@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.Unity.Helper;
@@ -12,7 +13,6 @@ namespace NitroxClient.GameLogic.Helper
     {
         private static readonly Regex LockerRegex = new(@"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
         private const string LOCKER_BASE_NAME = "submarine_locker_01_0";
-        private const string PLAYER_OBJECT_NAME = "Player";
         private const string ESCAPEPOD_OBJECT_NAME = "EscapePod";
 
         /// <summary>
@@ -20,9 +20,9 @@ namespace NitroxClient.GameLogic.Helper
         /// </summary>
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
-            if (owner.name == PLAYER_OBJECT_NAME)
+            if (owner.IsLocalPlayer())
             {
-                return Optional.Of(Inventory.Get().container);
+                return Optional.Of(Inventory.main.container);
             }
             RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
             if (remotePlayerId)

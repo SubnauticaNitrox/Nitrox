@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor;
 using NitroxClient.Helpers;

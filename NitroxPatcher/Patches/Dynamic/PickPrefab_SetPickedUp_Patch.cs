@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Helpers;
 using NitroxModel.DataStructures;

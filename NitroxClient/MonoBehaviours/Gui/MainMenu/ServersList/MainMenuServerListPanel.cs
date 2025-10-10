@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FMODUnity;
 using NitroxClient.Communication;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel;

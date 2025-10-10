@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.DataStructures;

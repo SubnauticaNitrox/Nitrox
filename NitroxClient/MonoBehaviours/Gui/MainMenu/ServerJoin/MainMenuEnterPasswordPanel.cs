@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using FMODUnity;
+using NitroxClient.Extensions;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;

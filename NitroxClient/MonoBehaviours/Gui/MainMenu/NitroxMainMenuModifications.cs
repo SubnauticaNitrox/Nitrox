@@ -1,4 +1,5 @@
-﻿using NitroxClient.MonoBehaviours.Discord;
+﻿using NitroxClient.Extensions;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxClient.Unity.Helper;
@@ -29,7 +30,7 @@ public class NitroxMainMenuModifications : MonoBehaviour
 
     private void MultiplayerMenuMods()
     {
-        GameObject startButton = GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
+        GameObject startButton = GameObjectExtensions.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
         GameObject showLoadedMultiplayer = Instantiate(startButton, startButton.transform.parent);
         showLoadedMultiplayer.name = "ButtonMultiplayer";
         showLoadedMultiplayer.transform.SetSiblingIndex(3);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;

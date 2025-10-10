@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 
-namespace NitroxClient.Unity.Helper;
+namespace NitroxClient.Extensions;
 
-public static class CoroutineHelper
+public static class CoroutineExtensions
 {
     public static IEnumerator OnYieldError(this IEnumerator enumerator, Action<Exception> exceptionCallback)
     {

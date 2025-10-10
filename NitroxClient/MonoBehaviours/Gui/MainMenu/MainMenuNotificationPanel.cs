@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using NitroxClient.Extensions;
 using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;

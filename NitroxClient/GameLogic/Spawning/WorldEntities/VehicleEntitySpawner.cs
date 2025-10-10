@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;

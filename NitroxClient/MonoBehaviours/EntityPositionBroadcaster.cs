@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;

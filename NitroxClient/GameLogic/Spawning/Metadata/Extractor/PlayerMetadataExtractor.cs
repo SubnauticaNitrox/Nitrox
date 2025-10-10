@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;

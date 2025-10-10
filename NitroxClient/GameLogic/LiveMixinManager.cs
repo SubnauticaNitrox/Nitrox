@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NitroxClient.Extensions;
 using NitroxModel.DataStructures;
 using UnityEngine;
 

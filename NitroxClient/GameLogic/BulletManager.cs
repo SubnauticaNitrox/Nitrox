@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -44,7 +45,7 @@ public class BulletManager
             return;
         }
 
-        GameObject torpedoClone = GameObjectHelper.SpawnFromPrefab(prefab, bulletId);
+        GameObject torpedoClone = GameObjectExtensions.SpawnFromPrefab(prefab, bulletId);
         // We mark it to be able to ignore events from remote bullets
         torpedoClone.AddComponent<RemotePlayerBullet>();
 

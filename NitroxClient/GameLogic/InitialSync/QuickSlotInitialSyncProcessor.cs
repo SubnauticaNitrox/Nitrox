@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;

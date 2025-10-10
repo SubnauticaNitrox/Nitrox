@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -43,7 +44,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
             return true;
         }
 
-        GameObject gameObject = GameObjectHelper.SpawnFromPrefab(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.SpawnFromPrefab(prefab, entity.Id);
 
         SetupObject(entity, gameObject, parentObject, equipment);
 

@@ -1,3 +1,4 @@
+using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using NitroxModel.GameLogic.PlayerAnimation;
 using UnityEngine;

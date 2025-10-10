@@ -1,8 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 
-namespace NitroxClient.Helpers;
+namespace NitroxClient.Extensions;
 
 public static class PlanterExtensions
 {

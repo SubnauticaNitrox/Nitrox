@@ -1,3 +1,4 @@
+using NitroxClient.Extensions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
