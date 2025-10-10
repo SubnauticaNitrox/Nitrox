@@ -26,6 +26,8 @@
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
+        <GameName>Subnautica</GameName>
+        <GameMinimumVersion>82304</GameMinimumVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
