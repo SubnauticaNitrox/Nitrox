@@ -1,5 +1,3 @@
-using NitroxClient.Extensions;
-using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

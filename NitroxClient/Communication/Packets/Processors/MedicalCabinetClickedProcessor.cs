@@ -1,8 +1,6 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 

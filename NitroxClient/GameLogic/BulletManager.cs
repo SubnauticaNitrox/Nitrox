@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using UnityEngine;
 

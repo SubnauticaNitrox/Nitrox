@@ -3,7 +3,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

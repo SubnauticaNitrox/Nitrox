@@ -1,5 +1,4 @@
 using FMOD.Studio;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;

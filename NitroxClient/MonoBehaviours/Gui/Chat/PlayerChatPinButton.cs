@@ -1,5 +1,4 @@
 using NitroxClient.GameLogic.ChatUI;
-using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

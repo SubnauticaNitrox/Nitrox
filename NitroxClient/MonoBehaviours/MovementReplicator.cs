@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;

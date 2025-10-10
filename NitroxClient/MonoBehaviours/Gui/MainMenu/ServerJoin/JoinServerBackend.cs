@@ -6,6 +6,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;

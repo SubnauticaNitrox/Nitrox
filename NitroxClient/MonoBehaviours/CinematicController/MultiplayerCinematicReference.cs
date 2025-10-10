@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 

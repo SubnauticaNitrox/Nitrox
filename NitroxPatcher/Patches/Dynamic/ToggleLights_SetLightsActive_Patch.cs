@@ -4,7 +4,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 

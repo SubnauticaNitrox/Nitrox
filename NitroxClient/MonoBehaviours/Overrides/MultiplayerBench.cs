@@ -1,6 +1,4 @@
 using System;
-using NitroxClient.Extensions;
-using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Overrides;

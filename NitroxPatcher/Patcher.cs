@@ -10,7 +10,6 @@ using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;

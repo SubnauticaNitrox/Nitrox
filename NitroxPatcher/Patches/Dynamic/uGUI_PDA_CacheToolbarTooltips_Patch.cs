@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Text;
 using NitroxClient.GameLogic.HUD;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

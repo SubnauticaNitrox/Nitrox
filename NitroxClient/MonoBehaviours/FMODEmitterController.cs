@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
 using UnityEngine;

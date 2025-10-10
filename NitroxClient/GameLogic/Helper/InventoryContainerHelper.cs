@@ -1,8 +1,6 @@
 using System.Text.RegularExpressions;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;

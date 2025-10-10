@@ -1,8 +1,6 @@
 using System.Collections;
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;

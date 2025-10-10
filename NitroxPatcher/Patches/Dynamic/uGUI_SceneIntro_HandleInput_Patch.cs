@@ -5,7 +5,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

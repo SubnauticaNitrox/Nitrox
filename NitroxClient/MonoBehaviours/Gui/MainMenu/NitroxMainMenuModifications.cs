@@ -1,8 +1,6 @@
-﻿using NitroxClient.Extensions;
-using NitroxClient.MonoBehaviours.Discord;
+﻿using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;

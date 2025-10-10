@@ -1,4 +1,3 @@
-using NitroxClient.Extensions;
 using NitroxClient.GameLogic;
 using UnityEngine;
 

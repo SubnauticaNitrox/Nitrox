@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using NitroxModel.Helper;
 using UnityEngine.UI;
 
 namespace NitroxPatcher.Patches.Persistent;
