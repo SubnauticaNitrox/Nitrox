@@ -66,8 +66,8 @@ namespace Nitrox.Model.Packets.Processors
         {
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                                                                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(serverDependencyRegistrar);
+            SubnauticaServerAutoFacRegistrar subnauticaServerDependencyRegistrar = new SubnauticaServerAutoFacRegistrar();
+            NitroxServiceLocator.InitializeDependencyContainer(subnauticaServerDependencyRegistrar);
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()

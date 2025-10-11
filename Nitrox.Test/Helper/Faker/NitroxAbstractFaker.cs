@@ -17,7 +17,7 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
 
     static NitroxAbstractFaker()
     {
-        Assembly[] assemblies = { typeof(Packet).Assembly, typeof(SubnauticaInGameLogger).Assembly, typeof(ServerAutoFacRegistrar).Assembly, typeof(SubnauticaServerAutoFacRegistrar).Assembly };
+        Assembly[] assemblies = { typeof(Packet).Assembly, typeof(SubnauticaInGameLogger).Assembly, typeof(SubnauticaServerAutoFacRegistrar).Assembly };
         HashSet<Type> blacklistedTypes = new() { typeof(Packet), typeof(CorrelatedPacket), typeof(Command), typeof(PacketProcessor) };
 
         List<Type> types = new();
