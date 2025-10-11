@@ -19,8 +19,8 @@ using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
+using Nitrox.Server.Subnautica.Models.Serialization;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.Models.Design;
 

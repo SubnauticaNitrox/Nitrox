@@ -6,12 +6,12 @@ using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata.Bases;
-using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.Serialization.World;
 using Nitrox.Server.Subnautica;
+using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
-namespace NitroxServer.Serialization;
+namespace Nitrox.Server.Subnautica.Models.Serialization;
 
 [TestClass]
 public class WorldPersistenceTest

@@ -7,11 +7,11 @@ using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Test;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxServer;
-using NitroxServer.Communication.Packets;
-using NitroxServer.Communication.Packets.Processors;
-using NitroxServer.Communication.Packets.Processors.Abstract;
+using Nitrox.Server.Subnautica.Models;
 using Nitrox.Server.Subnautica;
+using Nitrox.Server.Subnautica.Models.Packets;
+using Nitrox.Server.Subnautica.Models.Packets.Processors;
+using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Model.Packets.Processors
 {

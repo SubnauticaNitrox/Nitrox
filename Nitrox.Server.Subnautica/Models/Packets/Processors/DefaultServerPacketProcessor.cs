@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using Nitrox.Model.Packets;
+using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.GameLogic;
+
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
+{
+    private readonly PlayerManager playerManager;
+
+    private readonly HashSet<Type> loggingPacketBlackList = new()
+    {
+        typeof(AnimationChangeEvent),
+        typeof(PlayerMovement),
+        typeof(ItemPosition),
+        typeof(PlayerStats),
+        typeof(StoryGoalExecuted),
+        typeof(FMODAssetPacket),
+        typeof(FMODCustomEmitterPacket),
+        typeof(FMODCustomLoopingEmitterPacket),
+        typeof(FMODStudioEmitterPacket),
+        typeof(PlayerCinematicControllerCall),
+        typeof(TorpedoShot),
+        typeof(TorpedoHit),
+        typeof(TorpedoTargetAcquired),
+        typeof(StasisSphereShot),
+        typeof(StasisSphereHit),
+        typeof(SeaTreaderChunkPickedUp),
+        typeof(ToggleLights)
+    };
+
+    /// <summary>
+    /// Packet types which don't have a server packet processor but should not be transmitted
+    /// </summary>
+    private readonly HashSet<Type> defaultPacketProcessorBlacklist = new()
+    {
+        typeof(GameModeChanged), typeof(DropSimulationOwnership),
+    };
+
+    public DefaultServerPacketProcessor(PlayerManager playerManager)
+    {
+        this.playerManager = playerManager;
+    }
+
+    public override void Process(Packet packet, Player player)
+    {
+        if (!loggingPacketBlackList.Contains(packet.GetType()))
+        {
+            Log.Debug($"Using default packet processor for: {packet} and player {player.Id}");
+        }
+
+        if (defaultPacketProcessorBlacklist.Contains(packet.GetType()))
+        {
+            Log.ErrorOnce($"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
+            return;
+        }
+        playerManager.SendPacketToOtherPlayers(packet, player);
+    }
+}

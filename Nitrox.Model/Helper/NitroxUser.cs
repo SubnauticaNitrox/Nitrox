@@ -44,7 +44,7 @@ public static class NitroxUser
                 return execParentDir.FullName;
             }
 
-            // Nitrox.Model, NitroxServer and other assemblies are stored in Nitrox.Launcher/lib
+            // Nitrox.Model and other assemblies are stored in Nitrox.Launcher/lib
             if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "Resources", "LanguageFiles")))
             {
                 return execParentDir.Parent.FullName;

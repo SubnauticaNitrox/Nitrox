@@ -5,9 +5,9 @@ using System.Reflection;
 using Nitrox.Model.Subnautica.Logger;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Packets.Processors.Abstract;
-using NitroxServer;
+using Nitrox.Server.Subnautica.Models;
 using Nitrox.Server.Subnautica;
-using NitroxServer.ConsoleCommands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 
 namespace Nitrox.Test.Helper.Faker;
 
