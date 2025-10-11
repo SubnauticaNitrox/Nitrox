@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -24,7 +23,7 @@ public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject, parent.Value, out Crash crash, out CrashHome crashHome))
         {
             yield break;
@@ -43,7 +42,7 @@ public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
             return false;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject, parent.Value, out Crash crash, out CrashHome crashHome))
         {
             return true;

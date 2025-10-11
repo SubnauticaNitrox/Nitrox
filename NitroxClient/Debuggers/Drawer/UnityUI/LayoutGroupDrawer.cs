@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
 using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;

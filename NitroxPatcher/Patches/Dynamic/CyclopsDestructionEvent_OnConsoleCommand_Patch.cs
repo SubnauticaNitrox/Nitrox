@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
-using NitroxModel.Helper;
 using static NitroxModel.Helper.Reflect;
 
 namespace NitroxPatcher.Patches.Dynamic;

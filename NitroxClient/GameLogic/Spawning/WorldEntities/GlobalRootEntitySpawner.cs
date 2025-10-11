@@ -2,7 +2,6 @@ using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -31,7 +30,7 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         {
             return false;
         }
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         SetupObject(entity, gameObject);
 
         result.Set(gameObject);

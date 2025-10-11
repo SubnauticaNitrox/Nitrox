@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Abstract;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -31,7 +30,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject))
         {
             yield break;
@@ -48,7 +47,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             return false;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject))
         {
             return true;

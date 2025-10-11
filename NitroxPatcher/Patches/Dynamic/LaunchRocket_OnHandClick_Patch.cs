@@ -3,8 +3,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

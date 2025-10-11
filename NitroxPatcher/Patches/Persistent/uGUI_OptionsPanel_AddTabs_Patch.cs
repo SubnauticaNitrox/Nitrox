@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.GameLogic.Settings;
-using NitroxModel.Helper;
 using UnityEngine.Events;
 
 namespace NitroxPatcher.Patches.Persistent

@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {

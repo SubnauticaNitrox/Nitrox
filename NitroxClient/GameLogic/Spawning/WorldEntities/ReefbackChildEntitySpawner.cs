@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -29,7 +28,7 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(reefbackChildEntity, out ReefbackLife parentReefbackLife))
         {
             yield break;
@@ -57,7 +56,7 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
             return true;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         SetupObject(reefbackChildEntity, gameObject, parentReefbackLife);
 
         result.Set(gameObject);

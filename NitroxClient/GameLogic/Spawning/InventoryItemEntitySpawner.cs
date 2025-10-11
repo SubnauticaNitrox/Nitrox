@@ -6,7 +6,6 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
@@ -51,7 +50,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
             return true;
         }
 
-        GameObject gameObject = GameObjectHelper.SpawnFromPrefab(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.SpawnFromPrefab(prefab, entity.Id);
 
         SetupObject(entity, gameObject, parentObject, container);
 

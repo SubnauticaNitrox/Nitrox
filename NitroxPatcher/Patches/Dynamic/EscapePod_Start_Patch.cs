@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using HarmonyLib;
-using NitroxModel.Helper;
 using UnityEngine;
 // ReSharper disable UseUtf8StringLiteral
 

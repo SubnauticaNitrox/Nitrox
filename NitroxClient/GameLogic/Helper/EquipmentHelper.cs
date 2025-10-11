@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.Helper
             o => o.GetComponent<UpgradeConsole>().AliveOrNull()?.modules,
             o => o.GetComponent<Vehicle>().AliveOrNull()?.modules,
             o => o.GetComponent<VehicleUpgradeConsoleInput>().AliveOrNull()?.equipment,
-            o => string.Equals("Player", o.GetComponent<Player>().AliveOrNull()?.name, StringComparison.InvariantCulture) ? Inventory.main.equipment : null
+            o => o.IsLocalPlayer() ? Inventory.main.equipment : null
         };
 
         public static Optional<Equipment> FindEquipmentComponent(GameObject owner)

@@ -1,12 +1,11 @@
 using System;
 using System.Runtime.CompilerServices;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
-namespace NitroxClient.Helpers;
+namespace NitroxClient.Extensions;
 
 public static class NitroxEntityExtensions
 {

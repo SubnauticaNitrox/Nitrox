@@ -3,9 +3,9 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NitroxClient.Unity.Helper;
+namespace NitroxClient.Extensions;
 
-public static class RendererHelpers
+public static class RendererExtensions
 {
     //This entire method is necessary in order to deal with the fact that UWE compiles Subnautica in a mode
     //that prevents us from accessing the pixel map of the 2D textures they apply to their materials.

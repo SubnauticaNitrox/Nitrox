@@ -1,7 +1,6 @@
 using System.Collections;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -38,7 +37,7 @@ public class CreatureRespawnEntitySpawner : IWorldEntitySpawner, IWorldEntitySyn
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(creatureRespawnEntity, gameObject, out Respawn respawn))
         {
             yield break;
@@ -61,7 +60,7 @@ public class CreatureRespawnEntitySpawner : IWorldEntitySpawner, IWorldEntitySyn
             return false;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(creatureRespawnEntity, gameObject, out Respawn respawn))
         {
             return true;

@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
