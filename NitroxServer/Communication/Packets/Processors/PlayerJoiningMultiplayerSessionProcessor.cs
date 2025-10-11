@@ -56,6 +56,10 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
 
+            // TODO: Remove this code when security of player login is improved by https://github.com/SubnauticaNitrox/Nitrox/issues/1996
+            // We need to reset permissions on join, otherwise players can impersonate an admin easily.
+            player.Permissions = serverConfig.DefaultPlayerPerm;
+
             // Make players on localhost admin by default.
             if (connection.Endpoint.Address.IsLocalhost())
             {
