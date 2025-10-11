@@ -41,7 +41,7 @@ public class RemotePlayer : INitroxPlayer
     public AnimationController AnimationController { get; private set; }
     public ItemsContainer Inventory { get; private set; }
     public Transform ItemAttachPoint { get; private set; }
-    public RemotePlayerVitals vitals { get; private set; }
+    public RemotePlayerVitals Vitals { get; private set; }
 
     public ushort PlayerId => PlayerContext.PlayerId;
     public string PlayerName => PlayerContext.PlayerName;
@@ -108,7 +108,7 @@ public class RemotePlayer : INitroxPlayer
         PlayerAnimation animation = PlayerContext.Animation;
         UpdateAnimationAndCollider((AnimChangeType)animation.Type, (AnimChangeState)animation.State);
 
-        vitals = playerVitalsManager.CreateOrFindForPlayer(this);
+        Vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
 
         PlayerDisconnectEvent.AddHandler(Body, _ =>
@@ -535,11 +535,11 @@ public class RemotePlayer : INitroxPlayer
 
     private void RefreshVitalsVisibility()
     {
-        if (vitals)
+        if (Vitals)
         {
             // TODO: only show health and oxygen in freedom mode
             bool visible = PlayerContext.GameMode != NitroxGameMode.CREATIVE;
-            vitals.SetStatsVisible(visible);
+            Vitals.SetStatsVisible(visible);
         }
     }
 
