@@ -8,8 +8,8 @@ using NitroxModel;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
-using NitroxModel_Subnautica.Helper;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
@@ -32,7 +32,7 @@ namespace Nitrox.Server.Subnautica
                                           "Assembly-CSharp",
                                           "Assembly-CSharp-firstpass",
                                           "NitroxModel",
-                                          "NitroxModel-Subnautica"))
+                                          "Nitrox.Model.Subnautica"))
                             .As<ServerProtoBufSerializer, IServerSerializer>()
                             .SingleInstance();
             containerBuilder.Register(c => new SubnauticaServerJsonSerializer())

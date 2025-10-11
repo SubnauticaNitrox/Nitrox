@@ -1,5 +1,5 @@
 using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures.Surrogates;
+using Nitrox.Model.Subnautica.DataStructures.Surrogates;
 using NitroxServer.Serialization;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ namespace Nitrox.Server.Subnautica.Serialization
             RegisterHardCodedTypes();
         }
 
-        // Register here all hard coded types, that come from NitroxModel-Subnautica or Nitrox.Server.Subnautica
+        // Register here all hard coded types, that come from Nitrox.Model.Subnautica or Nitrox.Server.Subnautica
         private void RegisterHardCodedTypes()
         {
             Model.Add(typeof(Light), true);

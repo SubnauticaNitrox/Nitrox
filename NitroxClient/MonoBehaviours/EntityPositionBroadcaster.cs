@@ -5,7 +5,7 @@ using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 using static NitroxModel.Packets.EntityTransformUpdates;
 

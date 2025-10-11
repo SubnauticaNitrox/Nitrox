@@ -5,7 +5,7 @@ using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

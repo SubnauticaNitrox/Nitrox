@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxClient", "NitroxClien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel", "NitroxModel\NitroxModel.csproj", "{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel-Subnautica", "NitroxModel-Subnautica\NitroxModel-Subnautica.csproj", "{47D774E0-750C-427B-8C38-F8F985114A2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Model.Subnautica", "Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj", "{47D774E0-750C-427B-8C38-F8F985114A2E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
 EndProject

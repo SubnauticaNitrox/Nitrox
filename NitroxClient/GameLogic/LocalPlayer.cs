@@ -9,7 +9,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic.PlayerAnimation;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;

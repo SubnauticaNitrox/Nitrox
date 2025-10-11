@@ -7,7 +7,7 @@ using KellermanSoftware.CompareNetObjects;
 using KellermanSoftware.CompareNetObjects.TypeComparers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel_Subnautica.Logger;
+using Nitrox.Model.Subnautica.Logger;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets;

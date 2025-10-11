@@ -24,7 +24,7 @@ using NitroxModel.Core;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel.Networking;
-using NitroxModel_Subnautica.Helper;
+using Nitrox.Model.Subnautica.Helper;
 
 namespace NitroxClient
 {
