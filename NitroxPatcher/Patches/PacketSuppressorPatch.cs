@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxPatcher.Patches;
 

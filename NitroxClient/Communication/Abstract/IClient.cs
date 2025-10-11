@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxClient.Communication.Abstract
 {

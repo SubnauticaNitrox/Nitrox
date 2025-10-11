@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Cyclops;

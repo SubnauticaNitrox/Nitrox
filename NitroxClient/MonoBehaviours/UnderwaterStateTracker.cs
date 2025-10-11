@@ -1,5 +1,5 @@
 using NitroxClient.GameLogic;
-using NitroxModel.GameLogic.PlayerAnimation;
+using Nitrox.Model.GameLogic.PlayerAnimation;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

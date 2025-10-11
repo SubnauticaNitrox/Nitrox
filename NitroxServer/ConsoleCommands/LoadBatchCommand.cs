@@ -1,7 +1,7 @@
 ﻿#if DEBUG
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic.Entities.Spawning;

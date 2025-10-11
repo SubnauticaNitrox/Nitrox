@@ -1,7 +1,7 @@
 using System;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Networking;
-using NitroxModel.Packets;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;

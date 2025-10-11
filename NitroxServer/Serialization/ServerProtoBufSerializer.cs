@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.OS.Shared;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 

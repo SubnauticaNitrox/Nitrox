@@ -1,6 +1,6 @@
 using System;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type;
 

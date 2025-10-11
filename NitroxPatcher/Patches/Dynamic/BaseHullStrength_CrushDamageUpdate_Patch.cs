@@ -4,8 +4,8 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Model.Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;

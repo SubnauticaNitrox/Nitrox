@@ -1,6 +1,6 @@
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Subnautica.DataStructures;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 

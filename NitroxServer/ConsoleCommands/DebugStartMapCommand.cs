@@ -1,8 +1,8 @@
 ﻿#if DEBUG
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;

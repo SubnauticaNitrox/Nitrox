@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Networking;
-using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Serialization;
-using NitroxModel.Server;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Serialization;
+using Nitrox.Model.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
@@ -140,7 +140,7 @@ public class WorldPersistence
 #endif
         }
         // Initialized only once, just like UnityEngine.Random
-        XORRandom.InitSeed(seed.GetHashCode());
+        XorRandom.InitSeed(seed.GetHashCode());
 
         Log.Info($"Loading world with seed {seed}");
 

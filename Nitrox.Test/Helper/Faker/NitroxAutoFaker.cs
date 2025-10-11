@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using BinaryPack.Attributes;
-using NitroxModel.Logger;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Test.Helper.Faker;
 

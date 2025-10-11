@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Packets;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands.Abstract

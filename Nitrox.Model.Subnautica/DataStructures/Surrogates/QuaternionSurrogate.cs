@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using NitroxModel.DataStructures.Surrogates;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Surrogates;
+using Nitrox.Model.DataStructures.Unity;
 using UnityEngine;
 
 namespace Nitrox.Model.Subnautica.DataStructures.Surrogates

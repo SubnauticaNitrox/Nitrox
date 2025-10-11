@@ -1,9 +1,9 @@
 using System;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Bases;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Bases;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace Nitrox.Model.Subnautica.DataStructures;

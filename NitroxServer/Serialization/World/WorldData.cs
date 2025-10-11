@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.Serialization.World

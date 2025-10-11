@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxServer.Serialization.Json
 {

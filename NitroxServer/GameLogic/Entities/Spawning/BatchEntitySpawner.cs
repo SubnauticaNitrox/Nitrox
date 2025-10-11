@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Unity;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Helper;
 using NitroxServer.Resources;
@@ -158,7 +158,7 @@ public class BatchEntitySpawner : IEntitySpawner
         UwePrefab chosenPrefab = default;
         if (weightedFragmentProbability > 0f)
         {
-            float probabilityThreshold = XORRandom.NextFloat();
+            float probabilityThreshold = XorRandom.NextFloat();
             if (weightedFragmentProbability > 1f)
             {
                 probabilityThreshold *= weightedFragmentProbability;
@@ -282,7 +282,7 @@ public class BatchEntitySpawner : IEntitySpawner
         }
         if (randomPosition)
         {
-            position += XORRandom.NextInsideSphere(4f);
+            position += XorRandom.NextInsideSphere(4f);
         }
 
         if (classId == CellRootEntity.CLASS_ID)
@@ -428,7 +428,7 @@ public class BatchEntitySpawner : IEntitySpawner
                 string prefabClassId = prefabAsset.ClassId;
                 if (prefabAsset is PrefabPlaceholderRandomAsset randomAsset && randomAsset.ClassIds.Count > 0)
                 {
-                    int randomIndex = XORRandom.NextIntRange(0, randomAsset.ClassIds.Count);
+                    int randomIndex = XorRandom.NextIntRange(0, randomAsset.ClassIds.Count);
                     prefabClassId = randomAsset.ClassIds[randomIndex];
                 }
 

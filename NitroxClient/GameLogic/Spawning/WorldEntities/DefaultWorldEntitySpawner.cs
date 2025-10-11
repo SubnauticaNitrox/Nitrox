@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 using UWE;

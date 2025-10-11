@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using static NitroxModel.Packets.EntityTransformUpdates;
+using static Nitrox.Model.Packets.EntityTransformUpdates;
 
 namespace NitroxServer.Communication.Packets.Processors
 {

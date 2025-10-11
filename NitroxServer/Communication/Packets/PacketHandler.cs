@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.Core;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
+using Nitrox.Model.Core;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;

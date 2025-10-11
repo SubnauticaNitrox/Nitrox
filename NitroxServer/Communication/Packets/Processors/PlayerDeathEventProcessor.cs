@@ -1,6 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel.Serialization;
+﻿using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 

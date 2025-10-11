@@ -1,6 +1,6 @@
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;

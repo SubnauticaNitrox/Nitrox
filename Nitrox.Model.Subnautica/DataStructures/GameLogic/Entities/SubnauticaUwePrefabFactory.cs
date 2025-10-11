@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using LitJson;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Helper;
 using static LootDistributionData;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;

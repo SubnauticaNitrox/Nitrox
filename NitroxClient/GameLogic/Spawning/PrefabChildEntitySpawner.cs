@@ -2,8 +2,8 @@ using System.Collections;
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;

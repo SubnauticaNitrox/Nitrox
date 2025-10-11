@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxClient", "NitroxClient\NitroxClient.csproj", "{5453E724-5A8B-46A4-850B-1F17FA2E938D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel", "NitroxModel\NitroxModel.csproj", "{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Model", "Nitrox.Model\Nitrox.Model.csproj", "{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Model.Subnautica", "Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj", "{47D774E0-750C-427B-8C38-F8F985114A2E}"
 EndProject

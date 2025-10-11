@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

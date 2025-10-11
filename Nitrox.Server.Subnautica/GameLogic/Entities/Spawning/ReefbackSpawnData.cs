@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Unity;
 
 namespace Nitrox.Server.Subnautica.GameLogic.Entities.Spawning;
 

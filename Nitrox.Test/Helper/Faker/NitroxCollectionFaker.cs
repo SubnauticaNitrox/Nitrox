@@ -1,4 +1,4 @@
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Test.Helper.Faker;
 

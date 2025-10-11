@@ -16,7 +16,7 @@ public class RandomSpawnSpoofer
     {
         if (randomPossibilitiesByClassId.TryGetValue(classId, out string[] choices))
         {
-            int randomIndex = XORRandom.NextIntRange(0, choices.Length);
+            int randomIndex = XorRandom.NextIntRange(0, choices.Length);
             classId = choices[randomIndex];
         }
     }

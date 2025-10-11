@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
 {

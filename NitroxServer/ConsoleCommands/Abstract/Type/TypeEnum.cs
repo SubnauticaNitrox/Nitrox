@@ -1,5 +1,5 @@
 using System;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {

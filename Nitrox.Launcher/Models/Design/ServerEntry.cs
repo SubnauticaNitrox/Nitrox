@@ -14,11 +14,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Serialization;
-using NitroxModel.Server;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Serialization;
+using Nitrox.Model.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 

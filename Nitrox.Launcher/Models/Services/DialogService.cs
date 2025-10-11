@@ -8,7 +8,7 @@ using Avalonia.Threading;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Logger;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.Models.Services;
 

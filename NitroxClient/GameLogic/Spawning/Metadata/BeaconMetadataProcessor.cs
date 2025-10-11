@@ -1,7 +1,7 @@
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata;

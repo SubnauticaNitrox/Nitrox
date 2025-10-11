@@ -1,5 +1,5 @@
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Helper;
 

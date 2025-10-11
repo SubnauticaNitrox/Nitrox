@@ -1,7 +1,7 @@
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Unity;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Helper;
 using static Nitrox.Server.Subnautica.GameLogic.Entities.Spawning.ReefbackSpawnData;
@@ -34,7 +34,7 @@ public class ReefbackBootstrapper : IEntityBootstrapper
         }
 
         // In case the grassIndex is chosen randomly
-        int grassIndex = XORRandom.NextIntRange(1, GRASS_VARIANTS_COUNT);
+        int grassIndex = XorRandom.NextIntRange(1, GRASS_VARIANTS_COUNT);
 
         entity = new ReefbackEntity(entity.Transform, entity.Level, entity.ClassId,
                                     entity.SpawnedByServer, entity.Id, entity.TechType,
@@ -50,7 +50,7 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             NitroxTransform slotTransform = DuplicateTransform(PlantSlotsCoordinates[i]);
             slotTransform.SetParent(plantSlotsRootTransform, false);
 
-            float random = XORRandom.NextFloat() * plantsProbabilitySum;
+            float random = XorRandom.NextFloat() * plantsProbabilitySum;
             float totalProbability = 0f;
             int chosenPlantIndex = 0;
             for (int k = 0; k < SpawnablePlants.Count; k++)
@@ -64,7 +64,7 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             }
 
             ReefbackSpawnData.ReefbackSlotPlant slotPlant = SpawnablePlants[chosenPlantIndex];
-            string randomId = slotPlant.ClassIds[XORRandom.NextIntRange(0, slotPlant.ClassIds.Count)];
+            string randomId = slotPlant.ClassIds[XorRandom.NextIntRange(0, slotPlant.ClassIds.Count)];
 
             NitroxId id = generator.NextId();
             NitroxTransform plantTransform = new(slotTransform.Position, slotPlant.StartRotationQuaternion, NitroxVector3.One);
@@ -87,7 +87,7 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             NitroxTransform slotTransform = DuplicateTransform(CreatureSlotsCoordinates[i]);
             slotTransform.SetParent(creatureSlotsRootTransform, false);
 
-            float random = XORRandom.NextFloat() * creatureProbabilitySum;
+            float random = XorRandom.NextFloat() * creatureProbabilitySum;
             float totalProbability = 0f;
             int chosenCreatureIndex = 0;
             for (int k = 0; k < SpawnableCreatures.Count; k++)
@@ -101,11 +101,11 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             }
 
             ReefbackSpawnData.ReefbackSlotCreature slotCreature = SpawnableCreatures[chosenCreatureIndex];
-            int spawnCount = XORRandom.NextIntRange(slotCreature.MinNumber, slotCreature.MaxNumber + 1);
+            int spawnCount = XorRandom.NextIntRange(slotCreature.MinNumber, slotCreature.MaxNumber + 1);
             for (int j = 0; j < spawnCount; j++)
             {
                 NitroxId id = generator.NextId();
-                NitroxTransform creatureTransform = new(slotTransform.LocalPosition + XORRandom.NextInsideSphere(5f), slotTransform.LocalRotation, NitroxVector3.One);
+                NitroxTransform creatureTransform = new(slotTransform.LocalPosition + XorRandom.NextInsideSphere(5f), slotTransform.LocalRotation, NitroxVector3.One);
                 creatureTransform.SetParent(CreatureSlotsRootTransform, false);
                 creatureTransform.SetParent(null, false);
 

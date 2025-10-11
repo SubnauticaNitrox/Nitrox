@@ -1,6 +1,6 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {

@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace NitroxModel.DataStructures;
+namespace Nitrox.Model.DataStructures;
 
 [TestClass]
 public class NitroxIdTest

@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Server;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Packets.Processors.Abstract;
+using Nitrox.Model.Server;
 using NitroxServer.Communication;
 
 namespace NitroxServer

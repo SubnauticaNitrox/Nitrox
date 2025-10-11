@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Serialization;
-using NitroxModel.Server;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Serialization;
+using Nitrox.Model.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization.World;

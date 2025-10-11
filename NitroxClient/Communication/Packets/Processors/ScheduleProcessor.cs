@@ -1,6 +1,6 @@
 using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 using Story;
 
 namespace NitroxClient.Communication.Packets.Processors;

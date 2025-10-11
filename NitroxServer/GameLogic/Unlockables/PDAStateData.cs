@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using Nitrox;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
 
 namespace NitroxServer.GameLogic.Unlockables;
 
@@ -11,7 +12,7 @@ public class PDAStateData
 {
     /// <summary>
     /// Gets or sets the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
-    /// The KnownTech construct uses both <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.KNOWN'>KnownTech.knownTech</see> and <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.ANALYZED'>KnownTech.analyzedTech</see>
+    /// The KnownTech construct uses both <see cref='Model.Packets.KnownTechEntryAdd.EntryCategory.KNOWN'>KnownTech.knownTech</see> and <see cref='Model.Packets.KnownTechEntryAdd.EntryCategory.ANALYZED'>KnownTech.analyzedTech</see>
     /// </summary>
     [DataMember(Order = 1)]
     public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = [];

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using NitroxModel.Packets;
-using NitroxModel.Serialization;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization;

@@ -1,5 +1,5 @@
-﻿using NitroxModel.Core;
-using NitroxModel.Helper;
+﻿using Nitrox.Model.Core;
+using Nitrox.Model.Helper;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type

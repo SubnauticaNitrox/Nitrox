@@ -14,12 +14,12 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery.Models;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Platforms.Store;
-using NitroxModel.Platforms.Store.Interfaces;
+using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.Store;
+using Nitrox.Model.Platforms.Store.Interfaces;
 
 namespace Nitrox.Launcher.ViewModels;
 

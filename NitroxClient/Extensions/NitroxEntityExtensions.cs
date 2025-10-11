@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxClient.Extensions;

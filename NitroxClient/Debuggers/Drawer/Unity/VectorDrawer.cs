@@ -1,5 +1,5 @@
 ﻿using Nitrox.Model.Subnautica.DataStructures;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Unity;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;

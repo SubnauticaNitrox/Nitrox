@@ -3,7 +3,7 @@ using FMOD.Studio;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Subnautica.DataStructures;
-using NitroxModel.GameLogic.FMOD;
+using Nitrox.Model.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

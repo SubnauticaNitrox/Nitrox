@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using FMODUnity;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -1,3 +1,3 @@
-global using NitroxModel;
-global using NitroxModel.Helper;
-global using NitroxModel.Extensions;
+global using Nitrox.Model;
+global using Nitrox.Model.Helper;
+global using Nitrox.Model.Extensions;

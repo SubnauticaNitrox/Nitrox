@@ -1,6 +1,6 @@
 using System.Net;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Packets.Processors.Abstract;
 
 namespace NitroxServer.Communication;
 

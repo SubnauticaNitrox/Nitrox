@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FMODUnity;
 using NitroxClient.Communication;
-using NitroxModel.Serialization;
+using Nitrox.Model.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

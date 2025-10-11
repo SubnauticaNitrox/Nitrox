@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 

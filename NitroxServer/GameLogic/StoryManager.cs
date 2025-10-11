@@ -1,10 +1,10 @@
 using System;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Packets;
 using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxModel.Helper;
-using NitroxModel;
+using Nitrox.Model.Helper;
+using Nitrox.Model;
 
 namespace NitroxServer.GameLogic;
 

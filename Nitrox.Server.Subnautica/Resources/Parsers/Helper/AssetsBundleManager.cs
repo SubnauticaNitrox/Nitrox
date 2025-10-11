@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Unity;
 
 namespace Nitrox.Server.Subnautica.Resources.Parsers.Helper;
 

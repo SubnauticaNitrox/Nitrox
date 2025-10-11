@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Timers;
-using NitroxModel.Networking;
-using NitroxModel.Packets;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Packets;
 using static NitroxServer.GameLogic.StoryManager;
 
 namespace NitroxServer.GameLogic;

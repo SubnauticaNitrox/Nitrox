@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Serialization;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands

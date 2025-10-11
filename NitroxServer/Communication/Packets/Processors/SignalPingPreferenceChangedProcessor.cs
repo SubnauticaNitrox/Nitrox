@@ -1,4 +1,4 @@
-﻿using NitroxModel.Packets;
+﻿using Nitrox.Model.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 
 namespace NitroxServer.Communication.Packets.Processors;

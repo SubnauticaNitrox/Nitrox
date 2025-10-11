@@ -1,6 +1,6 @@
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel.Server;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;

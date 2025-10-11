@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Avalonia.Platform;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace Nitrox.Launcher.Models.Utils;
 

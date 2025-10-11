@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
 

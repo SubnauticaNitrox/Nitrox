@@ -1,8 +1,8 @@
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Nitrox.Server.Subnautica.Resources.Parsers.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
 using Nitrox.Server.Subnautica.Resources.Parsers.Helper;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;

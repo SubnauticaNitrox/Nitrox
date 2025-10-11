@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

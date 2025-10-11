@@ -1,5 +1,5 @@
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;

@@ -1,5 +1,5 @@
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 
 namespace NitroxServer.Communication.Packets.Processors;

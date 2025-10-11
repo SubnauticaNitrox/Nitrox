@@ -1,8 +1,8 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 

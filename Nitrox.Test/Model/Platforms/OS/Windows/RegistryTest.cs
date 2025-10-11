@@ -2,7 +2,7 @@ using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Nitrox.Test.Model.Platforms;
 
-namespace NitroxModel.Platforms.OS.Windows;
+namespace Nitrox.Model.Platforms.OS.Windows;
 
 [TestClass]
 [SupportedOSPlatform("windows")]

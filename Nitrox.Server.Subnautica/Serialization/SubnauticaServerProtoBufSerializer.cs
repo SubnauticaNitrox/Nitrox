@@ -1,4 +1,4 @@
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.Surrogates;
 using NitroxServer.Serialization;
 using UnityEngine;

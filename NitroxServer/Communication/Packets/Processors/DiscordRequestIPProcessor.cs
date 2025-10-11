@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using NitroxModel.Packets;
-using NitroxModel.Serialization;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 
 namespace NitroxServer.Communication.Packets.Processors;

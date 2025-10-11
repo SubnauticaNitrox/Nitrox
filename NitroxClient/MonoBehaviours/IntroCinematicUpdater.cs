@@ -1,6 +1,6 @@
 using System.Collections;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

@@ -1,9 +1,9 @@
-global using NitroxModel.Logger;
+global using Nitrox.Model.Logger;
 using System;
 using System.Reflection;
 using Autofac;
-using NitroxModel.Core;
-using NitroxModel.Networking;
+using Nitrox.Model.Core;
+using Nitrox.Model.Networking;
 using NitroxServer.Communication.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;

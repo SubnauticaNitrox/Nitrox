@@ -1,4 +1,4 @@
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 

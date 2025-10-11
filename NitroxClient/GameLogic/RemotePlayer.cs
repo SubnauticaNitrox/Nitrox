@@ -8,11 +8,11 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.MonoBehaviours.Vehicles;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.GameLogic.PlayerAnimation;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Server;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Server;
 using UnityEngine;
 using UWE;
 

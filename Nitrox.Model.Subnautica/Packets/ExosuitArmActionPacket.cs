@@ -1,7 +1,7 @@
 ﻿using System;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Packets;
 
 namespace Nitrox.Model.Subnautica.Packets
 {

@@ -2,8 +2,8 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
-using NitroxModel.Server;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Server;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

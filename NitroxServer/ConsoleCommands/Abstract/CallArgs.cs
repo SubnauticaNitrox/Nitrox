@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {

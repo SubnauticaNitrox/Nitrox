@@ -1,5 +1,5 @@
 using System;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Unity;
 using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Resources;

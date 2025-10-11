@@ -1,7 +1,7 @@
 using FMOD.Studio;
 using NitroxClient.GameLogic;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;

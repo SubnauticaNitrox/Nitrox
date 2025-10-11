@@ -1,7 +1,7 @@
 using System.IO;
-using NitroxModel.Packets;
-using NitroxModel.Serialization;
-using NitroxModel.Server;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Serialization;
+using Nitrox.Model.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
@@ -15,7 +15,7 @@ internal class SetKeepInventoryCommand : Command
     private readonly SubnauticaServerConfig serverConfig;
     private readonly Server server;
 
-    public SetKeepInventoryCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("keepinventory", NitroxModel.DataStructures.GameLogic.Perms.ADMIN, "Sets \"keep inventory\" setting to on/off. If \"on\", players won't lose items when they die.")
+    public SetKeepInventoryCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("keepinventory", Nitrox.Model.DataStructures.GameLogic.Perms.ADMIN, "Sets \"keep inventory\" setting to on/off. If \"on\", players won't lose items when they die.")
     {
         AddParameter(new TypeBoolean("state", true, "The true/false state to set keep inventory on death to"));
         this.playerManager = playerManager;

@@ -1,4 +1,4 @@
-﻿using NitroxModel.Logger;
+﻿using Nitrox.Model.Logger;
 
 namespace Nitrox.Model.Subnautica.Logger
 {

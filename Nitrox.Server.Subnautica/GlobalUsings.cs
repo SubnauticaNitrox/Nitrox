@@ -1,2 +1,2 @@
-global using NitroxModel.Logger;
-global using NitroxModel.Extensions;
+global using Nitrox.Model.Logger;
+global using Nitrox.Model.Extensions;

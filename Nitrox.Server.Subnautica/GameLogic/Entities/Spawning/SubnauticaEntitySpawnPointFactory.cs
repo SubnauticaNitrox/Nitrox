@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;

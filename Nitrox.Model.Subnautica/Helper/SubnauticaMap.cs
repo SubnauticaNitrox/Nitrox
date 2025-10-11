@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
 
 namespace Nitrox.Model.Subnautica.Helper
 {

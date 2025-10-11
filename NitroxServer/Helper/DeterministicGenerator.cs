@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxServer.Helper
 {

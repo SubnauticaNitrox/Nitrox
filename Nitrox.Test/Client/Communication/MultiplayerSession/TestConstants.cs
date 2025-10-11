@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
 using NSubstitute;
 
 namespace Nitrox.Test.Client.Communication.MultiplayerSession

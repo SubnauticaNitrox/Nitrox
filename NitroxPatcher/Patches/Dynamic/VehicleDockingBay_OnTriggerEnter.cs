@@ -1,9 +1,9 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

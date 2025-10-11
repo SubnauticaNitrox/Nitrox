@@ -2,8 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;

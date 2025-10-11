@@ -8,10 +8,10 @@ using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Helper;
+using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 

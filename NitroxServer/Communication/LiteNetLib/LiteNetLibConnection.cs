@@ -2,8 +2,8 @@ using System;
 using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using NitroxModel.Networking;
-using NitroxModel.Packets;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Packets;
 
 namespace NitroxServer.Communication.LiteNetLib;
 

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.InitialSync;

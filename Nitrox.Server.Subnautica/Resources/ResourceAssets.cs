@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
 using NitroxServer.Resources;
 using UWE;
 

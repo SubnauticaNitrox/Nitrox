@@ -5,9 +5,9 @@ using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

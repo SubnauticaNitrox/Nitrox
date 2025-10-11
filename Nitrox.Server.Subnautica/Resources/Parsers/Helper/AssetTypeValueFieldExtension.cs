@@ -1,5 +1,5 @@
 using AssetsTools.NET;
-using NitroxModel.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Unity;
 using UnityEngine;
 
 namespace Nitrox.Server.Subnautica.Resources.Parsers.Helper;
