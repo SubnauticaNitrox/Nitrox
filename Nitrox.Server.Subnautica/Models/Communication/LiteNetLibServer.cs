@@ -3,7 +3,6 @@ using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Mono.Nat;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.Packets;
 using Nitrox.Server.Subnautica.Models.GameLogic;

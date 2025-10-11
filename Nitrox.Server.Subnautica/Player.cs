@@ -5,7 +5,6 @@ using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Server;
 using Nitrox.Server.Subnautica.Models.Communication;

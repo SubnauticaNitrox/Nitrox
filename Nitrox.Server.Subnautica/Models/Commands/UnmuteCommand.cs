@@ -1,5 +1,4 @@
 ﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
 using Nitrox.Server.Subnautica.Models.GameLogic;

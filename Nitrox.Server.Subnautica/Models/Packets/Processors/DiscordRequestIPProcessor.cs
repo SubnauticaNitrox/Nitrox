@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Net;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 

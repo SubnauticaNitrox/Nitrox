@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using Nitrox.Model.Networking;
-using Nitrox.Model.Packets;
 using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
