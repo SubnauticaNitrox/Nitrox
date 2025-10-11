@@ -125,7 +125,7 @@ public static class JoinServerBackend
 
             if (ip.IsLocalhost())
             {
-                if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
+                if (Process.GetProcessesByName("Nitrox.Server.Subnautica").Length == 0)
                 {
                     Log.Error("No server process was found while address was localhost");
                     msg += $"\n{Language.main.Get("Nitrox_StartServer")}";

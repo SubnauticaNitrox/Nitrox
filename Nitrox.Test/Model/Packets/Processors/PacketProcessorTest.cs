@@ -11,7 +11,7 @@ using NitroxServer;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer_Subnautica;
+using Nitrox.Server.Subnautica;
 
 namespace NitroxModel.Packets.Processors
 {
