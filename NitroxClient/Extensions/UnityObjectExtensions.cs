@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using NitroxModel.Core;
 using UnityEngine;
 
-namespace NitroxClient.Helpers;
+namespace NitroxClient.Extensions;
 
 public static class UnityObjectExtensions
 {

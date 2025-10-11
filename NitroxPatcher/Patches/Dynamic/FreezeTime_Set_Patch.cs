@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Reflection;
-using NitroxModel.Helper;
 using UWE;
 
 namespace NitroxPatcher.Patches.Dynamic;

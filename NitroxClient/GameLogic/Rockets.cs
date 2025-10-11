@@ -1,6 +1,5 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;

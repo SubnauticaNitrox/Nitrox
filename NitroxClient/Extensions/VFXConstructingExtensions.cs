@@ -1,6 +1,6 @@
-namespace NitroxClient.Helpers;
+namespace NitroxClient.Extensions;
 
-public static class VFXConstructingHelper
+public static class VFXConstructingExtensions
 {
     public static void EndGracefully(this VFXConstructing vfxConstructing)
     {

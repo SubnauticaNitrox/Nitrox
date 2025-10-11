@@ -4,7 +4,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
-using NitroxModel.Helper;
 using UnityEngine.InputSystem;
 
 namespace NitroxPatcher.Patches.Persistent;

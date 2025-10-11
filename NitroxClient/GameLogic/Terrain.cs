@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;

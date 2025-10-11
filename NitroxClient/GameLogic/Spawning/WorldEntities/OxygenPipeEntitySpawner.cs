@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -38,7 +37,7 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject, out OxygenPipe oxygenPipe))
         {
             yield break;
@@ -57,7 +56,7 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
             return false;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject, out OxygenPipe oxygenPipe))
         {
             return true;

@@ -1,7 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

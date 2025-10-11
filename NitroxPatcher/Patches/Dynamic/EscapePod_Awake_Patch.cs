@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.GameLogic.Spawning;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

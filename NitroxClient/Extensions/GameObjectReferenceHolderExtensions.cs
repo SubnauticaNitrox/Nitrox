@@ -1,7 +1,7 @@
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
-namespace NitroxClient.Helpers;
+namespace NitroxClient.Extensions;
 
 public static class GameObjectReferenceHolderExtensions
 {

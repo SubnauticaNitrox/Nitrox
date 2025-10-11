@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

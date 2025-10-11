@@ -8,7 +8,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
-using NitroxModel.Helper;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 

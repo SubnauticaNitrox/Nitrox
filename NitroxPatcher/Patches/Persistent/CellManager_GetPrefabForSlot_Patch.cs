@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {

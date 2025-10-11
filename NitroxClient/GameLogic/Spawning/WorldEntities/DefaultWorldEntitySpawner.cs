@@ -6,7 +6,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
-using static NitroxClient.Unity.Helper.GameObjectHelper;
+using static NitroxClient.Extensions.GameObjectExtensions;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 

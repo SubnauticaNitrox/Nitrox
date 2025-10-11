@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+namespace NitroxClient.MonoBehaviours.Gui.InGame;
 
 public static class TopRightWatermarkText
 {

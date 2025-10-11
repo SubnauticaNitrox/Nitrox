@@ -1,9 +1,7 @@
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using UnityEngine;
 

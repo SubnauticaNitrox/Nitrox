@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using LitJson;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 

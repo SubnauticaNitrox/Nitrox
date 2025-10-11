@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;

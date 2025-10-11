@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxModel.Helper;
 using NitroxPatcher.PatternMatching;
 using static System.Reflection.Emit.OpCodes;
 
