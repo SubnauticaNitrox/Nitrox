@@ -1,6 +1,5 @@
 using System;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Helper;
 

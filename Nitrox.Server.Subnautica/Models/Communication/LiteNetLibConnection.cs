@@ -3,7 +3,6 @@ using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Nitrox.Model.Networking;
-using Nitrox.Model.Packets;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 

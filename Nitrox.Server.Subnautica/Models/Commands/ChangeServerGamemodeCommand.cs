@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;

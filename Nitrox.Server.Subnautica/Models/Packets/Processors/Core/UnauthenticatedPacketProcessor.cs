@@ -1,5 +1,4 @@
-﻿using Nitrox.Model.Packets;
-using Nitrox.Model.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Server.Subnautica.Models.Communication;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors.Core

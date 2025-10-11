@@ -6,7 +6,6 @@ using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.GameLogic.Bases;
 using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 

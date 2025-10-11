@@ -1,5 +1,4 @@
-﻿using Nitrox.Model.Packets;
-using Nitrox.Model.Serialization;
+﻿using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 

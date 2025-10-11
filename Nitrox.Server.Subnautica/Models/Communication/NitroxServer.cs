@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.Packets;
 using Nitrox.Server.Subnautica.Models.GameLogic;

@@ -4,7 +4,6 @@ using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Packets;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 

@@ -1,6 +1,5 @@
 ﻿using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Packets;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 

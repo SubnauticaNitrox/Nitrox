@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nitrox.Model.Core;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.Packets.Processors;

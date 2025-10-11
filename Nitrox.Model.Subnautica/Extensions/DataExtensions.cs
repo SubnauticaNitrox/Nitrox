@@ -6,7 +6,7 @@ using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Packets;
 using UnityEngine;
 
-namespace Nitrox.Model.Subnautica.DataStructures;
+namespace Nitrox.Model.Subnautica.Extensions;
 
 /// <summary>
 ///     Contains extension methods for converting Unity types to Nitrox types and vice versa.

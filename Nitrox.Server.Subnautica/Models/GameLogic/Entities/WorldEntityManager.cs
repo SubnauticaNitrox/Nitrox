@@ -7,7 +7,6 @@ using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.DataStructures.Util;
-using Nitrox.Model.Packets;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;

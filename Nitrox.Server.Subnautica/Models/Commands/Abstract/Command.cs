@@ -5,7 +5,6 @@ using System.Text;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Util;
-using Nitrox.Model.Packets;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
