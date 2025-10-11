@@ -12,8 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="[2.1.11]" />
+        <PackageReference Include="AssetsTools.NET" />
+        <PackageReference Include="SixLabors.ImageSharp" />
     </ItemGroup>
 
     <ItemGroup>

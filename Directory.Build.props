@@ -49,10 +49,10 @@
 
     <!-- Shared dependencies for all Nitrox.* projects -->
     <ItemGroup Condition="'$(NitroxProject)' == 'true'">
-        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0">
+        <PackageReference Include="JetBrains.Annotations">
             <Aliases>JB</Aliases>
         </PackageReference>
-        <PackageReference Include="PolySharp" Version="1.15.0">
+        <PackageReference Include="PolySharp">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
@@ -61,7 +61,7 @@
     <Choose>
         <When Condition="'$(TestLibrary)' == 'false'">
             <ItemGroup>
-                <PackageReference Include="Nitrox.Analyzers" Version="*">
+                <PackageReference Include="Nitrox.Analyzers">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
                 </PackageReference>
@@ -73,11 +73,11 @@
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <ItemGroup>
-                <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
+                <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
                 </PackageReference>
-                <PackageReference Include="Nitrox.Discovery.MSBuild" Version="0.1.0">
+                <PackageReference Include="Nitrox.Discovery.MSBuild">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
                 </PackageReference>
