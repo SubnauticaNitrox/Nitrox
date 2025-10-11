@@ -1,4 +1,4 @@
-using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

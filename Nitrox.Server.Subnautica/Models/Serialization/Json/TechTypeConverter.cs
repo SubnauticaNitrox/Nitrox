@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.Json
 {

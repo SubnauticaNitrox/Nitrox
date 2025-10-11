@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
@@ -221,18 +220,16 @@ public class WorldEntityManager
     }
 
     public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
-    {            
-        IMap map = NitroxServiceLocator.LocateService<IMap>();
-
-        int totalBatches = map.DimensionsInBatches.X * map.DimensionsInBatches.Y * map.DimensionsInBatches.Z;
+    {
+        int totalBatches = SubnauticaMap.DimensionsInBatches.X * SubnauticaMap.DimensionsInBatches.Y * SubnauticaMap.DimensionsInBatches.Z;
         int batchesLoaded = 0;
 
-        for (int x = 0; x < map.DimensionsInBatches.X; x++)
+        for (int x = 0; x < SubnauticaMap.DimensionsInBatches.X; x++)
         {
             token.ThrowIfCancellationRequested();
-            for (int y = 0; y < map.DimensionsInBatches.Y; y++)
+            for (int y = 0; y < SubnauticaMap.DimensionsInBatches.Y; y++)
             {
-                for (int z = 0; z < map.DimensionsInBatches.Z; z++)
+                for (int z = 0; z < SubnauticaMap.DimensionsInBatches.Z; z++)
                 {
                     int spawned = LoadUnspawnedEntities(new(x, y, z), true);
 

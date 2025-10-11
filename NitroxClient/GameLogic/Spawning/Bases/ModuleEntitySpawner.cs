@@ -7,11 +7,10 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
-using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;

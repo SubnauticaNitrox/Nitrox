@@ -3,6 +3,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;

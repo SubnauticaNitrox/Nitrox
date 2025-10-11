@@ -84,10 +84,6 @@ namespace NitroxClient
                             .As<ILocalNitroxPlayer>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<SubnauticaMap>()
-                            .As<IMap>()
-                            .InstancePerLifetimeScope();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();

@@ -1,5 +1,7 @@
+using System;
+
 #if NETFRAMEWORK
-namespace System.Runtime.CompilerServices;
+namespace Nitrox.Model;
 
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
 internal sealed class CallerArgumentExpressionAttribute : Attribute

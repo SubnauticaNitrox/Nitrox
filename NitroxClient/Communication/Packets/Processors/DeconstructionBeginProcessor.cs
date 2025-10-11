@@ -3,6 +3,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 

@@ -5,9 +5,9 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

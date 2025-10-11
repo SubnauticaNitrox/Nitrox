@@ -2,6 +2,7 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using Story;
 
 namespace NitroxPatcher.Patches.Dynamic;

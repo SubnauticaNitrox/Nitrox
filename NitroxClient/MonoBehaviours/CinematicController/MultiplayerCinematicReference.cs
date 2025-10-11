@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.CinematicController;

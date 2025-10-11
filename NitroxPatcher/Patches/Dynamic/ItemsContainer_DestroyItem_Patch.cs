@@ -4,6 +4,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxPatcher.PatternMatching;
 using static System.Reflection.Emit.OpCodes;
 

@@ -6,6 +6,7 @@ using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Modals;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

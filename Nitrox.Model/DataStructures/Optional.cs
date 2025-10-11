@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nitrox.Model.DataStructures.Util
+namespace Nitrox.Model.DataStructures
 {
     /// <summary>
     ///     Used to give context on whether the wrapped value is nullable and to improve error logging.

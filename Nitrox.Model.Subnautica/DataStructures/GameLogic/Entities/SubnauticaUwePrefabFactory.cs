@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using LitJson;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Helper;
 using static LootDistributionData;
 

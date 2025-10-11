@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
-using static Nitrox.Model.Packets.EntityTransformUpdates;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
@@ -23,29 +22,29 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 
         public override void Process(EntityTransformUpdates packet, Player simulatingPlayer)
         {
-            Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer = InitializeVisibleUpdateMapWithOtherPlayers(simulatingPlayer);
+            Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = InitializeVisibleUpdateMapWithOtherPlayers(simulatingPlayer);
             AssignVisibleUpdatesToPlayers(simulatingPlayer, packet.Updates, visibleUpdatesByPlayer);
             SendUpdatesToPlayers(visibleUpdatesByPlayer);
         }
 
-        private Dictionary<Player, List<EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(Player simulatingPlayer)
+        private Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(Player simulatingPlayer)
         {
-            Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer = new Dictionary<Player, List<EntityTransformUpdate>>();
+            Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = new Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>>();
 
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 if (!player.Equals(simulatingPlayer))
                 {
-                    visibleUpdatesByPlayer[player] = new List<EntityTransformUpdate>();
+                    visibleUpdatesByPlayer[player] = new List<EntityTransformUpdates.EntityTransformUpdate>();
                 }
             }
 
             return visibleUpdatesByPlayer;
         }
 
-        private void AssignVisibleUpdatesToPlayers(Player sendingPlayer, List<EntityTransformUpdate> updates, Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer)
+        private void AssignVisibleUpdatesToPlayers(Player sendingPlayer, List<EntityTransformUpdates.EntityTransformUpdate> updates, Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
         {
-            foreach (EntityTransformUpdate update in updates)
+            foreach (EntityTransformUpdates.EntityTransformUpdate update in updates)
             {
                 if (!simulationOwnershipData.TryGetLock(update.Id, out SimulationOwnershipData.PlayerLock playerLock) || playerLock.Player != sendingPlayer)
                 {
@@ -60,7 +59,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
                     continue;
                 }
 
-                foreach (KeyValuePair<Player, List<EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
+                foreach (KeyValuePair<Player, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
                 {
                     if (playerUpdates.Key.CanSee(worldEntity))
                     {
@@ -70,12 +69,12 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
             }
         }
 
-        private void SendUpdatesToPlayers(Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer)
+        private void SendUpdatesToPlayers(Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
         {
-            foreach (KeyValuePair<Player, List<EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
+            foreach (KeyValuePair<Player, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
             {
                 Player player = playerUpdates.Key;
-                List<EntityTransformUpdate> updates = playerUpdates.Value;
+                List<EntityTransformUpdates.EntityTransformUpdate> updates = playerUpdates.Value;
 
                 if (updates.Count > 0)
                 {

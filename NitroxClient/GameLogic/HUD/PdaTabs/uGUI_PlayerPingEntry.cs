@@ -9,6 +9,7 @@ using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;

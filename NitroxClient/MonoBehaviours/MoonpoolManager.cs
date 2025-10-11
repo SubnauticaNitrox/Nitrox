@@ -4,10 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
-using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

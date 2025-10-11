@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using Nitrox.Model.Core;
+using Nitrox.Model.Platforms.OS.Windows.Internal;
 
 namespace Nitrox.Model.Platforms.OS.Shared;
 
@@ -144,7 +146,7 @@ public class ProcessEx : IDisposable
     /// <summary>
     ///     Starts the current app as a new instance, passing the same command line arguments.
     /// </summary>
-    public static void StartSelfCopyArgs() => StartSelf(Helper.NitroxEnvironment.CommandLineArgs);
+    public static void StartSelfCopyArgs() => StartSelf(NitroxEnvironment.CommandLineArgs);
 #endif
 
     /// <summary>

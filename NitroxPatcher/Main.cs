@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using JB::JetBrains.Annotations;
+using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.Logger;
 using NitroxPatcher.Helper;
 using UnityEngine;

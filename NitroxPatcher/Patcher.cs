@@ -9,7 +9,7 @@ using HarmonyLib.Tools;
 using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Core;
-using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.DataStructures;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;

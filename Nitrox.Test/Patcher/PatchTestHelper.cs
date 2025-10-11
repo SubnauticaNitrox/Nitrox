@@ -1,9 +1,5 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
-using FluentAssertions;
 using HarmonyLib;
 using Nitrox.Model.Helper;
 using NitroxPatcher.PatternMatching;

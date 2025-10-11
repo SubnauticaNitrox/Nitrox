@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;

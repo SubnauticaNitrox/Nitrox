@@ -1,40 +1,39 @@
 ﻿using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
-namespace Nitrox.Model.Subnautica.Helper
+namespace Nitrox.Model.Subnautica.Helper;
+
+/// <summary>
+///     Static information about the game world loaded by Subnautica that isn't (and shouldn't) be retrievable from the game directly.
+/// </summary>
+public static class SubnauticaMap
 {
+    private const int BATCH_SIZE = 160;
+    private const int SKYBOX_METERS_ABOVE_WATER = 160;
+
     /// <summary>
-    ///     Static information about the game world loaded by Subnautica that isn't (and shouldn't) be retrievable from the game directly. 
+    ///     TechType can't be introspected at runtime in RELEASE mode because its reflection info is elided.
     /// </summary>
-    public class SubnauticaMap : IMap
-    {
-        private const int BATCH_SIZE = 160;
-        private const int SKYBOX_METERS_ABOVE_WATER = 160;
+    public static readonly List<NitroxTechType> GLOBAL_ROOT_TECH_TYPES =
+    [
+        new(nameof(TechType.Pipe)),
+        new(nameof(TechType.Constructor)),
+        new(nameof(TechType.Flare)),
+        new(nameof(TechType.Gravsphere)),
+        new(nameof(TechType.PipeSurfaceFloater)),
+        new(nameof(TechType.SmallStorage)),
+        new(nameof(TechType.CyclopsDecoy)),
+        new(nameof(TechType.LEDLight)),
+        new(nameof(TechType.Beacon))
+    ];
 
-        /// <summary>
-        ///     TechType can't be introspected at runtime in RELEASE mode because its reflection info is elided.
-        /// </summary>
-        public static readonly List<NitroxTechType> GLOBAL_ROOT_TECH_TYPES = new List<NitroxTechType>
-        {
-            new NitroxTechType(nameof(TechType.Pipe)),
-            new NitroxTechType(nameof(TechType.Constructor)),
-            new NitroxTechType(nameof(TechType.Flare)),
-            new NitroxTechType(nameof(TechType.Gravsphere)),
-            new NitroxTechType(nameof(TechType.PipeSurfaceFloater)),
-            new NitroxTechType(nameof(TechType.SmallStorage)),
-            new NitroxTechType(nameof(TechType.CyclopsDecoy)),
-            new NitroxTechType(nameof(TechType.LEDLight)),
-            new NitroxTechType(nameof(TechType.Beacon))
-        };
-
-        public int ItemLevelOfDetail => 3;
-        public int BatchSize => 160;
-        public NitroxInt3 BatchDimensions => new NitroxInt3(BatchSize, BatchSize, BatchSize);
-        public NitroxInt3 DimensionsInMeters => new NitroxInt3(4096, 3200, 4096);
-        public NitroxInt3 DimensionsInBatches => NitroxInt3.Ceil(DimensionsInMeters / BATCH_SIZE);
-        public NitroxInt3 BatchDimensionCenter => new NitroxInt3(DimensionsInMeters.X / 2, DimensionsInMeters.Y - SKYBOX_METERS_ABOVE_WATER, DimensionsInMeters.Z / 2);
-        public List<NitroxTechType> GlobalRootTechTypes { get; } = GLOBAL_ROOT_TECH_TYPES;
-    }
+    public static int ItemLevelOfDetail => 3;
+    public static int BatchSize => 160;
+    public static NitroxInt3 BatchDimensions => new(BatchSize, BatchSize, BatchSize);
+    public static NitroxInt3 DimensionsInMeters => new(4096, 3200, 4096);
+    public static NitroxInt3 DimensionsInBatches => NitroxInt3.Ceil(DimensionsInMeters / BATCH_SIZE);
+    public static NitroxInt3 BatchDimensionCenter => new(DimensionsInMeters.X / 2, DimensionsInMeters.Y - SKYBOX_METERS_ABOVE_WATER, DimensionsInMeters.Z / 2);
+    public static List<NitroxTechType> GlobalRootTechTypes => GLOBAL_ROOT_TECH_TYPES;
 }

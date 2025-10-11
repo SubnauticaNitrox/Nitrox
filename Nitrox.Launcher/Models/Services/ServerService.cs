@@ -14,6 +14,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
+using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Platforms.OS.Shared;

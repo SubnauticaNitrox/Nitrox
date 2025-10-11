@@ -1,4 +1,5 @@
 using System.Collections;
+using Nitrox.Model.Core;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
 using Nitrox.Model.Helper;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;

@@ -2,6 +2,7 @@ using FMOD.Studio;
 using NitroxClient.GameLogic;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.Communication;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
@@ -210,7 +210,7 @@ public partial class PlayerManager
                 playerContext.PlayerNitroxId,
                 Optional.Empty,
                 serverConfig.DefaultPlayerPerm,
-                serverConfig.DefaultPlayerStats,
+                new(serverConfig.DefaultOxygenValue, serverConfig.DefaultMaxOxygenValue, serverConfig.DefaultHealthValue, serverConfig.DefaultHungerValue, serverConfig.DefaultThirstValue, serverConfig.DefaultInfectionValue),
                 serverConfig.GameMode,
                 [],
                 [],

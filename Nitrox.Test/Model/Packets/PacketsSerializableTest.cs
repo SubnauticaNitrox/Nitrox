@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BinaryPack.Attributes;
+﻿using BinaryPack.Attributes;
 using KellermanSoftware.CompareNetObjects;
 using KellermanSoftware.CompareNetObjects.TypeComparers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Model.DataStructures;
 using Nitrox.Test.Helper.Faker;
 using Nitrox.Model.Subnautica.Logger;

@@ -3,6 +3,7 @@ using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Core;
 using Nitrox.Model.Discovery.Models;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.OS.Shared;

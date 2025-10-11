@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using JB::JetBrains.Annotations;
-using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Model.Helper;
 

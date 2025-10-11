@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {

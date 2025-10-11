@@ -1,10 +1,11 @@
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;

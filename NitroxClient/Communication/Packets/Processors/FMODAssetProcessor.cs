@@ -3,6 +3,7 @@ using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

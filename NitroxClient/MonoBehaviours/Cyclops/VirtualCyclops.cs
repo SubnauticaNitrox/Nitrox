@@ -4,6 +4,7 @@ using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Cyclops;

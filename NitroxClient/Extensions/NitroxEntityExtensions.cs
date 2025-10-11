@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxClient.Extensions;

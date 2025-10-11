@@ -2,6 +2,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using Story;
 
 namespace NitroxClient.Communication.Packets.Processors;

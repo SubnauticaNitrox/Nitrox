@@ -5,7 +5,8 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
-using static Nitrox.Model.Packets.CoffeeMachineUse;
+using Nitrox.Model.Subnautica.Packets;
+using static Nitrox.Model.Subnautica.Packets.CoffeeMachineUse;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

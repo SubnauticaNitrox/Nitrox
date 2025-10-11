@@ -3,8 +3,9 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
-using static Nitrox.Model.Packets.EntityTransformUpdates;
+using static Nitrox.Model.Subnautica.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
