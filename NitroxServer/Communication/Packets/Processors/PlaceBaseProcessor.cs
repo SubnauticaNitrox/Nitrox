@@ -13,7 +13,7 @@ public class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
     {
         if (buildingManager.CreateBase(packet))
         {
-            ClaimBuildPiece(packet.BuildEntity, player);
+            TryClaimBuildPiece(packet.BuildEntity, player);
             
             // End-players can process elementary operations without this data (packet would be heavier for no reason)
             packet.Deflate();
