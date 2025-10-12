@@ -14,9 +14,9 @@ using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.Core;
-using Nitrox.Model.Discovery;
-using Nitrox.Model.Discovery.Models;
 using Nitrox.Model.Helper;
+using Nitrox.Model.Platforms.Discovery;
+using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -32,13 +32,13 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     [ObservableProperty]
     private string programDataFolderDir;
-    
+
     [ObservableProperty]
     private string screenshotsFolderDir;
-    
+
     [ObservableProperty]
     private string savesFolderDir;
-    
+
     [ObservableProperty]
     private string logsFolderDir;
 
@@ -50,10 +50,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     [ObservableProperty]
     private bool lightModeEnabled;
-    
+
     [ObservableProperty]
     private bool allowMultipleGameInstances;
-    
+
     [ObservableProperty]
     private bool isInReleaseMode;
 
@@ -189,13 +189,13 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             LauncherNotifier.Error($"Failed to open folder: {ex.Message}");
         }
     }
-    
+
     partial void OnLightModeEnabledChanged(bool value)
     {
         keyValueStore.SetIsLightModeEnabled(value);
         Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
     }
-    
+
     partial void OnAllowMultipleGameInstancesChanged(bool value)
     {
         keyValueStore.SetIsMultipleGameInstancesAllowed(value);

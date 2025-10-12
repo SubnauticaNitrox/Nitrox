@@ -1,6 +1,6 @@
 using System;
 
-namespace Nitrox.Model.Discovery.Models;
+namespace Nitrox.Model.Platforms.Discovery.Models;
 
 [Flags]
 public enum GameLibraries

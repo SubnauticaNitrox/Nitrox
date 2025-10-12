@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Nitrox.Model.Discovery.InstallationFinders;
-using Nitrox.Model.Discovery.InstallationFinders.Core;
-using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Platforms.Discovery.InstallationFinders;
+using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
+using Nitrox.Model.Platforms.Discovery.Models;
 
-namespace Nitrox.Model.Discovery;
+namespace Nitrox.Model.Platforms.Discovery;
 
 /// <summary>
 /// Main game installation finder that will use all available methods of detection to find the game installation directory

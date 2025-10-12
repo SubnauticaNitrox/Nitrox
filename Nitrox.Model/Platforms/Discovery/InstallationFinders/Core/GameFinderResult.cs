@@ -1,11 +1,10 @@
 extern alias JB;
 using System;
 using System.Runtime.CompilerServices;
-using JB::JetBrains.Annotations;
-using Nitrox.Model.Discovery.Models;
 using Nitrox.Model.Helper;
+using Nitrox.Model.Platforms.Discovery.Models;
 
-namespace Nitrox.Model.Discovery.InstallationFinders.Core;
+namespace Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
 
 public sealed record GameFinderResult
 {
@@ -44,7 +43,7 @@ public sealed record GameFinderResult
         };
     }
 
-    public static GameFinderResult Ok([NotNull] string path, [CallerFilePath] string callerCodeFile = "")
+    public static GameFinderResult Ok(string path, [CallerFilePath] string callerCodeFile = "")
     {
         Validate.NotNull(path);
         return new GameFinderResult

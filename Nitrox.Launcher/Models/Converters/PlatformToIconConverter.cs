@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Avalonia.Media.Imaging;
 using Nitrox.Launcher.Models.Utils;
-using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Platforms.Discovery.Models;
 
 namespace Nitrox.Launcher.Models.Converters;
 

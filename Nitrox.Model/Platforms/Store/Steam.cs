@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Nitrox.Model.Discovery.Models;
 using Nitrox.Model.Helper;
+using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.OS.Windows;
 using Nitrox.Model.Platforms.Store.Exceptions;
@@ -255,7 +255,7 @@ public sealed class Steam : IGamePlatform
         }
 
         return result;
-        
+
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)
         {
