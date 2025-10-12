@@ -71,15 +71,17 @@ public class EntitySimulation
         return ownershipChanges;
     }
 
-    public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player, bool shouldEntityMove = true)
+    public bool TryAssignEntityToPlayer(Entity entity, Player player, bool shouldEntityMove, out SimulatedEntity simulatedEntity)
     {
         if (simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
         {
             bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
-            return new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+            simulatedEntity = new(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+            return true;
         }
 
-        throw new Exception($"New entity was already being simulated by someone else: {entity.Id}");
+        simulatedEntity = null;
+        return false;
     }
 
     public List<SimulatedEntity> AssignGlobalRootEntitiesAndGetData(Player player)
