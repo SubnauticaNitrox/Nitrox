@@ -33,17 +33,15 @@ public abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> whe
 
     /// <summary>
     /// Attempts to acquire simulation ownership on <paramref name="entity"/> for <paramref name="player"/>.
-    /// If the attempt is unsuccessful, nothing will happen.
+    /// If the attempt is successful, it will be notified to all players.
+    /// Otherwise, nothing will happen.
     /// </summary>
-    public void ClaimBuildPiece(Entity entity, Player player)
+    public void TryClaimBuildPiece(Entity entity, Player player)
     {
-        try
+        if (entitySimulation.TryAssignEntityToPlayer(entity, player, false, out SimulatedEntity simulatedEntity))
         {
-            SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, player, false);
             SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
             playerManager.SendPacketToAllPlayers(ownershipChangePacket);
         }
-        catch (Exception)
-        { }
     }
 }

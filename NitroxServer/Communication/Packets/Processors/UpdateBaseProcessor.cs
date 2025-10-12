@@ -16,7 +16,7 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
         {
             if (packet.BuiltPieceEntity is GlobalRootEntity entity)
             {
-                ClaimBuildPiece(entity, player);
+                TryClaimBuildPiece(entity, player);
             }
             // End-players can process elementary operations without this data (packet would be heavier for no reason)
             packet.Deflate();
