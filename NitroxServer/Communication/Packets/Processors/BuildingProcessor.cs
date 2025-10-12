@@ -1,3 +1,4 @@
+using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
@@ -30,10 +31,19 @@ public abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> whe
         playerManager.SendPacketToOtherPlayers(packet, player);
     }
 
+    /// <summary>
+    /// Attempts to acquire simulation ownership on <paramref name="entity"/> for <paramref name="player"/>.
+    /// If the attempt is unsuccessful, nothing will happen.
+    /// </summary>
     public void ClaimBuildPiece(Entity entity, Player player)
     {
-        SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, player, false);
-        SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
-        playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+        try
+        {
+            SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, player, false);
+            SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
+            playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+        }
+        catch (Exception)
+        { }
     }
 }
