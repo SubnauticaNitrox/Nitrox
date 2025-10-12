@@ -13,9 +13,9 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery;
-using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.Discovery;
+using NitroxModel.Platforms.Discovery.Models;
 using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;

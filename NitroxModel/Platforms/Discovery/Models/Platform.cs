@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace NitroxModel.Discovery.Models;
+namespace NitroxModel.Platforms.Discovery.Models;
 
 public enum Platform
 {
