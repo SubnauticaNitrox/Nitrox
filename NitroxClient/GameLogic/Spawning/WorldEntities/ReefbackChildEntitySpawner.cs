@@ -81,8 +81,8 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
 
         transform.localPosition = entity.Transform.LocalPosition.ToUnity();
         transform.localRotation = entity.Transform.LocalRotation.ToUnity();
-        transform.localScale = entity.Transform.LocalScale.ToUnity();
-
+        // We don't set the localScale because it is already correct from the prefab but the server doesn't know about it (which doesn't matter)
+        
         // Positioning from ReefbackLife.SpawnPlants and ReefbackLife.SpawnCreatures
         switch (entity.Type)
         {
