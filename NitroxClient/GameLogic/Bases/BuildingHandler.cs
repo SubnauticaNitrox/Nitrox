@@ -183,6 +183,9 @@ public partial class BuildingHandler : MonoBehaviour
             baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(absoluteCell, moonpoolId);
         }
 
+        // It's very important that the tracker starts at 0 here because otherwise, it'd be
+        // misevaluated to -1 if the local client was to start editing this base
+        EnsureTracker(placeBase.FormerGhostId).ResetToId(0);
         BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.UtcNow;
     }
 
