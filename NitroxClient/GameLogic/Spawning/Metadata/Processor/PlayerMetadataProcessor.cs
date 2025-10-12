@@ -3,10 +3,8 @@ using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
-using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
-using static Nitrox.Model.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -42,7 +40,7 @@ public class PlayerMetadataProcessor : EntityMetadataProcessor<PlayerMetadata>
         ItemsContainer currentItems = Inventory.Get().container;
         Equipment equipment = Inventory.main.equipment;
 
-        foreach (EquippedItem equippedItem in metadata.EquippedItems)
+        foreach (PlayerMetadata.EquippedItem equippedItem in metadata.EquippedItems)
         {
             InventoryItem inventoryItem = currentItems.FirstOrDefault(item => item.item.TryGetNitroxId(out NitroxId id) && equippedItem.Id == id);
 

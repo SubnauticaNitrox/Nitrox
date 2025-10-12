@@ -15,7 +15,6 @@ using System.Threading;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.Util;
 using Nitrox.Server.Subnautica.Models.Commands.Processor;
 
 namespace Nitrox.Server.Subnautica;

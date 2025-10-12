@@ -1,5 +1,3 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Test.Server.Helper;

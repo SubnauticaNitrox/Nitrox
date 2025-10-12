@@ -1,11 +1,9 @@
 using System.Reflection;
 using Autofac;
 using Nitrox.Model.Core;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Processor;
 using Nitrox.Server.Subnautica.Models.Communication;
@@ -63,7 +61,6 @@ namespace Nitrox.Server.Subnautica
                             .As<IEntityBootstrapperManager>()
                             .SingleInstance();
 
-            containerBuilder.RegisterType<SubnauticaMap>().As<IMap>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntityRegistry>().AsSelf().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SubnauticaWorldModifier>().As<IWorldModifier>().InstancePerLifetimeScope();
             containerBuilder.Register(c => FMODWhitelist.Load(GameInfo.Subnautica)).InstancePerLifetimeScope();

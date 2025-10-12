@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using BinaryPack.Attributes;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using ProtoBuf;
+
+namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+
+[Serializable, DataContract]
+[ProtoInclude(50, typeof(BuildEntity))]
+[ProtoInclude(51, typeof(EscapePodEntity))]
+[ProtoInclude(52, typeof(InteriorPieceEntity))]
+[ProtoInclude(53, typeof(MapRoomEntity))]
+[ProtoInclude(54, typeof(ModuleEntity))]
+[ProtoInclude(55, typeof(MoonpoolEntity))]
+[ProtoInclude(56, typeof(PlanterEntity))]
+[ProtoInclude(57, typeof(PlayerEntity))]
+[ProtoInclude(58, typeof(VehicleEntity))]
+[ProtoInclude(59, typeof(RadiationLeakEntity))]
+public class GlobalRootEntity : WorldEntity
+{
+    [IgnoreDataMember]
+    public const int GLOBAL_ROOT_LEVEL = 100;
+
+    [IgnoreConstructor]
+    protected GlobalRootEntity()
+    {
+        // Constructor for serialization. Has to be "protected" for json serialization.
+    }
+
+    /// <remarks>Used for deserialization</remarks>
+    public GlobalRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
+    { }
+}

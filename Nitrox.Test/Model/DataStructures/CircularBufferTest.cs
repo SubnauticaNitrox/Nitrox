@@ -1,7 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Nitrox.Model.DataStructures;
+﻿namespace Nitrox.Model.DataStructures;
 
 [TestClass]
 public class CircularBufferTest

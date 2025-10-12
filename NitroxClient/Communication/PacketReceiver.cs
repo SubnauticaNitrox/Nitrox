@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication;
 

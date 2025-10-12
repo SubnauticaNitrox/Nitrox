@@ -7,6 +7,7 @@ using Nitrox.Model.Packets;
 using NitroxPatcher.PatternMatching;
 using System.Collections.Generic;
 using System.Reflection;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 

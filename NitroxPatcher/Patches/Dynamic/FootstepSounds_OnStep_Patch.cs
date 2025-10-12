@@ -9,6 +9,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

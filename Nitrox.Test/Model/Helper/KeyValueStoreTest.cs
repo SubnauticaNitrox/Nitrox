@@ -1,5 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Nitrox.Model.Helper;
 
 [TestClass]

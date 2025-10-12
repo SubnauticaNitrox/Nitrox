@@ -1,10 +1,8 @@
-﻿using System;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nitrox.Test.Client.Communication.MultiplayerSession;
+﻿using Nitrox.Test.Client.Communication.MultiplayerSession;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using NSubstitute;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState

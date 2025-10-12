@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

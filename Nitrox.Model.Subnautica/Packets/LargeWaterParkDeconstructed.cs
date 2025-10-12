@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic.Bases;
-using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 
-namespace Nitrox.Model.Packets;
+namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
 public sealed class LargeWaterParkDeconstructed : PieceDeconstructed

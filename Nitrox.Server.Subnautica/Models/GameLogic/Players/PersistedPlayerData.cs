@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Players;
 

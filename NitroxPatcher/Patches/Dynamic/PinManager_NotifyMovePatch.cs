@@ -4,6 +4,7 @@ using System.Reflection;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

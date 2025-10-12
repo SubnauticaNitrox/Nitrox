@@ -3,6 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches;
 

@@ -2,6 +2,7 @@ using System;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;

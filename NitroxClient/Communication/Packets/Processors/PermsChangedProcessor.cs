@@ -1,7 +1,8 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.DataStructures.GameLogic;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

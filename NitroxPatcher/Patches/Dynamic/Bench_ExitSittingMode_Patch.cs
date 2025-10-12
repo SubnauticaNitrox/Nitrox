@@ -4,6 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

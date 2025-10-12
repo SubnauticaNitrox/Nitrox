@@ -1,4 +1,4 @@
-﻿namespace Nitrox.Model.DataStructures.Util;
+﻿namespace Nitrox.Model.DataStructures;
 
 [TestClass]
 public class OptionalTest

@@ -1,7 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Nitrox.Model.DataStructures.Unity
+﻿namespace Nitrox.Model.DataStructures.Unity
 {
     [TestClass]
     public class NitroxQuaternionTest

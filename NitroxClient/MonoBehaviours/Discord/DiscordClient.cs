@@ -6,6 +6,7 @@ using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using Nitrox.Model;
 using Nitrox.Model.Core;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

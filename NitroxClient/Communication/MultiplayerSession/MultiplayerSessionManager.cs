@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
@@ -8,6 +9,8 @@ using Nitrox.Model.Helper;
 using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Serialization;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {

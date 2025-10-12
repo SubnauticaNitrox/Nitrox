@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Nitrox.Model.Helper;
+namespace Nitrox.Model.Core;
 
 /// <summary>
 ///     Environment helper for getting meta data about where and how Nitrox is running.

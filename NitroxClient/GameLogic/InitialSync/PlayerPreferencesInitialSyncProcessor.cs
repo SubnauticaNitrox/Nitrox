@@ -6,8 +6,9 @@ using NitroxClient.Communication;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 

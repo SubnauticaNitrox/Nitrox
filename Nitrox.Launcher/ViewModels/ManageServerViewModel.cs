@@ -22,6 +22,7 @@ using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Config = Nitrox.Model.Serialization.SubnauticaServerConfig;
 
 namespace Nitrox.Launcher.ViewModels;

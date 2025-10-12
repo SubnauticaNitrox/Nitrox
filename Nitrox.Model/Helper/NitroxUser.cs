@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Nitrox.Model.Core;
 using Nitrox.Model.Discovery;
 using Nitrox.Model.Discovery.InstallationFinders.Core;
 using Nitrox.Model.Platforms.OS.Shared;

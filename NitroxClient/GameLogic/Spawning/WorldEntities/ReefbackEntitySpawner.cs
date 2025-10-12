@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
-using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;

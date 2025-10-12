@@ -4,10 +4,10 @@ using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.MonoBehaviours.Discord;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.Util;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Helper;
 using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;

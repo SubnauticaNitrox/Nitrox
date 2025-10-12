@@ -5,6 +5,7 @@ using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

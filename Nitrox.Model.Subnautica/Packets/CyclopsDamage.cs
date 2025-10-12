@@ -3,6 +3,7 @@ using System.Linq;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
+using UnityEngine;
 
 namespace Nitrox.Model.Subnautica.Packets
 {

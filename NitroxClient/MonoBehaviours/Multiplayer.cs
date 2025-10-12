@@ -17,6 +17,7 @@ using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using Nitrox.Model.Core;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;

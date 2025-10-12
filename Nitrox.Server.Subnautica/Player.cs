@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.DataStructures.GameLogic.Entities;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.DataStructures.Util;
-using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.Communication;
 
 namespace Nitrox.Server.Subnautica

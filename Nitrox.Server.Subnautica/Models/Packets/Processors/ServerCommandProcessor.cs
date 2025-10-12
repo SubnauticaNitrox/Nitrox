@@ -1,4 +1,4 @@
-﻿using Nitrox.Model.DataStructures.Util;
+﻿using Nitrox.Model.DataStructures;
 using Nitrox.Server.Subnautica.Models.Commands.Processor;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 

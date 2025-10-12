@@ -2,7 +2,6 @@ using System.Text.RegularExpressions;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerLogic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper

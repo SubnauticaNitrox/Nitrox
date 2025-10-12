@@ -1,9 +1,7 @@
-﻿using FluentAssertions;
-using FluentAssertions.Events;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FluentAssertions.Events;
+using Nitrox.Model.Subnautica.Packets;
 using Nitrox.Test.Client.Communication.MultiplayerSession;
 using NitroxClient.Communication.Abstract;
-using Nitrox.Model.Packets;
 using NSubstitute;
 
 namespace NitroxClient.Communication.MultiplayerSession

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using UWE;
 
 namespace Nitrox.Server.Subnautica.Models.Resources;
