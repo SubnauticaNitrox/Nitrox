@@ -83,7 +83,11 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             passwordInput.MoveToEndOfLine(false, true);
             
             // Open Steam Deck onscreen keyboard for better compatibility
-            if (SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer)
+            // Check for Steam Deck in multiple ways (native Linux and Windows via Proton)
+            if (SystemInfo.deviceModel.Contains("SteamDeck") || 
+                Application.platform == RuntimePlatform.LinuxPlayer ||
+                System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
+                System.IO.File.Exists("/home/deck/.steampid"))
             {
                 OpenDeckKeyboard();
             }
@@ -189,7 +193,10 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         {
             selectedInputField.Select();
             // Open Steam Deck onscreen keyboard when password field is selected
-            if ((SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer) && selectedInputField == passwordInput)
+            if ((SystemInfo.deviceModel.Contains("SteamDeck") || 
+                 Application.platform == RuntimePlatform.LinuxPlayer ||
+                 System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
+                 System.IO.File.Exists("/home/deck/.steampid")) && selectedInputField == passwordInput)
             {
                 OpenDeckKeyboard();
             }

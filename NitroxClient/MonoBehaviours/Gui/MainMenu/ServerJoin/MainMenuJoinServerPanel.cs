@@ -146,7 +146,11 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             playerNameInputField.MoveToEndOfLine(false, true);
             
             // Open Steam Deck onscreen keyboard for better compatibility
-            if (SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer)
+            // Check for Steam Deck in multiple ways (native Linux and Windows via Proton)
+            if (SystemInfo.deviceModel.Contains("SteamDeck") || 
+                Application.platform == RuntimePlatform.LinuxPlayer ||
+                System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
+                System.IO.File.Exists("/home/deck/.steampid"))
             {
                 OpenDeckKeyboard();
             }
@@ -262,7 +266,10 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
 
         // Open Steam Deck onscreen keyboard when player name field is selected
-        if ((SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer) && 
+        if ((SystemInfo.deviceModel.Contains("SteamDeck") || 
+             Application.platform == RuntimePlatform.LinuxPlayer ||
+             System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
+             System.IO.File.Exists("/home/deck/.steampid")) && 
             selectedItem == selectableItems[0])
         {
             OpenDeckKeyboard();
