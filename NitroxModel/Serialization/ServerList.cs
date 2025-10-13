@@ -38,7 +38,12 @@ public class ServerList
     {
         // Create file if it doesn't exist yet.
         string file = DefaultFile;
-        if (!File.Exists(file))
+        string[] lines;
+        try
+        {
+            lines = File.ReadAllLines(file);
+        }
+        catch (IOException)
         {
             instance = Default;
             instance.Save();
@@ -46,7 +51,7 @@ public class ServerList
         }
 
         ServerList list = new();
-        foreach (string line in File.ReadAllLines(file))
+        foreach (string line in lines)
         {
             Entry entry = Entry.FromLine(line);
             if (entry == null)
@@ -117,7 +122,7 @@ public class ServerList
         {
         }
 
-        public static Entry FromLine(string line)
+        public static Entry? FromLine(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
             {
@@ -145,7 +150,8 @@ public class ServerList
                     }
                     break;
                 default:
-                    throw new Exception($"Expected server entry to have 2 or 3 parts: {line}");
+                    Log.Warn($"A server list entry contained too many elements. Either 2 or 3 is valid but was: {line}");
+                    return null;
             }
 
             string name = parts[0].Trim();
