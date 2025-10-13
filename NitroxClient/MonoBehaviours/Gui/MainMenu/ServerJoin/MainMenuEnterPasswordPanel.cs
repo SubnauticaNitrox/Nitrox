@@ -19,6 +19,7 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
 
     private TMP_InputField passwordInput;
     private mGUI_Change_Legend_On_Select legendChange;
+    private TouchScreenKeyboard deckKeyboard;
 
     private GameObject selectedItem;
     private GameObject[] selectableItems;
@@ -80,6 +81,38 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             EventSystem.current.SetSelectedGameObject(passwordInput.gameObject);
             yield return null;
             passwordInput.MoveToEndOfLine(false, true);
+            
+            // Open Steam Deck onscreen keyboard for better compatibility
+            if (SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                OpenDeckKeyboard();
+            }
+        }
+    }
+
+    public void OpenDeckKeyboard()
+    {
+        deckKeyboard = TouchScreenKeyboard.Open(passwordInput.text, TouchScreenKeyboardType.Default, false, false, true, false);
+    }
+
+    private void Update()
+    {
+        if (deckKeyboard != null)
+        {
+            // Keep field synced with OSK
+            passwordInput.text = deckKeyboard.text;
+
+            // Check if OSK closed
+            if (!deckKeyboard.active || deckKeyboard.status == TouchScreenKeyboard.Status.Done || deckKeyboard.status == TouchScreenKeyboard.Status.Canceled)
+            {
+                deckKeyboard = null;
+
+                // Commit the text to the panel
+                if (!string.IsNullOrEmpty(passwordInput.text))
+                {
+                    OnConfirmButtonClicked();
+                }
+            }
         }
     }
 
@@ -155,6 +188,11 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {
             selectedInputField.Select();
+            // Open Steam Deck onscreen keyboard when password field is selected
+            if ((SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer) && selectedInputField == passwordInput)
+            {
+                OpenDeckKeyboard();
+            }
         }
         else // Buttons
         {
