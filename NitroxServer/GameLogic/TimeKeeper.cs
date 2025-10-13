@@ -85,7 +85,7 @@ public class TimeKeeper
         this.ntpSyncer = ntpSyncer;
 
         // We only need the correction offset to be calculated once
-        ntpSyncer.Setup(true, (onlineMode, _) => // TODO: set to false after tests
+        ntpSyncer.Setup(verbose: false, (onlineMode, _) =>
         {
             if (!onlineMode)
             {
@@ -128,7 +128,7 @@ public class TimeKeeper
         {
             // Reset the syncer before starting another round of it
             ntpSyncer.Dispose();
-            ntpSyncer.Setup(true, (onlineMode, _) =>  // TODO: set to false after tests
+            ntpSyncer.Setup(verbose: false, (onlineMode, _) =>
             {
                 if (onlineMode)
                 {
