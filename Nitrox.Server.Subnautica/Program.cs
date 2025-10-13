@@ -370,7 +370,7 @@ public class Program
                         Console.Write(keyInfo.KeyChar);
                         if (Console.CursorLeft - 1 < inputLineBuilder.Length)
                         {
-                            inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
+                            inputLineBuilder.Insert(int.Max(Console.CursorLeft - 1, 0), keyInfo.KeyChar);
                             RedrawInput(Console.CursorLeft, -1);
                         }
                         else
