@@ -82,9 +82,9 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             yield return null;
             passwordInput.MoveToEndOfLine(false, true);
             
-            // Open Steam Deck onscreen keyboard for better compatibility
-            // Only activate OSK on actual handheld devices or when explicitly in gamepad mode
-            if (IsHandheldDevice() && GameInput.PrimaryDevice == GameInput.Device.Controller)
+            // Open onscreen keyboard for better controller compatibility
+            // Activate OSK when using controller (Steam will handle the keyboard display)
+            if (GameInput.PrimaryDevice == GameInput.Device.Controller && TouchScreenKeyboard.isSupported)
             {
                 OpenDeckKeyboard();
             }
@@ -197,8 +197,8 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {
             selectedInputField.Select();
-            // Open Steam Deck onscreen keyboard when password field is selected via controller
-            if (IsHandheldDevice() && GameInput.PrimaryDevice == GameInput.Device.Controller && selectedInputField == passwordInput)
+            // Open onscreen keyboard when password field is selected via controller
+            if (GameInput.PrimaryDevice == GameInput.Device.Controller && TouchScreenKeyboard.isSupported && selectedInputField == passwordInput)
             {
                 OpenDeckKeyboard();
             }

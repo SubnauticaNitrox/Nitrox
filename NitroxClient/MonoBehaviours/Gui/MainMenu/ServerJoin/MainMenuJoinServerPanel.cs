@@ -145,9 +145,9 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             yield return new WaitForEndOfFrame();
             playerNameInputField.MoveToEndOfLine(false, true);
             
-            // Open Steam Deck onscreen keyboard for better compatibility
-            // Only activate OSK on actual handheld devices or when explicitly in gamepad mode
-            if (IsHandheldDevice() && GameInput.PrimaryDevice == GameInput.Device.Controller)
+            // Open onscreen keyboard for better controller compatibility
+            // Activate OSK when using controller (Steam will handle the keyboard display)
+            if (GameInput.PrimaryDevice == GameInput.Device.Controller && TouchScreenKeyboard.isSupported)
             {
                 OpenDeckKeyboard();
             }
@@ -270,8 +270,8 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             selectable.Select();
         }
 
-        // Open Steam Deck onscreen keyboard when player name field is selected via controller
-        if (IsHandheldDevice() && GameInput.PrimaryDevice == GameInput.Device.Controller && 
+        // Open onscreen keyboard when player name field is selected via controller
+        if (GameInput.PrimaryDevice == GameInput.Device.Controller && TouchScreenKeyboard.isSupported && 
             selectedItem == selectableItems[0])
         {
             OpenDeckKeyboard();
