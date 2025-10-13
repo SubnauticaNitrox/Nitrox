@@ -158,6 +158,9 @@ public sealed class Steam : IGamePlatform
         {
             throw new FileNotFoundException("Steam was not found on your machine.");
         }
+        
+        // Ensure steam_appid.txt exists in game directory for Steam API initialization
+        EnsureSteamAppIdFile(gameFilePath, steamAppId);
         string steamPath = Path.GetDirectoryName(steamExe);
         if (steamPath == null)
         {
@@ -174,7 +177,7 @@ public sealed class Steam : IGamePlatform
         }
 
         // Start through game executable. This allows custom args so that VR mode can be on with Nitrox (Subnautica hard codes '-vrmode none' as default launch option and starting game through Steam from command line always uses default launch option).
-        // This way allows for multiple instances to run, but also stops some Steam integrations from working (e.g. Steam Input, Steam Overlay).
+        // Enhanced to enable Steam integrations (Steam Input, Steam Overlay) for better controller and OSK support.
         ProcessStartInfo result = new()
         {
             FileName = gameFilePath,
@@ -183,7 +186,9 @@ public sealed class Steam : IGamePlatform
             {
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
-                ["SteamAppID"] = steamAppId.ToString()
+                ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
+                ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay
+                ["ENABLE_VKBASALT"] = "0" // Disable VKBasalt to prevent overlay conflicts
             }
         };
 
@@ -252,6 +257,10 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("WINEPREFIX", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
+            
+            // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
+            // Note: SteamAppId and other overlay vars are already set in the initial EnvironmentVariables collection
+            result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Linux-specific overlay flag
         }
 
         return result;
@@ -347,5 +356,37 @@ public sealed class Steam : IGamePlatform
             _ => throw new FileNotFoundException("Failed to find Steam console log file")
         };
         return File.GetLastWriteTime(Path.Combine(steamLogsPath, "console_log.txt"));
+    }
+
+    /// <summary>
+    /// STEAM API INTEGRATION:
+    /// Ensures steam_appid.txt file exists in the game directory for Steam API initialization.
+    /// This file enables Steam overlay and Steam Input functionality by telling Steam which app is running.
+    /// Critical for Steam Deck OSK, controller support, and Steam overlay integration.
+    /// Without this file, Steam Input and overlay features may not work properly.
+    /// </summary>
+    private static void EnsureSteamAppIdFile(string gameFilePath, int steamAppId)
+    {
+        try
+        {
+            string gameDirectory = Path.GetDirectoryName(gameFilePath);
+            if (string.IsNullOrEmpty(gameDirectory))
+            {
+                return;
+            }
+
+            string steamAppIdFile = Path.Combine(gameDirectory, "steam_appid.txt");
+            
+            // Only create/update if file doesn't exist or has wrong content
+            if (!File.Exists(steamAppIdFile) || File.ReadAllText(steamAppIdFile).Trim() != steamAppId.ToString())
+            {
+                File.WriteAllText(steamAppIdFile, steamAppId.ToString());
+                Log.Info($"Created/updated steam_appid.txt with app ID {steamAppId} in {gameDirectory}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warn($"Failed to create steam_appid.txt: {ex.Message}");
+        }
     }
 }

@@ -54,6 +54,9 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private bool allowMultipleGameInstances;
     
     [ObservableProperty]
+    private bool steamOverlayEnabled;
+    
+    [ObservableProperty]
     private bool isInReleaseMode;
 
     private static string DefaultLaunchArg => "-vrmode none";
@@ -69,6 +72,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        SteamOverlayEnabled = keyValueStore.GetIsSteamOverlayEnabled();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -198,5 +202,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     partial void OnAllowMultipleGameInstancesChanged(bool value)
     {
         keyValueStore.SetIsMultipleGameInstancesAllowed(value);
+    }
+    
+    partial void OnSteamOverlayEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsSteamOverlayEnabled(value);
     }
 }

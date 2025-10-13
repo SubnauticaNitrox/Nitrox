@@ -257,8 +257,34 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
     }
 
+    /// <summary>
+    /// STEAM OVERLAY INTEGRATION:
+    /// Determines whether to launch game through Steam or directly.
+    /// Steam launch enables overlay, Steam Input, controller support, and OSK functionality.
+    /// Critical for Steam Deck and controller users who rely on Steam Input for navigation and text entry.
+    /// </summary>
     private bool ShouldSkipSteam(string args)
     {
+        // Check if Steam overlay is disabled by user setting
+        if (!keyValueStore.GetIsSteamOverlayEnabled())
+        {
+            return true; // Skip Steam if overlay is disabled
+        }
+
+        // Check if game is actually from Steam before forcing overlay
+        if (!IsGameFromSteam())
+        {
+            return true; // Skip Steam if game isn't from Steam
+        }
+
+        // Force Steam launch for better controller and overlay support (Steam Deck, controllers, OSK)
+        // Check if we're on a handheld device or Steam Deck
+        if (IsHandheldOrControllerPreferred())
+        {
+            // Always use Steam for Steam Deck and controller users to enable overlay and Steam Input
+            return false;
+        }
+
         if (App.InstantLaunch != null)
         {
             // Running through Steam is fine if single instance.
@@ -278,6 +304,42 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// HANDHELD/CONTROLLER DETECTION:
+    /// Detects Steam Deck and other handheld gaming devices where controller input is preferred.
+    /// These devices benefit most from Steam overlay and Steam Input functionality.
+    /// Used to automatically prefer Steam launch for better user experience on handheld devices.
+    /// </summary>
+    private bool IsHandheldOrControllerPreferred()
+    {
+        // Check for Steam Deck environment
+        return Environment.GetEnvironmentVariable("SteamDeck") != null ||
+               File.Exists("/home/deck/.steampid") ||
+               Environment.GetEnvironmentVariable("STEAM_DECK") != null ||
+               // Check if running under Steam (which usually indicates controller preference)
+               Environment.GetEnvironmentVariable("SteamAppId") != null ||
+               Environment.GetEnvironmentVariable("SteamGameId") != null;
+    }
+
+    private bool IsGameFromSteam()
+    {
+        string gamePath = NitroxUser.GamePath;
+        
+        // Check if the game path contains Steam-specific directory indicators
+        if (string.IsNullOrEmpty(gamePath))
+        {
+            return false;
+        }
+
+        // Check for common Steam directory patterns
+        return gamePath.Contains("steamapps", StringComparison.OrdinalIgnoreCase) ||
+               gamePath.Contains("Steam", StringComparison.OrdinalIgnoreCase) ||
+               // Check for Steam API DLL files in game directory
+               File.Exists(Path.Combine(gamePath, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")) ||
+               File.Exists(Path.Combine(gamePath, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")) ||
+               File.Exists(Path.Combine(gamePath, "steam_appid.txt"));
     }
 
     private void UpdateGamePlatform()

@@ -24,4 +24,11 @@ public static class KeyValueStoreExtensions
     {
         store.SetValue("IsMultipleGameInstancesAllowed", value);
     }
+
+    public static bool GetIsSteamOverlayEnabled(this IKeyValueStore store, bool defaultValue = true) => store.GetValue("IsSteamOverlayEnabled", defaultValue);
+
+    public static void SetIsSteamOverlayEnabled(this IKeyValueStore store, bool value)
+    {
+        store.SetValue("IsSteamOverlayEnabled", value);
+    }
 }

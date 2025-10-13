@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
+using NitroxModel.Logger;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -28,6 +29,11 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
     private GameObject selectedItem;
     private GameObject[] selectableItems;
+    
+    // Color picker controller state
+    private bool isInColorPickerMode = false;
+    private Image colorPanelHighlight;
+    private Outline colorPanelBorder;
 
     public void Setup(GameObject savedGamesRef)
     {
@@ -81,6 +87,29 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         saturationSlider.transform.localPosition = new Vector3(197, 0, 0);
         colorPickerPreview = colorPicker.gameObject.AddComponent<MainMenuColorPickerPreview>();
         colorPickerPreview.Init(colorPicker);
+
+        // Create highlight border for controller mode
+        GameObject highlightPanel = new GameObject("ColorPickerHighlight");
+        highlightPanel.transform.SetParent(colorPickerObject.transform, false);
+        highlightPanel.transform.SetAsFirstSibling(); // Put behind the color picker
+        RectTransform highlightRect = highlightPanel.AddComponent<RectTransform>();
+        highlightRect.anchorMin = new Vector2(0, 0);
+        highlightRect.anchorMax = new Vector2(1, 1);
+        highlightRect.offsetMin = new Vector2(-20, -20); // Padding around the color picker
+        highlightRect.offsetMax = new Vector2(220, 20); // Include the saturation slider area
+        
+        // Create thin yellow border outline instead of filled rectangle
+        colorPanelHighlight = highlightPanel.AddComponent<Image>();
+        colorPanelHighlight.color = Color.clear; // Transparent fill
+        colorPanelHighlight.raycastTarget = false; // Don't block input
+        
+        // Add Outline component for yellow border
+        colorPanelBorder = highlightPanel.AddComponent<Outline>();
+        colorPanelBorder.effectColor = Color.yellow; // Yellow border like button highlights
+        colorPanelBorder.effectDistance = new Vector2(3, 3); // Thin border thickness
+        colorPanelBorder.useGraphicAlpha = true;
+        
+        colorPanelHighlight.gameObject.SetActive(false); // Hidden by default
 
         GameObject buttonLeft = Instantiate(newGameButtonRef, parent);
         buttonLeft.GetComponent<RectTransform>().sizeDelta = new Vector2(160, 45);
@@ -146,17 +175,82 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             playerNameInputField.MoveToEndOfLine(false, true);
             
             // Open onscreen keyboard for better controller compatibility
-            // Activate OSK when using controller (Steam will handle the keyboard display)
-            if (GameInput.PrimaryDevice == GameInput.Device.Controller && TouchScreenKeyboard.isSupported)
+            // Use Steam Input keyboard when running through Proton/Steam
+            bool shouldShowOSK = GameInput.PrimaryDevice == GameInput.Device.Controller ||
+                                IsSteamInputActive() ||
+                                UnityEngine.Input.GetJoystickNames().Length > 0;
+            
+            Log.Info($"OSK Debug - TouchScreen supported: {TouchScreenKeyboard.isSupported}, Controller: {GameInput.PrimaryDevice}, Steam: {IsSteamInputActive()}, Joysticks: {UnityEngine.Input.GetJoystickNames().Length}, ShouldShow: {shouldShowOSK}");
+            
+            if (shouldShowOSK)
             {
-                OpenDeckKeyboard();
+                Log.Info("Opening Steam Input keyboard for controller input");
+                OpenSteamKeyboard();
             }
         }
     }
 
-    public void OpenDeckKeyboard()
+    public void OpenSteamKeyboard()
     {
-        deckKeyboard = TouchScreenKeyboard.Open(playerNameInputField.text, TouchScreenKeyboardType.Default, false, false, true, false);
+        Log.Info("Attempting to open Steam Input keyboard");
+        
+        // For Proton/Steam Input, try multiple approaches to trigger Steam's OSK
+        if (IsSteamInputActive())
+        {
+            // Method 1: Try Unity's TouchScreenKeyboard (may work through Steam Input layer)
+            if (TouchScreenKeyboard.isSupported)
+            {
+                Log.Info("Using TouchScreenKeyboard API through Steam Input");
+                deckKeyboard = TouchScreenKeyboard.Open(playerNameInputField.text, TouchScreenKeyboardType.Default, false, false, true, false);
+            }
+            
+            // Method 2: Focus the input field strongly to trigger Steam Input's auto-keyboard
+            Log.Info("Strongly focusing input field for Steam Input detection");
+            playerNameInputField.ActivateInputField();
+            playerNameInputField.Select();
+            EventSystem.current.SetSelectedGameObject(playerNameInputField.gameObject);
+            
+            // Method 3: Simulate Steam Input keyboard hotkey (Steam+X on Steam Deck)
+            // This might trigger Steam's virtual keyboard
+            StartCoroutine(TriggerSteamKeyboardHotkey());
+        }
+        else
+        {
+            Log.Info("Steam Input not detected, falling back to standard TouchScreenKeyboard");
+            if (TouchScreenKeyboard.isSupported)
+            {
+                deckKeyboard = TouchScreenKeyboard.Open(playerNameInputField.text, TouchScreenKeyboardType.Default, false, false, true, false);
+            }
+        }
+    }
+    
+    private System.Collections.IEnumerator TriggerSteamKeyboardHotkey()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        // Try to trigger Steam's virtual keyboard by simulating the hotkey
+        // Steam Deck uses Steam+X to open keyboard
+        Log.Info("Attempting to trigger Steam virtual keyboard hotkey");
+        
+        // Keep the input field focused
+        if (playerNameInputField != null)
+        {
+            playerNameInputField.ActivateInputField();
+            EventSystem.current.SetSelectedGameObject(playerNameInputField.gameObject);
+        }
+    }
+    
+    private System.Collections.IEnumerator RestoreCursorPosition(Vector3 originalPos)
+    {
+        yield return null; // Wait one frame for OSK to open
+        
+        // Only restore if we're still in a reasonable state
+        if (UnityEngine.Input.mousePresent && Vector3.Distance(UnityEngine.Input.mousePosition, originalPos) > 50f)
+        {
+            // Unity doesn't allow direct mouse position setting, but we can at least 
+            // ensure the UI state is consistent
+            EventSystem.current.SetSelectedGameObject(playerNameInputField.gameObject);
+        }
     }
 
     private bool IsHandheldDevice()
@@ -165,6 +259,14 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
                System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
                System.IO.File.Exists("/home/deck/.steampid") ||
                SystemInfo.deviceType == DeviceType.Handheld;
+    }
+
+    private bool IsSteamInputActive()
+    {
+        // Check for Steam environment variables that indicate Steam Input is active
+        return System.Environment.GetEnvironmentVariable("SteamAppId") != null ||
+               System.Environment.GetEnvironmentVariable("SteamGameId") != null ||
+               System.Environment.GetEnvironmentVariable("STEAM_COMPAT_CLIENT_INSTALL_PATH") != null;
     }
 
     private void Update()
@@ -181,25 +283,213 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
                 // OSK closed, player can now use controller to navigate and join
             }
         }
+
+        // Handle controller input for color picker
+        HandleColorPickerControllerInput();
+    }
+
+    private void HandleColorPickerControllerInput()
+    {
+        // Only handle controller input if using controller
+        bool isUsingController = GameInput.PrimaryDevice == GameInput.Device.Controller || 
+                                IsSteamInputActive() || 
+                                UnityEngine.Input.GetJoystickNames().Length > 0;
+        
+        if (!isUsingController)
+        {
+            return;
+        }
+
+        // Check if color picker is currently selected (any part of it)
+        bool colorPickerSelected = selectedItem != null && 
+                                  (selectedItem == colorPicker.gameObject || 
+                                   selectedItem.transform.IsChildOf(colorPicker.transform) ||
+                                   selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker);
+
+        // Update highlight visibility
+        if (colorPanelHighlight != null)
+        {
+            colorPanelHighlight.gameObject.SetActive(colorPickerSelected);
+        }
+
+        // Handle color picker mode input
+        if (isInColorPickerMode)
+        {
+            // Get joystick input - Left stick for color wheel, Right stick for saturation
+            Vector2 leftStick = new Vector2(UnityEngine.Input.GetAxis("Horizontal"), UnityEngine.Input.GetAxis("Vertical"));
+            Vector2 rightStick = new Vector2(UnityEngine.Input.GetAxis("Joy X Axis 4"), UnityEngine.Input.GetAxis("Joy Y Axis 4"));
+
+            // Handle left stick for color wheel (with deadzone)
+            if (leftStick.magnitude > 0.1f)
+            {
+                HandleColorWheelController(leftStick);
+            }
+
+            // Handle right stick Y axis for saturation slider (with deadzone)
+            if (Mathf.Abs(rightStick.y) > 0.1f)
+            {
+                HandleSaturationSliderController(-rightStick.y); // Invert Y for intuitive up/down control
+            }
+
+            // Exit color picker mode with B button or if color picker is no longer selected
+            if (UnityEngine.Input.GetButtonDown("Cancel") || !colorPickerSelected)
+            {
+                ExitColorPickerMode();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// VISUAL ENHANCEMENT - YELLOW BORDER COLOR PICKER:
+    /// Activates controller mode for color picker with enhanced visual feedback.
+    /// Uses Unity Outline component to create yellow border matching UI theme.
+    /// Provides clear visual indication when color picker is active and ready for controller input.
+    /// </summary>
+    private void EnterColorPickerMode()
+    {
+        isInColorPickerMode = true;
+        Log.Info("Entered color picker controller mode - use left stick for color wheel, right stick for intensity");
+        
+        // Make border more prominent when in color picker mode
+        if (colorPanelBorder != null)
+        {
+            colorPanelBorder.effectColor = Color.yellow; // Bright yellow border
+            colorPanelBorder.effectDistance = new Vector2(4, 4); // Thicker border when active
+        }
+    }
+    
+    private void ExitColorPickerMode()
+    {
+        isInColorPickerMode = false;
+        Log.Info("Exited color picker controller mode");
+        
+        // Return border to normal selection state
+        if (colorPanelBorder != null)
+        {
+            colorPanelBorder.effectColor = Color.yellow; // Normal yellow border
+            colorPanelBorder.effectDistance = new Vector2(3, 3); // Normal border thickness
+        }
+        
+        // End color picker preview
+        if (GameInput.PrimaryDevice == GameInput.Device.Controller && colorPickerPreview != null)
+        {
+            colorPickerPreview.OnPointerUp(null);
+        }
+    }
+
+    private void HandleColorWheelController(Vector2 stickInput)
+    {
+        if (colorPicker == null || colorPicker.pointer == null)
+        {
+            return;
+        }
+
+        // Get current pointer position relative to color wheel center
+        Vector2 currentPos = colorPicker.pointer.localPosition;
+        float wheelRadius = colorPicker.GetComponent<RectTransform>().rect.width * 0.5f * 0.85f; // Account for wheel bounds
+
+        // Apply stick input to move the pointer
+        Vector2 newPos = currentPos + stickInput * Time.unscaledDeltaTime * 100f; // Adjust speed as needed
+
+        // Clamp to wheel radius
+        if (newPos.magnitude > wheelRadius)
+        {
+            newPos = newPos.normalized * wheelRadius;
+        }
+
+        // Update pointer position
+        colorPicker.pointer.localPosition = newPos;
+
+        // Force color picker update by directly calling its color change mechanism
+        // This simulates what happens when the user drags the pointer
+        if (colorPickerPreview != null)
+        {
+            // The color picker preview component handles the color updates
+            // Trigger a color update by calculating the color at the new position
+            Vector2 normalizedPos = newPos / wheelRadius;
+            float distance = Mathf.Clamp01(normalizedPos.magnitude);
+            float angle = Mathf.Atan2(normalizedPos.y, normalizedPos.x) * Mathf.Rad2Deg;
+            if (angle < 0)
+            {
+                angle += 360f;
+            }
+            
+            // Convert to HSV color (using current saturation from slider)
+            float hue = angle / 360f;
+            float saturation = saturationSlider != null ? saturationSlider.value : 1f;
+            Color newColor = Color.HSVToRGB(hue, saturation, 1f);
+            
+            // Trigger the color change event if it exists
+            if (colorPicker.onColorChange != null)
+            {
+                ColorChangeEventData eventData = new ColorChangeEventData(EventSystem.current) 
+                { 
+                    color = newColor 
+                };
+                colorPicker.onColorChange.Invoke(eventData);
+            }
+        }
+    }
+
+    private void HandleSaturationSliderController(float rightStickY)
+    {
+        if (saturationSlider == null)
+        {
+            return;
+        }
+
+        // Get current slider value
+        float currentValue = saturationSlider.value;
+        
+        // Apply right stick input to modify slider value
+        float newValue = currentValue + rightStickY * Time.unscaledDeltaTime * 0.5f; // Adjust speed as needed
+        
+        // Clamp to slider bounds [0, 1]
+        newValue = Mathf.Clamp01(newValue);
+        
+        // Update slider value
+        saturationSlider.value = newValue;
     }
 
     public bool OnButtonDown(GameInput.Button button)
     {
-        if (button != GameInput.Button.UISubmit || !selectedItem)
+        if (!selectedItem)
         {
             return false;
         }
 
-        if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
+        // Handle color picker mode
+        if (button == GameInput.Button.UISubmit)
         {
-            inputField.Select();
-            inputField.ActivateInputField();
+            // Check if color picker is selected
+            bool colorPickerSelected = selectedItem == colorPicker.gameObject || 
+                                      selectedItem.transform.IsChildOf(colorPicker.transform) ||
+                                      selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker;
+            
+            if (colorPickerSelected && !isInColorPickerMode)
+            {
+                EnterColorPickerMode();
+                return true;
+            }
+            else if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
+            {
+                inputField.Select();
+                inputField.ActivateInputField();
+                return true;
+            }
+            else if (selectedItem.TryGetComponentInChildren(out Button buttonComponent))
+            {
+                buttonComponent.onClick.Invoke();
+                return true;
+            }
         }
-        else if (selectedItem.TryGetComponentInChildren(out Button buttonComponent))
+        else if (button == GameInput.Button.UICancel && isInColorPickerMode)
         {
-            buttonComponent.onClick.Invoke();
+            ExitColorPickerMode();
+            return true;
         }
-        return true;
+        
+        return false;
     }
 
     public bool OnScroll(float scrollDelta, float speedMultiplier)
@@ -271,10 +561,10 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
 
         // Open onscreen keyboard when player name field is selected via controller
-        if (GameInput.PrimaryDevice == GameInput.Device.Controller && TouchScreenKeyboard.isSupported && 
+        if ((GameInput.PrimaryDevice == GameInput.Device.Controller || IsSteamInputActive()) && 
             selectedItem == selectableItems[0])
         {
-            OpenDeckKeyboard();
+            OpenSteamKeyboard();
         }
 
         if (!EventSystem.current.alreadySelecting)
@@ -290,6 +580,16 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         if (!selectedItem)
         {
             return;
+        }
+
+        // Exit color picker mode if we're deselecting the color picker
+        bool wasColorPickerSelected = selectedItem == colorPicker.gameObject || 
+                                     selectedItem.transform.IsChildOf(colorPicker.transform) ||
+                                     selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker;
+        
+        if (wasColorPickerSelected && isInColorPickerMode)
+        {
+            ExitColorPickerMode();
         }
 
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))

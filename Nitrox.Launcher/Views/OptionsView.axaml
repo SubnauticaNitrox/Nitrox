@@ -193,13 +193,20 @@
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
-                                      ToolTip.Tip="Enable this option to allow multiple instances of the game to run at the same time. NOTE: Enabling this will disable Steam's in-game overlay">
+                                      ToolTip.Tip="Allow multiple game instances to run simultaneously. NOTE: This bypasses Steam launcher and disables Steam overlay, Steam Input, and controller support for better performance with multiple instances.">
                                 <Interaction.Behaviors>
                                     <EventTriggerBehavior EventName="Click">
                                         <InvokeCommandAction Command="{Binding DisplaySteamOverlayNotificationCommand}" />
                                     </EventTriggerBehavior>
                                 </Interaction.Behaviors>
                             </CheckBox>
+                        </StackPanel>
+                    </Border>
+                    <Border>
+                        <StackPanel>
+                            <TextBlock Text="Steam overlay" />
+                            <CheckBox Classes="switch" IsChecked="{Binding SteamOverlayEnabled}"
+                                      ToolTip.Tip="Required for Steam Input and controller support (Steam Deck, Xbox, PlayStation controllers). Enable Steam overlay to unlock Steam Input features: controller support, onscreen keyboard (OSK), and Steam Deck compatibility. Launches game through Steam instead of direct execution. Only works with Steam version of Subnautica." />
                         </StackPanel>
                     </Border>
                     <!--<Border>
