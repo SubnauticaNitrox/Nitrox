@@ -83,11 +83,8 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             passwordInput.MoveToEndOfLine(false, true);
             
             // Open Steam Deck onscreen keyboard for better compatibility
-            // Check for Steam Deck in multiple ways (native Linux and Windows via Proton)
-            if (SystemInfo.deviceModel.Contains("SteamDeck") || 
-                Application.platform == RuntimePlatform.LinuxPlayer ||
-                System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
-                System.IO.File.Exists("/home/deck/.steampid"))
+            // Only activate OSK on actual handheld devices or when explicitly in gamepad mode
+            if (IsHandheldDevice() && GameInput.PrimaryDevice == GameInput.Device.Controller)
             {
                 OpenDeckKeyboard();
             }
@@ -97,6 +94,14 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
     public void OpenDeckKeyboard()
     {
         deckKeyboard = TouchScreenKeyboard.Open(passwordInput.text, TouchScreenKeyboardType.Default, false, false, true, false);
+    }
+
+    private bool IsHandheldDevice()
+    {
+        return SystemInfo.deviceModel.Contains("SteamDeck") || 
+               System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
+               System.IO.File.Exists("/home/deck/.steampid") ||
+               SystemInfo.deviceType == DeviceType.Handheld;
     }
 
     private void Update()
@@ -192,11 +197,8 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {
             selectedInputField.Select();
-            // Open Steam Deck onscreen keyboard when password field is selected
-            if ((SystemInfo.deviceModel.Contains("SteamDeck") || 
-                 Application.platform == RuntimePlatform.LinuxPlayer ||
-                 System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
-                 System.IO.File.Exists("/home/deck/.steampid")) && selectedInputField == passwordInput)
+            // Open Steam Deck onscreen keyboard when password field is selected via controller
+            if (IsHandheldDevice() && GameInput.PrimaryDevice == GameInput.Device.Controller && selectedInputField == passwordInput)
             {
                 OpenDeckKeyboard();
             }
