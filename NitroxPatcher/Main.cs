@@ -115,6 +115,7 @@ public static class Main
         };
 
         Log.Info($"Using Nitrox {NitroxEnvironment.VersionInfo} built on {NitroxEnvironment.BuildDate:F}");
+        Log.Info($"Game version: {Application.version}");
         try
         {
             Patcher.Initialize();
