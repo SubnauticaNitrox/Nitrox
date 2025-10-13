@@ -24,6 +24,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     private MainMenuColorPickerPreview colorPickerPreview;
     private Slider saturationSlider;
     private uGUI_InputField playerNameInputField;
+    private TouchScreenKeyboard deckKeyboard;
 
     private GameObject selectedItem;
     private GameObject[] selectableItems;
@@ -143,6 +144,33 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             SelectFirstItem();
             yield return new WaitForEndOfFrame();
             playerNameInputField.MoveToEndOfLine(false, true);
+            
+            // Open Steam Deck onscreen keyboard for better compatibility
+            if (SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                OpenDeckKeyboard();
+            }
+        }
+    }
+
+    public void OpenDeckKeyboard()
+    {
+        deckKeyboard = TouchScreenKeyboard.Open(playerNameInputField.text, TouchScreenKeyboardType.Default, false, false, true, false);
+    }
+
+    private void Update()
+    {
+        if (deckKeyboard != null)
+        {
+            // Keep field synced with OSK
+            playerNameInputField.text = deckKeyboard.text;
+
+            // Check if OSK closed
+            if (!deckKeyboard.active || deckKeyboard.status == TouchScreenKeyboard.Status.Done || deckKeyboard.status == TouchScreenKeyboard.Status.Canceled)
+            {
+                deckKeyboard = null;
+                // OSK closed, player can now use controller to navigate and join
+            }
         }
     }
 
@@ -231,6 +259,13 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         if (selectedItem.TryGetComponentInChildren(out Selectable selectable))
         {
             selectable.Select();
+        }
+
+        // Open Steam Deck onscreen keyboard when player name field is selected
+        if ((SystemInfo.deviceModel.Contains("SteamDeck") || Application.platform == RuntimePlatform.LinuxPlayer) && 
+            selectedItem == selectableItems[0])
+        {
+            OpenDeckKeyboard();
         }
 
         if (!EventSystem.current.alreadySelecting)
