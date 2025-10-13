@@ -53,13 +53,10 @@ public class ServerList
         ServerList list = new();
         foreach (string line in lines)
         {
-            Entry entry = Entry.FromLine(line);
-            if (entry == null)
+            if (Entry.FromLine(line) is { } entry)
             {
-                continue;
+                list.entries.Add(entry);
             }
-
-            list.entries.Add(entry);
         }
         return list;
     }
