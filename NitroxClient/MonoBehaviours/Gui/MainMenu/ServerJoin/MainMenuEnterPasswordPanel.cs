@@ -198,14 +198,6 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         }
     }
 
-    private bool IsHandheldDevice()
-    {
-        return SystemInfo.deviceModel.Contains("SteamDeck") || 
-               System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
-               System.IO.File.Exists("/home/deck/.steampid") ||
-               SystemInfo.deviceType == DeviceType.Handheld;
-    }
-
     /// <summary>
     /// STEAM INPUT DETECTION:
     /// Detects if Steam Input is active by checking Steam-specific environment variables.
