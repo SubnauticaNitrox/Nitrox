@@ -107,7 +107,7 @@ public class Program
             {
                 _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
             };
-            string serverSaveName = NitroxServer.Server.GetSaveName(args, "My World");
+            string serverSaveName = NitroxServer.Server.GetSaveName(args);
             Log.SaveName = serverSaveName;
 
             using (CancellationTokenSource portWaitCts = CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token))

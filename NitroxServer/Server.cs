@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -368,13 +369,13 @@ public class Server
     ///     Parses the save name from the given command line arguments or defaults to the standard save name.
     /// </summary>
     // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
-    public static string GetSaveName(string[] args, string defaultValue = null)
+    public static string GetSaveName(string[] args, string defaultValue = "My World")
     {
-        string result = args.GetCommandArgs("--save").FirstOrDefault() ?? args.GetCommandArgs("--name").FirstOrDefault();
+        string? result = args.GetCommandArgs("--save").FirstOrDefault() ?? args.GetCommandArgs("--name").FirstOrDefault();
         return IsValidSaveName(result) ? result : defaultValue;
     }
 
-    private static bool IsValidSaveName(string name)
+    private static bool IsValidSaveName([NotNull] string? name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -388,7 +389,7 @@ public class Server
         {
             return false;
         }
-        if (name.IndexOfAny(Path.GetInvalidFileNameChars().ToArray()) > -1)
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars()) > -1)
         {
             return false;
         }
