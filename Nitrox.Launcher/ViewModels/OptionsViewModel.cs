@@ -54,6 +54,12 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private bool allowMultipleGameInstances;
     
     [ObservableProperty]
+    private bool steamOverlayEnabled;
+    
+    [ObservableProperty]
+    private bool bigPictureModeEnabled;
+    
+    [ObservableProperty]
     private bool isInReleaseMode;
 
     private static string DefaultLaunchArg => "-vrmode none";
@@ -69,6 +75,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        SteamOverlayEnabled = keyValueStore.GetIsSteamOverlayEnabled();
+        BigPictureModeEnabled = keyValueStore.GetIsBigPictureModeEnabled();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -189,6 +197,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
     }
     
+    /// <summary>
+    /// Handles UI theme changes and applies them immediately to the running application.
+    /// Persists the preference to nitrox.cfg for future sessions.
+    /// </summary>
     partial void OnLightModeEnabledChanged(bool value)
     {
         keyValueStore.SetIsLightModeEnabled(value);
@@ -198,5 +210,15 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     partial void OnAllowMultipleGameInstancesChanged(bool value)
     {
         keyValueStore.SetIsMultipleGameInstancesAllowed(value);
+    }
+    
+    partial void OnSteamOverlayEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsSteamOverlayEnabled(value);
+    }
+    
+    partial void OnBigPictureModeEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsBigPictureModeEnabled(value);
     }
 }

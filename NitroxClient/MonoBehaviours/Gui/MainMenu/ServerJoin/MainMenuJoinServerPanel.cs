@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
+using NitroxModel.Logger;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,6 +25,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     private MainMenuColorPickerPreview colorPickerPreview;
     private Slider saturationSlider;
     private uGUI_InputField playerNameInputField;
+    private TouchScreenKeyboard deckKeyboard;
 
     private GameObject selectedItem;
     private GameObject[] selectableItems;
@@ -80,6 +82,16 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         saturationSlider.transform.localPosition = new Vector3(197, 0, 0);
         colorPickerPreview = colorPicker.gameObject.AddComponent<MainMenuColorPickerPreview>();
         colorPickerPreview.Init(colorPicker);
+
+        // Create highlight border for controller mode
+        GameObject highlightPanel = new GameObject("ColorPickerHighlight");
+        highlightPanel.transform.SetParent(colorPickerObject.transform, false);
+        highlightPanel.transform.SetAsFirstSibling(); // Put behind the color picker
+        RectTransform highlightRect = highlightPanel.AddComponent<RectTransform>();
+        highlightRect.anchorMin = new Vector2(0, 0);
+        highlightRect.anchorMax = new Vector2(1, 1);
+        highlightRect.offsetMin = new Vector2(-20, -20); // Padding around the color picker
+        highlightRect.offsetMax = new Vector2(220, 20); // Include the saturation slider area
 
         GameObject buttonLeft = Instantiate(newGameButtonRef, parent);
         buttonLeft.GetComponent<RectTransform>().sizeDelta = new Vector2(160, 45);
@@ -143,26 +155,167 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             SelectFirstItem();
             yield return new WaitForEndOfFrame();
             playerNameInputField.MoveToEndOfLine(false, true);
+            
+            // Open onscreen keyboard for better controller compatibility
+            // Use Steam Input keyboard when running through Proton/Steam
+            bool shouldShowOSK = GameInput.PrimaryDevice == GameInput.Device.Controller ||
+                                IsSteamInputActive() ||
+                                UnityEngine.Input.GetJoystickNames().Length > 0;
+            
+            Log.Info($"OSK Debug - TouchScreen supported: {TouchScreenKeyboard.isSupported}, Controller: {GameInput.PrimaryDevice}, Steam: {IsSteamInputActive()}, Joysticks: {UnityEngine.Input.GetJoystickNames().Length}, ShouldShow: {shouldShowOSK}");
+            
+            if (shouldShowOSK)
+            {
+                Log.Info("Opening Steam Input keyboard for controller input");
+                OpenSteamKeyboard();
+            }
         }
     }
 
+    public void OpenSteamKeyboard()
+    {
+        Log.Info("Attempting to open Steam Input keyboard");
+        
+        // For Proton/Steam Input, try multiple approaches to trigger Steam's OSK
+        if (IsSteamInputActive())
+        {
+            // Method 1: Try Unity's TouchScreenKeyboard (may work through Steam Input layer)
+            if (TouchScreenKeyboard.isSupported)
+            {
+                Log.Info("Using TouchScreenKeyboard API through Steam Input");
+                deckKeyboard = TouchScreenKeyboard.Open(playerNameInputField.text, TouchScreenKeyboardType.Default, false, false, true, false);
+            }
+            
+            // Method 2: Focus the input field strongly to trigger Steam Input's auto-keyboard
+            Log.Info("Strongly focusing input field for Steam Input detection");
+            playerNameInputField.ActivateInputField();
+            playerNameInputField.Select();
+            EventSystem.current.SetSelectedGameObject(playerNameInputField.gameObject);
+            
+            // Method 3: Simulate Steam Input keyboard hotkey (Steam+X on Steam Deck)
+            // This might trigger Steam's virtual keyboard
+            StartCoroutine(TriggerSteamKeyboardHotkey());
+        }
+        else
+        {
+            Log.Info("Steam Input not detected, falling back to standard TouchScreenKeyboard");
+            if (TouchScreenKeyboard.isSupported)
+            {
+                deckKeyboard = TouchScreenKeyboard.Open(playerNameInputField.text, TouchScreenKeyboardType.Default, false, false, true, false);
+            }
+        }
+    }
+    
+    private System.Collections.IEnumerator TriggerSteamKeyboardHotkey()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        // Try to trigger Steam's virtual keyboard by simulating the hotkey
+        // Steam Deck uses Steam+X to open keyboard
+        Log.Info("Attempting to trigger Steam virtual keyboard hotkey");
+        
+        // Keep the input field focused
+        if (playerNameInputField != null)
+        {
+            playerNameInputField.ActivateInputField();
+            EventSystem.current.SetSelectedGameObject(playerNameInputField.gameObject);
+        }
+    }
+    
+    private System.Collections.IEnumerator RestoreCursorPosition(Vector3 originalPos)
+    {
+        yield return null; // Wait one frame for OSK to open
+        
+        // Only restore if we're still in a reasonable state
+        if (UnityEngine.Input.mousePresent && Vector3.Distance(UnityEngine.Input.mousePosition, originalPos) > 50f)
+        {
+            // Unity doesn't allow direct mouse position setting, but we can at least 
+            // ensure the UI state is consistent
+            EventSystem.current.SetSelectedGameObject(playerNameInputField.gameObject);
+        }
+    }
+
+    private bool IsHandheldDevice()
+    {
+        return SystemInfo.deviceModel.Contains("SteamDeck") || 
+               System.Environment.GetEnvironmentVariable("SteamDeck") != null ||
+               System.IO.File.Exists("/home/deck/.steampid") ||
+               SystemInfo.deviceType == DeviceType.Handheld;
+    }
+
+    private bool IsSteamInputActive()
+    {
+        // Check for Steam environment variables that indicate Steam Input is active
+        return System.Environment.GetEnvironmentVariable("SteamAppId") != null ||
+               System.Environment.GetEnvironmentVariable("SteamGameId") != null ||
+               System.Environment.GetEnvironmentVariable("STEAM_COMPAT_CLIENT_INSTALL_PATH") != null;
+    }
+
+    private void Update()
+    {
+        if (deckKeyboard != null)
+        {
+            // Keep field synced with OSK
+            playerNameInputField.text = deckKeyboard.text;
+
+            // Check if OSK closed
+            if (!deckKeyboard.active || deckKeyboard.status == TouchScreenKeyboard.Status.Done || deckKeyboard.status == TouchScreenKeyboard.Status.Canceled)
+            {
+                deckKeyboard = null;
+                // OSK closed, player can now use controller to navigate and join
+            }
+        }
+
+        // Handle controller input for color picker
+        HandleColorPickerControllerInput();
+    }
+
+    private void HandleColorPickerControllerInput()
+    {
+        // Only handle controller input if using controller
+        bool isUsingController = GameInput.PrimaryDevice == GameInput.Device.Controller || 
+                                IsSteamInputActive() || 
+                                UnityEngine.Input.GetJoystickNames().Length > 0;
+        
+        if (!isUsingController)
+        {
+            return;
+        }
+
+        // Check if color picker is currently selected (any part of it)
+        bool colorPickerSelected = selectedItem != null && 
+                                  (selectedItem == colorPicker.gameObject || 
+                                   selectedItem.transform.IsChildOf(colorPicker.transform) ||
+                                   selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker);
+
+
+    }
+
+
+
     public bool OnButtonDown(GameInput.Button button)
     {
-        if (button != GameInput.Button.UISubmit || !selectedItem)
+        if (!selectedItem)
         {
             return false;
         }
 
-        if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
+        if (button == GameInput.Button.UISubmit)
         {
-            inputField.Select();
-            inputField.ActivateInputField();
+            if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
+            {
+                inputField.Select();
+                inputField.ActivateInputField();
+                return true;
+            }
+            else if (selectedItem.TryGetComponentInChildren(out Button buttonComponent))
+            {
+                buttonComponent.onClick.Invoke();
+                return true;
+            }
         }
-        else if (selectedItem.TryGetComponentInChildren(out Button buttonComponent))
-        {
-            buttonComponent.onClick.Invoke();
-        }
-        return true;
+        
+        return false;
     }
 
     public bool OnScroll(float scrollDelta, float speedMultiplier)
@@ -233,6 +386,13 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             selectable.Select();
         }
 
+        // Open onscreen keyboard when player name field is selected via controller
+        if ((GameInput.PrimaryDevice == GameInput.Device.Controller || IsSteamInputActive()) && 
+            selectedItem == selectableItems[0])
+        {
+            OpenSteamKeyboard();
+        }
+
         if (!EventSystem.current.alreadySelecting)
         {
             EventSystem.current.SetSelectedGameObject(selectedItem);
@@ -247,6 +407,8 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         {
             return;
         }
+
+
 
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {

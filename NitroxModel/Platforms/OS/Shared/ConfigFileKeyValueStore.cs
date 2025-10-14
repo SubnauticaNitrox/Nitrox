@@ -94,26 +94,60 @@ public class ConfigFileKeyValueStore : IKeyValueStore
         {
             return (true, null);
         }
-        Dictionary<string, object> deserialized;
-        try
+
+        // Check if config file exists
+        bool configExists = File.Exists(FilePath);
+        
+        Dictionary<string, object> deserialized = new();
+        if (configExists)
         {
-            deserialized = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(FilePath));
-        }
-        catch (Exception e)
-        {
-            return (false, e);
-        }
-        if (deserialized == null)
-        {
-            return (false, new Exception("Deserialized object was null"));
+            try
+            {
+                deserialized = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(FilePath));
+                if (deserialized == null)
+                {
+                    return (false, new Exception("Deserialized object was null"));
+                }
+            }
+            catch (Exception e)
+            {
+                return (false, e);
+            }
         }
 
         foreach (KeyValuePair<string, object> item in deserialized)
         {
             keyValuePairs[item.Key] = item.Value;
         }
+
+        // Initialize default settings for first-time users (when no config file exists)
+        if (!configExists)
+        {
+            InitializeDefaultSettings();
+        }
+
         hasLoaded = true;
         return (true, null);
+    }
+
+    private void InitializeDefaultSettings()
+    {
+        if (!keyValuePairs.ContainsKey("IsSteamOverlayEnabled"))
+        {
+            keyValuePairs["IsSteamOverlayEnabled"] = false;
+        }
+        
+        if (!keyValuePairs.ContainsKey("IsBigPictureModeEnabled"))
+        {
+            keyValuePairs["IsBigPictureModeEnabled"] = false;
+        }
+        
+        if (!keyValuePairs.ContainsKey("IsMultipleGameInstancesAllowed"))
+        {
+            keyValuePairs["IsMultipleGameInstancesAllowed"] = false;
+        }
+        
+        TrySaveConfig();
     }
 
     public bool DeleteKey(string key)

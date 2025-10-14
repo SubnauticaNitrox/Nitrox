@@ -24,4 +24,18 @@ public static class KeyValueStoreExtensions
     {
         store.SetValue("IsMultipleGameInstancesAllowed", value);
     }
+
+    public static bool GetIsSteamOverlayEnabled(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("IsSteamOverlayEnabled", defaultValue);
+
+    public static void SetIsSteamOverlayEnabled(this IKeyValueStore store, bool value)
+    {
+        store.SetValue("IsSteamOverlayEnabled", value);
+    }
+
+    public static bool GetIsBigPictureModeEnabled(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("IsBigPictureModeEnabled", defaultValue);
+
+    public static void SetIsBigPictureModeEnabled(this IKeyValueStore store, bool value)
+    {
+        store.SetValue("IsBigPictureModeEnabled", value);
+    }
 }

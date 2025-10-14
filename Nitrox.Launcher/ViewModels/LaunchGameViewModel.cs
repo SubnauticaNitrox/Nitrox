@@ -242,9 +242,17 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
         // Start game & gaming platform if needed.
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
+        
+        // BIG PICTURE MODE: Two-stage launch process
+        if (keyValueStore.GetIsBigPictureModeEnabled() && platform is Steam steamPlatform)
+        {
+            await LaunchWithBigPictureMode(steamPlatform, subnauticaExe, subnauticaLaunchArguments);
+            return; // Exit early - Big Picture mode handles launch in background
+        }
+
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), false),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
@@ -257,8 +265,40 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
     }
 
+    /// <summary>
+    /// STEAM OVERLAY INTEGRATION:
+    /// Determines whether to launch game through Steam or directly.
+    /// Steam launch enables overlay, Steam Input, controller support, and OSK functionality.
+    /// Critical for Steam Deck and controller users who rely on Steam Input for navigation and text entry.
+    /// </summary>
     private bool ShouldSkipSteam(string args)
     {
+        // Big Picture mode always forces Steam launch when enabled
+        if (keyValueStore.GetIsBigPictureModeEnabled())
+        {
+            return false; // Always use Steam for Big Picture mode
+        }
+
+        // Check if Steam overlay is disabled by user setting
+        if (!keyValueStore.GetIsSteamOverlayEnabled())
+        {
+            return true; // Skip Steam if overlay is disabled
+        }
+
+        // Check if game is actually from Steam before forcing overlay
+        if (!IsGameFromSteam())
+        {
+            return true; // Skip Steam if game isn't from Steam
+        }
+
+        // Force Steam launch for better controller and overlay support (Steam Deck, controllers, OSK)
+        // Check if we're on a handheld device or Steam Deck
+        if (IsHandheldOrControllerPreferred())
+        {
+            // Always use Steam for Steam Deck and controller users to enable overlay and Steam Input
+            return false;
+        }
+
         if (App.InstantLaunch != null)
         {
             // Running through Steam is fine if single instance.
@@ -278,6 +318,135 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// HANDHELD/CONTROLLER DETECTION:
+    /// Detects Steam Deck, Big Picture mode, and other handheld gaming devices where controller input is preferred.
+    /// These devices benefit most from Steam overlay and Steam Input functionality.
+    /// Used to automatically prefer Steam launch for better user experience on handheld devices.
+    /// </summary>
+    private bool IsHandheldOrControllerPreferred()
+    {
+        // Big Picture mode explicitly indicates controller/TV preference
+        if (keyValueStore.GetIsBigPictureModeEnabled())
+        {
+            return true;
+        }
+
+        // Check for Steam Deck environment
+        return Environment.GetEnvironmentVariable("SteamDeck") != null ||
+               File.Exists("/home/deck/.steampid") ||
+               Environment.GetEnvironmentVariable("STEAM_DECK") != null ||
+               // Check if running under Steam (which usually indicates controller preference)
+               Environment.GetEnvironmentVariable("SteamAppId") != null ||
+               Environment.GetEnvironmentVariable("SteamGameId") != null;
+    }
+
+    private bool IsGameFromSteam()
+    {
+        string gamePath = NitroxUser.GamePath;
+        
+        // Check if the game path contains Steam-specific directory indicators
+        if (string.IsNullOrEmpty(gamePath))
+        {
+            return false;
+        }
+
+        // Check for common Steam directory patterns
+        return gamePath.Contains("steamapps", StringComparison.OrdinalIgnoreCase) ||
+               gamePath.Contains("Steam", StringComparison.OrdinalIgnoreCase) ||
+               // Check for Steam API DLL files in game directory
+               File.Exists(Path.Combine(gamePath, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")) ||
+               File.Exists(Path.Combine(gamePath, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")) ||
+               File.Exists(Path.Combine(gamePath, "steam_appid.txt"));
+    }
+
+    /// <summary>
+    /// BIG PICTURE MODE ENHANCED LAUNCH:
+    /// Implements two-stage launch process for Big Picture mode.
+    /// Stage 1: Launch Steam Big Picture mode and wait for it to fully load
+    /// Stage 2: Launch Subnautica through Steam while keeping launcher in background
+    /// This ensures Big Picture interface is ready before game launch.
+    /// </summary>
+    private async Task LaunchWithBigPictureMode(Steam steamPlatform, string subnauticaExe, string launchArguments)
+    {
+        try
+        {
+            // Stage 1: Launch Steam Big Picture Mode
+            Log.Info("Big Picture Mode: Launching Steam Big Picture interface...");
+            
+            string? steamExe = steamPlatform.GetExeFile();
+                
+            if (steamExe == null)
+            {
+                throw new Exception("Could not find Steam executable for Big Picture mode launch");
+            }
+
+            // Launch Steam Big Picture Mode - Multiple methods to ensure it activates
+            bool bigPictureStarted = false;
+            
+            // Method 1: Try Steam protocol URL
+            try
+            {
+                ProcessStartInfo protocolStart = new()
+                {
+                    FileName = "steam://open/bigpicture",
+                    UseShellExecute = true
+                };
+                Process.Start(protocolStart);
+                Log.Info("Big Picture Mode: Attempted Steam protocol activation...");
+                await Task.Delay(1000); // Give protocol time to work
+                bigPictureStarted = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Info($"Steam protocol failed: {ex.Message}, trying direct launch...");
+            }
+
+            // Method 2: If protocol failed, try direct Steam command
+            if (!bigPictureStarted)
+            {
+                ProcessStartInfo directStart = new()
+                {
+                    FileName = steamExe,
+                    Arguments = "-bigpicture -tenfoot", // Multiple flags for Big Picture mode
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                Process.Start(directStart);
+                Log.Info("Big Picture Mode: Launched Steam with Big Picture flags...");
+            }
+
+            // Stage 2: Wait for Big Picture to fully load, then launch game
+            // Allow configurable delay - default 5 seconds should be enough for most systems
+            int delayMs = keyValueStore.GetValue("BigPictureLaunchDelay", 5000);
+            Log.Info($"Big Picture Mode: Waiting {delayMs/1000} seconds for interface to load...");
+            
+            await Task.Delay(delayMs);
+            
+            Log.Info("Big Picture Mode: Launching Subnautica through Steam in background...");
+            
+            // Launch game through Steam while Big Picture stays active
+            ProcessStartInfo gameStart = new()
+            {
+                FileName = steamExe,
+                Arguments = $@"-applaunch {GameInfo.Subnautica.SteamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {launchArguments}",
+                UseShellExecute = false,
+                CreateNoWindow = true // Keep launcher in background
+            };
+
+            Process.Start(gameStart);
+            Log.Info("Big Picture Mode: Subnautica launched successfully through Steam");
+            
+            // Minimize launcher window to background but keep it running for monitoring
+            // The launcher stays active to handle any Nitrox coordination
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Big Picture Mode launch failed: {ex.Message}");
+            throw;
+        }
     }
 
     private void UpdateGamePlatform()
