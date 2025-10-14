@@ -171,6 +171,17 @@ public static class NitroxUser
                 return gamePath;
             }
 
+            string cliGamePath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--game-path").FirstOrDefault();
+            if (Directory.Exists(cliGamePath) && Path.IsPathRooted(cliGamePath))
+            {
+                GamePlatform = GamePlatforms.GetPlatformByGameDir(cliGamePath);
+                return gamePath = cliGamePath;
+            }
+            if (cliGamePath != null)
+            {
+                throw new DirectoryNotFoundException($"Game directory not found at user-specified location: {cliGamePath}");
+            }
+
             List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
             GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
             if (potentiallyValidResult?.IsOk == true)

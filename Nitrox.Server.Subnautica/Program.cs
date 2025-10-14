@@ -26,7 +26,7 @@ namespace Nitrox.Server.Subnautica;
 [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 public class Program
 {
-    private static Lazy<string> gameInstallDir;
+    private static Lazy<string>? gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
     private static readonly CancellationTokenSource serverCts = new();
@@ -84,19 +84,7 @@ public class Program
             Stopwatch watch = Stopwatch.StartNew();
 
             // Allow game path to be given as command argument
-            string gameDir;
-            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], GameInfo.Subnautica.ExeName)))
-            {
-                gameDir = Path.GetFullPath(args[0]);
-                gameInstallDir = new Lazy<string>(() => gameDir);
-            }
-            else
-            {
-                gameInstallDir = new Lazy<string>(() =>
-                {
-                    return gameDir = NitroxUser.GamePath;
-                });
-            }
+            gameInstallDir = new Lazy<string>(() => NitroxUser.GamePath);
             Log.Info($"Using game files from: \'{gameInstallDir.Value}\'");
 
             // TODO: Fix DI to not be slow (should not use IO in type constructors). Instead, use Lazy<T> (et al). This way, cancellation can be faster.
@@ -525,11 +513,11 @@ public class Program
     private static class AssemblyResolver
     {
         private static string currentExecutableDirectory;
-        private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = [];
+        private static readonly Dictionary<string, AssemblyCacheEntry> resolvedAssemblyCache = [];
 
-        public static Assembly Handler(object sender, ResolveEventArgs args)
+        public static Assembly? Handler(object sender, ResolveEventArgs args)
         {
-            static Assembly ResolveFromLib(ReadOnlySpan<char> dllName)
+            static Assembly? ResolveFromLib(ReadOnlySpan<char> dllName)
             {
                 dllName = dllName.Slice(0, Math.Max(dllName.IndexOf(','), 0));
                 if (dllName.IsEmpty)
@@ -546,9 +534,14 @@ public class Program
                 }
                 string dllNameStr = dllName.ToString();
                 // If available, return cached assembly
-                if (resolvedAssemblyCache.TryGetValue(dllNameStr, out Assembly val))
+                if (resolvedAssemblyCache.TryGetValue(dllNameStr, out AssemblyCacheEntry cacheEntry) && cacheEntry is { Assembly: { } cachedAssembly })
                 {
-                    return val;
+                    return cachedAssembly;
+                }
+                if (cacheEntry == null)
+                {
+                    cacheEntry = new AssemblyCacheEntry(0, null);
+                    resolvedAssemblyCache[dllNameStr] = cacheEntry;
                 }
 
                 // Load DLLs where this program (exe) is located
@@ -556,25 +549,33 @@ public class Program
                 // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
                 if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
                 {
-                    // Try find game managed libraries
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (gameInstallDir != null)
                     {
-                        dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllNameStr);
-                    }
-                    else
-                    {
-                        dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+                        // Try find game managed libraries
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllNameStr);
+                        }
+                        else
+                        {
+                            dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+                        }
                     }
                 }
 
                 try
                 {
                     // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-                    Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
-                    return resolvedAssemblyCache[dllNameStr] = assembly;
+                    cacheEntry.Assembly = Assembly.Load(File.ReadAllBytes(dllPath));
+                    return cacheEntry.Assembly;
                 }
                 catch
                 {
+                    cacheEntry.Attempts++;
+                    if (cacheEntry.Attempts >= 5)
+                    {
+                        throw new FileNotFoundException($"Failed to load DLL '{dllName}' at: {dllPath}");
+                    }
                     return null;
                 }
             }
@@ -601,6 +602,12 @@ public class Program
                 pathAttempt = proc.MainModule?.FileName;
             }
             return currentExecutableDirectory = new Uri(Path.GetDirectoryName(pathAttempt ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
+        }
+
+        private record AssemblyCacheEntry(int Attempts, Assembly? Assembly)
+        {
+            public int Attempts { get; set; } = Attempts;
+            public Assembly? Assembly { get; set; } = Assembly;
         }
     }
 }
