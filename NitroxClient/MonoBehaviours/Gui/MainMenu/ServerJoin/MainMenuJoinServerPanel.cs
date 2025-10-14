@@ -29,11 +29,6 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
     private GameObject selectedItem;
     private GameObject[] selectableItems;
-    
-    // Color picker controller state
-    private bool isInColorPickerMode = false;
-    private Image colorPanelHighlight;
-    private Outline colorPanelBorder;
 
     public void Setup(GameObject savedGamesRef)
     {
@@ -97,19 +92,6 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         highlightRect.anchorMax = new Vector2(1, 1);
         highlightRect.offsetMin = new Vector2(-20, -20); // Padding around the color picker
         highlightRect.offsetMax = new Vector2(220, 20); // Include the saturation slider area
-        
-        // Create thin yellow border outline instead of filled rectangle
-        colorPanelHighlight = highlightPanel.AddComponent<Image>();
-        colorPanelHighlight.color = Color.clear; // Transparent fill
-        colorPanelHighlight.raycastTarget = false; // Don't block input
-        
-        // Add Outline component for yellow border
-        colorPanelBorder = highlightPanel.AddComponent<Outline>();
-        colorPanelBorder.effectColor = Color.yellow; // Yellow border like button highlights
-        colorPanelBorder.effectDistance = new Vector2(3, 3); // Thin border thickness
-        colorPanelBorder.useGraphicAlpha = true;
-        
-        colorPanelHighlight.gameObject.SetActive(false); // Hidden by default
 
         GameObject buttonLeft = Instantiate(newGameButtonRef, parent);
         buttonLeft.GetComponent<RectTransform>().sizeDelta = new Vector2(160, 45);
@@ -306,150 +288,10 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
                                    selectedItem.transform.IsChildOf(colorPicker.transform) ||
                                    selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker);
 
-        // Update highlight visibility
-        if (colorPanelHighlight != null)
-        {
-            colorPanelHighlight.gameObject.SetActive(colorPickerSelected);
-        }
 
-        // Handle color picker mode input
-        if (isInColorPickerMode)
-        {
-            // Get joystick input - Left stick for color wheel, Right stick for saturation
-            Vector2 leftStick = new Vector2(UnityEngine.Input.GetAxis("Horizontal"), UnityEngine.Input.GetAxis("Vertical"));
-            Vector2 rightStick = new Vector2(UnityEngine.Input.GetAxis("Joy X Axis 4"), UnityEngine.Input.GetAxis("Joy Y Axis 4"));
-
-            // Handle left stick for color wheel (with deadzone)
-            if (leftStick.magnitude > 0.1f)
-            {
-                HandleColorWheelController(leftStick);
-            }
-
-            // Handle right stick Y axis for saturation slider (with deadzone)
-            if (Mathf.Abs(rightStick.y) > 0.1f)
-            {
-                HandleSaturationSliderController(-rightStick.y); // Invert Y for intuitive up/down control
-            }
-
-            // Exit color picker mode with B button or if color picker is no longer selected
-            if (UnityEngine.Input.GetButtonDown("Cancel") || !colorPickerSelected)
-            {
-                ExitColorPickerMode();
-            }
-        }
-    }
-    
-    /// <summary>
-    /// VISUAL ENHANCEMENT - YELLOW BORDER COLOR PICKER:
-    /// Activates controller mode for color picker with enhanced visual feedback.
-    /// Uses Unity Outline component to create yellow border matching UI theme.
-    /// Provides clear visual indication when color picker is active and ready for controller input.
-    /// </summary>
-    private void EnterColorPickerMode()
-    {
-        isInColorPickerMode = true;
-        Log.Info("Entered color picker controller mode - use left stick for color wheel, right stick for intensity");
-        
-        // Make border more prominent when in color picker mode
-        if (colorPanelBorder != null)
-        {
-            colorPanelBorder.effectColor = Color.yellow; // Bright yellow border
-            colorPanelBorder.effectDistance = new Vector2(4, 4); // Thicker border when active
-        }
-    }
-    
-    private void ExitColorPickerMode()
-    {
-        isInColorPickerMode = false;
-        Log.Info("Exited color picker controller mode");
-        
-        // Return border to normal selection state
-        if (colorPanelBorder != null)
-        {
-            colorPanelBorder.effectColor = Color.yellow; // Normal yellow border
-            colorPanelBorder.effectDistance = new Vector2(3, 3); // Normal border thickness
-        }
-        
-        // End color picker preview
-        if (GameInput.PrimaryDevice == GameInput.Device.Controller && colorPickerPreview != null)
-        {
-            colorPickerPreview.OnPointerUp(null);
-        }
     }
 
-    private void HandleColorWheelController(Vector2 stickInput)
-    {
-        if (colorPicker == null || colorPicker.pointer == null)
-        {
-            return;
-        }
 
-        // Get current pointer position relative to color wheel center
-        Vector2 currentPos = colorPicker.pointer.localPosition;
-        float wheelRadius = colorPicker.GetComponent<RectTransform>().rect.width * 0.5f * 0.85f; // Account for wheel bounds
-
-        // Apply stick input to move the pointer
-        Vector2 newPos = currentPos + stickInput * Time.unscaledDeltaTime * 100f; // Adjust speed as needed
-
-        // Clamp to wheel radius
-        if (newPos.magnitude > wheelRadius)
-        {
-            newPos = newPos.normalized * wheelRadius;
-        }
-
-        // Update pointer position
-        colorPicker.pointer.localPosition = newPos;
-
-        // Force color picker update by directly calling its color change mechanism
-        // This simulates what happens when the user drags the pointer
-        if (colorPickerPreview != null)
-        {
-            // The color picker preview component handles the color updates
-            // Trigger a color update by calculating the color at the new position
-            Vector2 normalizedPos = newPos / wheelRadius;
-            float distance = Mathf.Clamp01(normalizedPos.magnitude);
-            float angle = Mathf.Atan2(normalizedPos.y, normalizedPos.x) * Mathf.Rad2Deg;
-            if (angle < 0)
-            {
-                angle += 360f;
-            }
-            
-            // Convert to HSV color (using current saturation from slider)
-            float hue = angle / 360f;
-            float saturation = saturationSlider != null ? saturationSlider.value : 1f;
-            Color newColor = Color.HSVToRGB(hue, saturation, 1f);
-            
-            // Trigger the color change event if it exists
-            if (colorPicker.onColorChange != null)
-            {
-                ColorChangeEventData eventData = new ColorChangeEventData(EventSystem.current) 
-                { 
-                    color = newColor 
-                };
-                colorPicker.onColorChange.Invoke(eventData);
-            }
-        }
-    }
-
-    private void HandleSaturationSliderController(float rightStickY)
-    {
-        if (saturationSlider == null)
-        {
-            return;
-        }
-
-        // Get current slider value
-        float currentValue = saturationSlider.value;
-        
-        // Apply right stick input to modify slider value
-        float newValue = currentValue + rightStickY * Time.unscaledDeltaTime * 0.5f; // Adjust speed as needed
-        
-        // Clamp to slider bounds [0, 1]
-        newValue = Mathf.Clamp01(newValue);
-        
-        // Update slider value
-        saturationSlider.value = newValue;
-    }
 
     public bool OnButtonDown(GameInput.Button button)
     {
@@ -458,20 +300,9 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             return false;
         }
 
-        // Handle color picker mode
         if (button == GameInput.Button.UISubmit)
         {
-            // Check if color picker is selected
-            bool colorPickerSelected = selectedItem == colorPicker.gameObject || 
-                                      selectedItem.transform.IsChildOf(colorPicker.transform) ||
-                                      selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker;
-            
-            if (colorPickerSelected && !isInColorPickerMode)
-            {
-                EnterColorPickerMode();
-                return true;
-            }
-            else if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
+            if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
             {
                 inputField.Select();
                 inputField.ActivateInputField();
@@ -482,11 +313,6 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
                 buttonComponent.onClick.Invoke();
                 return true;
             }
-        }
-        else if (button == GameInput.Button.UICancel && isInColorPickerMode)
-        {
-            ExitColorPickerMode();
-            return true;
         }
         
         return false;
@@ -582,15 +408,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             return;
         }
 
-        // Exit color picker mode if we're deselecting the color picker
-        bool wasColorPickerSelected = selectedItem == colorPicker.gameObject || 
-                                     selectedItem.transform.IsChildOf(colorPicker.transform) ||
-                                     selectedItem.GetComponentInParent<uGUI_ColorPicker>() == colorPicker;
-        
-        if (wasColorPickerSelected && isInColorPickerMode)
-        {
-            ExitColorPickerMode();
-        }
+
 
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {
