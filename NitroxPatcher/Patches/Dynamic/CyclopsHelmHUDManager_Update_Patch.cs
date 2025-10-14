@@ -17,6 +17,12 @@ public sealed partial class CyclopsHelmHUDManager_Update_Patch : NitroxPatch, ID
         {
             __instance.hudActive = true;
         }
+        if (__instance.hudActive && 
+            int.TryParse(__instance.powerText.text.Replace("%", ""), out int value) &&
+            value < 0)
+        {
+            __instance.powerText.text = "0%";
+        }
         if (__instance.subLiveMixin.IsAlive())
         {
             if (__instance.motorMode.engineOn)
