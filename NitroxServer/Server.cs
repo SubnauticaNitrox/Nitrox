@@ -136,7 +136,7 @@ public class Server
         {
             // Create new save file
             Log.Debug("No save file was found, creating a new one...");
-            saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), "My World");
+            saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), GetSaveName(NitroxEnvironment.CommandLineArgs));
             Directory.CreateDirectory(saveDir);
         }
 
