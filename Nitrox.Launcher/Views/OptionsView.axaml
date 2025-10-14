@@ -193,7 +193,7 @@
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
-                                      ToolTip.Tip="Allow multiple game instances to run simultaneously. NOTE: This bypasses Steam launcher and disables Steam overlay, Steam Input, and controller support for better performance with multiple instances.">
+                                      ToolTip.Tip="Allow multiple game instances to run simultaneously. NOTE: This bypasses Steam launcher and disables Steam overlay, Steam Input, and controller support.">
                                 <Interaction.Behaviors>
                                     <EventTriggerBehavior EventName="Click">
                                         <InvokeCommandAction Command="{Binding DisplaySteamOverlayNotificationCommand}" />
@@ -213,7 +213,7 @@
                         <StackPanel>
                             <TextBlock Text="Big Picture mode" />
                             <CheckBox Classes="switch" IsChecked="{Binding BigPictureModeEnabled}"
-                                      ToolTip.Tip="Launch Steam Big Picture mode for TV/couch gaming experience" />
+                                      ToolTip.Tip="Launch Subnautica in Steam Big Picture mode" />
                         </StackPanel>
                     </Border>
                     <!--<Border>

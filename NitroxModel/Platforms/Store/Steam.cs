@@ -164,8 +164,6 @@ public sealed class Steam : IGamePlatform
             throw new FileNotFoundException("Steam was not found on your machine.");
         }
         
-        // Ensure steam_appid.txt exists in game directory for Steam API initialization
-        EnsureSteamAppIdFile(gameFilePath, steamAppId);
         string steamPath = Path.GetDirectoryName(steamExe);
         if (steamPath == null)
         {
@@ -382,37 +380,5 @@ public sealed class Steam : IGamePlatform
             _ => throw new FileNotFoundException("Failed to find Steam console log file")
         };
         return File.GetLastWriteTime(Path.Combine(steamLogsPath, "console_log.txt"));
-    }
-
-    /// <summary>
-    /// STEAM API INTEGRATION:
-    /// Ensures steam_appid.txt file exists in the game directory for Steam API initialization.
-    /// This file enables Steam overlay and Steam Input functionality by telling Steam which app is running.
-    /// Critical for Steam Deck OSK, controller support, and Steam overlay integration.
-    /// Without this file, Steam Input and overlay features may not work properly.
-    /// </summary>
-    private static void EnsureSteamAppIdFile(string gameFilePath, int steamAppId)
-    {
-        try
-        {
-            string gameDirectory = Path.GetDirectoryName(gameFilePath);
-            if (string.IsNullOrEmpty(gameDirectory))
-            {
-                return;
-            }
-
-            string steamAppIdFile = Path.Combine(gameDirectory, "steam_appid.txt");
-            
-            // Only create/update if file doesn't exist or has wrong content
-            if (!File.Exists(steamAppIdFile) || File.ReadAllText(steamAppIdFile).Trim() != steamAppId.ToString())
-            {
-                File.WriteAllText(steamAppIdFile, steamAppId.ToString());
-                Log.Info($"Created/updated steam_appid.txt with app ID {steamAppId} in {gameDirectory}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Warn($"Failed to create steam_appid.txt: {ex.Message}");
-        }
     }
 }
