@@ -5,7 +5,7 @@
     },
     "Launch test save": {
       "commandName": "Project",
-      "commandLineArgs": "--save test"
+      "commandLineArgs": "--save test --data-path '/home/measurity/Desktop/NitroxData'"
     }
   }
 }

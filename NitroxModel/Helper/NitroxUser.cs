@@ -83,6 +83,13 @@ public static class NitroxUser
                 }
             }
 
+            string cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(cliDataPath) && Path.IsPathRooted(cliDataPath))
+            {
+                Directory.CreateDirectory(cliDataPath);
+                return appDataPath = cliDataPath;
+            }
+
             if (!Directory.Exists(applicationData))
             {
                 applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);

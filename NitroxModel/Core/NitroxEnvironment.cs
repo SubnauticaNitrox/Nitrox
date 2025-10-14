@@ -87,7 +87,7 @@ public static class NitroxEnvironment
     /// <summary>
     ///     Gets the command line arguments as passed to the program on start.
     /// </summary>
-    public static string[] CommandLineArgs => commandLineArgs ??= Environment.GetCommandLineArgs().Skip(1).ToArray();
+    public static string[] CommandLineArgs => commandLineArgs ??= Environment.GetCommandLineArgs().Skip(1).Select(p => p.Trim('\'')).ToArray();
 
     public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
 
