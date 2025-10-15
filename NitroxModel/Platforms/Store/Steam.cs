@@ -149,7 +149,60 @@ public sealed class Steam : IGamePlatform
             throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
+        // Handle Big Picture mode launch
+        if (bigPictureMode)
+        {
+            await LaunchBigPictureInterfaceAsync();
+        }
+
         return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
+    }
+
+    private async Task LaunchBigPictureInterfaceAsync()
+    {
+        Log.Info("Big Picture Mode: Launching Steam Big Picture interface...");
+
+        string? steamExe = GetExeFile();
+
+        if (steamExe == null)
+        {
+            throw new Exception("Could not find Steam executable for Big Picture mode launch");
+        }
+
+        // Launch Steam Big Picture Mode
+        bool bigPictureStarted = false;
+
+        // Try Steam protocol URL first
+        try
+        {
+            ProcessStartInfo protocolStart = new()
+            {
+                FileName = "steam://open/bigpicture",
+                UseShellExecute = true
+            };
+            Process.Start(protocolStart);
+            Log.Info("Big Picture Mode: Attempted Steam protocol activation...");
+            await Task.Delay(1000);
+            bigPictureStarted = true;
+        }
+        catch (Exception ex)
+        {
+            Log.Info($"Steam protocol failed: {ex.Message}, trying direct launch...");
+        }
+
+        // Fallback to direct Steam command if protocol failed
+        if (!bigPictureStarted)
+        {
+            ProcessStartInfo directStart = new()
+            {
+                FileName = steamExe,
+                Arguments = "-bigpicture",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            Process.Start(directStart);
+            Log.Info("Big Picture Mode: Launched Steam with Big Picture flag...");
+        }
     }
 
     private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false)

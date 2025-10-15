@@ -243,16 +243,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         // Start game & gaming platform if needed.
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         
-        // BIG PICTURE MODE: Two-stage launch process
-        if (keyValueStore.GetIsBigPictureModeEnabled() && platform is Steam steamPlatform)
-        {
-            await LaunchWithBigPictureMode(steamPlatform, subnauticaExe, subnauticaLaunchArguments);
-            return; // Exit early - Big Picture mode handles launch in background
-        }
-
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore.GetIsBigPictureModeEnabled()),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
@@ -298,67 +291,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return true; // Default: skip Steam unless explicitly enabled
-    }
-
-    private async Task LaunchWithBigPictureMode(Steam steamPlatform, string subnauticaExe, string launchArguments)
-    {
-        Log.Info("Big Picture Mode: Launching Steam Big Picture interface...");
-        
-        string? steamExe = steamPlatform.GetExeFile();
-            
-        if (steamExe == null)
-        {
-            throw new Exception("Could not find Steam executable for Big Picture mode launch");
-        }
-
-        // Launch Steam Big Picture Mode
-        bool bigPictureStarted = false;
-        
-        // Try Steam protocol URL first
-        try
-        {
-            ProcessStartInfo protocolStart = new()
-            {
-                FileName = "steam://open/bigpicture",
-                UseShellExecute = true
-            };
-            Process.Start(protocolStart);
-            Log.Info("Big Picture Mode: Attempted Steam protocol activation...");
-            await Task.Delay(1000);
-            bigPictureStarted = true;
-        }
-        catch (Exception ex)
-        {
-            Log.Info($"Steam protocol failed: {ex.Message}, trying direct launch...");
-        }
-
-        // Fallback to direct Steam command if protocol failed
-        if (!bigPictureStarted)
-        {
-            ProcessStartInfo directStart = new()
-            {
-                FileName = steamExe,
-                Arguments = "-bigpicture",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            Process.Start(directStart);
-            Log.Info("Big Picture Mode: Launched Steam with Big Picture flag...");
-        }
-
-        // Launch game through Steam
-        Log.Info("Big Picture Mode: Launching Subnautica through Steam...");
-        
-        ProcessStartInfo gameStart = new()
-        {
-            FileName = steamExe,
-            Arguments = $@"-applaunch {GameInfo.Subnautica.SteamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {launchArguments}",
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-
-        Process.Start(gameStart);
-        Log.Info("Big Picture Mode: Subnautica launched successfully through Steam");
     }
 
     private void UpdateGamePlatform()
