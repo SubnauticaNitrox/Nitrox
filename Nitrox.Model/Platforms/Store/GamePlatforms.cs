@@ -5,7 +5,7 @@ namespace Nitrox.Model.Platforms.Store;
 
 public static class GamePlatforms
 {
-    private static readonly IGamePlatform[] allPlatforms = [new Steam(), new EpicGames(), new MSStore(), new Discord()];
+    private static readonly IGamePlatform[] allPlatforms = [new Steam(), new EpicGames(), new HeroicGames(), new MSStore(), new Discord()];
 
     public static IGamePlatform? GetPlatformByGameDir(string gameRootPath)
     {

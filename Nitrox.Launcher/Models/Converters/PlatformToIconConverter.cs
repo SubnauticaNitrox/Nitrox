@@ -17,6 +17,7 @@ public class PlatformToIconConverter : Converter<PlatformToIconConverter>
     {
         Platform.STEAM => "/Assets/Images/store-icons/steam.png",
         Platform.EPIC => "/Assets/Images/store-icons/epic.png",
+        Platform.HEROIC => "/Assets/Images/store-icons/heroic.png",
         Platform.MICROSOFT => "/Assets/Images/store-icons/xbox.png",
         Platform.DISCORD => "/Assets/Images/store-icons/discord.png",
         _ => "/Assets/Images/store-icons/missing.png",

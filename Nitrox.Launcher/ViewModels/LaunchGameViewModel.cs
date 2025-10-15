@@ -242,6 +242,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         {
             Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments)),
             EpicGames => await EpicGames.StartGameAsync(gameExePath, launchArguments),
+            HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
             MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),
             Discord => await Discord.StartGameAsync(gameExePath, launchArguments),
             _ => throw new Exception($"Directory '{NitroxUser.GamePath}' is not a valid {gameInfo.Name} game installation or the game platform is unsupported by Nitrox.")
