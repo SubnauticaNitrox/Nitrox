@@ -252,7 +252,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), false),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),

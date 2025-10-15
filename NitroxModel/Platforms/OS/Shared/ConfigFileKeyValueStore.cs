@@ -94,32 +94,24 @@ public class ConfigFileKeyValueStore : IKeyValueStore
         {
             return (true, null);
         }
-
-        // Check if config file exists
-        bool configExists = File.Exists(FilePath);
-        
-        Dictionary<string, object> deserialized = new();
-        if (configExists)
+        Dictionary<string, object> deserialized;
+        try
         {
-            try
-            {
-                deserialized = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(FilePath));
-                if (deserialized == null)
-                {
-                    return (false, new Exception("Deserialized object was null"));
-                }
-            }
-            catch (Exception e)
-            {
-                return (false, e);
-            }
+            deserialized = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(FilePath));
+        }
+        catch (Exception e)
+        {
+            return (false, e);
+        }
+        if (deserialized == null)
+        {
+            return (false, new Exception("Deserialized object was null"));
         }
 
         foreach (KeyValuePair<string, object> item in deserialized)
         {
             keyValuePairs[item.Key] = item.Value;
         }
-
         hasLoaded = true;
         return (true, null);
     }

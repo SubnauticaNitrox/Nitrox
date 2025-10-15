@@ -134,12 +134,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam)
-    {
-        return await StartGameAsync(pathToGameExe, launchArguments, steamAppId, skipSteam, false);
-    }
-
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
+    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode = false)
     {
         try
         {
@@ -192,7 +187,7 @@ public sealed class Steam : IGamePlatform
         }
 
         // Start through game executable. This allows custom args so that VR mode can be on with Nitrox (Subnautica hard codes '-vrmode none' as default launch option and starting game through Steam from command line always uses default launch option).
-        // Enhanced to enable Steam integrations (Steam Input, Steam Overlay) for better controller and OSK support.
+        // This way allows for multiple instances to run, but also stops some Steam integrations from working (e.g. Steam Input, Steam Overlay).
         ProcessStartInfo result = new()
         {
             FileName = gameFilePath,
@@ -203,19 +198,10 @@ public sealed class Steam : IGamePlatform
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
                 ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay
-                ["ENABLE_VKBASALT"] = "0" // Disable VKBasalt to prevent overlay conflicts
+                ["ENABLE_VKBASALT"] = "0" // VKBasalt prevents Steam overlay from working
             }
         };
         
-        // BIG PICTURE MODE ENHANCEMENT:
-        // Set additional environment variables to ensure proper Steam integration in Big Picture mode
-        if (bigPictureMode)
-        {
-            result.EnvironmentVariables["STEAM_BIGPICTURE"] = "1"; // Indicate Big Picture mode context
-            result.EnvironmentVariables["STEAM_FORCE_OVERLAY"] = "1"; // Ensure overlay stays active
-            result.EnvironmentVariables["SDL_GAMECONTROLLERCONFIG_FILE"] = ""; // Clear conflicting controller configs
-        }
-
         // Start via Proton on Linux.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
