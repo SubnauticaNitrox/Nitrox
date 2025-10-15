@@ -16,10 +16,6 @@ public static class KeyValueStoreExtensions
 
     public static void SetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool value) => store.SetValue("IsMultipleGameInstancesAllowed", value);
 
-    public static bool GetUseSteamOverlayEnabled(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("UseSteamOverlay", defaultValue);
-
-    public static void SetSteamOverlayEnabled(this IKeyValueStore store, bool value) => store.SetValue("UseSteamOverlay", value);
-
     public static bool GetUseBigPictureMode(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("UseBigPictureMode", defaultValue);
 
     public static void SetBigPictureMode(this IKeyValueStore store, bool value) => store.SetValue("UseBigPictureMode", value);

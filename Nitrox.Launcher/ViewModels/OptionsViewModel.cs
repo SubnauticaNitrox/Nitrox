@@ -54,9 +54,6 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private bool allowMultipleGameInstances;
     
     [ObservableProperty]
-    private bool steamOverlayEnabled;
-    
-    [ObservableProperty]
     private bool useBigPictureMode;
     
     [ObservableProperty]
@@ -75,7 +72,6 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
-        SteamOverlayEnabled = keyValueStore.GetUseSteamOverlayEnabled();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
