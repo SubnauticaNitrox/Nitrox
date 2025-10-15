@@ -167,30 +167,43 @@ public sealed class Steam : IGamePlatform
             throw new Exception("Could not find Steam executable for Big Picture mode launch");
         }
 
-        // Try Steam protocol URL first
-        try
+        // Try Steam protocol URL first (preferred method)
+        Process? proc = Process.Start(new ProcessStartInfo
         {
-            using Process? proc = Process.Start(new ProcessStartInfo
-            {
-                FileName = "steam://open/bigpicture",
-                UseShellExecute = true
-            });
-            Log.Info("Big Picture Mode: Attempted Steam protocol activation...");
-            await Task.Delay(1000);
+            FileName = "steam://open/bigpicture",
+            UseShellExecute = true
+        });
 
-        }
-        catch (Exception ex)
+        if (proc != null)
         {
-            Log.Info($"Steam protocol failed: {ex.Message}, trying direct launch...");
-            using Process? proc = Process.Start(new ProcessStartInfo
+            Log.Info("Big Picture Mode: Steam protocol activation successful");
+            // Wait for Big Picture to start loading before launching the game.
+            // This prevents focus stealing issues where Big Picture loads after the game has started.
+            // The delay allows Big Picture to become the active interface before the game launches.
+            await Task.Delay(1000);
+        }
+        else
+        {
+            Log.Info("Big Picture Mode: Steam protocol failed, trying direct launch...");
+            proc = Process.Start(new ProcessStartInfo
             {
                 FileName = steamExe,
                 Arguments = "-bigpicture",
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
+
+            if (proc != null)
+            {
+                Log.Info("Big Picture Mode: Direct launch successful");
+                await Task.Delay(1000);
+            }
+            else
+            {
+                Log.Error("Big Picture Mode: Failed to launch Big Picture interface through any method");
+                throw new Exception("Failed to launch Steam Big Picture interface");
+            }
         }
-        Log.Info("Big Picture Mode: Launched Steam with Big Picture flag...");
     }
 
     private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false)
