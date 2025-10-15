@@ -238,7 +238,6 @@ public sealed class Steam : IGamePlatform
                 ["ENABLE_VKBASALT"] = "0" // VKBasalt prevents Steam overlay from working
             }
         };
-        
         // Start via Proton on Linux.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
