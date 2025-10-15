@@ -57,7 +57,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private bool steamOverlayEnabled;
     
     [ObservableProperty]
-    private bool bigPictureModeEnabled;
+    private bool useBigPictureMode;
     
     [ObservableProperty]
     private bool isInReleaseMode;
@@ -75,8 +75,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
-        SteamOverlayEnabled = keyValueStore.GetIsSteamOverlayEnabled();
-        BigPictureModeEnabled = keyValueStore.GetIsBigPictureModeEnabled();
+        SteamOverlayEnabled = keyValueStore.GetUseSteamOverlayEnabled();
+        UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -202,19 +202,22 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         keyValueStore.SetIsLightModeEnabled(value);
         Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
     }
-    
+
     partial void OnAllowMultipleGameInstancesChanged(bool value)
     {
+        if (value)
+        {
+            UseBigPictureMode = false;
+        }
         keyValueStore.SetIsMultipleGameInstancesAllowed(value);
     }
     
-    partial void OnSteamOverlayEnabledChanged(bool value)
+    partial void OnUseBigPictureModeChanged(bool value)
     {
-        keyValueStore.SetIsSteamOverlayEnabled(value);
-    }
-    
-    partial void OnBigPictureModeEnabledChanged(bool value)
-    {
-        keyValueStore.SetIsBigPictureModeEnabled(value);
+        if (value)
+        {
+            AllowMultipleGameInstances = false;
+        }
+        keyValueStore.SetBigPictureMode(value);
     }
 }

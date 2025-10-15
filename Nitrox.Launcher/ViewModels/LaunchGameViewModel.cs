@@ -244,7 +244,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore.GetValue("IsBigPictureModeEnabled", false)),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore.GetUseBigPictureMode()),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
@@ -260,7 +260,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private bool ShouldSkipSteam(string args)
     {
         // Check if Steam overlay is enabled by user setting
-        if (keyValueStore.GetIsSteamOverlayEnabled())
+        if (keyValueStore.GetUseBigPictureMode())
         {
             return false; // Use Steam if overlay is enabled
         }

@@ -185,14 +185,16 @@
                     <Border>
                         <StackPanel>
                             <TextBlock Text="Enable light mode" />
-                            <CheckBox Classes="switch" IsChecked="{Binding LightModeEnabled}"
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding LightModeEnabled}"
                                       ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
                         </StackPanel>
                     </Border>
                     <Border>
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
-                            <CheckBox Classes="switch" IsChecked="{Binding AllowMultipleGameInstances}"
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding AllowMultipleGameInstances}"
                                       ToolTip.Tip="Allow multiple game instances to run simultaneously. NOTE: This bypasses Steam launcher and disables Steam overlay, Steam Input, and controller support.">
                                 <Interaction.Behaviors>
                                     <EventTriggerBehavior EventName="Click">
@@ -204,27 +206,13 @@
                     </Border>
                     <Border>
                         <StackPanel>
-                            <TextBlock Text="Steam overlay" />
-                            <CheckBox Classes="switch" IsChecked="{Binding SteamOverlayEnabled}"
-                                      ToolTip.Tip="Enable Steam overlay for controller support and Steam Input functionality" />
-                        </StackPanel>
-                    </Border>
-                    <Border>
-                        <StackPanel>
                             <TextBlock Text="Big Picture mode" />
-                            <CheckBox Classes="switch" IsChecked="{Binding BigPictureModeEnabled}"
-                                      ToolTip.Tip="Launch Subnautica in Steam Big Picture mode" />
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding UseBigPictureMode}"
+                                      ToolTip.Tip="Launch games in Steam Big Picture mode" />
                         </StackPanel>
                     </Border>
-                    <!--<Border>
-                        <StackPanel>
-                            <TextBlock Text="Example setting name" />
-                            <CheckBox Classes="switch" IsChecked="{Binding LightModeEnabled}"
-                                      ToolTip.Tip="" />
-                        </StackPanel>
-                    </Border>-->
                 </WrapPanel>
-                
             </StackPanel>
 
             <!--  AppData Location  -->

@@ -151,8 +151,6 @@ public sealed class Steam : IGamePlatform
         // Handle Big Picture mode launch
         if (bigPictureMode)
         {
-            // Big Picture mode requires Steam, so force skipSteam to false
-            skipSteam = false;
             await LaunchBigPictureInterfaceAsync();
         }
 
