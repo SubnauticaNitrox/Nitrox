@@ -7,11 +7,11 @@ public enum Platform
     [Description("Standalone")]
     NONE,
 
-    [Description("Epic Games Store")]
-    EPIC,
-
     [Description("Steam")]
     STEAM,
+
+    [Description("Epic Games Store")]
+    EPIC,
 
     [Description("Microsoft")]
     MICROSOFT,

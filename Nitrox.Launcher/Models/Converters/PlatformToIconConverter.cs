@@ -13,12 +13,12 @@ public class PlatformToIconConverter : Converter<PlatformToIconConverter>
         return AssetHelper.GetAssetFromStream(GetIconPathForPlatform(value as Platform?), static stream => new Bitmap(stream));
     }
 
-    private static string GetIconPathForPlatform(Platform? platform) => platform switch
+    private static string GetIconPathForPlatform(Platform? platform) => $"/Assets/Images/store-icons/{platform switch
     {
-        Platform.EPIC => "/Assets/Images/store-icons/epic.png",
-        Platform.STEAM => "/Assets/Images/store-icons/steam.png",
-        Platform.MICROSOFT => "/Assets/Images/store-icons/xbox.png",
-        Platform.DISCORD => "/Assets/Images/store-icons/discord.png",
-        _ => "/Assets/Images/store-icons/missing.png",
-    };
+        Platform.STEAM => "steam.png",
+        Platform.EPIC => "epic.png",
+        Platform.MICROSOFT => "xbox.png",
+        Platform.DISCORD => "discord.png",
+        _ => "missing.png",
+    }}";
 }
