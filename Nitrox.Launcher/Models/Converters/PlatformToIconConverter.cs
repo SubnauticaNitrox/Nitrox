@@ -17,6 +17,7 @@ public class PlatformToIconConverter : Converter<PlatformToIconConverter>
     {
         Platform.STEAM => "steam.png",
         Platform.EPIC => "epic.png",
+        Platform.HEROIC => "heroic.png",
         Platform.MICROSOFT => "xbox.png",
         Platform.DISCORD => "discord.png",
         _ => "missing.png",

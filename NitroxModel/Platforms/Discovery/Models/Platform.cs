@@ -13,6 +13,9 @@ public enum Platform
     [Description("Epic Games Store")]
     EPIC,
 
+    [Description("Heroic Games Launcher")]
+    HEROIC,
+
     [Description("Microsoft")]
     MICROSOFT,
 

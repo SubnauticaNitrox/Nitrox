@@ -19,6 +19,7 @@ public sealed class GameInstallationFinder
     {
         { GameLibraries.STEAM, new SteamFinder() },
         { GameLibraries.EPIC, new EpicGamesFinder() },
+        { GameLibraries.HEROIC, new HeroicGamesFinder() },
         { GameLibraries.MICROSOFT, new MicrosoftFinder() },
         { GameLibraries.DISCORD, new DiscordFinder() },
         { GameLibraries.ENVIRONMENT, new EnvironmentFinder() },
@@ -33,7 +34,7 @@ public sealed class GameInstallationFinder
     /// <returns>Positive and negative results from the search</returns>
     public IEnumerable<GameFinderResult> FindGame(GameInfo gameInfo, GameLibraries gameLibraries = GameLibraries.ALL)
     {
-        if (gameInfo is null || !gameLibraries.IsDefined())
+        if (!gameLibraries.IsDefined())
         {
             yield break;
         }
@@ -54,7 +55,7 @@ public sealed class GameInstallationFinder
             {
                 result = result with { Origin = wantedFinder };
             }
-            if (result.Path != null)
+            if (!string.IsNullOrEmpty(result.Path))
             {
                 result = result with { Path = Path.GetFullPath(result.Path) };
             }
