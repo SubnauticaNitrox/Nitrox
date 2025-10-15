@@ -391,4 +391,3 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
-*.dxvk-cache
