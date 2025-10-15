@@ -63,7 +63,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
         ProgramDataFolderDir = NitroxUser.AppDataPath;
         ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
         SavesFolderDir = keyValueStore.GetSavesFolderDir();
@@ -147,7 +147,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     [RelayCommand(CanExecute = nameof(CanSetArguments))]
     private void SetArguments()
     {
-        keyValueStore.SetSubnauticaLaunchArguments(LaunchArgs);
+        keyValueStore.SetLaunchArguments(GameInfo.Subnautica, LaunchArgs);
         SetArgumentsCommand.NotifyCanExecuteChanged();
     }
 
@@ -155,7 +155,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
-        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg) && !isResettingArgs;
+        return LaunchArgs != keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg) && !isResettingArgs;
     }
 
     [RelayCommand]

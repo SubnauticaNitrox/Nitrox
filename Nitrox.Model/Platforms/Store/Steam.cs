@@ -20,7 +20,7 @@ public sealed class Steam : IGamePlatform
     public string Name => nameof(Steam);
     public Platform Platform => Platform.STEAM;
 
-    private string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
+    private static string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
 
     public bool OwnsGame(string gameRootPath) =>
         gameRootPath switch
@@ -31,7 +31,7 @@ public sealed class Steam : IGamePlatform
             _ => false
         };
 
-    public async Task<ProcessEx?> StartPlatformAsync()
+    private static async Task<ProcessEx?> StartPlatformAsync()
     {
         // If steam is already running, do not start it.
         ProcessEx steam = ProcessEx.GetFirstProcess(SteamProcessName);
@@ -101,7 +101,7 @@ public sealed class Steam : IGamePlatform
         return steam;
     }
 
-    public string? GetExeFile()
+    private static string? GetExeFile()
     {
         string steamExecutable = "";
 
@@ -134,19 +134,19 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam)
+    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam)
     {
         try
         {
             using ProcessEx steam = await StartPlatformAsync();
             if (steam == null)
             {
-                throw new GamePlatformException(this, "Platform is not running and could not be found.");
+                throw new GamePlatformException(GameLibraries.STEAM, "Platform is not running and could not be found.");
             }
         }
         catch (OperationCanceledException ex)
         {
-            throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+            throw new GamePlatformException(GameLibraries.STEAM, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
         return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam));

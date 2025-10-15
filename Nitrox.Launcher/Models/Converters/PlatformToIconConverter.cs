@@ -15,8 +15,8 @@ public class PlatformToIconConverter : Converter<PlatformToIconConverter>
 
     private static string GetIconPathForPlatform(Platform? platform) => platform switch
     {
-        Platform.EPIC => "/Assets/Images/store-icons/epic.png",
         Platform.STEAM => "/Assets/Images/store-icons/steam.png",
+        Platform.EPIC => "/Assets/Images/store-icons/epic.png",
         Platform.MICROSOFT => "/Assets/Images/store-icons/xbox.png",
         Platform.DISCORD => "/Assets/Images/store-icons/discord.png",
         _ => "/Assets/Images/store-icons/missing.png",

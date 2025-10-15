@@ -19,8 +19,8 @@ public sealed class GameInstallationFinder
     {
         { GameLibraries.STEAM, new SteamFinder() },
         { GameLibraries.EPIC, new EpicGamesFinder() },
-        { GameLibraries.DISCORD, new DiscordFinder() },
         { GameLibraries.MICROSOFT, new MicrosoftFinder() },
+        { GameLibraries.DISCORD, new DiscordFinder() },
         { GameLibraries.ENVIRONMENT, new EnvironmentFinder() },
         { GameLibraries.CONFIG, new ConfigFinder() }
     };

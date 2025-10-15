@@ -19,24 +19,14 @@ public sealed class MSStore : IGamePlatform
         return isLocalAppData || File.Exists(Path.Combine(gameDirectory, "appxmanifest.xml"));
     }
 
-    public Task<ProcessEx> StartPlatformAsync()
-    {
-        throw new NotImplementedException("Unnecessary to start platform");
-    }
-
-    public string GetExeFile()
-    {
-        throw new NotImplementedException("Unnecessary to get platform executable");
-    }
-
-    public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string subnauticaLaunchArguments = "")
+    public static async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
     {
         return await Task.FromResult(
             ProcessEx.Start(
                 @"C:\Windows\System32\cmd.exe",
                 [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
-                @$"/C start /b {pathToGameExe} --nitrox ""{NitroxUser.LauncherPath}"" {subnauticaLaunchArguments}",
+                @$"/C start /b {pathToGameExe} --nitrox ""{NitroxUser.LauncherPath}"" {launchArguments}",
                 createWindow: false)
         );
     }
