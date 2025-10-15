@@ -134,7 +134,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode = false)
+    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, IKeyValueStore keyValueStore)
     {
         try
         {
@@ -150,8 +150,11 @@ public sealed class Steam : IGamePlatform
         }
 
         // Handle Big Picture mode launch
+        bool bigPictureMode = keyValueStore.GetValue("IsBigPictureModeEnabled", false);
         if (bigPictureMode)
         {
+            // Big Picture mode requires Steam, so force skipSteam to false
+            skipSteam = false;
             await LaunchBigPictureInterfaceAsync();
         }
 
