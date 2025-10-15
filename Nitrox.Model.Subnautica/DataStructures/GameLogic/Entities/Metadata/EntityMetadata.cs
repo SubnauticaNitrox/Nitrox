@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
-using ProtoBuf;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata
 {

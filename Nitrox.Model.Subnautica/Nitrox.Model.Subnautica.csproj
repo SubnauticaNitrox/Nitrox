@@ -12,4 +12,10 @@
         <PackageReference Include="LitJson" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Reference Include="protobuf-net">
+            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
 </Project>

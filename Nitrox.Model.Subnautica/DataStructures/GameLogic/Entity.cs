@@ -6,7 +6,6 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using ProtoBuf;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
 {

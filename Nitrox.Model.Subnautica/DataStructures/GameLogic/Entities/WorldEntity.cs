@@ -5,7 +5,6 @@ using BinaryPack.Attributes;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using ProtoBuf;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
 {
