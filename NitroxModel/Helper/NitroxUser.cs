@@ -83,7 +83,7 @@ public static class NitroxUser
                 }
             }
 
-            string cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
+            string? cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
             if (!string.IsNullOrWhiteSpace(cliDataPath) && Path.IsPathRooted(cliDataPath))
             {
                 Directory.CreateDirectory(cliDataPath);
@@ -171,7 +171,7 @@ public static class NitroxUser
                 return gamePath;
             }
 
-            string cliGamePath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--game-path").FirstOrDefault();
+            string? cliGamePath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--game-path").FirstOrDefault();
             if (Directory.Exists(cliGamePath) && Path.IsPathRooted(cliGamePath))
             {
                 GamePlatform = GamePlatforms.GetPlatformByGameDir(cliGamePath);
