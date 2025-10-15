@@ -303,9 +303,7 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("WINEPREFIX", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
-            
-            // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
-            result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Linux-specific overlay flag
+            result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
         }
 
         return result;
