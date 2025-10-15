@@ -223,7 +223,7 @@ public sealed class Steam : IGamePlatform
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
-            string steamArgs = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
+            args = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
             
             // BIG PICTURE MODE ENHANCEMENT:
             // When Big Picture mode is enabled, ensure Steam maintains its background UI and overlay functionality
@@ -232,13 +232,13 @@ public sealed class Steam : IGamePlatform
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
                 // -silent prevents Steam from stealing focus from Big Picture mode
-                steamArgs = $@"-silent -applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
+                args = $@"-silent -applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
             }
             
             return new()
             {
                 FileName = steamExe,
-                Arguments = steamArgs
+                Arguments = args
             };
         }
 
