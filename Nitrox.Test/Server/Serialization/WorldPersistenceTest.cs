@@ -17,7 +17,7 @@ public class WorldPersistenceTest
 {
     private static readonly string tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
     private static PersistedWorldData worldData;
-    public static PersistedWorldData[] WorldsDataAfter { get; private set; }
+    public static PersistedWorldData[]? WorldsDataAfter { get; private set; }
     public static IServerSerializer[] ServerSerializers { get; private set; }
 
     [ClassInitialize]
@@ -497,7 +497,7 @@ public class DynamicWorldDataAfterAttribute : Attribute, ITestDataSource
 {
     public IEnumerable<object[]> GetData(MethodInfo methodInfo)
     {
-        return WorldPersistenceTest.WorldsDataAfter.Select((t, i) => new object[] { t, WorldPersistenceTest.ServerSerializers[i].GetType().Name });
+        return (WorldPersistenceTest.WorldsDataAfter ?? []).Select((t, i) => new object[] { t, WorldPersistenceTest.ServerSerializers[i].GetType().Name });
     }
 
     public string GetDisplayName(MethodInfo methodInfo, object[] data)
