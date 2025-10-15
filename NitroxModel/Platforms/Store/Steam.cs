@@ -63,7 +63,6 @@ public sealed class Steam : IGamePlatform
             UseShellExecute = true,
             Arguments = launchArgs
         });
-
         if (process is not { IsRunning: true })
         {
             process?.Dispose();
@@ -173,7 +172,7 @@ public sealed class Steam : IGamePlatform
         // Try Steam protocol URL first
         try
         {
-            Process.Start(new ProcessStartInfo
+            using Process? proc = Process.Start(new ProcessStartInfo
             {
                 FileName = "steam://open/bigpicture",
                 UseShellExecute = true
@@ -185,7 +184,7 @@ public sealed class Steam : IGamePlatform
         catch (Exception ex)
         {
             Log.Info($"Steam protocol failed: {ex.Message}, trying direct launch...");
-            Process.Start(new ProcessStartInfo
+            using Process? proc = Process.Start(new ProcessStartInfo
             {
                 FileName = steamExe,
                 Arguments = "-bigpicture",
@@ -212,12 +211,11 @@ public sealed class Steam : IGamePlatform
         if (!skipSteam)
         {
             args = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
-            
             if (bigPictureMode)
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
                 // -silent prevents Steam from stealing focus from Big Picture mode
-                args = $@"-silent -applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
+                args = $"-silent {args}";
             }
             
             return new()
