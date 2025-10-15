@@ -375,7 +375,7 @@ public class Server
         return IsValidSaveName(result) ? result : defaultValue;
     }
 
-    private static bool IsValidSaveName([NotNull] string? name)
+    private static bool IsValidSaveName([NotNullWhen(true)] string? name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -385,7 +385,7 @@ public class Server
         {
             return false;
         }
-        if (name.EndsWith("."))
+        if (name.EndsWith('.'))
         {
             return false;
         }
