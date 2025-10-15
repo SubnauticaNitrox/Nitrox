@@ -225,9 +225,6 @@ public sealed class Steam : IGamePlatform
         {
             args = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
             
-            // BIG PICTURE MODE ENHANCEMENT:
-            // When Big Picture mode is enabled, ensure Steam maintains its background UI and overlay functionality
-            // This prevents conflicts between Big Picture interface and game overlay
             if (bigPictureMode)
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
