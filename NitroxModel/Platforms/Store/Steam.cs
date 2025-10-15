@@ -135,23 +135,26 @@ public sealed class Steam : IGamePlatform
 
     public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
     {
-        try
-        {
-            using ProcessEx steam = await StartPlatformAsync();
-            if (steam == null)
-            {
-                throw new GamePlatformException(this, "Platform is not running and could not be found.");
-            }
-        }
-        catch (OperationCanceledException ex)
-        {
-            throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
-        }
-
-        // Handle Big Picture mode launch
+        // Handle Big Picture mode launch - this ensures Steam is running with Big Picture activated
         if (bigPictureMode)
         {
             await LaunchBigPictureInterfaceAsync();
+        }
+        else
+        {
+            // For regular mode, ensure Steam is running normally
+            try
+            {
+                using ProcessEx steam = await StartPlatformAsync();
+                if (steam == null)
+                {
+                    throw new GamePlatformException(this, "Platform is not running and could not be found.");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+            }
         }
 
         return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
@@ -159,10 +162,50 @@ public sealed class Steam : IGamePlatform
 
     private async Task LaunchBigPictureInterfaceAsync()
     {
-        Log.Info("Big Picture Mode: Launching Steam Big Picture interface...");
+        // First ensure Steam is running
+        ProcessEx? existingSteam = ProcessEx.GetFirstProcess(SteamProcessName);
+        if (existingSteam == null)
+        {
+            Log.Info("Big Picture Mode: Steam not running, starting Steam...");
+            string? steamExe = GetExeFile();
+            if (steamExe == null)
+            {
+                throw new Exception("Could not find Steam executable for Big Picture mode launch");
+            }
 
-        string? steamExe = GetExeFile();
-        if (steamExe == null)
+            // Start Steam normally first
+            ProcessEx steam = ProcessEx.From(new ProcessStartInfo
+            {
+                WorkingDirectory = Path.GetDirectoryName(steamExe) ?? Directory.GetCurrentDirectory(),
+                FileName = steamExe,
+                WindowStyle = ProcessWindowStyle.Minimized,
+                UseShellExecute = true,
+                Arguments = "-silent" // Don't show Steam window
+            });
+
+            if (steam == null || !steam.IsRunning)
+            {
+                throw new Exception("Failed to start Steam for Big Picture mode");
+            }
+
+            // Wait for Steam to be ready
+            using CancellationTokenSource steamReadyCts = new(TimeSpan.FromSeconds(30));
+            try
+            {
+                DateTime consoleLogFileLastWrite = GetSteamConsoleLogLastWrite(steamExe);
+                while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(steamExe) && !steamReadyCts.IsCancellationRequested)
+                {
+                    await Task.Delay(250, steamReadyCts.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
+            }
+        }
+
+        string? steamExePath = GetExeFile();
+        if (steamExePath == null)
         {
             throw new Exception("Could not find Steam executable for Big Picture mode launch");
         }
@@ -178,13 +221,15 @@ public sealed class Steam : IGamePlatform
         {
             Log.Info("Big Picture Mode: Steam protocol activation successful");
             // Wait for Big Picture to start loading before launching the game.
-            // This prevents focus stealing issues where Big Picture loads after the game has started.
+            // This prevents focus stealing issues where Big Picture loads after the game has started
+            // and steals focus from the game, causing a jarring user experience.
+            // The 1-second delay provides enough time for Big Picture to initialize while keeping launch times reasonable.
             // Use the same timeout pattern as the main Steam launch for consistency.
             using CancellationTokenSource bigPictureReadyCts = new(TimeSpan.FromSeconds(15));
             try
             {
                 Log.Debug("Waiting for Big Picture to initialize...");
-                await Task.Delay(1000, bigPictureReadyCts.Token); // Minimum wait time
+                await Task.Delay(1000, bigPictureReadyCts.Token); // Minimum wait time to allow Big Picture initialization
                 Log.Debug("Big Picture initialization delay complete");
             }
             catch (OperationCanceledException)
@@ -195,34 +240,46 @@ public sealed class Steam : IGamePlatform
         else
         {
             Log.Info("Big Picture Mode: Steam protocol failed, trying direct launch...");
-            proc = Process.Start(new ProcessStartInfo
+            try
             {
-                FileName = steamExe,
-                Arguments = "-bigpicture",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
+                proc = Process.Start(new ProcessStartInfo
+                {
+                    FileName = steamExePath,
+                    Arguments = "-bigpicture",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
 
-            if (proc != null)
-            {
-                Log.Info("Big Picture Mode: Direct launch successful");
-                // Wait for Big Picture to start loading before launching the game.
-                using CancellationTokenSource bigPictureReadyCts = new(TimeSpan.FromSeconds(15));
-                try
+                if (proc != null)
                 {
-                    Log.Debug("Waiting for Big Picture to initialize...");
-                    await Task.Delay(1000, bigPictureReadyCts.Token); // Minimum wait time
-                    Log.Debug("Big Picture initialization delay complete");
+                    Log.Info("Big Picture Mode: Direct launch successful");
+                    // Wait for Big Picture to start loading before launching the game.
+                    // This prevents focus stealing issues where Big Picture loads after the game has started
+                    // and steals focus from the game, causing a jarring user experience.
+                    // The 1-second delay provides enough time for Big Picture to initialize while keeping launch times reasonable.
+                    // Use the same timeout pattern as the main Steam launch for consistency.
+                    using CancellationTokenSource bigPictureReadyCts = new(TimeSpan.FromSeconds(15));
+                    try
+                    {
+                        Log.Debug("Waiting for Big Picture to initialize...");
+                        await Task.Delay(1000, bigPictureReadyCts.Token); // Minimum wait time to allow Big Picture initialization
+                        Log.Debug("Big Picture initialization delay complete");
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Log.Warn("Big Picture initialization timed out");
+                    }
                 }
-                catch (OperationCanceledException)
+                else
                 {
-                    Log.Warn("Big Picture initialization timed out");
+                    Log.Error("Big Picture Mode: Direct launch process failed to start");
+                    throw new Exception("Failed to launch Steam Big Picture interface");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Log.Error("Big Picture Mode: Failed to launch Big Picture interface through any method");
-                throw new Exception("Failed to launch Steam Big Picture interface");
+                Log.Error($"Big Picture Mode: Direct launch failed with exception: {ex.Message}");
+                throw new Exception("Failed to launch Steam Big Picture interface", ex);
             }
         }
     }

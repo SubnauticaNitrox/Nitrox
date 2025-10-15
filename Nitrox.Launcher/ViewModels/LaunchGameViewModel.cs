@@ -283,7 +283,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             return true;
         }
 
-        return true; // Default: skip Steam unless explicitly enabled
+        return false; // Default: use Steam unless explicitly disabled for special cases
     }
 
     private void UpdateGamePlatform()
