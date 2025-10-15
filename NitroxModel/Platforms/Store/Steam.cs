@@ -134,7 +134,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, IKeyValueStore keyValueStore)
+    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
     {
         try
         {
@@ -150,7 +150,6 @@ public sealed class Steam : IGamePlatform
         }
 
         // Handle Big Picture mode launch
-        bool bigPictureMode = keyValueStore.GetValue("IsBigPictureModeEnabled", false);
         if (bigPictureMode)
         {
             // Big Picture mode requires Steam, so force skipSteam to false
@@ -166,46 +165,35 @@ public sealed class Steam : IGamePlatform
         Log.Info("Big Picture Mode: Launching Steam Big Picture interface...");
 
         string? steamExe = GetExeFile();
-
         if (steamExe == null)
         {
             throw new Exception("Could not find Steam executable for Big Picture mode launch");
         }
 
-        // Launch Steam Big Picture Mode
-        bool bigPictureStarted = false;
-
         // Try Steam protocol URL first
         try
         {
-            ProcessStartInfo protocolStart = new()
+            Process.Start(new ProcessStartInfo
             {
                 FileName = "steam://open/bigpicture",
                 UseShellExecute = true
-            };
-            Process.Start(protocolStart);
+            });
             Log.Info("Big Picture Mode: Attempted Steam protocol activation...");
             await Task.Delay(1000);
-            bigPictureStarted = true;
+
         }
         catch (Exception ex)
         {
             Log.Info($"Steam protocol failed: {ex.Message}, trying direct launch...");
-        }
-
-        // Fallback to direct Steam command if protocol failed
-        if (!bigPictureStarted)
-        {
-            ProcessStartInfo directStart = new()
+            Process.Start(new ProcessStartInfo
             {
                 FileName = steamExe,
                 Arguments = "-bigpicture",
                 UseShellExecute = false,
                 CreateNoWindow = true
-            };
-            Process.Start(directStart);
-            Log.Info("Big Picture Mode: Launched Steam with Big Picture flag...");
+            });
         }
+        Log.Info("Big Picture Mode: Launched Steam with Big Picture flag...");
     }
 
     private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false)

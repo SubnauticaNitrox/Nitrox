@@ -242,10 +242,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
         // Start game & gaming platform if needed.
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
-        
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore.GetValue("IsBigPictureModeEnabled", false)),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
