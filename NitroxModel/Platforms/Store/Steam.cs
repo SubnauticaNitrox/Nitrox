@@ -179,8 +179,18 @@ public sealed class Steam : IGamePlatform
             Log.Info("Big Picture Mode: Steam protocol activation successful");
             // Wait for Big Picture to start loading before launching the game.
             // This prevents focus stealing issues where Big Picture loads after the game has started.
-            // The delay allows Big Picture to become the active interface before the game launches.
-            await Task.Delay(1000);
+            // Use the same timeout pattern as the main Steam launch for consistency.
+            using CancellationTokenSource bigPictureReadyCts = new(TimeSpan.FromSeconds(15));
+            try
+            {
+                Log.Debug("Waiting for Big Picture to initialize...");
+                await Task.Delay(1000, bigPictureReadyCts.Token); // Minimum wait time
+                Log.Debug("Big Picture initialization delay complete");
+            }
+            catch (OperationCanceledException)
+            {
+                Log.Warn("Big Picture initialization timed out");
+            }
         }
         else
         {
@@ -196,7 +206,18 @@ public sealed class Steam : IGamePlatform
             if (proc != null)
             {
                 Log.Info("Big Picture Mode: Direct launch successful");
-                await Task.Delay(1000);
+                // Wait for Big Picture to start loading before launching the game.
+                using CancellationTokenSource bigPictureReadyCts = new(TimeSpan.FromSeconds(15));
+                try
+                {
+                    Log.Debug("Waiting for Big Picture to initialize...");
+                    await Task.Delay(1000, bigPictureReadyCts.Token); // Minimum wait time
+                    Log.Debug("Big Picture initialization delay complete");
+                }
+                catch (OperationCanceledException)
+                {
+                    Log.Warn("Big Picture initialization timed out");
+                }
             }
             else
             {
