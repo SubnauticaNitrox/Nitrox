@@ -191,7 +191,6 @@ public sealed class Steam : IGamePlatform
             return;
         }
 
-        Log.Info("Big Picture Mode: Steam protocol activation successful");
         // Wait to prevent focus stealing issues where Big Picture loads after the game has started
         await Task.Delay(1000);
     }
