@@ -135,6 +135,7 @@ public sealed class Steam : IGamePlatform
 
     public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
     {
+        bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
         try
         {
             using ProcessEx steam = await StartPlatformAsync();
@@ -148,16 +149,20 @@ public sealed class Steam : IGamePlatform
             throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
-        // Handle Big Picture mode launch - this ensures Steam is running with Big Picture activated
         if (bigPictureMode)
         {
-            await LaunchBigPictureInterfaceAsync();
+            if (isPlatformStartingUp)
+            {
+                // TODO: Instead of waiting, detect when Steam Big Picture is ready to be started by Steam.
+                await Task.Delay(2000);
+            }
+            await LaunchSteamBigPictureModeAsync();
         }
 
         return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
     }
 
-    private async Task LaunchBigPictureInterfaceAsync()
+    private async Task LaunchSteamBigPictureModeAsync()
     {
         string? steamExe = GetExeFile();
         if (steamExe == null)
