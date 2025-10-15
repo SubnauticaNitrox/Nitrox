@@ -325,7 +325,6 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
             
             // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
-            // Note: SteamAppId and other overlay vars are already set in the initial EnvironmentVariables collection
             result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Linux-specific overlay flag
         }
 
