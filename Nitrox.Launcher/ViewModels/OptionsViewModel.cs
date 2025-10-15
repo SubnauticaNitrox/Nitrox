@@ -197,10 +197,6 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
     }
     
-    /// <summary>
-    /// Handles UI theme changes and applies them immediately to the running application.
-    /// Persists the preference to nitrox.cfg for future sessions.
-    /// </summary>
     partial void OnLightModeEnabledChanged(bool value)
     {
         keyValueStore.SetIsLightModeEnabled(value);
