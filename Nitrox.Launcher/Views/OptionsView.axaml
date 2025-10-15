@@ -11,7 +11,8 @@
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
-    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    xmlns:models="clr-namespace:NitroxModel.Discovery.Models;assembly=NitroxModel">
     <Design.DataContext>
         <designer:DesignOptionsViewModel />
     </Design.DataContext>
@@ -190,7 +191,7 @@
                                       ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
                         </StackPanel>
                     </Border>
-                    <Border>
+                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch"
@@ -204,7 +205,7 @@
                             </CheckBox>
                         </StackPanel>
                     </Border>
-                    <Border>
+                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
                         <StackPanel>
                             <TextBlock Text="Big Picture mode" />
                             <CheckBox Classes="switch"
