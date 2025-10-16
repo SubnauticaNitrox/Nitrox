@@ -205,12 +205,11 @@
                             </CheckBox>
                         </StackPanel>
                     </Border>
-                    <Border>
+                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
                         <StackPanel>
                             <TextBlock Text="Big Picture mode" />
                             <CheckBox Classes="switch"
                                       IsChecked="{Binding UseBigPictureMode}"
-                                      IsEnabled="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}"
                                       ToolTip.Tip="Launch games in Steam Big Picture mode" />
                         </StackPanel>
                     </Border>
