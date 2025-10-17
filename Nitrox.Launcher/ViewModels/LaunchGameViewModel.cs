@@ -16,6 +16,7 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.Discovery;
 using NitroxModel.Platforms.Discovery.Models;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
@@ -227,6 +228,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         LauncherNotifier.Info("Starting game");
 
+        if (!GameInstallationFinder.FindPlatformAndGame(gameInfo))
+        {
+            return; // Logging is done in FindPlatformAndGame()
+        }
+
         string gameExePathSuffix = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "MacOS" : string.Empty;
         string gameExePath = Path.Combine(NitroxUser.GamePath, gameExePathSuffix, gameInfo.ExeName);
         if (!File.Exists(gameExePath))
@@ -236,8 +242,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
         // Start game & gaming platform if needed.
         string launchArguments = $"{keyValueStore.GetLaunchArguments(gameInfo)} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
-        IGamePlatform? platform = GamePlatforms.GetPlatformByGameDir(NitroxUser.GamePath);
-        ProcessEx game = platform switch
+        ProcessEx game = NitroxUser.GamePlatform switch
         {
             Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments)),
             EpicGames => await EpicGames.StartGameAsync(gameExePath, launchArguments),
@@ -249,7 +254,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
         if (game is null)
         {
-            throw new Exception($"Game failed to start through {platform.Name}");
+            throw new Exception($"Game failed to start through {NitroxUser.GamePlatform.Name}");
         }
     }
 
