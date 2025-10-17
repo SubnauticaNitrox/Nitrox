@@ -229,7 +229,7 @@ public class Program
                     // Redraw part of line
                     string changedInputSegment = inputLineBuilder.ToString(start, end);
                     Console.CursorVisible = false;
-                    Console.Write($"{changedInputSegment}{new string(' ', inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1)}");
+                    Console.Write($"{changedInputSegment}{new string(' ', int.Max(0, inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1))}");
                     Console.CursorVisible = true;
                 }
                 Console.CursorLeft = lastPosition;
