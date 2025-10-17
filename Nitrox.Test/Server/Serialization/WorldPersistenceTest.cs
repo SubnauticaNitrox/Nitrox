@@ -10,6 +10,8 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization.World;
 using Nitrox.Server.Subnautica;
+using NitroxModel;
+using NitroxModel.Platforms.Discovery;
 
 namespace NitroxServer.Serialization;
 
@@ -24,6 +26,10 @@ public class WorldPersistenceTest
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
+        if (!GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica))
+        {
+            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+        }
         NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar(), new TestAutoFacRegistrar());
         NitroxServiceLocator.BeginNewLifetimeScope();
 

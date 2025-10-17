@@ -19,6 +19,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.Discovery;
 using NitroxServer.ConsoleCommands.Processor;
 
 namespace Nitrox.Server.Subnautica;
@@ -26,7 +27,6 @@ namespace Nitrox.Server.Subnautica;
 [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 public class Program
 {
-    private static Lazy<string>? gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
     private static readonly CancellationTokenSource serverCts = new();
@@ -83,9 +83,11 @@ public class Program
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            // Allow game path to be given as command argument
-            gameInstallDir = new Lazy<string>(() => NitroxUser.GamePath);
-            Log.Info($"Using game files from: \'{gameInstallDir.Value}\'");
+            if (!GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica))
+            {
+                throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+            }
+            Log.Info($"Using game files from: \'{NitroxUser.GamePath}\'");
 
             // TODO: Fix DI to not be slow (should not use IO in type constructors). Instead, use Lazy<T> (et al). This way, cancellation can be faster.
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
@@ -168,7 +170,7 @@ public class Program
     private static void CloseWindowHandler(PosixSignalContext context)
     {
         context.Cancel = false;
-        serverCts?.Cancel();
+        serverCts.Cancel();
     }
 
     /// <summary>
@@ -377,7 +379,7 @@ public class Program
         }
 
         ipc.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
-        
+
         if (!Console.IsInputRedirected)
         {
             // Important to not hang process: keep command handler on the main thread when input not redirected (i.e. don't Task.Run)
@@ -512,7 +514,7 @@ public class Program
 
     private static class AssemblyResolver
     {
-        private static string currentExecutableDirectory;
+        private static string currentExecutableDirectory = string.Empty;
         private static readonly Dictionary<string, AssemblyCacheEntry> resolvedAssemblyCache = [];
 
         public static Assembly? Handler(object sender, ResolveEventArgs args)
@@ -547,18 +549,18 @@ public class Program
                 // Load DLLs where this program (exe) is located
                 string dllPath = Path.Combine(GetExecutableDirectory(), "lib", dllNameStr);
                 // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
-                if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
+                if (dllPath.Contains("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) || !File.Exists(dllPath))
                 {
-                    if (gameInstallDir != null)
+                    if (NitroxUser.GamePath != null)
                     {
                         // Try find game managed libraries
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
-                            dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllNameStr);
+                            dllPath = Path.Combine(NitroxUser.GamePath, "Resources", "Data", "Managed", dllNameStr);
                         }
                         else
                         {
-                            dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+                            dllPath = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", dllNameStr);
                         }
                     }
                 }
@@ -591,7 +593,7 @@ public class Program
 
         private static string GetExecutableDirectory()
         {
-            if (currentExecutableDirectory != null)
+            if (!string.IsNullOrEmpty(currentExecutableDirectory))
             {
                 return currentExecutableDirectory;
             }
