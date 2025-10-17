@@ -81,7 +81,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             return;
         }
 
-        NitroxUser.GamePath = path;
+        NitroxUser.SetGamePathAndPlatform(path, null);
         if (LaunchGameViewModel.LastFindSubnauticaTask != null)
         {
             await LaunchGameViewModel.LastFindSubnauticaTask;

@@ -1,6 +1,8 @@
+using Nitrox.Model;
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
 using Nitrox.Model.Core;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
@@ -23,6 +25,10 @@ public class WorldPersistenceTest
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
+        if (!GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica))
+        {
+            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+        }
         NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar(), new TestAutoFacRegistrar());
         NitroxServiceLocator.BeginNewLifetimeScope();
 

@@ -145,15 +145,8 @@ public static class NitroxUser
 
     public static IGamePlatform? GamePlatform
     {
-        get
-        {
-            if (gamePlatform == null)
-            {
-                _ = GamePath; // Ensure gamePath is set
-            }
-            return gamePlatform;
-        }
-        set
+        get => gamePlatform;
+        private set
         {
             if (gamePlatform != value)
             {
@@ -163,54 +156,12 @@ public static class NitroxUser
         }
     }
 
-    public static string GamePath
+    public static string GamePath => string.IsNullOrEmpty(gamePath) ? string.Empty : gamePath;
+
+    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
     {
-        get
-        {
-            if (!string.IsNullOrEmpty(gamePath))
-            {
-                return gamePath;
-            }
-
-            string? cliGamePath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--game-path").FirstOrDefault();
-            if (Directory.Exists(cliGamePath) && Path.IsPathRooted(cliGamePath))
-            {
-                GamePlatform = GamePlatforms.GetPlatformByGameDir(cliGamePath);
-                return gamePath = cliGamePath;
-            }
-            if (cliGamePath != null)
-            {
-                throw new DirectoryNotFoundException($"Game directory not found at user-specified location: {cliGamePath}");
-            }
-
-            List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
-            GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
-            if (potentiallyValidResult?.IsOk == true)
-            {
-                Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
-                gamePath = potentiallyValidResult.Path;
-                GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
-                return gamePath;
-            }
-
-            Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
-            return string.Empty;
-        }
-        set
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return;
-            }
-            if (!Directory.Exists(value))
-            {
-                throw new ArgumentException("Given path is an invalid directory");
-            }
-
-            // Ensures the path looks alright (no mixed / and \ path separators)
-            gamePath = Path.GetFullPath(value);
-            GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
-        }
+        gamePath = Path.GetFullPath(path);
+        gamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 
     public static string? ExecutableRootPath

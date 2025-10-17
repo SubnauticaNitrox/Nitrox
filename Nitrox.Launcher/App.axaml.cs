@@ -20,6 +20,7 @@ using Nitrox.Launcher.Views;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
@@ -82,6 +83,8 @@ public class App : Application
             InstantLaunch = new InstantLaunchData(save, players);
         });
         cliParser.Run(NitroxEnvironment.CommandLineArgs);
+
+        GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica);
 
         // Fallback to normal startup.
         if (StartupWindowFactory == null)
