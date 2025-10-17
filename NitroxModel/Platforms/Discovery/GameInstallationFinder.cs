@@ -35,8 +35,8 @@ public static class GameInstallationFinder
     public static bool FindPlatformAndGame(GameInfo gameInfo, GameLibraries gameLibraries = GameLibraries.ALL)
     {
         List<GameFinderResult> finderResults = FindGame(gameInfo, gameLibraries).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
-        GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
-        if (potentiallyValidResult?.IsOk == true)
+        GameFinderResult? potentiallyValidResult = finderResults.LastOrDefault();
+        if (potentiallyValidResult is { IsOk: true })
         {
             Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
             IGamePlatform platform = GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin);
@@ -44,7 +44,7 @@ public static class GameInstallationFinder
             return true;
         }
 
-        Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
+        Log.Error($"Could not locate {gameInfo.Name} installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
         return false;
     }
 

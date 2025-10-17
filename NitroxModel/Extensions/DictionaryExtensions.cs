@@ -54,7 +54,7 @@ public static class DictionaryExtensions
             throw new ArgumentNullException(nameof(key));
         }
 
-        return !dictionary.TryGetValue(key, out TValue obj) ? defaultValue : obj;
+        return dictionary.TryGetValue(key, out TValue obj) ? obj : defaultValue;
     }
 #endif
 }
