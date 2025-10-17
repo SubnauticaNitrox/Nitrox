@@ -224,12 +224,13 @@ public class Program
                     // Redraw entire line
                     Console.Write($"\r{new string(' ', GetConsoleWidth(-1))}\r{inputLineBuilder}");
                 }
-                else
+                else if (start > -1)
                 {
                     // Redraw part of line
+                    start = int.Min(start, inputLineBuilder.Length);
                     string changedInputSegment = inputLineBuilder.ToString(start, end);
                     Console.CursorVisible = false;
-                    Console.Write($"{changedInputSegment}{new string(' ', int.Max(0, inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1))}");
+                    Console.Write($"{changedInputSegment}{new string(' ', int.Max(0, inputLineBuilder.Length - changedInputSegment.Length + 1))}");
                     Console.CursorVisible = true;
                 }
                 Console.CursorLeft = lastPosition;
