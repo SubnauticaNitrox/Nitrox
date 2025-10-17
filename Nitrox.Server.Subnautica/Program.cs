@@ -201,11 +201,13 @@ public class Program
             Log.Info("Server input stream is available");
             StringBuilder inputLineBuilder = new();
 
+            int GetConsoleWidth(int offset = 0) => int.Max(0, Console.WindowWidth + offset);
+
             void ClearInputLine()
             {
                 currentHistoryIndex = 0;
                 inputLineBuilder.Clear();
-                Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r");
+                Console.Write($"\r{new string(' ', GetConsoleWidth(-1))}\r");
             }
 
             void RedrawInput(int start = 0, int end = 0)
@@ -220,7 +222,7 @@ public class Program
                 if (start == 0 && end == 0)
                 {
                     // Redraw entire line
-                    Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r{inputLineBuilder}");
+                    Console.Write($"\r{new string(' ', GetConsoleWidth(-1))}\r{inputLineBuilder}");
                 }
                 else
                 {
@@ -311,7 +313,7 @@ public class Program
                                 ClearInputLine();
                                 continue;
                             case ConsoleKey.Tab:
-                                if (Console.CursorLeft + 4 < Console.WindowWidth)
+                                if (Console.CursorLeft + 4 < GetConsoleWidth())
                                 {
                                     inputLineBuilder.Insert(Console.CursorLeft, "    ");
                                     RedrawInput(Console.CursorLeft, -1);
@@ -322,7 +324,7 @@ public class Program
                                 inputLineBuilder.Clear();
                                 inputLineBuilder.Append(inputHistory[--currentHistoryIndex]);
                                 RedrawInput();
-                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
                                 continue;
                             case ConsoleKey.DownArrow when inputHistory.Count > 0 && currentHistoryIndex < 0:
                                 if (currentHistoryIndex == -1)
@@ -333,7 +335,7 @@ public class Program
                                 inputLineBuilder.Clear();
                                 inputLineBuilder.Append(inputHistory[++currentHistoryIndex]);
                                 RedrawInput();
-                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
                                 continue;
                         }
                     }
