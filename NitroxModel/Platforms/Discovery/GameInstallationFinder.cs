@@ -24,7 +24,8 @@ public static class GameInstallationFinder
         { GameLibraries.MICROSOFT, new MicrosoftFinder() },
         { GameLibraries.DISCORD, new DiscordFinder() },
         { GameLibraries.ENVIRONMENT, new EnvironmentFinder() },
-        { GameLibraries.CONFIG, new ConfigFinder() }
+        { GameLibraries.CONFIG, new ConfigFinder() },
+        { GameLibraries.CMD_LINE_ARGS, new CmdLineArgsFinder() }
     };
 
     /// <summary>
