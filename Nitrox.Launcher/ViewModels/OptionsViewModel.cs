@@ -54,6 +54,9 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private bool allowMultipleGameInstances;
     
     [ObservableProperty]
+    private bool useBigPictureMode;
+    
+    [ObservableProperty]
     private bool isInReleaseMode;
 
     private static string DefaultLaunchArg => "-vrmode none";
@@ -69,6 +72,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -194,9 +198,22 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         keyValueStore.SetIsLightModeEnabled(value);
         Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
     }
-    
+
     partial void OnAllowMultipleGameInstancesChanged(bool value)
     {
+        if (value)
+        {
+            UseBigPictureMode = false;
+        }
         keyValueStore.SetIsMultipleGameInstancesAllowed(value);
+    }
+    
+    partial void OnUseBigPictureModeChanged(bool value)
+    {
+        if (value)
+        {
+            AllowMultipleGameInstances = false;
+        }
+        keyValueStore.SetBigPictureMode(value);
     }
 }
