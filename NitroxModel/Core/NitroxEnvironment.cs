@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace NitroxModel.Helper;
 
@@ -87,7 +89,24 @@ public static class NitroxEnvironment
     /// <summary>
     ///     Gets the command line arguments as passed to the program on start.
     /// </summary>
-    public static string[] CommandLineArgs => commandLineArgs ??= Environment.GetCommandLineArgs().Skip(1).ToArray();
+    public static string[] CommandLineArgs
+    {
+        get
+        {
+            if (commandLineArgs != null)
+            {
+                return commandLineArgs;
+            }
+
+            IEnumerable<string> args = Environment.GetCommandLineArgs().Skip(1);
+            // Windows removes the ' character around an arg but other OSes do not.
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                args = args.Select(p => p.Trim('\''));
+            }
+            return commandLineArgs ??= args.ToArray();
+        }
+    }
 
     public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
 
