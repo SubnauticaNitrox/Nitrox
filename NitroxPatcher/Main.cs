@@ -132,7 +132,7 @@ public static class Main
             {
                 Log.Warn(otherModsSummary);
             }
-        });
+        }).ContinueWithHandleError();
         try
         {
             Patcher.Initialize();
