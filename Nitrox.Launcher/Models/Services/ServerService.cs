@@ -137,9 +137,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
     {
-        Version latestCompatibleVersion = new(1, 8, 0, 0); // Update this version with every release as necessary
-
-        if (server.Version >= latestCompatibleVersion)
+        if (server.Version >= new Version(NitroxEnvironment.Version.Major, NitroxEnvironment.Version.Minor))
         {
             return true;
         }
