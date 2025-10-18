@@ -137,12 +137,14 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
     {
-        List<Version> compatibleVersions = [new(1, 8, 0, 0)]; // Update this list with every release as necessary
+        Version latestCompatibleVersion = new(1, 8, 0, 0); // Update this version with every release as necessary
 
-        if (server.Version == NitroxEnvironment.Version || compatibleVersions.Contains(server.Version))
+        if (server.Version >= latestCompatibleVersion)
         {
             return true;
         }
+
+        // TODO: Add prompt for upgrade here if the version is incompatible but can be upgraded via upgrade script
 
         return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
