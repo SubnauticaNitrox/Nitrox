@@ -20,4 +20,4 @@ if [ ! -f appimagetool ]; then
 fi
 
 # Build AppImage
-./appimagetool "$APPDIR" NitroxLauncher-x86_64.AppImage
+./appimagetool "$APPDIR" "NitroxLauncher-${ARCH}.AppImage"

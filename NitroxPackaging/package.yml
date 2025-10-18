@@ -7,6 +7,13 @@ on:
 jobs:
   build-and-package:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dotnet-arch: x64
+            flatpak-arch: x86_64
+          - dotnet-arch: arm64
+            flatpak-arch: aarch64
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,7 +26,7 @@ jobs:
       - name: Build Nitrox Launcher (Self-Contained)
         run: |
           dotnet restore Nitrox.Launcher/Nitrox.Launcher.csproj
-          dotnet publish Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r linux-x64 --self-contained
+          dotnet publish Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r linux-${{ matrix.dotnet-arch }} --self-contained
 
       - name: Install Flatpak tools
         run: |
@@ -28,21 +35,21 @@ jobs:
 
       - name: Build Flatpak
         run: |
-          flatpak-builder --force-clean --repo=repo build-dir NitroxPackaging/com.subnauticanitrox.Nitrox.json
+          flatpak-builder --force-clean --repo=repo --arch=${{ matrix.flatpak-arch }} build-dir NitroxPackaging/com.subnauticanitrox.Nitrox.json
 
       - name: Make AppImage
         run: |
           chmod +x NitroxPackaging/build-appimage.sh
-          NitroxPackaging/build-appimage.sh
+          ARCH=${{ matrix.dotnet-arch }} NitroxPackaging/build-appimage.sh
 
       - name: Upload Flatpak bundle
         uses: actions/upload-artifact@v4
         with:
-          name: Nitrox-Flatpak
+          name: Nitrox-Flatpak-${{ matrix.dotnet-arch }}
           path: repo
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: Nitrox-AppImage
-          path: NitroxLauncher-x86_64.AppImage
+          name: Nitrox-AppImage-${{ matrix.dotnet-arch }}
+          path: NitroxLauncher-${{ matrix.dotnet-arch }}.AppImage
