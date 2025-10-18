@@ -8,6 +8,7 @@ using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
+using NitroxPatcher.Helper;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;

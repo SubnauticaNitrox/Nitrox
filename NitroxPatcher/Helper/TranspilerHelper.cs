@@ -11,7 +11,7 @@ using NitroxModel.Core;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 
-namespace NitroxPatcher;
+namespace NitroxPatcher.Helper;
 
 internal static class TranspilerHelper
 {
