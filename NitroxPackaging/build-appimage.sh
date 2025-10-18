@@ -9,9 +9,9 @@ cp -r Nitrox.Launcher/bin/Release/net9.0/linux-x64/publish/* "$APPDIR/usr/bin/"
 mkdir -p "$APPDIR/usr/share/applications"
 echo "[Desktop Entry]\nName=Nitrox Launcher\nExec=NitroxLauncher\nIcon=nitrox\nType=Application\nCategories=Game;" > "$APPDIR/usr/share/applications/nitrox.desktop"
 
-# Create icon (placeholder)
+# Create icon
 mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
-cp Nitrox.Launcher/Assets/nitrox.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/nitrox.png"
+cp Nitrox.Launcher/Assets/Images/subnautica-icon.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/nitrox.png"
 
 # Download appimagetool if not present
 if [ ! -f appimagetool ]; then
