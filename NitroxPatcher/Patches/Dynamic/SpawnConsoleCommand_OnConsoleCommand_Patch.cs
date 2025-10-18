@@ -1,6 +1,6 @@
 using System.Reflection;
+using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;

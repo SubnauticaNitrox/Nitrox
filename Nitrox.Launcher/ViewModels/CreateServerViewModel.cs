@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Helper;
-using NitroxModel.Server;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Server;
 
 namespace Nitrox.Launcher.ViewModels;
 

@@ -1,7 +1,8 @@
 using System.Collections;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 

@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.GameLogic.PlayerAnimation;
+using Nitrox.Model.GameLogic.PlayerAnimation;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

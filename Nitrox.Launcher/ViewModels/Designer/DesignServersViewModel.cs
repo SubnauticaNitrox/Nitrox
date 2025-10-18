@@ -1,5 +1,5 @@
 using Nitrox.Launcher.Models.Services;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace Nitrox.Launcher.ViewModels.Designer;
 

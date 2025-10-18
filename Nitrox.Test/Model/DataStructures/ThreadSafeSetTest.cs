@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace NitroxModel.DataStructures
+﻿namespace Nitrox.Model.DataStructures
 {
     [TestClass]
     public class ThreadSafeSetTest

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

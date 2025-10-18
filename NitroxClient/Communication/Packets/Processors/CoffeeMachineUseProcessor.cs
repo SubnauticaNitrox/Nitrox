@@ -1,10 +1,11 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
-using static NitroxModel.Packets.CoffeeMachineUse;
+using static Nitrox.Model.Subnautica.Packets.CoffeeMachineUse;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

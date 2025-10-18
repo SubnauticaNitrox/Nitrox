@@ -4,8 +4,9 @@ using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Modals;
-using NitroxModel.Networking;
-using NitroxModel.Packets;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

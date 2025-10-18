@@ -14,13 +14,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Serialization;
-using NitroxModel.Server;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Serialization;
+using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Serialization;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.Models.Design;
 

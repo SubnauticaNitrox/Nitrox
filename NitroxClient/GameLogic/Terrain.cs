@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using WorldStreaming;
 

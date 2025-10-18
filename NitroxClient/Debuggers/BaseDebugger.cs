@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Nitrox.Model.DataStructures;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers

@@ -4,7 +4,7 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

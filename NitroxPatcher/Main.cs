@@ -1,12 +1,13 @@
 extern alias JB;
-global using NitroxModel.Logger;
+global using Nitrox.Model.Logger;
 global using static NitroxClient.Extensions.NitroxEntityExtensions;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using JB::JetBrains.Annotations;
-using NitroxModel_Subnautica.Logger;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.Logger;
 using UnityEngine;
 
 namespace NitroxPatcher;

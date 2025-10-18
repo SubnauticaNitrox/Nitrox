@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

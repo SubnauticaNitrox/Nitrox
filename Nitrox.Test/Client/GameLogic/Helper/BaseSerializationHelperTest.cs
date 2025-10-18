@@ -1,8 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Logger;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Nitrox.Model.Logger;
 
 namespace NitroxClient.GameLogic.Helper;
 

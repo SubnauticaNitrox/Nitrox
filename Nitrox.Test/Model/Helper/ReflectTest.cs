@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace NitroxModel.Helper;
+namespace Nitrox.Model.Helper;
 
 [TestClass]
 public class ReflectTest

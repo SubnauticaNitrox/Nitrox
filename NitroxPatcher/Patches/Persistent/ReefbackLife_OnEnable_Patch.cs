@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Persistent;

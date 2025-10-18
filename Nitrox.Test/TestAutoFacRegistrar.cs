@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using NitroxClient.Debuggers;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 using NSubstitute;
 
 namespace Nitrox.Test

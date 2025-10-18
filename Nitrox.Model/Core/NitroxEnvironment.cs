@@ -1,0 +1,129 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+namespace Nitrox.Model.Core;
+
+/// <summary>
+///     Environment helper for getting meta data about where and how Nitrox is running.
+/// </summary>
+public static class NitroxEnvironment
+{
+    private static bool hasSet;
+
+    private static string[]? commandLineArgs;
+    public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
+    public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
+
+    public static string VersionInfo
+    {
+        get
+        {
+            if (IsReleaseMode)
+            {
+                return $"{ReleasePhase} V{Version} {GitShortHash}";
+            }
+            return $"{ReleasePhase} {GitShortHash}";
+        }
+    }
+
+    public static DateTimeOffset BuildDate
+    {
+        get
+        {
+            string buildDateText = Assembly.GetExecutingAssembly().GetMetaData("BuildDate");
+            return DateTimeOffset.TryParse(buildDateText, out DateTimeOffset result) ? result : default;
+        }
+    }
+
+    public static string GitShortHash
+    {
+        get
+        {
+            if (Assembly.GetExecutingAssembly().GetMetaData("GitShortHash") is { Length: > 0 } shortHash)
+            {
+                return shortHash;
+            }
+
+            string gitHash = GitHash;
+            if (gitHash is { Length: > 0 })
+            {
+                gitHash = gitHash.Substring(0, Math.Min(10, gitHash.Length));
+            }
+            return gitHash;
+        }
+    }
+
+    public static int GameMinimumVersion
+    {
+        get
+        {
+            if (!int.TryParse(Assembly.GetExecutingAssembly().GetMetaData(nameof(GameMinimumVersion)), out int result))
+            {
+                throw new Exception("Failed to extract compatible game version number from embedded metadata");
+            }
+            return result;
+        }
+    }
+
+    public static string GitHash => Assembly.GetExecutingAssembly().GetMetaData("GitHash") ?? "";
+
+    public static Types Type { get; private set; } = Types.NORMAL;
+    public static bool IsTesting => Type == Types.TESTING;
+    public static bool IsNormal => Type == Types.NORMAL;
+
+    public static bool IsReleaseMode
+    {
+        get
+        {
+#if RELEASE
+                return true;
+#else
+            return false;
+#endif
+        }
+    }
+
+    /// <summary>
+    ///     Gets the command line arguments as passed to the program on start.
+    /// </summary>
+    public static string[] CommandLineArgs
+    {
+        get
+        {
+            if (commandLineArgs != null)
+            {
+                return commandLineArgs;
+            }
+
+            IEnumerable<string> args = Environment.GetCommandLineArgs().Skip(1);
+            // Windows removes the ' character around an arg but other OSes do not.
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                args = args.Select(p => p.Trim('\''));
+            }
+            return commandLineArgs ??= args.ToArray();
+        }
+    }
+
+    public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
+
+    public static void Set(Types value)
+    {
+        if (hasSet)
+        {
+            throw new Exception("Environment type can only be set once");
+        }
+
+        Type = value;
+        hasSet = true;
+    }
+
+    public enum Types
+    {
+        NORMAL,
+        TESTING
+    }
+}

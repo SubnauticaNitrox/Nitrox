@@ -1,5 +1,7 @@
-﻿using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+﻿using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Abstract
 {

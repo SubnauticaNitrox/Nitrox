@@ -1,13 +1,13 @@
 using System.Collections;
+using Nitrox.Model.DataStructures;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;

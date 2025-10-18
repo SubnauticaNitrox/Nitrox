@@ -3,7 +3,7 @@
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-    xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+    xmlns:server="clr-namespace:Nitrox.Model.Server;assembly=Nitrox.Model"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
     <Design.PreviewWith>

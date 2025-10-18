@@ -1,4 +1,4 @@
-using NitroxModel.Serialization;
+using Nitrox.Model.Serialization;
 
 namespace Nitrox.Launcher.ViewModels.Designer;
 

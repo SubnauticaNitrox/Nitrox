@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Launcher.ViewModels;
 

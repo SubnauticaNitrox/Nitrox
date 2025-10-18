@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Utils;
 

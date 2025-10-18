@@ -1,9 +1,10 @@
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.FMOD;

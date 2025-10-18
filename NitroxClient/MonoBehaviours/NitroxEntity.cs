@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
 using ProtoBuf;
 using UnityEngine;
 

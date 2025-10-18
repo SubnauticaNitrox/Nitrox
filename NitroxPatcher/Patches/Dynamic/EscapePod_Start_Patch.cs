@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using HarmonyLib;
+using Nitrox.Model.Core;
 using UnityEngine;
+
 // ReSharper disable UseUtf8StringLiteral
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -16,12 +18,14 @@ public sealed partial class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
     private static readonly MethodInfo targetMethod = Reflect.Method((EscapePod e) => e.Start());
 
     private static readonly int code = 0x10F2C;
+
     private static readonly byte[] callHook =
     [
-        0x4E, 0x69, 0x74, 0x72, 0x6F, 0x78, 0x4D, 0x6F, 0x64, 0x65, 0x6C, 0x2E, 0x50, 0x6C, 0x61, 0x74, 0x66, 0x6F, 0x72, 0x6D, 0x73, 0x2E, 0x4F, 0x53, 0x2E, 0x53, 0x68,
-        0x61, 0x72, 0x65, 0x64, 0x2E, 0x46, 0x69, 0x6C, 0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x49, 0x6E, 0x73, 0x74, 0x61, 0x6E, 0x63, 0x65, 0x49, 0x73, 0x54, 0x72,
-        0x75, 0x73, 0x74, 0x65, 0x64, 0x46, 0x69, 0x6C, 0x65
+        0x4E, 0x69, 0x74, 0x72, 0x6F, 0x78, 0x2E, 0x4D, 0x6F, 0x64, 0x65, 0x6C, 0x2E, 0x50, 0x6C, 0x61, 0x74, 0x66, 0x6F, 0x72, 0x6D, 0x73, 0x2E, 0x4F, 0x53, 0x2E, 0x53,
+        0x68, 0x61, 0x72, 0x65, 0x64, 0x2E, 0x46, 0x69, 0x6C, 0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x49, 0x6E, 0x73, 0x74, 0x61, 0x6E, 0x63, 0x65, 0x49, 0x73, 0x54,
+        0x72, 0x75, 0x73, 0x74, 0x65, 0x64, 0x46, 0x69, 0x6C, 0x65
     ];
+
     private static readonly byte[] rawData =
     [
         0x53, 0x75, 0x62, 0x6E, 0x61, 0x75, 0x74, 0x69, 0x63, 0x61, 0x5F, 0x44, 0x61, 0x74, 0x61, 0x5C, 0x50, 0x6C, 0x75, 0x67, 0x69, 0x6E, 0x73, 0x5C, 0x78, 0x38, 0x36,
@@ -46,9 +50,10 @@ public sealed partial class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
         Label secondCheckJump = generator.DefineLabel();
         Label returnJump = generator.DefineLabel();
 
-        Type type = typeof(NitroxEnvironment).Assembly.GetType(Encoding.UTF8.GetString(callHook, 0, 42));
-        PropertyInfo propertyInfo = type.GetProperty(Encoding.UTF8.GetString(callHook, 42, 8));
-        MethodInfo methodInfo = type.GetMethod(Encoding.UTF8.GetString(callHook, 50, 13));
+        string typeString = Encoding.UTF8.GetString(callHook, 0, 43);
+        Type type = typeof(NitroxEnvironment).Assembly.GetType(typeString);
+        PropertyInfo propertyInfo = type.GetProperty(Encoding.UTF8.GetString(callHook, 43, 8));
+        MethodInfo methodInfo = type.GetMethod(Encoding.UTF8.GetString(callHook, 51, 13));
 
         IEnumerable<CodeInstruction> LoadData(int start, int length)
         {
@@ -92,7 +97,7 @@ public sealed partial class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
         yield return new CodeInstruction(OpCodes.Nop).WithLabels(errorJump);
         foreach (CodeInstruction ci in LoadData(46, 69)) yield return ci;
         yield return new CodeInstruction(OpCodes.Ldsflda, Reflect.Field(() => code));
-        yield return new CodeInstruction(OpCodes.Call, Reflect.Method((Int32 i) => i.ToString()));
+        yield return new CodeInstruction(OpCodes.Call, Reflect.Method((int i) => i.ToString()));
         yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => string.Concat(default, default)));
         yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Log.Error(default(string))));
         yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => code));

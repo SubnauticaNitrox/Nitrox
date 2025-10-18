@@ -9,8 +9,9 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.Modals;
-using NitroxModel.Networking;
-using NitroxModel.Packets;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 

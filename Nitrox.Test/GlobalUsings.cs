@@ -1,7 +1,7 @@
 global using static FluentAssertions.FluentActions;
 global using FluentAssertions;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
-global using NitroxModel.Extensions;
+global using Nitrox.Model.Extensions;
 global using System;
 global using System.Collections;
 global using System.Collections.Generic;
@@ -9,3 +9,4 @@ global using System.IO;
 global using System.Linq;
 global using System.Reflection;
 global using System.Threading;
+global using Nitrox.Model.Subnautica.Extensions;

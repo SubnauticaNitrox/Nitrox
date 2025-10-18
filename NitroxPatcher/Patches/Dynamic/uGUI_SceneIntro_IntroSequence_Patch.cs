@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

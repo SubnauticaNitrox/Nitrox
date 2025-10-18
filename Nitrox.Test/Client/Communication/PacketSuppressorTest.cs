@@ -1,4 +1,4 @@
-using NitroxModel.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication;
 

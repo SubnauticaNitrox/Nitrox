@@ -1,7 +1,8 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+﻿using Nitrox.Model.DataStructures;
+using NitroxClient.Communication.Abstract;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using NSubstitute;
 
 namespace Nitrox.Test.Client.Communication.MultiplayerSession

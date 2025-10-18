@@ -3,9 +3,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
-using static NitroxModel.Packets.CoffeeMachineUse;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
+using static Nitrox.Model.Subnautica.Packets.CoffeeMachineUse;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

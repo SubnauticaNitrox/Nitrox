@@ -1,4 +1,4 @@
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace Nitrox.Launcher.Models.Extensions;
 

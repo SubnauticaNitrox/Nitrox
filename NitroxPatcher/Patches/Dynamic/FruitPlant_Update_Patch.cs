@@ -2,9 +2,10 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

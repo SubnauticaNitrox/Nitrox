@@ -1,7 +1,8 @@
 using System.Collections;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
