@@ -1,0 +1,48 @@
+name: Package Nitrox for Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build Nitrox Launcher
+        run: |
+          dotnet restore Nitrox.Launcher/Nitrox.Launcher.csproj
+          dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Release
+
+      - name: Install Flatpak tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+
+      - name: Build Flatpak
+        run: |
+          flatpak-builder --force-clean --repo=repo build-dir NitroxPackaging/com.subnauticanitrox.Nitrox.json
+
+      - name: Make AppImage
+        run: |
+          chmod +x NitroxPackaging/build-appimage.sh
+          NitroxPackaging/build-appimage.sh
+
+      - name: Upload Flatpak bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nitrox-Flatpak
+          path: repo
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nitrox-AppImage
+          path: NitroxLauncher-x86_64.AppImage

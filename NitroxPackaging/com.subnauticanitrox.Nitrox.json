@@ -1,0 +1,21 @@
+{
+  "app-id": "com.subnauticanitrox.Nitrox",
+  "runtime": "org.freedesktop.Platform//22.08",
+  "sdk": "org.freedesktop.Sdk//22.08",
+  "command": "NitroxLauncher",
+  "modules": [
+    {
+      "name": "NitroxLauncher",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -D /app/Nitrox.Launcher/bin/Release/net9.0/NitroxLauncher /app/bin/NitroxLauncher"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "Nitrox.Launcher/bin/Release/net9.0/"
+        }
+      ]
+    }
+  ]
+}
