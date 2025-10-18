@@ -3,7 +3,7 @@ set -e
 
 APPDIR=AppDir
 mkdir -p "$APPDIR/usr/bin"
-cp Nitrox.Launcher/bin/Release/net9.0/NitroxLauncher "$APPDIR/usr/bin/"
+cp -r Nitrox.Launcher/bin/Release/net9.0/linux-x64/publish/* "$APPDIR/usr/bin/"
 
 # Create desktop entry
 mkdir -p "$APPDIR/usr/share/applications"

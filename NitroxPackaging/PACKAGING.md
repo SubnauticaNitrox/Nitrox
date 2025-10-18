@@ -7,12 +7,21 @@ This guide explains how to build and package Nitrox as Flatpak and AppImage usin
 - Flatpak and flatpak-builder installed (for Flatpak)
 - Bash, wget (for AppImage)
 
+# Nitrox Packaging Guide: Flatpak & AppImage
+
+This guide explains how to build and package Nitrox as Flatpak and AppImage using the provided scripts and GitHub Actions workflow.
+
+## Prerequisites
+- .NET 9.0 SDK installed (locally or in CI)
+- Flatpak and flatpak-builder installed (for Flatpak)
+- Bash, wget (for AppImage)
+
 ## Packaging on Release
 Packaging is automated via GitHub Actions and runs only when a release is published. Artifacts are uploaded for download.
 
 ### Files Added
-- `com.subnauticanitrox.Nitrox.json`: Flatpak manifest
-- `build-appimage.sh`: AppImage packaging script
+- `com.subnauticanitrox.Nitrox.json`: Flatpak manifest (includes .NET 9.0 runtime)
+- `build-appimage.sh`: AppImage packaging script (uses self-contained .NET 9.0 build)
 - `.github/workflows/package.yml`: GitHub Actions workflow
 
 ## Manual Packaging
@@ -20,7 +29,8 @@ Packaging is automated via GitHub Actions and runs only when a release is publis
 ### Flatpak
 1. Build the project:
    ```bash
-   dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Release
+   dotnet restore Nitrox.Launcher/Nitrox.Launcher.csproj
+   dotnet publish Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r linux-x64 --self-contained
    ```
 2. Run Flatpak builder:
    ```bash
@@ -30,13 +40,26 @@ Packaging is automated via GitHub Actions and runs only when a release is publis
 ### AppImage
 1. Build the project:
    ```bash
-   dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Release
+   dotnet restore Nitrox.Launcher/Nitrox.Launcher.csproj
+   dotnet publish Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r linux-x64 --self-contained
    ```
 2. Run the packaging script:
    ```bash
    chmod +x build-appimage.sh
    ./build-appimage.sh
    ```
+
+## Customization
+- Update the manifest and script if your main binary or assets change location.
+- Ensure your icon is present at `Nitrox.Launcher/Assets/nitrox.png`.
+
+## For Maintainers
+- To integrate, copy the above files into your fork or main repo.
+- The workflow only triggers on release events.
+- Artifacts are available in the GitHub Actions run after release.
+
+---
+For questions, contact the Nitrox packaging maintainers.
 
 ## Customization
 - Update the manifest and script if your main binary or assets change location.

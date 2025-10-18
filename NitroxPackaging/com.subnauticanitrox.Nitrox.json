@@ -1,19 +1,41 @@
 {
   "app-id": "com.subnauticanitrox.Nitrox",
   "runtime": "org.freedesktop.Platform//22.08",
+  "runtime-version": "22.08",
   "sdk": "org.freedesktop.Sdk//22.08",
   "command": "NitroxLauncher",
+  "finish-args": [
+    "--share=network",
+    "--share=ipc",
+    "--socket=x11",
+    "--socket=wayland",
+    "--device=dri"
+  ],
   "modules": [
+    {
+      "name": "dotnet",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -D dotnet /app/dotnet"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.visualstudio.microsoft.com/download/pr/12345678-1234-1234-1234-123456789012/dotnet-sdk-9.0.100-linux-x64.tar.gz",
+          "sha256": "placeholder-sha256"
+        }
+      ]
+    },
     {
       "name": "NitroxLauncher",
       "buildsystem": "simple",
       "build-commands": [
-        "install -D /app/Nitrox.Launcher/bin/Release/net9.0/NitroxLauncher /app/bin/NitroxLauncher"
+        "install -D /app/Nitrox.Launcher/bin/Release/net9.0/linux-x64/publish/NitroxLauncher /app/bin/NitroxLauncher"
       ],
       "sources": [
         {
           "type": "dir",
-          "path": "Nitrox.Launcher/bin/Release/net9.0/"
+          "path": "Nitrox.Launcher/bin/Release/net9.0/linux-x64/publish/"
         }
       ]
     }

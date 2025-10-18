@@ -16,10 +16,10 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Build Nitrox Launcher
+      - name: Build Nitrox Launcher (Self-Contained)
         run: |
           dotnet restore Nitrox.Launcher/Nitrox.Launcher.csproj
-          dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Release
+          dotnet publish Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r linux-x64 --self-contained
 
       - name: Install Flatpak tools
         run: |
