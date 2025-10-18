@@ -1,8 +1,8 @@
 using System.IO;
-using NitroxModel.Discovery.InstallationFinders.Core;
-using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
+using NitroxModel.Platforms.Discovery.InstallationFinders.Core;
+using static NitroxModel.Platforms.Discovery.InstallationFinders.Core.GameFinderResult;
 
-namespace NitroxModel.Discovery.InstallationFinders;
+namespace NitroxModel.Platforms.Discovery.InstallationFinders;
 
 /// <summary>
 /// MS Store games are stored under <c>C:\XboxGames\[GAME]\Content\</c> by default.

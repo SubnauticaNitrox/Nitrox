@@ -14,9 +14,10 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.Discovery;
+using NitroxModel.Platforms.Discovery.Models;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
@@ -48,7 +49,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     ];
 
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
-    public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
@@ -211,6 +211,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             }
             server.Name = App.InstantLaunch.SaveName;
             Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serverService.StartServerAsync(server)).ContinueWithHandleError();
+
             // Start a game in multiplayer for each player
             foreach (string playerName in App.InstantLaunch.PlayerNames)
             {
@@ -221,39 +222,39 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }).ContinueWithHandleError();
     }
 
-    private async Task StartSubnauticaAsync(string[]? args = null)
+    private async Task StartSubnauticaAsync(string[]? args = null) => await StartGameAsync(GameInfo.Subnautica, args);
+
+    private async Task StartGameAsync(GameInfo gameInfo, string[]? args = null)
     {
         LauncherNotifier.Info("Starting game");
-        string subnauticaPath = NitroxUser.GamePath;
-        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
-        string subnauticaExe;
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+
+        if (!GameInstallationFinder.FindPlatformAndGame(gameInfo))
         {
-            subnauticaExe = Path.Combine(subnauticaPath, "MacOS", GameInfo.Subnautica.ExeName);
+            return; // Logging is done in FindPlatformAndGame()
         }
-        else
+
+        string gameExePathSuffix = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "MacOS" : string.Empty;
+        string gameExePath = Path.Combine(NitroxUser.GamePath, gameExePathSuffix, gameInfo.ExeName);
+        if (!File.Exists(gameExePath))
         {
-            subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
-        }
-        if (!File.Exists(subnauticaExe))
-        {
-            throw new FileNotFoundException("Unable to find Subnautica executable");
+            throw new FileNotFoundException($"Unable to find {gameInfo.ExeName}");
         }
 
         // Start game & gaming platform if needed.
-        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
-        using ProcessEx game = platform switch
+        string launchArguments = $"{keyValueStore.GetLaunchArguments(gameInfo)} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
+        ProcessEx game = NitroxUser.GamePlatform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
-            EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
-            MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
-            Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
-            _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game platform is unsupported by Nitrox.")
+            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments)),
+            EpicGames => await EpicGames.StartGameAsync(gameExePath, launchArguments),
+            HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
+            MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),
+            Discord => await Discord.StartGameAsync(gameExePath, launchArguments),
+            _ => throw new Exception($"Directory '{NitroxUser.GamePath}' is not a valid {gameInfo.Name} game installation or the game platform is unsupported by Nitrox.")
         };
 
         if (game is null)
         {
-            throw new Exception($"Game failed to start through {platform.Name}");
+            throw new Exception($"Game failed to start through {NitroxUser.GamePlatform.Name}");
         }
     }
 
