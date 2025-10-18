@@ -97,7 +97,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
             ChangeView(new EmbeddedServerViewModel(server));
             return;
         }
-        if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server))
+        if (!await serverService.ConfirmServerVersionAsync(server))
         {
             return;
         }
