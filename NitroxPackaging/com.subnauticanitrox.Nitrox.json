@@ -9,7 +9,9 @@
     "--share=ipc",
     "--socket=x11",
     "--socket=wayland",
-    "--device=dri"
+    "--device=dri",
+    "--filesystem=~/.config/nitrox",
+    "--filesystem=~/.steam"
   ],
   "modules": [
     {

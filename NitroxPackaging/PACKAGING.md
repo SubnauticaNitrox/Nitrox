@@ -20,8 +20,8 @@ This guide explains how to build and package Nitrox as Flatpak and AppImage usin
 Packaging is automated via GitHub Actions and runs only when a release is published. Artifacts are uploaded for download.
 
 ### Files Added
-- `com.subnauticanitrox.Nitrox.json`: Flatpak manifest (includes .NET 9.0 runtime)
-- `build-appimage.sh`: AppImage packaging script (uses self-contained .NET 9.0 build)
+- `com.subnauticanitrox.Nitrox.json`: Flatpak manifest (includes .NET 9.0 runtime and filesystem permissions for ~/.config/nitrox and ~/.steam)
+- `build-appimage.sh`: AppImage packaging script (uses self-contained .NET 9.0 build; has access to user directories)
 - `.github/workflows/package.yml`: GitHub Actions workflow
 
 ## Manual Packaging
@@ -48,6 +48,10 @@ Packaging is automated via GitHub Actions and runs only when a release is publis
    chmod +x build-appimage.sh
    ./build-appimage.sh
    ```
+
+## Directory Access
+- **Flatpak:** Grants access to `~/.config/nitrox` (for config files) and `~/.steam` (for Steam installations).
+- **AppImage:** Runs in the host environment with full access to user directories, including `~/.config/nitrox` and Steam locations.
 
 ## Customization
 - Update the manifest and script if your main binary or assets change location.
