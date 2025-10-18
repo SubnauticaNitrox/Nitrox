@@ -94,9 +94,8 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                 return false;
             }
         }
-
-        // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
-        if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server))
+        
+        if (!await ConfirmServerVersionAsync(server))
         {
             return false;
         }
@@ -136,13 +135,22 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         }
     }
 
-    public async Task<bool> ConfirmServerVersionAsync(ServerEntry server) =>
-        await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+    public async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
+    {
+        List<Version> compatibleVersions = [new(1, 8, 0, 0)]; // Update this list with every release as necessary
+
+        if (server.Version == NitroxEnvironment.Version || compatibleVersions.Contains(server.Version))
+        {
+            return true;
+        }
+
+        return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Title = "Version Mismatch Detected";
             model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
+    }
 
     private async Task GetSavesOnDiskAsync(CancellationToken cancellationToken = default)
     {
