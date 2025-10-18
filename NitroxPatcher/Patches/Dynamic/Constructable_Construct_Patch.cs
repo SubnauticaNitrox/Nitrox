@@ -100,15 +100,18 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
             return;
         }
 
-        // update as a normal module
-        Resolve<ThrottledPacketSender>().SendThrottled(new ModifyConstructedAmount(entityId, amount),
-            (packet) => { return packet.GhostId; }, 0.1f);
+        ModifyConstructedAmount modifyConstructedAmount = new(entityId, amount);
 
-        // If we're done with that ghost we can remove the throttled packets
-        if (amount == 0)
+        // If we're done with that ghost we can remove the related throttled packet
+        if (amount == 0f)
         {
             Resolve<ThrottledPacketSender>().RemovePendingPackets(entityId);
+            Resolve<IPacketSender>().Send(modifyConstructedAmount);
+            return;
         }
+
+        // update as a normal module
+        Resolve<ThrottledPacketSender>().SendThrottled(modifyConstructedAmount, (packet) => { return packet.GhostId; }, 0.1f);
     }
 
     public static IEnumerator BroadcastObjectBuilt(ConstructableBase constructableBase, NitroxId entityId)
