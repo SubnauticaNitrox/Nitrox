@@ -48,10 +48,7 @@ public class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
             entitySimulation.BroadcastSimulationChanges(new(totalSimulationChanges));
         }
 
-        if (totalEntities.Count > 0)
-        {
-            SpawnEntities batchEntities = new(totalEntities, packet.Added, true);
-            player.SendPacket(batchEntities);
-        }
+        // We send this data whether or not it's empty because the client needs to know about it (see Terrain)
+        player.SendPacket(new SpawnEntities(totalEntities, packet.Added, true));
     }
 }
