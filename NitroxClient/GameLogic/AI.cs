@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
 using UnityEngine;
-using static NitroxModel.Packets.RangedAttackLastTargetUpdate;
+using static Nitrox.Model.Packets.RangedAttackLastTargetUpdate;
 
 namespace NitroxClient.GameLogic;
 

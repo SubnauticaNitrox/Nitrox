@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace NitroxModel.DataStructures
+namespace Nitrox.Model.DataStructures
 {
     using StringPriorityQueue = PriorityQueue<string>;
 

@@ -3,9 +3,9 @@ using System.Linq;
 using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxModel;
-using NitroxModel.Core;
-using NitroxModel.Packets;
+using Nitrox.Model;
+using Nitrox.Model.Core;
+using Nitrox.Model.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,7 +47,7 @@ public class DiscordClient : MonoBehaviour
         try
         {
             discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
-            discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
+            discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((Nitrox.Model.Logger.LogLevel)level, $"[Discord] {message}"));
 
             activityManager = discord.GetActivityManager();
 

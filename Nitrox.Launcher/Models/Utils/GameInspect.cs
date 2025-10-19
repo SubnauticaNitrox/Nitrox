@@ -3,9 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Utils;
 

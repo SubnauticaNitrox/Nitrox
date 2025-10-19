@@ -1,5 +1,5 @@
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures.Util;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 

@@ -6,11 +6,11 @@ using BinaryPack.Attributes;
 using KellermanSoftware.CompareNetObjects;
 using KellermanSoftware.CompareNetObjects.TypeComparers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nitrox.Model.DataStructures;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel_Subnautica.Logger;
-using NitroxModel.DataStructures;
+using Nitrox.Model.Subnautica.Logger;
 
-namespace NitroxModel.Packets;
+namespace Nitrox.Model.Packets;
 
 [TestClass]
 public class PacketsSerializableTest

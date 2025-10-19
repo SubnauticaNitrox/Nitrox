@@ -12,14 +12,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using NitroxModel;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxServer.ConsoleCommands.Processor;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Server.Subnautica.Models.Commands.Processor;
 
 namespace Nitrox.Server.Subnautica;
 
@@ -71,11 +68,11 @@ public class Program
             Console.TreatControlCAsInput = true;
         }
 
-        Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
+        Log.Info($"Starting Nitrox Server V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
         Log.Debug($@"Process start args: ""{string.Join(@""", """, NitroxEnvironment.CommandLineArgs)}""");
 
         Task handleConsoleInputTask;
-        NitroxServer.Server server;
+        Server server;
         try
         {
             handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), serverCts.Token);
@@ -90,12 +87,12 @@ public class Program
             // TODO: Fix DI to not be slow (should not use IO in type constructors). Instead, use Lazy<T> (et al). This way, cancellation can be faster.
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
-            server = NitroxServiceLocator.LocateService<NitroxServer.Server>();
+            server = NitroxServiceLocator.LocateService<Server>();
             server.PlayerCountChanged += count =>
             {
                 _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
             };
-            string serverSaveName = NitroxServer.Server.GetSaveName(args);
+            string serverSaveName = Server.GetSaveName(args);
             Log.SaveName = serverSaveName;
 
             using (CancellationTokenSource portWaitCts = CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token))

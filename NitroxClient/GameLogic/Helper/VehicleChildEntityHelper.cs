@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper;

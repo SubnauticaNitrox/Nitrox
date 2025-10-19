@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
-using NitroxModel.Serialization;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Serialization;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {

@@ -1,6 +1,6 @@
 using System;
 using Avalonia.Controls;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
 

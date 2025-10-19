@@ -1,7 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;

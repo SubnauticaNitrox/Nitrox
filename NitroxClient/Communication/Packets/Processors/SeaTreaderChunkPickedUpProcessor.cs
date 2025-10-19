@@ -1,6 +1,6 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;

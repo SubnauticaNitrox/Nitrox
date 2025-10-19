@@ -5,7 +5,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

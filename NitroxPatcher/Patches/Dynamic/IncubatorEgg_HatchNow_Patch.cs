@@ -1,10 +1,10 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

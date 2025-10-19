@@ -1,7 +1,7 @@
 using System;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;

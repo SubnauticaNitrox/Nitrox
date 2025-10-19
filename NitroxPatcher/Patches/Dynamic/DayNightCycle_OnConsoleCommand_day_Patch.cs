@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Core;
-using NitroxModel.Packets;
+using Nitrox.Model.Core;
+using Nitrox.Model.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

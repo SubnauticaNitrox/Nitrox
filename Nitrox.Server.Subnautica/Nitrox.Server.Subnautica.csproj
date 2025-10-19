@@ -6,8 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
-        <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,6 +22,9 @@
 
     <ItemGroup>
         <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" />
+        <Content Update="..\Nitrox.Assets.Subnautica\Resources\classdata.tpk">
+          <Link>Models\Resources\classdata.tpk</Link>
+        </Content>
     </ItemGroup>
 
     <Import Project="..\Nitrox.Shared.targets" />

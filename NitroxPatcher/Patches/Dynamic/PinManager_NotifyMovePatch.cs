@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

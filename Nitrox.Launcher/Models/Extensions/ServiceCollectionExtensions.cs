@@ -14,7 +14,7 @@ using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using Nitrox.Launcher.Views.Abstract;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using ServiceScan.SourceGenerator;
 
 namespace Nitrox.Launcher.Models.Extensions;

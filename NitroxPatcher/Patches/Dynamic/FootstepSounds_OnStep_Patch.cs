@@ -7,8 +7,8 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

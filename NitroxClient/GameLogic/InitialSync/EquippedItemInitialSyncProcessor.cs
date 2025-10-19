@@ -4,9 +4,9 @@ using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

@@ -3,7 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

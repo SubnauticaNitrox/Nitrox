@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Logger;
+using Nitrox.Model.Logger;
 using System;
 using System.Collections.Generic;
 using System.Linq;

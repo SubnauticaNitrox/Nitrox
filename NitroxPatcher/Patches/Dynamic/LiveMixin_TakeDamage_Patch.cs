@@ -3,10 +3,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

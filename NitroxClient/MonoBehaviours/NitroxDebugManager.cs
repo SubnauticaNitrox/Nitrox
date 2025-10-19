@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Debuggers;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

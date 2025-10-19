@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 

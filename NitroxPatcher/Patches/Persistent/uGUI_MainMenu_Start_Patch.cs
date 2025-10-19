@@ -5,9 +5,9 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.MultiplayerSession;
 using NitroxPatcher.Patches.Dynamic;
 using UnityEngine;
 

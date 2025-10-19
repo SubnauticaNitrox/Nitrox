@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace Nitrox.Test.Client.Communication
 {

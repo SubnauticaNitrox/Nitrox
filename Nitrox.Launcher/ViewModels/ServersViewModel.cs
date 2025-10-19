@@ -12,8 +12,8 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 

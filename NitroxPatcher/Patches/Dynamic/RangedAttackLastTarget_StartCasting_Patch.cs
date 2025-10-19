@@ -1,5 +1,5 @@
 using System.Reflection;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -16,4 +16,3 @@ public sealed partial class RangedAttackLastTarget_StartCasting_Patch : NitroxPa
         RangedAttackLastTarget_StartCharging_Patch.BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CASTING);
     }
 }
-

@@ -1,4 +1,4 @@
-﻿namespace NitroxModel;
+﻿namespace Nitrox.Model;
 
 [TestClass]
 public class ExtensionsTest

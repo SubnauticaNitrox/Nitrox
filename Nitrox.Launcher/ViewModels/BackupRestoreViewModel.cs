@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxServer.Serialization.World;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.ViewModels;
 

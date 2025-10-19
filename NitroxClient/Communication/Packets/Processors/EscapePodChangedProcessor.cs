@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures.Util;
+using Nitrox.Model.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -35,5 +35,3 @@ namespace NitroxClient.Communication.Packets.Processors
         }
     }
 }
-
-

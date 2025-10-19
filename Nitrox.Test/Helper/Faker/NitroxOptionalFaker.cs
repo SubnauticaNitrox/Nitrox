@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures.Util;
 
 namespace Nitrox.Test.Helper.Faker;
 

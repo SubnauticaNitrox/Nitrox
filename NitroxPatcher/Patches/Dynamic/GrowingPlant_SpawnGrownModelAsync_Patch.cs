@@ -4,7 +4,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

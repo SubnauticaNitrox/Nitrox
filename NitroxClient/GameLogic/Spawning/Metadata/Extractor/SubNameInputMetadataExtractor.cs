@@ -1,8 +1,8 @@
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 

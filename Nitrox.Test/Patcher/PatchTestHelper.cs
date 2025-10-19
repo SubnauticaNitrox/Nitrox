@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using FluentAssertions;
 using HarmonyLib;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using NitroxPatcher.PatternMatching;
 
 namespace NitroxTest.Patcher

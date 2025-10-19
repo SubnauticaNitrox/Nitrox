@@ -1,17 +1,17 @@
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
-using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.Serialization.World;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures.GameLogic.Entities.Metadata.Bases;
 using Nitrox.Server.Subnautica;
+using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
-namespace NitroxServer.Serialization;
+namespace Nitrox.Server.Subnautica.Models.Serialization;
 
 [TestClass]
 public class WorldPersistenceTest

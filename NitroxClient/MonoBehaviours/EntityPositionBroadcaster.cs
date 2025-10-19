@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
-using static NitroxModel.Packets.EntityTransformUpdates;
+using static Nitrox.Model.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.MonoBehaviours;
 

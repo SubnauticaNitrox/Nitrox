@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
 using UnityEngine;
 using Mathf = UnityEngine.Mathf;
 
