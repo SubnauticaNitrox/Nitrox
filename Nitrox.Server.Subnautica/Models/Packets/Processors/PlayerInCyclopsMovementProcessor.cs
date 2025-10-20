@@ -5,15 +5,17 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PlayerInCyclopsMovementProcessor : AuthenticatedPacketProcessor<PlayerInCyclopsMovement>
+internal sealed class PlayerInCyclopsMovementProcessor : AuthenticatedPacketProcessor<PlayerInCyclopsMovement>
 {
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
+    private readonly ILogger<PlayerInCyclopsMovementProcessor> logger;
 
-    public PlayerInCyclopsMovementProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public PlayerInCyclopsMovementProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<PlayerInCyclopsMovementProcessor> logger)
     {
         this.playerManager = playerManager;
         this.entityRegistry = entityRegistry;
+        this.logger = logger;
     }
 
     public override void Process(PlayerInCyclopsMovement packet, Player player)
@@ -29,7 +31,7 @@ public class PlayerInCyclopsMovementProcessor : AuthenticatedPacketProcessor<Pla
         }
         else
         {
-            Log.ErrorOnce($"{nameof(PlayerEntity)} couldn't be found for player {player.Name}. It is adviced the player reconnects before losing too much progression.");
+            logger.ZLogErrorOnce($"{nameof(PlayerEntity)} couldn't be found for player {player.Name}. It is advised the player reconnects before losing too much progression.");
         }
     }
 }

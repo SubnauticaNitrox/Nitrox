@@ -6,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 // TODO: When we make the new command system, move this stuff to it
-public class SunbeamCommand : Command
+internal sealed class SunbeamCommand : Command
 {
     private readonly StoryManager storyManager;
 

@@ -5,16 +5,16 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDAScanFinished>
+internal sealed class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDAScanFinished>
 {
     private readonly PlayerManager playerManager;
-    private readonly PDAStateData pdaStateData;
+    private readonly PdaManager pdaManager;
     private readonly WorldEntityManager worldEntityManager;
 
-    public PDAScanFinishedPacketProcessor(PlayerManager playerManager, PDAStateData pdaStateData, WorldEntityManager worldEntityManager)
+    public PDAScanFinishedPacketProcessor(PlayerManager playerManager, PdaManager pdaManager, WorldEntityManager worldEntityManager)
     {
         this.playerManager = playerManager;
-        this.pdaStateData = pdaStateData;
+        this.pdaManager = pdaManager;
         this.worldEntityManager = worldEntityManager;
     }
 
@@ -22,11 +22,10 @@ public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDASc
     {
         if (!packet.WasAlreadyResearched)
         {
-            pdaStateData.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
+            pdaManager.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
         }
         playerManager.SendPacketToOtherPlayers(packet, player);
 
-        
         if (packet.Id != null)
         {
             if (packet.Destroy)
@@ -35,7 +34,7 @@ public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDASc
             }
             else
             {
-                pdaStateData.AddScannerFragment(packet.Id);
+                pdaManager.AddScannerFragment(packet.Id);
             }
         }
     }

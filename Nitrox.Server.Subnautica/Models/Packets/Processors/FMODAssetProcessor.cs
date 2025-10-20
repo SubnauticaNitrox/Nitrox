@@ -2,25 +2,21 @@
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class FMODAssetProcessor : AuthenticatedPacketProcessor<FMODAssetPacket>
+sealed class FMODAssetProcessor(PlayerManager playerManager, FmodService fmodService, ILogger<FMODAssetProcessor> logger) : AuthenticatedPacketProcessor<FMODAssetPacket>
 {
-    private readonly PlayerManager playerManager;
-    private readonly FMODWhitelist fmodWhitelist;
-
-    public FMODAssetProcessor(PlayerManager playerManager, FMODWhitelist fmodWhitelist)
-    {
-        this.playerManager = playerManager;
-        this.fmodWhitelist = fmodWhitelist;
-    }
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly FmodService fmodService = fmodService;
+    private readonly ILogger<FMODAssetProcessor> logger = logger;
 
     public override void Process(FMODAssetPacket packet, Player sendingPlayer)
     {
-        if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
+        if (!fmodService.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
-            Log.Error($"[{nameof(FMODAssetProcessor)}] Whitelist has no item for {packet.AssetPath}.");
+            logger.ZLogError($"whitelist has no item for '{packet.AssetPath}'.");
             return;
         }
 

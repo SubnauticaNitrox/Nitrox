@@ -7,13 +7,15 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
 {
-    private readonly SubnauticaServerConfig serverConfig;
+    private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly ILogger<DiscordRequestIPProcessor> logger;
 
     private string ipPort;
 
-    public DiscordRequestIPProcessor(SubnauticaServerConfig serverConfig)
+    public DiscordRequestIPProcessor(IOptions<SubnauticaServerOptions> options, ILogger<DiscordRequestIPProcessor> logger)
     {
-        this.serverConfig = serverConfig;
+        this.options = options;
+        this.logger = logger;
     }
 
     public override void Process(DiscordRequestIP packet, Player player)
@@ -33,11 +35,11 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
         string result = await GetIpAsync();
         if (result == "")
         {
-            Log.Error("Couldn't get external Ip for discord request.");
+            logger.ZLogError($"Couldn't get external Ip for discord request.");
             return;
         }
 
-        packet.IpPort = ipPort = $"{result}:{serverConfig.ServerPort}";
+        packet.IpPort = ipPort = $"{result}:{options.Value.ServerPort}";
         player.SendPacket(packet);
     }
 

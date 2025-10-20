@@ -11,11 +11,13 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly EntityRegistry entityRegistry;
+        private readonly ILogger<ModuleAddedProcessor> logger;
 
-        public ModuleAddedProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+        public ModuleAddedProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<ModuleAddedProcessor> logger)
         {
             this.playerManager = playerManager;
             this.entityRegistry = entityRegistry;
+            this.logger = logger;
         }
 
         public override void Process(ModuleAdded packet, Player player)
@@ -24,7 +26,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 
             if (!entity.HasValue)
             {
-                Log.Error($"Could not find entity {packet.Id} module added to a vehicle.");
+                logger.ZLogError($"Could not find entity {packet.Id} module added to a vehicle.");
                 return;
             }
 

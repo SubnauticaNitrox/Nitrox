@@ -6,22 +6,24 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
+internal sealed class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
 {
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
+    private readonly ILogger<EntityMetadataUpdateProcessor> logger;
 
-    public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger)
     {
         this.playerManager = playerManager;
         this.entityRegistry = entityRegistry;
+        this.logger = logger;
     }
 
     public override void Process(EntityMetadataUpdate packet, Player sendingPlayer)
     {
         if (!entityRegistry.TryGetEntityById(packet.Id, out Entity entity))
         {
-            Log.Error($"Entity metadata {packet.NewValue.GetType()} updated on an entity unknown to the server {packet.Id}");
+            logger.ZLogError($"Entity metadata {packet.NewValue.GetType()} updated on an entity unknown to the server {packet.Id}");
             return;
         }
 
@@ -69,7 +71,7 @@ public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<Entity
             return true;
         }
 
-        Log.WarnOnce($"Player {sendingPlayer.Name} tried updating metadata of another player's entity {entity.Id}");
+        logger.ZLogWarningOnce($"Player {sendingPlayer.Name} tried updating metadata of another player's entity {entity.Id}");
         return false;
     }
 }

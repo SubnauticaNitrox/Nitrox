@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -12,10 +11,12 @@ public class ServerProtoBufSerializer : IServerSerializer
 {
     public const string FILE_ENDING = ".nitrox";
 
+    private readonly ILogger? logger;
     protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
-    public ServerProtoBufSerializer(params string[] assemblies)
+    public ServerProtoBufSerializer(ILogger? logger, params string[] assemblies)
     {
+        this.logger = logger;
         foreach (string assembly in assemblies)
         {
             RegisterAssemblyClasses(assembly);
@@ -62,7 +63,7 @@ public class ServerProtoBufSerializer : IServerSerializer
     {
         bool HasNitroxDataContract(Type type) => type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
         bool HasNitroxProtoBuf(Type type) => type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
-        
+
         foreach (Type type in Assembly.Load(assemblyName).GetTypes())
         {
             try
@@ -81,7 +82,7 @@ public class ServerProtoBufSerializer : IServerSerializer
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}");
+                logger?.ZLogError(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type:@Type} from {assemblyName:@AssemblyName}");
             }
         }
     }
