@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel.GameLogic.FMOD;
+using Nitrox.Model.GameLogic.FMOD;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

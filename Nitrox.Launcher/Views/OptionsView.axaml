@@ -12,7 +12,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
-    xmlns:models="clr-namespace:NitroxModel.Discovery.Models;assembly=NitroxModel">
+    xmlns:models="clr-namespace:Nitrox.Model.Discovery.Models;assembly=Nitrox.Model">
     <Design.DataContext>
         <designer:DesignOptionsViewModel />
     </Design.DataContext>

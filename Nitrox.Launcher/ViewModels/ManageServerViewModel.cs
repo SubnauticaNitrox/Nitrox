@@ -18,11 +18,12 @@ using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Server;
-using Config = NitroxModel.Serialization.SubnauticaServerConfig;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Config = Nitrox.Model.Serialization.SubnauticaServerConfig;
 
 namespace Nitrox.Launcher.ViewModels;
 

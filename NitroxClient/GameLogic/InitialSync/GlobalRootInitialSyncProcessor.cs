@@ -2,9 +2,11 @@ using System.Collections;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxModel.GameLogic.PlayerAnimation;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;

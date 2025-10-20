@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.Models.Utils;
 

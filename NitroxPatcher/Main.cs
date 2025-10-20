@@ -1,12 +1,14 @@
 extern alias JB;
-global using NitroxModel.Logger;
-global using static NitroxClient.Extensions.NitroxEntityExtensions;
+global using Nitrox.Model.Logger;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using JB::JetBrains.Annotations;
-using NitroxModel_Subnautica.Logger;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.Logger;
+using NitroxPatcher.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher;
@@ -116,6 +118,22 @@ public static class Main
 
         Log.Info($"Using Nitrox {NitroxEnvironment.VersionInfo} built on {NitroxEnvironment.BuildDate:F}");
         Log.Info($"Game version: {Application.version}");
+        // Log if other mods are loaded
+        Task.Run(async () =>
+        {
+            if (SupportHelper.GetSummaryOfOtherMods() is { } otherModsSummary)
+            {
+                Log.Warn(otherModsSummary);
+                return;
+            }
+            // ... no other mods right now, we try again after a wait period.
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            otherModsSummary = SupportHelper.GetSummaryOfOtherMods();
+            if (otherModsSummary != null)
+            {
+                Log.Warn(otherModsSummary);
+            }
+        }).ContinueWithHandleError();
         try
         {
             Patcher.Initialize();

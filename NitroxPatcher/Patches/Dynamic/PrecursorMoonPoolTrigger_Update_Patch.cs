@@ -4,9 +4,9 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using NitroxPatcher.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

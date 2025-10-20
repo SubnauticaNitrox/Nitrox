@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
-using NitroxModel.Platforms.OS.Windows;
+using Nitrox.Model.Platforms.OS.Windows;
 
 namespace Nitrox.Launcher.Models.Extensions;
 

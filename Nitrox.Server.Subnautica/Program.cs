@@ -12,21 +12,17 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using NitroxModel;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxServer.ConsoleCommands.Processor;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Processor;
 
 namespace Nitrox.Server.Subnautica;
 
 [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 public class Program
 {
-    private static Lazy<string> gameInstallDir;
+    private static Lazy<string>? gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
     private static readonly CancellationTokenSource serverCts = new();
@@ -71,11 +67,11 @@ public class Program
             Console.TreatControlCAsInput = true;
         }
 
-        Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
+        Log.Info($"Starting Nitrox Server V{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
         Log.Debug($@"Process start args: ""{string.Join(@""", """, NitroxEnvironment.CommandLineArgs)}""");
 
         Task handleConsoleInputTask;
-        NitroxServer.Server server;
+        Server server;
         try
         {
             handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), serverCts.Token);
@@ -84,30 +80,18 @@ public class Program
             Stopwatch watch = Stopwatch.StartNew();
 
             // Allow game path to be given as command argument
-            string gameDir;
-            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], GameInfo.Subnautica.ExeName)))
-            {
-                gameDir = Path.GetFullPath(args[0]);
-                gameInstallDir = new Lazy<string>(() => gameDir);
-            }
-            else
-            {
-                gameInstallDir = new Lazy<string>(() =>
-                {
-                    return gameDir = NitroxUser.GamePath;
-                });
-            }
+            gameInstallDir = new Lazy<string>(() => NitroxUser.GamePath);
             Log.Info($"Using game files from: \'{gameInstallDir.Value}\'");
 
             // TODO: Fix DI to not be slow (should not use IO in type constructors). Instead, use Lazy<T> (et al). This way, cancellation can be faster.
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
-            server = NitroxServiceLocator.LocateService<NitroxServer.Server>();
+            server = NitroxServiceLocator.LocateService<Server>();
             server.PlayerCountChanged += count =>
             {
                 _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
             };
-            string serverSaveName = NitroxServer.Server.GetSaveName(args, "My World");
+            string serverSaveName = Server.GetSaveName(args);
             Log.SaveName = serverSaveName;
 
             using (CancellationTokenSource portWaitCts = CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token))
@@ -213,11 +197,13 @@ public class Program
             Log.Info("Server input stream is available");
             StringBuilder inputLineBuilder = new();
 
+            int GetConsoleWidth(int offset = 0) => int.Max(0, Console.WindowWidth + offset);
+
             void ClearInputLine()
             {
                 currentHistoryIndex = 0;
                 inputLineBuilder.Clear();
-                Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r");
+                Console.Write($"\r{new string(' ', GetConsoleWidth(-1))}\r");
             }
 
             void RedrawInput(int start = 0, int end = 0)
@@ -232,14 +218,15 @@ public class Program
                 if (start == 0 && end == 0)
                 {
                     // Redraw entire line
-                    Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r{inputLineBuilder}");
+                    Console.Write($"\r{new string(' ', GetConsoleWidth(-1))}\r{inputLineBuilder}");
                 }
-                else
+                else if (start > -1)
                 {
                     // Redraw part of line
+                    start = int.Min(start, inputLineBuilder.Length);
                     string changedInputSegment = inputLineBuilder.ToString(start, end);
                     Console.CursorVisible = false;
-                    Console.Write($"{changedInputSegment}{new string(' ', inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1)}");
+                    Console.Write($"{changedInputSegment}{new string(' ', int.Max(0, inputLineBuilder.Length - changedInputSegment.Length + 1))}");
                     Console.CursorVisible = true;
                 }
                 Console.CursorLeft = lastPosition;
@@ -323,7 +310,7 @@ public class Program
                                 ClearInputLine();
                                 continue;
                             case ConsoleKey.Tab:
-                                if (Console.CursorLeft + 4 < Console.WindowWidth)
+                                if (Console.CursorLeft + 4 < GetConsoleWidth())
                                 {
                                     inputLineBuilder.Insert(Console.CursorLeft, "    ");
                                     RedrawInput(Console.CursorLeft, -1);
@@ -334,7 +321,7 @@ public class Program
                                 inputLineBuilder.Clear();
                                 inputLineBuilder.Append(inputHistory[--currentHistoryIndex]);
                                 RedrawInput();
-                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
                                 continue;
                             case ConsoleKey.DownArrow when inputHistory.Count > 0 && currentHistoryIndex < 0:
                                 if (currentHistoryIndex == -1)
@@ -345,7 +332,7 @@ public class Program
                                 inputLineBuilder.Clear();
                                 inputLineBuilder.Append(inputHistory[++currentHistoryIndex]);
                                 RedrawInput();
-                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
                                 continue;
                         }
                     }
@@ -525,11 +512,11 @@ public class Program
     private static class AssemblyResolver
     {
         private static string currentExecutableDirectory;
-        private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = [];
+        private static readonly Dictionary<string, AssemblyCacheEntry> resolvedAssemblyCache = [];
 
-        public static Assembly Handler(object sender, ResolveEventArgs args)
+        public static Assembly? Handler(object sender, ResolveEventArgs args)
         {
-            static Assembly ResolveFromLib(ReadOnlySpan<char> dllName)
+            static Assembly? ResolveFromLib(ReadOnlySpan<char> dllName)
             {
                 dllName = dllName.Slice(0, Math.Max(dllName.IndexOf(','), 0));
                 if (dllName.IsEmpty)
@@ -546,9 +533,14 @@ public class Program
                 }
                 string dllNameStr = dllName.ToString();
                 // If available, return cached assembly
-                if (resolvedAssemblyCache.TryGetValue(dllNameStr, out Assembly val))
+                if (resolvedAssemblyCache.TryGetValue(dllNameStr, out AssemblyCacheEntry cacheEntry) && cacheEntry is { Assembly: { } cachedAssembly })
                 {
-                    return val;
+                    return cachedAssembly;
+                }
+                if (cacheEntry == null)
+                {
+                    cacheEntry = new AssemblyCacheEntry(0, null);
+                    resolvedAssemblyCache[dllNameStr] = cacheEntry;
                 }
 
                 // Load DLLs where this program (exe) is located
@@ -556,25 +548,33 @@ public class Program
                 // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
                 if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
                 {
-                    // Try find game managed libraries
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    if (gameInstallDir != null)
                     {
-                        dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllNameStr);
-                    }
-                    else
-                    {
-                        dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+                        // Try find game managed libraries
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllNameStr);
+                        }
+                        else
+                        {
+                            dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+                        }
                     }
                 }
 
                 try
                 {
                     // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-                    Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
-                    return resolvedAssemblyCache[dllNameStr] = assembly;
+                    cacheEntry.Assembly = Assembly.Load(File.ReadAllBytes(dllPath));
+                    return cacheEntry.Assembly;
                 }
                 catch
                 {
+                    cacheEntry.Attempts++;
+                    if (cacheEntry.Attempts >= 5)
+                    {
+                        throw new FileNotFoundException($"Failed to load DLL '{dllName}' at: {dllPath}");
+                    }
                     return null;
                 }
             }
@@ -601,6 +601,12 @@ public class Program
                 pathAttempt = proc.MainModule?.FileName;
             }
             return currentExecutableDirectory = new Uri(Path.GetDirectoryName(pathAttempt ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
+        }
+
+        private record AssemblyCacheEntry(int Attempts, Assembly? Assembly)
+        {
+            public int Attempts { get; set; } = Attempts;
+            public Assembly? Assembly { get; set; } = Assembly;
         }
     }
 }

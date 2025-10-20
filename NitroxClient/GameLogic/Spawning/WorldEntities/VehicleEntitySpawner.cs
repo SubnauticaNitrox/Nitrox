@@ -1,13 +1,13 @@
 using System.Collections;
+using Nitrox.Model.DataStructures;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -49,6 +49,7 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
     {
         TechType techType = vehicleEntity.TechType.ToUnity();
         GameObject gameObject = null;
+        Vehicle vehicle = null;
 
         bool isCyclops = techType == TechType.Cyclops;
         if (isCyclops)
@@ -66,9 +67,8 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
             GameObject techPrefab = techPrefabCoroutine.GetResult();
             gameObject = Utils.SpawnPrefabAt(techPrefab, null, vehicleEntity.Transform.Position.ToUnity());
             Validate.NotNull(gameObject, $"{nameof(VehicleEntitySpawner)}: No prefab for tech type: {techType}");
-            Vehicle vehicle = gameObject.GetComponent<Vehicle>();
 
-            if (vehicle)
+            if (gameObject.TryGetComponent(out vehicle))
             {
                 vehicle.LazyInitialize();
             }
@@ -106,6 +106,12 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
         if (parent.HasValue)
         {
             DockVehicle(gameObject, parent.Value);
+        }
+        
+        // While spawning a vehicle, we want to make sure that it doesn't free fall as if it was just built by a constructor
+        if (gameObject.TryGetComponent(out vehicle))
+        {
+            vehicle.constructionFallOverride = false;
         }
 
         result.Set(gameObject);

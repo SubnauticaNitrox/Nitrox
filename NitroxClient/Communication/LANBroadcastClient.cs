@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using NitroxModel.Constants;
+using Nitrox.Model.Constants;
 
 namespace NitroxClient.Communication;
 

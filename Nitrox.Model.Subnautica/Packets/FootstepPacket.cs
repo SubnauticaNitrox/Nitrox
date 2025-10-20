@@ -1,0 +1,27 @@
+using System;
+using Nitrox.Model.Packets;
+
+namespace Nitrox.Model.Subnautica.Packets;
+
+[Serializable]
+public class FootstepPacket : Packet
+{
+    public ushort PlayerID { get; }
+    public StepSounds AssetIndex { get; }
+
+    public FootstepPacket(ushort playerID, StepSounds assetIndex)
+    {
+        PlayerID = playerID;
+        AssetIndex = assetIndex;
+
+        DeliveryMethod = Networking.NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
+        UdpChannel = UdpChannelId.MOVEMENTS;
+    }
+
+    public enum StepSounds : byte
+    {
+        PRECURSOR,
+        METAL,
+        LAND
+    }
+}
