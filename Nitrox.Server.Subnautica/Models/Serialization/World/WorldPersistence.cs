@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Serialization;
@@ -127,7 +128,7 @@ public class WorldPersistence
         return CreateFreshWorld();
     }
 
-    public World CreateWorld(PersistedWorldData pWorldData, NitroxGameMode gameMode)
+    public World CreateWorld(PersistedWorldData pWorldData, SubnauticaGameMode gameMode)
     {
         string seed = pWorldData.WorldData.Seed;
         if (string.IsNullOrWhiteSpace(seed))

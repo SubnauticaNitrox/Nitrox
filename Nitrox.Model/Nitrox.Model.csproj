@@ -40,6 +40,8 @@
         <Otherwise>
             <ItemGroup>
                 <!-- Modern .NET specific references -->
+                <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+                <PackageReference Include="Microsoft.Extensions.Options" />
             </ItemGroup>
         </Otherwise>
     </Choose>

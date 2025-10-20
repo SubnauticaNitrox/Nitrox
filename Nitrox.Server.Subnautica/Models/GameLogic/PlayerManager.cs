@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.MultiplayerSession;
@@ -16,6 +17,7 @@ using Nitrox.Server.Subnautica.Models.Communication;
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
+// TODO: Rename to "service"
 public partial class PlayerManager
 {
     // https://regex101.com/r/eTWiEs/2/
@@ -124,7 +126,7 @@ public partial class PlayerManager
         bool hasSeenPlayerBefore = player != null;
         ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
         NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
-        NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
+        SubnauticaGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
         IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
         PlayerAnimation animation = new(AnimChangeType.UNDERWATER, AnimChangeState.ON);
 

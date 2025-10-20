@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nitrox.Model.Core;
@@ -35,7 +34,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
             Flags = PermsFlag.NONE;
             RequiredPermLevel = perms;
             AllowedArgOverflow = false;
-            Aliases = Array.Empty<string>();
+            Aliases = [];
             Parameters = new List<IParameter<object>>();
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }

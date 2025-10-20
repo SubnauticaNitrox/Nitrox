@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -6,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Serialization;
@@ -18,7 +16,8 @@ using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica;
 
-public class Server
+// TODO: This class should be split (and then removed) into .NET hosted services (eg: LiteNetLibService, PersistenceService)
+internal sealed class Server
 {
     private readonly Models.Communication.NitroxServer server;
     private readonly WorldPersistence worldPersistence;
