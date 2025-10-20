@@ -5,15 +5,15 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-public class TimeCommand : Command
+internal sealed class TimeCommand : Command
 {
-    private readonly TimeKeeper timeKeeper;
+    private readonly TimeService timeService;
 
-    public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
+    public TimeCommand(TimeService timeService) : base("time", Perms.MODERATOR, "Changes the map time")
     {
         AddParameter(new TypeString("day/night", false, "Time to change to"));
 
-        this.timeKeeper = timeKeeper;
+        this.timeService = timeService;
     }
 
     protected override void Execute(CallArgs args)
@@ -23,17 +23,17 @@ public class TimeCommand : Command
         switch (time?.ToLower())
         {
             case "day":
-                timeKeeper.ChangeTime(StoryManager.TimeModification.DAY);
+                timeService.ChangeTime(StoryManager.TimeModification.DAY);
                 SendMessageToAllPlayers("Time set to day");
                 break;
 
             case "night":
-                timeKeeper.ChangeTime(StoryManager.TimeModification.NIGHT);
+                timeService.ChangeTime(StoryManager.TimeModification.NIGHT);
                 SendMessageToAllPlayers("Time set to night");
                 break;
 
             default:
-                timeKeeper.ChangeTime(StoryManager.TimeModification.SKIP);
+                timeService.ChangeTime(StoryManager.TimeModification.SKIP);
                 SendMessageToAllPlayers("Skipped time");
                 break;
         }

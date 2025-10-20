@@ -7,7 +7,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem>
+internal sealed class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem>
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;

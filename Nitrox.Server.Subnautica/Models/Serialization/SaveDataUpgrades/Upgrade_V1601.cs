@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades
 {
-    public class Upgrade_V1601 : SaveDataUpgrade
+    public class Upgrade_V1601(ILogger<Upgrade_V1601> logger) : SaveDataUpgrade(logger)
     {
         public override Version TargetVersion { get; } = new Version(1, 6, 0, 1);
 

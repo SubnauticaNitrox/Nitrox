@@ -1,59 +1,66 @@
 <Project>
-    <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageVersion Include="AssetsTools.NET" Version="3.0.0-preview1" />
-        <PackageVersion Include="Autofac" Version="[4.9.4]" />
-        <PackageVersion Include="Avalonia.Desktop" Version="11.3.4" />
-        <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.4" />
-        <PackageVersion Include="Avalonia.Svg.Skia" Version="11.3.0" />
-        <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.4" />
-        <PackageVersion Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
-        <PackageVersion Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6" />
-        <PackageVersion Include="Avalonia" Version="11.3.4" />
-        <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" />
-        <PackageVersion Include="Bogus" Version="35.6.3" />
-        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageVersion Include="CompareNETObjects" Version="4.83.0" />
-        <PackageVersion Include="ConsoleAppFramework" Version="5.6.1" />
-        <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-        <PackageVersion Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
-        <PackageVersion Include="dnlib" Version="4.4.0" />
-        <PackageVersion Include="FluentAssertions.Analyzers" Version="[0.34.1]" />
-        <PackageVersion Include="FluentAssertions" Version="[7.2.0]" />
-        <PackageVersion Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
-        <PackageVersion Include="HarmonyX" Version="2.10.0" />
-        <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
-        <PackageVersion Include="LiteNetLib" Version="1.2.0" />
-        <PackageVersion Include="LitJson" Version="0.19.0" />
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-        <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.8" />
-        <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
-        <PackageVersion Include="Mono.Nat" Version="3.0.4" />
-        <PackageVersion Include="MSTest" Version="3.8.3" />
-        <PackageVersion Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageVersion Include="Nitrox.Analyzers" Version="*" />
-        <PackageVersion Include="Nitrox.BinaryPack" Version="2.0.1" />
-        <PackageVersion Include="Nitrox.Discovery.MSBuild" Version="0.1.1" />
-        <PackageVersion Include="NSubstitute" Version="5.3.0" />
-        <PackageVersion Include="PolySharp" Version="1.15.0" />
-        <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
-        <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
-        <PackageVersion Include="Serilog.Sinks.Map" Version="2.0.0" />
-        <PackageVersion Include="Serilog" Version="4.2.0" />
-        <PackageVersion Include="ServiceScan.SourceGenerator" Version="2.3.4" />
-        <PackageVersion Include="SixLabors.ImageSharp" Version="[2.1.11]" />
-        <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
-        <PackageVersion Include="System.Buffers" Version="4.6.1" />
-        <PackageVersion Include="System.ComponentModel" Version="4.3.0" />
-        <PackageVersion Include="System.IO.Compression" Version="4.3.0" />
-        <PackageVersion Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-        <PackageVersion Include="System.Memory" Version="4.6.3" />
-        <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
-        <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-        <PackageVersion Include="System.Text.Json" Version="9.0.4" />
-        <PackageVersion Include="System.ValueTuple" Version="4.6.1" />
-    </ItemGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="AssetsTools.NET" Version="3.0.0-preview1" />
+    <PackageVersion Include="Autofac" Version="[4.9.4]" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.4" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.4" />
+    <PackageVersion Include="Avalonia.Svg.Skia" Version="11.3.0" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.4" />
+    <PackageVersion Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
+    <PackageVersion Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6" />
+    <PackageVersion Include="Avalonia" Version="11.3.4" />
+    <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" />
+    <PackageVersion Include="Bogus" Version="35.6.3" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="CompareNETObjects" Version="4.83.0" />
+    <PackageVersion Include="ConsoleAppFramework" Version="5.6.1" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
+    <PackageVersion Include="dnlib" Version="4.4.0" />
+    <PackageVersion Include="FluentAssertions.Analyzers" Version="[0.34.1]" />
+    <PackageVersion Include="FluentAssertions" Version="[7.2.0]" />
+    <PackageVersion Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
+    <PackageVersion Include="HarmonyX" Version="2.10.0" />
+    <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageVersion Include="LiteNetLib" Version="1.2.0" />
+    <PackageVersion Include="LitJson" Version="0.19.0" />
+    <PackageVersion Include="MagicOnion.Abstractions" Version="7.0.6" />
+    <PackageVersion Include="MagicOnion.Client" Version="7.0.6" />
+    <PackageVersion Include="MagicOnion.Server" Version="7.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageVersion Include="Mono.Nat" Version="3.0.4" />
+    <PackageVersion Include="MSTest" Version="3.8.3" />
+    <PackageVersion Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageVersion Include="Nitrox.Analyzers" Version="*" />
+    <PackageVersion Include="Nitrox.BinaryPack" Version="2.0.1" />
+    <PackageVersion Include="Nitrox.Discovery.MSBuild" Version="0.1.1" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="PolySharp" Version="1.15.0" />
+    <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Map" Version="2.0.0" />
+    <PackageVersion Include="Serilog" Version="4.2.0" />
+    <PackageVersion Include="ServiceScan.SourceGenerator" Version="2.4.1" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="[2.1.11]" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+    <PackageVersion Include="System.Buffers" Version="4.6.1" />
+    <PackageVersion Include="System.ComponentModel" Version="4.3.0" />
+    <PackageVersion Include="System.IO.Compression" Version="4.3.0" />
+    <PackageVersion Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+    <PackageVersion Include="System.Memory" Version="4.6.3" />
+    <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.4" />
+    <PackageVersion Include="System.ValueTuple" Version="4.6.1" />
+    <PackageVersion Include="ZLogger" Version="2.5.10" />
+  </ItemGroup>
 </Project>

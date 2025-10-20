@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
@@ -15,13 +13,15 @@ public class BuildingManager
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
-    private readonly SubnauticaServerConfig config;
+    private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly ILogger<BuildingManager> logger;
 
-    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SubnauticaServerConfig config)
+    internal BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
-        this.config = config;
+        this.options = options;
+        this.logger = logger;
     }
 
     public bool AddGhost(PlaceGhost placeGhost)
@@ -31,7 +31,7 @@ public class BuildingManager
         {
             if (entityRegistry.GetEntityById(ghostEntity.Id).HasValue)
             {
-                Log.Error($"Trying to add a ghost to Global Root but another entity with the same id already exists (GhostId: {ghostEntity.Id})");
+                logger.ZLogError($"Trying to add a ghost to Global Root but another entity with the same id already exists (GhostId: {ghostEntity.Id})");
                 return false;
             }
 
@@ -41,17 +41,17 @@ public class BuildingManager
 
         if (!entityRegistry.TryGetEntityById(ghostEntity.ParentId, out Entity parentEntity))
         {
-            Log.Error($"Trying to add a ghost to a build that isn't registered (ParentId: {ghostEntity.ParentId})");
+            logger.ZLogError($"Trying to add a ghost to a build that isn't registered (ParentId: {ghostEntity.ParentId})");
             return false;
         }
         if (parentEntity is not BuildEntity)
         {
-            Log.Error($"Trying to add a ghost to an entity that is not a building (ParentId: {ghostEntity.ParentId})");
+            logger.ZLogError($"Trying to add a ghost to an entity that is not a building (ParentId: {ghostEntity.ParentId})");
             return false;
         }
         if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(ghostEntity.Id)))
         {
-            Log.Error($"Trying to add a ghost to a building but another child with the same id already exists (GhostId: {ghostEntity.Id})");
+            logger.ZLogError($"Trying to add a ghost to a building but another child with the same id already exists (GhostId: {ghostEntity.Id})");
             return false;
         }
 
@@ -66,7 +66,7 @@ public class BuildingManager
         {
             if (entityRegistry.GetEntityById(moduleEntity.Id).HasValue)
             {
-                Log.Error($"Trying to add a module to Global Root but another entity with the same id already exists ({moduleEntity.Id})");
+                logger.ZLogError($"Trying to add a module to Global Root but another entity with the same id already exists ({moduleEntity.Id})");
                 return false;
             }
 
@@ -76,17 +76,17 @@ public class BuildingManager
 
         if (!entityRegistry.TryGetEntityById(moduleEntity.ParentId, out Entity parentEntity))
         {
-            Log.Error($"Trying to add a module to a build that isn't registered (ParentId: {moduleEntity.ParentId})");
+            logger.ZLogError($"Trying to add a module to a build that isn't registered (ParentId: {moduleEntity.ParentId})");
             return false;
         }
         if (parentEntity is not BuildEntity && parentEntity is not VehicleEntity)
         {
-            Log.Error($"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
+            logger.ZLogError($"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
             return false;
         }
         if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(moduleEntity.Id)))
         {
-            Log.Error($"Trying to add a module to a building but another child with the same id already exists (ModuleId: {moduleEntity.Id})");
+            logger.ZLogError($"Trying to add a module to a building but another child with the same id already exists (ModuleId: {moduleEntity.Id})");
             return false;
         }
 
@@ -98,7 +98,7 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(modifyConstructedAmount.GhostId, out Entity entity))
         {
-            Log.Error($"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
+            logger.ZLogError($"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
             return false;
         }
 
@@ -144,12 +144,12 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(placeBase.FormerGhostId, out Entity entity))
         {
-            Log.Error($"Trying to place a base from a non-registered ghost (Id: {placeBase.FormerGhostId})");
+            logger.ZLogError($"Trying to place a base from a non-registered ghost (Id: {placeBase.FormerGhostId})");
             return false;
         }
         if (entity is not GhostEntity)
         {
-            Log.Error($"Trying to add a new build to Global Root but another build with the same id already exists (GhostId: {placeBase.FormerGhostId})");
+            logger.ZLogError($"Trying to add a new build to Global Root but another build with the same id already exists (GhostId: {placeBase.FormerGhostId})");
             return false;
         }
 
@@ -162,20 +162,20 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
-            Log.Error($"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
+            logger.ZLogError($"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
             operationId = -1;
             return false;
         }
         if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out BuildEntity buildEntity))
         {
-            Log.Error($"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
+            logger.ZLogError($"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
             operationId = -1;
             return false;
         }
         int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
-        if (deltaOperations != 0 && config.SafeBuilding)
+        if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
-            Log.Warn($"Ignoring an {nameof(UpdateBase)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            logger.ZLogWarning($"Ignoring an {nameof(UpdateBase)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(player);
             operationId = -1;
             return false;
@@ -268,7 +268,7 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(baseDeconstructed.FormerBaseId, out BuildEntity _))
         {
-            Log.Error($"Trying to replace a non-registered build (BaseId: {baseDeconstructed.FormerBaseId})");
+            logger.ZLogError($"Trying to replace a non-registered build (BaseId: {baseDeconstructed.FormerBaseId})");
             return false;
         }
 
@@ -277,27 +277,27 @@ public class BuildingManager
         return true;
     }
 
-    public bool ReplacePieceByGhost(Player player, PieceDeconstructed pieceDeconstructed, out Entity removedEntity, out int operationId)
+    public bool ReplacePieceByGhost(Player player, PieceDeconstructed pieceDeconstructed, out Entity? removedEntity, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
-            Log.Error($"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
+            logger.ZLogError($"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
             removedEntity = null;
             operationId = -1;
             return false;
         }
         if (entityRegistry.TryGetEntityById(pieceDeconstructed.PieceId, out GhostEntity _))
         {
-            Log.Error($"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
+            logger.ZLogError($"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
             removedEntity = null;
             operationId = -1;
             return false;
         }
 
         int deltaOperations = buildEntity.OperationId + 1 - pieceDeconstructed.OperationId;
-        if (deltaOperations != 0 && config.SafeBuilding)
+        if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
-            Log.Warn($"Ignoring a {nameof(PieceDeconstructed)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            logger.ZLogWarning($"Ignoring a {nameof(PieceDeconstructed)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(player);
             removedEntity = null;
             operationId = -1;
@@ -318,7 +318,7 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(waterParkDeconstructed.BaseId, out BuildEntity buildEntity))
         {
-            Log.Error($"Trying to create a WaterPark piece in a non-registered build ({waterParkDeconstructed.BaseId})");
+            logger.ZLogError($"Trying to create a WaterPark piece in a non-registered build ({waterParkDeconstructed.BaseId})");
             return false;
         }
 
@@ -367,7 +367,7 @@ public class BuildingManager
 
         if (packet.PieceId == null || !entityRegistry.TryGetEntityById(packet.PieceId, out InteriorPieceEntity deconstructedPiece))
         {
-            Log.Error($"Could not find {nameof(InteriorPieceEntity)} with id {packet.PieceId} to be deconstructed");
+            logger.ZLogError($"Could not find {nameof(InteriorPieceEntity)} with id {packet.PieceId} to be deconstructed");
             return false;
         }
 
@@ -375,7 +375,7 @@ public class BuildingManager
         {
             if (!entityRegistry.TryGetEntityById(entry.Key, out InteriorPieceEntity waterPark))
             {
-                Log.Error($"Could not find {nameof(InteriorPieceEntity)} id {entry.Key} to move {entry.Value} entities to");
+                logger.ZLogError($"Could not find {nameof(InteriorPieceEntity)} id {entry.Key} to move {entry.Value} entities to");
                 continue;
             }
 

@@ -5,15 +5,17 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUndocking>
+internal sealed class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUndocking>
 {
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
+    private readonly ILogger<VehicleUndockingProcessor> logger;
 
-    public VehicleUndockingProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public VehicleUndockingProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<VehicleUndockingProcessor> logger)
     {
         this.playerManager = playerManager;
         this.entityRegistry = entityRegistry;
+        this.logger = logger;
     }
 
     public override void Process(VehicleUndocking packet, Player player)
@@ -22,13 +24,13 @@ public class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUnd
         {
             if (!entityRegistry.TryGetEntityById(packet.VehicleId, out Entity vehicleEntity))
             {
-                Log.Error($"Unable to find vehicle to undock {packet.VehicleId}");
+                logger.ZLogError($"Unable to find vehicle to undock {packet.VehicleId}");
                 return;
             }
 
             if (!entityRegistry.GetEntityById(vehicleEntity.ParentId).HasValue)
             {
-                Log.Error($"Unable to find docked vehicles parent {vehicleEntity.ParentId} to undock from");
+                logger.ZLogError($"Unable to find docked vehicles parent {vehicleEntity.ParentId} to undock from");
                 return;
             }
 

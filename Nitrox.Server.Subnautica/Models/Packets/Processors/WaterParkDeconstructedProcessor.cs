@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDeconstructed>
+sealed class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDeconstructed>
 {
     public WaterParkDeconstructedProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
 
