@@ -33,13 +33,33 @@ public class GlobalRootData
         {
             return;
         }
+
+        bool brokenEntitiesFound = false;
+
         foreach (Entity child in entity.ChildEntities)
         {
-            if (child is WorldEntity childWE && childWE.Transform != null)
+            if (child is not WorldEntity childWE)
+            {
+                continue;
+            }
+
+            if (child is not GlobalRootEntity && childWE.Level == 100)
+            {
+                Log.Error($"Found a world entity with cell level 100. It will be hotfixed.\n{childWE}");
+                childWE.Level = 0;
+                brokenEntitiesFound = true;
+            }
+
+            if (childWE.Transform != null)
             {
                 childWE.Transform.SetParent(entity.Transform, false);
                 EnsureChildrenTransformAreParented(childWE);
             }
+        }
+
+        if (brokenEntitiesFound)
+        {
+            Log.WarnOnce($"Please consider reporting the above issues on the Discord server.");
         }
     }
 
