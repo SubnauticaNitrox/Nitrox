@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.Serialization;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
@@ -6,10 +5,10 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
 {
     [Serializable]
     [DataContract]
-    public class GameData
+    internal sealed class GameData
     {
         [DataMember(Order = 1)]
-        public PDAStateData PDAState { get; set; }
+        public PdaStateData PDAState { get; set; }
 
         [DataMember(Order = 2)]
         public StoryGoalData StoryGoals { get; set; }
@@ -17,13 +16,13 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
         [DataMember(Order = 3)]
         public StoryTimingData StoryTiming { get; set; }
 
-        public static GameData From(PDAStateData pdaState, StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper, StoryManager storyManager, TimeKeeper timeKeeper)
+        public static GameData From(PdaManager pdaManager, StoryGoalData storyGoals, StoryScheduler storyScheduler, StoryManager storyManager, TimeService timeService)
         {
             return new GameData
             {
-                PDAState = pdaState,
-                StoryGoals = StoryGoalData.From(storyGoals, scheduleKeeper),
-                StoryTiming = StoryTimingData.From(storyManager, timeKeeper)
+                PDAState = pdaManager.PdaState,
+                StoryGoals = StoryGoalData.From(storyGoals, storyScheduler),
+                StoryTiming = StoryTimingData.From(storyManager, timeService)
             };
         }
     }

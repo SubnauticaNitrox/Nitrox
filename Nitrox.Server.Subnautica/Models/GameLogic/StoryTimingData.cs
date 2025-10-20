@@ -1,11 +1,10 @@
-using System;
 using System.Runtime.Serialization;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic
 {
     [Serializable]
     [DataContract]
-    public class StoryTimingData
+    internal sealed class StoryTimingData
     {
         [DataMember(Order = 1)]
         public double ElapsedSeconds { get; set; }
@@ -22,15 +21,15 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
         [DataMember(Order = 5)]
         public double? AuroraRealExplosionTime { get; set; }
 
-        public static StoryTimingData From(StoryManager storyManager, TimeKeeper timeKeeper)
+        public static StoryTimingData From(StoryManager storyManager, TimeService timeService)
         {
             return new StoryTimingData
             {
-                ElapsedSeconds = timeKeeper.ElapsedSeconds,
+                ElapsedSeconds = timeService.GameTime.TotalSeconds,
                 AuroraCountdownTime = storyManager.AuroraCountdownTimeMs,
                 AuroraWarningTime = storyManager.AuroraWarningTimeMs,
-                RealTimeElapsed = timeKeeper.RealTimeElapsed,
-                AuroraRealExplosionTime = storyManager.AuroraRealExplosionTime
+                RealTimeElapsed = timeService.RealTime.TotalMilliseconds,
+                AuroraRealExplosionTime = storyManager.AuroraRealExplosionTime.TotalSeconds
             };
         }
     }

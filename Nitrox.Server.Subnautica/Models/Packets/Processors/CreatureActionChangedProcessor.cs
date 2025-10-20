@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class CreatureActionChangedProcessor(
+internal sealed class CreatureActionChangedProcessor(
     PlayerManager playerManager,
     EntityRegistry entityRegistry
 ) : TransmitIfCanSeePacketProcessor<CreatureActionChanged>(playerManager, entityRegistry)

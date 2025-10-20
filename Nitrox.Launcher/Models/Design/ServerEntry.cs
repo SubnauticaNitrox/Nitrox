@@ -2,9 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
@@ -13,14 +11,15 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Nitrox.Launcher.Models.Exceptions;
+using Nitrox.Model.Configuration;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 
@@ -32,9 +31,8 @@ namespace Nitrox.Launcher.Models.Design;
 public partial class ServerEntry : ObservableObject
 {
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
-    public const string DEFAULT_SERVER_CONFIG_NAME = "server.cfg";
 
-    private static readonly SubnauticaServerConfig serverDefaults = new();
+    private static readonly SubnauticaServerOptions serverDefaults = new();
 
     [ObservableProperty]
     private bool allowCommands = !serverDefaults.DisableConsole;
@@ -43,19 +41,19 @@ public partial class ServerEntry : ObservableObject
     private bool allowKeepInventory = serverDefaults.KeepInventoryOnDeath;
 
     [ObservableProperty]
-    private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
+    private bool allowLanDiscovery = serverDefaults.LanDiscovery;
 
     [ObservableProperty]
-    private bool allowPvP = serverDefaults.PvPEnabled;
+    private bool allowPvP = serverDefaults.PvpEnabled;
 
     [ObservableProperty]
-    private bool autoPortForward = serverDefaults.AutoPortForward;
+    private bool portForward = serverDefaults.PortForward;
 
     [ObservableProperty]
     private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
 
     [ObservableProperty]
-    private NitroxGameMode gameMode = serverDefaults.GameMode;
+    private SubnauticaGameMode gameMode = serverDefaults.GameMode;
 
     [ObservableProperty]
     private bool isEmbedded;
@@ -100,6 +98,17 @@ public partial class ServerEntry : ObservableObject
     private Version version = NitroxEnvironment.Version;
 
     internal ServerProcess? Process { get; private set; }
+    private int processId;
+
+    private OutputLineType lastOutputType;
+
+    public AvaloniaList<OutputLine> Output { get; } = [];
+
+    public int ProcessId
+    {
+        get => processId = Process?.Id ?? processId;
+        set => processId = value;
+    }
 
     public static ServerEntry? FromDirectory(string saveDir)
     {
@@ -107,13 +116,13 @@ public partial class ServerEntry : ObservableObject
         return result.RefreshFromDirectory(saveDir) ? result : null;
     }
 
-    public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
+    public static ServerEntry? CreateNew(string saveDir, SubnauticaGameMode saveGameMode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveDir, nameof(saveDir));
 
         Directory.CreateDirectory(saveDir);
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
         string fileEnding = config.SerializerMode switch
         {
             ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
@@ -122,17 +131,15 @@ public partial class ServerEntry : ObservableObject
         };
 
         File.WriteAllText(Path.Combine(saveDir, $"Version{fileEnding}"), null);
-        using (config.Update(saveDir))
-        {
-            config.GameMode = saveGameMode;
-        }
+        config.GameMode = saveGameMode;
+        NitroxConfig.CreateFile(saveDir, config);
 
         return FromDirectory(saveDir);
     }
 
     public bool RefreshFromDirectory(string saveDir)
     {
-        if (!File.Exists(Path.Combine(saveDir, DEFAULT_SERVER_CONFIG_NAME)))
+        if (!File.Exists(Path.Combine(saveDir, SerializableFileNameAttribute.GetFileName<SubnauticaServerOptions>())))
         {
             Log.Warn($"Tried loading invalid save directory at '{saveDir}'");
             return false;
@@ -145,7 +152,7 @@ public partial class ServerEntry : ObservableObject
             icon = new Bitmap(Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME));
         }
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
         string fileEnding = config.SerializerMode switch
         {
             ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
@@ -165,8 +172,8 @@ public partial class ServerEntry : ObservableObject
         {
             serverVersion = config.SerializerMode switch
             {
-                ServerSerializerMode.JSON => new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                ServerSerializerMode.PROTOBUF => new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                ServerSerializerMode.JSON => new ServerJsonSerializer(NullLogger<ServerJsonSerializer>.Instance).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                ServerSerializerMode.PROTOBUF => new SubnauticaServerProtoBufSerializer(null).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
                 _ => throw new NotImplementedException()
             };
         }
@@ -180,14 +187,15 @@ public partial class ServerEntry : ObservableObject
         AutoSaveInterval = config.SaveInterval / 1000;
         MaxPlayers = config.MaxConnections;
         Port = config.ServerPort;
-        AutoPortForward = config.AutoPortForward;
-        AllowLanDiscovery = config.LANDiscoveryEnabled;
+        PortForward = config.PortForward;
+        AllowLanDiscovery = config.LanDiscovery;
         AllowCommands = !config.DisableConsole;
-        AllowPvP = config.PvPEnabled;
+        AllowPvP = config.PvpEnabled;
         AllowKeepInventory = config.KeepInventoryOnDeath;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
         Version = serverVersion;
-        IsEmbedded = config.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
+        // TODO: Store IsEmbedded in launcher cfg
+        IsEmbedded = RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                      ?
                                                      // This file is affected by server saving
@@ -221,11 +229,6 @@ public partial class ServerEntry : ObservableObject
             Dispatcher.UIThread.InvokeAsync(StopAsync);
         }, IsEmbedded, existingProcessId);
 
-        if (Process != null)
-        {
-            Process.PlayerCountChanged += count => Dispatcher.UIThread.Post(() => Players = count);
-        }
-
         IsNewServer = false;
         IsOnline = true;
     }
@@ -243,6 +246,7 @@ public partial class ServerEntry : ObservableObject
 
         IsOnline = false;
         IsServerClosing = false;
+        Output.Clear();
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
@@ -271,17 +275,9 @@ public partial class ServerEntry : ObservableObject
 
     internal partial class ServerProcess : IDisposable
     {
-        private readonly Ipc.ClientIpc ipc;
-        private readonly CancellationTokenSource ipcCts;
-        private OutputLineType lastOutputType;
         private Process? serverProcess;
-
-        [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
-        private static partial Regex OutputLineRegex { get; }
-
         public int Id { get; }
         public bool IsRunning { get; private set; }
-        public AvaloniaList<OutputLine> Output { get; } = [];
 
         private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processId = 0)
         {
@@ -317,81 +313,19 @@ public partial class ServerEntry : ObservableObject
 
                 serverProcess = System.Diagnostics.Process.Start(startInfo);
             }
-
-            if (serverProcess != null || processId != 0)
+            Id = serverProcess?.Id ?? processId;
+            if (serverProcess != null)
             {
-                Id = serverProcess?.Id ?? processId;
-
+                serverProcess.Exited += (sender, args) => onExited();
                 IsRunning = true;
-                ipcCts = new CancellationTokenSource();
-                ipc = new Ipc.ClientIpc(Id, ipcCts);
-                ipc.StartReadingServerOutput(
-                    output =>
-                    {
-                        if (string.IsNullOrWhiteSpace(output))
-                        {
-                            return;
-                        }
-
-                        if (output.StartsWith($"{Ipc.Messages.PlayerCountMessage}:", StringComparison.Ordinal))
-                        {
-                            if (int.TryParse(output[$"{Ipc.Messages.PlayerCountMessage}:".Length..].Trim('[', ']'), out int playerCount))
-                            {
-                                PlayerCountChanged?.Invoke(playerCount);
-                            }
-                            return;
-                        }
-
-                        // Ignore any messages that are part of the IPC message protocol
-                        if (Ipc.Messages.AllMessages.Any(msg => output.StartsWith($"{msg}:", StringComparison.Ordinal)))
-                        {
-                            return;
-                        }
-
-                        using StringReader reader = new(output);
-                        while (reader.ReadLine() is { } line)
-                        {
-                            Match match = OutputLineRegex.Match(line);
-                            if (match.Success)
-                            {
-                                OutputLine outputLine = new()
-                                {
-                                    Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
-                                    LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
-                                    Type = match.Groups["level"].ValueSpan switch
-                                    {
-                                        "DBG" => OutputLineType.DEBUG_LOG,
-                                        "WRN" => OutputLineType.WARNING_LOG,
-                                        "ERR" => OutputLineType.ERROR_LOG,
-                                        _ => OutputLineType.INFO_LOG
-                                    }
-                                };
-                                lastOutputType = outputLine.Type;
-                                Output.Add(outputLine);
-                            }
-                            else
-                            {
-                                Output.Add(new OutputLine
-                                {
-                                    Timestamp = "",
-                                    LogText = line,
-                                    Type = lastOutputType
-                                });
-                            }
-                        }
-                    },
-                    () =>
-                    {
-                        IsRunning = false;
-                        onExited?.Invoke();
-                    },
-                    ipcCts.Token
-                );
+            }
+            else
+            {
+                onExited();
             }
         }
 
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processId) => new(saveDir, onExited, isEmbedded, processId);
-        public event Action<int>? PlayerCountChanged;
 
         /// <summary>
         ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.
@@ -431,7 +365,8 @@ public partial class ServerEntry : ObservableObject
 
             try
             {
-                return await ipc.SendCommand(command, cancellationToken);
+                // TODO: FIX IPC
+                // return await ipc.SendCommand(command, cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -457,8 +392,6 @@ public partial class ServerEntry : ObservableObject
         public void Dispose()
         {
             IsRunning = false;
-            ipcCts.Cancel();
-            ipc.Dispose();
             serverProcess?.Dispose();
             serverProcess = null;
         }

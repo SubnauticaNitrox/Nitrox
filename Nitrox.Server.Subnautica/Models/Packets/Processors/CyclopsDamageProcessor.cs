@@ -6,7 +6,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
     /// <summary>
     /// This is the absolute damage state. The current simulation owner is the only one who sends this packet to the server
     /// </summary>
-    public class CyclopsDamageProcessor : AuthenticatedPacketProcessor<CyclopsDamage>
+    sealed class CyclopsDamageProcessor : AuthenticatedPacketProcessor<CyclopsDamage>
     {
         private readonly PlayerManager playerManager;
 

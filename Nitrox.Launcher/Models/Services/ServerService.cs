@@ -15,6 +15,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Platforms.OS.Shared;
@@ -36,8 +37,6 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     private FileSystemWatcher? watcher;
     private readonly CancellationTokenSource serverRefreshCts = new();
     private readonly HashSet<string> loggedErrorDirectories = [];
-    private readonly HashSet<int> knownServerProcessIds = [];
-    private readonly Lock knownServerProcessIdsLock = new();
     private volatile bool hasUpdatedAtLeastOnce;
 
     public ServerService(DialogService dialogService, IKeyValueStore keyValueStore, Func<IRoutingScreen> screenProvider)
@@ -74,7 +73,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     private async Task LoadServersAsync()
     {
-        await GetSavesOnDiskAsync();
+        await GetSavesOnStorageAsync();
         _ = WatchServersAsync(serverRefreshCts.Token).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
@@ -109,23 +108,10 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         try
         {
             server.Version = NitroxEnvironment.Version;
-            server.Start(keyValueStore.GetSavesFolderDir(), onExited: () =>
-            {
-                lock (knownServerProcessIdsLock)
-                {
-                    knownServerProcessIds.Remove(server.Process?.Id ?? 0);
-                }
-            });
+            server.Start(keyValueStore.GetSavesFolderDir());
             if (server.IsEmbedded)
             {
                 await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));
-            }
-            if (server.Process is { Id: > 0 })
-            {
-                lock (knownServerProcessIdsLock)
-                {
-                    knownServerProcessIds.Add(server.Process.Id);
-                }
             }
             return true;
         }
@@ -137,6 +123,22 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         }
     }
 
+    public ServerEntry? GetServerEntryByProcessIdOrSaveName(int processId, string saveName)
+    {
+        lock (serversLock)
+        {
+            foreach (ServerEntry entry in servers)
+            {
+                if (entry.Name == saveName || entry.ProcessId == processId)
+                {
+                    entry.ProcessId = processId;
+                    return entry;
+                }
+            }
+        }
+        return null;
+    }
+
     public async Task<bool> ConfirmServerVersionAsync(ServerEntry server) =>
         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
@@ -145,7 +147,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
             model.ButtonOptions = ButtonOptions.YesNo;
         });
 
-    private async Task GetSavesOnDiskAsync(CancellationToken cancellationToken = default)
+    private async Task GetSavesOnStorageAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -219,7 +221,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                     {
                         try
                         {
-                            await GetSavesOnDiskAsync(cancellationToken);
+                            await GetSavesOnStorageAsync(cancellationToken);
                             shouldRefreshServersList = false;
                         }
                         catch (IOException)
@@ -308,75 +310,6 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
         string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);
-        return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
-    }
-
-    public async Task DetectAndAttachRunningServersAsync()
-    {
-        foreach (string pipeName in GetNitroxServerPipeNames())
-        {
-            try
-            {
-                Match? match = Regex.Match(pipeName, @"NitroxServer_(\d+)");
-                if (!match.Success)
-                {
-                    continue;
-                }
-                int processId = int.Parse(match.Groups[1].Value);
-                lock (knownServerProcessIdsLock)
-                {
-                    if (knownServerProcessIds.Contains(processId))
-                    {
-                        continue;
-                    }
-                }
-                using CancellationTokenSource? cts = new(1000);
-                using Ipc.ClientIpc ipc = new(processId, cts);
-                await ipc.SendCommand(Ipc.Messages.SaveNameMessage, cts.Token);
-                string response = await ipc.ReadStringAsync(cts.Token);
-                if (response.StartsWith($"{Ipc.Messages.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
-                {
-                    string? saveName = response[$"{Ipc.Messages.SaveNameMessage}:".Length..].Trim('[', ']');
-                    ServerEntry? serverMatch = servers?.FirstOrDefault(s => string.Equals(s.Name, saveName, StringComparison.Ordinal));
-                    if (serverMatch != null)
-                    {
-                        Log.Info($"Found running server \"{serverMatch.Name}\" (PID: {processId})");
-                        serverMatch.IsOnline = true;
-                        lock (knownServerProcessIdsLock)
-                        {
-                            knownServerProcessIds.Add(processId);
-                        }
-                        serverMatch.Start(keyValueStore.GetSavesFolderDir(), processId);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Debug($"Pipe scan error for {pipeName}: {ex.Message}");
-            }
-        }
-    }
-
-    private static List<string> GetNitroxServerPipeNames()
-    {
-        try
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                DirectoryInfo? pipeDir = new(@"\\.\pipe\");
-                return pipeDir.GetFileSystemInfos()
-                              .Select(f => f.Name)
-                              .Where(n => n.StartsWith("NitroxServer_", StringComparison.OrdinalIgnoreCase))
-                              .ToList();
-            }
-
-            return ProcessEx.GetProcessesByName(GetServerExeName(), p => $"NitroxServer_{p.Id}")
-                            .Where(s => s != null)
-                            .ToList();
-        }
-        catch
-        {
-            return [];
-        }
+        return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, SubnauticaGameMode.SURVIVAL);
     }
 }

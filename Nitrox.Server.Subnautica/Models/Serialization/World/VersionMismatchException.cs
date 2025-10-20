@@ -1,5 +1,3 @@
-using System;
-
 namespace Nitrox.Server.Subnautica.Models.Serialization.World
 {
     [Serializable]

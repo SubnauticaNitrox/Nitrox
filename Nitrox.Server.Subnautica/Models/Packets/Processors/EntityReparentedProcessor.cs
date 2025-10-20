@@ -5,7 +5,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityReparented>
+sealed class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityReparented>
 {
     private readonly EntityRegistry entityRegistry;
     private readonly PlayerManager playerManager;

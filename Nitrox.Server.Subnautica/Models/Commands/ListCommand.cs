@@ -11,19 +11,19 @@ namespace Nitrox.Server.Subnautica.Models.Commands
     internal class ListCommand : Command
     {
         private readonly PlayerManager playerManager;
-        private readonly SubnauticaServerConfig serverConfig;
+        private readonly IOptions<SubnauticaServerOptions> options;
 
-        public ListCommand(SubnauticaServerConfig serverConfig, PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
+        public ListCommand(IOptions<SubnauticaServerOptions> options, PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
         {
             this.playerManager = playerManager;
-            this.serverConfig = serverConfig;
+            this.options = options;
         }
 
         protected override void Execute(CallArgs args)
         {
             IList<string> players = playerManager.GetConnectedPlayers().Select(player => player.Name).ToList();
 
-            StringBuilder builder = new($"List of players ({players.Count}/{serverConfig.MaxConnections}):\n");
+            StringBuilder builder = new($"List of players ({players.Count}/{options.Value.MaxConnections}):\n");
             builder.Append(string.Join(", ", players));
 
             SendMessage(args.Sender, builder.ToString());

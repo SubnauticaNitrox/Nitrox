@@ -9,10 +9,12 @@ namespace Nitrox.Server.Subnautica.Models.Commands
 {
     internal class DirectoryCommand : Command
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "dir" };
+        private readonly ILogger<DirectoryCommand> logger;
+        public override IEnumerable<string> Aliases { get; } = ["dir"];
 
-        public DirectoryCommand() : base("directory", Perms.CONSOLE, "Opens the current directory of the server")
+        public DirectoryCommand(ILogger<DirectoryCommand> logger) : base("directory", Perms.HOST, "Opens the current directory of the server")
         {
+            this.logger = logger;
         }
 
         protected override void Execute(CallArgs args)
@@ -21,12 +23,11 @@ namespace Nitrox.Server.Subnautica.Models.Commands
 
             if (!Directory.Exists(path))
             {
-                Log.ErrorSensitive("Unable to open Nitrox directory {path} because it does not exist", path);
+                logger.ZLogError($"Unable to open Nitrox directory {path.ToSensitive()} because it does not exist");
                 return;
-
             }
 
-            Log.InfoSensitive("Opening directory {path}", path);
+            logger.ZLogInformation($"Opening directory {path.ToSensitive()}");
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true, Verb = "open" })?.Dispose();
         }
     }

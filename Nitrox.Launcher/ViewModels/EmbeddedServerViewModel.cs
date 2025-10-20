@@ -31,7 +31,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Output;
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {

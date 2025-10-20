@@ -7,7 +7,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
+sealed class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
 {
     private readonly EntitySimulation entitySimulation;
     private readonly WorldEntityManager worldEntityManager;

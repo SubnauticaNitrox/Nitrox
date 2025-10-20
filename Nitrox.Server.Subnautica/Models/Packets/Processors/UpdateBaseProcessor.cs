@@ -5,7 +5,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
+internal sealed class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
 {
     public UpdateBaseProcessor(BuildingManager buildingManager, PlayerManager playerManager, EntitySimulation entitySimulation) : base(buildingManager, playerManager, entitySimulation) { }
 
