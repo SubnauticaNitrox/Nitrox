@@ -10,23 +10,8 @@ public class ConfigFileKeyValueStore : IKeyValueStore
 {
     private bool hasLoaded = false;
     private readonly Dictionary<string, object> keyValuePairs = new();
-    public string FolderPath { get; }
+    public string FolderPath { get; } = NitroxUser.AppDataPath;
     public string FilePath => Path.Combine(FolderPath, "nitrox.cfg");
-
-    public ConfigFileKeyValueStore()
-    {
-        // LocalApplicationData's default is $HOME/.config under linux and XDG_CONFIG_HOME if set
-        // What is the difference between .config and .local/share?
-        // .config should contain all config files.
-        // .local/share should contain data that isn't config files (binary blobs, downloaded data, server saves).
-        // .cache should house all cache files (files that can be safely deleted to free up space)
-        string localShare = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        if (string.IsNullOrEmpty(localShare))
-        {
-            throw new Exception("Could not determine where to save configs. Check HOME and XDG_CONFIG_HOME variables.");
-        }
-        FolderPath = Path.Combine(localShare, "Nitrox");
-    }
 
     public T GetValue<T>(string key, T defaultValue)
     {
