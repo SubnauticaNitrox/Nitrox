@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using FMODUnity;
-using NitroxModel.Serialization;
+using Nitrox.Model.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

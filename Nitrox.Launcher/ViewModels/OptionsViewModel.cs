@@ -13,10 +13,11 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery;
-using NitroxModel.Discovery.Models;
-using NitroxModel.Helper;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Core;
+using Nitrox.Model.Discovery;
+using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -66,7 +67,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         ProgramDataFolderDir = NitroxUser.AppDataPath;
         ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
         SavesFolderDir = keyValueStore.GetSavesFolderDir();
-        LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
+        LogsFolderDir = Model.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;

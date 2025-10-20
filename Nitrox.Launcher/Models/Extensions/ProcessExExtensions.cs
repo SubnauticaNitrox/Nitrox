@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Platforms.OS.Windows;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.OS.Windows;
 
 namespace Nitrox.Launcher.Models.Extensions;
 

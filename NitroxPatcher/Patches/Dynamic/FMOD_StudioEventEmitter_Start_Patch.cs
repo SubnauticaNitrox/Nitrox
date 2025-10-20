@@ -1,7 +1,7 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
-using NitroxModel_Subnautica.Helper;
-using NitroxModel.GameLogic.FMOD;
+using Nitrox.Model.Subnautica.Helper;
+using Nitrox.Model.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

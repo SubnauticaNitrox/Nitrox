@@ -1,9 +1,8 @@
 using System.Collections.Generic;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel_Subnautica.DataStructures;
-using static NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata;
+using static Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 
 namespace NitroxPatcher.Patches;
 

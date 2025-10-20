@@ -3,11 +3,11 @@ using System.Linq;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.MonoBehaviours.Discord;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Helper;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;

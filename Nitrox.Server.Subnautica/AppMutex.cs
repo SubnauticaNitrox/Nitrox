@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace Nitrox.Server.Subnautica;
 
+// TODO: Convert to .NET HostedService when using MSDI.
 public static class AppMutex
 {
     private static readonly SemaphoreSlim mutexReleaseGate = new(1);

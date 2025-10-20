@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace NitroxClient.Extensions;
 

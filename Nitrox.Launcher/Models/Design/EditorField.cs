@@ -1,6 +1,6 @@
 using System.Reflection;
 using Avalonia.Collections;
-using NitroxModel.Serialization;
+using Nitrox.Model.Serialization;
 
 namespace Nitrox.Launcher.Models.Design;
 

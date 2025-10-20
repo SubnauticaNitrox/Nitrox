@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.Unity.Helper;
-using NitroxModel.GameLogic.FMOD;
+using Nitrox.Model.GameLogic.FMOD;
 using UnityEngine;
 #pragma warning disable 618
 
@@ -126,13 +126,13 @@ public class SoundDebugger : BaseDebugger
                 {
                     using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label($"Volume: {NitroxModel.Helper.Mathf.Round(volume, 2)}");
+                        GUILayout.Label($"Volume: {Nitrox.Model.Helper.Mathf.Round(volume, 2)}");
                         volume = GUILayout.HorizontalSlider(volume, 0f, 1f, GUILayout.Width(240f));
                     }
                     GUILayout.Space(5f);
                     using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label($"Distance: {NitroxModel.Helper.Mathf.Round(distance)}");
+                        GUILayout.Label($"Distance: {Nitrox.Model.Helper.Mathf.Round(distance)}");
                         distance = GUILayout.HorizontalSlider(distance, 0f, 500f, GUILayout.Width(240f));
                     }
                 }

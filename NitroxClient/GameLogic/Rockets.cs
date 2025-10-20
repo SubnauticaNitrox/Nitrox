@@ -1,9 +1,9 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic

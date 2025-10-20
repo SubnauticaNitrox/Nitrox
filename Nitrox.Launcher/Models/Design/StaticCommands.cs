@@ -9,7 +9,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
-using NitroxModel.Logger;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.Models.Design;
 

@@ -1,6 +1,6 @@
 using Autofac;
 
-namespace NitroxModel.Core;
+namespace Nitrox.Model.Core;
 
 [TestClass]
 public class DependencyInjectionTests

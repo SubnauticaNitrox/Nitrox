@@ -6,7 +6,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

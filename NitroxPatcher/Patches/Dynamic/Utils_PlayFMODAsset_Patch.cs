@@ -1,7 +1,7 @@
 using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.GameLogic.FMOD;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
