@@ -140,7 +140,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Title = "Version Mismatch Detected";
-            model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")} and current Nitrox version is v{NitroxEnvironment.Version}{Environment.NewLine}{Environment.NewLine}It is advisable to find out about the latest changes and whether the backup is compatible.{Environment.NewLine}Note that it's always possible to use the world backup feature in case of failures.{Environment.NewLine}{Environment.NewLine}Would you still like to continue?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
 
