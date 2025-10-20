@@ -61,9 +61,6 @@ namespace Nitrox.Model.Packets.Processors
         {
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                                                                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            SubnauticaServerAutoFacRegistrar subnauticaServerDependencyRegistrar = new SubnauticaServerAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(subnauticaServerDependencyRegistrar);
-            NitroxServiceLocator.BeginNewLifetimeScope();
 
             List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
                                                                          .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
@@ -91,7 +88,7 @@ namespace Nitrox.Model.Packets.Processors
                                             .Assembly.GetTypes()
                                             .Where(p => p.IsClass && p.IsAbstract && (p.IsAssignableToGenericType(typeof(AuthenticatedPacketProcessor<>)) || p.IsAssignableToGenericType(typeof(UnauthenticatedPacketProcessor<>)))));
 
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new SubnauticaServerAutoFacRegistrar(), new TestAutoFacRegistrar());
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new TestAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             foreach (Type packet in typeof(Packet).Assembly.GetTypes().Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract).ToList())

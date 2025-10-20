@@ -52,7 +52,7 @@ public static class NatHelper
         }
     }
 
-    public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
+    public static async Task<Mapping?> GetPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
     {
         return await MonoNatHelper.GetFirstAsync(static async (device, protocolAndPort) =>
         {

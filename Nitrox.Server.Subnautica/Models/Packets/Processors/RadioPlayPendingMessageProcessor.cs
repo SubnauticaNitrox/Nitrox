@@ -1,25 +1,27 @@
 ﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class RadioPlayPendingMessageProcessor : AuthenticatedPacketProcessor<RadioPlayPendingMessage>
+    internal sealed class RadioPlayPendingMessageProcessor : AuthenticatedPacketProcessor<RadioPlayPendingMessage>
     {
-        private readonly StoryGoalData storyGoalData;
+        private readonly StoryManager storyManager;
         private readonly PlayerManager playerManager;
+        private readonly ILogger<RadioPlayPendingMessageProcessor> logger;
 
-        public RadioPlayPendingMessageProcessor(StoryGoalData storyGoalData, PlayerManager playerManager)
+        public RadioPlayPendingMessageProcessor(StoryManager storyManager, PlayerManager playerManager, ILogger<RadioPlayPendingMessageProcessor> logger)
         {
-            this.storyGoalData = storyGoalData;
+            this.storyManager = storyManager;
             this.playerManager = playerManager;
+            this.logger = logger;
         }
 
         public override void Process(RadioPlayPendingMessage packet, Player player)
         {
-            if (!storyGoalData.RemovedLatestRadioMessage())
+            if (!storyManager.RemovedLatestRadioMessage())
             {
-                Log.Warn($"Tried to remove the latest radio message but the radio queue is empty: {packet}");
+                logger.ZLogWarning($"Tried to remove the latest radio message but the radio queue is empty: {packet}");
+                return;
             }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

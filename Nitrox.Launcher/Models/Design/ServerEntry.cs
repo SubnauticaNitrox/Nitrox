@@ -2,10 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
@@ -13,14 +12,15 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Nitrox.Launcher.Models.Exceptions;
+using Nitrox.Model.Configuration;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 
@@ -32,9 +32,8 @@ namespace Nitrox.Launcher.Models.Design;
 public partial class ServerEntry : ObservableObject
 {
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
-    public const string DEFAULT_SERVER_CONFIG_NAME = "server.cfg";
 
-    private static readonly SubnauticaServerConfig serverDefaults = new();
+    private static readonly SubnauticaServerOptions serverDefaults = new();
 
     [ObservableProperty]
     private bool allowCommands = !serverDefaults.DisableConsole;
@@ -43,19 +42,19 @@ public partial class ServerEntry : ObservableObject
     private bool allowKeepInventory = serverDefaults.KeepInventoryOnDeath;
 
     [ObservableProperty]
-    private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
+    private bool allowLanDiscovery = serverDefaults.LanDiscovery;
 
     [ObservableProperty]
-    private bool allowPvP = serverDefaults.PvPEnabled;
-
-    [ObservableProperty]
-    private bool autoPortForward = serverDefaults.AutoPortForward;
+    private bool allowPvP = serverDefaults.PvpEnabled;
 
     [ObservableProperty]
     private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
 
+    public Channel<string> CommandQueue = Channel.CreateUnbounded<string>();
+    private CancellationTokenSource cts = new();
+
     [ObservableProperty]
-    private NitroxGameMode gameMode = serverDefaults.GameMode;
+    private SubnauticaGameMode gameMode = serverDefaults.GameMode;
 
     [ObservableProperty]
     private bool isEmbedded;
@@ -91,6 +90,11 @@ public partial class ServerEntry : ObservableObject
     private int port = serverDefaults.ServerPort;
 
     [ObservableProperty]
+    private bool portForward = serverDefaults.PortForward;
+
+    private int processId;
+
+    [ObservableProperty]
     private string? seed;
 
     [ObservableProperty]
@@ -100,20 +104,27 @@ public partial class ServerEntry : ObservableObject
     private Version version = NitroxEnvironment.Version;
 
     internal ServerProcess? Process { get; private set; }
+    public AvaloniaList<OutputLine> Output { get; } = [];
 
-    public static ServerEntry? FromDirectory(string saveDir)
+    public int ProcessId
     {
-        ServerEntry result = new();
-        return result.RefreshFromDirectory(saveDir) ? result : null;
+        get => processId = Process?.Id ?? processId;
+        set => processId = value;
     }
 
-    public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
+    public static async Task<ServerEntry?> FromDirectoryAsync(string saveDir)
+    {
+        ServerEntry result = new();
+        return await result.RefreshFromDirectoryAsync(saveDir) ? result : null;
+    }
+
+    public static async Task<ServerEntry?> CreateNew(string saveDir, SubnauticaGameMode saveGameMode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveDir, nameof(saveDir));
 
         Directory.CreateDirectory(saveDir);
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
         string fileEnding = config.SerializerMode switch
         {
             ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
@@ -121,18 +132,32 @@ public partial class ServerEntry : ObservableObject
             _ => throw new NotImplementedException()
         };
 
-        File.WriteAllText(Path.Combine(saveDir, $"Version{fileEnding}"), null);
-        using (config.Update(saveDir))
-        {
-            config.GameMode = saveGameMode;
-        }
+        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{fileEnding}"), (string?)null);
+        config.GameMode = saveGameMode;
+        NitroxConfig.CreateFile(saveDir, config);
 
-        return FromDirectory(saveDir);
+        return await FromDirectoryAsync(saveDir);
     }
 
-    public bool RefreshFromDirectory(string saveDir)
+    public async Task<bool> RefreshFromProcessAsync(int processId)
     {
-        if (!File.Exists(Path.Combine(saveDir, DEFAULT_SERVER_CONFIG_NAME)))
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            return false;
+        }
+        await ResetAsync();
+        if (Process?.Id != processId)
+        {
+            Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, false, processId);
+        }
+        IsOnline = Process.IsRunning;
+        IsEmbedded = true; // Using server management API we can act like this is an embedded server.
+        return true;
+    }
+
+    public async Task<bool> RefreshFromDirectoryAsync(string saveDir)
+    {
+        if (!File.Exists(Path.Combine(saveDir, SerializableFileNameAttribute.GetFileName<SubnauticaServerOptions>())))
         {
             Log.Warn($"Tried loading invalid save directory at '{saveDir}'");
             return false;
@@ -145,7 +170,7 @@ public partial class ServerEntry : ObservableObject
             icon = new Bitmap(Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME));
         }
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
         string fileEnding = config.SerializerMode switch
         {
             ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
@@ -165,13 +190,18 @@ public partial class ServerEntry : ObservableObject
         {
             serverVersion = config.SerializerMode switch
             {
-                ServerSerializerMode.JSON => new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                ServerSerializerMode.PROTOBUF => new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                ServerSerializerMode.JSON => new ServerJsonSerializer(NullLogger<ServerJsonSerializer>.Instance).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                ServerSerializerMode.PROTOBUF => new SubnauticaServerProtoBufSerializer(null).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
                 _ => throw new NotImplementedException()
             };
         }
 
+        string prevName = Name;
         Name = Path.GetFileName(saveDir);
+        if (prevName != Name)
+        {
+            await ResetAsync();
+        }
         ServerIcon = icon;
         Password = config.ServerPassword;
         Seed = config.Seed;
@@ -180,14 +210,15 @@ public partial class ServerEntry : ObservableObject
         AutoSaveInterval = config.SaveInterval / 1000;
         MaxPlayers = config.MaxConnections;
         Port = config.ServerPort;
-        AutoPortForward = config.AutoPortForward;
-        AllowLanDiscovery = config.LANDiscoveryEnabled;
+        PortForward = config.PortForward;
+        AllowLanDiscovery = config.LanDiscovery;
         AllowCommands = !config.DisableConsole;
-        AllowPvP = config.PvPEnabled;
+        AllowPvP = config.PvpEnabled;
         AllowKeepInventory = config.KeepInventoryOnDeath;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
         Version = serverVersion;
-        IsEmbedded = config.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
+        // TODO: Store default option "IsEmbedded" in launcher cfg, not server.cfg
+        IsEmbedded = RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                      ?
                                                      // This file is affected by server saving
@@ -198,7 +229,7 @@ public partial class ServerEntry : ObservableObject
         return true;
     }
 
-    public void Start(string savesDir, int existingProcessId = 0, Action? onExited = null)
+    public void Start(string savesDir, int existingProcessId = 0)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -215,16 +246,8 @@ public partial class ServerEntry : ObservableObject
         }
 
         // Start server and add notify when server closed.
-        Process = ServerProcess.Start(Path.Combine(savesDir, Name), () =>
-        {
-            onExited?.Invoke();
-            Dispatcher.UIThread.InvokeAsync(StopAsync);
-        }, IsEmbedded, existingProcessId);
-
-        if (Process != null)
-        {
-            Process.PlayerCountChanged += count => Dispatcher.UIThread.Post(() => Players = count);
-        }
+        Process = ServerProcess.Start(Path.Combine(savesDir, Name), cts, IsEmbedded, existingProcessId);
+        ProcessId = Process.Id;
 
         IsNewServer = false;
         IsOnline = true;
@@ -233,16 +256,7 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task StopAsync()
     {
-        IsServerClosing = true;
-        if (Process is { IsRunning: true } && !await Process.CloseAsync())
-        {
-            // Force shutdown if server doesn't respond to close command.
-            Log.Warn($"Server '{Name}' didn't respond to close command. Forcing shutdown.");
-            Process.Kill();
-        }
-
-        IsOnline = false;
-        IsServerClosing = false;
+        await cts.CancelAsync();
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
@@ -260,30 +274,72 @@ public partial class ServerEntry : ObservableObject
     {
         switch (e.PropertyName)
         {
-            case nameof(IsOnline) when Process is { Id: var processId and > 0 }:
+            case nameof(IsOnline) when ProcessId > 0:
                 WeakReferenceMessenger.Default.Send(new ServerStatusMessage(processId, IsOnline, Players));
                 break;
         }
         base.OnPropertyChanged(e);
     }
 
+    private async Task ResetAsync()
+    {
+        if (IsOnline)
+        {
+            return;
+        }
+        if (Process is { IsRunning: true } && ProcessId == Process.Id)
+        {
+            return;
+        }
+        if (IsServerClosing)
+        {
+            return;
+        }
+        if (!cts.IsCancellationRequested)
+        {
+            await cts.CancelAsync();
+        }
+        cts = new();
+        cts.Token.Register(async void () =>
+        {
+            try
+            {
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    IsServerClosing = true;
+                    try
+                    {
+                        await CommandQueue.Writer.WriteAsync("quit", CancellationToken.None);
+                        CommandQueue.Writer.Complete();
+                        await CommandQueue.Reader.Completion;
+                    }
+                    catch (ChannelClosedException)
+                    {
+                        // ignored
+                    }
+                    CommandQueue = Channel.CreateUnbounded<string>();
+                    IsOnline = false;
+                    ProcessId = 0;
+                    Output.Clear();
+                    IsServerClosing = false;
+                });
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        });
+    }
+
     private bool CanOpenSaveFolder() => !string.IsNullOrWhiteSpace(Name);
 
-    internal partial class ServerProcess : IDisposable
+    internal class ServerProcess : IDisposable
     {
-        private readonly Ipc.ClientIpc ipc;
-        private readonly CancellationTokenSource ipcCts;
-        private OutputLineType lastOutputType;
         private Process? serverProcess;
-
-        [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\](?<logText>(?:.|\n)*?(?=$|\n\[))")]
-        private static partial Regex OutputLineRegex { get; }
-
         public int Id { get; }
         public bool IsRunning { get; private set; }
-        public AvaloniaList<OutputLine> Output { get; } = [];
 
-        private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false, int processId = 0)
+        private ServerProcess(string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = 0)
         {
             if (processId == 0)
             {
@@ -317,148 +373,29 @@ public partial class ServerEntry : ObservableObject
 
                 serverProcess = System.Diagnostics.Process.Start(startInfo);
             }
-
-            if (serverProcess != null || processId != 0)
+            else
             {
-                Id = serverProcess?.Id ?? processId;
-
+                serverProcess = System.Diagnostics.Process.GetProcessById(processId);
+                serverProcess.EnableRaisingEvents = true;
+            }
+            Id = serverProcess?.Id ?? processId;
+            cts.Token.Register(Dispose);
+            if (serverProcess != null)
+            {
+                serverProcess.Exited += (sender, args) => cts.Cancel();
                 IsRunning = true;
-                ipcCts = new CancellationTokenSource();
-                ipc = new Ipc.ClientIpc(Id, ipcCts);
-                ipc.StartReadingServerOutput(
-                    output =>
-                    {
-                        if (string.IsNullOrWhiteSpace(output))
-                        {
-                            return;
-                        }
-
-                        if (output.StartsWith($"{Ipc.Messages.PlayerCountMessage}:", StringComparison.Ordinal))
-                        {
-                            if (int.TryParse(output[$"{Ipc.Messages.PlayerCountMessage}:".Length..].Trim('[', ']'), out int playerCount))
-                            {
-                                PlayerCountChanged?.Invoke(playerCount);
-                            }
-                            return;
-                        }
-
-                        // Ignore any messages that are part of the IPC message protocol
-                        if (Ipc.Messages.AllMessages.Any(msg => output.StartsWith($"{msg}:", StringComparison.Ordinal)))
-                        {
-                            return;
-                        }
-
-                        using StringReader reader = new(output);
-                        while (reader.ReadLine() is { } line)
-                        {
-                            Match match = OutputLineRegex.Match(line);
-                            if (match.Success)
-                            {
-                                OutputLine outputLine = new()
-                                {
-                                    Timestamp = $"[{match.Groups["timestamp"].ValueSpan}]",
-                                    LogText = match.Groups["logText"].ValueSpan.Trim().ToString(),
-                                    Type = match.Groups["level"].ValueSpan switch
-                                    {
-                                        "DBG" => OutputLineType.DEBUG_LOG,
-                                        "WRN" => OutputLineType.WARNING_LOG,
-                                        "ERR" => OutputLineType.ERROR_LOG,
-                                        _ => OutputLineType.INFO_LOG
-                                    }
-                                };
-                                lastOutputType = outputLine.Type;
-                                Output.Add(outputLine);
-                            }
-                            else
-                            {
-                                Output.Add(new OutputLine
-                                {
-                                    Timestamp = "",
-                                    LogText = line,
-                                    Type = lastOutputType
-                                });
-                            }
-                        }
-                    },
-                    () =>
-                    {
-                        IsRunning = false;
-                        onExited?.Invoke();
-                    },
-                    ipcCts.Token
-                );
+            }
+            else
+            {
+                cts.Cancel();
             }
         }
 
-        public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processId) => new(saveDir, onExited, isEmbedded, processId);
-        public event Action<int>? PlayerCountChanged;
-
-        /// <summary>
-        ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.
-        /// </summary>
-        public async Task<bool> CloseAsync()
-        {
-            using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(7));
-            try
-            {
-                do
-                {
-                    if (!await SendCommandAsync("stop", ctsCloseTimeout.Token))
-                    {
-                        await Task.Delay(100, ctsCloseTimeout.Token);
-                    }
-                } while (IsRunning && !ctsCloseTimeout.IsCancellationRequested);
-            }
-            catch (OperationCanceledException)
-            {
-                // ignored
-            }
-
-            if (IsRunning)
-            {
-                return false;
-            }
-            Dispose();
-            return true;
-        }
-
-        public async Task<bool> SendCommandAsync(string command, CancellationToken cancellationToken = default)
-        {
-            if (!IsRunning || string.IsNullOrWhiteSpace(command))
-            {
-                return false;
-            }
-
-            try
-            {
-                return await ipc.SendCommand(command, cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                // ignored
-            }
-            catch (TimeoutException)
-            {
-                // ignored
-            }
-            catch (IOException)
-            {
-                // ignored - "broken pipe" or "socket shutdown"
-            }
-            return false;
-        }
-
-        public void Kill()
-        {
-            serverProcess?.Kill();
-            Dispose();
-        }
+        public static ServerProcess Start(string saveDir, CancellationTokenSource cts, bool isEmbedded, int processId) => new(saveDir, cts, isEmbedded, processId);
 
         public void Dispose()
         {
             IsRunning = false;
-            ipcCts.Cancel();
-            ipc.Dispose();
             serverProcess?.Dispose();
             serverProcess = null;
         }

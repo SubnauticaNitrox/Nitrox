@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class BedEnterProcessor : AuthenticatedPacketProcessor<BedEnter>
+    internal sealed class BedEnterProcessor : AuthenticatedPacketProcessor<BedEnter>
     {
         private readonly StoryManager storyManager;
 

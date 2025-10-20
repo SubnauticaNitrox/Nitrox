@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class ChatMessageProcessor : AuthenticatedPacketProcessor<ChatMessage>
+    sealed class ChatMessageProcessor : AuthenticatedPacketProcessor<ChatMessage>
     {
         private readonly PlayerManager playerManager;
 

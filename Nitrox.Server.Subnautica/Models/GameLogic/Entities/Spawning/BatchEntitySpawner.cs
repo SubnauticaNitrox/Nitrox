@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -8,22 +7,22 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Resources;
+using Nitrox.Server.Subnautica.Models.Resources.Core;
+using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using Nitrox.Server.Subnautica.Models.Serialization;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-public class BatchEntitySpawner : IEntitySpawner
+sealed class BatchEntitySpawner : IEntitySpawner
 {
     private readonly BatchCellsParser batchCellsParser;
 
     private readonly HashSet<NitroxInt3> emptyBatches = [];
-    private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId;
-    private readonly RandomSpawnSpoofer randomSpawnSpoofer;
+    private readonly PrefabPlaceholderGroupsResource prefabPlaceholderGroupsResource;
+    private readonly IOptions<SubnauticaServerOptions> options;
     private readonly IUwePrefabFactory prefabFactory;
     private readonly IEntityBootstrapperManager entityBootstrapperManager;
-    private readonly PDAStateData pdaStateData;
-
-    private readonly string seed;
+    private readonly PdaManager pdaManager;
 
     private readonly IUweWorldEntityFactory worldEntityFactory;
 
@@ -65,24 +64,19 @@ public class BatchEntitySpawner : IEntitySpawner
         EntitySpawnPointFactory entitySpawnPointFactory,
         IUweWorldEntityFactory worldEntityFactory,
         IUwePrefabFactory prefabFactory,
-        List<NitroxInt3> loadedPreviousParsed,
-        ServerProtoBufSerializer serializer,
+        SubnauticaServerProtoBufSerializer serializer,
         IEntityBootstrapperManager entityBootstrapperManager,
-        Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId,
-        PDAStateData pdaStateData,
-        RandomSpawnSpoofer randomSpawnSpoofer,
-        string seed
-    )
+        PdaManager pdaManager,
+        PrefabPlaceholderGroupsResource prefabPlaceholderGroupsResource,
+        IOptions<SubnauticaServerOptions> options)
     {
-        parsedBatches = [.. loadedPreviousParsed];
         this.worldEntityFactory = worldEntityFactory;
         this.prefabFactory = prefabFactory;
         this.entityBootstrapperManager = entityBootstrapperManager;
-        this.placeholdersGroupsByClassId = placeholdersGroupsByClassId;
-        this.pdaStateData = pdaStateData;
+        this.pdaManager = pdaManager;
         batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
-        this.randomSpawnSpoofer = randomSpawnSpoofer;
-        this.seed = seed;
+        this.prefabPlaceholderGroupsResource = prefabPlaceholderGroupsResource;
+        this.options = options;
     }
 
     public bool IsBatchSpawned(NitroxInt3 batchId)
@@ -97,15 +91,13 @@ public class BatchEntitySpawner : IEntitySpawner
     {
         lock (parsedBatches)
         {
-            if (parsedBatches.Contains(batchId))
+            if (!parsedBatches.Add(batchId))
             {
                 return [];
             }
-
-            parsedBatches.Add(batchId);
         }
 
-        DeterministicGenerator deterministicBatchGenerator = new(seed, batchId);
+        DeterministicGenerator deterministicBatchGenerator = new(options.Value.Seed, batchId);
         List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
         List<Entity> entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
@@ -228,7 +220,7 @@ public class BatchEntitySpawner : IEntitySpawner
                 {
                     if (prefab.IsFragment)
                     {
-                        if (pdaStateData.ScannerComplete.Contains(uweWorldEntity.TechType))
+                        if (pdaManager.ContainsCompletelyScannedTech(uweWorldEntity.TechType))
                         {
                             completeFragmentProbability += weightedProbability;
                             continue;
@@ -298,7 +290,7 @@ public class BatchEntitySpawner : IEntitySpawner
         }
         else
         {
-            randomSpawnSpoofer.PickRandomClassIdIfRequired(ref classId);
+            prefabPlaceholderGroupsResource.PickRandomClassIdIfRequired(ref classId);
             spawnedEntity = new WorldEntity(position,
                                             rotation,
                                             localScale,
@@ -394,7 +386,7 @@ public class BatchEntitySpawner : IEntitySpawner
     /// <returns>If this Entity is a PrefabPlaceholdersGroup</returns>
     private bool TryCreatePrefabPlaceholdersGroupWithChildren(ref WorldEntity entity, string classId, DeterministicGenerator deterministicBatchGenerator)
     {
-        if (!placeholdersGroupsByClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset groupAsset))
+        if (!prefabPlaceholderGroupsResource.GroupsByClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset groupAsset))
         {
             return false;
         }
@@ -410,12 +402,11 @@ public class BatchEntitySpawner : IEntitySpawner
             // Two cases, either the PrefabPlaceholder holds a visible GameObject or an EntitySlot (a MB which has a chance of spawning a prefab)
             if (prefabAsset is PrefabPlaceholderAsset placeholderAsset && placeholderAsset.EntitySlot.HasValue)
             {
-                WorldEntity spawnedEntity = SpawnPrefabAssetInEntitySlot(placeholderAsset.Transform, placeholderAsset.EntitySlot.Value, deterministicBatchGenerator, entity.AbsoluteEntityCell, entity);
-
+                WorldEntity? spawnedEntity = SpawnPrefabAssetInEntitySlot(placeholderAsset.Transform, placeholderAsset.EntitySlot.Value, deterministicBatchGenerator, entity.AbsoluteEntityCell, entity);
                 if (spawnedEntity != null)
                 {
                     // Spawned child will not be of the same type as the current prefabAsset
-                    if (placeholdersGroupsByClassId.ContainsKey(spawnedEntity.ClassId))
+                    if (prefabPlaceholderGroupsResource.PlaceholdersByClassId.ContainsKey(spawnedEntity.ClassId))
                     {
                         spawnedEntity = new PlaceholderGroupWorldEntity(spawnedEntity, i);
                     }
@@ -450,7 +441,7 @@ public class BatchEntitySpawner : IEntitySpawner
         return true;
     }
 
-    private WorldEntity SpawnPrefabAssetInEntitySlot(NitroxTransform transform, NitroxEntitySlot entitySlot, DeterministicGenerator deterministicBatchGenerator, AbsoluteEntityCell cell, Entity parentEntity)
+    private WorldEntity? SpawnPrefabAssetInEntitySlot(NitroxTransform transform, NitroxEntitySlot entitySlot, DeterministicGenerator deterministicBatchGenerator, AbsoluteEntityCell cell, Entity parentEntity)
     {
         if (!prefabFactory.TryGetPossiblePrefabs(entitySlot.BiomeType, out List<UwePrefab> prefabs) || prefabs.Count == 0)
         {

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -6,7 +5,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 [DataContract]
-public class StoryGoalData
+internal sealed class StoryGoalData
 {
     [DataMember(Order = 1)]
     public ThreadSafeSet<string> CompletedGoals { get; } = [];
@@ -17,29 +16,9 @@ public class StoryGoalData
     [DataMember(Order = 3)]
     public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = [];
 
-    public bool RemovedLatestRadioMessage()
+    public static StoryGoalData From(StoryGoalData storyGoals, StoryScheduler storyScheduler)
     {
-        if (RadioQueue.Count <= 0)
-        {
-            return false;
-        }
-
-        string message = RadioQueue.Dequeue();
-
-        // Just like StoryGoalManager.ExecutePendingRadioMessage
-        CompletedGoals.Add($"OnPlay{message}");
-
-        return true;
-    }
-
-    public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
-    {
-        storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
+        storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(storyScheduler.GetScheduledStories());
         return storyGoals;
-    }
-
-    public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper, Player player)
-    {
-        return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), scheduleKeeper.GetScheduledGoals(), new(player.PersonalCompletedGoalsWithTimestamp));
     }
 }

@@ -36,6 +36,6 @@ public class NitroxScheduledGoal
 
     public override string ToString()
     {
-        return $"[NitroxScheduledGoal: TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
+        return $"[{nameof(NitroxScheduledGoal)}: TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
     }
 }

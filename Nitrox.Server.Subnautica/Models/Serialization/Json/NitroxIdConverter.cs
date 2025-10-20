@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.Json

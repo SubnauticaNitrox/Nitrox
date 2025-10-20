@@ -36,7 +36,7 @@ namespace NitroxClient.MonoBehaviours
             return gameObject.Value;
         }
 
-        public static Optional<GameObject> GetObjectFrom(NitroxId id)
+        public static Optional<GameObject> GetObjectFrom(NitroxId? id)
         {
             if (id == null)
             {
