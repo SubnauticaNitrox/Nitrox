@@ -15,7 +15,8 @@
     xmlns:server="clr-namespace:Nitrox.Model.Server;assembly=Nitrox.Model"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
+    xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
+    xmlns:gameLogic="clr-namespace:Nitrox.Model.DataStructures.GameLogic;assembly=Nitrox.Model">
     <Design.DataContext>
         <vm:CreateServerViewModel Name="My Server Name" SelectedGameMode="CREATIVE" />
     </Design.DataContext>
@@ -40,7 +41,7 @@
                     <TextBlock Text="GAMEMODE" />
                     <controls:RadioButtonGroup
                         Classes="radioGroup"
-                        Enum="{x:Type server:NitroxGameMode}"
+                        Enum="{x:Type gameLogic:SubnauticaGameMode}"
                         SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>

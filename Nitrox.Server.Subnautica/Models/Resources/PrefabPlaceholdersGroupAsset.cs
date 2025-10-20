@@ -1,5 +1,5 @@
-using System;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Server.Subnautica.Models.Resources.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Resources;
 

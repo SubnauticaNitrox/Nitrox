@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Nitrox.Server.Subnautica.Models.Commands.Abstract.Type
 {

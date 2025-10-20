@@ -1,5 +1,4 @@
-﻿using System;
-using Nitrox.Model.MultiplayerSession;
+﻿using Nitrox.Model.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.Communication;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic

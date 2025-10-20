@@ -3,8 +3,6 @@ using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Networking;
-using Nitrox.Model.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
@@ -13,37 +11,42 @@ using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
+    internal sealed class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
     {
         private readonly PlayerManager playerManager;
-        private readonly ScheduleKeeper scheduleKeeper;
+        private readonly StoryScheduler storyScheduler;
         private readonly StoryManager storyManager;
-        private readonly World world;
         private readonly EntityRegistry entityRegistry;
-        private readonly SubnauticaServerConfig serverConfig;
-        private readonly NtpSyncer ntpSyncer;
+        private readonly WorldEntityManager worldEntityManager;
+        private readonly EntitySimulation entitySimulation;
+        private readonly EscapePodManager escapePodManager;
+        private readonly IOptions<SubnauticaServerOptions> options;
+        private readonly PdaManager pdaManager;
         private readonly SessionSettings sessionSettings;
+        private readonly ILogger<PlayerJoiningMultiplayerSessionProcessor> logger;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, SubnauticaServerConfig serverConfig, NtpSyncer ntpSyncer, SessionSettings sessionSettings)
+        public PlayerJoiningMultiplayerSessionProcessor(StoryScheduler storyScheduler, StoryManager storyManager, PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation, EscapePodManager escapePodManager, IOptions<SubnauticaServerOptions> options, PdaManager pdaManager, SessionSettings sessionSettings, ILogger<PlayerJoiningMultiplayerSessionProcessor> logger)
         {
-            this.scheduleKeeper = scheduleKeeper;
+            this.storyScheduler = storyScheduler;
             this.storyManager = storyManager;
             this.playerManager = playerManager;
-            this.world = world;
             this.entityRegistry = entityRegistry;
-            this.serverConfig = serverConfig;
-            this.ntpSyncer = ntpSyncer;
+            this.worldEntityManager = worldEntityManager;
+            this.entitySimulation = entitySimulation;
+            this.escapePodManager = escapePodManager;
+            this.options = options;
+            this.pdaManager = pdaManager;
             this.sessionSettings = sessionSettings;
+            this.logger = logger;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
-            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
+            NitroxId assignedEscapePodId = escapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
 
             if (wasBrandNewPlayer)
             {
@@ -58,20 +61,20 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 
             // TODO: Remove this code when security of player login is improved by https://github.com/SubnauticaNitrox/Nitrox/issues/1996
             // We need to reset permissions on join, otherwise players can impersonate an admin easily.
-            player.Permissions = serverConfig.DefaultPlayerPerm;
+            player.Permissions = options.Value.DefaultPlayerPerm;
 
             // Make players on localhost admin by default.
-            if (serverConfig.LocalhostIsAdmin && connection.Endpoint.Address.IsLocalhost())
+            if (options.Value.LocalhostIsAdmin && connection.Endpoint.Address.IsLocalhost())
             {
-                Log.Info($"Granted admin to '{player.Name}' because they're playing on the host machine");
+                logger.ZLogInformation($"Granted admin to '{player.Name}' because they're playing on the host machine");
                 player.Permissions = Perms.ADMIN;
             }
 
-            List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
+            List<SimulatedEntity> simulations = entitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
             player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
 
-            List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
+            List<GlobalRootEntity> globalRootEntities = worldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
@@ -80,8 +83,8 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
                 player.EquippedItems,
                 player.UsedItems,
                 player.QuickSlotsBindingIds,
-                world.GameData.PDAState.GetInitialPDAData(),
-                world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper, player),
+                pdaManager.GetInitialPDAData(),
+                storyManager.GetInitialStoryGoalData(storyScheduler, player),
                 player.Position,
                 player.Rotation,
                 player.SubRootId,
@@ -96,7 +99,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
                 storyManager.GetTimeData(),
                 isFirstPlayer,
                 BuildingManager.GetEntitiesOperations(globalRootEntities),
-                serverConfig.KeepInventoryOnDeath,
+                options.Value.KeepInventoryOnDeath,
                 sessionSettings,
                 player.InPrecursor,
                 player.DisplaySurfaceWater
@@ -115,9 +118,9 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerEntity playerEntity = new PlayerEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddOrUpdate(playerEntity);
-            world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
+            worldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
         }
 
@@ -127,7 +130,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
             {
                 return playerWorldEntity;
             }
-            Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
+            logger.ZLogError($"Unable to find player entity for {player.Name}. Re-creating one");
             return SetupPlayerEntity(player);
         }
     }

@@ -6,18 +6,20 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
     /// <summary>
     /// This is the absolute damage state. The current simulation owner is the only one who sends this packet to the server
     /// </summary>
-    public class CyclopsDamageProcessor : AuthenticatedPacketProcessor<CyclopsDamage>
+    sealed class CyclopsDamageProcessor : AuthenticatedPacketProcessor<CyclopsDamage>
     {
         private readonly PlayerManager playerManager;
+        private readonly ILogger<CyclopsDamageProcessor> logger;
 
-        public CyclopsDamageProcessor(PlayerManager playerManager)
+        public CyclopsDamageProcessor(PlayerManager playerManager, ILogger<CyclopsDamageProcessor> logger)
         {
             this.playerManager = playerManager;
+            this.logger = logger;
         }
 
         public override void Process(CyclopsDamage packet, Player simulatingPlayer)
         {
-            Log.Debug($"New cyclops damage from {simulatingPlayer.Id} {packet}");
+            logger.ZLogDebug($"New cyclops damage from player #{simulatingPlayer.Id}: {packet}");
 
             playerManager.SendPacketToOtherPlayers(packet, simulatingPlayer);
         }

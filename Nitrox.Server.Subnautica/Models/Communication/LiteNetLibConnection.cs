@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -10,13 +9,15 @@ public class LiteNetLibConnection : INitroxConnection, IEquatable<LiteNetLibConn
 {
     private readonly NetDataWriter dataWriter = new();
     private readonly NetPeer peer;
+    private readonly ILogger logger;
 
     public IPEndPoint Endpoint => peer;
     public NitroxConnectionState State => peer.ConnectionState.ToNitrox();
 
-    public LiteNetLibConnection(NetPeer peer)
+    public LiteNetLibConnection(NetPeer peer, ILogger logger)
     {
         this.peer = peer;
+        this.logger = logger;
     }
 
     public void SendPacket(Packet packet)
@@ -32,7 +33,7 @@ public class LiteNetLibConnection : INitroxConnection, IEquatable<LiteNetLibConn
         }
         else
         {
-            Log.Warn($"Cannot send packet {packet?.GetType()} to a closed connection {peer as IPEndPoint}");
+            logger.ZLogWarning($"Cannot send packet {packet?.GetType()} to a closed connection {peer as IPEndPoint}");
         }
     }
 

@@ -6,6 +6,7 @@ using System.Threading;
 using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Nitrox.Launcher.Models.Attributes;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.HttpDelegatingHandlers;
@@ -22,26 +23,34 @@ namespace Nitrox.Launcher.Models.Extensions;
 public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAppServices(this IServiceCollection services) =>
-        services.AddHttp()
-                // Domain APIs
-                .AddSingleton(_ => KeyValueStore.Instance)
-                // Services
-                .AddSingleton<ServerService>()
-                .AddSingleton<DialogService>()
-                .AddSingleton<StorageService>()
-                // UI
-                .AddSingleton<Window, MainWindow>()
-                .AddSingleton<MainWindowViewModel>()
-                .AddSingleton<Func<IRoutingScreen>>(provider => provider.GetRequiredService<MainWindowViewModel>)
-                .AddSingleton<Func<Window>>(provider => () =>
-                {
-                    Window window = provider.GetRequiredService<Window>();
-                    window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
-                    return window;
-                })
-                .AddDialogs()
-                .AddViews()
-                .AddViewModels();
+        services
+            // Domain APIs
+            .AddSingleton(_ => KeyValueStore.Instance)
+            .AddHttp()
+            .AddMagicOnionApis()
+            // Services
+            .AddMagicOnion().Services
+            .AddHostedSingletonService<StopAvaloniaOnHostExitService>()
+            .AddHostedSingletonService<PreventMultipleAppInstancesService>()
+            .AddHostedSingletonService<WriteGrpcPortFileService>()
+            .AddSingleton<ServerService>()
+            .AddSingleton<DialogService>()
+            .AddSingleton<StorageService>()
+            // UI
+            .AddSingleton<Window, MainWindow>()
+            .AddSingleton<MainWindowViewModel>()
+            .AddSingleton<Func<IRoutingScreen>>(provider => provider.GetRequiredService<MainWindowViewModel>)
+            .AddSingleton<Func<Window>>(provider => () =>
+            {
+                Window window = provider.GetRequiredService<Window>();
+                window.DataContext = provider.GetRequiredService<MainWindowViewModel>();
+                return window;
+            })
+            .AddDialogs()
+            .AddViews()
+            .AddViewModels();
+
+    private static IServiceCollection AddHostedSingletonService<T>(this IServiceCollection services) where T : class, IHostedService => services.AddSingleton<T>().AddHostedService(provider => provider.GetRequiredService<T>());
 
     [GenerateServiceRegistrations(AttributeFilter = typeof(ModalForViewModelAttribute), CustomHandler = nameof(AddDialog))]
     private static partial IServiceCollection AddDialogs(this IServiceCollection services);
@@ -58,6 +67,9 @@ public static partial class ServiceCollectionExtensions
 
     [GenerateServiceRegistrations(AttributeFilter = typeof(HttpServiceAttribute), CustomHandler = nameof(InternalAddHttpClient))]
     private static partial IServiceCollection AddHttpClients(this IServiceCollection services);
+
+    private static IServiceCollection AddMagicOnionApis(this IServiceCollection services) =>
+        services.AddMagicOnion().Services;
 
     /// <remarks>
     ///     <a

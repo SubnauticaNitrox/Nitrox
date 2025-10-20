@@ -6,18 +6,20 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class MultiplayerSessionReservationRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionReservationRequest>
+    sealed class MultiplayerSessionReservationRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionReservationRequest>
     {
         private readonly PlayerManager playerManager;
+        private readonly ILogger<MultiplayerSessionReservationRequestProcessor> logger;
 
-        public MultiplayerSessionReservationRequestProcessor(PlayerManager playerManager)
+        public MultiplayerSessionReservationRequestProcessor(PlayerManager playerManager, ILogger<MultiplayerSessionReservationRequestProcessor> logger)
         {
             this.playerManager = playerManager;
+            this.logger = logger;
         }
 
         public override void Process(MultiplayerSessionReservationRequest packet, INitroxConnection connection)
         {
-            Log.Info($"Processing reservation request from {packet.AuthenticationContext.Username}");
+            logger.ZLogInformation($"Processing reservation request from {packet.AuthenticationContext.Username}");
 
             string correlationId = packet.CorrelationId;
             PlayerSettings playerSettings = packet.PlayerSettings;
@@ -28,7 +30,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
                 authenticationContext,
                 correlationId);
 
-            Log.Info($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation}");
+            logger.ZLogInformation($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation}");
 
             connection.SendPacket(reservation);
         }

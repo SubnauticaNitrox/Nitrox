@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -7,8 +6,9 @@ using Nitrox.Server.Subnautica.Models.Serialization.Json;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 
-public abstract class SaveDataUpgrade
+public abstract class SaveDataUpgrade(ILogger logger)
 {
+    private readonly ILogger logger = logger;
     private static readonly JsonConverter[] converters = [new NitroxIdConverter(), new TechTypeConverter(), new VersionConverter(), new KeyValuePairConverter(), new StringEnumConverter()];
 
     /// <summary>
@@ -18,21 +18,21 @@ public abstract class SaveDataUpgrade
 
     public void UpgradeSaveFiles(string saveDir, string fileEnding)
     {
-        Log.Info($"┌── Executing {GetType().Name}");
+        logger.ZLogInformation($"┌── Executing {GetType().Name}");
         string baseDataPath = Path.Combine(saveDir, $"BaseData{fileEnding}");
         string playerDataPath = Path.Combine(saveDir, $"PlayerData{fileEnding}");
         string worldDataPath = Path.Combine(saveDir, $"WorldData{fileEnding}");
         string entityDataPath = Path.Combine(saveDir, $"EntityData{fileEnding}");
         string globalRootDataPath = Path.Combine(saveDir, $"GlobalRootData{fileEnding}");
 
-        Log.Info("├── Parsing raw json");
+        logger.ZLogInformation($"├── Parsing raw json");
         JObject baseData = TryParseFile(baseDataPath);
         JObject playerData = TryParseFile(playerDataPath);
         JObject worldData = TryParseFile(worldDataPath);
         JObject entityData = TryParseFile(entityDataPath);
         JObject globalRootData = TryParseFile(globalRootDataPath);
 
-        Log.Info("├── Applying upgrade scripts");
+        logger.ZLogInformation($"├── Applying upgrade scripts");
         if (baseData != null)
         {
             UpgradeBaseData(baseData);
@@ -54,7 +54,7 @@ public abstract class SaveDataUpgrade
             UpgradeGlobalRootData(globalRootData);
         }
 
-        Log.Info("└── Saving to disk");
+        logger.ZLogInformation($"└── Saving to disk");
         WriteJObjectIfNotNull(baseDataPath, baseData);
         WriteJObjectIfNotNull(playerDataPath, playerData);
         WriteJObjectIfNotNull(worldDataPath, worldData);

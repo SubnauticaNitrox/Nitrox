@@ -1,5 +1,4 @@
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Server;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
 using Nitrox.Server.Subnautica.Models.GameLogic;
@@ -9,23 +8,25 @@ namespace Nitrox.Server.Subnautica.Models.Commands;
 internal class GameModeCommand : Command
 {
     private readonly PlayerManager playerManager;
+    private readonly ILogger<GameModeCommand> logger;
 
-    public GameModeCommand(PlayerManager playerManager) : base("gamemode", Perms.ADMIN, "Changes a player's gamemode")
+    public GameModeCommand(PlayerManager playerManager, ILogger<GameModeCommand> logger) : base("gamemode", Perms.ADMIN, "Changes a player's gamemode")
     {
-        AddParameter(new TypeEnum<NitroxGameMode>("gamemode", true, "Gamemode to change to"));
+        AddParameter(new TypeEnum<SubnauticaGameMode>("gamemode", true, "Gamemode to change to"));
         AddParameter(new TypePlayer("name", false, "Username to whom change the game mode (defaults to self)"));
 
         this.playerManager = playerManager;
+        this.logger = logger;
     }
 
     protected override void Execute(CallArgs args)
     {
-        NitroxGameMode gameMode = args.Get<NitroxGameMode>(0);
+        SubnauticaGameMode gameMode = args.Get<SubnauticaGameMode>(0);
         Player targetPlayer = args.Get<Player>(1);
 
         if (args.IsConsole && targetPlayer == null)
         {
-            Log.Error($"Console can't use the gamemode command without providing a player name to it.");
+            logger.ZLogError($"Console can't use the gamemode command without providing a player name to it.");
             return;
         }
         // The target player if not set, is the player who sent the command
@@ -36,7 +37,7 @@ internal class GameModeCommand : Command
         SendMessage(targetPlayer, $"GameMode changed to {gameMode}");
         if (args.IsConsole)
         {
-            Log.Info($"Changed {targetPlayer.Name} [{targetPlayer.Id}]'s gamemode to {gameMode}");
+            logger.ZLogInformation($"Changed {targetPlayer.Name} [{targetPlayer.Id}]'s gamemode to {gameMode}");
         }
         else
         {

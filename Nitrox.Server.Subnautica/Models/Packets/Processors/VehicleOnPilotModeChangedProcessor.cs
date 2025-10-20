@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class VehicleOnPilotModeChangedProcessor : AuthenticatedPacketProcessor<VehicleOnPilotModeChanged>
+internal sealed class VehicleOnPilotModeChangedProcessor : AuthenticatedPacketProcessor<VehicleOnPilotModeChanged>
 {
     private readonly PlayerManager playerManager;
 

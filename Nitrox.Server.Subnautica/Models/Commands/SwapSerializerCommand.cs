@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
+﻿using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Server;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
@@ -10,35 +8,30 @@ namespace Nitrox.Server.Subnautica.Models.Commands
 {
     internal class SwapSerializerCommand : Command
     {
-        private readonly Server server;
-        private readonly WorldPersistence worldPersistence;
-        private readonly SubnauticaServerConfig serverConfig;
+        private readonly WorldService worldService;
+        private readonly IOptions<SubnauticaServerOptions> options;
 
-        public SwapSerializerCommand(Server server, SubnauticaServerConfig serverConfig, WorldPersistence worldPersistence) : base("swapserializer", Perms.CONSOLE, "Allows to change the save format")
+        public SwapSerializerCommand(IOptions<SubnauticaServerOptions> options, WorldService worldService) : base("swapserializer", Perms.HOST, "Allows to change the save format")
         {
             AddParameter(new TypeEnum<ServerSerializerMode>("serializer", true, "Save format to change to"));
 
-            this.server = server;
-            this.worldPersistence = worldPersistence;
-            this.serverConfig = serverConfig;
+            this.worldService = worldService;
+            this.options = options;
         }
 
         protected override void Execute(CallArgs args)
         {
             ServerSerializerMode serializerMode = args.Get<ServerSerializerMode>(0);
 
-            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
+            if (serializerMode != options.Value.SerializerMode)
             {
-                if (serializerMode != serverConfig.SerializerMode)
-                {
-                    serverConfig.SerializerMode = serializerMode;
-                    worldPersistence.UpdateSerializer(serializerMode);
-                    SendMessage(args.Sender, $"Server save format swapped to {serverConfig.SerializerMode}");
-                }
-                else
-                {
-                    SendMessage(args.Sender, "Server is already using this save format");
-                }
+                options.Value.SerializerMode = serializerMode;
+                worldService.UpdateSerializer(serializerMode);
+                SendMessage(args.Sender, $"Server save format swapped to {options.Value.SerializerMode}");
+            }
+            else
+            {
+                SendMessage(args.Sender, "Server is already using this save format");
             }
         }
     }

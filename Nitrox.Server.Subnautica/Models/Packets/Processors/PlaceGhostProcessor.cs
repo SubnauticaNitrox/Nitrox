@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PlaceGhostProcessor : BuildingProcessor<PlaceGhost>
+sealed class PlaceGhostProcessor : BuildingProcessor<PlaceGhost>
 {
     public PlaceGhostProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
 

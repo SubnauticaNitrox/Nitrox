@@ -7,6 +7,7 @@
     <ItemGroup>
         <PackageReference Include="Autofac" />
         <PackageReference Include="LiteNetLib" />
+        <PackageReference Include="MagicOnion.Abstractions" />
         <PackageReference Include="Microsoft.Win32.Registry" />
         <PackageReference Include="Mono.Nat" />
         <PackageReference Include="Newtonsoft.Json" NoWarn="NU1091;NU1092;NU1903;NU1904" />
@@ -20,6 +21,8 @@
         <PackageReference Include="System.Numerics.Vectors" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
         <PackageReference Include="System.Text.Json" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
     </ItemGroup>
 
     <ItemGroup>

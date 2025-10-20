@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class PlayerHeldItemChangedProcessor : AuthenticatedPacketProcessor<PlayerHeldItemChanged>
+    internal sealed class PlayerHeldItemChangedProcessor : AuthenticatedPacketProcessor<PlayerHeldItemChanged>
     {
         private readonly PlayerManager playerManager;
 

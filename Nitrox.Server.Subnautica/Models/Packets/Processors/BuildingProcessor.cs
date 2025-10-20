@@ -7,7 +7,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> where T : Packet
+internal abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> where T : Packet
 {
     internal readonly BuildingManager buildingManager;
     internal readonly PlayerManager playerManager;

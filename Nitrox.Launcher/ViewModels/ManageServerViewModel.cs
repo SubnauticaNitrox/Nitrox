@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -18,12 +19,12 @@ using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Configuration;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
-using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Config = Nitrox.Model.Serialization.SubnauticaServerConfig;
+using Nitrox.Model.Serialization;
+using Config = Nitrox.Model.Configuration.SubnauticaServerOptions;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -31,8 +32,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly string[] advancedSettingsDeniedFields =
     [
-        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
-        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm), nameof(Config.IsEmbedded), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvPEnabled), nameof(Config.SerializerMode)
+        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.PortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
+        nameof(Config.LanDiscovery), nameof(Config.DefaultPlayerPerm), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvpEnabled), nameof(Config.SerializerMode)
     ];
 
     private readonly DialogService dialogService;
@@ -78,7 +79,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private NitroxGameMode serverGameMode;
+    private SubnauticaGameMode serverGameMode;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -170,7 +171,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerMaxPlayers = Server.MaxPlayers;
         ServerPlayers = Server.Players;
         ServerPort = Server.Port;
-        ServerAutoPortForward = Server.AutoPortForward;
+        ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
         ServerAllowPvP = Server.AllowPvP;
@@ -189,7 +190,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                   ServerMaxPlayers != Server.MaxPlayers ||
                                   ServerPlayers != Server.Players ||
                                   ServerPort != Server.Port ||
-                                  ServerAutoPortForward != Server.AutoPortForward ||
+                                  ServerAutoPortForward != Server.PortForward ||
                                   ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
                                   ServerAllowCommands != Server.AllowCommands ||
                                   ServerAllowPvP != Server.AllowPvP ||
@@ -230,28 +231,26 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         Server.MaxPlayers = ServerMaxPlayers;
         Server.Players = ServerPlayers;
         Server.Port = ServerPort;
-        Server.AutoPortForward = ServerAutoPortForward;
+        Server.PortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
         Server.AllowPvP = ServerAllowPvP;
         Server.AllowKeepInventory = ServerAllowKeepInventory;
 
-        Config config = Config.Load(SaveFolderDirectory);
-        using (config.Update(SaveFolderDirectory))
-        {
-            config.ServerPassword = Server.Password;
-            if (Server.IsNewServer) { config.Seed = Server.Seed; }
-            config.GameMode = Server.GameMode;
-            config.DefaultPlayerPerm = Server.PlayerPermissions;
-            config.SaveInterval = (int)TimeSpan.FromSeconds(Server.AutoSaveInterval).TotalMilliseconds;
-            config.MaxConnections = Server.MaxPlayers;
-            config.ServerPort = Server.Port;
-            config.AutoPortForward = Server.AutoPortForward;
-            config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
-            config.DisableConsole = !Server.AllowCommands;
-            config.PvPEnabled = Server.AllowPvP;
-            config.KeepInventoryOnDeath = Server.AllowKeepInventory;
-        }
+        Config config = NitroxConfig.Load<Config>(SaveFolderDirectory);
+        config.ServerPassword = Server.Password;
+        if (Server.IsNewServer) { config.Seed = Server.Seed; }
+        config.GameMode = Server.GameMode;
+        config.DefaultPlayerPerm = Server.PlayerPermissions;
+        config.SaveInterval = (int)TimeSpan.FromSeconds(Server.AutoSaveInterval).TotalMilliseconds;
+        config.MaxConnections = (byte)Server.MaxPlayers;
+        config.ServerPort = (ushort)Server.Port;
+        config.PortForward = Server.PortForward;
+        config.LanDiscovery = Server.AllowLanDiscovery;
+        config.DisableConsole = !Server.AllowCommands;
+        config.PvpEnabled = Server.AllowPvP;
+        config.KeepInventoryOnDeath = Server.AllowKeepInventory;
+        NitroxConfig.CreateFile(SaveFolderDirectory, config);
 
         Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
 
@@ -277,7 +276,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerMaxPlayers = Server.MaxPlayers;
         ServerPlayers = Server.Players;
         ServerPort = Server.Port;
-        ServerAutoPortForward = Server.AutoPortForward;
+        ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
         ServerAllowPvP = Server.AllowPvP;
@@ -327,12 +326,12 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         {
             model.Title = $"Server '{ServerName}' config editor";
             model.FieldAcceptFilter = p => !advancedSettingsDeniedFields.Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
-            model.OwnerObject = Config.Load(SaveFolderDirectory);
+            model.OwnerObject = LoadConfig();
             model.DisableButtons = Server.IsOnline;
         });
         if (result && result!.OwnerObject is Config config)
         {
-            config.Serialize(SaveFolderDirectory);
+            StoreConfig(config);
         }
         LoadFrom(Server);
     }
@@ -371,7 +370,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     File.Delete(file);
                 }
                 ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
-                Server!.RefreshFromDirectory(SaveFolderDirectory);
+                await Server!.RefreshFromDirectoryAsync(SaveFolderDirectory);
                 LoadFrom(Server);
                 ServerEmbedded = isEmbedded; // Preserve the original IsEmbedded value
                 LauncherNotifier.Success("Backup restored successfully.");
@@ -429,11 +428,12 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     partial void OnServerEmbeddedChanged(bool value)
     {
         Server.IsEmbedded = value || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
+    }
 
-        Config config = Config.Load(SaveFolderDirectory);
-        using (config.Update(SaveFolderDirectory))
-        {
-            config.IsEmbedded = value;
-        }
+    private Config LoadConfig() => NitroxConfig.Load<Config>(Path.Combine(SaveFolderDirectory, typeof(Config).GetCustomAttribute<SerializableFileNameAttribute>()?.FileName ?? throw new InvalidOperationException()));
+
+    private void StoreConfig(Config config)
+    {
+        NitroxConfig.CreateFile(Path.Combine(SaveFolderDirectory, typeof(Config).GetCustomAttribute<SerializableFileNameAttribute>()?.FileName ?? throw new InvalidOperationException()), config);
     }
 }

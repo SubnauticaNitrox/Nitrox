@@ -9,10 +9,12 @@ namespace Nitrox.Server.Subnautica.Models.Commands
 {
     internal class HelpCommand : Command
     {
+        private readonly ILogger<HelpCommand> logger;
         public override IEnumerable<string> Aliases { get; } = new[] { "?" };
 
-        public HelpCommand() : base("help", Perms.PLAYER, "Displays this")
+        public HelpCommand(ILogger<HelpCommand> logger) : base("help", Perms.PLAYER, "Displays this")
         {
+            this.logger = logger;
             AddParameter(new TypeString("command", false, "Command to see help information for"));
         }
 
@@ -21,10 +23,13 @@ namespace Nitrox.Server.Subnautica.Models.Commands
             List<string> cmdsText;
             if (args.IsConsole)
             {
-                cmdsText = GetHelpText(Perms.CONSOLE, false, args.IsValid(0) ? args.Get<string>(0) : null);
-                foreach (string cmdText in cmdsText)
+                cmdsText = GetHelpText(Perms.HOST, false, args.IsValid(0) ? args.Get<string>(0) : null);
+                using (logger.BeginPlainScope())
                 {
-                    Log.Info(cmdText);
+                    foreach (string cmdText in cmdsText)
+                    {
+                        logger.ZLogInformation($"{cmdText}");
+                    }
                 }
             }
             else
@@ -40,23 +45,23 @@ namespace Nitrox.Server.Subnautica.Models.Commands
 
         private List<string> GetHelpText(Perms permThreshold, bool cropText, string singleCommand)
         {
-            static bool CanExecuteAndProcess(Command cmd, Perms perms)
-            {
-                return cmd.CanExecute(perms) && !(perms == Perms.CONSOLE && cmd.Flags.HasFlag(PermsFlag.NO_CONSOLE));
-            }
-            
             //Runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             if (singleCommand != null && !commands.Any(cmd => cmd.Name.Equals(singleCommand)))
             {
-                return new List<string> { "Command does not exist" };
+                return ["Command does not exist"];
             }
-            List<string> cmdsText = new();
+            List<string> cmdsText = [];
             cmdsText.Add(singleCommand != null ? $"=== Showing help for {singleCommand} ===" : "=== Showing command list ===");
             cmdsText.AddRange(commands.Where(cmd => CanExecuteAndProcess(cmd, permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
                                              .OrderByDescending(cmd => cmd.Name)
                                              .Select(cmd => cmd.ToHelpText(singleCommand != null, cropText)));
             return cmdsText;
+
+            static bool CanExecuteAndProcess(Command cmd, Perms perms)
+            {
+                return cmd.CanExecute(perms) && !(perms == Perms.HOST && cmd.Flags.HasFlag(PermsFlag.NO_CONSOLE));
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
@@ -8,17 +7,17 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
     class PlayerDeathEventProcessor : AuthenticatedPacketProcessor<PlayerDeathEvent>
     {
         private readonly PlayerManager playerManager;
-        private readonly SubnauticaServerConfig serverConfig;
+        private readonly IOptions<SubnauticaServerOptions> options;
 
-        public PlayerDeathEventProcessor(PlayerManager playerManager, SubnauticaServerConfig config)
+        public PlayerDeathEventProcessor(PlayerManager playerManager, IOptions<SubnauticaServerOptions> config)
         {
             this.playerManager = playerManager;
-            this.serverConfig = config;
+            options = config;
         }
 
         public override void Process(PlayerDeathEvent packet, Player player)
         {
-            if (serverConfig.IsHardcore())
+            if (options.Value.IsHardcore())
             {
                 player.IsPermaDeath = true;
                 PlayerKicked playerKicked = new PlayerKicked("Permanent death from hardcore mode");

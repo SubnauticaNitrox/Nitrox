@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
+internal sealed class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
 {
     public PlaceBaseProcessor(BuildingManager buildingManager, PlayerManager playerManager, EntitySimulation entitySimulation) : base(buildingManager, playerManager, entitySimulation){ }
 

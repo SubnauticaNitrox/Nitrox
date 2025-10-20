@@ -6,10 +6,12 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
     class WeldActionProcessor : AuthenticatedPacketProcessor<WeldAction>
     {
         private readonly SimulationOwnershipData simulationOwnershipData;
+        private readonly ILogger<WeldActionProcessor> logger;
 
-        public WeldActionProcessor(SimulationOwnershipData simulationOwnershipData)
+        public WeldActionProcessor(SimulationOwnershipData simulationOwnershipData, ILogger<WeldActionProcessor> logger)
         {
             this.simulationOwnershipData = simulationOwnershipData;
+            this.logger = logger;
         }
 
         public override void Process(WeldAction packet, Player player)
@@ -18,7 +20,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 
             if (simulatingPlayer != null)
             {
-                Log.Debug($"Send WeldAction to simulating player {simulatingPlayer.Name} for entity {packet.Id}");
+                logger.ZLogDebug($"Send WeldAction to simulating player {simulatingPlayer.Name} for entity {packet.Id}");
                 simulatingPlayer.SendPacket(packet);
             }
         }

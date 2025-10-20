@@ -31,7 +31,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
         public EntityMetadata Metadata { get; set; }
 
         [DataMember(Order = 4)]
-        public NitroxId ParentId { get; set; }
+        public NitroxId? ParentId { get; set; }
 
         [DataMember(Order = 5)]
         public List<Entity> ChildEntities { get; set; } = [];

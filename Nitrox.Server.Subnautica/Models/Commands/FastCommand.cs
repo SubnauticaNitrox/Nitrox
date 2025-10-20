@@ -1,4 +1,3 @@
-using System;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
@@ -7,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-public class FastCommand : Command
+internal sealed class FastCommand : Command
 {
     private readonly PlayerManager playerManager;
     private readonly SessionSettings sessionSettings;

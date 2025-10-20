@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using Newtonsoft.Json.Linq;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades
