@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class EscapePodChangedPacketProcessor : AuthenticatedPacketProcessor<EscapePodChanged>
+    internal sealed class EscapePodChangedPacketProcessor : AuthenticatedPacketProcessor<EscapePodChanged>
     {
         private readonly PlayerManager playerManager;
 

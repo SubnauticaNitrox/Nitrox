@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Nitrox.Model.Constants;
@@ -51,7 +50,7 @@ public static class LANBroadcastServer
             {
                 NetDataWriter writer = new();
                 writer.Put(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING);
-                writer.Put(global::Nitrox.Server.Subnautica.Server.Instance.Port);
+                writer.Put(SubnauticaServerConstants.DEFAULT_PORT);
 
                 server.SendBroadcast(writer, remoteEndPoint.Port);
             }

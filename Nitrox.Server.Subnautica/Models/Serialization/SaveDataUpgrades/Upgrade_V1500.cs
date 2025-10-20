@@ -1,4 +1,3 @@
-using System;
 using Newtonsoft.Json.Linq;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades
@@ -11,7 +10,7 @@ namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades
         {
             data["GameData"]["StoryTiming"] = data["StoryTimingData"];
             data.Property("StoryTimingData")?.Remove();
-            data["Seed"] = "TCCBIBZXAB"; //Default seed so life pod should stay the same
+            data["Seed"] = "TCCBIBZXAB";
             data["InventoryData"]["Modules"] = new JArray();
 
             Log.Warn("Plants will still be counted as normal items with no growth progression. Re adding them to a container should fix this.");

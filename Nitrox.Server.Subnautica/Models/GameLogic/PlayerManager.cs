@@ -1,28 +1,27 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Serialization;
-using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.Communication;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
-public partial class PlayerManager
+// TODO: Rename to "service"
+internal sealed partial class PlayerManager
 {
     // https://regex101.com/r/eTWiEs/2/
     [GeneratedRegex(@"^[a-zA-Z0-9._-]{3,25}$", RegexOptions.NonBacktracking)]
     private static partial Regex PlayerNameRegex();
 
-    private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
+    private readonly ThreadSafeDictionary<string, Player> allPlayersByName = [];
     private readonly ThreadSafeDictionary<ushort, Player> connectedPlayersById = [];
     private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
     private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
@@ -33,15 +32,14 @@ public partial class PlayerManager
 
     private Timer initialSyncTimer;
 
-    private readonly SubnauticaServerConfig serverConfig;
+    private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly Hibernator hibernator;
     private ushort currentPlayerId;
 
-    public PlayerManager(List<Player> players, SubnauticaServerConfig serverConfig)
+    public PlayerManager(IOptions<SubnauticaServerOptions> options, Hibernator hibernator)
     {
-        allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
-        currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
-
-        this.serverConfig = serverConfig;
+        this.options = options;
+        this.hibernator = hibernator;
     }
 
     public List<Player> GetConnectedPlayers()
@@ -59,19 +57,25 @@ public partial class PlayerManager
         return allPlayersByName.Values;
     }
 
+    public void AddPlayer(Player player)
+    {
+        allPlayersByName.Add(player.Name, player);
+        currentPlayerId = allPlayersByName.Values.Max(x => x.Id);
+    }
+
     public MultiplayerSessionReservation ReservePlayerContext(
         INitroxConnection connection,
         PlayerSettings playerSettings,
         AuthenticationContext authenticationContext,
         string correlationId)
     {
-        if (Math.Min(reservedPlayerNames.Count - 1, 0) >= serverConfig.MaxConnections)
+        if (Math.Min(reservedPlayerNames.Count - 1, 0) >= options.Value.MaxConnections)
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
         }
 
-        if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != serverConfig.ServerPassword))
+        if (!string.IsNullOrEmpty(options.Value.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != options.Value.ServerPassword))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -101,7 +105,7 @@ public partial class PlayerManager
         string playerName = authenticationContext.Username;
 
         allPlayersByName.TryGetValue(playerName, out Player player);
-        if (player?.IsPermaDeath == true && serverConfig.IsHardcore())
+        if (player?.IsPermaDeath == true && options.Value.IsHardcore())
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -124,7 +128,7 @@ public partial class PlayerManager
         bool hasSeenPlayerBefore = player != null;
         ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
         NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
-        NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
+        SubnauticaGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : options.Value.GameMode;
         IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
         PlayerAnimation animation = new(AnimChangeType.UNDERWATER, AnimChangeState.ON);
 
@@ -137,7 +141,7 @@ public partial class PlayerManager
 
         PlayerCurrentlyJoining = true;
 
-        InitialSyncTimerData timerData = new(connection, authenticationContext, serverConfig.InitialSyncTimeout);
+        InitialSyncTimerData timerData = new(connection, authenticationContext, options.Value.InitialSyncTimeout);
         initialSyncTimer = new Timer(InitialSyncTimerElapsed, timerData, 0, 200);
 
 
@@ -209,9 +213,9 @@ public partial class PlayerManager
                 NitroxQuaternion.Identity,
                 playerContext.PlayerNitroxId,
                 Optional.Empty,
-                serverConfig.DefaultPlayerPerm,
-                new(serverConfig.DefaultOxygenValue, serverConfig.DefaultMaxOxygenValue, serverConfig.DefaultHealthValue, serverConfig.DefaultHungerValue, serverConfig.DefaultThirstValue, serverConfig.DefaultInfectionValue),
-                serverConfig.GameMode,
+                options.Value.DefaultPlayerPerm,
+                new(options.Value.DefaultOxygenValue, options.Value.DefaultMaxOxygenValue, options.Value.DefaultHealthValue, options.Value.DefaultHungerValue, options.Value.DefaultThirstValue, options.Value.DefaultInfectionValue),
+                options.Value.GameMode,
                 [],
                 [],
                 new Dictionary<string, NitroxId>(),
@@ -271,12 +275,11 @@ public partial class PlayerManager
 
         if (!ConnectedPlayers().Any())
         {
-            Server.Instance.PauseServer();
-            Server.Instance.Save();
+            hibernator.Sleep();
         }
     }
 
-    public void FinishProcessingReservation(Player player = null)
+    public void FinishProcessingReservation(Player? player = null)
     {
         initialSyncTimer.Dispose();
         PlayerCurrentlyJoining = false;

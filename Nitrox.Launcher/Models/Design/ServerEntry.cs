@@ -14,13 +14,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
+using Nitrox.Model.Configuration;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 
@@ -32,9 +32,8 @@ namespace Nitrox.Launcher.Models.Design;
 public partial class ServerEntry : ObservableObject
 {
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
-    public const string DEFAULT_SERVER_CONFIG_NAME = "server.cfg";
 
-    private static readonly SubnauticaServerConfig serverDefaults = new();
+    private static readonly SubnauticaServerOptions serverDefaults = new();
 
     [ObservableProperty]
     private bool allowCommands = !serverDefaults.DisableConsole;
@@ -43,19 +42,19 @@ public partial class ServerEntry : ObservableObject
     private bool allowKeepInventory = serverDefaults.KeepInventoryOnDeath;
 
     [ObservableProperty]
-    private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
+    private bool allowLanDiscovery = serverDefaults.LanDiscovery;
 
     [ObservableProperty]
-    private bool allowPvP = serverDefaults.PvPEnabled;
+    private bool allowPvP = serverDefaults.PvpEnabled;
 
     [ObservableProperty]
-    private bool autoPortForward = serverDefaults.AutoPortForward;
+    private bool portForward = serverDefaults.PortForward;
 
     [ObservableProperty]
     private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
 
     [ObservableProperty]
-    private NitroxGameMode gameMode = serverDefaults.GameMode;
+    private SubnauticaGameMode gameMode = serverDefaults.GameMode;
 
     [ObservableProperty]
     private bool isEmbedded;
@@ -107,13 +106,13 @@ public partial class ServerEntry : ObservableObject
         return result.RefreshFromDirectory(saveDir) ? result : null;
     }
 
-    public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
+    public static ServerEntry? CreateNew(string saveDir, SubnauticaGameMode saveGameMode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveDir, nameof(saveDir));
 
         Directory.CreateDirectory(saveDir);
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
         string fileEnding = config.SerializerMode switch
         {
             ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
@@ -122,17 +121,15 @@ public partial class ServerEntry : ObservableObject
         };
 
         File.WriteAllText(Path.Combine(saveDir, $"Version{fileEnding}"), null);
-        using (config.Update(saveDir))
-        {
-            config.GameMode = saveGameMode;
-        }
+        config.GameMode = saveGameMode;
+        NitroxConfig.CreateFile(saveDir, config);
 
         return FromDirectory(saveDir);
     }
 
     public bool RefreshFromDirectory(string saveDir)
     {
-        if (!File.Exists(Path.Combine(saveDir, DEFAULT_SERVER_CONFIG_NAME)))
+        if (!File.Exists(Path.Combine(saveDir, SerializableFileNameAttribute.GetFileName<SubnauticaServerOptions>())))
         {
             Log.Warn($"Tried loading invalid save directory at '{saveDir}'");
             return false;
@@ -145,7 +142,7 @@ public partial class ServerEntry : ObservableObject
             icon = new Bitmap(Path.Combine(saveDir, DEFAULT_SERVER_ICON_NAME));
         }
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
         string fileEnding = config.SerializerMode switch
         {
             ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
@@ -166,7 +163,7 @@ public partial class ServerEntry : ObservableObject
             serverVersion = config.SerializerMode switch
             {
                 ServerSerializerMode.JSON => new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                ServerSerializerMode.PROTOBUF => new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
+                ServerSerializerMode.PROTOBUF => new SubnauticaServerProtoBufSerializer(null).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
                 _ => throw new NotImplementedException()
             };
         }
@@ -180,14 +177,15 @@ public partial class ServerEntry : ObservableObject
         AutoSaveInterval = config.SaveInterval / 1000;
         MaxPlayers = config.MaxConnections;
         Port = config.ServerPort;
-        AutoPortForward = config.AutoPortForward;
-        AllowLanDiscovery = config.LANDiscoveryEnabled;
+        PortForward = config.PortForward;
+        AllowLanDiscovery = config.LanDiscovery;
         AllowCommands = !config.DisableConsole;
-        AllowPvP = config.PvPEnabled;
+        AllowPvP = config.PvpEnabled;
         AllowKeepInventory = config.KeepInventoryOnDeath;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
         Version = serverVersion;
-        IsEmbedded = config.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
+        // TODO: Store IsEmbedded in launcher cfg
+        IsEmbedded = RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                      ?
                                                      // This file is affected by server saving

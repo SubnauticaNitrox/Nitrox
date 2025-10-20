@@ -5,7 +5,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class FMODAssetProcessor : AuthenticatedPacketProcessor<FMODAssetPacket>
+sealed class FMODAssetProcessor : AuthenticatedPacketProcessor<FMODAssetPacket>
 {
     private readonly PlayerManager playerManager;
     private readonly FMODWhitelist fmodWhitelist;

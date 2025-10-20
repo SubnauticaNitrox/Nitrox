@@ -14,7 +14,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 /// Regular <see cref="WorldEntity"/> are held in cells and should be registered in <see cref="worldEntitiesByBatchId"/> and <see cref="worldEntitiesByCell"/>.
 /// But <see cref="GlobalRootEntity"/> are held in their own root object (GlobalRoot) so they should never be registered in cells (they're seeable at all times).
 /// </remarks>
-public class WorldEntityManager
+internal sealed class WorldEntityManager
 {
     private readonly EntityRegistry entityRegistry;
 

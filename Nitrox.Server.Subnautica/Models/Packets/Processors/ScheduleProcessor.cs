@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class ScheduleProcessor : AuthenticatedPacketProcessor<Schedule>
+    internal sealed class ScheduleProcessor : AuthenticatedPacketProcessor<Schedule>
     {
         private readonly PlayerManager playerManager;
         private readonly ScheduleKeeper scheduleKeeper;

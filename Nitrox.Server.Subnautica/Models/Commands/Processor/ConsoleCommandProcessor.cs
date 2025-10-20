@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
@@ -9,29 +8,31 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Processor
 {
     public class ConsoleCommandProcessor
     {
+        private readonly ILogger<ConsoleCommandProcessor> logger;
         private readonly Dictionary<string, Command> commands = new();
-        private readonly char[] splitChar = { ' ' };
+        private readonly char[] splitChar = [' '];
 
-        public ConsoleCommandProcessor(IEnumerable<Command> cmds)
+        public ConsoleCommandProcessor(IEnumerable<Command> cmds, ILogger<ConsoleCommandProcessor> logger)
         {
+            this.logger = logger;
             foreach (Command cmd in cmds)
             {
-                if (commands.ContainsKey(cmd.Name))
+                if (!commands.TryAdd(cmd.Name, cmd))
                 {
                     throw new DuplicateRegistrationException($"Command {cmd.Name} is registered multiple times.");
                 }
 
-                commands[cmd.Name] = cmd;
-
                 foreach (string alias in cmd.Aliases)
                 {
-                    if (commands.ContainsKey(alias))
+                    if (!commands.TryAdd(alias, cmd))
                     {
                         throw new DuplicateRegistrationException($"Command {alias} is registered multiple times.");
                     }
-
-                    commands[alias] = cmd;
                 }
+            }
+            if (commands.Count < 1)
+            {
+                logger.ZLogWarning($"No commands registered");
             }
         }
 

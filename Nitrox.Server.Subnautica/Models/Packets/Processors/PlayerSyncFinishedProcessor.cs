@@ -1,15 +1,18 @@
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class PlayerSyncFinishedProcessor : AuthenticatedPacketProcessor<PlayerSyncFinished>
+    internal class PlayerSyncFinishedProcessor : AuthenticatedPacketProcessor<PlayerSyncFinished>
     {
         private readonly PlayerManager playerManager;
+        private readonly Hibernator hibernator;
 
-        public PlayerSyncFinishedProcessor(PlayerManager playerManager)
+        public PlayerSyncFinishedProcessor(PlayerManager playerManager, Hibernator hibernator)
         {
             this.playerManager = playerManager;
+            this.hibernator = hibernator;
         }
 
         public override void Process(PlayerSyncFinished packet, Player player)
@@ -17,7 +20,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
             // If this is the first player connecting we need to restart time at this exact moment
             if (playerManager.GetConnectedPlayers().Count == 1)
             {
-                Server.Instance.ResumeServer();
+                hibernator.Wake();
             }
 
             playerManager.FinishProcessingReservation(player);

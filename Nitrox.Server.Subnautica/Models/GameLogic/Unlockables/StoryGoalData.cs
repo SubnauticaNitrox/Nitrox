@@ -6,7 +6,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 [DataContract]
-public class StoryGoalData
+internal sealed class StoryGoalData
 {
     [DataMember(Order = 1)]
     public ThreadSafeSet<string> CompletedGoals { get; } = [];

@@ -1,5 +1,3 @@
-using System;
-
 namespace Nitrox.Server.Subnautica.Models.Commands.Abstract.Type
 {
     public class TypeEnum<T> : Parameter<object> where T : struct, Enum

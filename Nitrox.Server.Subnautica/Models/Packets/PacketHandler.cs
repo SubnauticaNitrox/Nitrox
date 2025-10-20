@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Server.Subnautica.Models.Communication;
@@ -9,7 +8,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets
 {
-    public class PacketHandler
+    internal sealed class PacketHandler
     {
         private readonly PlayerManager playerManager;
         private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;

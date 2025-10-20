@@ -4,12 +4,12 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class KnownTechEntryAddProcessor : AuthenticatedPacketProcessor<KnownTechEntryAdd>
+    internal sealed class KnownTechEntryAddProcessor : AuthenticatedPacketProcessor<KnownTechEntryAdd>
     {
         private readonly PlayerManager playerManager;
-        private readonly PDAStateData pdaStateData;
+        private readonly PdaStateData pdaStateData;
 
-        public KnownTechEntryAddProcessor(PlayerManager playerManager, PDAStateData pdaStateData)
+        public KnownTechEntryAddProcessor(PlayerManager playerManager, PdaStateData pdaStateData)
         {
             this.playerManager = playerManager;
             this.pdaStateData = pdaStateData;

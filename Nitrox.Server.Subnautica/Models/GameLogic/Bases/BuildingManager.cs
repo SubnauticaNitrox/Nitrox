@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
@@ -15,13 +13,13 @@ public class BuildingManager
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
-    private readonly SubnauticaServerConfig config;
+    private readonly IOptions<SubnauticaServerOptions> options;
 
-    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SubnauticaServerConfig config)
+    internal BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
-        this.config = config;
+        this.options = options;
     }
 
     public bool AddGhost(PlaceGhost placeGhost)
@@ -173,7 +171,7 @@ public class BuildingManager
             return false;
         }
         int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
-        if (deltaOperations != 0 && config.SafeBuilding)
+        if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
             Log.Warn($"Ignoring an {nameof(UpdateBase)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(player);
@@ -295,7 +293,7 @@ public class BuildingManager
         }
 
         int deltaOperations = buildEntity.OperationId + 1 - pieceDeconstructed.OperationId;
-        if (deltaOperations != 0 && config.SafeBuilding)
+        if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
             Log.Warn($"Ignoring a {nameof(PieceDeconstructed)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(player);

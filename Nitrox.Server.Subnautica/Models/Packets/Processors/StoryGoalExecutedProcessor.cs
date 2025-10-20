@@ -4,14 +4,14 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoalExecuted>
+internal sealed class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoalExecuted>
 {
     private readonly PlayerManager playerManager;
     private readonly StoryGoalData storyGoalData;
     private readonly ScheduleKeeper scheduleKeeper;
-    private readonly PDAStateData pdaStateData;
+    private readonly PdaStateData pdaStateData;
 
-    public StoryGoalExecutedProcessor(PlayerManager playerManager,  StoryGoalData storyGoalData, ScheduleKeeper scheduleKeeper, PDAStateData pdaStateData)
+    public StoryGoalExecutedProcessor(PlayerManager playerManager,  StoryGoalData storyGoalData, ScheduleKeeper scheduleKeeper, PdaStateData pdaStateData)
     {
         this.playerManager = playerManager;
         this.storyGoalData = storyGoalData;

@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class RadioPlayPendingMessageProcessor : AuthenticatedPacketProcessor<RadioPlayPendingMessage>
+    internal sealed class RadioPlayPendingMessageProcessor : AuthenticatedPacketProcessor<RadioPlayPendingMessage>
     {
         private readonly StoryGoalData storyGoalData;
         private readonly PlayerManager playerManager;

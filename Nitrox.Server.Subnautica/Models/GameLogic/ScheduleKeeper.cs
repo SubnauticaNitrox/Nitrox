@@ -6,21 +6,21 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic
 {
-    public class ScheduleKeeper
+    internal class ScheduleKeeper
     {
         private readonly ThreadSafeDictionary<string, NitroxScheduledGoal> scheduledGoals = new();
-        private readonly PDAStateData pdaStateData;
+        private readonly PdaStateData pdaStateData;
         private readonly StoryGoalData storyGoalData;
-        private readonly TimeKeeper timeKeeper;
+        private readonly TimeService timeService;
         private readonly PlayerManager playerManager;
 
-        private float ElapsedSecondsFloat => (float)timeKeeper.ElapsedSeconds;
+        private float ElapsedSecondsFloat => (float)timeService.GameTime.TotalSeconds;
 
-        public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, PlayerManager playerManager)
+        public ScheduleKeeper(PdaStateData pdaStateData, StoryGoalData storyGoalData, TimeService timeService, PlayerManager playerManager)
         {
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;
-            this.timeKeeper = timeKeeper;
+            this.timeService = timeService;
             this.playerManager = playerManager;
 
             // We still want to get a "replicated" list in memory

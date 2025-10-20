@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
+sealed class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
 {
     private readonly PlayerManager playerManager;
 

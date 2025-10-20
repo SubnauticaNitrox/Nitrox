@@ -6,7 +6,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 /// <summary>
 /// Broadcasts and stores the animation state of a player
 /// </summary>
-public class AnimationChangeEventProcessor : AuthenticatedPacketProcessor<AnimationChangeEvent>
+internal sealed class AnimationChangeEventProcessor : AuthenticatedPacketProcessor<AnimationChangeEvent>
 {
     private readonly PlayerManager playerManager;
 

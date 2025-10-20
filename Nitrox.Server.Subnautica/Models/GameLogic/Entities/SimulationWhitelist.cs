@@ -3,11 +3,11 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-public class SimulationWhitelist : ISimulationWhitelist
+internal static class SimulationWhitelist
 {
     /// <inheritdoc cref="ISimulationWhitelist.MovementWhitelist" />
-    public static readonly HashSet<NitroxTechType> MovementWhitelist = new()
-    {
+    public static readonly HashSet<NitroxTechType> MovementWhitelist =
+    [
         TechType.Shocker.ToDto(),
         TechType.Biter.ToDto(),
         TechType.Blighter.ToDto(),
@@ -66,15 +66,12 @@ public class SimulationWhitelist : ISimulationWhitelist
         TechType.Peeper.ToDto(),
         TechType.Jumper.ToDto(),
         TechType.Constructor.ToDto(),
-        TechType.PipeSurfaceFloater.ToDto(),
-    };
+        TechType.PipeSurfaceFloater.ToDto()
+    ];
 
     /// <inheritdoc cref="ISimulationWhitelist.UtilityWhitelist" />
     public static readonly HashSet<NitroxTechType> UtilityWhitelist = new()
     {
         TechType.CrashHome.ToDto()
     };
-
-    HashSet<NitroxTechType> ISimulationWhitelist.MovementWhitelist => MovementWhitelist;
-    HashSet<NitroxTechType> ISimulationWhitelist.UtilityWhitelist => UtilityWhitelist;
 }

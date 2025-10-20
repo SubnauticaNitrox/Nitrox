@@ -6,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
+internal sealed class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
 {
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
