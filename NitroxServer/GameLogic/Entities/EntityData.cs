@@ -46,7 +46,7 @@ public class EntityData
 
                 if (we.Level == 100)
                 {
-                    Log.Error($"Found an entity with cell level 100. It will be hotfixed.\n{we}");
+                    Log.Error($"Found a world entity with cell level 100. It will be hotfixed.\n{we}");
                     we.Level = 0;
                     brokenEntitiesFound = true;
                 }
@@ -59,7 +59,7 @@ public class EntityData
 
         if (brokenEntitiesFound)
         {
-            Log.Warn($"Please consider reporting the above issues on the Discord server.");
+            Log.WarnOnce($"Please consider reporting the above issues on the Discord server.");
         }
 
         foreach (Entity entity in Entities)

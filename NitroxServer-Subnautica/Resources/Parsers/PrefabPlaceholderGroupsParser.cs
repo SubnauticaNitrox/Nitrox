@@ -27,7 +27,7 @@ public sealed class PrefabPlaceholderGroupsParser : IDisposable
     /// the cache is rebuilt
     /// </para>
     /// </summary>
-    private const int CACHE_VERSION = 2;
+    private const int CACHE_VERSION = 3;
     private const string CACHE_FILENAME = "PrefabPlaceholdersGroupAssetsCache.json";
 
     private readonly string prefabDatabasePath;
