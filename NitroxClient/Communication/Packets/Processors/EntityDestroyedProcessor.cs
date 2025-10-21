@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -5,6 +8,7 @@ using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
+using Nitrox.Model.Subnautica.Extensions;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -21,6 +25,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
 
     public override void Process(EntityDestroyed packet)
     {
+        bool wasKnownEntity = entities.IsKnownEntity(packet.Id);
         entities.RemoveEntity(packet.Id);
         
         if (entities.SpawningEntities)
@@ -30,7 +35,13 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
 
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
         {
-            Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
+            if (wasKnownEntity)
+            {
+                Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
+            }
+
+            RemoveScannerPingsNear(packet);
+            RemoveMapRoomNodesNear(packet);
             return;
         }
 
@@ -48,6 +59,82 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
             else
             {
                 Entities.DestroyObject(gameObject);
+            }
+        }
+
+        RemoveScannerPingsNear(packet);
+        RemoveMapRoomNodesNear(packet);
+    }
+
+    private static void RemoveScannerPingsNear(EntityDestroyed packet)
+    {
+        if (!packet.LastKnownPosition.HasValue)
+        {
+            return;
+        }
+
+        Vector3 targetPosition = packet.LastKnownPosition.Value.ToUnity();
+        const float removalRadius = 2f;
+
+        PingInstance[] pingInstances = UnityEngine.Object.FindObjectsOfType<PingInstance>();
+
+        foreach (PingInstance ping in pingInstances)
+        {
+            string pingTypeName = ping.pingType.ToString();
+            if (pingTypeName.IndexOf("MapRoom", StringComparison.OrdinalIgnoreCase) < 0 &&
+                pingTypeName.IndexOf("Scanner", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                continue;
+            }
+
+            if (Vector3.Distance(ping.transform.position, targetPosition) > removalRadius)
+            {
+                continue;
+            }
+
+            UnityEngine.Object.Destroy(ping.gameObject);
+        }
+    }
+
+    private static void RemoveMapRoomNodesNear(EntityDestroyed packet)
+    {
+        if (!packet.LastKnownPosition.HasValue)
+        {
+            return;
+        }
+
+        Vector3 targetPosition = packet.LastKnownPosition.Value.ToUnity();
+        TechType? destroyedTechType = packet.TechType != null ? packet.TechType.ToUnity() : null;
+        const float removalRadius = 4f;
+
+        MapRoomFunctionality[] mapRooms = UnityEngine.Object.FindObjectsOfType<MapRoomFunctionality>();
+        foreach (MapRoomFunctionality mapRoom in mapRooms)
+        {
+            if (!mapRoom)
+            {
+                continue;
+            }
+
+            IList<ResourceTrackerDatabase.ResourceInfo> nodes = mapRoom.GetNodes();
+            if (nodes == null || nodes.Count == 0)
+            {
+                continue;
+            }
+
+            ResourceTrackerDatabase.ResourceInfo[] snapshot = nodes.ToArray();
+            foreach (ResourceTrackerDatabase.ResourceInfo info in snapshot)
+            {
+                if (destroyedTechType.HasValue && info.techType != destroyedTechType.Value)
+                {
+                    continue;
+                }
+
+                if (Vector3.Distance(info.position, targetPosition) > removalRadius)
+                {
+                    continue;
+                }
+
+                mapRoom.OnResourceRemoved(info);
             }
         }
     }
@@ -90,12 +177,12 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         {
             if (vehicle.destructionEffect)
             {
-                GameObject gameObject = Object.Instantiate(vehicle.destructionEffect);
+                GameObject gameObject = UnityEngine.Object.Instantiate(vehicle.destructionEffect);
                 gameObject.transform.position = vehicle.transform.position;
                 gameObject.transform.rotation = vehicle.transform.rotation;
             }
 
-            Object.Destroy(vehicle.gameObject);
+            UnityEngine.Object.Destroy(vehicle.gameObject);
         }
     }
 }

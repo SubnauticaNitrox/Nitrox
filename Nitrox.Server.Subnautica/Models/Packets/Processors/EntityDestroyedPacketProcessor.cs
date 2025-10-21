@@ -1,3 +1,4 @@
+using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
@@ -23,20 +24,29 @@ public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<Entit
     {
         entitySimulation.EntityDestroyed(packet.Id);
 
-        if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity entity))
+        if (!worldEntityManager.TryDestroyEntity(packet.Id, out Entity entity))
         {
-            if (entity is VehicleEntity vehicleEntity)
-            {
-                worldEntityManager.MovePlayerChildrenToRoot(vehicleEntity);
-            }
+            return;
+        }
 
-            foreach (Player player in playerManager.GetConnectedPlayers())
+        if (entity is VehicleEntity vehicleEntity)
+        {
+            worldEntityManager.MovePlayerChildrenToRoot(vehicleEntity);
+        }
+
+        NitroxVector3? lastKnownPosition = null;
+        if (entity is WorldEntity worldEntity)
+        {
+            lastKnownPosition = worldEntity.Transform.Position;
+        }
+
+        EntityDestroyed broadcastPacket = new(packet.Id, entity.TechType, lastKnownPosition);
+
+        foreach (Player player in playerManager.GetConnectedPlayers())
+        {
+            if (player != destroyingPlayer)
             {
-                bool isOtherPlayer = player != destroyingPlayer;
-                if (isOtherPlayer && player.CanSee(entity))
-                {
-                    player.SendPacket(packet);
-                }
+                player.SendPacket(broadcastPacket);
             }
         }
     }
