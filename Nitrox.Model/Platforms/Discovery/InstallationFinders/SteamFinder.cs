@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using Nitrox.Model.Discovery.InstallationFinders.Core;
+using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
 using Nitrox.Model.Platforms.OS.Windows;
-using static Nitrox.Model.Discovery.InstallationFinders.Core.GameFinderResult;
+using static Nitrox.Model.Platforms.Discovery.InstallationFinders.Core.GameFinderResult;
 
-namespace Nitrox.Model.Discovery.InstallationFinders;
+namespace Nitrox.Model.Platforms.Discovery.InstallationFinders;
 
 /// <summary>
 /// Trying to find the path in the Steam installation directory by the appid that contains the game installation directory.
