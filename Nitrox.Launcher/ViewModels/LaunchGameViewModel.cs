@@ -245,7 +245,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore.GetUseBigPictureMode()),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
@@ -260,6 +260,12 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
     private bool ShouldSkipSteam(string args)
     {
+        // Check if Steam overlay is enabled by user setting
+        if (keyValueStore.GetUseBigPictureMode())
+        {
+            return false; // Use Steam if overlay is enabled
+        }
+
         if (App.InstantLaunch != null)
         {
             // Running through Steam is fine if single instance.
@@ -278,7 +284,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             return true;
         }
 
-        return false;
+        return false; // Default: use Steam unless explicitly disabled for special cases
     }
 
     private void UpdateGamePlatform()
