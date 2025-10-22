@@ -10,15 +10,13 @@ public static class KeyValueStoreExtensions
 
     public static bool GetIsLightModeEnabled(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("IsLightModeEnabled", defaultValue);
 
-    public static void SetIsLightModeEnabled(this IKeyValueStore store, bool value)
-    {
-        store.SetValue("IsLightModeEnabled", value);
-    }
+    public static void SetIsLightModeEnabled(this IKeyValueStore store, bool value) => store.SetValue("IsLightModeEnabled", value);
 
     public static bool GetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("IsMultipleGameInstancesAllowed", defaultValue);
 
-    public static void SetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool value)
-    {
-        store.SetValue("IsMultipleGameInstancesAllowed", value);
-    }
+    public static void SetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool value) => store.SetValue("IsMultipleGameInstancesAllowed", value);
+
+    public static bool GetUseBigPictureMode(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("UseBigPictureMode", defaultValue);
+
+    public static void SetBigPictureMode(this IKeyValueStore store, bool value) => store.SetValue("UseBigPictureMode", value);
 }

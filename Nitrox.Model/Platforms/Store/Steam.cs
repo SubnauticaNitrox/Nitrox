@@ -63,7 +63,6 @@ public sealed class Steam : IGamePlatform
             UseShellExecute = true,
             Arguments = launchArgs
         });
-
         if (process is not { IsRunning: true })
         {
             process?.Dispose();
@@ -134,8 +133,9 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam)
+    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
     {
+        bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
         try
         {
             using ProcessEx steam = await StartPlatformAsync();
@@ -149,15 +149,64 @@ public sealed class Steam : IGamePlatform
             throw new GamePlatformException(GameLibraries.STEAM, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
-        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam));
+        if (bigPictureMode)
+        {
+            if (isPlatformStartingUp)
+            {
+                // TODO: Instead of waiting, detect when Steam Big Picture is ready to be started by Steam.
+                await Task.Delay(2000);
+            }
+            await LaunchSteamBigPictureModeAsync();
+        }
+
+        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
     }
 
-    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam)
+    private static async Task LaunchSteamBigPictureModeAsync()
+    {
+        string? steamExe = GetExeFile();
+        if (steamExe == null)
+        {
+            throw new Exception("Could not find Steam executable for Big Picture mode launch");
+        }
+
+        // Try Steam protocol URL first (preferred method)
+        Process? proc;
+        try
+        {
+            proc = Process.Start(new ProcessStartInfo
+            {
+                FileName = "steam://open/bigpicture",
+                UseShellExecute = true
+            }) ?? Process.Start(new ProcessStartInfo
+            {
+                FileName = steamExe,
+                Arguments = "-bigpicture",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to launch Steam Big Picture interface", ex);
+        }
+        if (proc == null)
+        {
+            Log.Error("Big Picture Mode: Direct launch process failed to start");
+            return;
+        }
+
+        // Wait to prevent focus stealing issues where Big Picture loads after the game has started
+        await Task.Delay(1000);
+    }
+
+    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false)
     {
         if (steamExe == null)
         {
             throw new FileNotFoundException("Steam was not found on your machine.");
         }
+
         string steamPath = Path.GetDirectoryName(steamExe);
         if (steamPath == null)
         {
@@ -166,10 +215,18 @@ public sealed class Steam : IGamePlatform
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
+            args = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
+            if (bigPictureMode)
+            {
+                // Keep Steam client minimized but active in background to maintain overlay functionality
+                // -silent prevents Steam from stealing focus from Big Picture mode
+                args = $"-silent {args}";
+            }
+
             return new()
             {
                 FileName = steamExe,
-                Arguments = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}"
+                Arguments = args
             };
         }
 
@@ -183,10 +240,11 @@ public sealed class Steam : IGamePlatform
             {
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
-                ["SteamAppID"] = steamAppId.ToString()
+                ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
+                ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay
+                ["ENABLE_VKBASALT"] = "0" // VKBasalt prevents Steam overlay from working
             }
         };
-
         // Start via Proton on Linux.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -252,6 +310,7 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("WINEPREFIX", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
+            result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
         }
 
         return result;

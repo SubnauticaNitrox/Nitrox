@@ -237,7 +237,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         string launchArguments = $"{keyValueStore.GetLaunchArguments(gameInfo)} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
         ProcessEx game = NitroxUser.GamePlatform switch
         {
-            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments)),
+            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments), keyValueStore.GetUseBigPictureMode()),
             EpicGames => await EpicGames.StartGameAsync(gameExePath, launchArguments),
             HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
             MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),
@@ -253,6 +253,12 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
     private bool ShouldSkipSteam(string args)
     {
+        // Check if Steam overlay is enabled by user setting
+        if (keyValueStore.GetUseBigPictureMode())
+        {
+            return false; // Use Steam if overlay is enabled
+        }
+
         if (App.InstantLaunch != null)
         {
             // Running through Steam is fine if single instance.
@@ -271,6 +277,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             return true;
         }
 
-        return false;
+        return false; // Default: use Steam unless explicitly disabled for special cases
     }
 }
