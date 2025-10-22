@@ -15,7 +15,8 @@ body:
       label: Which version are you playing on?
       description: If playing on older versions, you should try updating first.
       options:
-        - 1.8.0.0 (Latest release)
+        - 1.8.1.0 (Latest release)
+        - 1.8.0.0
         - 1.7.1.0
         - Latest commit (Only for experts)
         - Other
