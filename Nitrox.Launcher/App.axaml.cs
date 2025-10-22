@@ -84,8 +84,6 @@ public class App : Application
         });
         cliParser.Run(NitroxEnvironment.CommandLineArgs);
 
-        GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica);
-
         // Fallback to normal startup.
         if (StartupWindowFactory == null)
         {

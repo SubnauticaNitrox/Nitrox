@@ -7,12 +7,12 @@ using Nitrox.Model.Platforms.Discovery.InstallationFinders;
 using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.Store;
-using Nitrox.Model.Platforms.Store.Interfaces;
 
 namespace Nitrox.Model.Platforms.Discovery;
 
 /// <summary>
-/// Main game installation finder that will use all available methods of detection to find the game installation directory
+///     Main game installation finder that will use all available methods of detection to find the game installation
+///     directory
 /// </summary>
 public static class GameInstallationFinder
 {
@@ -28,27 +28,43 @@ public static class GameInstallationFinder
     };
 
     /// <summary>
-    /// Searches the system for a valid installation of <param name="gameInfo"></param>.
-    /// If found saves it to <see cref="NitroxUser.GamePath"/> / <see cref="NitroxUser.GamePlatform"/> and returns true.
+    ///     Searches the system for a valid installation of a game.
+    ///     If found saves it to <see cref="NitroxUser.GamePath" /> / <see cref="NitroxUser.GamePlatform" /> and returns the
+    ///     valid result.
     /// </summary>
-    public static bool FindPlatformAndGame(GameInfo gameInfo, GameLibraries gameLibraries = GameLibraries.ALL)
+    public static GameFinderResult FindGameCached(GameInfo gameInfo, GameLibraries gameLibraries = GameLibraries.ALL)
     {
+        if (!string.IsNullOrWhiteSpace(NitroxUser.GamePath) && NitroxUser.GamePlatform is { } platform)
+        {
+            return GameFinderResult.Ok(NitroxUser.GamePath) with
+            {
+                Origin = platform switch
+                {
+                    Steam => GameLibraries.STEAM,
+                    EpicGames => GameLibraries.EPIC,
+                    HeroicGames => GameLibraries.HEROIC,
+                    MSStore => GameLibraries.MICROSOFT,
+                    Discord => GameLibraries.DISCORD,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            };
+        }
+
         List<GameFinderResult> finderResults = FindGame(gameInfo, gameLibraries).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
         GameFinderResult? potentiallyValidResult = finderResults.LastOrDefault();
         if (potentiallyValidResult is { IsOk: true })
         {
             Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
-            IGamePlatform platform = GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin);
-            NitroxUser.SetGamePathAndPlatform(potentiallyValidResult.Path, platform);
-            return true;
+            NitroxUser.SetGamePathAndPlatform(potentiallyValidResult.Path, GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin) ?? GamePlatforms.GetPlatformByGameDir(potentiallyValidResult.Path));
+            return potentiallyValidResult;
         }
 
         Log.Error($"Could not locate {gameInfo.Name} installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
-        return false;
+        return potentiallyValidResult ?? GameFinderResult.NotFound();
     }
 
     /// <summary>
-    ///     Searches for the game install directory given its <see cref="GameInfo"/>.
+    ///     Searches for the game install directory given its <see cref="GameInfo" />.
     /// </summary>
     /// <param name="gameInfo">Info object of a game.</param>
     /// <param name="gameLibraries">Known game libraries to search through</param>

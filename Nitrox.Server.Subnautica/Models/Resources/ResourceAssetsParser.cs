@@ -38,7 +38,7 @@ public static class ResourceAssetsParser
     {
         if (string.IsNullOrEmpty(NitroxUser.GamePath))
         {
-            throw new Exception($"{nameof(NitroxUser.GamePath)} was null or empty. Be sure {nameof(GameInstallationFinder.FindPlatformAndGame)} was executed.");
+            throw new Exception($"{nameof(NitroxUser.GamePath)} was null or empty. Be sure {nameof(GameInstallationFinder.FindGameCached)} was executed.");
         }
 
         if (File.Exists(Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "resources.assets")))

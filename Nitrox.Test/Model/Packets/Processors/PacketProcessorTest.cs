@@ -92,7 +92,7 @@ namespace Nitrox.Model.Packets.Processors
                                             .Assembly.GetTypes()
                                             .Where(p => p.IsClass && p.IsAbstract && (p.IsAssignableToGenericType(typeof(AuthenticatedPacketProcessor<>)) || p.IsAssignableToGenericType(typeof(UnauthenticatedPacketProcessor<>)))));
 
-            if (!GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica))
+            if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
             {
                 throw new DirectoryNotFoundException("Could not find Subnautica installation.");
             }

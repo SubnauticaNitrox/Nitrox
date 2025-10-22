@@ -5,8 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Nitrox.Model.Core;
-using Nitrox.Model.Platforms.Discovery;
-using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
+using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
 using Nitrox.Model.Platforms.Store.Interfaces;
@@ -19,7 +18,7 @@ public static class NitroxUser
     private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
     private static string? appDataPath;
     private static string? launcherPath;
-    private static string? gamePath;
+    private static string gamePath = "";
     private static string? executableRootPath;
     private static string? executablePath;
     private static string? assetsPath;
@@ -140,28 +139,14 @@ public static class NitroxUser
         set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
     }
 
-    private static IGamePlatform? gamePlatform;
-    public static event Action? GamePlatformChanged;
-
-    public static IGamePlatform? GamePlatform
-    {
-        get => gamePlatform;
-        private set
-        {
-            if (gamePlatform != value)
-            {
-                gamePlatform = value;
-                GamePlatformChanged?.Invoke();
-            }
-        }
-    }
+    public static IGamePlatform? GamePlatform { get; private set; }
 
     public static string GamePath => string.IsNullOrEmpty(gamePath) ? string.Empty : gamePath;
 
     public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
     {
         gamePath = Path.GetFullPath(path);
-        gamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
+        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 
     public static string? ExecutableRootPath

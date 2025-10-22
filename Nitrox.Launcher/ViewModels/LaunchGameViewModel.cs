@@ -17,7 +17,6 @@ using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
-using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
@@ -54,15 +53,14 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         await Task.Run(() =>
         {
-            NitroxUser.GamePlatformChanged += UpdateGamePlatform;
-            UpdateGamePlatform();
+            GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+            PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
             HandleInstantLaunchForDevelopment();
         }, cancellationToken);
     }
 
     internal override Task ViewContentUnloadAsync()
     {
-        NitroxUser.GamePlatformChanged -= UpdateGamePlatform;
         return Task.CompletedTask;
     }
 
@@ -228,11 +226,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         LauncherNotifier.Info("Starting game");
 
-        if (!GameInstallationFinder.FindPlatformAndGame(gameInfo))
-        {
-            return; // Logging is done in FindPlatformAndGame()
-        }
-
         string gameExePathSuffix = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "MacOS" : string.Empty;
         string gameExePath = Path.Combine(NitroxUser.GamePath, gameExePathSuffix, gameInfo.ExeName);
         if (!File.Exists(gameExePath))
@@ -279,11 +272,5 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return false;
-    }
-
-    private void UpdateGamePlatform()
-    {
-        GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
     }
 }

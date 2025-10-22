@@ -20,14 +20,18 @@ public sealed class HeroicGames : IGamePlatform
 
     public bool OwnsGame(string gameDirectory)
     {
+        HeroicGamesFinder finder = new();
+
+        // TODO: Limit "FindGame" calls on last folder name of the path.
+
         // Heroic Games has no files inside or in the parent of the game directory
-        GameFinderResult? resultSubnautica = new HeroicGamesFinder().FindGame(GameInfo.Subnautica);
+        GameFinderResult? resultSubnautica = finder.FindGame(GameInfo.Subnautica);
         if (resultSubnautica.IsOk && PathEquals(gameDirectory, resultSubnautica.Path))
         {
             return true;
         }
 
-        GameFinderResult? resultBelowZero = new HeroicGamesFinder().FindGame(GameInfo.SubnauticaBelowZero);
+        GameFinderResult? resultBelowZero = finder.FindGame(GameInfo.SubnauticaBelowZero);
         if (resultBelowZero.IsOk && PathEquals(gameDirectory, resultBelowZero.Path))
         {
             return true;

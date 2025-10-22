@@ -79,7 +79,7 @@ public class Program
 
             Stopwatch watch = Stopwatch.StartNew();
 
-            if (!GameInstallationFinder.FindPlatformAndGame(GameInfo.Subnautica))
+            if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
             {
                 throw new DirectoryNotFoundException("Could not find Subnautica installation.");
             }

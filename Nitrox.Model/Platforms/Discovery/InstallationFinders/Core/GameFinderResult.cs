@@ -52,4 +52,6 @@ public sealed record GameFinderResult
             Path = path
         };
     }
+
+    public static implicit operator bool(GameFinderResult result) => result is { IsOk: true };
 }
