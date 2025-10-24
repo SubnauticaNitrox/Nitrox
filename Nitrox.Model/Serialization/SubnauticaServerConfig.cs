@@ -4,6 +4,7 @@ using Nitrox.Model.Server;
 
 namespace Nitrox.Model.Serialization
 {
+    // TODO: REMOVE THIS CLASS
     [PropertyDescription("Server settings can be changed here")]
     public class SubnauticaServerConfig : NitroxConfig<SubnauticaServerConfig>
     {
@@ -92,8 +93,8 @@ namespace Nitrox.Model.Serialization
 
         public string AdminPassword { get; set; } = StringHelper.GenerateRandomString(12);
 
-        [PropertyDescription("Possible values:", typeof(NitroxGameMode))]
-        public NitroxGameMode GameMode { get; set; } = NitroxGameMode.SURVIVAL;
+        [PropertyDescription("Possible values:", typeof(SubnauticaGameMode))]
+        public SubnauticaGameMode GameMode { get; set; } = SubnauticaGameMode.SURVIVAL;
 
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
         public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.JSON;

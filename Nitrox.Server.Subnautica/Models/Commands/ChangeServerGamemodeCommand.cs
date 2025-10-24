@@ -16,7 +16,7 @@ internal class ChangeServerGamemodeCommand : Command
 
     public ChangeServerGamemodeCommand(Server server, PlayerManager playerManager, SubnauticaServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
     {
-        AddParameter(new TypeEnum<NitroxGameMode>("gamemode", true, "Gamemode to change to"));
+        AddParameter(new TypeEnum<SubnauticaGameMode>("gamemode", true, "Gamemode to change to"));
 
         this.server = server;
         this.playerManager = playerManager;
@@ -25,7 +25,7 @@ internal class ChangeServerGamemodeCommand : Command
 
     protected override void Execute(CallArgs args)
     {
-        NitroxGameMode sgm = args.Get<NitroxGameMode>(0);
+        SubnauticaGameMode sgm = args.Get<SubnauticaGameMode>(0);
 
         using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
         {

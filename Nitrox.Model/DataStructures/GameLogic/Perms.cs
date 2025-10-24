@@ -23,7 +23,8 @@ namespace Nitrox.Model.DataStructures.GameLogic
         /// <summary>
         /// All permissions
         /// </summary>
-        CONSOLE
+        CONSOLE,
+        DEFAULT = PLAYER
     }
 
     [Flags]

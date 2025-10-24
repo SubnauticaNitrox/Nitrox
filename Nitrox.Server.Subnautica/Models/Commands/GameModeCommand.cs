@@ -12,7 +12,7 @@ internal class GameModeCommand : Command
 
     public GameModeCommand(PlayerManager playerManager) : base("gamemode", Perms.ADMIN, "Changes a player's gamemode")
     {
-        AddParameter(new TypeEnum<NitroxGameMode>("gamemode", true, "Gamemode to change to"));
+        AddParameter(new TypeEnum<SubnauticaGameMode>("gamemode", true, "Gamemode to change to"));
         AddParameter(new TypePlayer("name", false, "Username to whom change the game mode (defaults to self)"));
 
         this.playerManager = playerManager;
@@ -20,7 +20,7 @@ internal class GameModeCommand : Command
 
     protected override void Execute(CallArgs args)
     {
-        NitroxGameMode gameMode = args.Get<NitroxGameMode>(0);
+        SubnauticaGameMode gameMode = args.Get<SubnauticaGameMode>(0);
         Player targetPlayer = args.Get<Player>(1);
 
         if (args.IsConsole && targetPlayer == null)

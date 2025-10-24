@@ -6,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-public class PvpCommand : Command
+internal class PvpCommand : Command
 {
     private readonly SubnauticaServerConfig serverConfig;
     private readonly Server server;

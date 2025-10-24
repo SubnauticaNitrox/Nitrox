@@ -1,9 +1,9 @@
-namespace Nitrox.Model.Server;
+namespace Nitrox.Model.DataStructures.GameLogic;
 
 /// <summary>
 /// GameModes according to Subnautica's enum GameModeOption
 /// </summary>
-public enum NitroxGameMode
+public enum SubnauticaGameMode
 {
     SURVIVAL = 0,
     FREEDOM = 2,
