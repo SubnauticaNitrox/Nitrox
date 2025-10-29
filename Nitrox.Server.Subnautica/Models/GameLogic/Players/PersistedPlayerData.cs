@@ -37,7 +37,7 @@ public class PersistedPlayerData
     public PlayerStatsData CurrentStats { get; set; }
 
     [DataMember(Order = 9)]
-    public NitroxGameMode GameMode { get; set; }
+    public SubnauticaGameMode GameMode { get; set; }
 
     [DataMember(Order = 10)]
     public NitroxId SubRootId { get; set; }

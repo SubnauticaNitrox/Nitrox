@@ -1,4 +1,4 @@
-using Nitrox.Model.Server;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
@@ -22,7 +22,7 @@ namespace Nitrox.Server.Subnautica.Models.Serialization.World
         public StoryManager StoryManager { get; set; }
         public GameData GameData { get; set; }
         public SessionSettings SessionSettings { get; set; }
-        public NitroxGameMode GameMode { get; set; }
+        public SubnauticaGameMode GameMode { get; set; }
         public string Seed { get; set; }
     }
 }

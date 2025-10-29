@@ -55,7 +55,7 @@ public partial class ServerEntry : ObservableObject
     private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
 
     [ObservableProperty]
-    private NitroxGameMode gameMode = serverDefaults.GameMode;
+    private SubnauticaGameMode gameMode = serverDefaults.GameMode;
 
     [ObservableProperty]
     private bool isEmbedded;
@@ -107,7 +107,7 @@ public partial class ServerEntry : ObservableObject
         return result.RefreshFromDirectory(saveDir) ? result : null;
     }
 
-    public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
+    public static ServerEntry? CreateNew(string saveDir, SubnauticaGameMode saveGameMode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveDir, nameof(saveDir));
 

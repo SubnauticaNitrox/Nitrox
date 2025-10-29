@@ -15,6 +15,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Platforms.OS.Shared;
@@ -308,7 +309,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
         string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);
-        return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
+        return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, SubnauticaGameMode.SURVIVAL);
     }
 
     public async Task DetectAndAttachRunningServersAsync()

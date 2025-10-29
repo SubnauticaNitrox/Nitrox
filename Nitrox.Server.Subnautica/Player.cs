@@ -30,7 +30,7 @@ namespace Nitrox.Server.Subnautica
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
-        public NitroxGameMode GameMode { get; set; }
+        public SubnauticaGameMode GameMode { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
@@ -44,7 +44,7 @@ namespace Nitrox.Server.Subnautica
         public PlayerEntity Entity { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
-                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,
+                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor, bool displaySurfaceWater)
         {

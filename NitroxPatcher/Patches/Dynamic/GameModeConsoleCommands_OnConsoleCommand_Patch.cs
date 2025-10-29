@@ -1,9 +1,11 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
+using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -16,12 +18,12 @@ public sealed class GameModeConsoleCommands_OnConsoleCommand_Patch : NitroxPatch
     public static readonly MethodInfo TARGET_METHOD_FREEDOM = Reflect.Method((GameModeConsoleCommands t) => t.OnConsoleCommand_freedom());
     public static readonly MethodInfo TARGET_METHOD_HARDCORE = Reflect.Method((GameModeConsoleCommands t) => t.OnConsoleCommand_hardcore());
 
-    public static bool PrefixSurvival() => BroadcastGameModeChange(NitroxGameMode.SURVIVAL);
-    public static bool PrefixCreative() => BroadcastGameModeChange(NitroxGameMode.CREATIVE);
-    public static bool PrefixFreedom() => BroadcastGameModeChange(NitroxGameMode.FREEDOM);
-    public static bool PrefixHardcore() => BroadcastGameModeChange(NitroxGameMode.HARDCORE);
+    public static bool PrefixSurvival() => BroadcastGameModeChange(SubnauticaGameMode.SURVIVAL);
+    public static bool PrefixCreative() => BroadcastGameModeChange(SubnauticaGameMode.CREATIVE);
+    public static bool PrefixFreedom() => BroadcastGameModeChange(SubnauticaGameMode.FREEDOM);
+    public static bool PrefixHardcore() => BroadcastGameModeChange(SubnauticaGameMode.HARDCORE);
 
-    private static bool BroadcastGameModeChange(NitroxGameMode gameMode)
+    private static bool BroadcastGameModeChange(SubnauticaGameMode gameMode)
     {
         Resolve<IPacketSender>().Send(new ServerCommand($"gamemode {gameMode}"));
         return false;
