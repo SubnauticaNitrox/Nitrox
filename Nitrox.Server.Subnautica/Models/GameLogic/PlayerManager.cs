@@ -1,0 +1,265 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Serialization;
+using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Server.Subnautica.Models.Communication;
+
+namespace Nitrox.Server.Subnautica.Models.GameLogic;
+
+// TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
+public partial class PlayerManager
+{
+    // https://regex101.com/r/eTWiEs/2/
+    [GeneratedRegex(@"^[a-zA-Z0-9._-]{3,25}$", RegexOptions.NonBacktracking)]
+    private static partial Regex PlayerNameRegex();
+
+    private readonly SubnauticaServerConfig serverConfig;
+
+    private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
+    private readonly ThreadSafeDictionary<ushort, Player> connectedPlayersById = [];
+    private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
+    private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
+    private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
+
+    private ushort currentPlayerId;
+
+    public event Action<int>? PlayerCountChanged;
+
+    public PlayerManager(List<Player> players, SubnauticaServerConfig serverConfig)
+    {
+        allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
+        currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
+
+        this.serverConfig = serverConfig;
+    }
+
+    public IEnumerable<Player> GetAllPlayers() => allPlayersByName.Values;
+
+    public IEnumerable<Player> ConnectedPlayers()
+    {
+        return assetsByConnection.Values
+                                 .Where(assetPackage => assetPackage.Player != null)
+                                 .Select(assetPackage => assetPackage.Player);
+    }
+
+    public List<Player> GetConnectedPlayers() => ConnectedPlayers().ToList();
+
+    public List<Player> GetConnectedPlayersExcept(Player excludePlayer)
+    {
+        return ConnectedPlayers().Where(player => player != excludePlayer).ToList();
+    }
+
+    public Player? GetPlayer(INitroxConnection connection)
+    {
+        return assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage) ? assetPackage.Player : null;
+    }
+
+    public PlayerContext? GetPlayerContext(string reservationKey)
+    {
+        return reservations.TryGetValue(reservationKey, out PlayerContext playerContext) ? playerContext : null;
+    }
+
+    public MultiplayerSessionReservation ReservePlayerContext(
+        INitroxConnection connection,
+        PlayerSettings playerSettings,
+        AuthenticationContext authenticationContext,
+        string correlationId)
+    {
+        if (Math.Min(reservedPlayerNames.Count - 1, 0) >= serverConfig.MaxConnections)
+        {
+            MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
+            return new MultiplayerSessionReservation(correlationId, rejectedState);
+        }
+
+        if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != serverConfig.ServerPassword))
+        {
+            MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
+            return new MultiplayerSessionReservation(correlationId, rejectedState);
+        }
+
+
+        if (!PlayerNameRegex().IsMatch(authenticationContext.Username))
+        {
+            MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
+            return new MultiplayerSessionReservation(correlationId, rejectedState);
+        }
+
+        string playerName = authenticationContext.Username;
+
+        allPlayersByName.TryGetValue(playerName, out Player player);
+        if (player?.IsPermaDeath == true && serverConfig.IsHardcore())
+        {
+            MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
+            return new MultiplayerSessionReservation(correlationId, rejectedState);
+        }
+
+        if (reservedPlayerNames.Contains(playerName))
+        {
+            MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED;
+            return new MultiplayerSessionReservation(correlationId, rejectedState);
+        }
+
+        assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
+        if (assetPackage == null)
+        {
+            assetPackage = new ConnectionAssets();
+            assetsByConnection.Add(connection, assetPackage);
+            reservedPlayerNames.Add(playerName);
+        }
+
+        bool hasSeenPlayerBefore = player != null;
+        ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
+        NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
+        NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
+        IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
+        PlayerAnimation animation = new(AnimChangeType.UNDERWATER, AnimChangeState.ON);
+
+        // TODO: At some point, store the muted state of a player
+        PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);
+        string reservationKey = Guid.NewGuid().ToString();
+
+        reservations.Add(reservationKey, playerContext);
+        assetPackage.ReservationKey = reservationKey;
+
+        return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
+    }
+
+    public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+    {
+        PlayerContext playerContext = reservations[reservationKey];
+        Validate.NotNull(playerContext);
+        ConnectionAssets assetPackage = assetsByConnection[connection];
+        Validate.NotNull(assetPackage);
+
+        wasBrandNewPlayer = playerContext.WasBrandNewPlayer;
+
+        if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out Player player))
+        {
+            player = new Player(playerContext.PlayerId,
+                playerContext.PlayerName,
+                false,
+                playerContext,
+                connection,
+                NitroxVector3.Zero,
+                NitroxQuaternion.Identity,
+                playerContext.PlayerNitroxId,
+                Optional.Empty,
+                serverConfig.DefaultPlayerPerm,
+                new(serverConfig.DefaultOxygenValue, serverConfig.DefaultMaxOxygenValue, serverConfig.DefaultHealthValue, serverConfig.DefaultHungerValue, serverConfig.DefaultThirstValue, serverConfig.DefaultInfectionValue),
+                serverConfig.GameMode,
+                [],
+                [],
+                new Dictionary<string, NitroxId>(),
+                new Dictionary<string, float>(),
+                new Dictionary<string, PingInstancePreference>(),
+                [],
+                false,
+                true
+            );
+            allPlayersByName[playerContext.PlayerName] = player;
+        }
+
+        connectedPlayersById.Add(playerContext.PlayerId, player);
+
+        // TODO: make a ConnectedPlayer wrapper so this is not stateful
+        player.PlayerContext = playerContext;
+        player.Connection = connection;
+
+        // reconnecting players need to have their cell visibility refreshed
+        player.ClearVisibleCells();
+
+        assetPackage.Player = player;
+        assetPackage.ReservationKey = null;
+        reservations.Remove(reservationKey);
+
+        PlayerCountChanged?.Invoke(connectedPlayersById.Count);
+
+        return player;
+    }
+
+    public void PlayerDisconnected(INitroxConnection connection)
+    {
+        if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
+        {
+            return;
+        }
+
+        if (assetPackage.ReservationKey != null)
+        {
+            PlayerContext playerContext = reservations[assetPackage.ReservationKey];
+            reservedPlayerNames.Remove(playerContext.PlayerName);
+            reservations.Remove(assetPackage.ReservationKey);
+        }
+
+        if (assetPackage.Player != null)
+        {
+            Player player = assetPackage.Player;
+            reservedPlayerNames.Remove(player.Name);
+            connectedPlayersById.Remove(player.Id);
+            Log.Info($"{player.Name} left the game");
+        }
+
+        assetsByConnection.Remove(connection);
+
+        PlayerCountChanged?.Invoke(connectedPlayersById.Count);
+
+        if (!ConnectedPlayers().Any())
+        {
+            Server.Instance.PauseServer();
+            Server.Instance.Save();
+        }
+    }
+
+    public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
+    {
+        foundPlayer = null;
+        foreach (Player player in ConnectedPlayers())
+        {
+            if (player.Name == playerName)
+            {
+                foundPlayer = player;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool TryGetPlayerById(ushort playerId, out Player player)
+    {
+        return connectedPlayersById.TryGetValue(playerId, out player);
+    }
+
+    public void SendPacketToAllPlayers(Packet packet)
+    {
+        foreach (Player player in ConnectedPlayers())
+        {
+            player.SendPacket(packet);
+        }
+    }
+
+    public void SendPacketToOtherPlayers(Packet packet, Player sendingPlayer)
+    {
+        foreach (Player player in ConnectedPlayers())
+        {
+            if (player != sendingPlayer)
+            {
+                player.SendPacket(packet);
+            }
+        }
+    }
+
+    public void BroadcastPlayerJoined(Player player)
+    {
+        PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
+        SendPacketToOtherPlayers(playerJoinedPacket, player);
+    }
+}

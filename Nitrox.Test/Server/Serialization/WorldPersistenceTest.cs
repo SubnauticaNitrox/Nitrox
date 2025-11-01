@@ -1,24 +1,23 @@
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
-using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.Serialization.World;
-using Nitrox.Server.Subnautica;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
+using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
-namespace NitroxServer.Serialization;
+namespace Nitrox.Server.Subnautica.Models.Serialization;
 
 [TestClass]
 public class WorldPersistenceTest
 {
     private static readonly string tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
     private static PersistedWorldData worldData;
-    public static PersistedWorldData[] WorldsDataAfter { get; private set; }
+    public static PersistedWorldData[]? WorldsDataAfter { get; private set; }
     public static IServerSerializer[] ServerSerializers { get; private set; }
 
     [ClassInitialize]
@@ -498,7 +497,7 @@ public class DynamicWorldDataAfterAttribute : Attribute, ITestDataSource
 {
     public IEnumerable<object[]> GetData(MethodInfo methodInfo)
     {
-        return WorldPersistenceTest.WorldsDataAfter.Select((t, i) => new object[] { t, WorldPersistenceTest.ServerSerializers[i].GetType().Name });
+        return (WorldPersistenceTest.WorldsDataAfter ?? []).Select((t, i) => new object[] { t, WorldPersistenceTest.ServerSerializers[i].GetType().Name });
     }
 
     public string GetDisplayName(MethodInfo methodInfo, object[] data)

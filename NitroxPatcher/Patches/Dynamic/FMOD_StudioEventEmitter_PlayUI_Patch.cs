@@ -1,7 +1,7 @@
 using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.GameLogic.FMOD;
+using Nitrox.Model.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

@@ -1,8 +1,8 @@
 using System.Linq;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Nitrox;

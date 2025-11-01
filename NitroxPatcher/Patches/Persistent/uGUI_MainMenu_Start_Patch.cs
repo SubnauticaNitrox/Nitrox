@@ -2,12 +2,14 @@ using System;
 using System.Net;
 using System.Reflection;
 using HarmonyLib;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using NitroxPatcher.Patches.Dynamic;
 using UnityEngine;
 

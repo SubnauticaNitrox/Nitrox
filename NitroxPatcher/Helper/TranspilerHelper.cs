@@ -7,7 +7,7 @@ using System.Text;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 

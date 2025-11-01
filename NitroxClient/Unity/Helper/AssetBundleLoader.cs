@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.IO;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper;

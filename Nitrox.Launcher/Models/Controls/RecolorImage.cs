@@ -144,6 +144,7 @@ public sealed class RecolorImage : Control
     {
         if (Source is not null)
         {
+            stream.Position = 0;
             Source.Save(stream);
         }
     }

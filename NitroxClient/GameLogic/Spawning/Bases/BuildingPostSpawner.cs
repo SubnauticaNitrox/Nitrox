@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;

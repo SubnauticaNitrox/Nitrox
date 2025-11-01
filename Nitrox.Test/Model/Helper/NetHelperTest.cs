@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace NitroxModel.Helper;
+namespace Nitrox.Model.Helper;
 
 [TestClass]
 public class NetHelperTest

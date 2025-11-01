@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nitrox.Model.Core;
+using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Test;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Core;
-using NitroxModel.Packets.Processors.Abstract;
-using NitroxServer;
-using NitroxServer.Communication.Packets;
-using NitroxServer.Communication.Packets.Processors;
-using NitroxServer.Communication.Packets.Processors.Abstract;
 using Nitrox.Server.Subnautica;
+using Nitrox.Server.Subnautica.Models.Packets;
+using Nitrox.Server.Subnautica.Models.Packets.Processors;
+using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
-namespace NitroxModel.Packets.Processors
+namespace Nitrox.Model.Packets.Processors
 {
     [TestClass]
     public class PacketProcessorTest
@@ -66,8 +61,8 @@ namespace NitroxModel.Packets.Processors
         {
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                                                                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(serverDependencyRegistrar);
+            SubnauticaServerAutoFacRegistrar subnauticaServerDependencyRegistrar = new SubnauticaServerAutoFacRegistrar();
+            NitroxServiceLocator.InitializeDependencyContainer(subnauticaServerDependencyRegistrar);
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()

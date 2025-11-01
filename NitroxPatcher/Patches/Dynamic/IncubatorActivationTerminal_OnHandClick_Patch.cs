@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

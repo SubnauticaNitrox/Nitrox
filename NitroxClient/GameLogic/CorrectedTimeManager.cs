@@ -1,6 +1,6 @@
 using System;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
-using NitroxModel.Networking;
+using Nitrox.Model.Networking;
 
 namespace NitroxClient.GameLogic;
 

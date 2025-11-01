@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Utils;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.Models.HttpDelegatingHandlers;
 

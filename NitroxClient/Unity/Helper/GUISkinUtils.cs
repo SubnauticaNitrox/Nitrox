@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper

@@ -9,12 +9,13 @@ using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using UWE;
@@ -64,7 +65,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
             Log.ErrorOnce($"[{nameof(ConstructionAmountModified)}] Couldn't find a NitroxEntity on {constructable.name}");
             return;
         }
-        float amount = NitroxModel.Helper.Mathf.Clamp01(constructable.constructedAmount);
+        float amount = Nitrox.Model.Helper.Mathf.Clamp01(constructable.constructedAmount);
 
         // An object is destroyed when amount = 0 AND if we are destructing
         // so we don't need the broadcast if we are trying to construct with not enough resources (amount = 0)

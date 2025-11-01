@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxClient.Extensions;
 

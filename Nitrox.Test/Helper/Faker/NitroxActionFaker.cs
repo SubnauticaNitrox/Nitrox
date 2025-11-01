@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Nitrox.Test.Helper.Faker;
 
 public class NitroxActionFaker : NitroxFaker, INitroxFaker

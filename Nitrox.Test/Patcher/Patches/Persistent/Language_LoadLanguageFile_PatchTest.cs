@@ -1,5 +1,5 @@
 ﻿using LitJson;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace Nitrox.Test.Patcher.Patches.Persistent;
 
