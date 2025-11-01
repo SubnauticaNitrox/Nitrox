@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using Nitrox.Model.Discovery.InstallationFinders.Core;
-using static Nitrox.Model.Discovery.InstallationFinders.Core.GameFinderResult;
+using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
+using static Nitrox.Model.Platforms.Discovery.InstallationFinders.Core.GameFinderResult;
 
-namespace Nitrox.Model.Discovery.InstallationFinders;
+namespace Nitrox.Model.Platforms.Discovery.InstallationFinders;
 
 /// <summary>
 /// Trying to find install either in appdata or in C:. So for now we just check these 2 paths until we have a better way.

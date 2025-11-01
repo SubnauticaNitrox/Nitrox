@@ -41,5 +41,20 @@ public static class DictionaryExtensions
         dict.Add(key, value);
         return true;
     }
+
+    public static TValue GetValueOrDefault<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default)
+    {
+        if (dictionary == null)
+        {
+            throw new ArgumentNullException(nameof(dictionary));
+        }
+
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        return dictionary.TryGetValue(key, out TValue obj) ? obj : defaultValue;
+    }
 #endif
 }

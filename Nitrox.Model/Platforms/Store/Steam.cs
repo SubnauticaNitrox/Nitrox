@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Nitrox.Model.Discovery.Models;
 using Nitrox.Model.Helper;
+using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.OS.Windows;
 using Nitrox.Model.Platforms.Store.Exceptions;
@@ -20,7 +20,7 @@ public sealed class Steam : IGamePlatform
     public string Name => nameof(Steam);
     public Platform Platform => Platform.STEAM;
 
-    private string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
+    private static string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
 
     public bool OwnsGame(string gameRootPath) =>
         gameRootPath switch
@@ -31,7 +31,7 @@ public sealed class Steam : IGamePlatform
             _ => false
         };
 
-    public async Task<ProcessEx?> StartPlatformAsync()
+    private static async Task<ProcessEx?> StartPlatformAsync()
     {
         // If steam is already running, do not start it.
         ProcessEx steam = ProcessEx.GetFirstProcess(SteamProcessName);
@@ -100,7 +100,7 @@ public sealed class Steam : IGamePlatform
         return steam;
     }
 
-    public string? GetExeFile()
+    private static string? GetExeFile()
     {
         string steamExecutable = "";
 
@@ -133,7 +133,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
+    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
     {
         bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
         try
@@ -141,12 +141,12 @@ public sealed class Steam : IGamePlatform
             using ProcessEx steam = await StartPlatformAsync();
             if (steam == null)
             {
-                throw new GamePlatformException(this, "Platform is not running and could not be found.");
+                throw new GamePlatformException(GameLibraries.STEAM, "Platform is not running and could not be found.");
             }
         }
         catch (OperationCanceledException ex)
         {
-            throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+            throw new GamePlatformException(GameLibraries.STEAM, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
         if (bigPictureMode)
@@ -162,7 +162,7 @@ public sealed class Steam : IGamePlatform
         return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
     }
 
-    private async Task LaunchSteamBigPictureModeAsync()
+    private static async Task LaunchSteamBigPictureModeAsync()
     {
         string? steamExe = GetExeFile();
         if (steamExe == null)
@@ -206,7 +206,7 @@ public sealed class Steam : IGamePlatform
         {
             throw new FileNotFoundException("Steam was not found on your machine.");
         }
-        
+
         string steamPath = Path.GetDirectoryName(steamExe);
         if (steamPath == null)
         {
@@ -222,7 +222,7 @@ public sealed class Steam : IGamePlatform
                 // -silent prevents Steam from stealing focus from Big Picture mode
                 args = $"-silent {args}";
             }
-            
+
             return new()
             {
                 FileName = steamExe,
@@ -314,7 +314,7 @@ public sealed class Steam : IGamePlatform
         }
 
         return result;
-        
+
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)
         {

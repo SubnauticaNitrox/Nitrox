@@ -9,7 +9,7 @@ public class ResourceAssets
     public Dictionary<string, WorldEntityInfo> WorldEntitiesByClassId { get; init; } = new();
     public string LootDistributionsJson { get; init; } = "";
     public Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholdersGroupsByGroupClassId { get; init; } = new();
-    public Dictionary<string, string[]> RandomPossibilitiesByClassId { get; init; }
+    public Dictionary<string, string[]> RandomPossibilitiesByClassId { get; init; } = new();
     public RandomStartGenerator NitroxRandom { get; init; }
 
     public static void ValidateMembers(ResourceAssets resourceAssets)

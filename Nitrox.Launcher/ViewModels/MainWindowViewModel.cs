@@ -18,6 +18,7 @@ using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.Discovery;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -86,6 +87,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         {
             bool lightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = lightModeEnabled ? ThemeVariant.Light : ThemeVariant.Dark);
+            GameInstallationFinder.FindGameCached(GameInfo.Subnautica);
 
             if (!NitroxEnvironment.IsReleaseMode)
             {

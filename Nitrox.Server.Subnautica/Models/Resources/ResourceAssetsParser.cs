@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers.Abstract;
 
@@ -6,7 +8,7 @@ namespace Nitrox.Server.Subnautica.Models.Resources;
 
 public static class ResourceAssetsParser
 {
-    private static ResourceAssets resourceAssets;
+    private static ResourceAssets? resourceAssets;
 
     public static ResourceAssets Parse()
     {
@@ -34,15 +36,14 @@ public static class ResourceAssetsParser
 
     public static string FindDirectoryContainingResourceAssets()
     {
-        string subnauticaPath = NitroxUser.GamePath;
-        if (string.IsNullOrEmpty(subnauticaPath))
+        if (string.IsNullOrEmpty(NitroxUser.GamePath))
         {
-            throw new DirectoryNotFoundException("Could not locate Subnautica installation directory for resource parsing.");
+            throw new Exception($"{nameof(NitroxUser.GamePath)} was null or empty. Be sure {nameof(GameInstallationFinder.FindGameCached)} was executed.");
         }
 
-        if (File.Exists(Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder, "resources.assets")))
+        if (File.Exists(Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "resources.assets")))
         {
-            return Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder);
+            return Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder);
         }
         if (File.Exists(Path.Combine("..", "resources.assets"))) //  SubServer => Subnautica/Subnautica_Data/SubServer
         {

@@ -1,7 +1,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Nitrox.Model.Discovery;
+namespace Nitrox.Model.Platforms.Discovery;
 
 public static class GameInstallationHelper
 {
