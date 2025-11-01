@@ -2,7 +2,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

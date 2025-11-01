@@ -1,5 +1,4 @@
-﻿using NitroxClient.GameLogic.ChatUI;
-using NitroxModel.Core;
+using NitroxClient.GameLogic.ChatUI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,14 +17,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void Awake()
         {
-            playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+            playerChatManager = PlayerChatManager.Instance;
             chatSize = transform.parent.parent.GetComponent<RectTransform>().sizeDelta;
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             screenRes.y = (screenRes.x / Screen.width) * Screen.height;
-            offset = GetMouseWorldPosition() - (Vector2)playerChatManager.PlayerChaTransform.localPosition;
+            offset = GetMouseWorldPosition() - (Vector2)playerChatManager.PlayerChatTransform.localPosition;
             screenBorder = new Vector4(-(screenRes.x - chatSize.x) / 2f, (screenRes.x - chatSize.x) / 2f, -(screenRes.y - chatSize.y) / 2f, (screenRes.y - chatSize.y) / 2f);
 
             drag = true;
@@ -43,7 +42,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (drag)
             {
-                playerChatManager.PlayerChaTransform.localPosition = GetChatPosition();
+                playerChatManager.PlayerChatTransform.localPosition = GetChatPosition();
             }
         }
 

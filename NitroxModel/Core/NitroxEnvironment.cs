@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace NitroxModel.Helper;
 
@@ -10,6 +12,8 @@ namespace NitroxModel.Helper;
 public static class NitroxEnvironment
 {
     private static bool hasSet;
+
+    private static string[]? commandLineArgs;
     public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
     public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -52,20 +56,23 @@ public static class NitroxEnvironment
         }
     }
 
+    public static int GameMinimumVersion
+    {
+        get
+        {
+            if (!int.TryParse(Assembly.GetExecutingAssembly().GetMetaData(nameof(GameMinimumVersion)), out int result))
+            {
+                throw new Exception("Failed to extract compatible game version number from embedded metadata");
+            }
+            return result;
+        }
+    }
+
     public static string GitHash => Assembly.GetExecutingAssembly().GetMetaData("GitHash") ?? "";
 
     public static Types Type { get; private set; } = Types.NORMAL;
     public static bool IsTesting => Type == Types.TESTING;
     public static bool IsNormal => Type == Types.NORMAL;
-
-    public static int CurrentProcessId
-    {
-        get
-        {
-            using Process process = Process.GetCurrentProcess();
-            return process.Id;
-        }
-    }
 
     public static bool IsReleaseMode
     {
@@ -76,6 +83,28 @@ public static class NitroxEnvironment
 #else
             return false;
 #endif
+        }
+    }
+
+    /// <summary>
+    ///     Gets the command line arguments as passed to the program on start.
+    /// </summary>
+    public static string[] CommandLineArgs
+    {
+        get
+        {
+            if (commandLineArgs != null)
+            {
+                return commandLineArgs;
+            }
+
+            IEnumerable<string> args = Environment.GetCommandLineArgs().Skip(1);
+            // Windows removes the ' character around an arg but other OSes do not.
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                args = args.Select(p => p.Trim('\''));
+            }
+            return commandLineArgs ??= args.ToArray();
         }
     }
 

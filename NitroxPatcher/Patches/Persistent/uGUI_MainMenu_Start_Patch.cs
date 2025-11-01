@@ -1,17 +1,15 @@
-﻿#if DEBUG
 using System;
 using System.Net;
-using System.Numerics;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxModel;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxPatcher.Patches.Dynamic;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Persistent;
 
@@ -20,19 +18,27 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
 {
     private static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((uGUI_MainMenu t) => t.Start()));
 
+#if DEBUG
     private static bool applied;
     private static string playerName;
+#endif
 
     public static void Postfix()
     {
+        if (EndCreditsManager_OnLateUpdate_Patch.EndCreditsTriggered)
+        {
+            SpawnThankDialog();
+        }
+
+#if DEBUG
         if (applied)
         {
             return;
         }
         applied = true;
 
-        string[] args = Environment.GetCommandLineArgs();
-        Log.Info($"CommandLineArgs: {string.Join(" ", args)}");
+        string[] args = NitroxEnvironment.CommandLineArgs;
+        Log.Info($"CommandLineArgs: '{string.Join(" ", args)}'");
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) && args.Length > i + 1)
@@ -42,8 +48,29 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
                 _ = JoinServerBackend.StartDetachedMultiplayerClientAsync(IPAddress.Loopback, 11000, SessionConnectionStateChangedHandler);
             }
         }
+#endif
     }
 
+    public static void SpawnThankDialog()
+    {
+        uGUI_MainMenu mainMenu = uGUI_MainMenu.main;
+        // Hide main menu
+        mainMenu.ShowPrimaryOptions(false);
+
+        // Move dialog to a place where it's visible
+        GameObject dialogObject = mainMenu.transform.Find("Panel/Options/Dialog").gameObject;
+        dialogObject.transform.SetParent(mainMenu.transform, false);
+
+        uGUI_Dialog dialog = dialogObject.GetComponent<uGUI_Dialog>();
+
+        // Show our custom dialog
+        dialog.Show(Language.main.Get("Nitrox_ThankForPlaying"), (_) =>
+        {
+            Application.Quit();
+        }, [Language.main.Get("Nitrox_OK")]);
+    }
+
+#if DEBUG
     private static void SessionConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
     {
         switch (state.CurrentStage)
@@ -75,5 +102,5 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
                 break;
         }
     }
-}
 #endif
+}

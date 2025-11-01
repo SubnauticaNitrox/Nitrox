@@ -17,6 +17,8 @@ public class Terrain
     private readonly HashSet<AbsoluteEntityCell> visibleCells = [];
     private readonly List<AbsoluteEntityCell> addedCells = [];
     private readonly List<AbsoluteEntityCell> removedCells = [];
+    // We use a tuple rather than AbsoluteEntityCell for lightweight fetching by IsCellFullySpawned
+    private readonly HashSet<(Int3, Int3, int)> fullySpawnedCells = [];
 
     private bool cellsPendingSync;
     private float bufferedTime = 0f;
@@ -34,6 +36,7 @@ public class Terrain
 
         if (!visibleCells.Contains(cell))
         {
+            removedCells.Remove(cell);
             visibleCells.Add(cell);
             addedCells.Add(cell);
             cellsPendingSync = true;
@@ -49,7 +52,21 @@ public class Terrain
             visibleCells.Remove(cell);
             removedCells.Add(cell);
             cellsPendingSync = true;
+            fullySpawnedCells.Remove((batchId, cellId, level));
         }
+    }
+
+    public void AddFullySpawnedCell(AbsoluteEntityCell cell)
+    {
+        if (visibleCells.Contains(cell))
+        {
+            fullySpawnedCells.Add((cell.BatchId.ToUnity(), cell.CellId.ToUnity(), cell.Level));
+        }
+    }
+
+    public bool IsCellFullySpawned(Int3 batchId, Int3 cellId, int level)
+    {
+        return fullySpawnedCells.Contains((batchId, cellId, level));
     }
 
     public void UpdateVisibility()
@@ -59,7 +76,7 @@ public class Terrain
         {
             if (cellsPendingSync)
             {
-                CellVisibilityChanged cellsChanged = new(multiplayerSession.Reservation.PlayerId, addedCells.ToArray(), removedCells.ToArray());
+                CellVisibilityChanged cellsChanged = new(multiplayerSession.Reservation.PlayerId, addedCells, removedCells);
                 packetSender.Send(cellsChanged);
 
                 addedCells.Clear();
@@ -85,7 +102,16 @@ public class Terrain
         streamerV2.lowDetailOctreesStreamer.UpdateCenter(streamerV2.streamingCenter);
         streamerV2.clipmapStreamer.UpdateCenter(streamerV2.streamingCenter);
 
-        yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
+        yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
         Player.main.cinematicModeActive = false;
+    }
+
+    public static IEnumerator SafeWaitForWorldLoad()
+    {
+        yield return WaitForWorldLoad().OnYieldError(e =>
+        {
+            Player.main.cinematicModeActive = false;
+            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
+        });
     }
 }

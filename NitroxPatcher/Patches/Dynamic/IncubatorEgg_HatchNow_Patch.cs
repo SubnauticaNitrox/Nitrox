@@ -4,7 +4,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 

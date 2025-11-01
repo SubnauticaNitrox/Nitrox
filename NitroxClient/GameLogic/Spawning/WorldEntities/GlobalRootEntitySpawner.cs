@@ -2,7 +2,6 @@ using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -31,7 +30,7 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         {
             return false;
         }
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         SetupObject(entity, gameObject);
 
         result.Set(gameObject);
@@ -55,7 +54,7 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
             // WaterParks have a child named "items_root" where the fish are put
             if (parentTransform.TryGetComponent(out WaterPark waterPark))
             {
-                SetupObjectInWaterPark(gameObject, waterPark);
+                SetupObjectInWaterPark(gameObject, largeWorldEntity, waterPark);
 
                 // TODO: When metadata is reworked (it'll be possible to give different metadatas to the same entity)
                 // this will no longer be needed because the entity metadata will set this to false accordingly
@@ -79,8 +78,12 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         }
     }
 
-    public static void SetupObjectInWaterPark(GameObject gameObject, WaterPark waterPark)
+    public static void SetupObjectInWaterPark(GameObject gameObject, LargeWorldEntity largeWorldEntity, WaterPark waterPark)
     {
+        // Fishes in water parks are GlobalRootEntities on server-side but client-side needs them at a regular cell level (not GlobalRoot)
+        // initialCellLevel refers to the prefab's cell level which is the value we'll use
+        largeWorldEntity.cellLevel = largeWorldEntity.initialCellLevel;
+
         gameObject.transform.SetParent(waterPark.itemsRoot, false);
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {

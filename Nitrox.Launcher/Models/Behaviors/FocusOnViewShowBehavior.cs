@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Avalonia.Xaml.Interactivity;
 using CommunityToolkit.Mvvm.Messaging;
 
@@ -11,7 +12,11 @@ public class FocusOnViewShowBehavior : Behavior<Control>
 {
     protected override void OnAttached()
     {
-        WeakReferenceMessenger.Default.Register<ShowViewMessage>(this, static (obj, _) => (obj as FocusOnViewShowBehavior)?.Focus());
+        WeakReferenceMessenger.Default.Register<ShowViewMessage>(this, static (obj, _) =>
+        {
+            // Need to queue this work on UI thread as calls via message originate from a different thread.
+            Dispatcher.UIThread.Invoke(() => (obj as FocusOnViewShowBehavior)?.Focus());
+        });
         base.OnAttached();
     }
 

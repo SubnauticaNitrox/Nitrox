@@ -11,17 +11,20 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable, DataContract]
 [ProtoInclude(50, typeof(BuildEntity))]
-[ProtoInclude(51, typeof(EscapePodWorldEntity))]
+[ProtoInclude(51, typeof(EscapePodEntity))]
 [ProtoInclude(52, typeof(InteriorPieceEntity))]
 [ProtoInclude(53, typeof(MapRoomEntity))]
 [ProtoInclude(54, typeof(ModuleEntity))]
 [ProtoInclude(55, typeof(MoonpoolEntity))]
 [ProtoInclude(56, typeof(PlanterEntity))]
-[ProtoInclude(57, typeof(PlayerWorldEntity))]
-[ProtoInclude(58, typeof(VehicleWorldEntity))]
+[ProtoInclude(57, typeof(PlayerEntity))]
+[ProtoInclude(58, typeof(VehicleEntity))]
 [ProtoInclude(59, typeof(RadiationLeakEntity))]
 public class GlobalRootEntity : WorldEntity
 {
+    [IgnoreDataMember]
+    public const int GLOBAL_ROOT_LEVEL = 100;
+
     [IgnoreConstructor]
     protected GlobalRootEntity()
     {

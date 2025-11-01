@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
@@ -123,7 +122,7 @@ public class MoonpoolManager : MonoBehaviour
     {
         foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
-            VehicleWorldEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleWorldEntity>().FirstOrFallback(null);
+            VehicleEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleEntity>().FirstOrFallback(null);
             if (moonpoolVehicleEntity != null)
             {
                 yield return entities.SpawnEntityAsync(moonpoolVehicleEntity);

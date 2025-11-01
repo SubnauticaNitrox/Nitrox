@@ -22,6 +22,8 @@ public class EntityData
         // children to their respective parent entities.
         Dictionary<NitroxId, Entity> entitiesById = Entities.ToDictionary(entity => entity.Id);
 
+        bool brokenEntitiesFound = false;
+
         foreach (Entity entity in Entities)
         {
             if (entity is WorldEntity we)
@@ -41,24 +43,34 @@ public class EntityData
                     Log.Error("Found WorldEntity with NaN or infinite rotation. Resetting rotation.");
                     we.Transform.LocalRotation = NitroxQuaternion.Identity;
                 }
+
+                if (we.Level == 100)
+                {
+                    Log.Error($"Found an entity with cell level 100. It will be hotfixed.\n{we}");
+                    we.Level = 0;
+                    brokenEntitiesFound = true;
+                }
             }
 
             // We will re-build the child hierarchy below and want to avoid duplicates.
             // TODO: Rework system to no longer persist children entities because they are duplicates.
             entity.ChildEntities.Clear();
+        }
 
-            if (entity.ParentId == null)
+        if (brokenEntitiesFound)
+        {
+            Log.Warn($"Please consider reporting the above issues on the Discord server.");
+        }
+
+        foreach (Entity entity in Entities)
+        {
+            if (entity.ParentId != null && entitiesById.TryGetValue(entity.ParentId, out Entity parentEntity))
             {
-                continue;
-            }
+                parentEntity.ChildEntities.Add(entity);
 
-            if (entitiesById.TryGetValue(entity.ParentId, out Entity parent))
-            {
-                parent.ChildEntities.Add(entity);
-
-                if (entity is WorldEntity we2 && parent is WorldEntity weParent)
+                if (entity is WorldEntity worldEntity && parentEntity is WorldEntity parentWorldEntity)
                 {
-                    we2.Transform.SetParent(weParent.Transform, false);
+                    worldEntity.Transform.SetParent(parentWorldEntity.Transform, false);
                 }
             }
         }

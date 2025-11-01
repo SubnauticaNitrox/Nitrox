@@ -75,6 +75,7 @@
     "Nitrox_ResyncSettings": "Επανσυγχρονισμός",
     "Nitrox_SafeBuilding": "Ασφαλές κτίριο",
     "Nitrox_SafeBuildingLog": "Ημερολόγιο ασφαλούς κτιρίου",
+    "Nitrox_ScannerRoomWarn": "Σημείωση: τα δωμάτια σάρωσης δεν λειτουργούν σωστά σε αυτήν την έκδοση του Nitrox. Θα αντιμετωπίσετε πολλά σφάλματα (bugs).",
     "Nitrox_ServerEntry_DeleteWarning": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν τον διακοσμιστή?",
     "Nitrox_ServerStopped": "Ο διακομιστής εχει σταματήσει",
     "Nitrox_Settings_Bandwidth": "Ρυθμίσεις εύρους ζώνης",

@@ -1,7 +1,7 @@
 using NitroxClient.GameLogic;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours;
+namespace NitroxClient.MonoBehaviours.Cyclops;
 
 /// <remarks>
 /// Ground detection adapted from <see href="https://github.com/Unity-Technologies/Standard-Assets-Characters/blob/master/Assets/_Standard%20Assets/Characters/Scripts/Physics/OpenCharacterController.cs"/>

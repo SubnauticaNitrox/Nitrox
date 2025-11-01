@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -12,7 +11,7 @@ public sealed partial class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicP
     {
         if (item != null)
         {
-            Resolve<ItemContainers>().BroadcastBatteryAdd(item.item.gameObject, __instance.gameObject, item.techType);
+            Resolve<ItemContainers>().BroadcastBatteryAdd(item.item.gameObject, __instance, item.techType);
         }
     }
 }

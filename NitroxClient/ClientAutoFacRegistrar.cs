@@ -8,7 +8,6 @@ using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.InitialSync.Abstract;
@@ -95,7 +94,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();

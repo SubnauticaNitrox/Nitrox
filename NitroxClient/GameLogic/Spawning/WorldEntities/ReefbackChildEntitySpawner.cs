@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -29,7 +28,7 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(reefbackChildEntity, out ReefbackLife parentReefbackLife))
         {
             yield break;
@@ -57,7 +56,7 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
             return true;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         SetupObject(reefbackChildEntity, gameObject, parentReefbackLife);
 
         result.Set(gameObject);
@@ -82,8 +81,8 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
 
         transform.localPosition = entity.Transform.LocalPosition.ToUnity();
         transform.localRotation = entity.Transform.LocalRotation.ToUnity();
-        transform.localScale = entity.Transform.LocalScale.ToUnity();
-
+        // We don't set the localScale because it is already correct from the prefab but the server doesn't know about it (which doesn't matter)
+        
         // Positioning from ReefbackLife.SpawnPlants and ReefbackLife.SpawnCreatures
         switch (entity.Type)
         {

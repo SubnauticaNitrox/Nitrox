@@ -8,7 +8,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -82,10 +81,12 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
 
     private static void SendFootstepPacket(FMODAsset asset)
     {
-        if (!Resolve<LocalPlayer>().PlayerId.HasValue)
+        ushort? playerId = Resolve<LocalPlayer>().PlayerId;
+        if (!playerId.HasValue)
         {
             return;
         }
+
         FootstepPacket.StepSounds assetIndex;
         switch (asset.path)
         {
@@ -101,7 +102,8 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
             default:
                 return;
         }
-        FootstepPacket footstepPacket = new(Resolve<LocalPlayer>().PlayerId.Value, assetIndex);
+
+        FootstepPacket footstepPacket = new(playerId.Value, assetIndex);
         Resolve<IPacketSender>().Send(footstepPacket);
     }
 }

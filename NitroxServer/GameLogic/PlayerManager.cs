@@ -6,6 +6,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.GameLogic.PlayerAnimation;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
@@ -15,14 +16,18 @@ using NitroxServer.Communication;
 namespace NitroxServer.GameLogic;
 
 // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
-public class PlayerManager
+public partial class PlayerManager
 {
+    // https://regex101.com/r/eTWiEs/2/
+    [GeneratedRegex(@"^[a-zA-Z0-9._-]{3,25}$", RegexOptions.NonBacktracking)]
+    private static partial Regex PlayerNameRegex();
+
     private readonly SubnauticaServerConfig serverConfig;
 
     private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
     private readonly ThreadSafeDictionary<ushort, Player> connectedPlayersById = [];
-    private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = new();
-    private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
+    private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
+    private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
     private ushort currentPlayerId;
@@ -69,7 +74,7 @@ public class PlayerManager
         AuthenticationContext authenticationContext,
         string correlationId)
     {
-        if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
+        if (Math.Min(reservedPlayerNames.Count - 1, 0) >= serverConfig.MaxConnections)
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -81,8 +86,8 @@ public class PlayerManager
             return new MultiplayerSessionReservation(correlationId, rejectedState);
         }
 
-        //https://regex101.com/r/eTWiEs/2/
-        if (!Regex.IsMatch(authenticationContext.Username, @"^[a-zA-Z0-9._-]{3,25}$"))
+
+        if (!PlayerNameRegex().IsMatch(authenticationContext.Username))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -116,9 +121,10 @@ public class PlayerManager
         NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
         NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
         IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
+        PlayerAnimation animation = new(AnimChangeType.UNDERWATER, AnimChangeState.ON);
 
         // TODO: At some point, store the muted state of a player
-        PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode);
+        PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);
         string reservationKey = Guid.NewGuid().ToString();
 
         reservations.Add(reservationKey, playerContext);
@@ -155,7 +161,9 @@ public class PlayerManager
                 new Dictionary<string, NitroxId>(),
                 new Dictionary<string, float>(),
                 new Dictionary<string, PingInstancePreference>(),
-                []
+                [],
+                false,
+                true
             );
             allPlayersByName[playerContext.PlayerName] = player;
         }
@@ -248,5 +256,11 @@ public class PlayerManager
                 player.SendPacket(packet);
             }
         }
+    }
+
+    public void BroadcastPlayerJoined(Player player)
+    {
+        PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
+        SendPacketToOtherPlayers(playerJoinedPacket, player);
     }
 }

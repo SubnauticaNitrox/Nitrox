@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Linq;
 using FMODUnity;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;
@@ -133,9 +132,9 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
 
     private void Update()
     {
-        if (GameInput.GetKeyDown(KeyCode.Tab))
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
         {
-            if (GameInput.GetKey(KeyCode.LeftShift))
+            if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
             {
                 SelectItemInDirection(-1, 0);
             }
@@ -144,7 +143,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
                 SelectItemInDirection(1, 0);
             }
         }
-        else if (selectedItem && GameInput.GetKeyDown(KeyCode.Return))
+        else if (selectedItem && UnityEngine.Input.GetKeyDown(KeyCode.Return))
         {
             OnConfirm();
         }

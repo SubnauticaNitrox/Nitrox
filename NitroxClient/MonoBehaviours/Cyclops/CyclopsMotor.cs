@@ -1,9 +1,8 @@
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours.Cyclops;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace NitroxClient.MonoBehaviours;
+namespace NitroxClient.MonoBehaviours.Cyclops;
 
 /// <summary>
 /// A replacement for <see cref="GroundMotor"/> while Local Player is in a Cyclops.

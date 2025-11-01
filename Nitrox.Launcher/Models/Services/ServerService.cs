@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -140,7 +139,8 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     public async Task<bool> ConfirmServerVersionAsync(ServerEntry server) =>
         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Title = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.Title = "Version Mismatch Detected";
+            model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
 

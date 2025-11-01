@@ -61,6 +61,12 @@ public class PersistedPlayerData
     [DataMember(Order = 16)]
     public SubnauticaPlayerPreferences PlayerPreferences { get; set; }
 
+    [DataMember(Order = 17)]
+    public bool InPrecursor { get; set; }
+
+    [DataMember(Order = 18)]
+    public bool DisplaySurfaceWater { get; set; }
+
     public Player ToPlayer()
     {
         return new Player(Id,
@@ -80,7 +86,9 @@ public class PersistedPlayerData
                           EquippedItems,
                           PersonalCompletedGoalsWithTimestamp,
                           PlayerPreferences.PingPreferences,
-                          PlayerPreferences.PinnedTechTypes);
+                          PlayerPreferences.PinnedTechTypes,
+                          InPrecursor,
+                          DisplaySurfaceWater);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)
@@ -101,7 +109,9 @@ public class PersistedPlayerData
             NitroxId = player.GameObjectId,
             IsPermaDeath = player.IsPermaDeath,
             PersonalCompletedGoalsWithTimestamp = new(player.PersonalCompletedGoalsWithTimestamp),
-            PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList())
+            PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList()),
+            InPrecursor = player.InPrecursor,
+            DisplaySurfaceWater = player.DisplaySurfaceWater
         };
     }
 }

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+namespace NitroxClient.MonoBehaviours.Gui.InGame;
 
 public static class TopRightWatermarkText
 {
@@ -23,10 +23,11 @@ public static class TopRightWatermarkText
         GameObject gameObject = Object.Instantiate(buildWatermark, buildWatermark.transform.parent);
         gameObject.name = name;
         Object.Destroy(gameObject.GetComponent<uGUI_BuildWatermark>());
+        Object.Destroy(gameObject.GetComponent<TextMeshProUGUI>()); // This forces TextMeshPro to redo text decorations which it would otherwise cache.
 
-        uGUI_TextFade textFade = gameObject.AddComponent<uGUI_TextFade>();
+        uGUI_TextFade textFade = gameObject.AddComponent<uGUI_TextFade>(); // This also adds a "TextMeshProUGUI" component.
         textFade.SetAlignment(TextAlignmentOptions.TopRight);
-        textFade.SetColor(Color.white.WithAlpha(0.5f));
+        textFade.SetColor(Color.white.WithAlpha(0.4f));
         textFade.SetText(text);
         textFade.FadeIn(1f, null);
 
@@ -36,10 +37,11 @@ public static class TopRightWatermarkText
     public static void ApplyChangesForInGame()
     {
         versionText.text.fontSize = 18;
-        loadingScreenWarning.FadeOut(1f, null);
+        versionText.GetComponent<CanvasGroup>().alpha = 0.2f; // TextMeshPro alpha stops working when in-game so we use canvas alpha.
         if (XRSettings.enabled)
         {
             versionText.FadeOut(1f, null);
         }
+        loadingScreenWarning.FadeOut(1f, () => Object.Destroy(loadingScreenWarning.gameObject));
     }
 }

@@ -5,7 +5,6 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -117,6 +116,8 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
     public static InteriorPieceEntity From(IBaseModule module, EntityMetadataManager entityMetadataManager)
     {
         InteriorPieceEntity interiorPiece = InteriorPieceEntity.MakeEmpty();
+        interiorPiece.Level = (int)LargeWorldEntity.CellLevel.Global;
+
         GameObject gameObject = (module as Component).gameObject;
         if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
         {

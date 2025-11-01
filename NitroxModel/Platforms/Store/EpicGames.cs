@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using NitroxModel.Discovery.Models;
@@ -38,7 +38,7 @@ public sealed class EpicGames : IGamePlatform
                 pathToGameExe,
                 [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
-                $"-EpicPortal {launchArguments}")
+                $"-EpicPortal -epicuserid=0 {launchArguments}")
         );
     }
 }

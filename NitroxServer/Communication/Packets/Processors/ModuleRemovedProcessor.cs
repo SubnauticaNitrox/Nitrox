@@ -1,5 +1,5 @@
-using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -31,6 +31,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (entity.Value is InstalledModuleEntity installedModule)
             {
+                // packet.NewParentId is actually the old container, so when the old equipment grid wasn't the player equipment,
+                // this entity will fail to spawn for other players because it can't find the ItemsContainer component.
+                // This is usually OK, but still weird and should probably be changed.
                 InventoryItemEntity inventoryEntity = new(installedModule.Id, installedModule.ClassId, installedModule.TechType, installedModule.Metadata, packet.NewParentId, installedModule.ChildEntities);
 
                 // Convert the world entity into an inventory item

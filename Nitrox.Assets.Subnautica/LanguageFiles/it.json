@@ -75,6 +75,7 @@
     "Nitrox_ResyncSettings": "Risincronizzazione",
     "Nitrox_SafeBuilding": "Costruzione Sicura",
     "Nitrox_SafeBuildingLog": "Registro Costruzione Sicura",
+    "Nitrox_ScannerRoomWarn": "Nota: le stanze scanner non funzionano correttamente in questa versione di nitrox. Aspettati molti bug.",
     "Nitrox_ServerEntry_DeleteWarning": "Sei sicuro di voler eliminare questo server?",
     "Nitrox_ServerStopped": "Il server si è arrestato",
     "Nitrox_Settings_Bandwidth": "Impostazioni Banda",

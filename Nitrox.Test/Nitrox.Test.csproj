@@ -10,26 +10,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.6.3" />
-        <PackageReference Include="CompareNETObjects" Version="4.83.0" />
-        <PackageReference Include="coverlet.collector" Version="6.0.4">
+        <PackageReference Include="Bogus" />
+        <PackageReference Include="CompareNETObjects" />
+        <PackageReference Include="coverlet.collector">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FluentAssertions" Version="[7.2.0]" />
-        <PackageReference Include="FluentAssertions.Analyzers" Version="[0.34.1]">
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="FluentAssertions.Analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="MSTest" Version="3.8.3" />
-        <PackageReference Include="NSubstitute" Version="5.3.0" />
+        <PackageReference Include="MSTest" />
+        <PackageReference Include="NSubstitute" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
         <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
         <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
-        <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
+        <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" />
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 

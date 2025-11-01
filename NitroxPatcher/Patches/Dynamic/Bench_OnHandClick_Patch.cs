@@ -1,10 +1,9 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -47,7 +46,7 @@ public sealed partial class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
         {
             skipPrefix = true;
             bench.OnHandClick(context.GuiHand);
-            Resolve<LocalPlayer>().AnimationChange(AnimChangeType.BENCH, AnimChangeState.ON);
+            Resolve<LocalPlayer>().BroadcastBenchChanged(id, BenchChanged.BenchChangeState.SITTING_DOWN);
             skipPrefix = false;
         }
         else

@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -37,7 +36,7 @@ public class GeyserWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpa
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(geyserWorldEntity, gameObject, out Geyser geyser))
         {
             yield break;
@@ -60,7 +59,7 @@ public class GeyserWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpa
             return false;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(geyserWorldEntity, gameObject, out Geyser geyser))
         {
             return true;

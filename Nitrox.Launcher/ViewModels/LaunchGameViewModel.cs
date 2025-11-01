@@ -94,6 +94,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
     }
 
+    /// <summary>
+    ///     Prepares Subnautica to load Nitrox, then starts Subnautica.
+    /// </summary>
     [RelayCommand]
     private async Task StartMultiplayerAsync(string[]? args = null)
     {
@@ -222,7 +225,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         LauncherNotifier.Info("Starting game");
         string subnauticaPath = NitroxUser.GamePath;
-        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? Environment.GetCommandLineArgs())}";
+        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
         string subnauticaExe;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -232,18 +235,16 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         {
             subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
         }
-
         if (!File.Exists(subnauticaExe))
         {
             throw new FileNotFoundException("Unable to find Subnautica executable");
         }
 
-        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
-
         // Start game & gaming platform if needed.
+        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ProcessEx.ProcessExists(GameInfo.Subnautica.ExeName) && keyValueStore.GetIsMultipleGameInstancesAllowed()),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments)),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
@@ -256,9 +257,32 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
     }
 
+    private bool ShouldSkipSteam(string args)
+    {
+        if (App.InstantLaunch != null)
+        {
+            // Running through Steam is fine if single instance.
+            return App.InstantLaunch is { PlayerNames.Length: > 1 };
+        }
+        if (args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
+        {
+            if (keyValueStore.GetIsMultipleGameInstancesAllowed())
+            {
+                return true;
+            }
+        }
+        else if (args.Contains("-vrmode", StringComparison.OrdinalIgnoreCase))
+        {
+            // VR Mode. Can only work if NOT going through Steam as it will always add '-vrmode none' due to hard coded default Steam "launch option" args. See: https://steamdb.info/app/264710/config/
+            return true;
+        }
+
+        return false;
+    }
+
     private void UpdateGamePlatform()
     {
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>().Description;
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
     }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;
@@ -96,8 +95,8 @@ public class MainMenuServerButton : MonoBehaviour
     {
         uGUI_MainMenu.main.OnRightSideOpened(deleteCg.gameObject);
         uGUI_LegendBar.ClearButtons();
-        uGUI_LegendBar.ChangeButton(0, uGUI.FormatButton(GameInput.Button.UICancel, gamePadOnly: true), Language.main.GetFormat("Back"));
-        uGUI_LegendBar.ChangeButton(1, uGUI.FormatButton(GameInput.Button.UISubmit, gamePadOnly: true), Language.main.GetFormat("ItemSelectorSelect"));
+        uGUI_LegendBar.ChangeButton(0, GameInput.FormatButton(GameInput.Button.UICancel), Language.main.GetFormat("Back"));
+        uGUI_LegendBar.ChangeButton(1, GameInput.FormatButton(GameInput.Button.UISubmit), Language.main.GetFormat("ItemSelectorSelect"));
         StartCoroutine(loadButtonRef.ShiftAlpha(loadCg, 0.0f, loadButtonRef.animTime, loadButtonRef.alphaPower, false));
         StartCoroutine(loadButtonRef.ShiftAlpha(deleteCg, 1f, loadButtonRef.animTime, loadButtonRef.alphaPower, true, cancelDeleteButton));
         StartCoroutine(loadButtonRef.ShiftPos(loadCg, MainMenuLoadButton.target.left, MainMenuLoadButton.target.centre, loadButtonRef.animTime, loadButtonRef.posPower));

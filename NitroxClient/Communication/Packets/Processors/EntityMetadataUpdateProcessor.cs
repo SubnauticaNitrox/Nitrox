@@ -1,4 +1,5 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -11,18 +12,24 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class EntityMetadataUpdateProcessor : ClientPacketProcessor<EntityMetadataUpdate>
 {
+    private readonly Entities entities;
     private readonly EntityMetadataManager entityMetadataManager;
 
-    public EntityMetadataUpdateProcessor(EntityMetadataManager entityMetadataManager)
+    public EntityMetadataUpdateProcessor(Entities entities, EntityMetadataManager entityMetadataManager)
     {
+        this.entities = entities;
         this.entityMetadataManager = entityMetadataManager;
     }
 
     public override void Process(EntityMetadataUpdate update)
     {
-        if (!NitroxEntity.TryGetObjectFrom(update.Id, out GameObject gameObject))
+        if (entities.SpawningEntities)
         {
             entityMetadataManager.RegisterNewerMetadata(update.Id, update.NewValue);
+        }
+
+        if (!NitroxEntity.TryGetObjectFrom(update.Id, out GameObject gameObject))
+        {
             return;
         }
 

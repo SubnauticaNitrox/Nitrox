@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using NitroxPatcher.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

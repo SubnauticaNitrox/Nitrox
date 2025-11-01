@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours.Vehicles;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;

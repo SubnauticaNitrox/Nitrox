@@ -4,14 +4,14 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxPatcher.Helper;
 using NitroxPatcher.Patches.Persistent;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class CyclopsSonarDisplay_NewEntityOnSonar_Patch : NitroxPatch, IPersistentPatch
+public sealed partial class CyclopsSonarDisplay_NewEntityOnSonar_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarDisplay t) => t.NewEntityOnSonar(default));
 

@@ -83,6 +83,13 @@ public static class NitroxUser
                 }
             }
 
+            string? cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(cliDataPath) && Path.IsPathRooted(cliDataPath))
+            {
+                Directory.CreateDirectory(cliDataPath);
+                return appDataPath = cliDataPath;
+            }
+
             if (!Directory.Exists(applicationData))
             {
                 applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -91,6 +98,12 @@ public static class NitroxUser
             return appDataPath = Path.Combine(applicationData, "Nitrox");
         }
     }
+
+    public static string CrashLogsPath => Path.Combine(AppDataPath, "crashes");
+
+    public static string ScreenshotsPath => Path.Combine(AppDataPath, "screenshots");
+
+    public static string CachePath => Path.Combine(AppDataPath, "cache");
 
     /// <summary>
     ///     Tries to get the launcher path that was previously saved by other Nitrox code.
@@ -156,6 +169,17 @@ public static class NitroxUser
             if (!string.IsNullOrEmpty(gamePath))
             {
                 return gamePath;
+            }
+
+            string? cliGamePath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--game-path").FirstOrDefault();
+            if (Directory.Exists(cliGamePath) && Path.IsPathRooted(cliGamePath))
+            {
+                GamePlatform = GamePlatforms.GetPlatformByGameDir(cliGamePath);
+                return gamePath = cliGamePath;
+            }
+            if (cliGamePath != null)
+            {
+                throw new DirectoryNotFoundException($"Game directory not found at user-specified location: {cliGamePath}");
             }
 
             List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();

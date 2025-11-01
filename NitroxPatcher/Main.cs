@@ -1,15 +1,13 @@
 extern alias JB;
 global using NitroxModel.Logger;
-global using static NitroxClient.Helpers.NitroxEntityExtensions;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using JB::JetBrains.Annotations;
-using Microsoft.Win32;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.Logger;
+using NitroxPatcher.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher;
@@ -26,57 +24,60 @@ public static class Main
         string[] args = Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length - 1; i++)
         {
-            if (args[i].Equals("--nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
+            string path = (args[i], args[i + 1]) switch
             {
-                return Path.GetFullPath(args[i + 1]);
+                ("--nitrox", { } value) when Directory.Exists(value) => value,
+                _ => null
+            };
+            if (path is not null)
+            {
+                return Path.GetFullPath(path);
             }
         }
 
         // Get path from environment variable.
-        string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH", EnvironmentVariableTarget.Process);
+        string envPath = Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY, EnvironmentVariableTarget.Process);
         if (Directory.Exists(envPath))
         {
             return envPath;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // Get path from windows registry.
-            using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
-            if (nitroxRegKey == null)
-            {
-                return null;
-            }
-            string path = nitroxRegKey.GetValue("LauncherPath") as string;
-            return Directory.Exists(path) ? path : null;
-        }
         return null;
     });
 
     private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
+    private static bool initialized;
 
     /// <summary>
     ///     Entrypoint of Nitrox. Code in this method cannot use other dependencies (DLLs) without crashing
     ///     due to <see cref="AppDomain.AssemblyResolve" /> not being called.
-    ///     Use the <see cref="Init" /> method or later before using dependency code.
+    ///     Use the <see cref="InitWithDependencies" /> method or later before using dependency code.
     /// </summary>
     [UsedImplicitly]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Execute()
     {
+        if (initialized)
+        {
+            return;
+        }
+        initialized = true;
+
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-        if (!Directory.Exists(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH")))
+        Console.WriteLine("Checking if Nitrox should run...");
+        if (!Directory.Exists(Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY)))
         {
-            Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY, nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
         }
-        if (!Directory.Exists(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH")))
+        if (!Directory.Exists(Environment.GetEnvironmentVariable(NitroxUser.LAUNCHER_PATH_ENV_KEY)))
         {
             Console.WriteLine("Nitrox will not load because launcher path was not provided.");
             return;
         }
 
+        Console.WriteLine("Now initializing Nitrox...");
         InitWithDependencies();
     }
 
@@ -115,6 +116,23 @@ public static class Main
         };
 
         Log.Info($"Using Nitrox {NitroxEnvironment.VersionInfo} built on {NitroxEnvironment.BuildDate:F}");
+        Log.Info($"Game version: {Application.version}");
+        // Log if other mods are loaded
+        Task.Run(async () =>
+        {
+            if (SupportHelper.GetSummaryOfOtherMods() is { } otherModsSummary)
+            {
+                Log.Warn(otherModsSummary);
+                return;
+            }
+            // ... no other mods right now, we try again after a wait period.
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            otherModsSummary = SupportHelper.GetSummaryOfOtherMods();
+            if (otherModsSummary != null)
+            {
+                Log.Warn(otherModsSummary);
+            }
+        }).ContinueWithHandleError();
         try
         {
             Patcher.Initialize();
@@ -131,12 +149,16 @@ public static class Main
     /// <p/>
     /// Required to load the files from the Nitrox Launcher subfolder which would otherwise not be found.
     /// </summary>
-    private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+    private static Assembly? CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
     {
         string dllFileName = args.Name.Split(',')[0];
         if (!dllFileName.EndsWith(".dll"))
         {
             dllFileName += ".dll";
+        }
+        if (dllFileName.EndsWith(".resources.dll", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
         }
 
         // Load DLLs where Nitrox launcher is first, if not found, use Subnautica's DLLs.
@@ -144,7 +166,7 @@ public static class Main
         if (!File.Exists(dllPath))
         {
             Console.Write($"Did not find '{dllFileName}' at '{dllPath}'");
-            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
+            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, dllFileName);
             Console.WriteLine($", looking at {dllPath}");
         }
 

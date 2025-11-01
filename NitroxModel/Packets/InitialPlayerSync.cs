@@ -35,9 +35,10 @@ namespace NitroxModel.Packets
         public TimeData TimeData { get; }
         public bool IsFirstPlayer { get; }
         public Dictionary<NitroxId, int> BuildOperationIds { get; }
-
         public bool KeepInventoryOnDeath { get; }
         public SessionSettings SessionSettings { get; }
+        public bool InPrecursor { get; }
+        public bool DisplaySurfaceWater { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -62,7 +63,9 @@ namespace NitroxModel.Packets
             bool isFirstPlayer,
             Dictionary<NitroxId, int> buildOperationIds,
             bool keepInventoryOnDeath,
-            SessionSettings sessionSettings)
+            SessionSettings sessionSettings,
+            bool inPrecursor,
+            bool displaySurfaceWater)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -88,6 +91,8 @@ namespace NitroxModel.Packets
             BuildOperationIds = buildOperationIds;
             KeepInventoryOnDeath = keepInventoryOnDeath;
             SessionSettings = sessionSettings;
+            InPrecursor = inPrecursor;
+            DisplaySurfaceWater = displaySurfaceWater;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -115,7 +120,9 @@ namespace NitroxModel.Packets
             bool isFirstPlayer,
             Dictionary<NitroxId, int> buildOperationIds,
             bool keepInventoryOnDeath,
-            SessionSettings sessionSettings)
+            SessionSettings sessionSettings,
+            bool inPrecursor,
+            bool displaySurfaceWater)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -141,6 +148,8 @@ namespace NitroxModel.Packets
             BuildOperationIds = buildOperationIds;
             KeepInventoryOnDeath = keepInventoryOnDeath;
             SessionSettings = sessionSettings;
+            InPrecursor = inPrecursor;
+            DisplaySurfaceWater = displaySurfaceWater;
         }
     }
 }

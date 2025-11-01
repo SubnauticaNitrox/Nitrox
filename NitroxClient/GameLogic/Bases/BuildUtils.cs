@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic.Bases;
 
 public static class BuildUtils
 {
-    public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell baseCell = null, Base.Face? baseFace = null)
+    public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell? baseCell = null, Base.Face? baseFace = null)
     {
         // It is unimaginable to have a BaseDeconstructable that is not child of a BaseCell
         if (!baseCell && !baseDeconstructable.TryGetComponentInParent(out baseCell, true))
@@ -31,7 +31,7 @@ public static class BuildUtils
 
     public static BuildPieceIdentifier GetIdentifier(BaseDeconstructable baseDeconstructable, BaseCell baseCell, Base.Face? baseFace = null)
     {
-        return new()
+        return new BuildPieceIdentifier
         {
             Recipe = baseDeconstructable.recipe.ToDto(),
             BaseFace = baseFace?.ToDto() ?? baseDeconstructable.face?.ToDto(),
@@ -73,7 +73,7 @@ public static class BuildUtils
                 }
                 break;
             case BaseAddMapRoomGhost:
-                face = new(GetMapRoomFunctionalityCell(baseGhost), 0);
+                face = new Base.Face(GetMapRoomFunctionalityCell(baseGhost), 0);
                 return true;
         }
 
@@ -88,7 +88,7 @@ public static class BuildUtils
     /// <returns>
     /// Whether or not the id was successfully transferred
     /// </returns>
-    public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase, out GameObject moduleObject)
+    public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase, out GameObject? moduleObject)
     {
         // 1. Find the face of the target piece
         Base.Face? face = null;
@@ -114,7 +114,7 @@ public static class BuildUtils
         // If the ghost is under a BaseDeconstructable(Clone), it may have an associated module
         else if (IsBaseDeconstructable(constructableBase))
         {
-            face = new(constructableBase.moduleFace.Value.cell + baseGhost.targetBase.GetAnchor(), constructableBase.moduleFace.Value.direction);
+            face = new Base.Face(constructableBase.moduleFace.Value.cell + baseGhost.targetBase.GetAnchor(), constructableBase.moduleFace.Value.direction);
         }
         else
         {
@@ -138,7 +138,7 @@ public static class BuildUtils
 
                 case TechType.BaseMapRoom:
                     // In the case the ghost is under a BaseDeconstructable, this is a good way to identify a MapRoom
-                    face = new(GetMapRoomFunctionalityCell(baseGhost), 0);
+                    face = new Base.Face(GetMapRoomFunctionalityCell(baseGhost), 0);
                     isMapRoomGhost = true;
                     break;
 
@@ -165,14 +165,8 @@ public static class BuildUtils
             if (mapRoomFunctionality)
             {
                 // As MapRooms can be built as the first piece of a base, we need to make sure that they receive a new id if they're not in a base
-                if (constructableBase.GetComponentInParent<Base>(true))
-                {
-                    NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id);
-                }
-                else
-                {
-                    NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id.Increment());
-                }
+                NitroxId nitroxId = constructableBase.GetComponentInParent<Base>(true) ? id : id.Increment();
+                NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, nitroxId);
                 moduleObject = mapRoomFunctionality.gameObject;
                 return true;
             }
@@ -287,7 +281,6 @@ public static class BuildUtils
                 {
                     continue;
                 }
-                MonoBehaviour moduleMB = baseModule as MonoBehaviour;
                 AddChild(InteriorPieceEntitySpawner.From(baseModule, entityMetadataManager));
             }
             else if (transform.TryGetComponent(out Constructable constructable))
@@ -309,8 +302,22 @@ public static class BuildUtils
         return childEntities;
     }
 
-    public static Component AliveOrNull(this IBaseModule baseModule)
+    public static Component? AliveOrNull(this IBaseModule baseModule)
     {
         return (baseModule as Component).AliveOrNull();
+    }
+
+    public static void DeconstructionAllowed(NitroxId baseId, ref bool result, ref string reason)
+    {
+        if (BuildingHandler.Main.BasesCooldown.ContainsKey(baseId))
+        {
+            result = false;
+            reason = Language.main.Get("Nitrox_ErrorRecentBuildUpdate");
+        }
+        else if (BuildingHandler.Main.EnsureTracker(baseId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
+        {
+            result = false;
+            reason = Language.main.Get("Nitrox_ErrorDesyncDetected");
+        }
     }
 }

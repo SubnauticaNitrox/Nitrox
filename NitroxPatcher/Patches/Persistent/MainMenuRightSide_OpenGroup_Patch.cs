@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 

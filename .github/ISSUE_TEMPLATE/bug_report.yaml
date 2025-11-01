@@ -12,14 +12,22 @@ body:
   - type: dropdown
     id: nitrox_version
     attributes:
-      label: Are you on the latest version of Nitrox?
-      description: If not, you should try updating first.
+      label: Which version are you playing on?
+      description: If playing on older versions, you should try updating first.
       options:
-        - Yes, I'm on the latest release of Nitrox.
-        - Yes, I'm on the latest commit of the repo (only for experts).
-        - No, I need to download a newer version and try again.
+        - 1.8.0.0 (Latest release)
+        - 1.7.1.0
+        - Latest commit (Only for experts)
+        - Other
     validations:
       required: true
+  - type: input
+    id: nitrox_version_details
+    attributes:
+      label: Details about version
+      description: If you answered `Latest commit` or `Other`, please provide the commit hash or links to that version.
+    validations:
+      required: false
   - type: dropdown
     id: os_type
     attributes:
@@ -27,8 +35,8 @@ body:
       description: Please select your Operating System from the dropdown.
       options:
         - Windows
-        - Linux (currently not supported, don't file any reports if your are using this)
-        - MacOS (currently not supported, don't file any reports if your are using this)
+        - Linux
+        - MacOS (currently not distributed, don't file any reports if your are using this)
     validations:
       required: true
   - type: dropdown
@@ -39,7 +47,8 @@ body:
       options:
         - Steam
         - Epic
-        - MS-Store/Windows Store (currently not supported, don't file any reports if your are using this)
+        - Microsoft Store
+        - Discord
         - Other
     validations:
       required: true
@@ -64,7 +73,7 @@ body:
     attributes:
       label: Relevant log output
       description: |
-        Please upload your game logs if possible. The logs are located next to the launcher in a folder called "Nitrox Logs".
+        Please upload your game logs if possible. The logs are located in application data folder, accessible from inside the launcher (`Options` > `Open Logs folder` at the bottom of the page)
         Upload the most recent "game-XXXXXXXX.log" and if you hosted the server also "server-XXXXXXXX.log" to [Pastebin](https://pastebin.com/).
         After you created a paste for both files post their links into this box.
       placeholder: |

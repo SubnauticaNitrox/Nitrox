@@ -25,7 +25,7 @@ public class FMODStudioEventEmitterProcessor : ClientPacketProcessor<FMODStudioE
         {
             if (packet.Play)
             {
-                fmodEmitterController.PlayStudioEmitter(packet.AssetPath);
+                fmodEmitterController.PlayStudioEmitter(packet.AssetPath, emitterControllerObject.transform.position);
             }
             else
             {

@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Abstract;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -31,7 +30,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject))
         {
             yield break;
@@ -48,7 +47,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             return false;
         }
 
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject))
         {
             return true;
@@ -63,17 +62,26 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
 
     public static void AdditionalSpawningSteps(GameObject gameObject)
     {
-        if (gameObject.TryGetComponent(out PlaceTool placeTool))
+        if (!gameObject.TryGetComponent(out PlaceTool placeTool))
         {
-            if (gameObject.TryGetComponentInParent(out SubRoot subRoot))
-            {
-                SkyEnvironmentChanged.Send(gameObject, subRoot);
-            }
-            if (gameObject.TryGetComponent(out Rigidbody rigidbody))
-            {
-                UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, true, false);
-            }
-            placeTool.OnPlace();
+            return;
+        }
+
+        if (gameObject.TryGetComponentInParent(out SubRoot subRoot))
+        {
+            SkyEnvironmentChanged.Send(gameObject, subRoot);
+        }
+        if (gameObject.TryGetComponent(out Rigidbody rigidbody))
+        {
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, true, false);
+        }
+        placeTool.OnPlace();
+
+        // Placed tools in bases are GlobalRootEntities on server-side but client-side needs them at a regular cell level (not GlobalRoot)
+        // initialCellLevel refers to the prefab's cell level which is the value we'll use
+        if (gameObject.TryGetComponent(out LargeWorldEntity largeWorldEntity))
+        {
+            largeWorldEntity.cellLevel = largeWorldEntity.initialCellLevel;
         }
     }
 

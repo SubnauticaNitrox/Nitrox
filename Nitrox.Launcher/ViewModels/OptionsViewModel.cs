@@ -30,7 +30,16 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     private string launchArgs;
 
     [ObservableProperty]
+    private string programDataFolderDir;
+    
+    [ObservableProperty]
+    private string screenshotsFolderDir;
+    
+    [ObservableProperty]
     private string savesFolderDir;
+    
+    [ObservableProperty]
+    private string logsFolderDir;
 
     [ObservableProperty]
     private KnownGame selectedGame;
@@ -46,23 +55,21 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     
     [ObservableProperty]
     private bool isInReleaseMode;
-    
-    [ObservableProperty]
-    private string multipleInstancesTooltip;
 
     private static string DefaultLaunchArg => "-vrmode none";
+    private bool isResettingArgs;
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        await Task.Run(() =>
-        {
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
-            LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
-            AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
-            IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-        }, cancellationToken);
+        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        ProgramDataFolderDir = NitroxUser.AppDataPath;
+        ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
+        SavesFolderDir = keyValueStore.GetSavesFolderDir();
+        LogsFolderDir = NitroxModel.Logger.Log.LogDirectory;
+        LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+        AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
@@ -128,9 +135,11 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     [RelayCommand]
     private void ResetArguments(IInputElement? focusTargetAfterReset = null)
     {
+        isResettingArgs = true;
         LaunchArgs = DefaultLaunchArg;
-        ShowResetArgsBtn = false;
-        SetArgumentsCommand.NotifyCanExecuteChanged();
+        SetArguments();
+        isResettingArgs = false;
+
         focusTargetAfterReset?.Focus();
     }
 
@@ -145,18 +154,39 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
-        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg) && !isResettingArgs;
     }
 
     [RelayCommand]
-    private void OpenSavesFolder()
+    private void DisplaySteamOverlayNotification()
     {
-        Process.Start(new ProcessStartInfo
+        if (AllowMultipleGameInstances && SelectedGame.Platform == Platform.STEAM)
         {
-            FileName = SavesFolderDir,
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+            LauncherNotifier.Warning("Note: Enabling this option will disable Steam's in-game overlay. Disable this option to use Steam's overlay");
+        }
+    }
+
+    [RelayCommand]
+    private void OpenFolder(string? dir = null)
+    {
+        if (!Directory.Exists(dir))
+        {
+            LauncherNotifier.Error("Can't open. Directory does not exist.");
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = dir,
+                Verb = "open",
+                UseShellExecute = true
+            })?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            LauncherNotifier.Error($"Failed to open folder: {ex.Message}");
+        }
     }
     
     partial void OnLightModeEnabledChanged(bool value)

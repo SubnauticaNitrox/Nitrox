@@ -32,7 +32,6 @@
     "Nitrox_LostConnectionWarn": "Veza s poslužiteljem više ne postoji",
     "Nitrox_Multiplayer": "Multiplayer",
     "Nitrox_MultiplayerLoaded": "Multiplayer klijent učitan …",
-    "Nitrox_Mute": "Isključi zvuk igrača {PLAYER}",
     "Nitrox_MuteQuestion": "Isključiti zvuk igrača {PLAYER}?",
     "Nitrox_MutedPlayer": "Isključen zvuk igrača {PLAYER}",
     "Nitrox_OutOfDateClient": "Tvoja Nitrox instalacija je zastarjela. Poslužitelj: {serverVersion}, Tvoja: {localVersion}.",

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Core;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches;
 

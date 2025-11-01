@@ -1,9 +1,7 @@
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -11,12 +9,8 @@ namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata>
 {
-    private readonly FMODWhitelist fmodWhitelist;
-
-    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager, FMODWhitelist fmodWhitelist) : base(liveMixinManager)
-    {
-        this.fmodWhitelist = fmodWhitelist;
-    }
+    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager) : base(liveMixinManager)
+    { }
 
     public override void ProcessMetadata(GameObject gameObject, SeamothMetadata metadata)
     {
@@ -36,35 +30,24 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
         {
             SetLights(seamoth, metadata.LightsOn);
             SetHealth(seamoth.gameObject, metadata.Health);
+            SetInPrecursor(seamoth, metadata.InPrecursor);
             SetNameAndColors(subName, metadata.Name, metadata.Colors);
         }
     }
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
     {
+        ToggleLights toggleLights = seamoth.toggleLights;
+
+        if (lightsOn == toggleLights.GetLightsActive())
+        {
+            // Lights are already in the desired state, nothing to do.
+            return;
+        }
+
         using (FMODSystem.SuppressSendingSounds())
         {
-            ToggleLights toggleLights = seamoth.toggleLights;
-            FMODAsset soundAsset;
-
-            using (FMODSystem.SuppressSubnauticaSounds())
-            {
-                toggleLights.SetLightsActive(lightsOn);
-            }
-
-            if (lightsOn)
-            {
-                soundAsset = toggleLights.lightsOnSound ? toggleLights.lightsOnSound.asset : toggleLights.onSound;
-            }
-            else
-            {
-                soundAsset = toggleLights.lightsOffSound ? toggleLights.lightsOffSound.asset : toggleLights.offSound;
-            }
-
-            if (soundAsset && fmodWhitelist.TryGetSoundData(soundAsset.path, out SoundData soundData))
-            {
-                FMODEmitterController.PlayEventOneShot(soundAsset, soundData.Radius, toggleLights.transform.position);
-            }
+            seamoth.toggleLights.SetLightsActive(lightsOn);
         }
     }
 }

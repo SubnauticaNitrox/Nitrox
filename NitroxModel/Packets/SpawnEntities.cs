@@ -11,18 +11,23 @@ namespace NitroxModel.Packets
         public List<Entity> Entities { get; }
         public List<SimulatedEntity> Simulations { get; }
 
+        public List<AbsoluteEntityCell> SpawnedCells { get; }
+
         public bool ForceRespawn { get; }
 
-        public SpawnEntities(List<Entity> entities)
+        public SpawnEntities(List<Entity> entities, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn = false)
         {
             Entities = entities;
-            ForceRespawn = false;
+            Simulations = [];
+            SpawnedCells = spawnedCells;
+            ForceRespawn = forceRespawn;
         }
 
         public SpawnEntities(Entity entity, SimulatedEntity simulatedEntity = null, bool forceRespawn = false)
         {
             Entities = [entity];
             Simulations = [];
+            SpawnedCells = [];
             if (simulatedEntity != null)
             {
                 Simulations.Add(simulatedEntity);
@@ -32,10 +37,11 @@ namespace NitroxModel.Packets
         }
 
         // Constructor for serialization. 
-        public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulations, bool forceRespawn)
+        public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulations, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn)
         {
             Entities = entities;
             Simulations = simulations;
+            SpawnedCells = spawnedCells;
             ForceRespawn = forceRespawn;
         }
     }

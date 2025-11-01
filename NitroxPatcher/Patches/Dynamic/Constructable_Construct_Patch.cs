@@ -14,7 +14,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
@@ -101,9 +100,18 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
             return;
         }
 
+        ModifyConstructedAmount modifyConstructedAmount = new(entityId, amount);
+
+        // If we're done with that ghost we can remove the related throttled packet
+        if (amount == 0f)
+        {
+            Resolve<ThrottledPacketSender>().RemovePendingPackets(entityId);
+            Resolve<IPacketSender>().Send(modifyConstructedAmount);
+            return;
+        }
+
         // update as a normal module
-        Resolve<ThrottledPacketSender>().SendThrottled(new ModifyConstructedAmount(entityId, amount),
-            (packet) => { return packet.GhostId; }, 0.1f);
+        Resolve<ThrottledPacketSender>().SendThrottled(modifyConstructedAmount, (packet) => { return packet.GhostId; }, 0.1f);
     }
 
     public static IEnumerator BroadcastObjectBuilt(ConstructableBase constructableBase, NitroxId entityId)

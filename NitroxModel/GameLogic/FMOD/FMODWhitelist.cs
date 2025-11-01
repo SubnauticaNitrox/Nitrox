@@ -9,7 +9,7 @@ namespace NitroxModel.GameLogic.FMOD;
 
 public class FMODWhitelist
 {
-    private readonly HashSet<string> whitelistedPaths = new();
+    private readonly HashSet<string> whitelistedPaths = [];
     private readonly Dictionary<string, SoundData> soundsWhitelist = new();
 
     public static FMODWhitelist Load(GameInfo game)
@@ -19,7 +19,7 @@ public class FMODWhitelist
 
     private FMODWhitelist(GameInfo game)
     {
-        string filePath = Path.Combine(NitroxUser.AssetsPath, "Resources", $"SoundWhitelist_{game.Name}.csv");
+        string filePath = Path.Combine(NitroxUser.AssetsPath ?? string.Empty, "Resources", $"SoundWhitelist_{game.Name}.csv");
         string fileData = "";
         try
         {

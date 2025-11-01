@@ -1,6 +1,4 @@
-﻿using System;
-using NitroxModel.Core;
-using NitroxModel.Helper;
+﻿using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 

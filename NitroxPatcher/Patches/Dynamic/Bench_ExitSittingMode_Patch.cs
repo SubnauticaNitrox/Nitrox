@@ -1,10 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -15,7 +14,7 @@ public sealed partial class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicP
 
     public static void Prefix(ref bool __runOriginal)
     {
-        __runOriginal = !Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected;
+        __runOriginal = !PlayerChatManager.Instance.IsChatSelected && !DevConsole.instance.selected;
     }
 
     public static void Postfix(Bench __instance, bool __runOriginal)
@@ -30,14 +29,14 @@ public sealed partial class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicP
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
 
-            Resolve<LocalPlayer>().AnimationChange(AnimChangeType.BENCH, AnimChangeState.OFF);
-            __instance.StartCoroutine(ResetAnimationDelayed(__instance.standUpCinematicController.interpolationTimeOut));
+            Resolve<LocalPlayer>().BroadcastBenchChanged(id, BenchChanged.BenchChangeState.STANDING_UP);
+            __instance.StartCoroutine(ResetAnimationDelayed(id, __instance.standUpCinematicController.interpolationTimeOut));
         }
     }
 
-    private static IEnumerator ResetAnimationDelayed(float delay)
+    private static IEnumerator ResetAnimationDelayed(NitroxId benchId, float delay)
     {
         yield return new WaitForSeconds(delay);
-        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.BENCH, AnimChangeState.UNSET);
+        Resolve<LocalPlayer>().BroadcastBenchChanged(benchId, BenchChanged.BenchChangeState.UNSET);
     }
 }

@@ -75,6 +75,7 @@
     "Nitrox_ResyncSettings": "重新同步",
     "Nitrox_SafeBuilding": "安全建築",
     "Nitrox_SafeBuildingLog": "安全建築日誌",
+    "Nitrox_ScannerRoomWarn": "請注意：此版本的 Nitrox 掃描室無法正常運作。預計會出現許多 bug。",
     "Nitrox_ServerEntry_DeleteWarning": "您確實要刪除該伺服器嗎？",
     "Nitrox_ServerStopped": "伺服器已關閉",
     "Nitrox_Settings_Bandwidth": "頻寬設定",

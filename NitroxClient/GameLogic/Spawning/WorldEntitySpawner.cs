@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -31,24 +30,28 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
 
     protected override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        EntityCell cellRoot = EnsureCell(entity);
-        if (cellRoot == null)
+        bool foundParentCell = TryFindAwakeParentCell(entity, out EntityCell parentCell);
+        if (foundParentCell)
         {
-            // Error logging is done in EnsureCell
+            parentCell.EnsureRoot();
+        }
+        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
+
+        // No place to spawn the entity
+        if (!foundParentCell && !parent.HasValue)
+        {
             return null;
         }
-
-        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
         IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
 
         if (entitySpawner is IWorldEntitySyncSpawner syncSpawner &&
-            syncSpawner.SpawnSync(entity, parent, cellRoot, result))
+            syncSpawner.SpawnSync(entity, parent, parentCell, result))
         {
             return null;
         }
 
-        return entitySpawner.SpawnAsync(entity, parent, cellRoot, result);
+        return entitySpawner.SpawnAsync(entity, parent, parentCell, result);
     }
 
     protected override bool SpawnsOwnChildren(WorldEntity entity)
@@ -59,17 +62,39 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
 
     protected override bool SpawnSync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        EntityCell cellRoot = EnsureCell(entity);
-        if (cellRoot == null)
+        bool foundParentCell = TryFindAwakeParentCell(entity, out EntityCell parentCell);
+        if (foundParentCell)
         {
-            // Error logging is done in EnsureCell
+            parentCell.EnsureRoot();
+        }
+        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
+
+        // No place to spawn the entity
+        if (!foundParentCell && !parent.HasValue)
+        {
             return true;
         }
 
-        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
         IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
 
-        return entitySpawner is IWorldEntitySyncSpawner syncSpawner && syncSpawner.SpawnSync(entity, parent, cellRoot, result);
+        return entitySpawner is IWorldEntitySyncSpawner syncSpawner && syncSpawner.SpawnSync(entity, parent, parentCell, result);
+    }
+
+    public bool TryFindAwakeParentCell(WorldEntity entity, out EntityCell parentCell)
+    {
+        Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
+        Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
+
+        if (batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
+        {
+            parentCell = batchCells.Get(cellId, entity.Level);
+            // in both states, the cell is awake
+            return parentCell != null &&
+                   (parentCell.state == EntityCell.State.IsAwake || parentCell.state == EntityCell.State.QueuedForSleep);
+        }
+
+        parentCell = null;
+        return false;
     }
 
     public EntityCell EnsureCell(WorldEntity entity)

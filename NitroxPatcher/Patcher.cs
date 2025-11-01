@@ -10,7 +10,6 @@ using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
@@ -23,7 +22,7 @@ internal static class Patcher
     /// <summary>
     ///     Dependency Injection container used by NitroxPatcher only.
     /// </summary>
-    private static IContainer container;
+    private static IContainer? container;
 
     private static readonly Harmony harmony = new("com.nitroxmod.harmony");
     private static bool isApplied;
@@ -92,12 +91,13 @@ internal static class Patcher
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Initialize()
     {
-        Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
-
         if (container != null)
         {
             throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
+
+        Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
+
         Log.Info("Registering dependencies");
         container = CreatePatchingContainer();
         try

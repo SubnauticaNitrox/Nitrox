@@ -66,6 +66,7 @@ public sealed class Steam : IGamePlatform
 
         if (process is not { IsRunning: true })
         {
+            process?.Dispose();
             return null;
         }
 
@@ -133,7 +134,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool supportMultipleInstances)
+    public async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam)
     {
         try
         {
@@ -148,125 +149,113 @@ public sealed class Steam : IGamePlatform
             throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            if (supportMultipleInstances)
-            {
-                // Needed to start multiple SN instances, but note that Steam Overlay won't work on this instance
-                return ProcessEx.Start(
-                    pathToGameExe,
-                    [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
-                    Path.GetDirectoryName(pathToGameExe),
-                    launchArguments
-                );
-            }
-            return ProcessEx.From(new ProcessStartInfo
-            {
-                FileName = GetExeFile() ?? throw new FileNotFoundException("Steam was not found on your machine."),
-                Arguments = $"""-applaunch {steamAppId} --nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
-            });
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            string steamPath = Path.GetDirectoryName(GetExeFile());
-            if (steamPath == null)
-            {
-                throw new Exception("Steam was not found on your machine.");
-            }
-            return StartGameWithProton(steamPath, pathToGameExe, steamAppId, launchArguments);
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return ProcessEx.Start(
-                pathToGameExe,
-                [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
-                Path.GetDirectoryName(pathToGameExe),
-                launchArguments
-            );
-        }
-
-        throw new NotSupportedException("Your operating system is not supported by Nitrox");
+        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam));
     }
 
-    private static ProcessEx? StartGameWithProton(string steamPath, string pathToGameExe, int steamAppId, string launchArguments)
+    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam)
     {
-        string compatdataPath = "";
-        if (!string.IsNullOrEmpty(pathToGameExe))
+        if (steamExe == null)
         {
-            string[] pathComponents = pathToGameExe.Split(Path.DirectorySeparatorChar);
-            int steamAppsIndex = pathComponents.GetIndex("steamapps");
-            if (steamAppsIndex != -1)
+            throw new FileNotFoundException("Steam was not found on your machine.");
+        }
+        string steamPath = Path.GetDirectoryName(steamExe);
+        if (steamPath == null)
+        {
+            throw new Exception("Steam was not found on your machine.");
+        }
+        // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
+        if (!skipSteam)
+        {
+            return new()
             {
-                string steamAppsPath = string.Join(Path.DirectorySeparatorChar.ToString(), pathComponents, 0, steamAppsIndex + 1);
-                compatdataPath = Path.Combine(steamAppsPath, "compatdata", steamAppId.ToString());
-            }
+                FileName = steamExe,
+                Arguments = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}"
+            };
         }
 
-        string sniperappid = "1628350";
-        string sniperruntimepath = Path.Combine(GetLibraryPath(steamPath, sniperappid), "steamapps", "common", "SteamLinuxRuntime_sniper");
-
-        string protonPath = null;
-        string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
-        string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString()) ?? "proton_9";
-        bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
-        if (isValveProton)
+        // Start through game executable. This allows custom args so that VR mode can be on with Nitrox (Subnautica hard codes '-vrmode none' as default launch option and starting game through Steam from command line always uses default launch option).
+        // This way allows for multiple instances to run, but also stops some Steam integrations from working (e.g. Steam Input, Steam Overlay).
+        ProcessStartInfo result = new()
         {
-            int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
-            if (index != -1)
-            {
-                protonVersion = protonVersion[(index + "proton_".Length)..];
-            }
-            if (protonVersion == "experimental")
-            {
-                protonVersion = "-";
-            }
-
-            foreach (string path in GetAllLibraryPaths(steamPath))
-            {
-                foreach (string dir in Directory.EnumerateDirectories(Path.Combine(path, "steamapps", "common")))
-                {
-                    if (dir.Contains($"Proton {protonVersion}"))
-                    {
-                        protonPath = dir;
-                        break;
-                    }
-                }
-                if (protonPath != null)
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            protonPath = Path.Combine(protonRoot, protonVersion);
-        }
-        if (protonPath == null)
-        {
-            throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
-        }
-
-        ProcessStartInfo startInfo = new()
-        {
-            FileName = Path.Combine(sniperruntimepath, "_v2-entry-point"),
-            Arguments = $" --verb=run -- \"{Path.Combine(protonPath, "proton")}\" run \"{pathToGameExe}\" {launchArguments}",
-            WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
-            UseShellExecute = false,
-            Environment =
+            FileName = gameFilePath,
+            Arguments = args,
+            EnvironmentVariables =
             {
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
-                ["SteamAppID"] = steamAppId.ToString(),
-                ["STEAM_COMPAT_APP_ID"] = steamAppId.ToString(),
-                ["WINEPREFIX"] = compatdataPath,
-                ["STEAM_COMPAT_CLIENT_INSTALL_PATH"] = steamPath,
-                ["STEAM_COMPAT_DATA_PATH"] = compatdataPath,
+                ["SteamAppID"] = steamAppId.ToString()
             }
         };
-        return ProcessEx.From(startInfo);
 
+        // Start via Proton on Linux.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            string compatdataPath = "";
+            if (!string.IsNullOrEmpty(gameFilePath))
+            {
+                string[] pathComponents = gameFilePath.Split(Path.DirectorySeparatorChar);
+                int steamAppsIndex = pathComponents.GetIndex("steamapps");
+                if (steamAppsIndex != -1)
+                {
+                    string steamAppsPath = string.Join(Path.DirectorySeparatorChar.ToString(), pathComponents, 0, steamAppsIndex + 1);
+                    compatdataPath = Path.Combine(steamAppsPath, "compatdata", steamAppId.ToString());
+                }
+            }
+
+            string sniperAppId = "1628350";
+            string sniperRuntimePath = Path.Combine(GetLibraryPath(steamPath, sniperAppId), "steamapps", "common", "SteamLinuxRuntime_sniper");
+
+            string protonPath = null;
+            string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
+            string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString()) ?? "proton_9";
+            bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
+            if (isValveProton)
+            {
+                int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
+                if (index != -1)
+                {
+                    protonVersion = protonVersion[(index + "proton_".Length)..];
+                }
+                if (protonVersion == "experimental")
+                {
+                    protonVersion = "-";
+                }
+
+                foreach (string path in GetAllLibraryPaths(steamPath))
+                {
+                    foreach (string dir in Directory.EnumerateDirectories(Path.Combine(path, "steamapps", "common")))
+                    {
+                        if (dir.Contains($"Proton {protonVersion}"))
+                        {
+                            protonPath = dir;
+                            break;
+                        }
+                    }
+                    if (protonPath != null)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                protonPath = Path.Combine(protonRoot, protonVersion);
+            }
+            if (protonPath == null)
+            {
+                throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
+            }
+
+            result.FileName = Path.Combine(sniperRuntimePath, "_v2-entry-point");
+            result.Arguments = $" --verb=run -- \"{Path.Combine(protonPath, "proton")}\" run \"{gameFilePath}\" {args}";
+            result.EnvironmentVariables.Add("STEAM_COMPAT_APP_ID", steamAppId.ToString());
+            result.EnvironmentVariables.Add("WINEPREFIX", compatdataPath);
+            result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
+            result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
+        }
+
+        return result;
+        
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)
         {
@@ -355,7 +344,7 @@ public sealed class Steam : IGamePlatform
         {
             not null when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs"),
             not null when Path.GetDirectoryName(steamExePath) is { } steamPath => Path.Combine(steamPath, "logs"),
-            _ => ""
+            _ => throw new FileNotFoundException("Failed to find Steam console log file")
         };
         return File.GetLastWriteTime(Path.Combine(steamLogsPath, "console_log.txt"));
     }

@@ -10,6 +10,6 @@ public class ExosuitMetadataExtractor : EntityMetadataExtractor<Exosuit, Exosuit
         LiveMixin liveMixin = exosuit.liveMixin;
         SubName subName = exosuit.subName;
 
-        return new(liveMixin.health, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
+        return new(liveMixin.health, exosuit.precursorOutOfWater, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
     }
 }

@@ -3,7 +3,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

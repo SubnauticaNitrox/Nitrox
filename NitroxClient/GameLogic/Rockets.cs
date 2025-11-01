@@ -1,6 +1,5 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
@@ -42,7 +41,11 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            GameObject rocketObject = NitroxEntity.RequireObjectFrom(rocketId);
+            RocketLaunch(NitroxEntity.RequireObjectFrom(rocketId));
+        }
+
+        public void RocketLaunch(GameObject rocketObject)
+        {
             GameObject sphereCenter = rocketObject.FindChild("AtmosphereVolume");
             LaunchRocket launchRocket = rocketObject.RequireComponentInChildren<LaunchRocket>(true);
 

@@ -117,7 +117,7 @@ public class VirtualCyclops : MonoBehaviour
         foreach (Openable openable in Cyclops.GetComponentsInChildren<Openable>(true))
         {
             openable.blocked = false;
-            ReplicateOpening(openable, openable.isOpen);
+            ReplicateOpening(openable, openable.isOpen, openable.animTime);
             realOpenableByName.Add(openable.name, openable);
         }
     }
@@ -196,13 +196,13 @@ public class VirtualCyclops : MonoBehaviour
         }
     }
 
-    public void ReplicateOpening(Openable openable, bool openState)
+    public void ReplicateOpening(Openable openable, bool openState, float duration)
     {
         if (virtualOpenableByName.TryGetValue(openable.name, out Openable virtualOpenable))
         {
             using (PacketSuppressor<OpenableStateChanged>.Suppress())
             {
-                virtualOpenable.PlayOpenAnimation(openState, virtualOpenable.animTime);
+                virtualOpenable.PlayOpenAnimation(openState, duration);
             }
         }
     }

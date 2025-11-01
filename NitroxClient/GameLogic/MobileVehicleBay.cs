@@ -40,7 +40,7 @@ public class MobileVehicleBay
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
-        VehicleWorldEntity vehicleEntity = Vehicles.BuildVehicleWorldEntity(constructedObject, constructedObjectId, techType, constructorId);
+        VehicleEntity vehicleEntity = Vehicles.BuildVehicleEntity(constructedObject, constructedObjectId, techType, constructorId);
 
         packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
         // TODO: Fix remote players treating the SimulationOwnership change on the vehicle (they can't find it) even tho they're still in the

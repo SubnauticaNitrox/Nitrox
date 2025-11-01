@@ -142,19 +142,19 @@ public sealed class JoiningManager
             return playerManager.GetConnectedPlayers().Where(p => p != player).Select(p => p.PlayerContext);
         }
 
-        PlayerWorldEntity SetupNewPlayerEntity(Player player)
+        PlayerEntity SetupNewPlayerEntity(Player player)
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerWorldEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             world.EntityRegistry.AddOrUpdate(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
         }
 
-        PlayerWorldEntity RespawnExistingEntity(Player player)
+        PlayerEntity RespawnExistingEntity(Player player)
         {
-            if (world.EntityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerWorldEntity playerWorldEntity))
+            if (world.EntityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerEntity playerWorldEntity))
             {
                 return playerWorldEntity;
             }
@@ -163,7 +163,7 @@ public sealed class JoiningManager
         }
 
         Player player = playerManager.PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
-        NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
+        NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
 
         if (wasBrandNewPlayer)
         {
@@ -213,7 +213,9 @@ public sealed class JoiningManager
             isFirstPlayer,
             BuildingManager.GetEntitiesOperations(globalRootEntities),
             serverConfig.KeepInventoryOnDeath,
-            sessionSettings
+            sessionSettings,
+            player.InPrecursor,
+            player.DisplaySurfaceWater
         );
 
         player.SendPacket(initialPlayerSync);

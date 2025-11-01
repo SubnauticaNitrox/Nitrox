@@ -5,7 +5,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -101,6 +100,7 @@ public class Items
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
+        int level = gameObject.TryGetComponent(out LargeWorldEntity largeWorldEntity) ? (int)largeWorldEntity.cellLevel : 0;
 
         WorldEntity droppedItem;
         List<Entity> childrenEntities = GetPrefabChildren(gameObject, id, entityMetadataManager).ToList();
@@ -111,7 +111,7 @@ public class Items
         {
             // We cast it to an entity type that is always seeable by clients
             // therefore, the packet will be redirected to everyone
-            droppedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), 0, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), parentId, childrenEntities);
+            droppedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), level, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), parentId, childrenEntities);
         }
         else if (gameObject.TryGetComponent(out OxygenPipe oxygenPipe))
         {
@@ -136,13 +136,13 @@ public class Items
             oxygenPipe.rootPipeUID = rootPipeId.ToString();
             oxygenPipe.parentPipeUID = parentPipeId.ToString();
 
-            droppedItem = new OxygenPipeEntity(gameObject.transform.ToWorldDto(), 0, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null,
-                                              childrenEntities, rootPipeId, parentPipeId, parentConnection.GetAttachPoint().ToDto());
+            droppedItem = new OxygenPipeEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), null,
+                                              childrenEntities, parentPipeId, rootPipeId, parentConnection.GetAttachPoint().ToDto());
         }
         else
         {
             // Generic case
-            droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
+            droppedItem = new(gameObject.transform.ToWorldDto(), level, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
         }
 
         if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true)))
@@ -161,6 +161,7 @@ public class Items
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
+        int level = gameObject.TryGetComponent(out LargeWorldEntity largeWorldEntity) ? (int)largeWorldEntity.cellLevel : 0;
 
         List<Entity> childrenEntities = GetPrefabChildren(gameObject, id, entityMetadataManager).ToList();
         WorldEntity placedItem;
@@ -171,14 +172,14 @@ public class Items
         switch (gameObject.AliveOrNull())
         {
             case not null when IsGlobalRootObject(gameObject):
-                placedItem = new GlobalRootEntity(gameObject.transform.ToWorldDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+                placedItem = new GlobalRootEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
                 break;
             case not null when Player.main.AliveOrNull()?.GetCurrentSub().AliveOrNull()?.TryGetNitroxId(out NitroxId parentId) == true:
-                placedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), parentId, childrenEntities);
+                placedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), level, classId, true, id, techType.ToDto(), metadata.OrNull(), parentId, childrenEntities);
                 break;
             default:
                 // If the object is not under a SubRoot nor in GlobalRoot, it'll be under a CellRoot but we still want to remember its state
-                placedItem = new PlacedWorldEntity(gameObject.transform.ToWorldDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+                placedItem = new PlacedWorldEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
                 break;
         }
 

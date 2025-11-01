@@ -61,7 +61,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         Log.Info($"Received initial sync player GameObject Id: {id}");
     }
 
-    private void SetupEscapePod(bool firstTimeConnecting)
+    private static void SetupEscapePod(bool firstTimeConnecting)
     {
         EscapePod escapePod = EscapePod.main;
         if (escapePod)

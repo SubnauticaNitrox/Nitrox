@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic.Entities;
@@ -31,7 +32,9 @@ public class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
             worldEntityManager.LoadUnspawnedEntities(addedCell.BatchId, false);
 
             totalSimulationChanges.AddRange(entitySimulation.GetSimulationChangesForCell(player, addedCell));
-            totalEntities.AddRange(worldEntityManager.GetEntities(addedCell));
+            List<WorldEntity> newEntities = worldEntityManager.GetEntities(addedCell);
+
+            totalEntities.AddRange(newEntities);
         }
 
         foreach (AbsoluteEntityCell removedCell in packet.Removed)
@@ -45,10 +48,7 @@ public class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
             entitySimulation.BroadcastSimulationChanges(new(totalSimulationChanges));
         }
 
-        if (totalEntities.Count > 0)
-        {
-            SpawnEntities batchEntities = new(totalEntities);
-            player.SendPacket(batchEntities);
-        }
+        // We send this data whether or not it's empty because the client needs to know about it (see Terrain)
+        player.SendPacket(new SpawnEntities(totalEntities, packet.Added, true));
     }
 }

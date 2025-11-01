@@ -88,7 +88,7 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.AppDataPath ?? "", "Logs"));
+        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.AppDataPath ?? "", "logs"));
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName; // TODO: Filter by servername ( .Where(f => f.Name.Contains($"[{SaveName}]")) )
 
@@ -168,7 +168,7 @@ namespace NitroxModel.Logger
                            });
                        });
                    });
-               }, e => LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)) || GetLogFileName() is "launcher");
+               }, e => LogEventHasPropertiesAny(e, nameof(SaveName)) || GetLogFileName() is "launcher" or "game");
         });
 
         private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate, Action<string>? logOutputCallback = null) => sinkConfig.Logger(cnf =>

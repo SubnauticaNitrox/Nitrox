@@ -1,6 +1,17 @@
 #List of every sound and if it should be synced;;;
 #Eventpath;Should be synced;Should ignore subroot;Sound radius
 ;;;
+event:/bz/ui/pda/blueprint_toggle_all;false;false;0
+event:/bz/ui/pda/blueprint_toggle_off;false;false;0
+event:/bz/ui/pda/blueprint_toggle_on;false;false;0
+event:/bz/ui/pda/pda_pause_snapshot;false;false;0
+event:/creature/andi/1;false;false;0
+event:/creature/andi/2;false;false;0
+event:/creature/andi/a;false;false;0
+event:/creature/andi/b;false;false;0
+event:/creature/andi/c;false;false;0
+event:/creature/andi/start;false;false;0
+event:/creature/andi/stop;false;false;0
 event:/creature/bird_small/flap;false;false;0
 event:/creature/bird_small/idle;false;false;0
 event:/creature/biter/bite_1;false;false;0
@@ -47,8 +58,11 @@ event:/creature/cute_fish/say_bye;false;false;0
 event:/creature/cute_fish/tease_1;false;false;0
 event:/creature/cute_fish/tease_2;false;false;0
 event:/creature/enzyme_cure;false;false;0
+event:/creature/enzyme_treatment;false;false;0
 event:/creature/garry/idle;false;false;0
+event:/creature/gasopod/death;false;false;0
 event:/creature/gasopod/idle;false;false;0
+event:/creature/gasopod/pain;false;false;0
 event:/creature/gasopod/pod_burst;false;false;0
 event:/creature/gasopod/pod_release;false;false;0
 event:/creature/ghostleviathan/bite;false;false;0
@@ -78,16 +92,24 @@ event:/creature/magistrate/encounter_4;false;false;0
 event:/creature/magistrate/enzyme_ball_drop;false;false;0
 event:/creature/magistrate/enzyme_spray;false;false;0
 event:/creature/magistrate/face_loop;false;false;0
+event:/creature/magistrate/idle;false;false;0
+event:/creature/magistrate/roar;false;false;0
+event:/creature/magistrate/say_hello;false;false;0
+event:/creature/magistrate/speak;false;false;0
 event:/creature/magistrate/swimloop;false;false;0
 event:/creature/magistrate/telepathy_1;false;false;0
 event:/creature/magistrate/telepathy_2;false;false;0
 event:/creature/magistrate/telepathy_3;false;false;0
 event:/creature/mesmer/attack;false;false;0
+event:/creature/mesmer/idle;false;false;0
+event:/creature/mesmer/mesmerize_end;false;false;0
 event:/creature/mesmer/mesmerize_loop;false;false;0
+event:/creature/mesmer/mesmerize_start;false;false;0
 event:/creature/oculus/idle;false;false;0
 event:/creature/peeper/chirp;false;false;0
 event:/creature/ray/sing;false;false;0
 event:/creature/reaper/attack_player;false;false;0
+event:/creature/reaper/attack_player_bite;false;false;0
 event:/creature/reaper/attack_player_claw;false;false;0
 event:/creature/reaper/attack_seamoth;false;false;0
 event:/creature/reaper/idle;false;false;0
@@ -112,16 +134,23 @@ event:/creature/shocker/bite;false;false;0
 event:/creature/shocker/idle_loop;false;false;0
 event:/creature/shocker/shock;false;false;0
 event:/creature/spike_plant/player_hit;false;false;0
+event:/creature/spike_plant/shoot;false;false;0
 event:/creature/spine_eel/bite;false;false;0
 event:/creature/spine_eel/idle;false;false;0
 event:/creature/spine_eel/roar;false;false;0
+event:/creature/tred/attack_down;false;false;0
 event:/creature/tred/attack_down_nostomp;false;false;0
+event:/creature/tred/attack_swing;false;false;0
 event:/creature/tred/idle;false;false;0
+event:/creature/tred/shit_fall;false;false;0
 event:/creature/tred/shit_from_ass;false;false;0
+event:/creature/tred/shit_sequence;false;false;0
+event:/creature/tred/shit_sequence_2;false;false;0
 event:/creature/tred/step;false;false;0
 event:/creature/tred/stomp;false;false;0
 event:/creature/trident/bite;false;false;0
 event:/creature/trident/charge;false;false;0
+event:/creature/trident/death;false;false;0
 event:/creature/trident/roar;false;false;0
 event:/creature/trident/tooth_break;true;true;15
 event:/creature/trident/wound;false;false;0
@@ -135,9 +164,11 @@ event:/env/antechamber_pillar_up;false;false;0
 event:/env/antechamber_scan_end;false;false;0
 event:/env/antechamber_scan_loop;false;false;0
 event:/env/antechamber_scan_start;false;false;0
+event:/env/aurora_sparks_loop;false;false;0
 event:/env/background/arctic_background;false;false;0
 event:/env/background/blood_kelp_background;false;false;0
 event:/env/background/crash_zone;false;false;0
+event:/env/background/debris_fall;false;false;0
 event:/env/background/debris_fall_fire;false;false;0
 event:/env/background/dunes_background;false;false;0
 event:/env/background/fire;false;false;0
@@ -151,6 +182,8 @@ event:/env/background/koosh_background;false;false;0
 event:/env/background/lava_background;false;false;0
 event:/env/background/lava_river_loop;false;false;0
 event:/env/background/lost_river_background;false;false;0
+event:/env/background/lostriverbase_background;false;false;0
+event:/env/background/mountain_cave;false;false;0
 event:/env/background/mountain_underwater;false;false;0
 event:/env/background/mushroom_background;false;false;0
 event:/env/background/prec_aquarium;false;false;0
@@ -162,16 +195,27 @@ event:/env/background/shake;false;false;0
 event:/env/background/ship_ambience;false;false;0
 event:/env/background/ship_explode;false;false;0
 event:/env/background/ship_explode_2;false;false;0
+event:/env/background/shockwave;false;false;0
+event:/env/background/small_explode;false;false;0
 event:/env/background/sparse_reef_background;false;false;0
 event:/env/background/surface_generic_background;false;false;0
 event:/env/background/tredpath;false;false;0
+event:/env/background/twisty_bridges_background;false;false;0
 event:/env/background/underislands_background;false;false;0
+event:/env/background/vent_loop;false;false;0
+event:/env/background/wreak ambience;false;false;0
 event:/env/background/wreak_ambience_big;false;false;0
+event:/env/break_coral;false;false;0
 event:/env/bubble_pop;false;false;0
 event:/env/bubble_pop_player;false;false;0
 event:/env/close_underwater_door;false;false;0
 event:/env/creature_teleport;false;false;0
 event:/env/damage/acid_loop;false;false;0
+event:/env/damage/cold_loop;false;false;0
+event:/env/damage/heat_loop;false;false;0
+event:/env/damage/pressure_loop;false;false;0
+event:/env/damage/shock;false;false;0
+event:/env/geyser_erupt;false;false;0
 event:/env/green_artifact_loop;false;false;0
 event:/env/gun_return;false;false;0
 event:/env/gun_turn;false;false;0
@@ -195,6 +239,7 @@ event:/env/music/firefighting_music;false;false;0
 event:/env/music/floating_islands_background_music;false;false;0
 event:/env/music/generator_room_music;false;false;0
 event:/env/music/grandreef_background_music;false;false;0
+event:/env/music/grasy_background (2)_music;false;false;0
 event:/env/music/grasy_background_music;false;false;0
 event:/env/music/hatch_music;false;false;0
 event:/env/music/jellyshroom_caves_music;false;false;0
@@ -204,6 +249,7 @@ event:/env/music/lava_background_music;false;false;0
 event:/env/music/lost_river_background_music;false;false;0
 event:/env/music/lost_river_ghost_tree;false;false;0
 event:/env/music/lostriver_tree;false;false;0
+event:/env/music/lostriverbase_background_music;false;false;0
 event:/env/music/mountain_underwater_music;false;false;0
 event:/env/music/mushroom_background_music;false;false;0
 event:/env/music/prec_aquarium_music;false;false;0
@@ -213,7 +259,9 @@ event:/env/music/reef_background_music;false;false;0
 event:/env/music/ship_ambience_music;false;false;0
 event:/env/music/sparse_reef_background_music;false;false;0
 event:/env/music/tredpath_music;false;false;0
+event:/env/music/twisty_bridges_background_music;false;false;0
 event:/env/music/underislands_background_music;false;false;0
+event:/env/music/wreak ambience_music;false;false;0
 event:/env/music/wreak_ambience_big_music;false;false;0
 event:/env/music/zen_music;false;false;0
 event:/env/open_underwater_door;false;false;0
@@ -233,59 +281,120 @@ event:/env/prec_vent_exit;false;false;0
 event:/env/prec_vent_loop;false;false;0
 event:/env/shroom_in;false;false;0
 event:/env/shroom_out;false;false;0
+event:/env/slime_killed;false;false;0
+event:/env/slime_stick;false;false;0
 event:/env/splash;false;false;0
 event:/env/teleporter_on_loop;false;false;0
 event:/env/use_teleporter_use_loop;false;false;0
 event:/env/weather;false;false;0
+event:/interface/hover;false;false;0
+event:/interface/new_recipe;false;false;0
+event:/interface/off_long;false;false;0
+event:/interface/on_glitchy;false;false;0
+event:/interface/on_long;false;false;0
 event:/interface/option_tweek;false;false;0
+event:/interface/ping;false;false;0
+event:/interface/placeholder;false;false;0
 event:/interface/select;false;false;0
 event:/interface/text_type;false;false;0
 event:/loot/break_breakable;false;false;0
 event:/loot/databox/box_open;true;false;20
 event:/loot/floater/floater_hold_loop;false;false;0
+event:/loot/floater/floater_pickup;false;false;0
+event:/loot/floater/floater_place;false;false;0
 event:/loot/hit_breakable;false;false;0
 event:/loot/loot_locker_open;false;false;0
 event:/loot/new_PDA_data;false;false;0
+event:/loot/pickup_advancedwiringkit;false;false;0
+event:/loot/pickup_aluminumoxide;false;false;0
+event:/loot/pickup_battery;false;false;0
+event:/loot/pickup_bigwaterbottle;false;false;0
+event:/loot/pickup_bleach;false;false;0
+event:/loot/pickup_computerchip;false;false;0
 event:/loot/pickup_copper;false;false;0
+event:/loot/pickup_default;false;false;0
+event:/loot/pickup_diamond;false;false;0
+event:/loot/pickup_disinfectedwater;false;false;0
+event:/loot/pickup_egg;false;false;0
+event:/loot/pickup_filteredwater;false;false;0
+event:/loot/pickup_fins;false;false;0
+event:/loot/pickup_fish;false;false;0
 event:/loot/pickup_glass;false;false;0
 event:/loot/pickup_gold;false;false;0
+event:/loot/pickup_lead;false;false;0
+event:/loot/pickup_lithium;false;false;0
+event:/loot/pickup_lubricant;false;false;0
+event:/loot/pickup_magnesium;false;false;0
+event:/loot/pickup_magnetite;false;false;0
+event:/loot/pickup_organic;false;false;0
+event:/loot/pickup_powercell;false;false;0
+event:/loot/pickup_precursorioncrystal;false;false;0
 event:/loot/pickup_quartz;false;false;0
+event:/loot/pickup_reactorrod;false;false;0
 event:/loot/pickup_salt;false;false;0
 event:/loot/pickup_scrapmetal;false;false;0
+event:/loot/pickup_seatreaderpoop;false;false;0
 event:/loot/pickup_silver;false;false;0
+event:/loot/pickup_suit;false;false;0
 event:/loot/pickup_tank;false;false;0
+event:/loot/pickup_titanium;false;false;0
+event:/loot/pickup_uraninitecrystal;false;false;0
+event:/loot/pickup_uranium;false;false;0
+event:/loot/pickup_wiringkit;false;false;0
 event:/loot/prec_crystal_loop;false;false;0
 event:/main_menu/credits_music;false;false;0
+event:/main_menu/intro;false;false;0
+event:/main_menu/intro_background;false;false;0
 event:/main_menu/intro_cin;false;false;0
 event:/main_menu/intro_cin_music;false;false;0
 event:/main_menu/menu_background;false;false;0
 event:/main_menu/music;false;false;0
 event:/main_menu/unmute_all;false;false;0
+event:/player/access_denied;false;false;0
+event:/player/access_granted;false;false;0
 event:/player/adviseSelfScan;false;false;0
+event:/player/aurora_countdown;false;false;0
+event:/player/aurora_last_transmission;false;false;0
 event:/player/aurora_warning_1;false;false;0
 event:/player/aurora_warning_2;false;false;0
 event:/player/aurora_warning_3;false;false;0
+event:/player/batterly_low;false;false;0
+event:/player/blast_off;false;false;0
+event:/player/blood_loss;false;false;0
 event:/player/breathing;true;false;20
 event:/player/bubbles;true;false;20
+event:/player/change_mission;false;false;0
 event:/player/cold_damage;true;false;20
 event:/player/coughing;false;false;0
 event:/player/cube terminal_close;false;false;0
 event:/player/cube terminal_open;false;false;0
 event:/player/cube terminal_use;false;false;0
+event:/player/damage;false;false;20
 event:/player/data_terminal_use;false;false;0
 event:/player/depth_100;false;false;0
 event:/player/depth_200;false;false;0
+event:/player/drink;false;false;0
+event:/player/drink_stillsuit;false;false;0
+event:/player/eat;false;false;0
 event:/player/elevator_down;false;false;0
 event:/player/elevator_up;false;false;0
+event:/player/end_freedive;false;false;0
 event:/player/enzyme_cure;false;false;0
+event:/player/enzyme_cure_pda;false;false;0
 event:/player/food_critical;false;false;0
 event:/player/food_low;false;false;0
 event:/player/food_very_low;false;false;0
 event:/player/footstep_dirt;false;false;20
+event:/player/footstep_dirt_sprint;false;false;20
+event:/player/footstep_grass;false;false;20
+event:/player/footstep_grass_sprint;false;false;20
 event:/player/footstep_metal;false;false;20
+event:/player/footstep_metal_sprint;false;false;20
 event:/player/footstep_precursor_base;false;false;20
+event:/player/footstep_rocket;false;false;0
 event:/player/goal_airsack;false;false;0
 event:/player/goal_BiomeKelpForest;false;false;0
+event:/player/goal_BiomeKelpForest2;false;false;0
 event:/player/goal_BiomePrecursorGunUpper;false;false;0
 event:/player/goal_BiomePrecursorGunUpper2;false;false;0
 event:/player/goal_BiomePrecursorGunUpper3;false;false;0
@@ -293,12 +402,17 @@ event:/player/goal_BiomePrecursorGunUpper4;false;false;0
 event:/player/goal_Bladderfish;false;false;0
 event:/player/goal_CookedPeeper;false;false;0
 event:/player/goal_Copper;false;false;0
+event:/player/goal_danger;false;false;0
 event:/player/goal_Fins;false;false;0
+event:/player/goal_Intro1;false;false;0
 event:/player/goal_Knife;false;false;0
+event:/player/goal_lifepod1;false;false;0
 event:/player/goal_lifepod2;false;false;0
 event:/player/goal_lifepod3;false;false;0
 event:/player/goal_PDALoading;false;false;0
 event:/player/goal_Scanner;false;false;0
+event:/player/gun_disabled;false;false;0
+event:/player/gun_disabled_pda;false;false;0
 event:/player/gun_door_open;false;false;0
 event:/player/gun_door_sick;false;false;0
 event:/player/gunterminal_access_denied;true;false;20
@@ -311,7 +425,9 @@ event:/player/gunterminal_use_healed;true;false;20
 event:/player/hand_infection_cin;false;false;0
 event:/player/hatch_eggs;false;false;0
 event:/player/heat_damage;true;false;20
+event:/player/hungry_damage;true;false;20
 event:/player/infection_heal_cin;false;false;0
+event:/player/infection_scan_advise;false;false;0
 event:/player/infection_scan_advise_full;false;false;0
 event:/player/invalid_construction;false;false;0
 event:/player/inventory_secured;false;false;0
@@ -319,37 +435,56 @@ event:/player/jump;true;false;20
 event:/player/key terminal_close;false;false;0
 event:/player/key terminal_open;false;false;0
 event:/player/key_terminal_use;false;false;0
+event:/player/main_brief;false;false;0
+event:/player/mapped;false;false;0
 event:/player/new_creature;false;false;0
+event:/player/new_objective_added;false;false;0
+event:/player/new_tech;false;false;0
+event:/player/nighttime;false;false;0
+event:/player/open_pda;false;false;0
+event:/player/oxygen_10;false;false;0
 event:/player/oxygen_10_sec;false;false;0
+event:/player/oxygen_25;false;false;0
 event:/player/oxygen_30_sec;false;false;0
+event:/player/oxygen_50;false;false;0
 event:/player/Pain;false;false;0
 event:/player/Pain_no_tank;false;false;0
-event:/player/pain_no_tank_light;false;false;0
+event:/player/Pain_no_tank_light;false;false;0
+event:/player/Pain_over_time;false;false;0
 event:/player/Pain_surface;false;false;0
 event:/player/Precursor_Gun_ControlRoom;false;false;0
 event:/player/Precursor_Gun_DisableDenied;false;false;0
 event:/player/Precursor_Gun_LostRiverHint;false;false;0
+event:/player/Precursor_Gun_LostRiverHint2;false;false;0
 event:/player/Precursor_LostRiverBase_Log_1;false;false;0
 event:/player/Precursor_LostRiverBase_Log_2;false;false;0
 event:/player/Precursor_LostRiverBase_Log_4;false;false;0
 event:/player/Precursor_LostRiverBase_Log_5;false;false;0
 event:/player/Precursor_LostRiverBase_Log_6;false;false;0
 event:/player/Precursor_LostRiverBase_Log_7;false;false;0
+event:/player/Precursor_LostRiverBase_Log3;false;false;0
+event:/player/Puke;false;false;0
+event:/player/Puke_underwater;false;false;0
 event:/player/radiation;false;false;0
 event:/player/radiation_fix;false;false;0
 event:/player/radiation_remaining;false;false;0
+event:/player/scan_aurora;false;false;0
+event:/player/scan_planet;false;false;0
 event:/player/selfScan1;false;false;0
 event:/player/selfScan2;false;false;0
 event:/player/selfScan3;false;false;0
 event:/player/selfScan3b;false;false;0
 event:/player/selfScan4;false;false;0
 event:/player/selfScan5;false;false;0
+event:/player/sick_reveal;false;false;0
 event:/player/signal_upload;false;false;0
+event:/player/single_breath;false;false;0
 event:/player/start_freedive;false;false;0
 event:/player/start_freedive_splash;false;false;0
 event:/player/step;true;false;20
 event:/player/stillsuit_equipped;false;false;0
 event:/player/story/Aurora_RingRoom_Terminal2;false;false;0
+event:/player/story/Deepgrandreef;false;false;0
 event:/player/story/Ency_Aurora_RingRoom_Terminal3;false;false;0
 event:/player/story/Ending_zinger;false;false;0
 event:/player/story/Goal_BaseWindow;false;false;0
@@ -359,6 +494,7 @@ event:/player/story/Goal_BiomeBloodKelp2;false;false;0
 event:/player/story/Goal_BiomeCrashedShip;false;false;0
 event:/player/story/Goal_BiomeCrashZone;false;false;0
 event:/player/story/Goal_BiomeDeepGrandReef;false;false;0
+event:/player/story/Goal_BiomeDeepGrandReef2;false;false;0
 event:/player/story/Goal_BiomeDunes;false;false;0
 event:/player/story/Goal_BiomeFloatingIsland;false;false;0
 event:/player/story/Goal_BiomeGrassyPlateaus;false;false;0
@@ -410,6 +546,8 @@ event:/player/story/Goal_UnlockRadSuit;false;false;0
 event:/player/story/Goal_WaterPark;false;false;0
 event:/player/story/OvereatingWarning;false;false;0
 event:/player/story/PDASunbeamDestroyEventOutOfRange;false;false;0
+event:/player/story/Precursor_Gun_DataDownload1;false;false;0
+event:/player/story/Precursor_Gun_DataDownload2;false;false;0
 event:/player/story/Precursor_Gun_Disabled;false;false;0
 event:/player/story/Precursor_LavaCastle_Log1;false;false;0
 event:/player/story/Precursor_LavaCastle_Log2;false;false;0
@@ -435,6 +573,7 @@ event:/player/story/RadioWarper2;false;false;0
 event:/player/story/Rocket_ReadyGunStillActive;false;false;0
 event:/player/story/Story_AuroraConsole2;false;false;0
 event:/player/story/Story_AuroraConsole3;false;false;0
+event:/player/story/Story_RadioWarning;false;false;0
 event:/player/story/VO/Ency_Aurora_Cargo_PDA2;false;false;0
 event:/player/story/VO/Ency_Aurora_Living_Area_PDA2b;false;false;0
 event:/player/story/VO/Ency_DeepPDA1;false;false;0
@@ -471,41 +610,65 @@ event:/player/story/VO/RadioGrassy21;false;false;0
 event:/player/story/VO/RadioGrassy25;false;false;0
 event:/player/story/VO/RadioKelp28;false;false;0
 event:/player/story/VO/RadioMushroom24;false;false;0
+event:/player/story/VO/RadioRadiationSuit (female);false;false;0
 event:/player/story/VO/RadioRadiationSuit (male);false;false;0
 event:/player/story/VO/RadioSecondOfficer;false;false;0
 event:/player/story/VO/RadioShallows22;false;false;0
+event:/player/sunbeam_destroy;false;false;0
+event:/player/sunbeam_rescue;false;false;0
 event:/player/surface;false;false;20
 event:/player/surface_no_air;false;false;20
 event:/player/surface_tank;false;false;20
 event:/player/swim_surface;false;false;20
 event:/player/swim_underwater;true;false;20
+event:/player/thirsty_damage;true;false;20
+event:/player/use_first_aid;false;false;0
 event:/player/vitals_ok;false;false;0
+event:/player/vomit;false;false;0
 event:/player/water_critical;false;false;0
 event:/player/water_low;false;false;0
 event:/player/water_very_low;false;false;0
 event:/sub/base/AI_nopower;false;false;0
 event:/sub/base/base_background;false;false;0
-event:/sub/base/bioreactor_hatch_close;true;true;20
-event:/sub/base/bioreactor_hatch_open;true;true;20
+event:/sub/base/bioreactor_death;false;false;0
+event:/sub/base/bioreactor_hatch_close;true;false;20
+event:/sub/base/bioreactor_hatch_open;true;false;20
+event:/sub/base/bioreactor_working_loop;false;false;0
 event:/sub/base/bulkhead_close_back;true;true;20
 event:/sub/base/bulkhead_close_front;true;true;20
 event:/sub/base/bulkhead_open_back;true;true;20
 event:/sub/base/bulkhead_open_front;true;true;20
+event:/sub/base/chargers/battery_charger_close;true;false;20
+event:/sub/base/chargers/battery_charger_open;true;false;20
+event:/sub/base/chargers/cell_charger_close;true;false;20
+event:/sub/base/chargers/cell_charger_open;true;false;20
+event:/sub/base/chargers/charge_loop;false;false;0
 event:/sub/base/coffeemachine_idle;true;false;20
+event:/sub/base/door_close;true;false;20
+event:/sub/base/door_open;true;false;20
 event:/sub/base/enter_hatch;true;true;20
 event:/sub/base/enter_seamoth_left;true;true;20
 event:/sub/base/enter_seamoth_right;true;true;20
 event:/sub/base/exit_hatch;true;true;20
 event:/sub/base/hull_breach;false;false;0
+event:/sub/base/hull_decrease;false;false;0
+event:/sub/base/hull_increase;false;false;0
 event:/sub/base/hull_restored;false;false;0
+event:/sub/base/hull_warning;false;false;0
 event:/sub/base/make_coffee;true;false;30
 event:/sub/base/map room/apear;false;false;0
 event:/sub/base/map room/map_room_background;false;false;0
+event:/sub/base/map room/option_tweek;false;false;0
 event:/sub/base/map room/scan;false;false;0
 event:/sub/base/map room/select;false;false;0
 event:/sub/base/medkit_locker/close;true;false;20
 event:/sub/base/medkit_locker/open;true;false;20
+event:/sub/base/nuclear_reactor_death;false;false;0
+event:/sub/base/nuclearreactor_working_loop;false;false;0
 event:/sub/base/nuke_gen_loop;false;false;0
+event:/sub/base/place;false;false;0
+event:/sub/base/power_10_3D;false;false;0
+event:/sub/base/power_30_3D;false;false;0
 event:/sub/base/power_down;false;false;0
 event:/sub/base/power_down_3D;false;false;0
 event:/sub/base/power_loop;false;false;0
@@ -525,9 +688,12 @@ event:/sub/base/water_filter_loop;false;false;0
 event:/sub/base/water_filter_spawn;false;false;0
 event:/sub/base/water_filter_spawn_bottle;false;false;0
 event:/sub/base/welcome;false;false;0
+event:/sub/base/welcome _3D;false;false;0
+event:/sub/common/emergency_music;false;false;0
 event:/sub/common/fishsplat;false;false;0
 event:/sub/common/splash_in_and_out;false;false;0
 event:/sub/common/sub_splash;false;false;0
+event:/sub/common/surface_surface;false;false;0
 event:/sub/cyclops/AI_abandon;false;false;0
 event:/sub/cyclops/AI_ahead_flank;false;false;0
 event:/sub/cyclops/AI_ahead_slow;false;false;0
@@ -539,7 +705,9 @@ event:/sub/cyclops/AI_depth_update_1;false;false;0
 event:/sub/cyclops/AI_depth_update_2;false;false;0
 event:/sub/cyclops/AI_depth_warning_1;false;false;0
 event:/sub/cyclops/AI_depth_warning_2;false;false;0
+event:/sub/cyclops/AI_depth_warning_3;false;false;0
 event:/sub/cyclops/AI_drain;false;false;0
+event:/sub/cyclops/AI_emergency_speed;false;false;0
 event:/sub/cyclops/AI_engine_down;false;false;0
 event:/sub/cyclops/AI_engine_heat_critical;false;false;0
 event:/sub/cyclops/AI_engine_overheat;false;false;0
@@ -552,6 +720,8 @@ event:/sub/cyclops/AI_hull_crit;false;false;0
 event:/sub/cyclops/AI_hull_low;false;false;0
 event:/sub/cyclops/AI_leak;false;false;0
 event:/sub/cyclops/AI_no_power;false;false;0
+event:/sub/cyclops/AI_power_low;false;false;0
+event:/sub/cyclops/AI_shields;false;false;0
 event:/sub/cyclops/AI_silent_running;false;false;0
 event:/sub/cyclops/AI_system_failure;false;false;0
 event:/sub/cyclops/AI_welcome;false;false;0
@@ -564,19 +734,24 @@ event:/sub/cyclops/control_room_ambience;false;false;0
 event:/sub/cyclops/creature_attack_sfx;false;false;0
 event:/sub/cyclops/cyclops_door_close;true;true;20
 event:/sub/cyclops/cyclops_door_open;true;true;20
-event:/sub/cyclops/cyclops_helm_door_open;true;true;20
-event:/sub/cyclops/cyclops_loop_epic_fast;false;false;0
-event:/sub/cyclops/cyclops_loop_fast;false;false;0
-event:/sub/cyclops/cyclops_loop_normal;false;false;0
-event:/sub/cyclops/cyclops_loop_rpm;false;false;0
-event:/sub/cyclops/cyclops_loop_slow;false;false;0
+event:/sub/cyclops/cyclops_helm door_close;true;false;20
+event:/sub/cyclops/cyclops_helm_door_open;true;false;20
+event:/sub/cyclops/cyclops_loop_epic_fast;false;false;90
+event:/sub/cyclops/cyclops_loop_fast;false;false;90
+event:/sub/cyclops/cyclops_loop_normal;false;false;90
+event:/sub/cyclops/cyclops_loop_rpm;false;false;90
+event:/sub/cyclops/cyclops_loop_slow;false;false;90
+event:/sub/cyclops/cyclops_stop;false;false;90
 event:/sub/cyclops/decoy_loop;false;false;0
 event:/sub/cyclops/docking_doors_close;false;false;0
 event:/sub/cyclops/docking_doors_open;false;false;0
+event:/sub/cyclops/docking_hatch_close;false;false;0
 event:/sub/cyclops/docking_hatch_open;false;false;0
 event:/sub/cyclops/engine_room;false;false;0
 event:/sub/cyclops/enter_hatch;true;true;20
+event:/sub/cyclops/exit_hatch;true;true;20
 event:/sub/cyclops/explode;false;false;0
+event:/sub/cyclops/explode_countdown;false;false;0
 event:/sub/cyclops/floodlights_off;false;false;0
 event:/sub/cyclops/floodlights_on;false;false;0
 event:/sub/cyclops/horn;true;true;500
@@ -584,14 +759,19 @@ event:/sub/cyclops/impact_solid_hard;false;false;0
 event:/sub/cyclops/impact_solid_medium;false;false;0
 event:/sub/cyclops/impact_solid_soft;false;false;0
 event:/sub/cyclops/install_mod;false;false;0
+event:/sub/cyclops/interface_popup;false;false;0
+event:/sub/cyclops/interface_select;false;false;0
 event:/sub/cyclops/leak_loop;false;false;0
 event:/sub/cyclops/lights_off;false;false;0
 event:/sub/cyclops/lights_on;false;false;0
 event:/sub/cyclops/load_decoy;false;false;0
-event:/sub/cyclops/locker_close;true;true;20
-event:/sub/cyclops/locker_open;true;true;20
+event:/sub/cyclops/locker_close;true;false;20
+event:/sub/cyclops/locker_open;true;false;20
 event:/sub/cyclops/outer_hatch_close;true;true;20
 event:/sub/cyclops/outer_hatch_open;true;true;20
+event:/sub/cyclops/pressure_damage_heavy;false;false;0
+event:/sub/cyclops/pressure_damage_light;false;false;0
+event:/sub/cyclops/pressure_damage_medium;false;false;0
 event:/sub/cyclops/proximity;false;false;0
 event:/sub/cyclops/shield_on_loop;false;false;0
 event:/sub/cyclops/siren;false;false;0
@@ -621,7 +801,10 @@ event:/sub/exo/jets_empty;false;false;100
 event:/sub/exo/jets_loop;false;false;100
 event:/sub/exo/jump;true;true;90
 event:/sub/exo/land;true;true;90
+event:/sub/exo/land_precursor;true;true;90
+event:/sub/exo/sit;false;false;0
 event:/sub/exo/step;false;false;90
+event:/sub/exo/step_precursor;false;false;90
 event:/sub/exo/undock_exo_cyclops;false;false;0
 event:/sub/exo/undock_exo_moonpool;false;false;0
 event:/sub/exo/welcome;false;false;0
@@ -632,70 +815,104 @@ event:/sub/pod/climb_out_bottom_first_use;true;true;20
 event:/sub/pod/climb_out_top;true;true;20
 event:/sub/pod/climb_out_top_first_use;true;true;20
 event:/sub/pod/fix_panel_powerup;false;false;0
+event:/sub/pod/pod_background;false;false;0
 event:/sub/pod/pod_background_damaged;false;false;0
 event:/sub/pod/pod_fire;false;false;0
+event:/sub/pod/pod_sparks;false;false;0
+event:/sub/pod/radio/radio_generic;false;false;0
 event:/sub/pod/radio/radio_lifepod_17;false;false;0
 event:/sub/pod/radio/radio_lifepod_bounceback;false;false;0
 event:/sub/pod/radio/radio_new_msg_loop;false;false;0
 event:/sub/pod/radio/radio_play;false;false;0
 event:/sub/pod/radio/radio_power_on;false;false;0
 event:/sub/pod/radio/radioKoosh26;false;false;0
+event:/sub/pod/radio/radioMushroom24;false;false;0
+event:/sub/pod/radio/radioRadiationSuit;false;false;0
 event:/sub/pod/radio/radioSunbeam_not coming;false;false;0
 event:/sub/pod/radio/radioSunbeamEvent01;false;false;0
 event:/sub/pod/radio/radioSunbeamEvent02;false;false;0
 event:/sub/pod/radio/radioSunbeamEvent03;false;false;0
 event:/sub/pod/radio/radioSunbeamEvent04;false;false;0
 event:/sub/pod/radio/radioSunbeamEvent05;false;false;0
+event:/sub/pod/radio/radioSunbeamEvent05_PDA;false;false;0
+event:/sub/pod/radio/radioSunbeamEvent05_withPause;false;false;0
+event:/sub/pod/radio/radioSunbeamEvent05_withPause_noVoice;false;false;0
 event:/sub/rocket/all_systems_go;false;false;0
 event:/sub/rocket/auxilery_on;false;false;0
+event:/sub/rocket/call_lift_loop;false;false;0
+event:/sub/rocket/call_lift_loop_2;false;false;0
 event:/sub/rocket/computer_on;false;false;0
 event:/sub/rocket/coms_on;false;false;0
 event:/sub/rocket/end_cin_music;false;false;0
+event:/sub/rocket/end_cin_music_short;false;false;0
 event:/sub/rocket/end_cin_sfx;false;false;0
+event:/sub/rocket/end_cin_sfx_short;false;false;0
 event:/sub/rocket/epic_splash;false;false;0
 event:/sub/rocket/hydrolics_on;false;false;0
+event:/sub/rocket/ladders/innerPlatform_ladder_down;true;false;20
 event:/sub/rocket/ladders/innerPlatform_ladder_up;true;false;20
 event:/sub/rocket/ladders/innerRocketShip_ladder_down;true;false;20
 event:/sub/rocket/ladders/innerRocketShip_ladder_up;true;false;20
+event:/sub/rocket/ladders/outerPlatform_ladder_down;true;false;20
 event:/sub/rocket/ladders/outerPlatform_ladder_up;true;false;20
 event:/sub/rocket/lifesupport_on;false;false;0
+event:/sub/rocket/lift_arrive;false;false;0
 event:/sub/rocket/lift_beep;false;false;0
+event:/sub/rocket/outside_bottom_loop;false;false;0
+event:/sub/rocket/rocket;false;false;0
 event:/sub/rocket/rocket_door_open;true;true;20
 event:/sub/rocket/rocket_door_open_inside;true;true;20
 event:/sub/rocket/rocket_finished;false;false;0
 event:/sub/rocket/rocket_interior_loop;false;false;0
 event:/sub/rocket/stage_build;false;false;0
+event:/sub/rocket/start;false;false;0
+event:/sub/rocket/stop;false;false;0
+event:/sub/rocket/telemerty_on;false;false;0
 event:/sub/rocket/time capsual_launch;false;false;0
 event:/sub/rocket/time_pod_close;true;false;20
 event:/sub/rocket/time_pod_open;true;false;20
 event:/sub/rocket/time_pod_open_first_use;true;false;20
 event:/sub/rocket/time_pod_open_first_use_VO;false;false;0
 event:/sub/rocket/use_lift;true;false;20
+event:/sub/rocket/use_lift_2;true;false;20
 event:/sub/seamoth/AI_no_power;false;false;0
 event:/sub/seamoth/crush_damage;true;true;50
 event:/sub/seamoth/crush_depth_update;false;false;0
 event:/sub/seamoth/crush_depth_warning;false;false;0
 event:/sub/seamoth/depth_update;false;false;0
+event:/sub/seamoth/depth_warning;false;false;0
 event:/sub/seamoth/dock;false;false;0
 event:/sub/seamoth/dock_seamoth_cyclops;false;false;0
 event:/sub/seamoth/enter_seamoth;false;false;50
+event:/sub/seamoth/first_use;false;false;0
+event:/sub/seamoth/glass_break;false;false;0
+event:/sub/seamoth/hull_breach_warning;false;false;0
+event:/sub/seamoth/hull_fix;false;false;0
 event:/sub/seamoth/impact_solid_hard;false;false;0
 event:/sub/seamoth/impact_solid_medium;false;false;0
 event:/sub/seamoth/impact_solid_soft;false;false;0
 event:/sub/seamoth/interior_loop;false;false;0
-event:/sub/seamoth/pulse;false;false;0
+event:/sub/seamoth/power_down;false;false;0
+event:/sub/seamoth/pulse;true;true;50
 event:/sub/seamoth/pulse_charge_loop;false;false;0
-event:/sub/seamoth/seaglide_equip;true;true;10
-event:/sub/seamoth/seaglide_light_off;true;true;30
-event:/sub/seamoth/seaglide_light_on;true;true;30
+event:/sub/seamoth/seaglide_equip;true;false;10
+event:/sub/seamoth/seaglide_light_off;true;false;15
+event:/sub/seamoth/seaglide_light_on;true;false;15
+event:/sub/seamoth/seaglide_loop;false;false;0
 event:/sub/seamoth/seaglide_loop_rpm;false;false;60
 event:/sub/seamoth/seaglide_rev_up;false;false;60
+event:/sub/seamoth/seaglide_stop;false;false;0
+event:/sub/seamoth/seaglide_upgrade_loop;false;false;0
+event:/sub/seamoth/seajet_equip;false;false;0
 event:/sub/seamoth/seamoth_light_off;false;false;30
 event:/sub/seamoth/seamoth_light_on;false;false;30
+event:/sub/seamoth/seamoth_loop;false;false;90
 event:/sub/seamoth/seamoth_loop_rpm;false;false;90
 event:/sub/seamoth/seamoth_rev_up;false;false;75
 event:/sub/seamoth/seamoth_stop;false;false;0
+event:/sub/seamoth/select;false;false;0
 event:/sub/seamoth/sonar_loop;false;false;0
+event:/sub/seamoth/sparks;false;false;0
 event:/sub/seamoth/storage_close;false;false;0
 event:/sub/seamoth/storage_open;false;false;0
 event:/sub/seamoth/torpedo_armed;false;false;0
@@ -706,19 +923,30 @@ event:/sub/seamoth/undock;false;false;0
 event:/sub/seamoth/undock_seamoth_cyclops;false;false;0
 event:/sub/seamoth/welcome;false;false;0
 event:/sub_module/fabricator/build;true;false;20
+event:/sub_module/fabricator/build_long_end;true;false;20
 event:/sub_module/fabricator/build_long_loop;true;false;20
+event:/sub_module/fabricator/build_long_start;true;false;20
 event:/sub_module/fabricator/close;true;false;20
 event:/sub_module/fabricator/fabricator_click;false;false;0
+event:/sub_module/fabricator/fabricator_new_item;false;false;0
 event:/sub_module/fabricator/menu_up;false;false;0
 event:/sub_module/fabricator/negative;false;false;0
 event:/sub_module/fabricator/open;true;false;20
 event:/sub_module/first_aid/spawn;false;false;20
+event:/sub_module/workbench/build_long_loop;true;false;20
 event:/sub_module/workbench/close;true;false;20
 event:/sub_module/workbench/open;true;false;20
+event:/sub_module/workbench/working;true;false;20
+event:/tools/airbladder/2.0/equip;false;false;0
+event:/tools/airbladder/2.0/equip_fill_air;false;false;0
+event:/tools/airbladder/2.0/first_use;false;false;0
+event:/tools/airbladder/2.0/put_away;false;false;0
+event:/tools/airbladder/2.0/use;false;false;0
 event:/tools/airbladder/airbladder_deflate;false;false;0
 event:/tools/airbladder/airbladder_deflate_surface;false;false;0
 event:/tools/airbladder/airbladder_hold_loop;false;false;0
 event:/tools/airbladder/airbladder_inflate;false;false;0
+event:/tools/airbladder/airbladder_pickup;false;false;0
 event:/tools/battery_die;false;false;0
 event:/tools/battery_insert;false;false;0
 event:/tools/beacon/beacon_loop;false;false;0
@@ -727,24 +955,38 @@ event:/tools/builder/complete;false;false;0
 event:/tools/builder/deploy;false;false;20
 event:/tools/builder/first_use;false;false;0
 event:/tools/builder/loop;false;false;0
+event:/tools/builder/place;false;false;0
+event:/tools/builder/remove;false;false;0
 event:/tools/constructor/bot_1_hover;false;false;0
 event:/tools/constructor/bot_2_hover;false;false;0
 event:/tools/constructor/bot_3_hover;false;false;0
 event:/tools/constructor/bot_4_hover;false;false;0
 event:/tools/constructor/bots_build;false;false;0
+event:/tools/constructor/bots_confirm;false;false;0
+event:/tools/constructor/bots_fly_infront;false;false;0
 event:/tools/constructor/bots_out;false;false;0
 event:/tools/constructor/constructor_climb;false;false;0
 event:/tools/constructor/constructor_deploy_end;false;false;0
+event:/tools/constructor/constructor_deploy_start;false;false;0
 event:/tools/constructor/deploy;false;false;0
 event:/tools/constructor/spawn;false;false;0
 event:/tools/constructor/sub_splash;false;false;0
+event:/tools/diamondblade/deploy;false;false;0
+event:/tools/diamondblade/hit;false;false;0
+event:/tools/diamondblade/swing;false;false;0
 event:/tools/divereel/breadcrum;false;false;0
 event:/tools/divereel/deploy;false;false;0
+event:/tools/divereel/node_loop;false;false;0
+event:/tools/divereel/reeling;false;false;0
+event:/tools/divereel/reload;false;false;0
 event:/tools/divereel/reset_path;false;false;0
+event:/tools/divereel/set_anchor;false;false;0
+event:/tools/divereel/unravel;false;false;0
 event:/tools/dolls/jack;false;false;0
 event:/tools/dolls/mark;false;false;0
 event:/tools/extinguisher/deploy;false;false;0
 event:/tools/extinguisher/first use;false;false;0
+event:/tools/extinguisher/shoot;false;false;0
 event:/tools/extinguisher/use_loop;false;false;0
 event:/tools/flare/deploy;false;false;20
 event:/tools/flare/first_use;false;false;20
@@ -752,8 +994,8 @@ event:/tools/flare/on_loop;false;false;20
 event:/tools/flare/throw;false;false;20
 event:/tools/flashlight/deploy;false;false;20
 event:/tools/flashlight/fist_use;false;false;20
-event:/tools/flashlight/turn_off;false;false;30
-event:/tools/flashlight/turn_on;false;false;30
+event:/tools/flashlight/turn_off;false;false;15
+event:/tools/flashlight/turn_on;false;false;15
 event:/tools/floating_locker/close;false;false;20
 event:/tools/floating_locker/deploy;false;false;20
 event:/tools/floating_locker/open;false;false;20
@@ -776,17 +1018,24 @@ event:/tools/knife/heat_idle;true;false;10
 event:/tools/knife/hit;true;false;10
 event:/tools/knife/swing;true;false;10
 event:/tools/knife/swing_surface;true;false;10
+event:/tools/lasercutter/cut_end;true;false;20
 event:/tools/lasercutter/cut_loop;true;false;20
 event:/tools/lasercutter/deploy;true;false;20
 event:/tools/lasercutter/door_cut;true;false;20
 event:/tools/lasercutter/first_use;true;false;20
+event:/tools/lights/pick_up;false;false;0
 event:/tools/lights/place;false;false;0
 event:/tools/pda/close;false;false;20
+event:/tools/pda/drop_item;false;false;0
+event:/tools/pda/equip_gear;false;false;0
 event:/tools/pda/first_use;false;false;0
+event:/tools/pda/new_biome;false;false;0
 event:/tools/pda/open;true;false;20
 event:/tools/pda/select;false;false;0
+event:/tools/pda/unequip_gear;false;false;0
 event:/tools/pipes/bubbles_loop;false;false;0
 event:/tools/pipes/motor_loop;false;false;0
+event:/tools/scan;false;false;0
 event:/tools/scanner/draw;false;false;0
 event:/tools/scanner/first_use;false;false;0
 event:/tools/scanner/new_blueprint;false;false;0
@@ -814,4 +1063,51 @@ event:/tools/transfuser/take_sample;false;false;0
 event:/tools/use_loot;false;false;0
 event:/tools/welder/deploy;false;false;20
 event:/tools/welder/first_use;false;false;20
+event:/tools/welder/weld_end;false;false;0
 event:/tools/welder/weld_loop;false;false;0
+snapshot:/aurora warnings;false;false;0
+snapshot:/bloodkelp_verb;false;false;0
+snapshot:/boneshark_bite;false;false;0
+snapshot:/breathing on;false;false;0
+snapshot:/cyclops interior;false;false;0
+snapshot:/duck when voice;false;false;0
+snapshot:/filter down;false;false;0
+snapshot:/filter up;false;false;0
+snapshot:/fixing bs code problems;false;false;0
+snapshot:/ghost bite;false;false;0
+snapshot:/inside_mute;false;false;0
+snapshot:/island echo;false;false;0
+snapshot:/kelpblend verb;false;false;0
+snapshot:/kelps verb;false;false;0
+snapshot:/LOWPASS;false;false;0
+snapshot:/mtue failsafe background;false;false;0
+snapshot:/mushroomverb;false;false;0
+snapshot:/mute  water creatures;false;false;0
+snapshot:/mute all;false;false;0
+snapshot:/mute cyclops voice;false;false;0
+snapshot:/mute deploys;false;false;0
+snapshot:/mute dives;false;false;0
+snapshot:/mute dragon;false;false;0
+snapshot:/mute fabricator;false;false;0
+snapshot:/mute lost river;false;false;0
+snapshot:/mute music;false;false;0
+snapshot:/mute non sea creatures;false;false;0
+snapshot:/mute reaper;false;false;0
+snapshot:/mute reefback;false;false;0
+snapshot:/mute rocket loops;false;false;0
+snapshot:/mute sea;false;false;0
+snapshot:/mute voice;false;false;0
+snapshot:/mute when pain;false;false;0
+snapshot:/no verb;false;false;0
+snapshot:/onland;false;false;0
+snapshot:/outside_mute;false;false;0
+snapshot:/pda_pause;false;false;0
+snapshot:/pod_verb;false;false;0
+snapshot:/prec_base;false;false;0
+snapshot:/radio filter;false;false;0
+snapshot:/radio signal stgrength;false;false;0
+snapshot:/rOCKET INTERIOR;false;false;0
+snapshot:/trippy;false;false;0
+snapshot:/underwater verb;false;false;0
+snapshot:/underwater_caves;false;false;0
+snapshot:/when freedive sound;false;false;0

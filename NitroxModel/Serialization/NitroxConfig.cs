@@ -157,9 +157,9 @@ public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
     /// <summary>
     ///     Ensures updates are properly persisted to the backing config file without overwriting user edits.
     /// </summary>
-    public UpdateDiposable Update(string saveDir)
+    public UpdateDisposable Update(string saveDir)
     {
-        return new UpdateDiposable(this, saveDir);
+        return new UpdateDisposable(this, saveDir);
     }
 
     private static Dictionary<string, MemberInfo> GetTypeCacheDictionary()
@@ -168,7 +168,6 @@ public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
         if (typeCache.Count == 0)
         {
             IEnumerable<MemberInfo> members = type.GetFields()
-                                                  .Where(f => f.Attributes != FieldAttributes.NotSerialized)
                                                   .Concat(type.GetProperties()
                                                               .Where(p => p.CanWrite)
                                                               .Cast<MemberInfo>());
@@ -199,7 +198,7 @@ public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
 
     private static bool SetMemberValue(NitroxConfig<T> instance, MemberInfo member, string valueFromFile)
     {
-        object ConvertFromStringOrDefault(Type typeOfValue, out bool isDefault, object defaultValue = default)
+        object? ConvertFromStringOrDefault(Type typeOfValue, out bool isDefault, object? defaultValue = null)
         {
             try
             {
@@ -248,12 +247,12 @@ public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
         }
     }
 
-    public readonly struct UpdateDiposable : IDisposable
+    public readonly struct UpdateDisposable : IDisposable
     {
         private string SaveDir { get; }
         private NitroxConfig<T> Config { get; }
 
-        public UpdateDiposable(NitroxConfig<T> config, string saveDir)
+        public UpdateDisposable(NitroxConfig<T> config, string saveDir)
         {
             config.Deserialize(saveDir);
             SaveDir = saveDir;
