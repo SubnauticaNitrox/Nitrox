@@ -3,29 +3,44 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Input;
+using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery;
-using NitroxModel.Discovery.Models;
-using NitroxModel.Helper;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Core;
+using Nitrox.Model.Discovery;
+using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class OptionsViewModel : RoutableViewModelBase
+internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageService storageService) : RoutableViewModelBase
 {
-    private readonly IKeyValueStore keyValueStore;
+    private readonly IKeyValueStore keyValueStore = keyValueStore;
+    private readonly StorageService storageService = storageService;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
     private string launchArgs;
 
     [ObservableProperty]
+    private string programDataFolderDir;
+    
+    [ObservableProperty]
+    private string screenshotsFolderDir;
+    
+    [ObservableProperty]
     private string savesFolderDir;
+    
+    [ObservableProperty]
+    private string logsFolderDir;
 
     [ObservableProperty]
     private KnownGame selectedGame;
@@ -33,25 +48,33 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool showResetArgsBtn;
 
+    [ObservableProperty]
+    private bool lightModeEnabled;
+    
+    [ObservableProperty]
+    private bool allowMultipleGameInstances;
+    
+    [ObservableProperty]
+    private bool useBigPictureMode;
+    
+    [ObservableProperty]
+    private bool isInReleaseMode;
+
     private static string DefaultLaunchArg => "-vrmode none";
+    private bool isResettingArgs;
 
-    public OptionsViewModel()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-    }
-
-    public OptionsViewModel(IKeyValueStore keyValueStore)
-    {
-        this.keyValueStore = keyValueStore;
-    }
-
-    internal override async Task ViewContentLoadAsync()
-    {
-        await Task.Run(() =>
-        {
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
-        });
+        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        ProgramDataFolderDir = NitroxUser.AppDataPath;
+        ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
+        SavesFolderDir = keyValueStore.GetSavesFolderDir();
+        LogsFolderDir = Model.Logger.Log.LogDirectory;
+        LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+        AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
+        UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
+        IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
@@ -84,10 +107,6 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
-            if (NitroxEntryPatch.IsPatchApplied(NitroxUser.GamePath))
-            {
-                NitroxEntryPatch.Remove(NitroxUser.GamePath);
-            }
 
             return path;
         });
@@ -98,7 +117,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task SetGamePath()
     {
-        string selectedDirectory = await MainWindow.StorageProvider.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
+        string selectedDirectory = await storageService.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
         if (selectedDirectory == "")
         {
             return;
@@ -119,11 +138,13 @@ public partial class OptionsViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void ResetArguments(IInputElement focusTargetAfterReset = null)
+    private void ResetArguments(IInputElement? focusTargetAfterReset = null)
     {
+        isResettingArgs = true;
         LaunchArgs = DefaultLaunchArg;
-        ShowResetArgsBtn = false;
-        SetArgumentsCommand.NotifyCanExecuteChanged();
+        SetArguments();
+        isResettingArgs = false;
+
         focusTargetAfterReset?.Focus();
     }
 
@@ -138,17 +159,62 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
-        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg) && !isResettingArgs;
     }
 
     [RelayCommand]
-    private void OpenSavesFolder()
+    private void DisplaySteamOverlayNotification()
     {
-        Process.Start(new ProcessStartInfo
+        if (AllowMultipleGameInstances && SelectedGame.Platform == Platform.STEAM)
         {
-            FileName = SavesFolderDir,
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+            LauncherNotifier.Warning("Note: Enabling this option will disable Steam's in-game overlay. Disable this option to use Steam's overlay");
+        }
+    }
+
+    [RelayCommand]
+    private void OpenFolder(string? dir = null)
+    {
+        if (!Directory.Exists(dir))
+        {
+            LauncherNotifier.Error("Can't open. Directory does not exist.");
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = dir,
+                Verb = "open",
+                UseShellExecute = true
+            })?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            LauncherNotifier.Error($"Failed to open folder: {ex.Message}");
+        }
+    }
+    
+    partial void OnLightModeEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsLightModeEnabled(value);
+        Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
+    }
+
+    partial void OnAllowMultipleGameInstancesChanged(bool value)
+    {
+        if (value)
+        {
+            UseBigPictureMode = false;
+        }
+        keyValueStore.SetIsMultipleGameInstancesAllowed(value);
+    }
+    
+    partial void OnUseBigPictureModeChanged(bool value)
+    {
+        if (value)
+        {
+            AllowMultipleGameInstances = false;
+        }
+        keyValueStore.SetBigPictureMode(value);
     }
 }

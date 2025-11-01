@@ -2,10 +2,10 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -34,15 +34,15 @@ public sealed partial class FruitPlant_Update_Patch : NitroxPatch, IDynamicPatch
 
         // If the NitroxEntity is on the distant Plantable object (e.g. fruit tree in a plant pot)
         if (PickPrefab_SetPickedUp_Patch.TryGetPlantable(__instance, out Plantable plantable) &&
-            plantable.TryGetNitroxId(out entityId) &&
-            plantable.currentPlanter && plantable.currentPlanter.TryGetNitroxId(out NitroxId planterId))
+            plantable.TryGetNitroxId(out entityId) && plantable.currentPlanter.TryGetOwnerNitroxId(out NitroxId ownerNitroxId))
         {
             __state = (__instance.timeNextFruit, entityId, plantable);
             // In this precise case, we look for ownership over the planter and not the plant
             // This simplifies a lot simulation ownership distribution
-            return Resolve<SimulationOwnership>().HasAnyLockType(planterId);
+            return Resolve<SimulationOwnership>().HasAnyLockType(ownerNitroxId);
         }
 
+        Log.Error($"[{nameof(FruitPlant_Update_Patch)}] Could not find either the plantable id [{entityId}] or the planter's owner id for {__instance.name}");
         __state = (__instance.timeNextFruit, null, null);
         return true;
     }
@@ -51,6 +51,11 @@ public sealed partial class FruitPlant_Update_Patch : NitroxPatch, IDynamicPatch
     {
         // If no change was made
         if (__state.Item1 == __instance.timeNextFruit)
+        {
+            return;
+        }
+
+        if (__state.Item2 == null)
         {
             return;
         }

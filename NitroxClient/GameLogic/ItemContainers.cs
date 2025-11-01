@@ -4,13 +4,10 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -91,9 +88,9 @@ public class ItemContainers
         }
     }
 
-    public void BroadcastBatteryAdd(GameObject gameObject, EnergyMixin energyMixin, TechType techType)
+    public void BroadcastBatteryAdd(GameObject battery, EnergyMixin energyMixin, TechType techType)
     {
-        if (!gameObject.TryGetIdOrWarn(out NitroxId id))
+        if (!battery.TryGetIdOrWarn(out NitroxId id))
         {
             return;
         }
@@ -105,7 +102,7 @@ public class ItemContainers
             return;
         }
 
-        EnergyMixin[] components = parent.gameObject.GetComponentsInChildren<EnergyMixin>(true);
+        EnergyMixin[] components = parent.gameObject.GetAllComponentsInChildren<EnergyMixin>();
         int componentIndex = 0;
         for (int i = 0; i < components.Length; i++)
         {
@@ -116,7 +113,7 @@ public class ItemContainers
             }
         }
 
-        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(battery);
 
         InstalledBatteryEntity installedBattery = new(componentIndex, id, techType.ToDto(), metadata.OrNull(), parent.Id, []);
 

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
-using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Utils;
 
@@ -19,24 +19,24 @@ public static class NitroxEntryPatch
     private const string NITROX_ENTRY_TYPE_NAME = "Main";
     private const string NITROX_ENTRY_METHOD_NAME = "Execute";
 
-    private const string GAME_INPUT_TYPE_NAME = "GameInput";
-    private const string GAME_INPUT_METHOD_NAME = "Awake";
+    private const string TARGET_TYPE_NAME = "PlatformUtils";
+    private const string TARGET_METHOD_NAME = "Awake";
 
     private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
 
     /// <summary>
     /// Inject Nitrox entry point into Subnautica's Assembly-CSharp.dll
     /// </summary>
-    public static void Apply(string subnauticaBasePath)
+    public static async Task Apply(string subnauticaBasePath)
     {
         ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath, nameof(subnauticaBasePath));
-
-        Log.Debug("Adding Nitrox entry point to Subnautica");
 
         string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+
+        Log.Debug("Checking Subnautica code exists");
 
         if (File.Exists(modifiedAssemblyCSharp))
         {
@@ -57,23 +57,31 @@ public static class NitroxEntryPatch
             }
         }
 
+        byte[] cachedSha256ForFile = await Hashing.GetCachedSha256ByFilePath(assemblyCSharp);
+        byte[] currentCodeFileSha256 = await Hashing.GetSha256(assemblyCSharp);
+        if (cachedSha256ForFile.SequenceEqual(currentCodeFileSha256))
+        {
+            Log.Info("Subnautica already has Nitrox entry patch");
+            return;
+        }
+
+        Log.Debug($"Adding Nitrox entry point to Subnautica because code file hash mismatch [{Convert.ToHexStringLower(cachedSha256ForFile)}] != [{Convert.ToHexStringLower(currentCodeFileSha256)}]");
+
         /*
-          	private void Awake()
-	        {
-		        NitroxPatcher.Main.Execute(); <----------- Insert this line inside subnautica's code
-		        if (GameInput.instance != null)
-		        {
-			        global::UnityEngine.Object.Destroy(base.gameObject);
-			        return;
-		        }
-		        GameInput.instance = this;
-		        GameInput.instance.Initialize();
-		        for (int i = 0; i < GameInput.numDevices; i++)
-		        {
-			        GameInput.SetupDefaultBindings((GameInput.Device)i);
-		        }
-		        DevConsole.RegisterConsoleCommand(this, "debuginput", false, false);
-	        }
+         * private void Awake()
+         * {
+         *     NitroxPatcher.Main.Execute(); <--- [INSERTED LINE]
+         *     if (PlatformUtils._main != null)
+         *     {
+         *         Debug.LogError("Multiple PlatformUtils instances found in scene!", this);
+         *         Debug.Break();
+         *         global::UnityEngine.Object.DestroyImmediate(base.gameObject);
+         *         return;
+         *     }
+         *     PlatformUtils._main = this;
+         *     global::UnityEngine.Object.DontDestroyOnLoad(base.gameObject);
+         *     base.StartCoroutine(this.PlatformInitAsync());
+         * }
         */
         // TODO: Find a better way to inject Nitrox entrypoint instead of using file swapping
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
@@ -84,12 +92,12 @@ public static class NitroxEntryPatch
 
             MemberRef executeMethodReference = module.Import(executeMethodDefinition);
 
-            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == TARGET_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == TARGET_METHOD_NAME);
 
             Instruction callNitroxExecuteInstruction = OpCodes.Call.ToInstruction(executeMethodReference);
 
-            if (awakeMethod.Body.Instructions[0].Operand == callNitroxExecuteInstruction.Operand)
+            if (awakeMethod.Body.Instructions[0].Operand is MemberRef refA && callNitroxExecuteInstruction.Operand is MemberRef refB && refA.FullName == refB.FullName)
             {
                 Log.Warn("Nitrox entry point already patched.");
                 return;
@@ -104,7 +112,7 @@ public static class NitroxEntryPatch
 
         // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
         Log.Debug($"Deleting {GAME_ASSEMBLY_NAME}");
-        Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
+        Exception? error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
         if (error != null)
         {
             throw error;
@@ -112,6 +120,9 @@ public static class NitroxEntryPatch
 
         FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         Log.Debug("Added Nitrox entry point to Subnautica");
+
+        Log.Debug("Storing SHA256 of Nitrox-mutated code file in cache");
+        Log.Debug($"Code file SHA256: {Convert.ToHexStringLower(await Hashing.GetAndStoreSha256ForFile(assemblyCSharp))}");
     }
 
     /// <summary>
@@ -129,19 +140,20 @@ public static class NitroxEntryPatch
 
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
         {
-            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == TARGET_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == TARGET_METHOD_NAME);
 
             IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
             int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
-
             if (nitroxExecuteInstructionIndex == -1)
             {
-                Log.Debug($"Nitrox entry point not found in {GAME_INPUT_TYPE_NAME}:{GAME_INPUT_METHOD_NAME}");
+                Log.Debug($"Nitrox entry point not found in {TARGET_TYPE_NAME}:{TARGET_METHOD_NAME}");
                 return;
             }
-
-            methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+            do
+            {
+                methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+            } while ((nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions)) >= 0);
             module.Write(modifiedAssemblyCSharp);
 
             File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
@@ -166,7 +178,7 @@ public static class NitroxEntryPatch
         return -1;
     }
 
-    private static Exception RetryWait(Action action, int interval, int retries = 0)
+    private static Exception? RetryWait(Action action, int interval, int retries = 0)
     {
         Exception lastException = null;
         while (retries >= 0)
@@ -193,8 +205,8 @@ public static class NitroxEntryPatch
 
         using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
         {
-            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == TARGET_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == TARGET_METHOD_NAME);
 
             return awakeMethod.Body.Instructions[0]?.ToString() == NITROX_EXECUTE_INSTRUCTION;
         }

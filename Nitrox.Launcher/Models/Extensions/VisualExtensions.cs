@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
-using NitroxModel.Platforms.OS.Windows;
+using Nitrox.Model.Platforms.OS.Windows;
 
 namespace Nitrox.Launcher.Models.Extensions;
 
@@ -9,7 +9,7 @@ public static class VisualExtensions
 {
     public static void ApplyOsWindowStyling(this Visual visual)
     {
-        if (Avalonia.Controls.Design.IsDesignMode)
+        if (IsDesignMode)
         {
             return;
         }
@@ -30,5 +30,5 @@ public static class VisualExtensions
         WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value, window.CanResize);
     }
 
-    public static Window GetWindow(this Visual visual) => TopLevel.GetTopLevel(visual) as Window;
+    public static Window? GetWindow(this Visual visual) => TopLevel.GetTopLevel(visual) as Window;
 }

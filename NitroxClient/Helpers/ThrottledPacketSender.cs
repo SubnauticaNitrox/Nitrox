@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Helpers
 {
@@ -47,8 +48,11 @@ namespace NitroxClient.Helpers
                 return true;
             }
 
-            throttledPackets.Add(dedupeKey, new ThrottledPacket(packet, throttleTime));
+            throttledPacket = new(packet, throttleTime);
+            throttledPackets.Add(dedupeKey, throttledPacket);
             packetSender.Send(packet);
+            // It's very important to set WasSend to true, otherwise the packet will be sent again in Update()
+            throttledPacket.WasSend = true;
             return true;
         }
 

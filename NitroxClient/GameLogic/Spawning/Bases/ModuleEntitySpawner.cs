@@ -6,13 +6,11 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -43,14 +41,19 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield break;
         }
         GameObject moduleObject = result.Get().Value;
+        
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(moduleObject);
-        if (!opContainer.HasValue)
+        if (opContainer.HasValue)
         {
-            yield break;
+            yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
         }
 
-        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
-
+        Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(moduleObject);
+        if (opEquipment.HasValue)
+        {
+            yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InstalledModuleEntity>().ToList<Entity>(), true);
+        }
+        
         if (moduleObject.TryGetComponent(out PowerSource powerSource))
         {
             // TODO: Have synced/restored power
@@ -148,6 +151,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
     public static ModuleEntity From(Constructable constructable)
     {
         ModuleEntity module = ModuleEntity.MakeEmpty();
+        module.Level = (int)LargeWorldEntity.CellLevel.Global;
         FillObject(module, constructable);
         return module;
     }

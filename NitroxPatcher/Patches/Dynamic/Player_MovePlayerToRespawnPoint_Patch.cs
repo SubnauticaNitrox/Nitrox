@@ -1,8 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -21,13 +19,8 @@ public sealed partial class Player_MovePlayerToRespawnPoint_Patch : NitroxPatch,
             currentSubId = __instance.currentSub.GetId();
         }
 
-        Optional<NitroxId> currentEscapePodId = Optional.Empty;
-        if (__instance.currentEscapePod)
-        {
-            currentEscapePodId = __instance.currentEscapePod.GetId();
-        }
-
         Resolve<LocalPlayer>().BroadcastSubrootChange(currentSubId);
-        Resolve<LocalPlayer>().BroadcastEscapePodChange(currentEscapePodId);
+        
+        // BroadcastEscapePodChange() is handled by EscapePod_RespawnPlayer_Patch for cross-functionality with the warpme command 
     }
 }

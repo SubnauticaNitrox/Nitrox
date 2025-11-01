@@ -1,8 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -14,10 +14,10 @@ public sealed partial class Bench_OnPlayerDeath_Patch : NitroxPatch, IDynamicPat
     {
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
+            Resolve<LocalPlayer>().BroadcastBenchChanged(id, BenchChanged.BenchChangeState.UNSET);
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
 
-        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.BENCH, AnimChangeState.UNSET);
     }
 }

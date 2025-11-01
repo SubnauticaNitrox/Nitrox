@@ -1,9 +1,7 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -18,7 +16,7 @@ public sealed partial class Openable_PlayOpenAnimation_Patch : NitroxPatch, IDyn
     {
         if (__instance.TryGetComponentInParent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
         {
-            nitroxCyclops.Virtual.ReplicateOpening(__instance, openState);
+            nitroxCyclops.Virtual.ReplicateOpening(__instance, openState, duration);
         }
 
         // Do not try to sync

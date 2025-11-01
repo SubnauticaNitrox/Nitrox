@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -20,6 +20,12 @@ public static class BuildingPostSpawner
         else if (gameObject.TryGetComponent(out WaterPark waterPark))
         {
             SetupWaterPark(waterPark, objectId);
+            return null;
+        }
+        else if (gameObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
+        {
+            // TODO: remove once scanner rooms are properly synced
+            Log.InGame(Language.main.Get("Nitrox_ScannerRoomWarn"));
             return null;
         }
 

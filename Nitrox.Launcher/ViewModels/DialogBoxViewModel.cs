@@ -1,13 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Input.Platform;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -17,13 +12,13 @@ namespace Nitrox.Launcher.ViewModels;
 /// </summary>
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
-    [ObservableProperty] private string windowTitle;
+    [ObservableProperty] private string? windowTitle;
 
-    [ObservableProperty] private string title;
+    [ObservableProperty] private string title = "";
     [ObservableProperty] private double titleFontSize = 24;
     [ObservableProperty] private FontWeight titleFontWeight = FontWeight.Bold;
 
-    [ObservableProperty] private string description;
+    [ObservableProperty] private string description = "";
     [ObservableProperty] private double descriptionFontSize = 14;
     [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 
@@ -51,28 +46,6 @@ public partial class DialogBoxViewModel : ModalViewModelBase
         }
 
         base.OnPropertyChanged(e);
-    }
-
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task CopyToClipboard(ContentControl commandControl)
-    {
-        string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
-        IClipboard clipboard = commandControl.GetWindow().Clipboard;
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(text);
-
-            if (commandControl != null)
-            {
-                object previousContent = commandControl.Content;
-                commandControl.Content = "Copied!";
-                await Dispatcher.UIThread.InvokeAsync(async () =>
-                {
-                    await Task.Delay(3000);
-                    commandControl.Content = previousContent;
-                });
-            }
-        }
     }
 }
 

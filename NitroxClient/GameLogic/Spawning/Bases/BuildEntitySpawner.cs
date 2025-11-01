@@ -7,13 +7,12 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -50,7 +49,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 #if DEBUG
         Log.Verbose($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
 #endif
-        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>());
+        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerEntity>().ToList<Entity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
 
         TaskResult<Optional<GameObject>> childResult = new();
@@ -82,6 +81,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
     public static BuildEntity From(Base targetBase, EntityMetadataManager entityMetadataManager)
     {
         BuildEntity buildEntity = BuildEntity.MakeEmpty();
+        buildEntity.Level = (int)LargeWorldEntity.CellLevel.Global;
         if (targetBase.TryGetNitroxId(out NitroxId baseId))
         {
             buildEntity.Id = baseId;

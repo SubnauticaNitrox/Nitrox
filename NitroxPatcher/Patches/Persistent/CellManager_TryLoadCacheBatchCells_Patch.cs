@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxModel.Helper;
+using NitroxPatcher.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {

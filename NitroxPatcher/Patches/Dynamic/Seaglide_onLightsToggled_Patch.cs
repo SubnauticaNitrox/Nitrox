@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -13,7 +12,7 @@ public sealed partial class Seaglide_onLightsToggled_Patch : NitroxPatch, IDynam
     {
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
-            Resolve<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, active));
+            Resolve<IPacketSender>().Send(new Nitrox.Model.Subnautica.Packets.ToggleLights(id, active));
         }
     }
 }

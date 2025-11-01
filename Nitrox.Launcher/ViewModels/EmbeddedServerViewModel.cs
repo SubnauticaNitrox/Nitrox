@@ -10,20 +10,20 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Launcher.ViewModels;
 
 /// <summary>
 ///     Each (embedded) running server should have its own ViewModel.
 /// </summary>
-public partial class EmbeddedServerViewModel : RoutableViewModelBase
+internal partial class EmbeddedServerViewModel : RoutableViewModelBase
 {
     private readonly CircularBuffer<string> commandHistory = new(1000);
     private int? selectedHistoryIndex;
 
     [ObservableProperty]
-    private string serverCommand;
+    private string? serverCommand;
 
     [ObservableProperty]
     private ServerEntry serverEntry;
@@ -31,30 +31,26 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process.Output;
-
-    public EmbeddedServerViewModel()
-    {
-    }
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
         this.serverEntry = serverEntry;
         this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
-            if (status.Server != model.ServerEntry)
+            if (status.ProcessId != model.ServerEntry.Process?.Id)
             {
                 return;
             }
-            if (!status.IsOnline && model.HostScreen.ActiveViewModel is EmbeddedServerViewModel)
+            if (!status.IsOnline)
             {
-                model.HostScreen.BackAsync().ConfigureAwait(false);
+                model.Back();
             }
         });
     }
     
     [RelayCommand]
-    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
+    private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
@@ -77,7 +73,15 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
                 LogText = $"> {ServerCommand}"
             });
         }
-        await ServerEntry.Process.SendCommandAsync(ServerCommand);
+        string command = ServerCommand.TrimStart('/');
+        if (!string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase))
+        {
+            await ServerEntry.Process.SendCommandAsync(command);
+        }
+        else
+        {
+            await StopServerAsync();
+        }
         ClearInput(textBox);
     }
     

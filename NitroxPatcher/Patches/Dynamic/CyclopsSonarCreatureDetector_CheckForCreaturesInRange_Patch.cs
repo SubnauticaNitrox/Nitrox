@@ -1,10 +1,9 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 
-public sealed partial class CyclopsSonarCreatureDetector_CheckForCreaturesInRange_Patch : NitroxPatch, IPersistentPatch
+public sealed partial class CyclopsSonarCreatureDetector_CheckForCreaturesInRange_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarCreatureDetector t) => t.CheckForCreaturesInRange());
 

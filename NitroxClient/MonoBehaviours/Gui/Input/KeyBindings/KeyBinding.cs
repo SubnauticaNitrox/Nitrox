@@ -1,26 +1,12 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
-using NitroxModel.Helper;
+using UnityEngine.InputSystem;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 
-public class KeyBinding
+public abstract class KeyBinding(string buttonLabel, string defaultKeyboardKey, string defaultControllerKey = null)
 {
-    public GameInput.Button Button { get; }
-    public GameInput.Device Device { get; }
-    public string Label { get; }
-    public string PrimaryKey { get; }
-    public string SecondaryKey { get; }
-    public KeyBindingAction Action { get; }
+    public string ButtonLabel { get; init; } = buttonLabel;
+    public string DefaultKeyboardKey { get; init; } = defaultKeyboardKey;
+    public string DefaultControllerKey { get; init; } = defaultControllerKey;
 
-    public KeyBinding(int keyBindingValue, string buttonLabel, GameInput.Device buttonDevice, KeyBindingAction buttonAction, string primaryKey, string secondaryKey = null)
-    {
-        Validate.NotNull(primaryKey);
-
-        Button = (GameInput.Button)keyBindingValue;
-        Device = buttonDevice;
-        Label = buttonLabel;
-        Action = buttonAction;
-        PrimaryKey = primaryKey;
-        SecondaryKey = secondaryKey;
-    }
+    public abstract void Execute(InputAction.CallbackContext callbackContext);
 }

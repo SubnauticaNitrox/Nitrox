@@ -36,10 +36,9 @@
                     Spacing="50"
                     VerticalAlignment="Center">
                     <Image
-                        Margin="-25,0,0,0"
+                        Margin="-25,25,0,0"
                         Source="/Assets/Images/world-manager/server.png"
-                        Stretch="None"
-                        Width="300" />
+                        Stretch="None" />
                     <TextBlock
                         FontSize="32"
                         FontWeight="600"
@@ -62,10 +61,7 @@
                     </ListBox.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding BackupFileName}">
-                                <TextBlock Text="Backup " />
-                                <TextBlock Text="{Binding BackupDate}" />
-                            </StackPanel>
+                            <controls:RichTextBlock Text="{Binding BackupName}" ToolTip.Tip="{Binding BackupFilePath}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ListBox>

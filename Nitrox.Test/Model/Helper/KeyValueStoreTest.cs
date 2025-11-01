@@ -1,6 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace NitroxModel.Helper;
+namespace Nitrox.Model.Helper;
 
 [TestClass]
 public class KeyValueStoreTest

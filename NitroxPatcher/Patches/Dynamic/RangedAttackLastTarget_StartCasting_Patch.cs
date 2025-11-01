@@ -1,6 +1,6 @@
 using System.Reflection;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -17,4 +17,3 @@ public sealed partial class RangedAttackLastTarget_StartCasting_Patch : NitroxPa
         RangedAttackLastTarget_StartCharging_Patch.BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CASTING);
     }
 }
-

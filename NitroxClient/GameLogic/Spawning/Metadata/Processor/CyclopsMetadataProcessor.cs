@@ -1,9 +1,9 @@
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
@@ -65,6 +65,12 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
 
     private void SetEngineMode(GameObject cyclops, CyclopsMotorMode.CyclopsMotorModes mode)
     {
+        CyclopsMotorMode.CyclopsMotorModes oldMode = cyclops.GetComponent<SubControl>().cyclopsMotorMode.cyclopsMotorMode;
+        if (oldMode == mode)
+        {
+            return;
+        }
+
         foreach (CyclopsMotorModeButton button in cyclops.GetComponentsInChildren<CyclopsMotorModeButton>(true))
         {
             // At initial sync, this kind of processor is executed before the Start()

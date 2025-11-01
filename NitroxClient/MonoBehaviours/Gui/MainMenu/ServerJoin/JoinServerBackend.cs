@@ -6,12 +6,14 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
@@ -124,7 +126,7 @@ public static class JoinServerBackend
 
             if (ip.IsLocalhost())
             {
-                if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
+                if (Process.GetProcessesByName("Nitrox.Server.Subnautica").Length == 0)
                 {
                     Log.Error("No server process was found while address was localhost");
                     msg += $"\n{Language.main.Get("Nitrox_StartServer")}";
@@ -161,7 +163,7 @@ public static class JoinServerBackend
         IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
         UWE.CoroutineHost.StartCoroutine(startNewGame);
-        LoadingScreenVersionText.Initialize();
+        TopRightWatermarkText.Initialize();
     }
 
     public static void StopMultiplayerClient()

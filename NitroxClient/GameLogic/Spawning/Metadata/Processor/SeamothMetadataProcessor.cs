@@ -1,8 +1,9 @@
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
@@ -30,12 +31,21 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
         {
             SetLights(seamoth, metadata.LightsOn);
             SetHealth(seamoth.gameObject, metadata.Health);
+            SetInPrecursor(seamoth, metadata.InPrecursor);
             SetNameAndColors(subName, metadata.Name, metadata.Colors);
         }
     }
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
     {
+        ToggleLights toggleLights = seamoth.toggleLights;
+
+        if (lightsOn == toggleLights.GetLightsActive())
+        {
+            // Lights are already in the desired state, nothing to do.
+            return;
+        }
+
         using (FMODSystem.SuppressSendingSounds())
         {
             seamoth.toggleLights.SetLightsActive(lightsOn);

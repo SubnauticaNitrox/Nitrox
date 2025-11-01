@@ -1,9 +1,7 @@
 using System.Text.RegularExpressions;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
@@ -12,11 +10,22 @@ namespace NitroxClient.GameLogic.Helper
     {
         private static readonly Regex LockerRegex = new(@"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
         private const string LOCKER_BASE_NAME = "submarine_locker_01_0";
-        private const string PLAYER_OBJECT_NAME = "Player";
         private const string ESCAPEPOD_OBJECT_NAME = "EscapePod";
-        
+
+        /// <summary>
+        ///     Gets inventory container of game object. Returns player inventory first, then child inventories.
+        /// </summary>
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
+            if (owner.IsLocalPlayer())
+            {
+                return Optional.Of(Inventory.main.container);
+            }
+            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
+            if (remotePlayerId)
+            {
+                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
+            }
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
             if (seamothStorageContainer)
             {
@@ -31,15 +40,6 @@ namespace NitroxClient.GameLogic.Helper
             if (baseBioReactor)
             {
                 return Optional.Of(baseBioReactor.container);
-            }
-            if (owner.name == PLAYER_OBJECT_NAME)
-            {
-                return Optional.Of(Inventory.Get().container);
-            }
-            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
-            if (remotePlayerId)
-            {
-                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
             }
 
             return Optional.Empty;

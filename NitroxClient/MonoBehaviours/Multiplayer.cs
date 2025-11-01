@@ -12,11 +12,12 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Discord;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using NitroxModel.Core;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
+using Nitrox.Model.Core;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -166,12 +167,15 @@ namespace NitroxClient.MonoBehaviours
             InitMonoBehaviours();
             Utils.SetContinueMode(true);
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+
+            RegisterConnectedDelegates();
         }
 
         public void InitMonoBehaviours()
         {
             // Gameplay.
-            gameObject.AddComponent<AnimationSender>();
+            gameObject.AddComponent<UnderwaterStateTracker>();
+            gameObject.AddComponent<PrecursorTracker>();
             gameObject.AddComponent<PlayerMovementBroadcaster>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
@@ -185,6 +189,8 @@ namespace NitroxClient.MonoBehaviours
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             OnAfterMultiplayerEnd?.Invoke();
+
+            UnregisterConnectedDelegates();
         }
 
         private static void SetLoadingComplete()
@@ -196,9 +202,9 @@ namespace NitroxClient.MonoBehaviours
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
-            LoadingScreenVersionText.DisableWarningText();
+            TopRightWatermarkText.ApplyChangesForInGame();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
-            CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
+            CoroutineHost.StartCoroutine(PlayerChatManager.Instance.LoadChatKeyHint());
         }
 
         private IEnumerator InitializeLocalPlayerState()
@@ -226,8 +232,29 @@ namespace NitroxClient.MonoBehaviours
                 // If we just disconnected from a multiplayer session, then we need to kill the connection here.
                 // Maybe a better place for this, but here works in a pinch.
                 JoinServerBackend.StopMultiplayerClient();
-                SceneCleaner.Open();
             }
+        }
+
+        private void OnPlayerChat(string message)
+        {
+            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, message));
+        }
+
+        private void OnPlayerCommand(string command)
+        {
+            multiplayerSession.Send(new ServerCommand(command));
+        }
+
+        public void RegisterConnectedDelegates()
+        {
+            PlayerChatManager.Instance.OnPlayerChat += OnPlayerChat;
+            PlayerChatManager.Instance.OnPlayerCommand += OnPlayerCommand;
+        }
+
+        public void UnregisterConnectedDelegates()
+        {
+            PlayerChatManager.Instance.OnPlayerChat -= OnPlayerChat;
+            PlayerChatManager.Instance.OnPlayerCommand -= OnPlayerCommand;
         }
     }
 }

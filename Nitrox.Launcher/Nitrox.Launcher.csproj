@@ -26,33 +26,48 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.1.5" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.1.5" />
-        <PackageReference Include="Avalonia.Svg.Skia" Version="11.1.0.1" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.5" />
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.5" />
-        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.1.0.7" />
-        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.1.0.7" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="ConsoleAppFramework" Version="5.3.1">
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Svg.Skia" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Diagnostics">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Avalonia.Xaml.Interactions" />
+        <PackageReference Include="Avalonia.Xaml.Interactivity" />
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="ConsoleAppFramework">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dnlib" Version="4.4.0" />
-        <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
-        <PackageReference Include="LitJson" Version="0.19.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="dnlib" />
+        <PackageReference Include="LitJson" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="ServiceScan.SourceGenerator">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Update="Nitrox.Analyzers">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    
+    <!-- Temp fix for Avalonia 11.3 bug: https://github.com/AvaloniaUI/Avalonia/discussions/18971#discussioncomment-13533852 -->
+    <ItemGroup Condition="$(_IsLinux) or $(_IsLinuxTarget)">
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
-        <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+        <ProjectReference Include="..\Nitrox.Model\Nitrox.Model.csproj" />
     </ItemGroup>
 
     <!-- Project references not to be code-linked with app, but are used by app as content files. See https://github.com/dotnet/msbuild/issues/4795#issuecomment-1443879474  -->
     <ItemGroup>
         <!-- TODO: Fix server project reference so there's no code access (launcher should never call server exe code). -->
-        <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
+        <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" />
         <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
             <Name>NitroxPatcher472</Name>
             <SetTargetFramework>TargetFramework=net472</SetTargetFramework>
@@ -87,9 +102,10 @@
     </Target>
 
     <ItemGroup>
-        <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
-        <Content Include="..\Nitrox.Assets.Subnautica\LanguageFiles\**" LinkBase="Resources\LanguageFiles" CopyToOutputDirectory="PreserveNewest" />
-        <Content Include="..\Nitrox.Assets.Subnautica\AssetBundles\**" LinkBase="Resources\AssetBundles" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="..\Nitrox.Assets.Subnautica\*.dll" LinkBase="lib\net472" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\Nitrox.Assets.Subnautica\LanguageFiles\**" LinkBase="Resources\LanguageFiles" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\Nitrox.Assets.Subnautica\AssetBundles\**" LinkBase="Resources\AssetBundles" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <Import Project="..\Nitrox.Shared.targets" />

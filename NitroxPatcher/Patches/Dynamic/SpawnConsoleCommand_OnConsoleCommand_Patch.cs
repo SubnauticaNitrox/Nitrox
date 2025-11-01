@@ -1,7 +1,6 @@
 using System.Reflection;
+using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -16,7 +15,7 @@ public sealed partial class SpawnConsoleCommand_OnConsoleCommand_Patch : NitroxP
     {
         if (Resolve<LocalPlayer>().Permissions < Perms.MODERATOR)
         {
-            Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", Perms.MODERATOR.ToString()));
+            Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", nameof(Perms.MODERATOR)));
             return false;
         }
         return true;

@@ -7,14 +7,13 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;
@@ -173,6 +172,20 @@ public partial class BuildingHandler : MonoBehaviour
         BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
         constructableBase.SetState(true, true);
         NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, placeBase.FormerGhostId);
+
+        // Specific case : just a moonpool built as a base
+        if (constructableBase.techType == TechType.BaseMoonpool)
+        {
+            // For a new base, the moonpool will be the only cell which is 0, 0, 0
+            Int3 absoluteCell = new(0, 0, 0);
+            // Deterministic id, see MoonpoolManager.LateAssignNitroxEntity
+            NitroxId moonpoolId = placeBase.FormerGhostId.Increment();
+            baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(absoluteCell, moonpoolId);
+        }
+
+        // It's very important that the tracker starts at 0 here because otherwise, it'd be
+        // misevaluated to -1 if the local client was to start editing this base
+        EnsureTracker(placeBase.FormerGhostId).ResetToId(0);
         BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.UtcNow;
     }
 

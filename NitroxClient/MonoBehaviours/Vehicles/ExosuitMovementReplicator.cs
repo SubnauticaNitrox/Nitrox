@@ -1,9 +1,8 @@
 using FMOD.Studio;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
@@ -20,6 +19,8 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     private Vector3 leftAimTarget;
     private Vector3 rightAimTarget;
     private bool ikEnabled;
+
+    private RemotePlayer? drivingPlayer;
 
     public void Awake()
     {
@@ -108,7 +109,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         // See Exosuit.jetsActive setter
         if (jetsActive != exosuitMovementData.ThrottleApplied)
         {
-            jetsActive = exosuitMovementData.ThrottleApplied;
+            jetsActive = exosuitMovementData.ThrottleApplied && drivingPlayer != null;
             timeJetsActiveChanged = Time.time;
         }
 
@@ -134,6 +135,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     public override void Enter(RemotePlayer remotePlayer)
     {
+        drivingPlayer = remotePlayer;
         exosuit.SetIKEnabled(true);
         exosuit.thrustIntensity = 0;
     }
@@ -144,6 +146,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         exosuit.loopingJetSound.Stop(STOP_MODE.ALLOWFADEOUT);
         exosuit.fxcontrol.Stop(0);
 
+        drivingPlayer = null;
         jetsActive = false;
     }
 }

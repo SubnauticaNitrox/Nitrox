@@ -1,21 +1,20 @@
 ﻿<UserControl
+    d:DesignHeight="1000"
     d:DesignWidth="1000"
     mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     x:Class="Nitrox.Launcher.Views.OptionsView"
     x:DataType="vm:OptionsViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    xmlns:models="clr-namespace:Nitrox.Model.Discovery.Models;assembly=Nitrox.Model">
     <Design.DataContext>
-        <vm:OptionsViewModel>
-            <vm:OptionsViewModel.SelectedGame>
-                <design:KnownGame PathToGame="C:\Users\Me\Games\Subnautica" Platform="STEAM" />
-            </vm:OptionsViewModel.SelectedGame>
-        </vm:OptionsViewModel>
+        <designer:DesignOptionsViewModel />
     </Design.DataContext>
     <UserControl.Resources>
         <StackPanel Orientation="Vertical" x:Key="InfoIconTooltipText">
@@ -53,13 +52,13 @@
                     CornerRadius="12"
                     Padding="22,15">
                     <Grid ColumnDefinitions=" Auto, *, Auto">
-                        <Image
-                            Height="36"
+                        <controls:RecolorImage
+                            Grid.Column="0"
+                            Height="36" Width="36"
                             Margin="0,0,22,0"
                             Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
                             Stretch="Uniform"
-                            ToolTip.Tip="Welcome aboard, Captain!"
-                            Width="36" />
+                            ToolTip.Tip="Welcome aboard, Captain!" />
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Left"
@@ -71,7 +70,8 @@
                                 Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
                             <SelectableTextBlock
                                 FontSize="14"
-                                Foreground="#BFFFFFFF"
+                                Foreground="{DynamicResource BrandBlack}"
+                                Opacity="0.75"
                                 Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
                         </StackPanel>
                         <Button
@@ -84,32 +84,7 @@
                             ToolTip.Tip="Direct the launcher to your game's install location"
                             Width="120" />
                     </Grid>
-
-                    <!-- <ItemsControl ItemsSource="{Binding KnownGames}"> -->
-                    <!--     <ItemsControl.ItemTemplate> -->
-                    <!--         <DataTemplate> -->
-                    <!--             <StackPanel Orientation="Horizontal" Spacing="16" Height="52"> -->
-                    <!--                 <RadioButton Margin="0 0 -5 0" /> -->
-                    <!--  <Image Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"  -->
-                    <!--  ToolTip.Tip="Welcome aboard, Captain!"  -->
-                    <!--  Stretch="Uniform"  -->
-                    <!--  Height="36"  -->
-                    <!--  Width="36" />  -->
-                    <!--                 <StackPanel Spacing="2" VerticalAlignment="Center"> -->
-                    <!--                     <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Platform, Converter={converters:ToStringConverter}}" /> -->
-                    <!--                     <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding PathToGame, FallbackValue='Unknown path'}" /> -->
-                    <!--                 </StackPanel> -->
-                    <!--             </StackPanel> -->
-                    <!--         </DataTemplate> -->
-                    <!--     </ItemsControl.ItemTemplate> -->
-                    <!-- </ItemsControl> -->
                 </Border>
-                <Grid>
-                    <!--  <Button Classes="icon" VerticalAlignment="Bottom"  -->
-                    <!--  Content="Manually add game installation"  -->
-                    <!--  Command="{Binding AddGameInstallationCommand}"/>  -->
-                    <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
-                </Grid>
             </StackPanel>
 
             <!--  Launch Arguments  -->
@@ -141,7 +116,8 @@
                                 FontSize="12"
                                 Height="28"
                                 HorizontalAlignment="Right"
-                                IsVisible="{Binding ShowResetArgsBtn}"
+                                IsHitTestVisible="{Binding ShowResetArgsBtn}"
+                                Opacity="{Binding ShowResetArgsBtn, Converter={converters:BoolToDoubleConverter}}"
                                 Margin="0,0,12,0"
                                 Padding="0"
                                 ToolTip.Tip="Reset arguments"
@@ -158,10 +134,9 @@
                             <Button.Styles>
                                 <Style Selector="Button:pointerover">
                                     <Setter Property="Effect">
-                                        <!--  TODO: Figure out how to dynamically bind color property to change with active theme  -->
                                         <DropShadowDirectionEffect
                                             BlurRadius="20"
-                                            Color="White"
+                                            Color="{DynamicResource BrandBlack}"
                                             ShadowDepth="0" />
                                     </Setter>
                                 </Style>
@@ -178,39 +153,128 @@
                     </Grid>
                 </Border>
             </StackPanel>
-
-            <!--  Saves Folder Location  -->
+            
+            <!--  Launcher Settings  -->
             <StackPanel Spacing="12">
                 <TextBlock
                     FontSize="20"
                     FontWeight="Bold"
-                    Text="Save File Location" />
+                    Text="Launcher Settings" />
                 <TextBlock
                     FontSize="12"
                     HorizontalAlignment="Left"
-                    Text="This is the location where your Nitrox server save files are stored" />
+                    Text="Configure the launcher with these settings" />
+                
+                <WrapPanel Margin="-5">
+                    <WrapPanel.Styles>
+                        <Style Selector="WrapPanel > Border">
+                            <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
+                            <Setter Property="CornerRadius" Value="12" />
+                            <Setter Property="Margin" Value="5" />
+                            <Setter Property="Padding" Value="22,15" />
+                            <Style Selector="^ > StackPanel">
+                                <Setter Property="Spacing" Value="10" />
+                                <Setter Property="Orientation" Value="Horizontal" />
+                                <Style Selector="^ > TextBlock">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </Style>
+                        </Style>
+                    </WrapPanel.Styles>
+                    
+                    <Border>
+                        <StackPanel>
+                            <TextBlock Text="Enable light mode" />
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding LightModeEnabled}"
+                                      ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
+                        </StackPanel>
+                    </Border>
+                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
+                        <StackPanel>
+                            <TextBlock Text="Allow multiple game instances" />
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding AllowMultipleGameInstances}"
+                                      ToolTip.Tip="Allow multiple game instances to run simultaneously. NOTE: This bypasses Steam launcher and disables Steam overlay, Steam Input, and controller support.">
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="Click">
+                                        <InvokeCommandAction Command="{Binding DisplaySteamOverlayNotificationCommand}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </CheckBox>
+                        </StackPanel>
+                    </Border>
+                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
+                        <StackPanel>
+                            <TextBlock Text="Big Picture mode" />
+                            <CheckBox Classes="switch"
+                                      IsChecked="{Binding UseBigPictureMode}"
+                                      ToolTip.Tip="Launch games in Steam Big Picture mode" />
+                        </StackPanel>
+                    </Border>
+                </WrapPanel>
+            </StackPanel>
+
+            <!--  AppData Location  -->
+            <StackPanel Spacing="12">
+                <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="Nitrox Program Data Location" />
+                <TextBlock
+                    FontSize="12"
+                    HorizontalAlignment="Left"
+                    Text="This is the location where files used by Nitrox are stored, including your screenshots, saves and logs" />
 
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
                     CornerRadius="12"
                     Padding="22,15">
                     <Grid ColumnDefinitions="*,Auto">
-                        <TextBlock
+                        <SelectableTextBlock
                             FontSize="15"
-                            Foreground="#BFFFFFFF"
-                            Text="{Binding SavesFolderDir}"
+                            Foreground="{DynamicResource BrandBlack}"
+                            Opacity="0.75"
+                            Text="{Binding ProgramDataFolderDir}"
                             VerticalAlignment="Center" />
                         <Button
                             Classes="primary"
-                            Command="{Binding OpenSavesFolderCommand}"
+                            Command="{Binding OpenFolderCommand}"
+                            CommandParameter="{Binding ProgramDataFolderDir}"
                             Content="Open"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             Margin="22,0,0,0"
-                            ToolTip.Tip="Open saves folder"
+                            ToolTip.Tip="Open Program Data folder"
                             Width="120" />
                     </Grid>
                 </Border>
+                
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding ScreenshotsFolderDir}"
+                        ToolTip.Tip="{Binding ScreenshotsFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Screenshots folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding SavesFolderDir}"
+                        ToolTip.Tip="{Binding SavesFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Saves folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding LogsFolderDir}"
+                        ToolTip.Tip="{Binding LogsFolderDir}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Logs folder" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

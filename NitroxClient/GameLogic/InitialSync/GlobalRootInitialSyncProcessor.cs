@@ -1,10 +1,12 @@
 using System.Collections;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
+using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -73,7 +75,7 @@ public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
                 vehicles.SetOnPilotMode(playerContext.DrivingVehicle, playerContext.PlayerId, true);
                 if (playerManager.TryFind(playerContext.PlayerId, out RemotePlayer remotePlayer))
                 {
-                    // As remote players are still driving, they aren't updating their IsUnderwater state so AnimationSender.Update
+                    // As remote players are still driving, they aren't updating their IsUnderwater state so UnderwaterStateTracker.Update
                     // isn't going to send a packet. Therefore we need to set this by hand
                     remotePlayer.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
                 }

@@ -1,13 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
@@ -16,25 +17,25 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
+using Nitrox.Model.Core;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
 
 public class App : Application
 {
-    internal const string CRASH_REPORT_FILE_NAME = "Nitrox.Launcher-crash.txt";
-    internal static Func<Window> StartupWindowFactory;
-    internal static InstantLaunchData InstantLaunch;
-    internal static bool IsCrashReport;
+    internal static Func<Window>? StartupWindowFactory;
+    internal static InstantLaunchData? InstantLaunch;
+    private static bool isCrashReport;
 
     /// <summary>
     ///     If true, allows duplicate instances of the app to be active.
     /// </summary>
-    internal static bool AllowInstances;
+    private static bool allowInstances;
 
-    internal static X11RenderingMode? PreferredRenderingMode;
+    private static X11RenderingMode? preferredRenderingMode;
 
     public Window AppWindow
     {
@@ -48,7 +49,7 @@ public class App : Application
                 case ISingleViewApplicationLifetime singleViewPlatform:
                     singleViewPlatform.MainView = value;
                     break;
-                case null when Design.IsDesignMode:
+                case null when IsDesignMode:
                     Log.Info("Running in design previewer!");
                     break;
                 default:
@@ -61,47 +62,43 @@ public class App : Application
     {
         CultureManager.ConfigureCultureInfo();
         Log.Setup();
+        Log.Info($@"Starting Nitrox Launcher V{NitroxEnvironment.Version}+{NitroxEnvironment.GitHash} with args ""{string.Join(" ", NitroxEnvironment.CommandLineArgs)}"" built on {NitroxEnvironment.BuildDate:F}");
 
         // Handle command line arguments.
         ConsoleApp.ConsoleAppBuilder cliParser = ConsoleApp.Create();
         cliParser.Add("", (bool crashReport, X11RenderingMode? rendering = null, bool allowInstances = false) =>
         {
-            IsCrashReport = crashReport;
-            PreferredRenderingMode = rendering;
-            AllowInstances = allowInstances;
+            isCrashReport = crashReport;
+            preferredRenderingMode = rendering;
+            App.allowInstances = allowInstances;
 
-            if (IsCrashReport)
+            if (isCrashReport && CrashReporter.GetLastReport() is {} crashLog)
             {
-                string executableRootPath = Path.GetDirectoryName(Environment.ProcessPath ?? NitroxUser.ExecutableRootPath);
-                if (executableRootPath != null)
-                {
-                    string crashReportContent = File.ReadAllText(Path.Combine(executableRootPath, CRASH_REPORT_FILE_NAME));
-                    StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashReportContent } };
-                }
+                StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashLog } };
             }
         });
         cliParser.Add("instantlaunch", ([SaveName] string save, [MinLength(1)] params string[] players) =>
         {
             InstantLaunch = new InstantLaunchData(save, players);
         });
-        cliParser.Run(Environment.GetCommandLineArgs().Skip(1).ToArray());
+        cliParser.Run(NitroxEnvironment.CommandLineArgs);
 
         // Fallback to normal startup.
         if (StartupWindowFactory == null)
         {
-            if (!AllowInstances)
+            if (!allowInstances)
             {
                 CheckForRunningInstance();
             }
             ServiceProvider services = new ServiceCollection().AddAppServices().BuildServiceProvider();
-            StartupWindowFactory = () => new MainWindow { DataContext = services.GetRequiredService<MainWindowViewModel>() };
+            StartupWindowFactory = services.GetRequiredService<Func<Window>>();
         }
 
         AppBuilder builder = AppBuilder.Configure<App>()
                                        .UsePlatformDetect()
                                        .LogToTrace()
                                        .With(new SkiaOptions { UseOpacitySaveLayer = true });
-        builder = WithRenderingMode(builder, PreferredRenderingMode);
+        builder = WithRenderingMode(builder, preferredRenderingMode);
         return builder;
 
         static AppBuilder WithRenderingMode(AppBuilder builder, X11RenderingMode? rendering)
@@ -126,6 +123,8 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Debug.Assert(StartupWindowFactory != null, $"{nameof(StartupWindowFactory)} != null");
+
         FixAvaloniaPlugins();
         ApplyAppDefaults();
 
@@ -136,35 +135,13 @@ public class App : Application
 
     internal static void HandleUnhandledException(Exception ex)
     {
-        if (IsCrashReport)
+        if (isCrashReport)
         {
             Log.Error(ex, "Error while trying to show crash report");
             return;
         }
 
-        Log.Error(ex, "!!!Nitrox Launcher Crash!!!");
-
-        // Write crash report if we're not reporting one right now.
-        try
-        {
-            string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
-            string executableRoot = Path.GetDirectoryName(executableFilePath);
-            if (executableFilePath != null && executableRoot != null)
-            {
-                string crashReportFile = Path.Combine(executableRoot, CRASH_REPORT_FILE_NAME);
-                File.WriteAllText(crashReportFile, ex.ToString());
-                ProcessUtils.StartSelf("--crash-report");
-            }
-            else
-            {
-                Log.Error(ex, "Unable to get executable file path for writing crash report.");
-            }
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-        }
-        Environment.Exit(1);
+        CrashReporter.ReportAndExit(ex);
     }
 
     private static void CheckForRunningInstance()
@@ -203,17 +180,23 @@ public class App : Application
         }
     }
 
-    private void ApplyAppDefaults() => RequestedThemeVariant = ThemeVariant.Dark;
-
-    internal class InstantLaunchData
+    private void ApplyAppDefaults()
     {
-        public string SaveName { get; private set; }
-        public string[] PlayerNames { get; private set; }
+        RequestedThemeVariant = ThemeVariant.Dark;
 
-        public InstantLaunchData(string saveName, string[] playerNames)
+        // April Fools: Switch to Comic Sans on April 1st (only works on OSes with Comic Sans installed).
+        if (DateTime.Now is { Month: 4, Day: 1 })
         {
-            SaveName = saveName;
-            PlayerNames = playerNames;
+            Style? windowStyle = new(x => x.OfType<Window>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.FontFamilyProperty, FontFamily.Parse("Comic Sans MS"))
+                }
+            };
+            Styles.Add(windowStyle);
         }
     }
+
+    internal record InstantLaunchData(string SaveName, string[] PlayerNames);
 }

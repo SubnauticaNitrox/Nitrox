@@ -81,20 +81,20 @@
                         <Grid>
                             <Button
                                 Classes="anycontent"
-                                Command="{Binding TwitterLinkCommand}"
-                                ToolTip.Tip="Follow on Twitter">
-                                <Border Background="#00AAEC">
-                                    <Svg Path="/Assets/Icons/brand/twitter.svg" />
+                                Command="{Binding XLinkCommand}"
+                                ToolTip.Tip="Follow on X">
+                                <Border Background="#000000">
+                                    <Svg Path="/Assets/Icons/brand/x.svg" />
                                 </Border>
                             </Button>
 
                             <Button
-                                Command="{Binding TwitterLinkCommand}"
+                                Command="{Binding XLinkCommand}"
                                 Content="Follow"
-                                ToolTip.Tip="Follow on Twitter" />
+                                ToolTip.Tip="Follow on X" />
                         </Grid>
-                        <TextBlock Text="Twitter" />
-                        <TextBlock Text="Follow the Nitrox Twitter account to always be up to date on latest developments, events, and releases." />
+                        <TextBlock Text="X" />
+                        <TextBlock Text="Follow the Nitrox X account to always be up to date on latest developments, events, and releases." />
                     </StackPanel>
                 </Border>
                 <Border>

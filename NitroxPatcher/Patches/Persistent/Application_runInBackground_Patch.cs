@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Reflection;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Persistent;

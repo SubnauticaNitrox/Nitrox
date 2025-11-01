@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
 using static System.Reflection.Emit.OpCodes;
 

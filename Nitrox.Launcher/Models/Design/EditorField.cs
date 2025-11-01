@@ -1,18 +1,18 @@
 using System.Reflection;
 using Avalonia.Collections;
-using NitroxModel.Serialization;
+using Nitrox.Model.Serialization;
 
 namespace Nitrox.Launcher.Models.Design;
 
 public record EditorField
 {
-    public object Value { get; set; }
+    public object? Value { get; set; }
 
     public PropertyInfo PropertyInfo { get; init; }
 
-    public AvaloniaList<object> PossibleValues { get; set; }
+    public AvaloniaList<object>? PossibleValues { get; set; }
 
-    public string Description
+    public string? Description
     {
         get
         {
@@ -21,11 +21,16 @@ public record EditorField
             {
                 description = null;
             }
+            // Ignore description if used as a header.
+            if (description?.StartsWith('\n') == true)
+            {
+                description = null;
+            }
             return description;
         }
     }
 
-    public EditorField(PropertyInfo propertyInfo, object value, AvaloniaList<object> possibleValues)
+    public EditorField(PropertyInfo propertyInfo, object? value, AvaloniaList<object> possibleValues)
     {
         PropertyInfo = propertyInfo;
         Value = value;

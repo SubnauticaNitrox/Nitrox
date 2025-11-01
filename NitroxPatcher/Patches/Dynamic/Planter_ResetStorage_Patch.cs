@@ -1,9 +1,8 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -24,12 +23,11 @@ public sealed partial class Planter_ResetStorage_Patch : NitroxPatch, IDynamicPa
 
         // This is called from WaterPark.Update so we have no proper way of suppressing it.
         // Thus we restrict to simulation ownership
-        if (!__instance.TryGetIdOrWarn(out NitroxId planterId) ||
-            !Resolve<SimulationOwnership>().HasAnyLockType(planterId))
+        if (__instance.TryGetIdOrWarn(out NitroxId planterId) &&
+            __instance.TryGetOwnerNitroxId(out NitroxId? ownerNitroxId) &&
+            Resolve<SimulationOwnership>().HasAnyLockType(ownerNitroxId))
         {
-            return;
+            Resolve<IPacketSender>().Send(new ClearPlanter(planterId));
         }
-
-        Resolve<IPacketSender>().Send(new ClearPlanter(planterId));
     }
 }

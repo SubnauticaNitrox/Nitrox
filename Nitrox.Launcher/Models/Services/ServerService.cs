@@ -3,44 +3,53 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Server;
+using Nitrox.Model.Core;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Server;
 
 namespace Nitrox.Launcher.Models.Services;
 
 /// <summary>
 ///     Keeps track of server instances.
 /// </summary>
-public class ServerService : IMessageReceiver, INotifyPropertyChanged
+internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
 {
-    private readonly IDialogService dialogService;
+    private readonly DialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
-    private readonly IRoutingScreen screen;
+    private readonly Func<IRoutingScreen> screenProvider;
     private List<ServerEntry> servers = [];
     private readonly Lock serversLock = new();
     private bool shouldRefreshServersList;
-    private FileSystemWatcher watcher;
+    private FileSystemWatcher? watcher;
     private readonly CancellationTokenSource serverRefreshCts = new();
     private readonly HashSet<string> loggedErrorDirectories = [];
+    private readonly HashSet<int> knownServerProcessIds = [];
+    private readonly Lock knownServerProcessIdsLock = new();
     private volatile bool hasUpdatedAtLeastOnce;
 
-    public ServerService(IDialogService dialogService, IKeyValueStore keyValueStore, IRoutingScreen screen)
+    public ServerService(DialogService dialogService, IKeyValueStore keyValueStore, Func<IRoutingScreen> screenProvider)
     {
         this.dialogService = dialogService;
         this.keyValueStore = keyValueStore;
-        this.screen = screen;
+        this.screenProvider = screenProvider;
 
-        _ = LoadServersAsync().ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+        if (!IsDesignMode)
+        {
+            _ = LoadServersAsync().ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+        }
 
         this.RegisterMessageListener<SaveDeletedMessage, ServerService>(static (message, receiver) =>
         {
@@ -71,6 +80,22 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
 
     public async Task<bool> StartServerAsync(ServerEntry server)
     {
+        int serverPort = server.Port;
+        IPEndPoint endPoint = IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().FirstOrDefault(ip => ip.Port == serverPort);
+        if (endPoint != null)
+        {
+            bool proceed = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+            {
+                model.Title = $"Port {serverPort} is unavailable";
+                model.Description = "It is recommended to change the port before starting this server. Would you like to continue anyway?";
+                model.ButtonOptions = ButtonOptions.YesNo;
+            });
+            if (!proceed)
+            {
+                return false;
+            }
+        }
+
         // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
         if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server))
         {
@@ -84,10 +109,23 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
         try
         {
             server.Version = NitroxEnvironment.Version;
-            server.Start(keyValueStore.GetSavesFolderDir());
+            server.Start(keyValueStore.GetSavesFolderDir(), onExited: () =>
+            {
+                lock (knownServerProcessIdsLock)
+                {
+                    knownServerProcessIds.Remove(server.Process?.Id ?? 0);
+                }
+            });
             if (server.IsEmbedded)
             {
-                await screen.ShowAsync(new EmbeddedServerViewModel(server));
+                await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));
+            }
+            if (server.Process is { Id: > 0 })
+            {
+                lock (knownServerProcessIdsLock)
+                {
+                    knownServerProcessIds.Add(server.Process.Id);
+                }
             }
             return true;
         }
@@ -102,7 +140,8 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
     public async Task<bool> ConfirmServerVersionAsync(ServerEntry server) =>
         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Title = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.Title = "Version Mismatch Detected";
+            model.Description = $"The save '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")} but current Nitrox version is v{NitroxEnvironment.Version}{Environment.NewLine}{Environment.NewLine}It is advisable to find out about the latest changes and whether the backup is compatible.{Environment.NewLine}Note that it's always possible to use the world backup feature in case of failures.{Environment.NewLine}{Environment.NewLine}Would you still like to continue?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
 
@@ -247,14 +286,14 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
         }
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
         {
@@ -265,10 +304,79 @@ public class ServerService : IMessageReceiver, INotifyPropertyChanged
         return true;
     }
 
-    public async Task<ServerEntry> GetOrCreateServerAsync(string saveName)
+    public async Task<ServerEntry?> GetOrCreateServerAsync(string saveName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
         string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);
         return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
+    }
+
+    public async Task DetectAndAttachRunningServersAsync()
+    {
+        foreach (string pipeName in GetNitroxServerPipeNames())
+        {
+            try
+            {
+                Match? match = Regex.Match(pipeName, @"NitroxServer_(\d+)");
+                if (!match.Success)
+                {
+                    continue;
+                }
+                int processId = int.Parse(match.Groups[1].Value);
+                lock (knownServerProcessIdsLock)
+                {
+                    if (knownServerProcessIds.Contains(processId))
+                    {
+                        continue;
+                    }
+                }
+                using CancellationTokenSource? cts = new(1000);
+                using Ipc.ClientIpc ipc = new(processId, cts);
+                await ipc.SendCommand(Ipc.Messages.SaveNameMessage, cts.Token);
+                string response = await ipc.ReadStringAsync(cts.Token);
+                if (response.StartsWith($"{Ipc.Messages.SaveNameMessage}:", StringComparison.OrdinalIgnoreCase))
+                {
+                    string? saveName = response[$"{Ipc.Messages.SaveNameMessage}:".Length..].Trim('[', ']');
+                    ServerEntry? serverMatch = servers?.FirstOrDefault(s => string.Equals(s.Name, saveName, StringComparison.Ordinal));
+                    if (serverMatch != null)
+                    {
+                        Log.Info($"Found running server \"{serverMatch.Name}\" (PID: {processId})");
+                        serverMatch.IsOnline = true;
+                        lock (knownServerProcessIdsLock)
+                        {
+                            knownServerProcessIds.Add(processId);
+                        }
+                        serverMatch.Start(keyValueStore.GetSavesFolderDir(), processId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Debug($"Pipe scan error for {pipeName}: {ex.Message}");
+            }
+        }
+    }
+
+    private static List<string> GetNitroxServerPipeNames()
+    {
+        try
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                DirectoryInfo? pipeDir = new(@"\\.\pipe\");
+                return pipeDir.GetFileSystemInfos()
+                              .Select(f => f.Name)
+                              .Where(n => n.StartsWith("NitroxServer_", StringComparison.OrdinalIgnoreCase))
+                              .ToList();
+            }
+
+            return ProcessEx.GetProcessesByName(GetServerExeName(), p => $"NitroxServer_{p.Id}")
+                            .Where(s => s != null)
+                            .ToList();
+        }
+        catch
+        {
+            return [];
+        }
     }
 }

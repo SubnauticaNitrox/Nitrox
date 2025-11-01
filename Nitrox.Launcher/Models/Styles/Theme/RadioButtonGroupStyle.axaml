@@ -3,8 +3,9 @@
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-    xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:server="clr-namespace:Nitrox.Model.Server;assembly=Nitrox.Model"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
@@ -35,6 +36,7 @@
             <Setter.Value>
                 <DataTemplate>
                     <Button
+                        x:DataType="system:Object"
                         Background="Transparent"
                         BorderBrush="{DynamicResource BrandBorder}"
                         BorderThickness="2"
@@ -55,6 +57,9 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
+        <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
         <Setter Property="BorderBrush" Value="{Binding $parent[Button].BorderBrush}" />

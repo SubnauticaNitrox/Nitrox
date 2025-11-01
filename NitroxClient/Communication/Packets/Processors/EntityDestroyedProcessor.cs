@@ -2,7 +2,8 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -21,9 +22,14 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
     public override void Process(EntityDestroyed packet)
     {
         entities.RemoveEntity(packet.Id);
-        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+        
+        if (entities.SpawningEntities)
         {
             entities.MarkForDeletion(packet.Id);
+        }
+
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+        {
             Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
             return;
         }

@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Linq;
+using Nitrox.Model.DataStructures;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
@@ -26,7 +24,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
 
         TaskResult<GameObject> prefabResult = new();
         yield return DefaultWorldEntitySpawner.RequestPrefab(entity.TechType.ToUnity(), prefabResult);
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefabResult.Get(), entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefabResult.Get(), entity.Id);
 
         SetupObject(gameObject, energyMixin);
 
@@ -45,7 +43,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
             return true;
         }
 
-        GameObject gameObject = GameObjectHelper.SpawnFromPrefab(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.SpawnFromPrefab(prefab, entity.Id);
 
         SetupObject(gameObject, energyMixin);
 
@@ -64,7 +62,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
             return false;
         }
 
-        energyMixin = parentObject.GetComponentsInChildren<EnergyMixin>(true)
+        energyMixin = parentObject.GetAllComponentsInChildren<EnergyMixin>()
                                   .ElementAt(entity.ComponentIndex);
 
         if (!energyMixin)

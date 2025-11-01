@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
