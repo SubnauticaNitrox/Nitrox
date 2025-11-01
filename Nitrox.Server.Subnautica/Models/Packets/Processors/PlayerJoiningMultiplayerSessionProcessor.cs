@@ -61,7 +61,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
             player.Permissions = serverConfig.DefaultPlayerPerm;
 
             // Make players on localhost admin by default.
-            if (connection.Endpoint.Address.IsLocalhost())
+            if (serverConfig.LocalhostIsAdmin && connection.Endpoint.Address.IsLocalhost())
             {
                 Log.Info($"Granted admin to '{player.Name}' because they're playing on the host machine");
                 player.Permissions = Perms.ADMIN;

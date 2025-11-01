@@ -101,6 +101,9 @@ namespace Nitrox.Model.Serialization
         [PropertyDescription("Possible values:", typeof(Perms))]
         public Perms DefaultPlayerPerm { get; set; } = Perms.PLAYER;
 
+        [PropertyDescription("If true, players using localhost get admin by default - disable if you're using a proxy server")]
+        public bool LocalhostIsAdmin { get; set; } = true;
+
         [PropertyDescription("\nDefault player stats below here")]
         public float DefaultOxygenValue { get; set; } = 45;
 
