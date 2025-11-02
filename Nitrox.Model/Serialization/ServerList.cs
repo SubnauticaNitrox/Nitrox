@@ -168,6 +168,11 @@ public class ServerList
                     }
                 }
 
+                if (IPAddress.TryParse(trimmed, out IPAddress ipAddress)) // If the address is already a valid address, don't try to parse the port from it
+                {
+                    return ipAddress.ToString();
+                }
+
                 int lastColonIndex = trimmed.LastIndexOf(':');
                 if (lastColonIndex > -1 && lastColonIndex < trimmed.Length - 1)
                 {

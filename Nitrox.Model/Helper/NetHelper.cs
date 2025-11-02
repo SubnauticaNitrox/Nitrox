@@ -70,29 +70,22 @@ public static class NetHelper
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                IPAddress address = ip.Address;
-                if (address.IsIPv4MappedToIPv6)
+                IPAddress normalized = NormalizeAddress(ip.Address);
+
+                if (normalized.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    IPAddress normalized = NormalizeAddress(address);
                     lock (lanIpLock)
                     {
                         return lanIpCache = normalized;
                     }
                 }
-                if (address.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    lock (lanIpLock)
-                    {
-                        return lanIpCache = NormalizeAddress(address);
-                    }
-                }
 
                 if (ipv6Candidate == null
-                    && address.AddressFamily == AddressFamily.InterNetworkV6
-                    && !address.IsIPv6LinkLocal
-                    && !address.IsIPv6Multicast)
+                    && normalized.AddressFamily == AddressFamily.InterNetworkV6
+                    && !normalized.IsIPv6LinkLocal
+                    && !normalized.IsIPv6Multicast)
                 {
-                    ipv6Candidate = address;
+                    ipv6Candidate = normalized;
                 }
             }
         }
@@ -167,20 +160,16 @@ public static class NetHelper
 
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                IPAddress address = ip.Address;
-                if (address.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
+                IPAddress normalized = NormalizeAddress(ip.Address);
+                if (normalized.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
                 {
-                    if (address.IsIPv4MappedToIPv6)
-                    {
-                        yield return (NormalizeAddress(address), ni.Name.Replace("VPN", "").Trim());
-                        continue;
-                    }
-                    if (address.AddressFamily == AddressFamily.InterNetworkV6 && (address.IsIPv6LinkLocal || address.IsIPv6Multicast))
+                    if (normalized.AddressFamily == AddressFamily.InterNetworkV6
+                        && (normalized.IsIPv6LinkLocal || normalized.IsIPv6Multicast))
                     {
                         continue;
                     }
 
-                    yield return (address, ni.Name.Replace("VPN", "").Trim());
+                    yield return (normalized, ni.Name.Replace("VPN", "").Trim());
                 }
             }
         }
@@ -228,7 +217,7 @@ public static class NetHelper
     /// </summary>
     public static bool IsPrivate(this IPAddress address)
     {
-        address = NormalizeAddress(address);
+        IPAddress normalized = NormalizeAddress(address);
 
         static bool IsInRange(IPAddress ipAddress, string mask)
         {
@@ -245,9 +234,9 @@ public static class NetHelper
             return (ipNum & cidrMask) == (cidrAddress & cidrMask);
         }
 
-        if (address.AddressFamily == AddressFamily.InterNetworkV6)
+        if (normalized.AddressFamily == AddressFamily.InterNetworkV6)
         {
-            byte[] bytes = address.GetAddressBytes();
+            byte[] bytes = normalized.GetAddressBytes();
 
             // Unique local addresses (fc00::/7)
             if ((bytes[0] & 0xFE) == 0xFC)
@@ -266,7 +255,7 @@ public static class NetHelper
 
         foreach (string privateSubnet in privateNetworks)
         {
-            if (IsInRange(address, privateSubnet))
+            if (IsInRange(normalized, privateSubnet))
             {
                 return true;
             }
@@ -283,8 +272,8 @@ public static class NetHelper
         {
             return false;
         }
-        address = NormalizeAddress(address);
-        if (IPAddress.IsLoopback(address))
+        IPAddress normalized = NormalizeAddress(address);
+        if (IPAddress.IsLoopback(normalized))
         {
             return true;
         }
@@ -293,7 +282,7 @@ public static class NetHelper
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (address.Equals(NormalizeAddress(ip.Address)))
+                if (normalized.Equals(NormalizeAddress(ip.Address)))
                 {
                     return true;
                 }
