@@ -6,7 +6,7 @@ Nitrox does not currently satisfy all ideal security goals.
 For now authenticity and integrity in the communication between client and server is not implemented (see issue [#1996](https://github.com/SubnauticaNitrox/Nitrox/issues/1996)).
 Therefore users should be aware that all packets sent and received could be manipulated to alter the in-game state or the game world independent of access rights. \
 The vulnerabilities we are most concerned about (and which we hope we never find) are vulnerabilities where the game or `client->server->other clients` environment is broken out of. \
-For example, any Remote Code Execution vulnerabilities(RCEs) or the gathering of personal information (except IPs required for the system to function) from clients or servers are severe vulnerabilities which will be immediately addressed. This also includes any access to files and folders that Nitrox does not normally makes accessible (for example the world save files are more or less intentionally accessible).
+For example, any Remote Code Execution vulnerabilities(RCEs) or the gathering of personal information (except IPs required for the system to function) from clients or servers are severe vulnerabilities which will be immediately addressed. This also includes any access to files and folders that Nitrox does not normally make accessible (for example the world save files are generally accessible).
 
 ## Supported Versions
 
