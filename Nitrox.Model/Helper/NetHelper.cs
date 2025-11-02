@@ -32,6 +32,15 @@ public static class NetHelper
     private static readonly object wanIpLock = new();
     private static readonly object lanIpLock = new();
 
+    public static IPAddress NormalizeAddress(IPAddress address)
+    {
+        if (address == null)
+        {
+            throw new ArgumentNullException(nameof(address));
+        }
+        return address.IsIPv4MappedToIPv6 ? address.MapToIPv4() : address;
+    }
+
     /// <summary>
     ///     Gets the network interfaces used for going onto the internet.
     ///     This is done by filtering for "Ethernet" and "Wi-Fi" network interfaces where "Ethernet" is returned earlier.
@@ -56,17 +65,43 @@ public static class NetHelper
             }
         }
 
+        IPAddress? ipv6Candidate = null;
         foreach (NetworkInterface ni in GetInternetInterfaces())
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                IPAddress address = ip.Address;
+                if (address.IsIPv4MappedToIPv6)
+                {
+                    IPAddress normalized = NormalizeAddress(address);
+                    lock (lanIpLock)
+                    {
+                        return lanIpCache = normalized;
+                    }
+                }
+                if (address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     lock (lanIpLock)
                     {
-                        return lanIpCache = ip.Address;
+                        return lanIpCache = NormalizeAddress(address);
                     }
                 }
+
+                if (ipv6Candidate == null
+                    && address.AddressFamily == AddressFamily.InterNetworkV6
+                    && !address.IsIPv6LinkLocal
+                    && !address.IsIPv6Multicast)
+                {
+                    ipv6Candidate = address;
+                }
+            }
+        }
+
+        if (ipv6Candidate != null)
+        {
+            lock (lanIpLock)
+            {
+                return lanIpCache = ipv6Candidate;
             }
         }
 
@@ -132,9 +167,20 @@ public static class NetHelper
 
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                IPAddress address = ip.Address;
+                if (address.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
                 {
-                    yield return (ip.Address, ni.Name.Replace("VPN", "").Trim());
+                    if (address.IsIPv4MappedToIPv6)
+                    {
+                        yield return (NormalizeAddress(address), ni.Name.Replace("VPN", "").Trim());
+                        continue;
+                    }
+                    if (address.AddressFamily == AddressFamily.InterNetworkV6 && (address.IsIPv6LinkLocal || address.IsIPv6Multicast))
+                    {
+                        continue;
+                    }
+
+                    yield return (address, ni.Name.Replace("VPN", "").Trim());
                 }
             }
         }
@@ -182,8 +228,14 @@ public static class NetHelper
     /// </summary>
     public static bool IsPrivate(this IPAddress address)
     {
+        address = NormalizeAddress(address);
+
         static bool IsInRange(IPAddress ipAddress, string mask)
         {
+            if (ipAddress.AddressFamily != AddressFamily.InterNetwork)
+            {
+                return false;
+            }
             string[] parts = mask.Split('/');
 
             int ipNum = BitConverter.ToInt32(ipAddress.GetAddressBytes(), 0);
@@ -191,6 +243,25 @@ public static class NetHelper
             int cidrMask = IPAddress.HostToNetworkOrder(-1 << (32 - int.Parse(parts[1])));
 
             return (ipNum & cidrMask) == (cidrAddress & cidrMask);
+        }
+
+        if (address.AddressFamily == AddressFamily.InterNetworkV6)
+        {
+            byte[] bytes = address.GetAddressBytes();
+
+            // Unique local addresses (fc00::/7)
+            if ((bytes[0] & 0xFE) == 0xFC)
+            {
+                return true;
+            }
+
+            // Link-local addresses (fe80::/10)
+            if (bytes[0] == 0xFE && (bytes[1] & 0xC0) == 0x80)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         foreach (string privateSubnet in privateNetworks)
@@ -212,6 +283,7 @@ public static class NetHelper
         {
             return false;
         }
+        address = NormalizeAddress(address);
         if (IPAddress.IsLoopback(address))
         {
             return true;
@@ -221,7 +293,7 @@ public static class NetHelper
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (address.Equals(ip.Address))
+                if (address.Equals(NormalizeAddress(ip.Address)))
                 {
                     return true;
                 }

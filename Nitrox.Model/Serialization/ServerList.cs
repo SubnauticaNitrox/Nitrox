@@ -20,7 +20,7 @@ public class ServerList
         get
         {
             ServerList list = new();
-            list.Add(new Entry("Your server", "127.0.0.1", DEFAULT_PORT));
+            list.Add(new Entry("Your server", IPAddress.Loopback.ToString(), DEFAULT_PORT));
             return list;
         }
     }
@@ -126,18 +126,12 @@ public class ServerList
                 return null;
             }
             string[] parts = line.Split('|');
-            int port;
+            int port = DEFAULT_PORT;
             string address;
             switch (parts.Length)
             {
                 case 2:
-                    // Split from address as format "hostname:port".
-                    string[] addressSplit = parts[1].Split(':');
-                    address = addressSplit[0];
-                    if (!int.TryParse(addressSplit.ElementAtOrDefault(1), out port))
-                    {
-                        port = DEFAULT_PORT;
-                    }
+                    address = ParseAddressWithOptionalPort(parts[1], out port);
                     break;
                 case 3:
                     address = parts[1].Trim();
@@ -153,6 +147,40 @@ public class ServerList
 
             string name = parts[0].Trim();
             return new Entry(name, address, port);
+
+            static string ParseAddressWithOptionalPort(string value, out int parsedPort)
+            {
+                string trimmed = value.Trim();
+                parsedPort = DEFAULT_PORT;
+
+                if (trimmed.StartsWith("[", StringComparison.Ordinal) && trimmed.Contains(']'))
+                {
+                    int closingBracket = trimmed.LastIndexOf(']');
+                    if (closingBracket > 0)
+                    {
+                        string potentialPort = trimmed[(closingBracket + 1)..].TrimStart(':');
+                        if (!string.IsNullOrWhiteSpace(potentialPort))
+                        {
+                            int.TryParse(potentialPort, out parsedPort);
+                        }
+
+                        return trimmed.Substring(1, closingBracket - 1);
+                    }
+                }
+
+                int lastColonIndex = trimmed.LastIndexOf(':');
+                if (lastColonIndex > -1 && lastColonIndex < trimmed.Length - 1)
+                {
+                    string potentialPort = trimmed[(lastColonIndex + 1)..];
+                    if (int.TryParse(potentialPort, out int portCandidate))
+                    {
+                        parsedPort = portCandidate;
+                        return trimmed[..lastColonIndex];
+                    }
+                }
+
+                return trimmed;
+            }
         }
 
         public override string ToString()
