@@ -19,7 +19,7 @@ public partial class Enum_GetValues_Patch : NitroxPatch, IPersistentPatch
         // Nitrox values
         .. Enumerable.Range(KeyBindingManager.NITROX_BASE_ID, KeyBindingManager.KeyBindings.Count),
     ];
-
+/*
     public static bool Prefix(Type enumType, ref Array __result)
     {
         if (enumType == typeof(GameInput.Button))
@@ -28,5 +28,5 @@ public partial class Enum_GetValues_Patch : NitroxPatch, IPersistentPatch
             return false;
         }
         return true;
-    }
+    }*/
 }
