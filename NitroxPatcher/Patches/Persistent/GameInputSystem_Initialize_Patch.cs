@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -13,21 +14,15 @@ namespace NitroxPatcher.Patches.Persistent;
 /// <summary>
 /// Inserts Nitrox's keybinds in the new Subnautica input system
 /// </summary>
-public partial class GameInputSystem_Patch : NitroxPatch, IPersistentPatch
+public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistentPatch
 {
-    private static readonly MethodInfo INITIALIZE_METHOD = Reflect.Method((GameInputSystem t) => t.Initialize());
-    private static readonly MethodInfo DEINITIALIZE_METHOD = Reflect.Method((GameInputSystem t) => t.Deinitialize());
-    private static GameInput.Button[] oldAllActions;
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GameInputSystem t) => t.Initialize());
 
-    public static void InitializePrefix(GameInputSystem __instance)
+    public static void Prefix(GameInputSystem __instance)
     {
-        int buttonId = KeyBindingManager.NITROX_BASE_ID;
         CachedEnumString<GameInput.Button> actionNames = GameInput.ActionNames;
-        oldAllActions = GameInput.AllActions;
-        FieldInfo allActionsField = typeof(GameInput).GetField(nameof(GameInput.AllActions), BindingFlags.Public | BindingFlags.Static);
-        GameInput.Button[] allActions = [.. GameInput.AllActions, .. Enumerable.Range(buttonId, KeyBindingManager.KeyBindings.Count).Cast<GameInput.Button>()];
-        allActionsField?.SetValue(null, allActions);
 
+        int buttonId = KeyBindingManager.NITROX_BASE_ID;
         foreach (KeyBinding keyBinding in KeyBindingManager.KeyBindings)
         {
             GameInput.Button button = (GameInput.Button)buttonId++;
@@ -44,12 +39,6 @@ public partial class GameInputSystem_Patch : NitroxPatch, IPersistentPatch
                 GameInputSystem.bindingsController.Add(button, $"<Gamepad>/{keyBinding.DefaultControllerKey}");
             }
         }
-    }
-
-    public static void DeinitializePrefix()
-    {
-        FieldInfo allActionsField = typeof(GameInput).GetField(nameof(GameInput.AllActions), BindingFlags.Public | BindingFlags.Static);
-        allActionsField?.SetValue(null, oldAllActions);
     }
 
     /*
@@ -84,11 +73,5 @@ public partial class GameInputSystem_Patch : NitroxPatch, IPersistentPatch
             GameInput.Button button = (GameInput.Button)buttonId++;
             gameInputSystem.actions[button].started += keyBinding.Execute;
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, INITIALIZE_METHOD, ((Action<GameInputSystem>)InitializePrefix).Method);
-        PatchPrefix(harmony, DEINITIALIZE_METHOD, ((Action)DeinitializePrefix).Method);
     }
 }
