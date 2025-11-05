@@ -307,12 +307,15 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         modCount = 0;
         if (string.IsNullOrWhiteSpace(gameDir) || !Directory.Exists(gameDir))
+        {
             return false;
+        }
 
         string bepRoot = Path.Combine(gameDir, "BepInEx");
         if (!Directory.Exists(bepRoot))
+        {
             return false;
-
+        }
         string plugins = Path.Combine(bepRoot, "plugins");
         string patchers = Path.Combine(bepRoot, "patchers");
 
