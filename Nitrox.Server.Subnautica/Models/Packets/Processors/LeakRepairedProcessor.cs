@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class LeakRepairedProcessor : AuthenticatedPacketProcessor<LeakRepaired>
+sealed class LeakRepairedProcessor : AuthenticatedPacketProcessor<LeakRepaired>
 {
     private readonly WorldEntityManager worldEntityManager;
     private readonly PlayerManager playerManager;

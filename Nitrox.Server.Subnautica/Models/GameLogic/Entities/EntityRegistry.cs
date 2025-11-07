@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,9 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
 {
-    public class EntityRegistry
+    public class EntityRegistry(ILogger<EntityRegistry> logger)
     {
+        private readonly ILogger<EntityRegistry> logger = logger;
         private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById = new();
 
         public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
@@ -24,7 +24,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
             return GetEntityById<Entity>(id);
         }
 
-        public bool TryGetEntityById<T>(NitroxId id, out T entity) where T : Entity
+        public bool TryGetEntityById<T>(NitroxId id, out T? entity) where T : Entity
         {
             if (entitiesById.TryGetValue(id, out Entity _entity) && _entity is T typedEntity)
             {
@@ -63,7 +63,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
             if (!entitiesById.TryAdd(entity.Id, entity))
             {
                 // Log an error to show stack trace but don't halt execution.
-                Log.Error(new InvalidOperationException(), $"Trying to add duplicate entity {entity.Id}");
+                logger.ZLogError(new InvalidOperationException(), $"Trying to add duplicate entity {entity.Id}");
             }
         }
 
@@ -174,7 +174,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
         {
             if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
-                Log.Error($"Could not find entity to reparent: {entityId}");
+                logger.ZLogError($"Could not find entity to reparent: {entityId}");
                 return;
             }
             ReparentEntity(entity, newParentId);
@@ -184,7 +184,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
         {
             if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
-                Log.Error($"Could not find entity to reparent: {entityId}");
+                logger.ZLogError($"Could not find entity to reparent: {entityId}");
                 return;
             }
             ReparentEntity(entity, newParent);
@@ -216,12 +216,12 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
         {
             if (!TryGetEntityById(parentId, out Entity parentEntity))
             {
-                Log.Error($"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find origin parent entity for {parentId}");
+                logger.ZLogError($"[{nameof(TransferChildren)}] Couldn't find origin parent entity for {parentId}");
                 return;
             }
             if (!TryGetEntityById(newParentId, out Entity newParentEntity))
             {
-                Log.Error($"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find new parent entity for {newParentId}");
+                logger.ZLogError($"[{nameof(TransferChildren)}] Couldn't find new parent entity for {newParentId}");
                 return;
             }
             TransferChildren(parentEntity, newParentEntity, filter);

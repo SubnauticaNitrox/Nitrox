@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;

@@ -7,7 +7,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PlayerUnseeOutOfCellEntityProcessor : AuthenticatedPacketProcessor<PlayerUnseeOutOfCellEntity>
+internal sealed class PlayerUnseeOutOfCellEntityProcessor : AuthenticatedPacketProcessor<PlayerUnseeOutOfCellEntity>
 {
     private readonly SimulationOwnershipData simulationOwnershipData;
     private readonly PlayerManager playerManager;

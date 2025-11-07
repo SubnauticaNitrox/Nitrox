@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;

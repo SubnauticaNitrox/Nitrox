@@ -59,7 +59,6 @@ internal partial class ServersViewModel : RoutableViewModelBase
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         Servers = [..await serverService.GetServersAsync()];
-        await serverService.DetectAndAttachRunningServersAsync();
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]

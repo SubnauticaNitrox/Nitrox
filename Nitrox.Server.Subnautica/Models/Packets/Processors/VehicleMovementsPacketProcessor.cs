@@ -6,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<VehicleMovements>
+internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<VehicleMovements>
 {
     private static readonly NitroxVector3 CyclopsSteeringWheelRelativePosition = new(-0.05f, 0.97f, -23.54f);
 

@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PlayerStatsProcessor : AuthenticatedPacketProcessor<PlayerStats>
+class PlayerStatsProcessor : AuthenticatedPacketProcessor<PlayerStats>
 {
     private readonly PlayerManager playerManager;
 

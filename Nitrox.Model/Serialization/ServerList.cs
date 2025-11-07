@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
 
 namespace Nitrox.Model.Serialization;
@@ -10,7 +11,6 @@ namespace Nitrox.Model.Serialization;
 public class ServerList
 {
     private const string SERVERS_FILE_NAME = "servers";
-    public const int DEFAULT_PORT = 11000;
     private static ServerList instance;
     private readonly List<Entry> entries = new();
     public static ServerList Instance => instance ??= Refresh();
@@ -20,7 +20,7 @@ public class ServerList
         get
         {
             ServerList list = new();
-            list.Add(new Entry("Your server", "127.0.0.1", DEFAULT_PORT));
+            list.Add(new Entry("Your server", "127.0.0.1", SubnauticaServerConstants.DEFAULT_PORT));
             return list;
         }
     }
@@ -136,14 +136,14 @@ public class ServerList
                     address = addressSplit[0];
                     if (!int.TryParse(addressSplit.ElementAtOrDefault(1), out port))
                     {
-                        port = DEFAULT_PORT;
+                        port = SubnauticaServerConstants.DEFAULT_PORT;
                     }
                     break;
                 case 3:
                     address = parts[1].Trim();
                     if (!int.TryParse(parts[2], out port))
                     {
-                        port = DEFAULT_PORT;
+                        port = SubnauticaServerConstants.DEFAULT_PORT;
                     }
                     break;
                 default:

@@ -1,5 +1,4 @@
-﻿using System;
-using Nitrox.Model.DataStructures;
+﻿using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
 {

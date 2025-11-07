@@ -14,7 +14,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 /// Regular <see cref="WorldEntity"/> are held in cells and should be registered in <see cref="worldEntitiesByBatchId"/> and <see cref="worldEntitiesByCell"/>.
 /// But <see cref="GlobalRootEntity"/> are held in their own root object (GlobalRoot) so they should never be registered in cells (they're seeable at all times).
 /// </remarks>
-public class WorldEntityManager
+internal sealed class WorldEntityManager
 {
     private readonly EntityRegistry entityRegistry;
 
@@ -30,11 +30,12 @@ public class WorldEntityManager
 
     private readonly BatchEntitySpawner batchEntitySpawner;
     private readonly PlayerManager playerManager;
+    private readonly ILogger<WorldEntityManager> logger;
 
     private readonly object worldEntitiesLock;
     private readonly object globalRootEntitiesLock;
 
-    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager)
+    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager, ILogger<WorldEntityManager> logger)
     {
         List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
 
@@ -46,6 +47,7 @@ public class WorldEntityManager
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
         this.playerManager = playerManager;
+        this.logger = logger;
 
         worldEntitiesLock = new();
         globalRootEntitiesLock = new();
@@ -96,7 +98,7 @@ public class WorldEntityManager
         return [];
     }
 
-    public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell newCell, out WorldEntity worldEntity)
+    public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell? newCell, out WorldEntity worldEntity)
     {
         lock (worldEntitiesLock)
         {
@@ -219,7 +221,7 @@ public class WorldEntityManager
         }
     }
 
-    public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
+    public void LoadAllUnspawnedEntities(CancellationToken token)
     {
         int totalBatches = SubnauticaMap.DimensionsInBatches.X * SubnauticaMap.DimensionsInBatches.Y * SubnauticaMap.DimensionsInBatches.Z;
         int batchesLoaded = 0;
@@ -233,7 +235,7 @@ public class WorldEntityManager
                 {
                     int spawned = LoadUnspawnedEntities(new(x, y, z), true);
 
-                    Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
+                    logger.ZLogDebug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
                     batchesLoaded++;
                 }
@@ -241,7 +243,7 @@ public class WorldEntityManager
 
             if (batchesLoaded > 0)
             {
-                Log.Info($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
+                logger.ZLogInformation($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
             }
         }
     }
