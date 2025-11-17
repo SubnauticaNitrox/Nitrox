@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 
@@ -8,7 +8,7 @@ public sealed partial class ExosuitGrapplingArm_OnHit_Patch : NitroxPatch, IDyna
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitGrapplingArm t) => t.OnHit());
 
-    public static bool Prefix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
+    public static bool Prefix(ExosuitGrapplingArm __instance)
     {
         Exosuit componentInParent = __instance.GetComponentInParent<Exosuit>();
 
@@ -25,9 +25,8 @@ public sealed partial class ExosuitGrapplingArm_OnHit_Patch : NitroxPatch, IDyna
         return true;
     }
 
-    public static void Postfix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
+    public static void Postfix(ExosuitGrapplingArm __instance)
     {
-        // We send the hook direction to the other player so he sees where the other player exosuit is heading
-        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.START_USE_TOOL, ___hook.rb.velocity, null);
+        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance.exosuit, __instance, ExosuitArmAction.START_USE_TOOL);
     }
 }
