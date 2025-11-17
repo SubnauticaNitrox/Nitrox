@@ -21,6 +21,8 @@ public sealed record GameInfo
 
     public required string MsStoreStartUrl { get; init; }
 
+    public required string EgsNamespace { get; init; }
+
     static GameInfo()
     {
         Subnautica = new GameInfo
@@ -30,7 +32,8 @@ public sealed record GameInfo
             DataFolder = "Subnautica_Data",
             ExeName = "Subnautica.exe",
             SteamAppId = 264710,
-            MsStoreStartUrl = @"ms-xbl-38616e6e:\\"
+            MsStoreStartUrl = @"ms-xbl-38616e6e:\\",
+            EgsNamespace = "Jaguar"
         };
 
         SubnauticaBelowZero = new GameInfo
@@ -40,7 +43,8 @@ public sealed record GameInfo
             DataFolder = "SubnauticaZero_Data",
             ExeName = "SubnauticaZero.exe",
             SteamAppId = 848450,
-            MsStoreStartUrl = @"ms-xbl-6e27970f:\\"
+            MsStoreStartUrl = @"ms-xbl-6e27970f:\\",
+            EgsNamespace = "Foxglove"
         };
 
         // Fixup for OSX

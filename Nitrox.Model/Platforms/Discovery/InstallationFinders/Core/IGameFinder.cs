@@ -1,7 +1,4 @@
-extern alias JB;
-using JB::JetBrains.Annotations;
-
-namespace Nitrox.Model.Discovery.InstallationFinders.Core;
+namespace Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
 
 public interface IGameFinder
 {
@@ -10,5 +7,5 @@ public interface IGameFinder
     /// </summary>
     /// <param name="gameInfo">Game to search for.</param>
     /// <returns>Nullable game installation</returns>
-    [NotNull] GameFinderResult FindGame(GameInfo gameInfo);
+    GameFinderResult FindGame(GameInfo gameInfo);
 }
