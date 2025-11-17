@@ -18,7 +18,10 @@ public class LiteNetLibServer : NitroxServer
     public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
     {
         listener = new EventBasedNetListener();
-        server = new NetManager(listener);
+        server = new NetManager(listener)
+        {
+            IPv6Enabled = true
+        };
     }
 
     public override bool Start(CancellationToken ct = default)
