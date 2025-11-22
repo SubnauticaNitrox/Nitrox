@@ -25,7 +25,7 @@ public sealed class JoiningManager
     private readonly ThreadSafeQueue<(INitroxConnection, string)> joinQueue = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
-    public Action SyncFinishedCallback { get; private set; }
+    public Action? SyncFinishedCallback { get; private set; }
 
     public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world, SessionSettings sessionSettings)
     {
@@ -37,10 +37,6 @@ public sealed class JoiningManager
 
     private async Task JoinQueueLoop()
     {
-        // It may be possible to use the task's status itself for this,
-        // but the ContinueWithHandleError callback might cause issues
-        queueActive = true;
-
         while (true)
         {
             lock (queueLocker)
@@ -113,7 +109,7 @@ public sealed class JoiningManager
         // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
         lock (queueLocker)
         {
-            Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey).PlayerName} to queue");
+            Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey)?.PlayerName} to queue");
             joinQueue.Enqueue((connection, reservationKey));
 
             if (queueActive)
@@ -122,6 +118,9 @@ public sealed class JoiningManager
             }
             else
             {
+                // It may be possible to use the task's status itself for this,
+                // but the ContinueWithHandleError callback might cause issues
+                queueActive = true;
                 Task.Run(JoinQueueLoop).ContinueWithHandleError();
             }
         }

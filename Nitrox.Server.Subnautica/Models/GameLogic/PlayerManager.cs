@@ -41,6 +41,7 @@ public partial class PlayerManager
         this.serverConfig = serverConfig;
     }
 
+    /// <summary>All players that have joined since the server started, even if they disconnected</summary>
     public IEnumerable<Player> GetAllPlayers() => allPlayersByName.Values;
 
     public IEnumerable<Player> ConnectedPlayers()
@@ -255,11 +256,5 @@ public partial class PlayerManager
                 player.SendPacket(packet);
             }
         }
-    }
-
-    public void BroadcastPlayerJoined(Player player)
-    {
-        PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
-        SendPacketToOtherPlayers(playerJoinedPacket, player);
     }
 }
