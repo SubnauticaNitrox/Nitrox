@@ -6,7 +6,6 @@ using NitroxClient.MonoBehaviours.Discord;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Helper;
-using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
 
@@ -58,7 +57,7 @@ public class PlayerManager
                                                   .ToSet();
         if (Player.mainObject != null)
         {
-            remotePlayerObjects.Add(Player.mainObject);    
+            remotePlayerObjects.Add(Player.mainObject);
         }
         return remotePlayerObjects;
     }
@@ -68,10 +67,10 @@ public class PlayerManager
         Validate.NotNull(playerContext);
         Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
 
-            RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
-            
-            playersById.Add(remotePlayer.PlayerId, remotePlayer);
-            OnCreate(remotePlayer.PlayerId, remotePlayer);
+        RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
+
+        playersById.Add(remotePlayer.PlayerId, remotePlayer);
+        OnCreate(remotePlayer.PlayerId, remotePlayer);
 
         DiscordClient.UpdatePartySize(GetTotalPlayerCount());
 
