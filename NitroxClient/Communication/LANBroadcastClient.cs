@@ -63,8 +63,7 @@ public static class LANBroadcastClient
                 return;
             }
             int serverPort = reader.GetInt();
-            IPAddress serverAddress = NetHelper.NormalizeAddress(remoteEndPoint.Address);
-            IPEndPoint serverEndPoint = new(serverAddress, serverPort);
+            IPEndPoint serverEndPoint = new(remoteEndPoint.Address.TryGetAsIPv4(), serverPort);
             if (DiscoveredServers.Contains(serverEndPoint))
             {
                 return;

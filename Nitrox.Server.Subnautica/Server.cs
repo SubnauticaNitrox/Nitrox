@@ -293,19 +293,18 @@ public class Server
             {
                 continue;
             }
-            IPAddress displayAddress = NetHelper.NormalizeAddress(vpnAddress);
+            IPAddress displayAddress = vpnAddress.TryGetAsIPv4();
             options.Add($"{displayAddress} - Friends using {vpnName} (VPN)");
         }
         // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
         IPAddress? lanAddress = await localIp;
         if (lanAddress != null)
         {
-            IPAddress displayLan = NetHelper.NormalizeAddress(lanAddress);
+            IPAddress displayLan = lanAddress.TryGetAsIPv4();
             options.Add($"{displayLan} - Friends on same internet network (LAN)");
         }
 
-        IPAddress? sanitizedWan = wanAddress != null ? NetHelper.NormalizeAddress(wanAddress) : null;
-        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", sanitizedWan);
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryGetAsIPv4() ?? IPAddress.None);
     }
 
     public void StopAndWait(bool shouldSave = true)

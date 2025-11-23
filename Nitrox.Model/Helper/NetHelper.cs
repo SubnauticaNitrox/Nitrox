@@ -14,16 +14,6 @@ namespace Nitrox.Model.Helper;
 
 public static class NetHelper
 {
-    private static readonly string[] privateNetworks =
-    {
-        "10.0.0.0/8",
-        "127.0.0.0/8",
-        "172.16.0.0/12",
-        "192.0.0.0/24 ",
-        "192.168.0.0/16",
-        "198.18.0.0/15",
-    };
-
     private static IPAddress? wanIpCache;
     private static IPAddress? lanIpCache;
     private static long lastSeenPacketChange = -1;
@@ -32,14 +22,7 @@ public static class NetHelper
     private static readonly object wanIpLock = new();
     private static readonly object lanIpLock = new();
 
-    public static IPAddress NormalizeAddress(IPAddress address)
-    {
-        if (address == null)
-        {
-            throw new ArgumentNullException(nameof(address));
-        }
-        return address.IsIPv4MappedToIPv6 ? address.MapToIPv4() : address;
-    }
+    private static bool? hasInternet;
 
     /// <summary>
     ///     Gets the network interfaces used for going onto the internet.
@@ -70,22 +53,18 @@ public static class NetHelper
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                IPAddress normalized = NormalizeAddress(ip.Address);
-
-                if (normalized.AddressFamily == AddressFamily.InterNetwork)
+                IPAddress address = ip.Address.TryGetAsIPv4();
+                if (address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     lock (lanIpLock)
                     {
-                        return lanIpCache = normalized;
+                        return lanIpCache = address;
                     }
                 }
 
-                if (ipv6Candidate == null
-                    && normalized.AddressFamily == AddressFamily.InterNetworkV6
-                    && !normalized.IsIPv6LinkLocal
-                    && !normalized.IsIPv6Multicast)
+                if (ipv6Candidate == null && address is { AddressFamily: AddressFamily.InterNetworkV6, IsIPv6LinkLocal: false, IsIPv6Multicast: false })
                 {
-                    ipv6Candidate = normalized;
+                    ipv6Candidate = address;
                 }
             }
         }
@@ -160,17 +139,16 @@ public static class NetHelper
 
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                IPAddress normalized = NormalizeAddress(ip.Address);
-                if (normalized.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
+                IPAddress address = ip.Address.TryGetAsIPv4();
+                if (address.AddressFamily is not (AddressFamily.InterNetwork or AddressFamily.InterNetworkV6))
                 {
-                    if (normalized.AddressFamily == AddressFamily.InterNetworkV6
-                        && (normalized.IsIPv6LinkLocal || normalized.IsIPv6Multicast))
-                    {
-                        continue;
-                    }
-
-                    yield return (normalized, ni.Name.Replace("VPN", "").Trim());
+                    continue;
                 }
+                if (address is { AddressFamily: AddressFamily.InterNetworkV6 } and ({ IsIPv6LinkLocal: true } or { IsIPv6Multicast: true }))
+                {
+                    continue;
+                }
+                yield return (address, ni.Name.Replace("VPN", "").Trim());
             }
         }
     }
@@ -179,8 +157,6 @@ public static class NetHelper
     ///     Gets supported VPN address if known by current machine.
     /// </summary>
     public static IEnumerable<(IPAddress Address, string NetworkName)> GetVpnIps() => GetVpnIps("Hamachi", "Radmin VPN");
-
-    private static bool? hasInternet;
 
     public static bool HasInternetConnectivity()
     {
@@ -213,57 +189,6 @@ public static class NetHelper
     }
 
     /// <summary>
-    ///     Returns true if the given IP address is reserved for private networks.
-    /// </summary>
-    public static bool IsPrivate(this IPAddress address)
-    {
-        IPAddress normalized = NormalizeAddress(address);
-
-        static bool IsInRange(IPAddress ipAddress, string mask)
-        {
-            if (ipAddress.AddressFamily != AddressFamily.InterNetwork)
-            {
-                return false;
-            }
-            string[] parts = mask.Split('/');
-
-            int ipNum = BitConverter.ToInt32(ipAddress.GetAddressBytes(), 0);
-            int cidrAddress = BitConverter.ToInt32(IPAddress.Parse(parts[0]).GetAddressBytes(), 0);
-            int cidrMask = IPAddress.HostToNetworkOrder(-1 << (32 - int.Parse(parts[1])));
-
-            return (ipNum & cidrMask) == (cidrAddress & cidrMask);
-        }
-
-        if (normalized.AddressFamily == AddressFamily.InterNetworkV6)
-        {
-            byte[] bytes = normalized.GetAddressBytes();
-
-            // Unique local addresses (fc00::/7)
-            if ((bytes[0] & 0xFE) == 0xFC)
-            {
-                return true;
-            }
-
-            // Link-local addresses (fe80::/10)
-            if (bytes[0] == 0xFE && (bytes[1] & 0xC0) == 0x80)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        foreach (string privateSubnet in privateNetworks)
-        {
-            if (IsInRange(normalized, privateSubnet))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// <summary>
     ///     Returns true if the IP address points to the executing machine.
     /// </summary>
     public static bool IsLocalhost(this IPAddress? address)
@@ -272,17 +197,16 @@ public static class NetHelper
         {
             return false;
         }
-        IPAddress normalized = NormalizeAddress(address);
-        if (IPAddress.IsLoopback(normalized))
+        if (IPAddress.IsLoopback(address))
         {
             return true;
         }
-
+        address = address.TryGetAsIPv4();
         foreach (NetworkInterface ni in GetInternetInterfaces())
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (normalized.Equals(NormalizeAddress(ip.Address)))
+                if (address.Equals(ip.Address.TryGetAsIPv4()))
                 {
                     return true;
                 }

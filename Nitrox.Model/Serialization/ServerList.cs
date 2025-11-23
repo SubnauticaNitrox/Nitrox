@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using Nitrox.Model.Helper;
 
@@ -130,8 +129,8 @@ public class ServerList
             string address;
             switch (parts.Length)
             {
-                case 2:
-                    address = ParseAddressWithOptionalPort(parts[1], out port);
+                case 2 when IPAddress.TryParse(parts[1], out IPAddress parsedAddress):
+                    address = parsedAddress.ToString();
                     break;
                 case 3:
                     address = parts[1].Trim();
@@ -141,51 +140,12 @@ public class ServerList
                     }
                     break;
                 default:
-                    Log.Warn($"A server list entry contained too many elements. Either 2 or 3 is valid but was: {line}");
+                    Log.Warn($"A server list entry contained too many, or invalid, elements. Either 2 or 3 is valid but was: {line}");
                     return null;
             }
 
             string name = parts[0].Trim();
             return new Entry(name, address, port);
-
-            static string ParseAddressWithOptionalPort(string value, out int parsedPort)
-            {
-                string trimmed = value.Trim();
-                parsedPort = DEFAULT_PORT;
-
-                if (trimmed.StartsWith("[", StringComparison.Ordinal) && trimmed.Contains(']'))
-                {
-                    int closingBracket = trimmed.LastIndexOf(']');
-                    if (closingBracket > 0)
-                    {
-                        string potentialPort = trimmed[(closingBracket + 1)..].TrimStart(':');
-                        if (!string.IsNullOrWhiteSpace(potentialPort))
-                        {
-                            int.TryParse(potentialPort, out parsedPort);
-                        }
-
-                        return trimmed.Substring(1, closingBracket - 1);
-                    }
-                }
-
-                if (IPAddress.TryParse(trimmed, out IPAddress ipAddress)) // If the address is already a valid address, don't try to parse the port from it
-                {
-                    return ipAddress.ToString();
-                }
-
-                int lastColonIndex = trimmed.LastIndexOf(':');
-                if (lastColonIndex > -1 && lastColonIndex < trimmed.Length - 1)
-                {
-                    string potentialPort = trimmed[(lastColonIndex + 1)..];
-                    if (int.TryParse(potentialPort, out int portCandidate))
-                    {
-                        parsedPort = portCandidate;
-                        return trimmed[..lastColonIndex];
-                    }
-                }
-
-                return trimmed;
-            }
         }
 
         public override string ToString()
