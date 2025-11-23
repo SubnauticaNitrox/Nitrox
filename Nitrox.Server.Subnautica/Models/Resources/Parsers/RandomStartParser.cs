@@ -1,3 +1,4 @@
+using System.IO;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -16,7 +17,7 @@ public sealed class RandomStartParser : BundleFileParser<RandomStartGenerator>
 
     public RandomStartParser() : base(BUNDLE_NAME, 0) { }
 
-    public override RandomStartGenerator? ParseFile()
+    public override RandomStartGenerator ParseFile()
     {
         AssetFileInfo assetFile = bundleFile.GetAssetInfo(assetsManager, RANDOM_START_ASSET_NAME, AssetClassID.Texture2D);
         AssetTypeValueField textureValueField = assetsManager.GetBaseField(assetFileInst, assetFile);
@@ -26,7 +27,7 @@ public sealed class RandomStartParser : BundleFileParser<RandomStartGenerator>
 
         if (texDat is not { Length: > 0 })
         {
-            return null;
+            throw new InvalidDataException("Reading RandomStart asset was either null or empty.");
         }
 
         Image<Bgra32> texture = Image.LoadPixelData<Bgra32>(texDat, textureFile.m_Width, textureFile.m_Height);

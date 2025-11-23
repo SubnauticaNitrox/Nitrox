@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Linq;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -107,7 +106,16 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             SkyEnvironmentChanged.Send(moduleObject, (Component)null);
         }
         constructable.constructedAmount = moduleEntity.ConstructedAmount;
-        constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
+
+        // We need to force this state first because when we spawn constructables, they are constructed by default
+        // some MonoBehaviours like TechLight need this intermediary step
+        constructable.NotifyConstructedChanged(false);
+        
+        // constructable._constructed must be the opposite value so SetState is effective
+        bool constructed = moduleEntity.ConstructedAmount >= 1f;
+        constructable._constructed = !constructed;
+        constructable.SetState(constructed, false);
+
         constructable.UpdateMaterial();
         NitroxEntity.SetNewId(moduleObject, moduleEntity.Id);
 
