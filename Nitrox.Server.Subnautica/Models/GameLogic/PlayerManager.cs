@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.GameLogic.PlayerAnimation;
@@ -22,19 +21,17 @@ public partial class PlayerManager
     [GeneratedRegex(@"^[a-zA-Z0-9._-]{3,25}$", RegexOptions.NonBacktracking)]
     private static partial Regex PlayerNameRegex();
 
+    private readonly SubnauticaServerConfig serverConfig;
+
     private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
     private readonly ThreadSafeDictionary<ushort, Player> connectedPlayersById = [];
     private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
     private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-    private ThreadSafeQueue<KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
-    private bool PlayerCurrentlyJoining { get; set; }
-
-    private Timer initialSyncTimer;
-
-    private readonly SubnauticaServerConfig serverConfig;
     private ushort currentPlayerId;
+
+    public event Action<int>? PlayerCountChanged;
 
     public PlayerManager(List<Player> players, SubnauticaServerConfig serverConfig)
     {
@@ -44,19 +41,31 @@ public partial class PlayerManager
         this.serverConfig = serverConfig;
     }
 
-    public List<Player> GetConnectedPlayers()
+    /// <summary>All players that have joined since the server started, even if they disconnected</summary>
+    public IEnumerable<Player> GetAllPlayers() => allPlayersByName.Values;
+
+    public IEnumerable<Player> ConnectedPlayers()
     {
-        return ConnectedPlayers().ToList();
+        return assetsByConnection.Values
+                                 .Where(assetPackage => assetPackage.Player != null)
+                                 .Select(assetPackage => assetPackage.Player);
     }
+
+    public List<Player> GetConnectedPlayers() => ConnectedPlayers().ToList();
 
     public List<Player> GetConnectedPlayersExcept(Player excludePlayer)
     {
         return ConnectedPlayers().Where(player => player != excludePlayer).ToList();
     }
 
-    public IEnumerable<Player> GetAllPlayers()
+    public Player? GetPlayer(INitroxConnection connection)
     {
-        return allPlayersByName.Values;
+        return assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage) ? assetPackage.Player : null;
+    }
+
+    public PlayerContext? GetPlayerContext(string reservationKey)
+    {
+        return reservations.TryGetValue(reservationKey, out PlayerContext playerContext) ? playerContext : null;
     }
 
     public MultiplayerSessionReservation ReservePlayerContext(
@@ -77,25 +86,11 @@ public partial class PlayerManager
             return new MultiplayerSessionReservation(correlationId, rejectedState);
         }
 
+
         if (!PlayerNameRegex().IsMatch(authenticationContext.Username))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
-        }
-
-        if (PlayerCurrentlyJoining)
-        {
-            if (JoinQueue.Any(pair => ReferenceEquals(pair.Key, connection)))
-            {
-                // Don't enqueue the request if there is already another enqueued request by the same user
-                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
-            }
-
-            JoinQueue.Enqueue(new KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>(
-                                  connection,
-                                  new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
-
-            return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
         }
 
         string playerName = authenticationContext.Username;
@@ -135,64 +130,13 @@ public partial class PlayerManager
         reservations.Add(reservationKey, playerContext);
         assetPackage.ReservationKey = reservationKey;
 
-        PlayerCurrentlyJoining = true;
-
-        InitialSyncTimerData timerData = new(connection, authenticationContext, serverConfig.InitialSyncTimeout);
-        initialSyncTimer = new Timer(InitialSyncTimerElapsed, timerData, 0, 200);
-
-
         return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
     }
-
-    private void InitialSyncTimerElapsed(object state)
-    {
-        if (state is InitialSyncTimerData timerData && !timerData.Disposing)
-        {
-            allPlayersByName.TryGetValue(timerData.Context.Username, out Player player);
-
-            if (timerData.Connection.State < NitroxConnectionState.Connected)
-            {
-                if (player == null) // player can cancel the joining process before this timer elapses
-                {
-                    Log.Error("Player was nulled while joining");
-                    PlayerDisconnected(timerData.Connection);
-                }
-                else
-                {
-                    player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
-                    PlayerDisconnected(player.Connection);
-                    SendPacketToOtherPlayers(new Disconnect(player.Id), player);
-                }
-                timerData.Disposing = true;
-                FinishProcessingReservation();
-            }
-
-            if (timerData.Counter >= timerData.MaxCounter)
-            {
-                Log.Error("An unexpected Error occured during InitialSync");
-                PlayerDisconnected(timerData.Connection);
-
-                timerData.Disposing = true;
-                initialSyncTimer.Dispose(); // Looped long enough to require an override
-            }
-
-            timerData.Counter++;
-        }
-    }
-
-    public void NonPlayerDisconnected(INitroxConnection connection)
-    {
-        // Remove any requests sent by the connection from the join queue
-        JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
-    }
-
-    public event Action<int>? PlayerCountChanged;
 
     public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
     {
         PlayerContext playerContext = reservations[reservationKey];
         Validate.NotNull(playerContext);
-
         ConnectionAssets assetPackage = assetsByConnection[connection];
         Validate.NotNull(assetPackage);
 
@@ -244,8 +188,7 @@ public partial class PlayerManager
 
     public void PlayerDisconnected(INitroxConnection connection)
     {
-        assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
-        if (assetPackage == null)
+        if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
         {
             return;
         }
@@ -276,33 +219,6 @@ public partial class PlayerManager
         }
     }
 
-    public void FinishProcessingReservation(Player player = null)
-    {
-        initialSyncTimer.Dispose();
-        PlayerCurrentlyJoining = false;
-        if (player != null)
-        {
-            BroadcastPlayerJoined(player);
-        }
-
-        Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
-
-        // Tell next client that it can start joining.
-        if (JoinQueue.Count > 0)
-        {
-            KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
-            INitroxConnection requestConnection = keyValuePair.Key;
-            MultiplayerSessionReservationRequest reservationRequest = keyValuePair.Value;
-
-            MultiplayerSessionReservation reservation = ReservePlayerContext(requestConnection,
-            reservationRequest.PlayerSettings,
-            reservationRequest.AuthenticationContext,
-            reservationRequest.CorrelationId);
-
-            requestConnection.SendPacket(reservation);
-        }
-    }
-
     public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
     {
         foundPlayer = null;
@@ -323,21 +239,6 @@ public partial class PlayerManager
         return connectedPlayersById.TryGetValue(playerId, out player);
     }
 
-    public Player GetPlayer(INitroxConnection connection)
-    {
-        if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
-        {
-            return null;
-        }
-        return assetPackage.Player;
-    }
-
-    public Optional<Player> GetPlayer(string playerName)
-    {
-        allPlayersByName.TryGetValue(playerName, out Player player);
-        return Optional.OfNullable(player);
-    }
-
     public void SendPacketToAllPlayers(Packet packet)
     {
         foreach (Player player in ConnectedPlayers())
@@ -356,18 +257,4 @@ public partial class PlayerManager
             }
         }
     }
-
-    public IEnumerable<Player> ConnectedPlayers()
-    {
-        return assetsByConnection.Values
-            .Where(assetPackage => assetPackage.Player != null)
-            .Select(assetPackage => assetPackage.Player);
-    }
-
-    public void BroadcastPlayerJoined(Player player)
-    {
-        PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
-        SendPacketToOtherPlayers(playerJoinedPacket, player);
-    }
-
 }
