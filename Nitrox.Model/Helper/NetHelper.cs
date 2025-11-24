@@ -53,7 +53,7 @@ public static class NetHelper
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                IPAddress address = ip.Address.TryGetAsIPv4();
+                IPAddress address = ip.Address.TryExtractMappedIPv4();
                 if (address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     lock (lanIpLock)
@@ -139,7 +139,7 @@ public static class NetHelper
 
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                IPAddress address = ip.Address.TryGetAsIPv4();
+                IPAddress address = ip.Address.TryExtractMappedIPv4();
                 if (address.AddressFamily is not (AddressFamily.InterNetwork or AddressFamily.InterNetworkV6))
                 {
                     continue;
@@ -186,32 +186,5 @@ public static class NetHelper
                 IPInterfaceStatistics stats = i.GetIPStatistics();
                 return stats.BytesReceived + stats.BytesSent;
             });
-    }
-
-    /// <summary>
-    ///     Returns true if the IP address points to the executing machine.
-    /// </summary>
-    public static bool IsLocalhost(this IPAddress? address)
-    {
-        if (address == null)
-        {
-            return false;
-        }
-        if (IPAddress.IsLoopback(address))
-        {
-            return true;
-        }
-        address = address.TryGetAsIPv4();
-        foreach (NetworkInterface ni in GetInternetInterfaces())
-        {
-            foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
-            {
-                if (address.Equals(ip.Address.TryGetAsIPv4()))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

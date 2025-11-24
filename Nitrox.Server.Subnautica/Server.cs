@@ -293,18 +293,16 @@ public class Server
             {
                 continue;
             }
-            IPAddress displayAddress = vpnAddress.TryGetAsIPv4();
-            options.Add($"{displayAddress} - Friends using {vpnName} (VPN)");
+            options.Add($"{vpnAddress.TryExtractMappedIPv4()} - Friends using {vpnName} (VPN)");
         }
         // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
         IPAddress? lanAddress = await localIp;
         if (lanAddress != null)
         {
-            IPAddress displayLan = lanAddress.TryGetAsIPv4();
-            options.Add($"{displayLan} - Friends on same internet network (LAN)");
+            options.Add($"{lanAddress.TryExtractMappedIPv4()} - Friends on same internet network (LAN)");
         }
 
-        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryGetAsIPv4() ?? IPAddress.None);
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryExtractMappedIPv4() ?? IPAddress.None);
     }
 
     public void StopAndWait(bool shouldSave = true)
