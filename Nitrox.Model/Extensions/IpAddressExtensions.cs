@@ -142,10 +142,10 @@ public static class IpAddressExtensions
             {
                 case 32:
                 {
-                    int ipNum = BitConverter.ToInt32(hostAddress, 0);
-                    int cidrNumber = BitConverter.ToInt32(NotationBytes, 0);
-                    int cidrMask = IPAddress.HostToNetworkOrder(-1 << (hostAddressBitSize - NetworkMaskBitSize)); // -1 == all bits set, like uint.MaxValue
-                    return (ipNum & cidrMask) == (cidrNumber & cidrMask);
+                    int hostAddressNum = BitConverter.ToInt32(hostAddress, 0);
+                    int notationNum = BitConverter.ToInt32(NotationBytes, 0);
+                    int networkBitMask = IPAddress.HostToNetworkOrder(-1 << (hostAddressBitSize - NetworkMaskBitSize)); // -1 == all bits set, like uint.MaxValue
+                    return (hostAddressNum & networkBitMask) == (notationNum & networkBitMask);
                 }
                 default:
                 {
