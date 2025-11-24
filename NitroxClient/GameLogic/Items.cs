@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -24,10 +22,11 @@ public class Items
     private readonly EntityMetadataManager entityMetadataManager;
 
     /// <summary>
-    /// Whether or not <see cref="Inventory.Pickup"/> is running. It's useful to discriminate between Inventory.Pickup from
-    /// a regular <see cref="Pickupable.Pickup"/>
+    /// Whether or not <see cref="Inventory.Pickup"/> or a similar method is running (if greater than 0).
+    /// It's useful to make the distinction between picking up items and normal item container transfers.
     /// </summary>
-    public bool IsInventoryPickingUp;
+
+    public int PickingUpCount;
 
     public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {

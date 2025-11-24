@@ -46,7 +46,6 @@ public class PatchesTranspilerTest
         [typeof(EnergyMixin_SpawnDefaultAsync_Patch), -64],
         [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(EntityCell_SleepAsync_Patch), 2],
-        [typeof(Equipment_RemoveItem_Patch), 7],
         [typeof(ErrorMessage_OnLateUpdate_Patch), 0],
         [typeof(EscapePod_Start_Patch), 43],
         [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],

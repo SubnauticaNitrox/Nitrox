@@ -1,13 +1,13 @@
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -51,12 +51,12 @@ public class ItemContainers
             return;
         }
 
-        // Calls from Inventory.Pickup are managed by Items.PickedUp
-        if (items.IsInventoryPickingUp)
+        // Calls from Inventory.Pickup etc. are managed by Items.PickedUp
+        if (items.PickingUpCount > 0)
         {
             return;
         }
-        
+
         if (packetSender.Send(new EntityReparented(itemId, ownerId)))
         {
             Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
