@@ -12,7 +12,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
-    xmlns:models="clr-namespace:Nitrox.Model.Discovery.Models;assembly=Nitrox.Model">
+    xmlns:models="clr-namespace:Nitrox.Model.Platforms.Discovery.Models;assembly=Nitrox.Model">
     <Design.DataContext>
         <designer:DesignOptionsViewModel />
     </Design.DataContext>
@@ -153,7 +153,7 @@
                     </Grid>
                 </Border>
             </StackPanel>
-            
+
             <!--  Launcher Settings  -->
             <StackPanel Spacing="12">
                 <TextBlock
@@ -164,7 +164,7 @@
                     FontSize="12"
                     HorizontalAlignment="Left"
                     Text="Configure the launcher with these settings" />
-                
+
                 <WrapPanel Margin="-5">
                     <WrapPanel.Styles>
                         <Style Selector="WrapPanel > Border">
@@ -182,7 +182,7 @@
                             </Style>
                         </Style>
                     </WrapPanel.Styles>
-                    
+
                     <Border>
                         <StackPanel>
                             <TextBlock Text="Enable light mode" />
@@ -250,7 +250,7 @@
                             Width="120" />
                     </Grid>
                 </Border>
-                
+
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
                         CommandParameter="{Binding ScreenshotsFolderDir}"
                         ToolTip.Tip="{Binding ScreenshotsFolderDir}">

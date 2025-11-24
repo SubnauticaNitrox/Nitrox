@@ -1,9 +1,12 @@
+using System.Collections;
 using Nitrox.Model.DataStructures;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using UnityEngine;
+using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -17,6 +20,24 @@ public class AnimationChangeEventProcessor : ClientPacketProcessor<AnimationChan
     }
 
     public override void Process(AnimationChangeEvent animEvent)
+    {
+        // Possible for this to be sent during initial sync when the RemotePlayer doesn't exist yet
+        if (Multiplayer.Main.InitialSyncCompleted)
+        {
+            UpdateAnimation(animEvent);
+        }
+        else
+        {
+            CoroutineHost.StartCoroutine(Coroutine());
+            IEnumerator Coroutine()
+            {
+                yield return new WaitUntil(() => Multiplayer.Main.InitialSyncCompleted);
+                UpdateAnimation(animEvent);
+            }
+        }
+    }
+
+    private void UpdateAnimation(AnimationChangeEvent animEvent)
     {
         Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(animEvent.PlayerId);
         if (opPlayer.HasValue)
