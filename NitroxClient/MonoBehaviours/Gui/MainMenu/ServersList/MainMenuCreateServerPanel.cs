@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Net;
 using FMODUnity;
 using Nitrox.Model.Serialization;
 using TMPro;
@@ -92,7 +93,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         string serverPortText = serverPortInput.text.Trim();
 
         if (string.IsNullOrWhiteSpace(serverNameText) ||
-            string.IsNullOrWhiteSpace(serverHostText) ||
+            !IsValidDnsOrIp(serverHostText) ||
             string.IsNullOrWhiteSpace(serverPortText) ||
             !int.TryParse(serverPortText, out int serverPort))
         {
@@ -112,6 +113,25 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         {
             yield return new WaitForEndOfFrame();
             UIUtils.ScrollToShowItemInCenter(newEntry.transform);
+        }
+
+        static bool IsValidDnsOrIp(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+            // Valid IPv4 but port should be specified in designated field.
+            if (value.LastIndexOf(":", StringComparison.Ordinal) is var colonIndex and > 0 && IPAddress.TryParse(value.Substring(0, colonIndex), out _))
+            {
+                return false;
+            }
+            // Possibly a valid IPv6 but port should be specified in designated field.
+            if (value.IndexOf("]:", StringComparison.Ordinal) >= 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 

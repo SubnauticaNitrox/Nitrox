@@ -14,16 +14,6 @@ namespace Nitrox.Model.Helper;
 
 public static class NetHelper
 {
-    private static readonly string[] privateNetworks =
-    {
-        "10.0.0.0/8",
-        "127.0.0.0/8",
-        "172.16.0.0/12",
-        "192.0.0.0/24 ",
-        "192.168.0.0/16",
-        "198.18.0.0/15",
-    };
-
     private static IPAddress? wanIpCache;
     private static IPAddress? lanIpCache;
     private static long lastSeenPacketChange = -1;
@@ -31,6 +21,8 @@ public static class NetHelper
     private static readonly object connectivityLock = new();
     private static readonly object wanIpLock = new();
     private static readonly object lanIpLock = new();
+
+    private static bool? hasInternet;
 
     /// <summary>
     ///     Gets the network interfaces used for going onto the internet.
@@ -56,17 +48,32 @@ public static class NetHelper
             }
         }
 
+        IPAddress? ipv6Candidate = null;
         foreach (NetworkInterface ni in GetInternetInterfaces())
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                IPAddress address = ip.Address.TryExtractMappedIPv4();
+                if (address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     lock (lanIpLock)
                     {
-                        return lanIpCache = ip.Address;
+                        return lanIpCache = address;
                     }
                 }
+
+                if (ipv6Candidate == null && address is { AddressFamily: AddressFamily.InterNetworkV6, IsIPv6LinkLocal: false, IsIPv6Multicast: false })
+                {
+                    ipv6Candidate = address;
+                }
+            }
+        }
+
+        if (ipv6Candidate != null)
+        {
+            lock (lanIpLock)
+            {
+                return lanIpCache = ipv6Candidate;
             }
         }
 
@@ -132,10 +139,16 @@ public static class NetHelper
 
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
-                if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                IPAddress address = ip.Address.TryExtractMappedIPv4();
+                if (address.AddressFamily is not (AddressFamily.InterNetwork or AddressFamily.InterNetworkV6))
                 {
-                    yield return (ip.Address, ni.Name.Replace("VPN", "").Trim());
+                    continue;
                 }
+                if (address is { AddressFamily: AddressFamily.InterNetworkV6 } and ({ IsIPv6LinkLocal: true } or { IsIPv6Multicast: true }))
+                {
+                    continue;
+                }
+                yield return (address, ni.Name.Replace("VPN", "").Trim());
             }
         }
     }
@@ -144,8 +157,6 @@ public static class NetHelper
     ///     Gets supported VPN address if known by current machine.
     /// </summary>
     public static IEnumerable<(IPAddress Address, string NetworkName)> GetVpnIps() => GetVpnIps("Hamachi", "Radmin VPN");
-
-    private static bool? hasInternet;
 
     public static bool HasInternetConnectivity()
     {
@@ -175,58 +186,5 @@ public static class NetHelper
                 IPInterfaceStatistics stats = i.GetIPStatistics();
                 return stats.BytesReceived + stats.BytesSent;
             });
-    }
-
-    /// <summary>
-    ///     Returns true if the given IP address is reserved for private networks.
-    /// </summary>
-    public static bool IsPrivate(this IPAddress address)
-    {
-        static bool IsInRange(IPAddress ipAddress, string mask)
-        {
-            string[] parts = mask.Split('/');
-
-            int ipNum = BitConverter.ToInt32(ipAddress.GetAddressBytes(), 0);
-            int cidrAddress = BitConverter.ToInt32(IPAddress.Parse(parts[0]).GetAddressBytes(), 0);
-            int cidrMask = IPAddress.HostToNetworkOrder(-1 << (32 - int.Parse(parts[1])));
-
-            return (ipNum & cidrMask) == (cidrAddress & cidrMask);
-        }
-
-        foreach (string privateSubnet in privateNetworks)
-        {
-            if (IsInRange(address, privateSubnet))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// <summary>
-    ///     Returns true if the IP address points to the executing machine.
-    /// </summary>
-    public static bool IsLocalhost(this IPAddress? address)
-    {
-        if (address == null)
-        {
-            return false;
-        }
-        if (IPAddress.IsLoopback(address))
-        {
-            return true;
-        }
-
-        foreach (NetworkInterface ni in GetInternetInterfaces())
-        {
-            foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
-            {
-                if (address.Equals(ip.Address))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

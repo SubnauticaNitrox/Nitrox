@@ -51,6 +51,7 @@ public class LiteNetLibClient : IClient
         {
             UpdateTime = 15,
             ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
+            IPv6Enabled = true,
 #if DEBUG
             DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
