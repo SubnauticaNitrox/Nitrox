@@ -20,7 +20,6 @@ using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 
@@ -109,7 +108,7 @@ public partial class ServerEntry : ObservableObject
 
     public static ServerEntry? CreateNew(string saveDir, NitroxGameMode saveGameMode)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(saveDir, nameof(saveDir));
+        ArgumentException.ThrowIfNullOrWhiteSpace(saveDir);
 
         Directory.CreateDirectory(saveDir);
 
@@ -309,6 +308,11 @@ public partial class ServerEntry : ObservableObject
                     WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     CreateNoWindow = isEmbeddedMode
                 };
+                // Assist server with finding launcher location.
+                if (Directory.Exists(launcherPath))
+                {
+                    startInfo.EnvironmentVariables.Add(NitroxUser.LAUNCHER_PATH_ENV_KEY, launcherPath);
+                }
                 if (isEmbeddedMode)
                 {
                     startInfo.ArgumentList.Add("--embedded");
