@@ -1,10 +1,10 @@
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Spawning.Metadata;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -39,7 +39,6 @@ public class EquipmentSlots
         }
         else
         {
-            // UWE also sends module events here as they are technically equipment of the vehicles.
             string classId = pickupable.RequireComponent<PrefabIdentifier>().ClassId;
             NitroxTechType techType = pickupable.GetTechType().ToDto();
             EntityMetadata metadata = entityMetadataManager.Extract(pickupable.gameObject).OrNull();
@@ -70,7 +69,6 @@ public class EquipmentSlots
         }
         else
         {
-            // UWE also sends module events here as they are technically equipment of the vehicles.
             packetSender.Send(new EntityDestroyed(itemId));
         }
     }

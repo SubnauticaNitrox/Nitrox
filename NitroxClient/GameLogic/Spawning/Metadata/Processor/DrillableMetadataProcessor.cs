@@ -1,5 +1,4 @@
 using System.Linq;
-using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using UnityEngine;
@@ -10,10 +9,15 @@ public class DrillableMetadataProcessor : EntityMetadataProcessor<DrillableMetad
 {
     public override void ProcessMetadata(GameObject gameObject, DrillableMetadata metadata)
     {
-        Drillable drillable = gameObject.GetComponent<Drillable>();
-        if (!drillable)
+        if (!gameObject.TryGetComponent(out Drillable drillable))
         {
             Log.Error($"Could not find Drillable on {gameObject.name}");
+            return;
+        }
+
+        if (drillable.health.Length != metadata.ChunkHealth.Length)
+        {
+            Log.Error($"Malformed drillable metadata: expected {drillable.health.Length} entries, got {metadata.ChunkHealth.Length}");
             return;
         }
 
@@ -24,8 +28,6 @@ public class DrillableMetadataProcessor : EntityMetadataProcessor<DrillableMetad
             drillable.health = metadata.ChunkHealth;
             return;
         }
-
-        Validate.IsTrue(drillable.health.Length == metadata.ChunkHealth.Length);
 
         // Updates health of each node and spawns VFX as if each node had been drilled
         // by the packet's given amounts in the order they are stored. See Drillable.OnDrill

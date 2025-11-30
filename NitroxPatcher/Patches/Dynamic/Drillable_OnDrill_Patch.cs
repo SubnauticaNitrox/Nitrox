@@ -26,6 +26,7 @@ public sealed partial class Drillable_OnDrill_Patch : NitroxPatch, IDynamicPatch
 
         // For some reason the drillable ion cube deposit in the primary containment facility
         // is not automatically tagged as an entity. We spawn it here as a workaround.
+        // TODO: spawn this entity server-side in a bootstrapper instead of client-side
 
         AnteChamber antechamber = __instance.GetComponentInParent<AnteChamber>();
 

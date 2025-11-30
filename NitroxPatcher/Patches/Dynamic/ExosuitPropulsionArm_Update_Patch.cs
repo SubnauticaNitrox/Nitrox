@@ -11,12 +11,12 @@ public sealed partial class ExosuitPropulsionArm_Update_Patch : NitroxPatch, IDy
 
     public static void Prefix(ExosuitPropulsionArm __instance, out bool __state)
     {
-        __state = __instance.propulsionCannon.animator.GetBool(ExosuitModuleEvent.useToolAnimation);
+        __state = __instance.propulsionCannon.animator.GetBool(ExosuitModuleEvent.UseToolAnimation);
     }
 
     public static void Postfix(ExosuitPropulsionArm __instance, ref bool __state)
     {
-        bool isUsing = __instance.propulsionCannon.animator.GetBool(ExosuitModuleEvent.useToolAnimation);
+        bool isUsing = __instance.propulsionCannon.animator.GetBool(ExosuitModuleEvent.UseToolAnimation);
 
         if (__state != isUsing)
         {

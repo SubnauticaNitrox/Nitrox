@@ -12,19 +12,17 @@ public sealed partial class ExosuitClawArm_OnPickupAsync_Patch : NitroxPatch, ID
 
     public static IEnumerator Postfix(IEnumerator __result, ExosuitClawArm __instance)
     {
-        Exosuit exosuit = __instance.GetComponentInParent<Exosuit>();
-        if (exosuit.TryGetIdOrWarn(out NitroxId id))
+        if (__instance.exosuit.TryGetIdOrWarn(out NitroxId id))
         {
-            Pickupable pickupable = exosuit.GetActiveTarget().GetComponent<Pickupable>();
-            PickPrefab pickPrefab = exosuit.GetActiveTarget().GetComponent<PickPrefab>();
+            Pickupable pickupable = __instance.exosuit.GetActiveTarget().GetComponent<Pickupable>();
+            PickPrefab pickPrefab = __instance.exosuit.GetActiveTarget().GetComponent<PickPrefab>();
 
-            if (pickupable != null && pickupable.isPickupable && exosuit.storageContainer.container.HasRoomFor(pickupable))
+            if (pickupable != null && pickupable.isPickupable && __instance.exosuit.storageContainer.container.HasRoomFor(pickupable))
             {
                 NitroxServiceLocator.LocateService<Items>().PickedUp(pickupable.gameObject, pickupable.GetTechType(), id);
             }
             else if (pickPrefab != null)
             {
-                Log.Debug("Delete Pickprefab for exosuit claw arm"); // what does this mean??
                 NitroxServiceLocator.LocateService<Items>().PickedUp(pickPrefab.gameObject, pickPrefab.pickTech, id);
             }
         }
