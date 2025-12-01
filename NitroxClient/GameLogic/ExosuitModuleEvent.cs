@@ -19,12 +19,6 @@ public class ExosuitModuleEvent
         this.simulationOwnership = simulationOwnership;
     }
 
-
-    public void BroadcastClawUse(Exosuit exosuit, ExosuitClawArm clawArm, float cooldown)
-    {
-
-    }
-
     public void BroadcastArmAction(TechType techType, Exosuit exosuit, IExosuitArm exosuitArm, ExosuitArmAction armAction)
     {
         if (exosuit.TryGetIdOrWarn(out NitroxId id) && simulationOwnership.HasAnyLockType(id))
