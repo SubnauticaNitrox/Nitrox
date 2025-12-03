@@ -78,13 +78,13 @@ public class Items
         PickingUpObject = null;
     }
 
-    public void Planted(GameObject gameObject, NitroxId parentId)
+    public void MovedIntoInventory(GameObject gameObject, NitroxId parentId)
     {
         InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, parentId);
 
         if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
         {
-            Log.Debug($"Planted item {inventoryItemEntity}");
+            Log.Debug($"Recreated item {inventoryItemEntity} (planted or moved out of equipment)");
         }
     }
 

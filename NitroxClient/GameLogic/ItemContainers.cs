@@ -17,12 +17,14 @@ public class ItemContainers
     private readonly IPacketSender packetSender;
     private readonly EntityMetadataManager entityMetadataManager;
     private readonly Items items;
+    private readonly Entities entities;
 
-    public ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager, Items items)
+    public ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager, Items items, Entities entities)
     {
         this.packetSender = packetSender;
         this.entityMetadataManager = entityMetadataManager;
         this.items = items;
+        this.entities = entities;
     }
 
     public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform, ItemsContainer container)
@@ -42,7 +44,7 @@ public class ItemContainers
         // For planters, we'll always forcefully recreate the entity to ensure there's no desync
         if (container.containerType == ItemsContainerType.LandPlants || container.containerType == ItemsContainerType.WaterPlants)
         {
-            items.Planted(pickupable.gameObject, ownerId);
+            items.MovedIntoInventory(pickupable.gameObject, ownerId);
             return;
         }
 
@@ -54,6 +56,13 @@ public class ItemContainers
         // Calls from Inventory.Pickup etc. are managed by Items.PickedUp
         if (items.PickingUpCount > 0)
         {
+            return;
+        }
+
+        if (!entities.IsKnownEntity(itemId))
+        {
+            // If the entity existed but was deleted (for example by module remove), fall back to respawning
+            items.MovedIntoInventory(pickupable.gameObject, ownerId);
             return;
         }
 

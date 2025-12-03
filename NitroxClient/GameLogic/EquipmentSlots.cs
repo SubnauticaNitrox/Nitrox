@@ -44,6 +44,7 @@ public class EquipmentSlots
             EntityMetadata metadata = entityMetadataManager.Extract(pickupable.gameObject).OrNull();
 
             InstalledModuleEntity moduleEntity = new(slot, classId, itemId, techType, metadata, ownerId, []);
+            entities.MarkAsSpawned(moduleEntity);
 
             if (packetSender.Send(new EntitySpawnedByClient(moduleEntity, true)))
             {
@@ -69,6 +70,7 @@ public class EquipmentSlots
         }
         else
         {
+            entities.RemoveEntity(itemId);
             packetSender.Send(new EntityDestroyed(itemId));
         }
     }
