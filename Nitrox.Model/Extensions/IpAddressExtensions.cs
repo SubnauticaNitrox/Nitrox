@@ -18,11 +18,11 @@ public static class IpAddressExtensions
         {
             return false;
         }
-        address = address.TryExtractMappedIPv4();
         if (IPAddress.IsLoopback(address))
         {
             return true;
         }
+        address = address.TryExtractMappedIPv4();
         foreach (NetworkInterface ni in NetHelper.GetInternetInterfaces())
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
