@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -24,10 +22,11 @@ public class Items
     private readonly EntityMetadataManager entityMetadataManager;
 
     /// <summary>
-    /// Whether or not <see cref="Inventory.Pickup"/> is running. It's useful to discriminate between Inventory.Pickup from
-    /// a regular <see cref="Pickupable.Pickup"/>
+    /// Whether or not <see cref="Inventory.Pickup"/> or a similar method is running (if greater than 0).
+    /// It's useful to make the distinction between picking up items and normal item container transfers.
     /// </summary>
-    public bool IsInventoryPickingUp;
+
+    public int PickingUpCount;
 
     public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {
@@ -36,22 +35,29 @@ public class Items
         this.entityMetadataManager = entityMetadataManager;
     }
 
-    public void PickedUp(GameObject gameObject, TechType techType)
+    public void PickedUpByPlayer(GameObject gameObject, TechType techType)
+    {
+        // Newly created objects are normally placed into the player's inventory.
+        // PickedUp was designed for this, but also works when an item is being moved into e.g. a vehicle's storage.
+        // Consider making a new packet type if PickedUp is found to be impractical for this case.
+
+        if (!Player.main.TryGetNitroxId(out NitroxId playerId))
+        {
+            Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
+            return;
+        }
+
+        PickedUp(gameObject, techType, playerId);
+    }
+
+    public void PickedUp(GameObject gameObject, TechType techType, NitroxId containerId)
     {
         PickingUpObject = gameObject;
 
         // Try catch to avoid blocking PickingUpObject with a non null value outside of the current context
         try
         {
-            // Newly created objects are always placed into the player's inventory.
-            if (!Player.main.TryGetNitroxId(out NitroxId playerId))
-            {
-                Log.ErrorOnce($"[{nameof(Items)}] Player has no id! Could not set parent of picked up item {gameObject.name}.");
-                PickingUpObject = null;
-                return;
-            }
-
-            InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, playerId);
+            InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, containerId);
 
             if (inventoryItemEntity.TechType.ToUnity() != techType)
             {
@@ -72,13 +78,13 @@ public class Items
         PickingUpObject = null;
     }
 
-    public void Planted(GameObject gameObject, NitroxId parentId)
+    public void MovedIntoInventory(GameObject gameObject, NitroxId parentId)
     {
         InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, parentId);
 
         if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
         {
-            Log.Debug($"Planted item {inventoryItemEntity}");
+            Log.Debug($"Recreated item {inventoryItemEntity} (planted or moved out of equipment)");
         }
     }
 
