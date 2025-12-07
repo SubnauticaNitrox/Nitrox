@@ -30,7 +30,7 @@ public sealed partial class SubnauticaServerOptions
     public SubnauticaGameMode GameMode { get; set; }
 
     [PropertyDescription("Measured in milliseconds. Values less than 1 second will disable auto saving.")]
-    public int SaveInterval { get; set; } = (int)TimeSpan.FromMinutes(5).TotalMilliseconds;
+    public int SaveInterval { get; set; } = (int)TimeSpan.FromMinutes(2).TotalMilliseconds;
 
     [Range(0, int.MaxValue)]
     public int MaxBackups { get; set; } = 10;

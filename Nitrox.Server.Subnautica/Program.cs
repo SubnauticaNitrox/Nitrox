@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Server.Subnautica.Models;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Logging.ZLogger;
@@ -44,6 +46,10 @@ internal sealed class Program
                                            .Build();
         startOptions = new ServerStartOptions();
         configuration.Bind(startOptions);
+        if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+        {
+            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+        }
         startOptions.GamePath ??= NitroxUser.GamePath;
         startOptions.NitroxAppDataPath ??= NitroxUser.AppDataPath;
         startOptions.NitroxAssetsPath ??= NitroxUser.AssetsPath;

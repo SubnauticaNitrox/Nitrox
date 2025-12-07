@@ -13,6 +13,7 @@ internal sealed class LiteNetLibServer : IHostedService
 {
     private readonly PacketHandler packetHandler;
     private readonly PlayerManager playerManager;
+    private readonly JoiningManager joiningManager;
     private readonly EntitySimulation entitySimulation;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly ILogger<LiteNetLibServer> logger;
@@ -25,10 +26,11 @@ internal sealed class LiteNetLibServer : IHostedService
         Packet.InitSerializer();
     }
 
-    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, IOptions<SubnauticaServerOptions> options, ILogger<LiteNetLibServer> logger)
+    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, IOptions<SubnauticaServerOptions> options, ILogger<LiteNetLibServer> logger)
     {
         this.packetHandler = packetHandler;
         this.playerManager = playerManager;
+        this.joiningManager = joiningManager;
         this.entitySimulation = entitySimulation;
         this.options = options;
         this.logger = logger;
@@ -81,32 +83,30 @@ internal sealed class LiteNetLibServer : IHostedService
         server.Stop();
     }
 
-    protected void ClientDisconnected(INitroxConnection connection)
+    public void ClientDisconnected(INitroxConnection connection)
     {
-        Player player = playerManager.GetPlayer(connection);
-
-        if (player != null)
+        Player? player = playerManager.GetPlayer(connection);
+        if (player == null)
         {
-            playerManager.PlayerDisconnected(connection);
-
-            Disconnect disconnect = new(player.Id);
-            playerManager.SendPacketToAllPlayers(disconnect);
-
-            List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
-
-            if (ownershipChanges.Count > 0)
-            {
-                SimulationOwnershipChange ownershipChange = new(ownershipChanges);
-                playerManager.SendPacketToAllPlayers(ownershipChange);
-            }
+            joiningManager.JoiningPlayerDisconnected(connection);
+            return;
         }
-        else
+
+        playerManager.PlayerDisconnected(connection);
+
+        Disconnect disconnect = new(player.Id);
+        playerManager.SendPacketToAllPlayers(disconnect);
+
+        List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
+
+        if (ownershipChanges.Count > 0)
         {
-            playerManager.NonPlayerDisconnected(connection);
+            SimulationOwnershipChange ownershipChange = new(ownershipChanges);
+            playerManager.SendPacketToAllPlayers(ownershipChange);
         }
     }
 
-    protected void ProcessIncomingData(INitroxConnection connection, Packet packet)
+    public void ProcessIncomingData(INitroxConnection connection, Packet packet)
     {
         try
         {

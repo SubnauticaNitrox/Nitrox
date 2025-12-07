@@ -1,6 +1,8 @@
+using Nitrox.Model;
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
 using Nitrox.Model.Core;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
@@ -8,7 +10,6 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.World;
 
@@ -23,6 +24,10 @@ internal sealed class WorldServiceTest
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
+        if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+        {
+            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+        }
         NitroxServiceLocator.InitializeDependencyContainer(new TestAutoFacRegistrar());
         NitroxServiceLocator.BeginNewLifetimeScope();
 

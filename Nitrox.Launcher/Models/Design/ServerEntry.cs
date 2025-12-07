@@ -369,6 +369,11 @@ public partial class ServerEntry : ObservableObject
                     WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     CreateNoWindow = isEmbeddedMode
                 };
+                // Assist server with finding launcher location.
+                if (Directory.Exists(launcherPath))
+                {
+                    startInfo.EnvironmentVariables.Add(NitroxUser.LAUNCHER_PATH_ENV_KEY, launcherPath);
+                }
                 if (isEmbeddedMode)
                 {
                     startInfo.ArgumentList.Add("--embedded");

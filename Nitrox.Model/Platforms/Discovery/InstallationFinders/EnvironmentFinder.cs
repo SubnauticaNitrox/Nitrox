@@ -1,8 +1,8 @@
 using System;
-using Nitrox.Model.Discovery.InstallationFinders.Core;
-using static Nitrox.Model.Discovery.InstallationFinders.Core.GameFinderResult;
+using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
+using static Nitrox.Model.Platforms.Discovery.InstallationFinders.Core.GameFinderResult;
 
-namespace Nitrox.Model.Discovery.InstallationFinders;
+namespace Nitrox.Model.Platforms.Discovery.InstallationFinders;
 
 /// <summary>
 /// Trying to find the path in environment variables by the key {GAMEINFO FULLNAME}_INSTALLATION_PATH that contains the installation directory.
