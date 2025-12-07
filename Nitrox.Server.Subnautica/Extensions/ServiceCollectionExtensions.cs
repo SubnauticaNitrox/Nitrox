@@ -95,7 +95,11 @@ internal static partial class ServiceCollectionExtensions
                        formatterOptions.ColorBehavior = isEmbedded ? LoggerColorBehavior.Disabled : LoggerColorBehavior.Enabled;
                    });
                })
-               .AddNitroxZLoggerPlain(options => options.UseNitroxFormatter().OutputFunc = async (_, log) => await ServersManagementService.LogQueue.Writer.WriteAsync(log))
+               .AddNitroxZLoggerPlain(options =>
+               {
+                   options.IncludeScopes = true;
+                   options.UseNitroxFormatter().OutputFunc = async (_, log) => await ServersManagementService.LogQueue.Writer.WriteAsync(log);
+               })
                .AddNitroxZLoggerPlain(options =>
                {
                    options.IncludeScopes = true;

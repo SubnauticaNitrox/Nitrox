@@ -26,7 +26,7 @@ internal sealed partial class ServersManagementService(PlayerManager playerManag
     private GrpcChannel? channel;
     private Task? pushLogsTask;
 
-    [GeneratedRegex(@"\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\]\s(?<category>\w+):\s(?<logText>(?:.|\n)*?(?=$|\n\[))")]
+    [GeneratedRegex(@"(?:\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\]\s(?<category>\w+):\s)?(?<logText>(?:.|\n)*?(?=$|\n\[))")]
     private static partial Regex LogRegex { get; }
 
     public override void Dispose() => channel?.Dispose();
