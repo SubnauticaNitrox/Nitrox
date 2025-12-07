@@ -58,12 +58,13 @@ internal static class ConfigurationBuilderExtensions
     ///     Adds the first JSON file matching the file name in any parent directory of <see cref="AppContext.BaseDirectory" />.
     /// </summary>
     /// <remarks>
-    ///     This function creates a symbolic link for the first parent JSON file. A symbolic link is required because change detection does not work with
+    ///     This function creates a symbolic link for the first parent JSON file. A symbolic link is required because change
+    ///     detection does not work with
     ///     parent files.
     /// </remarks>
-    public static IConfigurationBuilder AddConditionalUpstreamJsonFile(this IConfigurationBuilder builder, bool skip, string fileName, bool optional = false, bool reloadOnChange = false)
+    public static IConfigurationBuilder AddConditionalUpstreamJsonFile(this IConfigurationBuilder builder, bool enabled, string fileName, bool optional = false, bool reloadOnChange = false)
     {
-        if (skip)
+        if (!enabled)
         {
             return builder;
         }
@@ -106,5 +107,60 @@ internal static class ConfigurationBuilderExtensions
         }, fileName, optional, reloadOnChange);
 
         return builder;
+    }
+
+    public static IConfigurationBuilder AddConditionalCsharpProjectJsonFile(this IConfigurationBuilder builder, bool enabled, string fileName, string? projectName = null, bool optional = false, bool reloadOnChange = false)
+    {
+        if (!enabled || projectName == null)
+        {
+            return builder;
+        }
+
+        // Symbolic link the first parent JSON file found. Required for change detection when file is in a parent directory.
+        string current = AppContext.BaseDirectory.TrimEnd('/', '\\');
+        while ((current = Path.GetDirectoryName(current)) is not null)
+        {
+            if (!IsSolutionRootWithProject(current, projectName))
+            {
+                continue;
+            }
+            string parentAppSettingsFilePath = Path.Combine(current, projectName, fileName);
+            if (File.Exists(parentAppSettingsFilePath))
+            {
+                FileInfo appSettingsFile = new(Path.Combine(AppContext.BaseDirectory, fileName));
+                if (appSettingsFile.Exists && appSettingsFile.LinkTarget != null)
+                {
+                    appSettingsFile.Delete();
+                }
+                appSettingsFile.CreateAsSymbolicLink(parentAppSettingsFilePath);
+            }
+            break;
+        }
+
+        builder.AddJsonFile(new PhysicalFileProvider(AppContext.BaseDirectory)
+        {
+            UseActivePolling = OperatingSystem.IsLinux(),
+            UsePollingFileWatcher = OperatingSystem.IsLinux()
+        }, fileName, optional, reloadOnChange);
+
+        return builder;
+
+        static bool IsSolutionRootWithProject(string path, string projectName)
+        {
+            bool isSolutionRoot = false;
+            bool projectExists = false;
+            foreach (string file in Directory.EnumerateFiles(path))
+            {
+                if (!isSolutionRoot && Path.GetExtension(file) is ".sln" or ".slnx")
+                {
+                    isSolutionRoot = true;
+                }
+                else if (!projectExists && Directory.Exists(Path.Combine(path, projectName)))
+                {
+                    projectExists = true;
+                }
+            }
+            return isSolutionRoot && projectExists;
+        }
     }
 }

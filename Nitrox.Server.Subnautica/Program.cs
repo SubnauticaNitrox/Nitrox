@@ -71,7 +71,8 @@ internal sealed class Program
         // Nitrox config can be overriden by development.json or command line args if supplied.
         builder.Configuration
                .AddNitroxConfigFile<SubnauticaServerOptions>(startOptions.GetServerConfigFilePath(), SubnauticaServerOptions.CONFIG_SECTION_PATH, true, true)
-               .AddConditionalUpstreamJsonFile(!builder.Environment.IsDevelopment(), "server.Development.json", true, true)
+               .AddConditionalCsharpProjectJsonFile(builder.Environment.IsDevelopment(), "server.Development.json", typeof(Program).Namespace)
+               .AddConditionalUpstreamJsonFile(builder.Environment.IsDevelopment(), "server.Development.json", true, true)
                .AddCommandLine(args)
             ;
         builder.Logging
