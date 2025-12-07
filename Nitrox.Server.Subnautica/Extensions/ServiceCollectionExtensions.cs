@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AssetsTools.NET.Extra;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Console;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -130,6 +132,7 @@ internal static partial class ServiceCollectionExtensions
         services.AddHostedSingletonService<CommandService>()
                 .AddHostedSingletonService<ConsoleInputService>()
                 .AddSingleton<TextCommandProcessor>()
+                .AddSingleton<IHostLifetime, ConsoleInputService.NoCtrlCCancelLifetime>()
                 .AddCommandHandlers();
         return services;
     }
