@@ -15,7 +15,7 @@ internal class SubnauticaResourceLoaderService(IEnumerable<IGameResource> resour
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         Stopwatch totalStopWatch = Stopwatch.StartNew();
-        logger.ZLogDebug($"Loading {resources.Count():@ResourceCount} resources {string.Join(", ", resources.Select(r => r.GetType().Name).OrderBy(n => n)):@TypeNames}...", resources.Count());
+        logger.ZLogDebug($"Loading {resources.Count():@ResourceCount} resources {string.Join(", ", resources.Select(r => r.GetType().Name).OrderBy(n => n)):@TypeNames}...");
         await Parallel.ForEachAsync(resources, cancellationToken, async (resource, token) =>
         {
             string resourceName = resource.GetType().Name;

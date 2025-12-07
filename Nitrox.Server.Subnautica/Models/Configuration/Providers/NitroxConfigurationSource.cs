@@ -10,7 +10,7 @@ internal sealed class NitroxConfigurationSource : FileConfigurationSource
     /// </summary>
     public string Section { get; init; }
 
-    public NitroxConfigurationSource(string path, string configSection = "", bool optional = true, IFileProvider fileProvider = null)
+    public NitroxConfigurationSource(string path, string configSection = "", bool optional = true, IFileProvider? fileProvider = null)
     {
         Path = path;
         Optional = optional;

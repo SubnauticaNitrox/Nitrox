@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -13,7 +12,7 @@ namespace Nitrox.Server.Subnautica.Services;
 /// <summary>
 ///     Service which prints out information at appropriate time in the app life cycle.
 /// </summary>
-internal sealed partial class StatusService(
+internal sealed class StatusService(
     [FromKeyedServices("startup")] Stopwatch appStartStopWatch,
     GameInfo gameInfo,
     PlayerManager playerManager,
@@ -28,9 +27,6 @@ internal sealed partial class StatusService(
     private readonly PlayerManager playerManager = playerManager;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
     private readonly Func<ISummarize[]> summarizersProvider = summarizersProvider;
-
-    [GeneratedRegex(@"\{([0-9]+)([^\}]*)\}")]
-    private partial Regex FormatTagRegex { get; }
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
