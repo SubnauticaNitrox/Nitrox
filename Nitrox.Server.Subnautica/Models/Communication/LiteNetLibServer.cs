@@ -35,7 +35,10 @@ internal sealed class LiteNetLibServer : IHostedService
         this.options = options;
         this.logger = logger;
         listener = new EventBasedNetListener();
-        server = new NetManager(listener);
+        server = new NetManager(listener)
+        {
+            IPv6Enabled = true
+        };
     }
 
     public void OnConnectionRequest(ConnectionRequest request)

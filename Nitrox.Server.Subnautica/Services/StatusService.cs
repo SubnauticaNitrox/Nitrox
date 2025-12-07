@@ -59,28 +59,28 @@ internal sealed partial class StatusService(
 
         async Task LogIps()
         {
-            Task<IPAddress> lanIp = Task.Run(NetHelper.GetLanIp, cancellationToken);
-            Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
-            Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(NetHelper.GetVpnIps, cancellationToken);
-            await Task.WhenAll(lanIp, wanIp, vpnIps);
-            logger.ZLogInformation($"Use following IPs to connect:");
+            Task<IPAddress> lanIpTask = Task.Run(NetHelper.GetLanIp, cancellationToken);
+            Task<IPAddress> wanIpTask = NetHelper.GetWanIpAsync();
+            Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIpsTasks = Task.Run(NetHelper.GetVpnIps, cancellationToken);
+            await Task.WhenAll(lanIpTask, wanIpTask, vpnIpsTasks);
+            logger.ZLogInformation($"Use IP to connect:");
             using (logger.BeginPlainScope())
             {
                 using (logger.BeginPrefixScope("\t"))
                 {
                     logger.ZLogInformation($"127.0.0.1 - You (Local)");
-                    if (wanIp.Result != null)
+                    if (wanIpTask.Result is {} wanIp)
                     {
-                        logger.LogWanIp(wanIp.Result);
+                        logger.LogWanIp(wanIp.TryExtractMappedIPv4());
                     }
-                    foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIps)
+                    foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIpsTasks)
                     {
                         logger.LogVpnIp(vpnName, vpnAddress);
                     }
                     // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
-                    if (lanIp.Result != null)
+                    if (lanIpTask.Result is {} lanIp)
                     {
-                        logger.LogLanIp(lanIp.Result);
+                        logger.LogLanIp(lanIp);
                     }
                 }
                 logger.ZLogInformation($"");

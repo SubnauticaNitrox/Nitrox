@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
@@ -20,7 +19,7 @@ public class ServerList
         get
         {
             ServerList list = new();
-            list.Add(new Entry("Your server", "127.0.0.1", SubnauticaServerConstants.DEFAULT_PORT));
+            list.Add(new Entry("Your server", IPAddress.Loopback.ToString(), SubnauticaServerConstants.DEFAULT_PORT));
             return list;
         }
     }
@@ -126,18 +125,12 @@ public class ServerList
                 return null;
             }
             string[] parts = line.Split('|');
-            int port;
+            int port = SubnauticaServerConstants.DEFAULT_PORT;
             string address;
             switch (parts.Length)
             {
-                case 2:
-                    // Split from address as format "hostname:port".
-                    string[] addressSplit = parts[1].Split(':');
-                    address = addressSplit[0];
-                    if (!int.TryParse(addressSplit.ElementAtOrDefault(1), out port))
-                    {
-                        port = SubnauticaServerConstants.DEFAULT_PORT;
-                    }
+                case 2 when IPAddress.TryParse(parts[1], out IPAddress parsedAddress):
+                    address = parsedAddress.ToString();
                     break;
                 case 3:
                     address = parts[1].Trim();
@@ -147,7 +140,7 @@ public class ServerList
                     }
                     break;
                 default:
-                    Log.Warn($"A server list entry contained too many elements. Either 2 or 3 is valid but was: {line}");
+                    Log.Warn($"A server list entry contained too many, or invalid, elements. Either 2 or 3 is valid but was: {line}");
                     return null;
             }
 

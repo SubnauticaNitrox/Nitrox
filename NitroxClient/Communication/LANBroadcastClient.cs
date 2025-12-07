@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Nitrox.Model.Constants;
+using Nitrox.Model.Helper;
 
 namespace NitroxClient.Communication;
 
@@ -62,7 +63,7 @@ public static class LANBroadcastClient
                 return;
             }
             int serverPort = reader.GetInt();
-            IPEndPoint serverEndPoint = new(remoteEndPoint.Address, serverPort);
+            IPEndPoint serverEndPoint = new(remoteEndPoint.Address.TryExtractMappedIPv4(), serverPort);
             if (DiscoveredServers.Contains(serverEndPoint))
             {
                 return;

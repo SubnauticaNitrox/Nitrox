@@ -1,24 +1,18 @@
-﻿using System.Net;
-using System.Net.Sockets;
+using System.Net;
+using Nitrox.Model.Helper;
 
-namespace Nitrox.Model.Helper;
+namespace Nitrox.Model.Extensions;
 
 [TestClass]
-public class NetHelperTest
+public class IpAddressExtensionsTest
 {
     [TestMethod]
     public void ShouldMatchPrivateIps()
     {
-        // Tested subnet ranges that are reserved for private networks:
-        // 10.0.0.0/8
-        // 127.0.0.0/8
-        // 172.16.0.0/12
-        // 192.0.0.0/24
-        // 192.168.0.0/16
-        // 198.18.0.0/15
-
+        // IPv4
         IPAddress.Parse("10.0.0.0").IsPrivate().Should().BeTrue();
         IPAddress.Parse("10.0.0.255").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("127.0.0.1").IsPrivate().Should().BeTrue();
         IPAddress.Parse("172.31.255.255").IsPrivate().Should().BeTrue();
         IPAddress.Parse("172.31.255.255").IsPrivate().Should().BeTrue();
         IPAddress.Parse("192.0.0.255").IsPrivate().Should().BeTrue();
@@ -34,17 +28,33 @@ public class NetHelperTest
         IPAddress.Parse("192.0.1.0").IsPrivate().Should().BeFalse();
         IPAddress.Parse("198.17.255.255").IsPrivate().Should().BeFalse();
         IPAddress.Parse("198.20.0.0").IsPrivate().Should().BeFalse();
+
+        // IPv6
+        IPAddress.Parse("::1").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("fc00:ff00::").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("fe80::").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("fe80::ffff:ffff:ffff:ffff").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("fe80:0000:0000:0000:0000:0000:0000:0001").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("febf:ffff:ffff:ffff:ffff:ffff:ffff:fffe").IsPrivate().Should().BeTrue();
+
+        IPAddress.Parse("fec0::").IsPrivate().Should().BeFalse();
+        IPAddress.Parse("fecf::").IsPrivate().Should().BeFalse();
+        IPAddress.Parse("fe7f::").IsPrivate().Should().BeFalse();
     }
 
     [TestMethod]
     public void ShouldMatchLocalhostIps()
     {
+        IPAddress.Parse("127.0.0.1").IsLocalhost().Should().BeTrue();
+        IPAddress.Parse("127.0.0.2").IsLocalhost().Should().BeTrue();
+        IPAddress.Parse("192.168.0.255").IsLocalhost().Should().BeFalse();
+        NetHelper.GetLanIp().IsLocalhost().Should().BeTrue();
+        IPAddress differentIp = GetSlightlyDifferentIp(NetHelper.GetLanIp());
+        differentIp.Should().NotBeEquivalentTo(NetHelper.GetLanIp());
+        differentIp.IsLocalhost().Should().BeFalse();
+
         IPAddress GetSlightlyDifferentIp(IPAddress address)
         {
-            if (address.AddressFamily != AddressFamily.InterNetwork)
-            {
-                throw new Exception("Only supports IPv4");
-            }
             byte[] bytes = address.GetAddressBytes();
             unchecked
             {
@@ -56,13 +66,5 @@ public class NetHelperTest
             }
             return new IPAddress(bytes);
         }
-
-        IPAddress.Parse("127.0.0.1").IsLocalhost().Should().BeTrue();
-        IPAddress.Parse("127.0.0.2").IsLocalhost().Should().BeTrue();
-        IPAddress.Parse("192.168.0.255").IsLocalhost().Should().BeFalse();
-        NetHelper.GetLanIp().IsLocalhost().Should().BeTrue();
-        IPAddress differentIp = GetSlightlyDifferentIp(NetHelper.GetLanIp());
-        differentIp.Should().NotBeEquivalentTo(NetHelper.GetLanIp());
-        differentIp.IsLocalhost().Should().BeFalse();
     }
 }
