@@ -98,7 +98,7 @@ internal static partial class ServiceCollectionExtensions
                .AddNitroxZLoggerPlain(options =>
                {
                    options.IncludeScopes = true;
-                   options.UseNitroxFormatter().OutputFunc = async (_, log) => await ServersManagementService.LogQueue.Writer.WriteAsync(log);
+                   options.UseNitroxFormatter(o => o.OmitWhenCaptured = true).OutputFunc = async (_, log) => await ServersManagementService.LogQueue.Writer.WriteAsync(log);
                })
                .AddNitroxZLoggerPlain(options =>
                {
