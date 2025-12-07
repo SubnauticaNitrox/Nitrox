@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -33,6 +34,8 @@ namespace Nitrox.Launcher.Models.Design;
 public partial class ServerEntry : ObservableObject
 {
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
+    private static readonly Dictionary<string, ServerEntry> entriesByDirectory = [];
+    private static readonly Lock entriesByDirectoryLocker = new();
 
     private static readonly SubnauticaServerOptions serverDefaults = new();
 
@@ -128,10 +131,25 @@ public partial class ServerEntry : ObservableObject
         }
     }
 
+    /// <summary>
+    ///     Should not be used directly unless for tests.
+    /// </summary>
+    internal ServerEntry()
+    {
+    }
+
     public static async Task<ServerEntry?> FromDirectoryAsync(string saveDir)
     {
-        ServerEntry result = new();
-        return await result.RefreshFromDirectoryAsync(saveDir) ? result : null;
+        ServerEntry entry;
+        lock (entriesByDirectoryLocker)
+        {
+            if (!entriesByDirectory.TryGetValue(saveDir, out entry))
+            {
+                entriesByDirectory[saveDir] = entry = new();
+            }
+        }
+        await entry.RefreshFromDirectoryAsync(saveDir);
+        return entry;
     }
 
     public static async Task<ServerEntry?> CreateNew(string saveDir, SubnauticaGameMode saveGameMode)
