@@ -61,7 +61,7 @@
     <Choose>
         <When Condition="'$(TestLibrary)' == 'false'">
             <ItemGroup>
-                <PackageReference Include="Nitrox.Analyzers" Version="*">
+                <PackageReference Include="Nitrox.Analyzers" Version="1.0.12">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
                 </PackageReference>
