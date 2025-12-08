@@ -1,17 +1,20 @@
 using System.ComponentModel;
 
-namespace Nitrox.Model.Discovery.Models;
+namespace Nitrox.Model.Platforms.Discovery.Models;
 
 public enum Platform
 {
     [Description("Standalone")]
     NONE,
 
+    [Description("Steam")]
+    STEAM,
+
     [Description("Epic Games Store")]
     EPIC,
 
-    [Description("Steam")]
-    STEAM,
+    [Description("Heroic Games Launcher")]
+    HEROIC,
 
     [Description("Microsoft")]
     MICROSOFT,

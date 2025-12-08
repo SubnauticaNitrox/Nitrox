@@ -281,22 +281,28 @@ public class Server
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
         Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(NetHelper.GetVpnIps);
 
-        List<string> options = ["127.0.0.1 - You (Local)"];
-        if (await wanIp != null)
+        List<string> options = [$"{IPAddress.Loopback} - You (Local)"];
+        IPAddress? wanAddress = await wanIp;
+        if (wanAddress != null)
         {
             options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
         }
         foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIps)
         {
-            options.Add($"{vpnAddress} - Friends using {vpnName} (VPN)");
+            if (vpnAddress == null)
+            {
+                continue;
+            }
+            options.Add($"{vpnAddress.TryExtractMappedIPv4()} - Friends using {vpnName} (VPN)");
         }
         // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
-        if (await localIp != null)
+        IPAddress? lanAddress = await localIp;
+        if (lanAddress != null)
         {
-            options.Add($"{localIp.Result} - Friends on same internet network (LAN)");
+            options.Add($"{lanAddress.TryExtractMappedIPv4()} - Friends on same internet network (LAN)");
         }
 
-        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanIp.Result);
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryExtractMappedIPv4() ?? IPAddress.None);
     }
 
     public void StopAndWait(bool shouldSave = true)

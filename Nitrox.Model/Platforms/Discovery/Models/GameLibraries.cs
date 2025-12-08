@@ -1,6 +1,6 @@
 using System;
 
-namespace Nitrox.Model.Discovery.Models;
+namespace Nitrox.Model.Platforms.Discovery.Models;
 
 [Flags]
 public enum GameLibraries
@@ -26,19 +26,24 @@ public enum GameLibraries
     EPIC = 1 << 3,
 
     /// <summary>
+    /// Heroic Games Launcher
+    /// </summary>
+    HEROIC = 1 << 4,
+
+    /// <summary>
     /// Microsoft store
     /// </summary>
-    MICROSOFT = 1 << 4,
+    MICROSOFT = 1 << 5,
 
     /// <summary>
     /// Discord game store
     /// </summary>
-    DISCORD = 1 << 5,
+    DISCORD = 1 << 6,
 
     /// <summary>
     /// Related to an official game platform
     /// </summary>
-    PLATFORMS = STEAM | EPIC | MICROSOFT | DISCORD,
+    PLATFORMS = STEAM | EPIC | HEROIC | MICROSOFT | DISCORD,
 
     /// <summary>
     /// Related to an external provider source

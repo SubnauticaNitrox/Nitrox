@@ -1,8 +1,8 @@
-using Nitrox.Model.Discovery.InstallationFinders.Core;
 using Nitrox.Model.Helper;
-using static Nitrox.Model.Discovery.InstallationFinders.Core.GameFinderResult;
+using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
+using static Nitrox.Model.Platforms.Discovery.InstallationFinders.Core.GameFinderResult;
 
-namespace Nitrox.Model.Discovery.InstallationFinders;
+namespace Nitrox.Model.Platforms.Discovery.InstallationFinders;
 
 /// <summary>
 ///     Tries to read a local config value that contains the installation directory.

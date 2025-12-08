@@ -6,6 +6,7 @@ on:
 
 jobs:
   setup:
+    if: github.repository_owner == 'SubnauticaNitrox'
     runs-on: [self-hosted, linux]
     steps:
     - name: Checking out repository
