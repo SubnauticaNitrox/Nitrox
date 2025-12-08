@@ -171,7 +171,7 @@ internal partial class NitroxZLoggerFormatter : IZLoggerFormatter
             _ => throw new ArgumentOutOfRangeException(nameof(logLevel))
         };
 
-    private bool IsPlainEntry(in IZLoggerEntry entry) => entry.TryGetProperty(out _, "plain");
+    private bool IsPlainEntry(in IZLoggerEntry entry) => entry.TryGetProperty(out PlainScope _);
 
     private ReadOnlySpan<char> GetEntryPrefix(in IZLoggerEntry entry)
     {

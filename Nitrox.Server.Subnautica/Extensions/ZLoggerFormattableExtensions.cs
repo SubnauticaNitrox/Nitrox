@@ -1,24 +1,25 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nitrox.Server.Subnautica.Extensions;
 
 internal static class ZLoggerFormattableExtensions
 {
-    public static bool TryGetProperty<T>(this IZLoggerEntry entry, out T result, T? equality = default)
+    public static bool TryGetProperty<T>(this IZLoggerEntry entry, [NotNullWhen(true)] out T? result) where T : class
     {
         if (entry.LogInfo.ScopeState is { } scope)
         {
             foreach (KeyValuePair<string, object?> keyValuePair in scope.Properties)
             {
                 object value = keyValuePair.Value;
-                if ((typeof(T).IsAssignableFrom(value.GetType()) && Equals(equality, default(T))) || value.Equals(equality))
+                if (value is T matchedValue)
                 {
-                    result = (T)value;
+                    result = matchedValue;
                     return true;
                 }
             }
         }
-        result = default;
+        result = null;
         return false;
     }
 }

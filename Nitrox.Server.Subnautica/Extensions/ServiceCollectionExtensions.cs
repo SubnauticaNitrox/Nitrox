@@ -107,7 +107,7 @@ internal static partial class ServiceCollectionExtensions
                    {
                        if (entry.TryGetProperty(out CaptureScope scope))
                        {
-                           scope.Logs.Add(log);
+                           scope.Capture(log);
                        }
                        return Task.CompletedTask;
                    };

@@ -10,7 +10,7 @@ internal static partial class LoggerExtensions
     /// <summary>
     ///     Sets the logger into "plain" mode. Text will be logged without the time, category or log level info.
     /// </summary>
-    public static IDisposable? BeginPlainScope(this ILogger logger) => logger.BeginScope("plain");
+    public static IDisposable? BeginPlainScope(this ILogger logger) => logger.BeginScope(new PlainScope());
 
     public static IDisposable? BeginPrefixScope(this ILogger logger, string prefix) => logger.BeginScope(new PrefixScope(prefix));
 
