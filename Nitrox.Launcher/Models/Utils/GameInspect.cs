@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Model.Core;
-using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Platforms.OS.Shared;
 
@@ -20,7 +21,7 @@ internal static class GameInspect
         try
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallDir);
-            
+
             string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
             if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion < NitroxEnvironment.GameMinimumVersion)
             {
@@ -57,8 +58,43 @@ internal static class GameInspect
         {
             return false;
         }
-        
         LauncherNotifier.Warning($"An instance of {game.FullName} is already running");
         return true;
+    }
+
+    public static void WarnIfBepInExMods(string gameDir)
+    {
+        if (GetBepInExModCount(gameDir) is var count and > 0)
+        {
+            Log.Warn($"BepInEx plugins detected: {count}");
+            LauncherNotifier.Warning($"BepInEx mod(s) were detected ({count}). Nitrox multiplayer does not support mods and they may cause instability.");
+        }
+
+        static int GetBepInExModCount(string gameDir)
+        {
+            if (string.IsNullOrWhiteSpace(gameDir) || !Directory.Exists(gameDir))
+            {
+                return 0;
+            }
+
+            string bepRoot = Path.Combine(gameDir, "BepInEx");
+            if (!Directory.Exists(bepRoot))
+            {
+                return 0;
+            }
+            return GetDllPaths(Path.Combine(bepRoot, "plugins")).Count() + GetDllPaths(Path.Combine(bepRoot, "patchers")).Count();
+
+            static IEnumerable<string> GetDllPaths(string path)
+            {
+                try
+                {
+                    return Directory.EnumerateFiles(path, "*.dll", SearchOption.AllDirectories);
+                }
+                catch (IOException)
+                {
+                    return [];
+                }
+            }
+        }
     }
 }

@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,9 +84,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
 
-            // BepInEx mod detection (warning only).
-            WarnIfBepInExMods(NitroxUser.GamePath);
-
             await StartSubnauticaAsync();
         }
         catch (Exception ex)
@@ -164,9 +159,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                     Log.Warn("Seems like QModManager is installed");
                     LauncherNotifier.Warning("QModManager Detected in the game folder");
                 }
-
-                // BepInEx mod detection (warning only).
-                WarnIfBepInExMods(NitroxUser.GamePath);
+                GameInspect.WarnIfBepInExMods(NitroxUser.GamePath);
 
                 return true;
             });
@@ -287,44 +280,5 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return false; // Default: use Steam unless explicitly disabled for special cases
-    }
-
-    // BepInEx mod detection
-    private static bool AreBepInExModsPresent(string gameDir, out int modCount)
-    {
-        modCount = 0;
-        if (string.IsNullOrWhiteSpace(gameDir) || !Directory.Exists(gameDir))
-        {
-            return false;
-        }
-
-        string bepRoot = Path.Combine(gameDir, "BepInEx");
-        if (!Directory.Exists(bepRoot))
-        {
-            return false;
-        }
-        string plugins = Path.Combine(bepRoot, "plugins");
-        string patchers = Path.Combine(bepRoot, "patchers");
-
-        static IEnumerable<string> DllsUnder(string dir) =>
-            Directory.Exists(dir)
-                ? Directory.EnumerateFiles(dir, "*.dll", SearchOption.AllDirectories)
-                : Enumerable.Empty<string>();
-
-        var found = DllsUnder(plugins).Concat(DllsUnder(patchers)).ToArray();
-        modCount = found.Length;
-        return modCount > 0;
-    }
-
-    private static void WarnIfBepInExMods(string gameDir)
-    {
-        if (AreBepInExModsPresent(gameDir, out int count))
-        {
-            Log.Warn($"BepInEx plugins detected: {count}");
-            LauncherNotifier.Warning(
-                count == 1
-                    ? "A BepInEx mod was detected. Nitrox multiplayer does not support mods and they may cause instability."
-                    : $"BepInEx mods were detected ({count}). Nitrox multiplayer does not support mods and they may cause instability.");
-        }
     }
 }
