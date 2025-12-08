@@ -83,7 +83,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             }
 
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
-
             await StartSubnauticaAsync();
         }
         catch (Exception ex)
