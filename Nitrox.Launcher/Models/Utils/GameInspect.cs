@@ -64,36 +64,33 @@ internal static class GameInspect
 
     public static void WarnIfBepInExMods(string gameDir)
     {
-        if (GetBepInExModCount(gameDir) is var count and > 0)
+        if (string.IsNullOrWhiteSpace(gameDir) || !Directory.Exists(gameDir))
         {
-            Log.Warn($"BepInEx plugins detected: {count}");
-            LauncherNotifier.Warning($"BepInEx mod(s) were detected ({count}). Nitrox multiplayer does not support mods and they may cause instability.");
+            return;
+        }
+        string bepRoot = Path.Combine(gameDir, "BepInEx");
+        if (!Directory.Exists(bepRoot))
+        {
+            return;
         }
 
-        static int GetBepInExModCount(string gameDir)
+        int modDllCount = GetDllPaths(Path.Combine(bepRoot, "plugins")).Count();
+        modDllCount += GetDllPaths(Path.Combine(bepRoot, "patchers")).Count();
+        if (modDllCount > 0)
         {
-            if (string.IsNullOrWhiteSpace(gameDir) || !Directory.Exists(gameDir))
-            {
-                return 0;
-            }
+            Log.Warn($"BepInEx plugins detected: {modDllCount}");
+            LauncherNotifier.Warning($"BepInEx mod(s) were detected ({modDllCount}). Nitrox multiplayer does not support mods and they may cause instability.");
+        }
 
-            string bepRoot = Path.Combine(gameDir, "BepInEx");
-            if (!Directory.Exists(bepRoot))
+        static IEnumerable<string> GetDllPaths(string path)
+        {
+            try
             {
-                return 0;
+                return Directory.EnumerateFiles(path, "*.dll", SearchOption.AllDirectories);
             }
-            return GetDllPaths(Path.Combine(bepRoot, "plugins")).Count() + GetDllPaths(Path.Combine(bepRoot, "patchers")).Count();
-
-            static IEnumerable<string> GetDllPaths(string path)
+            catch (IOException)
             {
-                try
-                {
-                    return Directory.EnumerateFiles(path, "*.dll", SearchOption.AllDirectories);
-                }
-                catch (IOException)
-                {
-                    return [];
-                }
+                return [];
             }
         }
     }
