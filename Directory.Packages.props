@@ -34,6 +34,7 @@
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
         <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.10" />
         <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0" />
         <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />

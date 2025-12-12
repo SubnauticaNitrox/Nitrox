@@ -7,7 +7,8 @@ using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal sealed class TimeService : BackgroundService, ISummarize, IHibernate
+internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSyncer, ILoggerFactory loggerFactory, ILogger<TimeService> logger)
+    : BackgroundService, ISummarize, IHibernate
 {
     public delegate void TimeSkippedEventHandler(TimeSpan skippedTime);
 
@@ -29,10 +30,11 @@ internal sealed class TimeService : BackgroundService, ISummarize, IHibernate
     /// </summary>
     private const int NTP_RETRY_INTERVAL_SECONDS = 60;
 
-    private readonly ILogger<TimeService> logger;
+    private readonly ILogger<TimeService> logger = logger;
 
-    private readonly NtpSyncer ntpSyncer;
-    private readonly PlayerManager playerManager;
+    private readonly NtpSyncer ntpSyncer = ntpSyncer;
+    private readonly ILoggerFactory loggerFactory = loggerFactory;
+    private readonly PlayerManager playerManager = playerManager;
 
     private readonly PeriodicTimer resyncTimer = new(TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS));
     private readonly Stopwatch stopWatch = new();
@@ -78,24 +80,6 @@ internal sealed class TimeService : BackgroundService, ISummarize, IHibernate
     ///     Uses ceiling because days count start at 1 and not 0.
     /// </remarks>
     public int GameDay => (int)Math.Ceiling(GameTime / TimeSpan.FromMinutes(20));
-
-    public TimeService(PlayerManager playerManager, NtpSyncer ntpSyncer, ILogger<TimeService> logger)
-    {
-        this.playerManager = playerManager;
-        this.ntpSyncer = ntpSyncer;
-        this.logger = logger;
-
-        // We only need the correction offset to be calculated once
-        ntpSyncer.Setup(false, (onlineMode, _) =>
-        {
-            if (!onlineMode)
-            {
-                // until we get online even once, we'll retry the ntp sync sequence every NTP_RETRY_INTERVAL
-                StartNtpTimer();
-            }
-        });
-        ntpSyncer.RequestNtpService();
-    }
 
     public void ResetCount()
     {
@@ -160,6 +144,17 @@ internal sealed class TimeService : BackgroundService, ISummarize, IHibernate
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // We only need the correction offset to be calculated once
+        ntpSyncer.Setup((onlineMode, _) =>
+        {
+            if (!onlineMode)
+            {
+                // until we get online even once, we'll retry the ntp sync sequence every NTP_RETRY_INTERVAL
+                StartNtpTimer();
+            }
+        }, loggerFactory.CreateLogger<NtpSyncer>());
+        ntpSyncer.RequestNtpService();
+
         while (!stoppingToken.IsCancellationRequested)
         {
             await resyncTimer.WaitForNextTickAsync(stoppingToken);
@@ -176,14 +171,14 @@ internal sealed class TimeService : BackgroundService, ISummarize, IHibernate
         retryTimer.Elapsed += delegate
         {
             // Reset the syncer before starting another round of it
-            ntpSyncer.Dispose();
-            ntpSyncer.Setup(false, (onlineMode, _) =>
+            ntpSyncer.Complete();
+            ntpSyncer.Setup((onlineMode, _) =>
             {
                 if (onlineMode)
                 {
                     retryTimer.Close();
                 }
-            });
+            }, loggerFactory.CreateLogger<NtpSyncer>());
             ntpSyncer.RequestNtpService();
         };
         retryTimer.Start();

@@ -5,122 +5,187 @@ using System.Reflection;
 using System.Timers;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Nitrox.Model.Networking;
 
-public class NtpSyncer
+public sealed class NtpSyncer
 {
     /// <summary>
-    /// Allowed time in milliseconds per ntp sync sequence
+    ///     Allowed time in milliseconds per ntp sync sequence
     /// </summary>
     /// <remarks>
-    /// 6 services * 5s TIMEOUT = max 30 seconds waiting if all services are semi-working but fail.
-    /// Also if the client is not connected to the internet, all requests will fail immediately so there'll be no extra wait time
+    ///     6 services * 5s TIMEOUT = max 30 seconds waiting if all services are semi-working but fail.
+    ///     Also if the client is not connected to the internet, all requests will fail immediately so there'll be no extra
+    ///     wait time
     /// </remarks>
-    public const float TIMEOUT_INTERVAL = 5000;
-    private static readonly FieldInfo NTP_REQUESTS_FIELD = typeof(NetManager).GetField("_ntpRequests", BindingFlags.NonPublic | BindingFlags.Instance);
-    private static readonly List<string> NTP_SERVICES = [
-        "time.windows.com", "3.pool.ntp.org", "2.pool.ntp.org", "1.pool.ntp.org", "0.pool.ntp.org", "pool.ntp.org"
-    ];
+    private const float TIMEOUT_INTERVAL = 5000;
 
-    private Stack<string> ntpServicesToTest;
-    private NetManager netManager;
-    private Timer timer;
-    private string latestUsedService;
-    private bool verbose;
+    private ILogger<NtpSyncer> logger = NullLogger<NtpSyncer>.Instance;
+    private LiteNetLibNtp ntp;
 
-    public bool Finished { get; private set; }
+    private Timer? timer;
+
+    public bool IsComplete { get; private set; }
     public bool OnlineMode { get; private set; }
     public TimeSpan CorrectionOffset { get; private set; }
-    public Action<bool, TimeSpan> FinishCallback { get; private set; }
+    private Action<bool, TimeSpan>? DisposeCallback { get; set; }
 
-    public void Setup(bool verbose, Action<bool, TimeSpan> finishCallback = null)
+    public void Setup(Action<bool, TimeSpan>? finishCallback = null, ILogger<NtpSyncer>? optionalLogger = null)
     {
-        ntpServicesToTest = new(NTP_SERVICES);
-        this.verbose = verbose;
-        FinishCallback = finishCallback;
-
-        EventBasedNetListener listener = new();
-        listener.NtpResponseEvent += TreatPacket;
-
-        netManager = new(listener);
-        netManager.Start();
-
-        timer = new(TIMEOUT_INTERVAL)
+        if (optionalLogger != null)
         {
-            AutoReset = false
-        };
+            logger = optionalLogger;
+        }
+        DisposeCallback = finishCallback;
 
+        ntp = new(TreatPacket);
+
+        timer = new(TIMEOUT_INTERVAL) { AutoReset = false };
         timer.Elapsed += delegate
         {
-            // It can happen that the requests were corrupted in which cases we want to clear them
-            IDictionary ntpRequests = (IDictionary)NTP_REQUESTS_FIELD.GetValue(netManager);
-            ntpRequests.Clear();
-
+            ntp.ClearNtpRequests();
             RequestNtpService();
         };
     }
 
     public void RequestNtpService()
     {
-        if (ntpServicesToTest.Count == 0)
+        if (timer == null)
         {
-            Dispose();
             return;
         }
 
-        string ntpService = ntpServicesToTest.Pop();
-
         try
         {
-            latestUsedService = ntpService;
-            netManager.CreateNtpRequest(ntpService);
+            if (ntp.CreateNextNtpRequest() == null)
+            {
+                Complete();
+                return;
+            }
             timer.Start();
-            netManager.TriggerUpdate();
+            ntp.TriggerUpdate();
         }
         catch (Exception ex)
         {
-            if (verbose)
-            {
-                Log.Error($"[{nameof(NtpSyncer)}] An error occurred during NTP sync sequence with {ntpService}, retrying with another one... ({ex.GetType()}: {ex.Message})");
-            }
+            logger.LogError($"An error occurred during NTP sync sequence with '{ntp.LatestUsedService}', retrying with another one... ({ex.GetType()}: {ex.Message})");
             timer.Stop();
             RequestNtpService();
         }
     }
 
-    private void TreatPacket(NtpPacket ntpPacket)
+    public void Complete()
     {
-        timer.Stop();
+        if (IsComplete)
+        {
+            return;
+        }
+        IsComplete = true;
+
+        timer?.Close();
+        timer = null;
+        ntp.Dispose();
+        try
+        {
+            DisposeCallback?.Invoke(OnlineMode, CorrectionOffset);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+        }
+        DisposeCallback = null;
+    }
+
+    private void TreatPacket(NtpPacket? ntpPacket)
+    {
+        timer?.Stop();
 
         if (ntpPacket != null)
         {
             OnlineMode = true;
             CorrectionOffset = ntpPacket.CorrectionOffset;
-            Dispose();
-            if (verbose)
-            {
-                Log.Info($"[{nameof(NtpSyncer)}] NTP time correction offset: {ntpPacket.CorrectionOffset}");
-            }
+            Complete();
+            logger.LogDebug($"NTP time correction offset: {ntpPacket.CorrectionOffset}");
         }
         else
         {
-            if (verbose)
-            {
-                Log.Error($"[{nameof(NtpSyncer)}] NTP request error at {latestUsedService}, retrying with another service...");
-            }
+            logger.LogError($"NTP request error at {ntp.LatestUsedService}, retrying with another service...");
             RequestNtpService();
         }
     }
 
-    public void Dispose()
+    private class LiteNetLibNtp : IDisposable
     {
-        timer?.Close();
-        timer = null;
-        netManager?.Stop();
-        netManager = null;
-        Finished = true;
-        FinishCallback?.Invoke(OnlineMode, CorrectionOffset);
-        FinishCallback = null;
+        private static readonly string[] ntpServices =
+        [
+            "time.windows.com",
+            "3.pool.ntp.org",
+            "2.pool.ntp.org",
+            "1.pool.ntp.org",
+            "0.pool.ntp.org",
+            "pool.ntp.org"
+        ];
+
+        private readonly EventBasedNetListener listener;
+
+        private readonly NetManager netManager;
+        private readonly Stack<string> ntpServicesToTest;
+        private string? latestUsedService;
+
+        public string LatestUsedService
+        {
+            get => latestUsedService ?? "no-service";
+            private set => latestUsedService = value;
+        }
+
+        public LiteNetLibNtp(EventBasedNetListener.OnNtpResponseEvent ntpEvent)
+        {
+            ntpServicesToTest = new(ntpServices);
+
+            listener = new();
+            listener.NtpResponseEvent += ntpEvent;
+
+            netManager = new(listener);
+            netManager.Start();
+        }
+
+        public void Dispose()
+        {
+            netManager.Stop();
+            listener.ClearNtpResponseEvent();
+        }
+
+        /// <remarks>
+        ///     It can happen that the requests were corrupted in which cases we want to clear them
+        /// </remarks>
+        public void ClearNtpRequests()
+        {
+            LiteNetLibReflection.GetNtpRequests(netManager).Clear();
+        }
+
+        public string? CreateNextNtpRequest()
+        {
+            if (ntpServicesToTest.Count < 1)
+            {
+                return null;
+            }
+            string ntpService = ntpServicesToTest.Pop();
+            LatestUsedService = ntpService;
+            netManager.CreateNtpRequest(ntpService);
+            return ntpService;
+        }
+
+        public void TriggerUpdate()
+        {
+            netManager.TriggerUpdate();
+        }
+    }
+
+    private static class LiteNetLibReflection
+    {
+        private static readonly FieldInfo ntpRequestsField = typeof(NetManager).GetField("_ntpRequests", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception($"Unable to find _ntpRequests field in {typeof(NetManager).FullName}");
+
+        public static IDictionary GetNtpRequests(NetManager manager) => (IDictionary)ntpRequestsField.GetValue(manager) ?? throw new Exception("Unable to get NtpRequests from LiteNetLib");
     }
 }
