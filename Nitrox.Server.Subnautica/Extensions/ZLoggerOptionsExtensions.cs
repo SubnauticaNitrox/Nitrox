@@ -14,7 +14,7 @@ internal static class ZLoggerOptionsExtensions
                 IncludeScopes = options.IncludeScopes
             };
             configure?.Invoke(formatterOptions);
-            return new NitroxZLoggerFormatter { FormatterOptions = formatterOptions };
+            return new NitroxZLoggerFormatter(formatterOptions);
         });
         return options;
     }
