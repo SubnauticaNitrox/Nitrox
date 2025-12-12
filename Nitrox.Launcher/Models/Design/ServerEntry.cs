@@ -294,9 +294,17 @@ public partial class ServerEntry : ObservableObject
     {
         await cts.CancelAsync();
         // Ensure the server is dead before continuing. On Linux, if launcher process closes it could otherwise abruptly kill the embedded servers.
-        while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+        using CancellationTokenSource waitProcessExitCts = new(TimeSpan.FromSeconds(20));
+        try
         {
-            await Task.Delay(200);
+            while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+            {
+                await Task.Delay(200, waitProcessExitCts.Token);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
         }
     }
 
