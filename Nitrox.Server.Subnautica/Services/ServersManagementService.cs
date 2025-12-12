@@ -123,7 +123,7 @@ internal sealed partial class ServersManagementService(PlayerManager playerManag
                 "dbug" => 1,
                 "warn" => 2,
                 "fail" => 3,
-                _ => 1
+                _ => 0
             };
             await api.AddOutputLine(match.Groups["category"].Value, match.Groups["timestamp"].Value, level, match.Groups["logText"].Value);
         }
