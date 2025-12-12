@@ -28,7 +28,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands
                 using CaptureScope scope = logger.BeginCaptureScope();
                 await statusService.LogServerSummary(viewerPerms);
                 SendMessage(sender, string.Join("", scope.Logs));
-            }).ContinueWithHandleError();
+            }).ContinueWithHandleError(ex => logger.ZLogError(ex, $"Error while trying to capture server summary"));
         }
     }
 }
