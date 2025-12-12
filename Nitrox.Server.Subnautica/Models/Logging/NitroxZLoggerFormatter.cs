@@ -13,7 +13,7 @@ namespace Nitrox.Server.Subnautica.Models.Logging;
 ///     Standard log formatter used by Nitrox with preconfigured logging middleware based on
 ///     <see cref="NitroxFormatterOptions" />.
 /// </summary>
-internal class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
+internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
 {
     public NitroxZLoggerFormatter(NitroxFormatterOptions options)
     {

@@ -27,7 +27,7 @@ internal abstract class MiddlewareZLoggerFormatter : IZLoggerFormatter
         ExecuteNext(ref context);
     }
 
-    private void ExecuteNext(ref ILoggerMiddleware.Context context)
+    private static void ExecuteNext(ref ILoggerMiddleware.Context context)
     {
         if (GetNextMiddleware(ref context) is not { } middleware)
         {
@@ -37,7 +37,7 @@ internal abstract class MiddlewareZLoggerFormatter : IZLoggerFormatter
         middleware.ExecuteLogMiddleware(ref context, ExecuteNext);
     }
 
-    private ILoggerMiddleware? GetNextMiddleware(ref ILoggerMiddleware.Context context)
+    private static ILoggerMiddleware? GetNextMiddleware(ref ILoggerMiddleware.Context context)
     {
         if (context.Middleware.Length < 1)
         {
