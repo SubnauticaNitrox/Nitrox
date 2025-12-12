@@ -140,7 +140,7 @@ internal partial class NitroxZLoggerFormatter : IZLoggerFormatter
                 paramIndex++;
             }
             // Write last part of the log (text after last parameter value).
-            if (lastMatch is { End: var val } && val.Value < originalFormat.Length - 1)
+            if (lastMatch is { End: var val } && val.Value < originalFormat.Length)
             {
                 writer.Write(originalFormat[val..]);
             }
