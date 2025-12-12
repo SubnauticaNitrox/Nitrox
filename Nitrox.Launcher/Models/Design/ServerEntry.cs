@@ -293,6 +293,11 @@ public partial class ServerEntry : ObservableObject
     public async Task StopAsync()
     {
         await cts.CancelAsync();
+        // Ensure the server is dead before continuing. On Linux, if launcher process closes it could otherwise abruptly kill the embedded servers.
+        while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+        {
+            await Task.Delay(200);
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]

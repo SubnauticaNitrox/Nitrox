@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -18,8 +17,6 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
-using Nitrox.Model.Platforms.OS.Shared;
-using Nitrox.Model.Server;
 
 namespace Nitrox.Launcher.Models.Services;
 
