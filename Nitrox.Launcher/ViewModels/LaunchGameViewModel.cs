@@ -158,6 +158,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                     Log.Warn("Seems like QModManager is installed");
                     LauncherNotifier.Warning("QModManager Detected in the game folder");
                 }
+                GameInspect.WarnIfBepInExMods(NitroxUser.GamePath);
 
                 return true;
             });
