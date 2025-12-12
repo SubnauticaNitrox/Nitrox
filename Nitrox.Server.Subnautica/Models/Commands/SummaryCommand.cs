@@ -25,9 +25,13 @@ namespace Nitrox.Server.Subnautica.Models.Commands
             // TODO: Make command execute async
             Task.Run(async () =>
             {
-                using CaptureScope scope = logger.BeginCaptureScope();
-                await statusService.LogServerSummary(viewerPerms);
-                SendMessage(sender, string.Join("", scope.Logs));
+                string summary;
+                using (CaptureScope scope = logger.BeginCaptureScope())
+                {
+                    await statusService.LogServerSummary(viewerPerms);
+                    summary = string.Join("", scope.Logs);
+                }
+                SendMessage(sender, summary.TrimEnd('\n'));
             }).ContinueWithHandleError(ex => logger.ZLogError(ex, $"Error while trying to capture server summary"));
         }
     }
