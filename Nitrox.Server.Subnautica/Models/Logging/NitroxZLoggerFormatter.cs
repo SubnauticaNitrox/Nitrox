@@ -24,7 +24,7 @@ internal class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
     {
         if (options.OmitWhenCaptured)
         {
-            yield return new BreakLoggerMiddleware { BreakCondition = static context => context.Entry.TryGetProperty(out CaptureScope _) };
+            yield return new BreakLoggerMiddleware { BreakCondition = static (ref ILoggerMiddleware.Context context) => context.Entry.TryGetProperty(out CaptureScope _) };
         }
         yield return new WriteLoggerMiddleware
         {
