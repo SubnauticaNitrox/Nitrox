@@ -98,7 +98,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
                 Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                 pickupable.Initialize();
 
-                item.PickedUp(gameObject, techType);
+                item.PickedUpByPlayer(gameObject, techType);
                 itemContainers.AddItem(gameObject, localPlayerId);
             }
         }

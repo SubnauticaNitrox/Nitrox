@@ -1,0 +1,19 @@
+using System.Reflection;
+using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
+
+namespace NitroxPatcher.Patches.Dynamic;
+
+// Method used by the AnteChamber to respawn the ion cube deposit
+public sealed partial class Drillable_Restore_Patch : NitroxPatch, IDynamicPatch
+{
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Drillable t) => t.Restore());
+
+    public static void Postfix(Drillable __instance)
+    {
+        if (__instance.TryGetIdOrWarn(out NitroxId id))
+        {
+            Resolve<Entities>().EntityMetadataChanged(__instance, id);
+        }
+    }
+}
