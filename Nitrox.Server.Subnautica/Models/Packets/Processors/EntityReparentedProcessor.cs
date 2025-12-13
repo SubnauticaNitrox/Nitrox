@@ -23,7 +23,7 @@ sealed class EntityReparentedProcessor(EntityRegistry entityRegistry, PlayerMana
             logger.ZLogError($"Couldn't find parent entity for {packet.NewParentId}");
             return;
         }
-        
+
         entityRegistry.ReparentEntity(packet.Id, packet.NewParentId);
         playerManager.SendPacketToOtherPlayers(packet, player);
     }

@@ -39,12 +39,13 @@ public class PatchesTranspilerTest
         [typeof(CyclopsSonarButton_Update_Patch), 3],
         [typeof(CyclopsSonarDisplay_NewEntityOnSonar_Patch), 3],
         [typeof(DevConsole_Update_Patch), 0],
+        [typeof(Drillable_ManagedUpdate_Patch), 3],
+        [typeof(Drillable_SpawnLootAsync_Patch), 2],
         [typeof(Eatable_IterateDespawn_Patch), 2],
         [typeof(EndCreditsManager_OnLateUpdate_Patch), 1],
         [typeof(EnergyMixin_SpawnDefaultAsync_Patch), -64],
         [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(EntityCell_SleepAsync_Patch), 2],
-        [typeof(Equipment_RemoveItem_Patch), 7],
         [typeof(ErrorMessage_OnLateUpdate_Patch), 0],
         [typeof(EscapePod_Start_Patch), 43],
         [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],
@@ -198,7 +199,7 @@ public class PatchesTranspilerTest
     {
         TypeBuilder myTypeBld = patchTestModule.DefineType($"{generatingType}_PatchTestType", TypeAttributes.Public);
 
-        return myTypeBld.DefineMethod(method.Name, MethodAttributes.Public,  method.ReturnType, method.GetParameters().Types()).GetILGenerator();
+        return myTypeBld.DefineMethod(method.Name, MethodAttributes.Public, method.ReturnType, method.GetParameters().Types()).GetILGenerator();
     }
 }
 

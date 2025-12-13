@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
@@ -41,7 +40,7 @@ public static class BatteryChildEntityHelper
             }
         }
 
-        InstalledBatteryEntity installedBattery = new(componentIndex, new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, new List<Entity>());
+        InstalledBatteryEntity installedBattery = new(componentIndex, new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, []);
         toPopulate.Add(installedBattery);
 
         CoroutineHost.StartCoroutine(entities.Value.SpawnEntityAsync(installedBattery));
