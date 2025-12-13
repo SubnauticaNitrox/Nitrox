@@ -115,7 +115,11 @@ internal static partial class ServiceCollectionExtensions
                .AddZLoggerRollingFile(static (options, provider) =>
                {
                    ServerStartOptions serverStartOptions = provider.GetRequiredService<IOptions<ServerStartOptions>>().Value;
-                   options.FilePathSelector = (timestamp, sequenceNumber) => $"{Path.Combine(serverStartOptions.GetServerLogsPath(), timestamp.ToLocalTime().ToString("yyyy-MM-dd"))}_server_{serverStartOptions.SaveName}_{sequenceNumber:000}.log";
+                   options.FilePathSelector = (timestamp, sequence) =>
+                   {
+                       string filename = $"{timestamp.ToLocalTime():yyyy-MM-dd}_server_{serverStartOptions.SaveName}_{sequence:000}.log";
+                       return Path.Combine(serverStartOptions.GetServerLogsPath(), filename);
+                   };
                    options.RollingInterval = RollingInterval.Day;
                    options.IncludeScopes = true;
                    options.UseNitroxFormatter(formatterOptions =>
