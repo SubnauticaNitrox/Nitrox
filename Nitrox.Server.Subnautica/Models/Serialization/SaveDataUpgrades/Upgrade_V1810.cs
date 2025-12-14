@@ -4,9 +4,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 
-public class Upgrade_V1801 : SaveDataUpgrade
+public class Upgrade_V1810 : SaveDataUpgrade
 {
-    public override Version TargetVersion { get; } = new(1, 8, 0, 1);
+    public override Version TargetVersion { get; } = new(1, 8, 1, 0);
 
     protected override void UpgradeEntityData(JObject data)
     {
