@@ -71,7 +71,7 @@ public static class Main
         Console.WriteLine("Checking if Nitrox should run...");
         if (!Directory.Exists(nitroxLauncherDir.Value))
         {
-            Console.WriteLine($"Nitrox will not load because launcher path was not provided or does not exists: {nitroxLauncherDir.Value}");
+            Console.WriteLine($"Nitrox will not load because launcher path was not provided or does not exist: {nitroxLauncherDir.Value}");
             return;
         }
 
