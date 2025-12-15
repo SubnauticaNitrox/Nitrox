@@ -65,8 +65,13 @@
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />
         </ReadLinesFromFile>
-        <Error Condition="@(GameVersion) &lt; $(GameMinimumVersion)" Text="$(GameName) version is outdated. Expected version &gt;=$(GameMinimumVersion) but was @(GameVersion)" />
-        <Message Importance="high" Text="Game found at: '$(GameDir)' with version @(GameVersion)" />
+        <Warning Condition="'@(GameVersion)' == ''" Text="Could not read game version file at '$(GameVersionFile)'; skipping version check by assuming $(GameMinimumVersion)." />
+        <PropertyGroup>
+            <_GameVersionNumber Condition="'@(GameVersion)' != ''">@(GameVersion)</_GameVersionNumber>
+            <_GameVersionNumber Condition="'@(GameVersion)' == ''">$(GameMinimumVersion)</_GameVersionNumber>
+        </PropertyGroup>
+        <Error Condition="$(_GameVersionNumber) &lt; $(GameMinimumVersion)" Text="$(GameName) version is outdated. Expected version &gt;=$(GameMinimumVersion) but was $(_GameVersionNumber)" />
+        <Message Importance="high" Text="Game found at: '$(GameDir)' with version $(_GameVersionNumber)" />
 
         <ItemGroup>
             <!-- Subnautica DLLs to include -->
