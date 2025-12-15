@@ -29,6 +29,7 @@
     
     <ItemGroup>
         <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\Nitrox.Assets.Subnautica\**\*.csv" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
