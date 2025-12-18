@@ -243,12 +243,12 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
             MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),
             Discord => await Discord.StartGameAsync(gameExePath, launchArguments),
-            _ => throw new Exception($"Directory '{NitroxUser.GamePath}' is not a valid {gameInfo.Name} game installation or the game platform is unsupported by Nitrox.")
+            _ => await Standalone.StartGameAsync(gameExePath, launchArguments),
         };
 
         if (game is null)
         {
-            throw new Exception($"Game failed to start through {NitroxUser.GamePlatform.Name}");
+            throw new Exception($"Game failed to start through {NitroxUser.GamePlatform?.Name ?? "Standalone"}");
         }
     }
 
