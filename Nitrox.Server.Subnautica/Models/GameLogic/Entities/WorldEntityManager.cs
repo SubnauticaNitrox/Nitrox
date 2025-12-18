@@ -219,10 +219,11 @@ public class WorldEntityManager
         }
     }
 
-    public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
+    public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token, System.Action<int> progressCallback = null)
     {
         int totalBatches = SubnauticaMap.DimensionsInBatches.X * SubnauticaMap.DimensionsInBatches.Y * SubnauticaMap.DimensionsInBatches.Z;
         int batchesLoaded = 0;
+        int lastReportedProgress = -1;
 
         for (int x = 0; x < SubnauticaMap.DimensionsInBatches.X; x++)
         {
@@ -236,12 +237,15 @@ public class WorldEntityManager
                     Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
                     batchesLoaded++;
-                }
-            }
 
-            if (batchesLoaded > 0)
-            {
-                Log.Info($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
+                    int progress = (int)(100f * batchesLoaded / totalBatches);
+                    if (progress != lastReportedProgress)
+                    {
+                        lastReportedProgress = progress;
+                        Log.Info($"Loading: {progress}%");
+                        progressCallback?.Invoke(progress);
+                    }
+                }
             }
         }
     }
