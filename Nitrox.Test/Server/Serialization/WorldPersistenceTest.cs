@@ -336,6 +336,12 @@ public class WorldPersistenceTest
                 Assert.IsTrue(metadata.ChunkHealth.SequenceEqual(metadataAfter.ChunkHealth));
                 Assert.AreEqual(metadata.TimeLastDrilled, metadataAfter.TimeLastDrilled);
                 break;
+            case PrecursorComputerTerminalMetadata metadata when entityAfter.Metadata is PrecursorComputerTerminalMetadata metadataAfter:
+                Assert.AreEqual(metadata.Used, metadataAfter.Used);
+                break;
+            case GenericConsoleMetadata metadata when entityAfter.Metadata is GenericConsoleMetadata metadataAfter:
+                Assert.AreEqual(metadata.GotUsed, metadataAfter.GotUsed);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
