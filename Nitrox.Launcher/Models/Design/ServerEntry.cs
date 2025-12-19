@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -13,7 +16,6 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Nitrox.Launcher.Models.Exceptions;
 using Nitrox.Model.Configuration;
 using Nitrox.Model.Core;
@@ -24,7 +26,6 @@ using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
 using Nitrox.Server.Subnautica.Models.Serialization;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -225,12 +226,26 @@ public partial class ServerEntry : ObservableObject
         Version serverVersion;
         using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            serverVersion = config.SerializerMode switch
+            switch (config.SerializerMode)
             {
-                ServerSerializerMode.JSON => new ServerJsonSerializer(NullLogger<ServerJsonSerializer>.Instance).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                ServerSerializerMode.PROTOBUF => new SubnauticaServerProtoBufSerializer(null).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                _ => throw new NotImplementedException()
-            };
+                case ServerSerializerMode.JSON:
+                    SaveFileVersion versionModel;
+                    try
+                    {
+                        versionModel = JsonSerializer.Deserialize<SaveFileVersion>(stream);
+                    }
+                    catch (Exception)
+                    {
+                        versionModel = new SaveFileVersion(NitroxEnvironment.Version);
+                    }
+                    serverVersion = versionModel.Version;
+                    break;
+                case ServerSerializerMode.PROTOBUF:
+                    serverVersion = new ServerProtoBufSerializer(null).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         string prevName = Name;

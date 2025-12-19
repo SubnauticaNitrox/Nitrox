@@ -1,7 +1,8 @@
+using System;
 using System.Runtime.Serialization;
 using Nitrox.Model.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Serialization.World;
+namespace Nitrox.Model.Serialization;
 
 [DataContract]
 public class SaveFileVersion

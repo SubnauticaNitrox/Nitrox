@@ -4,6 +4,7 @@ using System.Linq;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
