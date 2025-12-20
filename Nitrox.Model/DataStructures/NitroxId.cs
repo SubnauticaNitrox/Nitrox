@@ -10,7 +10,7 @@ namespace Nitrox.Model.DataStructures;
 /// </summary>
 [Serializable]
 [DataContract]
-public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxId>
+public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxId>
 {
     [DataMember(Order = 1)]
     [SerializableMember]
@@ -47,7 +47,7 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         guid = new Guid(bytes);
     }
 
-    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         info.AddValue("id", guid.ToByteArray());
     }
