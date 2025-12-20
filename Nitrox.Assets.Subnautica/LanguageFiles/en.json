@@ -85,6 +85,8 @@
     "Nitrox_ShowPing": "Show Ping",
     "Nitrox_SilenceChat": "Mute chat",
     "Nitrox_SilencedChatNotif": "Chat is now muted",
+    "Nitrox_SleepCancelled": "Sleep was cancelled.",
+    "Nitrox_SleepingPlayers": "{SLEEPING}/{TOTAL} players sleeping.",
     "Nitrox_StartServer": "Start your server first to join your self-hosted world",
     "Nitrox_StreamerSettings": "Streamer mode",
     "Nitrox_SyncingWorld": "Syncing multiplayer world…",

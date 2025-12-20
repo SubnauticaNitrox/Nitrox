@@ -15,7 +15,7 @@ public class LiteNetLibServer : NitroxServer
     private readonly EventBasedNetListener listener;
     private readonly NetManager server;
 
-    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, joiningManager, entitySimulation, serverConfig)
+    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SleepManager sleepManager, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, joiningManager, entitySimulation, sleepManager, serverConfig)
     {
         listener = new EventBasedNetListener();
         server = new NetManager(listener)
