@@ -17,20 +17,21 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
 
         if (metadata.TechType == NitroxTechType.None || metadata.Amount == 0)
         {
-            EnsureCrafterReset(crafterLogic);
+            EnsureCrafterReset(gameObject, crafterLogic);
         }
         else
         {
-            SpawnItemInCrafter(crafterLogic, metadata);
+            SpawnItemInCrafter(gameObject, crafterLogic, metadata);
         }
     }
 
-    private static void EnsureCrafterReset(CrafterLogic crafterLogic)
+    private static void EnsureCrafterReset(GameObject gameObject, CrafterLogic crafterLogic)
     {
         crafterLogic.ResetCrafter();
+        SetCrafterState(gameObject, false);
     }
 
-    private static void SpawnItemInCrafter(CrafterLogic crafterLogic, CrafterMetadata metadata)
+    private static void SpawnItemInCrafter(GameObject gameObject, CrafterLogic crafterLogic, CrafterMetadata metadata)
     {
         float elapsedFromStart = DayNightCycle.main.timePassedAsFloat - metadata.StartTime;
 
@@ -43,6 +44,7 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
         if (metadata.LinkedIndex == -1)
         {
             crafterLogic.Craft(metadata.TechType.ToUnity(), duration);
+            SetCrafterState(gameObject, true);
         }
         else
         {
@@ -55,5 +57,39 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
         }
         // Override this value in case some of the crafted items were already picked up
         crafterLogic.numCrafted = metadata.Amount;
+    }
+
+    private static void SetCrafterState(GameObject gameObject, bool crafting)
+    {
+        if (TryFindGhostCrafter(gameObject, out GhostCrafter ghostCrafter))
+        {
+            ghostCrafter.state = crafting;
+        }
+    }
+
+    private static bool TryFindGhostCrafter(GameObject gameObject, out GhostCrafter ghostCrafter)
+    {
+        if (gameObject.TryGetComponentInChildren(out ghostCrafter, true))
+        {
+            return true;
+        }
+
+        if (gameObject.TryGetComponent(out CrafterLogic crafterLogic))
+        {
+            Base parentBase = gameObject.GetComponentInParent<Base>();
+            if (parentBase)
+            {
+                foreach (GhostCrafter crafter in parentBase.GetComponentsInChildren<GhostCrafter>(true))
+                {
+                    if (crafter._logic == crafterLogic)
+                    {
+                        ghostCrafter = crafter;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
