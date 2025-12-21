@@ -66,6 +66,14 @@ public static class Hashing
         }
     }
 
+    public static async Task<string> ComputeMd5HashAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        using MD5 md5 = MD5.Create();
+        await using FileStream stream = File.OpenRead(filePath);
+        byte[] hash = await md5.ComputeHashAsync(stream, cancellationToken);
+        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+    }
+
     private static string GetSha256CacheFilePath(string targetFilePath)
     {
         string filePathMd5 = Convert.ToHexStringLower(MD5.HashData(Encoding.UTF8.GetBytes(targetFilePath)));
