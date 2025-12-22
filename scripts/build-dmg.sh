@@ -15,9 +15,11 @@ dotnet clean "$PROJECT_PATH"
 
 # Build the application
 echo "Building $APP_NAME..."
-# Note: We assume SUBNAUTICA_INSTALLATION_PATH is set or not needed for this specific build step if we ignore the error, 
-# but for a clean build we might need to mock it or ensure it exists. 
-# For CI, we might need to set a dummy path if the game isn't present.
+# Try to find dependencies in 'deps' folder if not set
+if [ -z "$SUBNAUTICA_INSTALLATION_PATH" ] && [ -d "$(pwd)/deps" ]; then
+    export SUBNAUTICA_INSTALLATION_PATH="$(pwd)/deps"
+fi
+# Fallback to /tmp/Subnautica if still not set (mostly for CI mock)
 export SUBNAUTICA_INSTALLATION_PATH=${SUBNAUTICA_INSTALLATION_PATH:-"/tmp/Subnautica"}
 
 dotnet build "$PROJECT_PATH" -r osx-arm64 -p:CreateAppBundle=true -p:Configuration=Release

@@ -57,6 +57,7 @@
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">
             <GameDataFolder>Resources/Data</GameDataFolder>
+            <GameDataFolder Condition="Exists('$(GameDir)Contents/Resources/Data')">Contents/Resources/Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup>
             <GameManagedDir>$(GameDir)$(GameDataFolder)/Managed/</GameManagedDir>
