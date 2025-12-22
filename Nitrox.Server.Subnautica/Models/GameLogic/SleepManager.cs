@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Nitrox.Model.Networking;
-using Nitrox.Model.Subnautica.Packets;
 using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
@@ -15,7 +13,7 @@ public class SleepManager
 
     private readonly PlayerManager playerManager;
     private readonly TimeKeeper timeKeeper;
-    private readonly HashSet<string> sleepingPlayerIds = [];
+    private readonly HashSet<ushort> sleepingPlayerIds = [];
     private bool isSleepInProgress;
     private Timer? sleepTimer;
 
@@ -27,14 +25,14 @@ public class SleepManager
 
     public void PlayerEnteredBed(Player player)
     {
-        if (!sleepingPlayerIds.Add(player.Id.ToString()))
+        if (!sleepingPlayerIds.Add(player.Id))
         {
             return;
         }
 
         BroadcastSleepStatus();
 
-        if (AreAllPlayersSleeping() && !isSleepInProgress)
+        if (!isSleepInProgress && AreAllPlayersSleeping())
         {
             StartSleep();
         }
@@ -42,7 +40,7 @@ public class SleepManager
 
     public void PlayerExitedBed(Player player)
     {
-        if (!sleepingPlayerIds.Remove(player.Id.ToString()))
+        if (!sleepingPlayerIds.Remove(player.Id))
         {
             return;
         }
@@ -58,7 +56,7 @@ public class SleepManager
 
     public void PlayerDisconnected(Player player)
     {
-        sleepingPlayerIds.Remove(player.Id.ToString());
+        sleepingPlayerIds.Remove(player.Id);
 
         // If sleep is already in progress, let it complete - don't cancel just because someone disconnected
         if (isSleepInProgress)
@@ -119,7 +117,7 @@ public class SleepManager
             sleepTimer.Dispose();
             sleepTimer = null;
         };
-        sleepTimer.Start();
+        sleepTimer?.Start();
 
         sleepingPlayerIds.Clear();
     }
