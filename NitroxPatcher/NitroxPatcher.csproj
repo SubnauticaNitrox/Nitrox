@@ -9,17 +9,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
-        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
+        <ProjectReference Include="../NitroxClient/NitroxClient.csproj" />
+        <ProjectReference Include="../Nitrox.Model.Subnautica/Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
 
     <Target Name="IncludeGameReferences" AfterTargets="FindGameAndIncludeReferences">
         <ItemGroup>
             <Reference Include="FMODUnity">
-                <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
+                <HintPath>$(GameManagedDir)FMODUnity.dll</HintPath>
             </Reference>
             <Reference Include="Sentry">
-                <HintPath>$(GameManagedDir)\Sentry.dll</HintPath>
+                <HintPath>$(GameManagedDir)Sentry.dll</HintPath>
             </Reference>
         </ItemGroup>
     </Target>

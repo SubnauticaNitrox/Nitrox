@@ -15,8 +15,8 @@
         <_VerifyMacOSFilesTaskName>_VerifyMacOSFiles</_VerifyMacOSFilesTaskName>
         <_CreateMacOSAppBundleTaskName>_CreateMacOSAppBundle</_CreateMacOSAppBundleTaskName>
 
-        <_NitroxOutputFolder>lib\</_NitroxOutputFolder>
-        <_NitroxResourcesFolder>Resources\</_NitroxResourcesFolder>
+        <_NitroxOutputFolder>lib/</_NitroxOutputFolder>
+        <_NitroxResourcesFolder>Resources/</_NitroxResourcesFolder>
     </PropertyGroup>
     
     <!-- Overridable properties -->
@@ -52,7 +52,7 @@
     <!-- MacOS specific properties -->
     <PropertyGroup Condition="$(_IsMacOSTarget)">
         <UseAppHost>true</UseAppHost>
-        <PlatformAssetsPath>$(MSBuildProjectDirectory)\Assets\MacOS</PlatformAssetsPath>
+        <PlatformAssetsPath>$(MSBuildProjectDirectory)/Assets/MacOS</PlatformAssetsPath>
     </PropertyGroup>
 
     <!-- *************** BUILD *************** -->
@@ -109,7 +109,7 @@
         <Message Importance="High"
                  Text="Running NitroxClean on $(MSBuildProjectName)" />
 
-         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder);$(TargetDir)\runtimes"
+         <RemoveDir Directories="$(TargetDir)$(_NitroxOutputFolder);$(TargetDir)$(_NitroxResourcesFolder);$(TargetDir)runtimes"
                     ContinueOnError="WarnAndContinue" />
     </Target>
 
@@ -180,19 +180,19 @@
                  Text="Running $(_CreateMacOSAppBundleTaskName) on $(MSBuildProjectName)" />
         
         <PropertyGroup>
-            <_ZipDir>$(TargetDir)bundle\</_ZipDir>
-            <_AppBundleDir>$(_ZipDir)$(AppBundleName)\</_AppBundleDir>
-            <_ContentDir>$(_AppBundleDir)Contents\</_ContentDir>
-            <_MacOSDir>$(_ContentDir)MacOS\</_MacOSDir>
-            <_ResourcesDir>$(_ContentDir)Resources\</_ResourcesDir>
+            <_ZipDir>$(TargetDir)bundle/</_ZipDir>
+            <_AppBundleDir>$(_ZipDir)$(AppBundleName)/</_AppBundleDir>
+            <_ContentDir>$(_AppBundleDir)Contents/</_ContentDir>
+            <_MacOSDir>$(_ContentDir)MacOS/</_MacOSDir>
+            <_ResourcesDir>$(_ContentDir)Resources/</_ResourcesDir>
 
             <_ZipFilePath>$(TargetDir)$(AppBundleName).zip</_ZipFilePath>
         </PropertyGroup>
         
         <ItemGroup>
-            <_AllFiles Include="$(TargetDir)\**\*" Exclude="$(_ZipFilePath);$(_AppBundleDir)\**\*" />
+            <_AllFiles Include="$(TargetDir)**/*" Exclude="$(_ZipFilePath);$(_AppBundleDir)**/*" />
             <_BundleFolders Include="$(_ContentDir);$(_MacOSDir);$(_ResourcesDir)" />
-            <_PlatformFiles Include="$(PlatformAssetsPath)\**\*" />
+            <_PlatformFiles Include="$(PlatformAssetsPath)/**/*" />
         </ItemGroup>
         
         <!-- Create the whole OSX bundle tree -->

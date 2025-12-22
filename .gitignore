@@ -391,3 +391,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# DMG generation
+dmg_root/
+*.dmg

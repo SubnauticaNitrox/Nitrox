@@ -5,13 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
-        <ProjectReference Include="..\Nitrox.Model\Nitrox.Model.csproj" />
+        <ProjectReference Include="../Nitrox.Model.Subnautica/Nitrox.Model.Subnautica.csproj" />
+        <ProjectReference Include="../Nitrox.Model/Nitrox.Model.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <Reference Include="LitJson">
-            <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
+            <HintPath>$(GameManagedDir)LitJson.dll</HintPath>
             <Private>false</Private>
         </Reference>
     </ItemGroup>

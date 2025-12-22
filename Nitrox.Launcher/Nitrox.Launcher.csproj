@@ -8,7 +8,7 @@
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
-        <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
+        <ApplicationIcon>Assets/Images/nitrox-icon.ico</ApplicationIcon>
         <PublishTrimmed>false</PublishTrimmed>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
@@ -18,7 +18,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets/**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -61,20 +61,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nitrox.Model\Nitrox.Model.csproj" />
+        <ProjectReference Include="../Nitrox.Model/Nitrox.Model.csproj" />
     </ItemGroup>
 
     <!-- Project references not to be code-linked with app, but are used by app as content files. See https://github.com/dotnet/msbuild/issues/4795#issuecomment-1443879474  -->
     <ItemGroup>
         <!-- TODO: Fix server project reference so there's no code access (launcher should never call server exe code). -->
-        <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" />
-        <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
+        <ProjectReference Include="../Nitrox.Server.Subnautica/Nitrox.Server.Subnautica.csproj" />
+        <ProjectReference Include="../NitroxPatcher/NitroxPatcher.csproj">
             <Name>NitroxPatcher472</Name>
             <SetTargetFramework>TargetFramework=net472</SetTargetFramework>
             <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <ExcludeAssets>compile</ExcludeAssets>
-            <AdditionalProperties Condition="'$(BuildingInsideVisualStudio)' != 'true'">TargetFramework=net472;OutDir=$(MSBuildProjectDirectory)\$(OutputPath)\lib\net472\</AdditionalProperties>
+            <AdditionalProperties Condition="'$(BuildingInsideVisualStudio)' != 'true'">TargetFramework=net472;OutDir=$(MSBuildProjectDirectory)/$(OutputPath)/lib/net472/</AdditionalProperties>
         </ProjectReference>
     </ItemGroup>
 
@@ -86,14 +86,14 @@
                  Text="Running _FixBuildInsideVisualStudio on $(MSBuildProjectName)" />
 
         <ItemGroup>
-            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\NitroxPatcher\bin\$(Configuration)\net472\*" />
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)/../NitroxPatcher/bin/$(Configuration)/net472/*" />
         </ItemGroup>
 
         <Error Text="Unable to find NitroxPatcher files from _NitroxFixBuildInsideVisualStudio"
                Condition="@(_FilesToCopy->Count()) == 0" />
 
         <Copy SourceFiles="@(_FilesToCopy)"
-              DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\lib\net472\"
+              DestinationFolder="$(MSBuildProjectDirectory)/$(OutputPath)/lib/net472/"
               OverwriteReadOnlyFiles="True"
               Retries="3"
               RetryDelayMilliseconds="100"
@@ -102,11 +102,11 @@
     </Target>
 
     <ItemGroup>
-        <Content Include="..\Nitrox.Assets.Subnautica\*.dll" LinkBase="lib\net472" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        <Content Include="..\Nitrox.Assets.Subnautica\LanguageFiles\**" LinkBase="Resources\LanguageFiles" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        <Content Include="..\Nitrox.Assets.Subnautica\AssetBundles\**" LinkBase="Resources\AssetBundles" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="../Nitrox.Assets.Subnautica/*.dll" LinkBase="lib/net472" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="../Nitrox.Assets.Subnautica/Resources/**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="../Nitrox.Assets.Subnautica/LanguageFiles/**" LinkBase="Resources/LanguageFiles" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="../Nitrox.Assets.Subnautica/AssetBundles/**" LinkBase="Resources/AssetBundles" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
-    <Import Project="..\Nitrox.Shared.targets" />
+    <Import Project="../Nitrox.Shared.targets" />
 </Project>

@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
+        <ProjectReference Include="../Nitrox.Model.Subnautica/Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -16,14 +16,14 @@
 
     <ItemGroup>
         <Reference Include="protobuf-net">
-            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+            <HintPath>../Nitrox.Assets.Subnautica/protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        <Content Include="..\Nitrox.Assets.Subnautica\**\*.csv" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="../Nitrox.Assets.Subnautica/**/*.tpk" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="../Nitrox.Assets.Subnautica/**/*.csv" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
-    <Import Project="..\Nitrox.Shared.targets" />
+    <Import Project="../Nitrox.Shared.targets" />
 </Project>

@@ -1,0 +1,31 @@
+name: Build macOS App
+
+on:
+    push:
+        branches: ["master"]
+    pull_request:
+        branches: ["master"]
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: macos-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 9.0.x
+
+            - name: Build and Create DMG
+              run: ./scripts/build-dmg.sh
+              env:
+                  SUBNAUTICA_INSTALLATION_PATH: ${{ github.workspace }}/deps
+
+            - name: Upload DMG
+              uses: actions/upload-artifact@v4
+              with:
+                  name: Nitrox-Installer
+                  path: Nitrox-Installer.dmg

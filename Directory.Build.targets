@@ -51,16 +51,16 @@
         </DiscoverGame>
         <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game '$(GameName)' on your machine" />
         <PropertyGroup>
-            <GameDir Condition="Exists('$(GameDir)')">$(GameDir)\</GameDir>
-            <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)\</GameDir>
+            <GameDir Condition="Exists('$(GameDir)')">$(GameDir)/</GameDir>
+            <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)/</GameDir>
             <GameDataFolder>Subnautica_Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">
-            <GameDataFolder>Resources\Data</GameDataFolder>
+            <GameDataFolder>Resources/Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup>
-            <GameManagedDir>$(GameDir)$(GameDataFolder)\Managed\</GameManagedDir>
-            <GameVersionFile>$(GameDir)$(GameDataFolder)\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
+            <GameManagedDir>$(GameDir)$(GameDataFolder)/Managed/</GameManagedDir>
+            <GameVersionFile>$(GameDir)$(GameDataFolder)/StreamingAssets/SNUnmanagedData/plastic_status.ignore</GameVersionFile>
         </PropertyGroup>
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />
