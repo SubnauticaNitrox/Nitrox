@@ -46,8 +46,6 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
         Pickupable pickupable = item.GetComponent<Pickupable>();
         Validate.IsTrue(pickupable);
 
-        Validate.NotNull(pickupable.inventoryItem);
-
         ItemsContainer inventory = opPlayer.Value.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
 
@@ -87,7 +85,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                     tool.mainCollider.enabled = true;
                 }
                 tool.GetComponent<Rigidbody>().isKinematic = false;
-                pickupable.inventoryItem.item.Reparent(inventory.tr);
+                pickupable.inventoryItem?.item.Reparent(inventory.tr);
                 foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
                 {
                     componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
@@ -103,15 +101,21 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 break;
 
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
-                pickupable.inventoryItem.item.Reparent(opPlayer.Value.ItemAttachPoint);
-                pickupable.inventoryItem.item.SetVisible(true);
-                Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
+                if (pickupable.inventoryItem != null)
+                {
+                    pickupable.inventoryItem.item.Reparent(opPlayer.Value.ItemAttachPoint);
+                    pickupable.inventoryItem.item.SetVisible(true);
+                    Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
+                }
                 break;
 
             case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM:
-                pickupable.inventoryItem.item.Reparent(inventory.tr);
-                pickupable.inventoryItem.item.SetVisible(false);
-                Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, defaultLayer);
+                if (pickupable.inventoryItem != null)
+                {
+                    pickupable.inventoryItem.item.Reparent(inventory.tr);
+                    pickupable.inventoryItem.item.SetVisible(false);
+                    Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, defaultLayer);
+                }
                 break;
 
             default:
