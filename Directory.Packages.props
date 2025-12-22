@@ -28,8 +28,8 @@
         <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
         <PackageVersion Include="LiteNetLib" Version="1.2.0" />
         <PackageVersion Include="LitJson" Version="0.19.0" />
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-        <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.8" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+        <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.1" />
         <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
         <PackageVersion Include="Mono.Nat" Version="3.0.4" />
         <PackageVersion Include="MSTest" Version="3.8.3" />
@@ -53,7 +53,7 @@
         <PackageVersion Include="System.Memory" Version="4.6.3" />
         <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
         <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-        <PackageVersion Include="System.Text.Json" Version="9.0.4" />
+        <PackageVersion Include="System.Text.Json" Version="10.0.1" />
         <PackageVersion Include="System.ValueTuple" Version="4.6.1" />
     </ItemGroup>
 </Project>
