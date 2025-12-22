@@ -29,3 +29,9 @@ jobs:
               with:
                   name: Nitrox-Installer
                   path: Nitrox-Installer.dmg
+
+            - name: Upload App Bundle
+              uses: actions/upload-artifact@v4
+              with:
+                  name: Nitrox-App
+                  path: Nitrox.Launcher/bin/Release/net9.0/osx-arm64/bundle/Nitrox.app
