@@ -70,6 +70,11 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
         if (gameObject.TryGetComponentInParent(out SubRoot subRoot))
         {
             SkyEnvironmentChanged.Send(gameObject, subRoot);
+            // Corresponds to the chain of call PlaceTool.Place -> Pickupable.Drop -> if (isInSub) -> Pickupable.Place
+            if (gameObject.TryGetComponent(out Pickupable pickupable))
+            {
+                pickupable.Place();
+            }
         }
         if (gameObject.TryGetComponent(out Rigidbody rigidbody))
         {
