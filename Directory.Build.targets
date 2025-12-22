@@ -51,11 +51,6 @@
         </DiscoverGame>
         <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game '$(GameName)' on your machine" />
         <PropertyGroup>
-            <_UserHome Condition="'$(HOME)' != ''">$(HOME)</_UserHome>
-            <_UserHome Condition="'$(_UserHome)' == '' and '$(USERPROFILE)' != ''">$(USERPROFILE)</_UserHome>
-            <SUBNAUTICA_INSTALLATION_PATH Condition="'$(SUBNAUTICA_INSTALLATION_PATH)' != '' and '$(_UserHome)' != '' and $(SUBNAUTICA_INSTALLATION_PATH.StartsWith('~'))">$([System.IO.Path]::Combine($(_UserHome), $([System.String]::Copy('$(SUBNAUTICA_INSTALLATION_PATH)').Substring(1))))</SUBNAUTICA_INSTALLATION_PATH>
-        </PropertyGroup>
-        <PropertyGroup>
             <GameDir Condition="Exists('$(GameDir)')">$(GameDir)\</GameDir>
             <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)\</GameDir>
             <GameDataFolder>Subnautica_Data</GameDataFolder>
