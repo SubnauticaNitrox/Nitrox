@@ -1,27 +1,22 @@
 using System.Diagnostics.CodeAnalysis;
-using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.GameLogic;
 
-public class SleepManager
+public class SleepManager(IPacketSender packetSender)
 {
-    [MemberNotNullWhen(true, nameof(currentBed))]
-    public bool IsInBed => currentBed != null;
-
-    public bool CanExitBed => IsInBed && !isSleepInProgress;
-
-    private readonly IPacketSender packetSender;
+    private readonly IPacketSender packetSender = packetSender;
     private Bed? currentBed;
     private bool isSleepInProgress;
     private float timeLastSleepBeforeEntering;
 
-    public SleepManager(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
+    [MemberNotNullWhen(true, nameof(currentBed))]
+    private bool IsInBed => currentBed != null;
 
-    public void LocalPlayerEnteredBed(Bed bed)
+    public bool CanExitBed => IsInBed && !isSleepInProgress;
+
+    public void EnterBed(Bed bed)
     {
         currentBed = bed;
         isSleepInProgress = false;
@@ -35,11 +30,9 @@ public class SleepManager
             return;
         }
 
-        currentBed.ExitInUseMode(Player.main, false);
+        currentBed.ExitInUseMode(Player.main);
         Player.main.timeLastSleep = timeLastSleepBeforeEntering;
-
         packetSender.Send(new BedExit());
-
         currentBed = null;
     }
 
@@ -47,24 +40,17 @@ public class SleepManager
     {
         isSleepInProgress = true;
         uGUI_PlayerSleep.main.StartSleepScreen();
-        DayNightCycle.main.SkipTime(396f, 5f);
     }
 
     public void OnSleepCancelled()
     {
-        if (DayNightCycle.main.IsInSkipTimeMode())
-        {
-            DayNightCycle.main.StopSkipTimeMode();
-        }
-
         if (IsInBed)
         {
-            currentBed.ExitInUseMode(Player.main, false);
+            currentBed.ExitInUseMode(Player.main);
             Player.main.timeLastSleep = timeLastSleepBeforeEntering;
         }
 
         uGUI_PlayerSleep.main.StopSleepScreen();
-
         currentBed = null;
         isSleepInProgress = false;
     }
@@ -73,7 +59,7 @@ public class SleepManager
     {
         if (IsInBed)
         {
-            currentBed.ExitInUseMode(Player.main, false);
+            currentBed.ExitInUseMode(Player.main);
         }
 
         currentBed = null;

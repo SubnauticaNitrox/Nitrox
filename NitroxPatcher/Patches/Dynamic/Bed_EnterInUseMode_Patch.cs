@@ -27,7 +27,7 @@ public sealed partial class Bed_EnterInUseMode_Patch : NitroxPatch, IDynamicPatc
         __instance.inUseMode = Bed.InUseMode.Sleeping;
 
         Resolve<IPacketSender>().Send(new BedEnter());
-        Resolve<SleepManager>().LocalPlayerEnteredBed(__instance);
+        Resolve<SleepManager>().EnterBed(__instance);
 
         return false;
     }

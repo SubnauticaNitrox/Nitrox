@@ -22,7 +22,6 @@ public sealed partial class Bed_Update_Patch : NitroxPatch, IDynamicPatch
         }
 
         SleepManager sleepManager = Resolve<SleepManager>();
-
         if (sleepManager.CanExitBed)
         {
             HandReticle.main.SetText(HandReticle.TextType.Hand, "Get Up", true, GameInput.Button.Exit);

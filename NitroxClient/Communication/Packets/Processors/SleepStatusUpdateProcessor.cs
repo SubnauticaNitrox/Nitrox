@@ -1,6 +1,5 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using Nitrox.Model.Logger;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -23,12 +22,12 @@ public class SleepStatusUpdateProcessor : ClientPacketProcessor<SleepStatusUpdat
             return;
         }
 
-        if (packet.SleepingPlayers > 0)
+        if (packet.PlayersInBed > 0)
         {
-            Log.InGame(Language.main.Get("Nitrox_SleepingPlayers").Replace("{SLEEPING}", packet.SleepingPlayers.ToString()).Replace("{TOTAL}", packet.TotalPlayers.ToString()));
+            Log.InGame(Language.main.Get("Nitrox_SleepingPlayers").Replace("{SLEEPING}", packet.PlayersInBed.ToString()).Replace("{TOTAL}", packet.TotalPlayers.ToString()));
         }
 
-        if (packet.AllPlayersSleeping)
+        if (packet.AllPlayersInBed)
         {
             sleepManager.OnAllPlayersSleeping();
         }

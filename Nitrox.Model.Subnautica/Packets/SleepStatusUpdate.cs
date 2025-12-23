@@ -7,17 +7,17 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class SleepStatusUpdate : Packet
 {
-    public int SleepingPlayers { get; }
+    public int PlayersInBed { get; }
     public int TotalPlayers { get; }
 
     [IgnoredMember]
-    public bool AllPlayersSleeping => SleepingPlayers >= TotalPlayers;
+    public bool AllPlayersInBed => PlayersInBed >= TotalPlayers;
 
     public bool WasCancelled { get; }
 
-    public SleepStatusUpdate(int sleepingPlayers, int totalPlayers, bool wasCancelled = false)
+    public SleepStatusUpdate(int playersInBed, int totalPlayers, bool wasCancelled = false)
     {
-        SleepingPlayers = sleepingPlayers;
+        PlayersInBed = playersInBed;
         TotalPlayers = totalPlayers;
         WasCancelled = wasCancelled;
     }
