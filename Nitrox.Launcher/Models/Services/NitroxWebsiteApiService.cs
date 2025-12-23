@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -17,16 +16,18 @@ namespace Nitrox.Launcher.Models.Services;
 internal sealed class NitroxWebsiteApiService
 {
     private readonly HttpClient httpClient;
+    private readonly HttpFileService httpFileService;
 
-    public NitroxWebsiteApiService(HttpClient httpClient)
+    public NitroxWebsiteApiService(HttpClient httpClient, HttpFileService httpFileService)
     {
         this.httpClient = httpClient;
+        this.httpFileService = httpFileService;
         httpClient.BaseAddress = new Uri("https://nitrox.rux.gg/api/");
     }
 
     public async Task<NitroxChangelog[]?> GetChangeLogsAsync(CancellationToken cancellationToken = default)
     {
-        ChangeLog[] changeLogs = await httpClient.GetFromJsonAsync<ChangeLog[]>("changelog/releases", cancellationToken: cancellationToken);
+        ChangeLog[] changeLogs = await httpClient.GetFromJsonAsync<ChangeLog[]>("changelog/releases", cancellationToken);
         NitroxChangelog[] result = new NitroxChangelog[changeLogs.Length];
         StringBuilder buffer = new();
         for (int i = 0; i < changeLogs.Length; i++)
@@ -38,33 +39,17 @@ internal sealed class NitroxWebsiteApiService
 
     public async Task<NitroxRelease?> GetNitroxLatestVersionAsync() => await httpClient.GetFromJsonAsync<NitroxRelease>("version/latest");
 
-    public async Task DownloadFileAsync(string url, string destinationPath, IProgress<(long bytesRead, long? totalBytes)>? progress = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    ///     Gets the latest Nitrox for the platform of the current machine.
+    /// </summary>
+    public async Task<HttpFileService.FileDownloader?> GetLatestNitroxAsync(CancellationToken cancellationToken)
     {
-        // Ensure we have an absolute URL
-        string absoluteUrl = url;
-        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+        if (await GetNitroxLatestVersionAsync() is not { CurrentPlatformInfo: { } downloadInfo })
         {
-            absoluteUrl = $"https://nitrox.rux.gg/api/{url.TrimStart('/')}";
+            return null;
         }
 
-        using HttpRequestMessage request = new(HttpMethod.Get, absoluteUrl);
-        using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        long? totalBytes = response.Content.Headers.ContentLength;
-        await using Stream contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        await using FileStream fileStream = new(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
-
-        byte[] buffer = new byte[8192];
-        long totalBytesRead = 0;
-        int bytesRead;
-
-        while ((bytesRead = await contentStream.ReadAsync(buffer, cancellationToken)) > 0)
-        {
-            await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken);
-            totalBytesRead += bytesRead;
-            progress?.Report((totalBytesRead, totalBytes));
-        }
+        return await httpFileService.GetFileStreamAsync(downloadInfo.DownloadUrl, cancellationToken);
     }
 
     public sealed record ChangeLog
@@ -93,21 +78,24 @@ internal sealed class NitroxWebsiteApiService
         /// <summary>
         ///     Gets the download info for the current platform and architecture.
         /// </summary>
-        public ArchitectureInfo? GetCurrentPlatformDownload()
+        public ArchitectureInfo? CurrentPlatformInfo
         {
-            if (Platforms == null)
+            get
             {
+                if (Platforms == null)
+                {
+                    return null;
+                }
+
+                if (Platforms.TryGetValue(NitroxEnvironment.PlatformName, out PlatformInfo? platformInfo) &&
+                    platformInfo?.Architectures != null &&
+                    platformInfo.Architectures.TryGetValue(NitroxEnvironment.ArchitectureName, out ArchitectureInfo? archInfo))
+                {
+                    return archInfo;
+                }
+
                 return null;
             }
-
-            if (Platforms.TryGetValue(NitroxEnvironment.PlatformName, out PlatformInfo? platformInfo) &&
-                platformInfo?.Architectures != null &&
-                platformInfo.Architectures.TryGetValue(NitroxEnvironment.ArchitectureName, out ArchitectureInfo? archInfo))
-            {
-                return archInfo;
-            }
-
-            return null;
         }
     }
 

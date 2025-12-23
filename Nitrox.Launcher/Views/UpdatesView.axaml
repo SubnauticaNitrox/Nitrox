@@ -81,7 +81,7 @@
                                 TextWrapping="Wrap" />
 
                             <!-- Download Progress Section -->
-                            <StackPanel IsVisible="{Binding IsDownloading, Mode=OneWay}" Spacing="8" Margin="0,8,0,0">
+                            <StackPanel IsVisible="{Binding DownloadProgress, Mode=OneWay}" Spacing="8" Margin="0,8,0,0">
                                 <TextBlock
                                     FontSize="12"
                                     FontWeight="Normal"
@@ -96,7 +96,6 @@
                                     HorizontalAlignment="Stretch"
                                     Margin="40,0" />
                                 <Button
-                                    Classes="secondary"
                                     Command="{Binding CancelDownloadCommand}"
                                     HorizontalAlignment="Center"
                                     HorizontalContentAlignment="Center"
@@ -105,13 +104,12 @@
                                 </Button>
                             </StackPanel>
 
-                            <!-- Download Button (hidden when downloading) -->
+                            <!-- Download Button -->
                             <Button
                                 Classes="primary"
                                 Command="{Binding DownloadUpdateCommand}"
                                 HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
-                                IsVisible="{Binding !IsDownloading, Mode=OneWay}"
                                 Margin="0,4,0,0"
                                 Padding="20,8"
                                 ToolTip.Tip="Download and install the latest version">
@@ -153,11 +151,11 @@
                             </TextBlock>
 
                             <!-- Download Progress Section -->
-                            <StackPanel IsVisible="{Binding IsDownloading, Mode=OneWay}" Spacing="8" Margin="0,8,0,0">
+                            <StackPanel IsVisible="{Binding DownloadProgress, Mode=OneWay}" Spacing="8" Margin="0,8,0,0">
                                 <TextBlock
                                     FontSize="12"
                                     FontWeight="Normal"
-                                    Text="{Binding DownloadStatus}"
+                                    Text="{Binding DownloadStatus, Mode=OneWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                                 <ProgressBar
@@ -168,7 +166,6 @@
                                     HorizontalAlignment="Stretch"
                                     Margin="40,0" />
                                 <Button
-                                    Classes="secondary"
                                     Command="{Binding CancelDownloadCommand}"
                                     HorizontalAlignment="Center"
                                     HorizontalContentAlignment="Center"
@@ -177,13 +174,13 @@
                                 </Button>
                             </StackPanel>
 
-                            <!-- Download Button (hidden when downloading) -->
+                            <!-- Download Button -->
                             <Button
                                 Classes="primary"
                                 Command="{Binding DownloadUpdateCommand}"
                                 HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
-                                IsVisible="{Binding !IsDownloading, Mode=OneWay}"
+                                IsVisible="{Binding !DownloadProgress, Mode=OneWay}"
                                 Margin="0,4,0,0"
                                 Padding="20,8"
                                 ToolTip.Tip="Download and install the latest version">

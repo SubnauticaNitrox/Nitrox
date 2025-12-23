@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
@@ -20,12 +21,15 @@ namespace Nitrox.Launcher.ViewModels;
 
 internal partial class UpdatesViewModel : RoutableViewModelBase
 {
-    private readonly NitroxWebsiteApiService nitroxWebsiteApi;
     private readonly DialogService dialogService;
+    private readonly NitroxWebsiteApiService nitroxWebsiteApi;
+    private CancellationTokenSource? downloadCts;
 
-    private NitroxWebsiteApiService.NitroxRelease? latestRelease;
-    private NitroxWebsiteApiService.ArchitectureInfo? downloadInfo;
-    private CancellationTokenSource? downloadCancellationTokenSource;
+    [ObservableProperty]
+    private double downloadProgress;
+
+    [ObservableProperty]
+    private string? downloadStatus;
 
     [ObservableProperty]
     private bool newUpdateAvailable;
@@ -42,17 +46,6 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
     [ObservableProperty]
     private string? version;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(DownloadUpdateCommand))]
-    [NotifyCanExecuteChangedFor(nameof(CancelDownloadCommand))]
-    private bool isDownloading;
-
-    [ObservableProperty]
-    private double downloadProgress;
-
-    [ObservableProperty]
-    private string? downloadStatus;
-
     public UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi, DialogService dialogService)
     {
         this.nitroxWebsiteApi = nitroxWebsiteApi;
@@ -64,22 +57,18 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
         try
         {
             Version currentVersion = NitroxEnvironment.Version;
-            latestRelease = await nitroxWebsiteApi.GetNitroxLatestVersionAsync();
-            Version latestVersion = latestRelease?.Version ?? new Version(0, 0);
-            downloadInfo = latestRelease?.GetCurrentPlatformDownload();
+            Version latestVersion = (await nitroxWebsiteApi.GetNitroxLatestVersionAsync())?.Version ?? new Version(0, 0);
 
             NewUpdateAvailable = latestVersion > currentVersion;
-            UsingOfficialVersion = NitroxEnvironment.IsReleaseMode && latestVersion >= currentVersion;
-
             if (NewUpdateAvailable)
             {
                 string versionMessage = $"A new version of the mod ({latestVersion}) is available.";
                 Log.Info(versionMessage);
                 LauncherNotifier.Warning(versionMessage);
             }
-
             Version = currentVersion.ToString();
             OfficialVersion = latestVersion.ToString();
+            UsingOfficialVersion = NitroxEnvironment.IsReleaseMode && latestVersion >= currentVersion;
         }
         catch
         {
@@ -113,140 +102,7 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
         });
     }
 
-    [RelayCommand(CanExecute = nameof(CanDownloadUpdate))]
-    private async Task DownloadUpdate()
-    {
-        if (latestRelease == null || downloadInfo == null)
-        {
-            LauncherNotifier.Error("No update information available for your platform. Please refresh and try again.");
-            return;
-        }
-
-        if (!NitroxEnvironment.IsReleaseMode)
-        {
-            LauncherNotifier.Info("Development build detected. Please use git pull to update your local repository.");
-            return;
-        }
-
-        DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-        {
-            model.Title = "Download and Install Update";
-            model.Description = $"This will download Nitrox {latestRelease.Version} ({downloadInfo.FileSizeMegaBytes:F1} MB) and install it.\n\nThe launcher will restart after the update is complete.\n\nDo you want to continue?";
-            model.ButtonOptions = ButtonOptions.YesNo;
-        });
-
-        if (!confirmResult)
-        {
-            return;
-        }
-
-        IsDownloading = true;
-        DownloadProgress = 0;
-        DownloadStatus = "Starting download...";
-        downloadCancellationTokenSource = new CancellationTokenSource();
-
-        try
-        {
-            string currentDir = NitroxUser.LauncherPath ?? AppDomain.CurrentDomain.BaseDirectory;
-            string tempDir = Path.Combine(Path.GetTempPath(), "NitroxUpdate");
-            string zipPath = Path.Combine(tempDir, $"Nitrox_{latestRelease.Version}.zip");
-            string extractPath = Path.Combine(tempDir, "extract");
-
-            // Clean up any previous update attempt
-            if (Directory.Exists(tempDir))
-            {
-                Directory.Delete(tempDir, true);
-            }
-            Directory.CreateDirectory(tempDir);
-
-            // Download the update
-            DownloadStatus = "Downloading...";
-            Progress<(long bytesRead, long? totalBytes)> progress = new(p =>
-            {
-                if (p.totalBytes.HasValue)
-                {
-                    DownloadProgress = (double)p.bytesRead / p.totalBytes.Value * 100;
-                    DownloadStatus = $"Downloading... {p.bytesRead / 1024.0 / 1024.0:F1} / {p.totalBytes.Value / 1024.0 / 1024.0:F1} MB";
-                }
-            });
-            await nitroxWebsiteApi.DownloadFileAsync(downloadInfo.DownloadUrl, zipPath, progress, downloadCancellationTokenSource.Token);
-
-            if (downloadCancellationTokenSource.Token.IsCancellationRequested)
-            {
-                return;
-            }
-
-            // Verify MD5 hash if provided
-            if (!string.IsNullOrEmpty(downloadInfo.Md5Hash))
-            {
-                DownloadStatus = "Verifying download...";
-                DownloadProgress = 100;
-                string downloadedHash = await Hashing.ComputeMd5HashAsync(zipPath);
-                if (!string.Equals(downloadedHash, downloadInfo.Md5Hash, StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new InvalidDataException($"Download verification failed. Expected hash: {downloadInfo.Md5Hash}, got: {downloadedHash}");
-                }
-            }
-
-            // Extract the update
-            DownloadStatus = "Extracting...";
-            if (Directory.Exists(extractPath))
-            {
-                Directory.Delete(extractPath, true);
-            }
-            ZipFile.ExtractToDirectory(zipPath, extractPath);
-
-            // Find the Nitrox folder inside the extracted content
-            string nitroxFolder = extractPath;
-            string[] subDirs = Directory.GetDirectories(extractPath);
-            if (subDirs.Length == 1)
-            {
-                nitroxFolder = subDirs[0];
-            }
-
-            // Create the updater batch script
-            string updaterScript = CreateUpdaterScript(nitroxFolder, currentDir, tempDir);
-
-            DownloadStatus = "Installing update...";
-            LauncherNotifier.Success("Update downloaded successfully. Restarting to apply update...");
-
-            // Start the updater script and exit
-            ProcessEx.Start(updaterScript, createWindow: false);
-
-            // Give the script a moment to start, then exit
-            await Task.Delay(500);
-            Environment.Exit(0);
-        }
-        catch (OperationCanceledException)
-        {
-            DownloadStatus = "Download cancelled";
-            LauncherNotifier.Info("Update download cancelled.");
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Failed to download or install update");
-            DownloadStatus = "Download failed";
-            await dialogService.ShowErrorAsync(ex, "Update Failed", "Failed to download or install the update.");
-        }
-        finally
-        {
-            IsDownloading = false;
-            downloadCancellationTokenSource?.Dispose();
-            downloadCancellationTokenSource = null;
-        }
-    }
-
-    private bool CanDownloadUpdate() => !IsDownloading;
-
-    [RelayCommand(CanExecute = nameof(CanCancelDownload))]
-    private void CancelDownload()
-    {
-        downloadCancellationTokenSource?.Cancel();
-    }
-
-    private bool CanCancelDownload() => IsDownloading;
-
-    private static string CreateUpdaterScript(string sourcePath, string destinationPath, string tempDir)
+    private static async Task<string> CreateUpdaterScriptAsync(string sourcePath, string destinationPath, string tempDir)
     {
         // Safety check: ensure destination path is rooted to prevent accidental file deletion
         if (!Path.IsPathRooted(destinationPath))
@@ -256,69 +112,69 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
 
         string scriptPath;
         string scriptContent;
-        string launcherExe = Path.Combine(destinationPath, "Nitrox.Launcher.exe");
+        string launcherExe = Path.Combine(destinationPath, Path.GetFileName(NitroxUser.ExecutableFilePath) ?? throw new Exception("Failed to get executable file name"));
 
         if (OperatingSystem.IsWindows())
         {
             scriptPath = Path.Combine(tempDir, "update.bat");
             scriptContent = $"""
-                @echo off
-                echo Waiting for Nitrox Launcher to close...
-                :waitloop
-                tasklist /FI "IMAGENAME eq Nitrox.Launcher.exe" 2>NUL | find /I /N "Nitrox.Launcher.exe">NUL
-                if "%ERRORLEVEL%"=="0" (
-                    timeout /t 1 /nobreak >nul
-                    goto waitloop
-                )
-                echo Cleaning old installation...
-                for %%F in ("{destinationPath}\*.dll") do del /Q "%%F" 2>nul
-                for %%F in ("{destinationPath}\*.exe") do del /Q "%%F" 2>nul
-                for %%F in ("{destinationPath}\*.json") do del /Q "%%F" 2>nul
-                for %%F in ("{destinationPath}\*.config") do del /Q "%%F" 2>nul
-                for %%F in ("{destinationPath}\*.txt") do del /Q "%%F" 2>nul
-                if exist "{destinationPath}\lib" rmdir /S /Q "{destinationPath}\lib" 2>nul
-                if exist "{destinationPath}\runtimes" rmdir /S /Q "{destinationPath}\runtimes" 2>nul
-                if exist "{destinationPath}\Resources" rmdir /S /Q "{destinationPath}\Resources" 2>nul
-                echo Installing update...
-                xcopy /E /Y /I "{sourcePath}\*" "{destinationPath}\"
-                if errorlevel 1 (
-                    echo Update failed! Press any key to exit...
-                    pause >nul
-                    exit /b 1
-                )
-                echo Starting Nitrox Launcher...
-                start "" "{launcherExe}"
-                exit
-                """;
+                             @echo off
+                             echo Waiting for Nitrox Launcher to close...
+                             :waitloop
+                             tasklist /FI "IMAGENAME eq Nitrox.Launcher.exe" 2>NUL | find /I /N "Nitrox.Launcher.exe">NUL
+                             if "%ERRORLEVEL%"=="0" (
+                                 timeout /t 1 /nobreak >nul
+                                 goto waitloop
+                             )
+                             echo Cleaning old installation...
+                             for %%F in ("{destinationPath}\*.dll") do del /Q "%%F" 2>nul
+                             for %%F in ("{destinationPath}\*.exe") do del /Q "%%F" 2>nul
+                             for %%F in ("{destinationPath}\*.json") do del /Q "%%F" 2>nul
+                             for %%F in ("{destinationPath}\*.config") do del /Q "%%F" 2>nul
+                             for %%F in ("{destinationPath}\*.txt") do del /Q "%%F" 2>nul
+                             if exist "{destinationPath}\lib" rmdir /S /Q "{destinationPath}\lib" 2>nul
+                             if exist "{destinationPath}\runtimes" rmdir /S /Q "{destinationPath}\runtimes" 2>nul
+                             if exist "{destinationPath}\Resources" rmdir /S /Q "{destinationPath}\Resources" 2>nul
+                             echo Installing update...
+                             xcopy /E /Y /I "{sourcePath}\*" "{destinationPath}\"
+                             if errorlevel 1 (
+                                 echo Update failed! Press any key to exit...
+                                 pause >nul
+                                 exit /b 1
+                             )
+                             echo Starting Nitrox Launcher...
+                             start "" "{launcherExe}"
+                             exit
+                             """;
         }
         else
         {
             string launcherPath = Path.Combine(destinationPath, "Nitrox.Launcher");
             scriptPath = Path.Combine(tempDir, "update.sh");
             scriptContent = $"""
-                #!/bin/bash
-                echo "Waiting for Nitrox Launcher to close..."
-                while pgrep -x "Nitrox.Launcher" > /dev/null; do
-                    sleep 1
-                done
-                echo "Cleaning old installation..."
-                rm -f "{destinationPath}"/*.dll 2>/dev/null
-                rm -f "{destinationPath}"/*.exe 2>/dev/null
-                rm -f "{destinationPath}"/*.json 2>/dev/null
-                rm -f "{destinationPath}"/*.config 2>/dev/null
-                rm -f "{destinationPath}"/*.txt 2>/dev/null
-                rm -rf "{destinationPath}/lib" 2>/dev/null
-                rm -rf "{destinationPath}/runtimes" 2>/dev/null
-                rm -rf "{destinationPath}/Resources" 2>/dev/null
-                echo "Installing update..."
-                cp -rf "{sourcePath}/"* "{destinationPath}/"
-                echo "Starting Nitrox Launcher..."
-                chmod +x "{launcherPath}"
-                nohup "{launcherPath}" >/dev/null 2>&1 &
-                """;
+                             #!/bin/bash
+                             echo "Waiting for Nitrox Launcher to close..."
+                             while pgrep -x "Nitrox.Launcher" > /dev/null; do
+                                 sleep 1
+                             done
+                             echo "Cleaning old installation..."
+                             rm -f "{destinationPath}"/*.dll 2>/dev/null
+                             rm -f "{destinationPath}"/*.exe 2>/dev/null
+                             rm -f "{destinationPath}"/*.json 2>/dev/null
+                             rm -f "{destinationPath}"/*.config 2>/dev/null
+                             rm -f "{destinationPath}"/*.txt 2>/dev/null
+                             rm -rf "{destinationPath}/lib" 2>/dev/null
+                             rm -rf "{destinationPath}/runtimes" 2>/dev/null
+                             rm -rf "{destinationPath}/Resources" 2>/dev/null
+                             echo "Installing update..."
+                             cp -rf "{sourcePath}/"* "{destinationPath}/"
+                             echo "Starting Nitrox Launcher..."
+                             chmod +x "{launcherPath}"
+                             nohup "{launcherPath}" >/dev/null 2>&1 &
+                             """;
         }
 
-        File.WriteAllText(scriptPath, scriptContent);
+        await File.WriteAllTextAsync(scriptPath, scriptContent);
 
         if (!OperatingSystem.IsWindows())
         {
@@ -327,4 +183,133 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
 
         return scriptPath;
     }
+
+    [RelayCommand(CanExecute = nameof(CanDownloadUpdate), AllowConcurrentExecutions = false)]
+    private async Task DownloadUpdate()
+    {
+        if (!NitroxEnvironment.IsReleaseMode)
+        {
+            LauncherNotifier.Info("Development build detected. Please use git pull to update your local repository.");
+            return;
+        }
+        if (await nitroxWebsiteApi.GetNitroxLatestVersionAsync() is not { CurrentPlatformInfo: {} downloadInfo } latestRelease)
+        {
+            LauncherNotifier.Error("No update information available for your platform. Please refresh and try again.");
+            return;
+        }
+        DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        {
+            model.Title = $"Download and install Nitrox {latestRelease.Version} ({downloadInfo.FileSizeMegaBytes:F1} MB)?";
+            model.Description = "The will overwrite your current Nitrox installation and restart Nitrox after the update is complete.\nPlease check if this update is compatible with your current save file before continuing.\n\nDo you want to continue?";
+            model.ButtonOptions = ButtonOptions.YesNo;
+        });
+        if (!confirmResult)
+        {
+            return;
+        }
+
+        DownloadProgress = 0;
+        DownloadStatus = "Starting download...";
+        using (downloadCts = new CancellationTokenSource())
+        {
+            try
+            {
+                string currentDir = NitroxUser.LauncherPath ?? AppDomain.CurrentDomain.BaseDirectory;
+                string tempDir = Path.Combine(Path.GetTempPath(), "NitroxUpdate");
+                string zipPath = Path.Combine(tempDir, $"Nitrox_{latestRelease.Version}.zip");
+                string extractPath = Path.Combine(tempDir, "extract");
+
+                // Clean up any previous update attempt
+                if (Directory.Exists(tempDir))
+                {
+                    Directory.Delete(tempDir, true);
+                }
+                Directory.CreateDirectory(tempDir);
+
+                // Download the update
+                DownloadStatus = "Downloading...";
+                using (HttpFileService.FileDownloader? downloader = await nitroxWebsiteApi.GetLatestNitroxAsync(downloadCts.Token))
+                {
+                    if (downloader == null)
+                    {
+                        return;
+                    }
+                    await foreach (long bytesRead in downloader.DownloadToFileInStepsAsync(zipPath))
+                    {
+                        if (downloader.SizeFromServer < 1)
+                        {
+                            continue;
+                        }
+                        DownloadProgress = (double)bytesRead / downloader.SizeFromServer * 100;
+                        DownloadStatus = $"Downloading... {bytesRead / 1024.0 / 1024.0:F1} / {downloader.SizeFromServer / 1024.0 / 1024.0:F1} MB";
+                    }
+                }
+
+                // Verify MD5 hash if provided
+                if (!string.IsNullOrEmpty(downloadInfo.Md5Hash))
+                {
+                    DownloadStatus = "Verifying download...";
+                    DownloadProgress = 100;
+                    string downloadedHash = await Hashing.ComputeMd5HashAsync(zipPath);
+                    if (!string.Equals(downloadedHash, downloadInfo.Md5Hash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw new InvalidDataException($"Download verification failed. Expected hash: {downloadInfo.Md5Hash}, got: {downloadedHash}");
+                    }
+                }
+
+                // Extract the update
+                DownloadStatus = "Extracting...";
+                if (Directory.Exists(extractPath))
+                {
+                    Directory.Delete(extractPath, true);
+                }
+                ZipFile.ExtractToDirectory(zipPath, extractPath);
+
+                // Find the Nitrox folder inside the extracted content
+                string nitroxFolder = extractPath;
+                string[] subDirs = Directory.GetDirectories(extractPath);
+                if (subDirs.Length == 1)
+                {
+                    nitroxFolder = subDirs[0];
+                }
+
+                // Create the updater batch script
+                string scriptFilePath = await CreateUpdaterScriptAsync(nitroxFolder, currentDir, tempDir);
+
+                DownloadStatus = "Installing update...";
+                LauncherNotifier.Success("Update downloaded successfully. Restarting to apply update...");
+
+                // Start the updater script and exit
+                using Process? script = ProcessEx.StartProcessDetached(new ProcessStartInfo
+                {
+                    FileName = scriptFilePath,
+                    CreateNoWindow = true
+                });
+                Environment.Exit(0);
+            }
+            catch (OperationCanceledException)
+            {
+                DownloadProgress = 0;
+                DownloadStatus = "Download cancelled";
+                LauncherNotifier.Info("Update download cancelled.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to download or install update");
+                DownloadProgress = 0;
+                DownloadStatus = "Download failed";
+                await dialogService.ShowErrorAsync(ex, "Update Failed", "Failed to download or install the update.");
+            }
+        }
+    }
+
+    private bool CanDownloadUpdate() => !CanCancelDownload();
+
+    [RelayCommand(CanExecute = nameof(CanCancelDownload))]
+    private void CancelDownload()
+    {
+        downloadCts?.Cancel();
+    }
+
+    private bool CanCancelDownload() => downloadCts is { IsCancellationRequested: false };
 }
