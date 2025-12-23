@@ -2,9 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -19,10 +21,12 @@ using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class UpdatesViewModel : RoutableViewModelBase
+internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi, DialogService dialogService, ServerService serverService, Func<Window> mainWindowProvider) : RoutableViewModelBase
 {
-    private readonly DialogService dialogService;
-    private readonly NitroxWebsiteApiService nitroxWebsiteApi;
+    private readonly DialogService dialogService = dialogService;
+    private readonly ServerService serverService = serverService;
+    private readonly Func<Window> mainWindowProvider = mainWindowProvider;
+    private readonly NitroxWebsiteApiService nitroxWebsiteApi = nitroxWebsiteApi;
     private CancellationTokenSource? downloadCts;
 
     [ObservableProperty]
@@ -45,12 +49,6 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     private string? version;
-
-    public UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi, DialogService dialogService)
-    {
-        this.nitroxWebsiteApi = nitroxWebsiteApi;
-        this.dialogService = dialogService;
-    }
 
     public async Task<bool> IsNitroxUpdateAvailableAsync()
     {
@@ -285,7 +283,7 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
                     FileName = scriptFilePath,
                     CreateNoWindow = true
                 });
-                Environment.Exit(0);
+                mainWindowProvider().CloseByCode();
             }
             catch (OperationCanceledException)
             {
@@ -303,7 +301,7 @@ internal partial class UpdatesViewModel : RoutableViewModelBase
         }
     }
 
-    private bool CanDownloadUpdate() => !CanCancelDownload();
+    private bool CanDownloadUpdate() => !CanCancelDownload() && serverService.Servers.All(s => !s.IsOnline);
 
     [RelayCommand(CanExecute = nameof(CanCancelDownload))]
     private void CancelDownload()

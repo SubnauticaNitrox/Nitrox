@@ -49,7 +49,7 @@ internal sealed class NitroxWebsiteApiService
             return null;
         }
 
-        return await httpFileService.GetFileStreamAsync(downloadInfo.DownloadUrl, cancellationToken);
+        return await httpFileService.GetFileAsync(downloadInfo.DownloadUrl, cancellationToken);
     }
 
     public sealed record ChangeLog

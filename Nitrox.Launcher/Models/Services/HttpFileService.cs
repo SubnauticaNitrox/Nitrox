@@ -19,7 +19,7 @@ internal sealed class HttpFileService
         this.httpClient.DefaultRequestHeaders.CacheControl = null;
     }
 
-    public async Task<FileDownloader> GetFileStreamAsync(string url, CancellationToken cancellationToken = default)
+    public async Task<FileDownloader> GetFileAsync(string url, CancellationToken cancellationToken = default)
     {
         // Ensure we have an absolute URL
         if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
