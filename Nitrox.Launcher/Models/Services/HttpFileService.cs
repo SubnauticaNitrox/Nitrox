@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Attributes;
+using Nitrox.Model.Core;
 
 namespace Nitrox.Launcher.Models.Services;
 
@@ -16,7 +17,15 @@ internal sealed class HttpFileService
     public HttpFileService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
-        this.httpClient.DefaultRequestHeaders.CacheControl = null;
+        if (NitroxEnvironment.IsReleaseMode)
+        {
+            this.httpClient.DefaultRequestHeaders.CacheControl = null;
+        }
+        else
+        {
+            // In development, we don't want to hammer file CDNs while testing things...
+            this.httpClient.DefaultRequestHeaders.CacheControl!.MaxAge = TimeSpan.FromDays(7);
+        }
     }
 
     public async Task<FileDownloader> GetFileAsync(string url, CancellationToken cancellationToken = default)

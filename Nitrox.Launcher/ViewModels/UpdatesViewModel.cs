@@ -110,7 +110,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
 
         string scriptPath;
         string scriptContent;
-        string launcherExe = Path.Combine(destinationPath, Path.GetFileName(NitroxUser.ExecutableFilePath) ?? throw new Exception("Failed to get executable file name"));
+        string launcherFilePath = Path.Combine(destinationPath, Path.GetFileName(NitroxUser.ExecutableFilePath) ?? throw new Exception("Failed to get executable file name"));
 
         if (OperatingSystem.IsWindows())
         {
@@ -141,13 +141,12 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
                                  exit /b 1
                              )
                              echo Starting Nitrox Launcher...
-                             start "" "{launcherExe}"
+                             start "" "{launcherFilePath}"
                              exit
                              """;
         }
         else
         {
-            string launcherPath = Path.Combine(destinationPath, "Nitrox.Launcher");
             scriptPath = Path.Combine(tempDir, "update.sh");
             scriptContent = $"""
                              #!/bin/bash
@@ -167,8 +166,8 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
                              echo "Installing update..."
                              cp -rf "{sourcePath}/"* "{destinationPath}/"
                              echo "Starting Nitrox Launcher..."
-                             chmod +x "{launcherPath}"
-                             nohup "{launcherPath}" >/dev/null 2>&1 &
+                             chmod +x "{launcherFilePath}"
+                             nohup "{launcherFilePath}" >/dev/null 2>&1 &
                              """;
         }
 
@@ -185,11 +184,6 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
     [RelayCommand(CanExecute = nameof(CanDownloadUpdate), AllowConcurrentExecutions = false)]
     private async Task DownloadUpdate()
     {
-        if (!NitroxEnvironment.IsReleaseMode)
-        {
-            LauncherNotifier.Info("Development build detected. Please use git pull to update your local repository.");
-            return;
-        }
         if (await nitroxWebsiteApi.GetNitroxLatestVersionAsync() is not { CurrentPlatformInfo: {} downloadInfo } latestRelease)
         {
             LauncherNotifier.Error("No update information available for your platform. Please refresh and try again.");
@@ -198,7 +192,15 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
         DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Title = $"Download and install Nitrox {latestRelease.Version} ({downloadInfo.FileSizeMegaBytes:F1} MB)?";
-            model.Description = "The will overwrite your current Nitrox installation and restart Nitrox after the update is complete.\nPlease check if this update is compatible with your current save file before continuing.\n\nDo you want to continue?";
+            if (NitroxEnvironment.IsReleaseMode)
+            {
+                model.Description = "The will overwrite your current Nitrox installation and restart Nitrox after the update is complete.\nPlease check if this update is compatible with your current save file before continuing.";
+            }
+            else
+            {
+                model.Description = "Development build detected. Please use git pull to update your local repository.";
+            }
+            model.Description += "\n\nDo you want to continue?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
         if (!confirmResult)
