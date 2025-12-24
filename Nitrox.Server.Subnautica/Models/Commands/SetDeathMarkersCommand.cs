@@ -1,0 +1,42 @@
+using System.IO;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Serialization;
+using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.GameLogic;
+using NitroxModel.Packets;
+
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+internal class SetDeathMarkersCommand : Command
+{
+    private readonly PlayerManager playerManager;
+    private readonly SubnauticaServerConfig serverConfig;
+    private readonly Server server;
+
+    public SetDeathMarkersCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("deathmarkers", Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
+    {
+        this.playerManager = playerManager;
+        this.serverConfig = serverConfig;
+        this.server = server;
+        AddParameter(new TypeBoolean("state", true, "on/off to enable/disable death markers"));
+    }
+
+    protected override void Execute(CallArgs args)
+    {
+        bool newDeathMarkersState = args.Get<bool>(0);
+        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
+        {
+            if (serverConfig.MarkDeathPointsWithBeacon != newDeathMarkersState)
+            {
+                serverConfig.MarkDeathPointsWithBeacon = newDeathMarkersState;
+                playerManager.SendPacketToAllPlayers(new DeathMarkersChanged(newDeathMarkersState));
+                SendMessageToAllPlayers($"MarkDeathPointsWithBeacon changed to \"{newDeathMarkersState}\" by {args.SenderName}");
+            }
+            else
+            {
+                SendMessage(args.Sender, $"MarkDeathPointsWithBeacon already set to {newDeathMarkersState}");
+            }
+        }
+    }
+}
