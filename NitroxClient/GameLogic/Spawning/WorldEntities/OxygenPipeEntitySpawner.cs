@@ -1,24 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
 {
-    private readonly Entities entities;
     private readonly WorldEntitySpawner worldEntitySpawner;
 
     private readonly Dictionary<NitroxId, List<OxygenPipe>> childrenPipeEntitiesByParentId = new();
 
-    public OxygenPipeEntitySpawner(Entities entities, WorldEntitySpawner worldEntitySpawner)
+    public OxygenPipeEntitySpawner(WorldEntitySpawner worldEntitySpawner)
     {
-        this.entities = entities;
         this.worldEntitySpawner = worldEntitySpawner;
     }
 
@@ -43,7 +40,6 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
         }
 
         SetupObject(entity, gameObject, oxygenPipe);
-        gameObject.SetActive(true);
 
         result.Set(Optional.Of(gameObject));
     }
@@ -62,7 +58,6 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
         }
 
         SetupObject(entity, gameObject, oxygenPipe);
-        gameObject.SetActive(true);
 
         result.Set(gameObject);
         return true;
@@ -120,6 +115,8 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
         }
 
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(oxygenPipe.rigidBody, true, false);
+        gameObject.SetActive(true);
+        // UpdatePipe spawns VFX and thus should be called after the object is set active
         oxygenPipe.UpdatePipe();
     }
 }
