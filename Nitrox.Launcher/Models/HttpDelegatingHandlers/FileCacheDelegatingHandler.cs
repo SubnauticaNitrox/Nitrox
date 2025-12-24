@@ -18,30 +18,34 @@ internal sealed class FileCacheDelegatingHandler : DelegatingHandler
         {
             return await base.SendAsync(request, cancellationToken);
         }
-
-        string? cacheFilePath = GetCacheFilePathForRequest(request);
-        if (cacheFilePath is not null && request.Headers.CacheControl is { MaxAge: { } cacheMaxAge })
+        if (request.Headers.CacheControl is not { MaxAge: { } cacheMaxAge })
         {
-            // Try load data from cache file, if applicable.
-            try
+            return await base.SendAsync(request, cancellationToken);
+        }
+        if (GetCacheFilePathForRequest(request) is not { } cacheFilePath)
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+
+        // Try load data from cache file.
+        try
+        {
+            DateTime lastWrite = File.GetLastWriteTimeUtc(cacheFilePath);
+            if (DateTimeOffset.UtcNow - lastWrite < cacheMaxAge)
             {
-                DateTime lastWrite = File.GetLastWriteTimeUtc(cacheFilePath);
-                if (DateTimeOffset.UtcNow - lastWrite < cacheMaxAge)
+                byte[] cacheData = await File.ReadAllBytesAsync(cacheFilePath, cancellationToken);
+                if (cacheData is { Length: > 0 })
                 {
-                    byte[] cacheData = await File.ReadAllBytesAsync(cacheFilePath, cancellationToken);
-                    if (cacheData is { Length: > 0 })
-                    {
-                        return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ReadOnlyMemoryContent(cacheData) };
-                    }
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ReadOnlyMemoryContent(cacheData) };
                 }
             }
-            catch (IOException)
-            {
-                // ignored
-            }
+        }
+        catch (IOException)
+        {
+            // ignored
         }
         HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
-        if (cacheFilePath is not null && response is { StatusCode: HttpStatusCode.OK, Content: { } content })
+        if (response is { StatusCode: HttpStatusCode.OK, Content: { } content })
         {
             await File.WriteAllBytesAsync(cacheFilePath, await content.ReadAsByteArrayAsync(cancellationToken), cancellationToken);
         }
