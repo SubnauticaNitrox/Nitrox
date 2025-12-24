@@ -93,6 +93,10 @@ public class Program
             {
                 _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
             };
+            server.RestartRequested += () =>
+            {
+                _ = ipc.SendOutput(Ipc.Messages.RestartMessage);
+            };
             string serverSaveName = Server.GetSaveName(args);
             Log.SaveName = serverSaveName;
 

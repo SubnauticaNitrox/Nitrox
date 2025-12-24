@@ -237,10 +237,19 @@ public partial class ServerEntry : ObservableObject
         if (Process != null)
         {
             Process.PlayerCountChanged += count => Dispatcher.UIThread.Post(() => Players = count);
+            Process.RestartRequested += () => Dispatcher.UIThread.Post(() => _ = RestartAsync(savesDir, onExited));
         }
 
         IsNewServer = false;
         IsOnline = true;
+    }
+
+    private async Task RestartAsync(string savesDir, Action? onExited)
+    {
+        Log.Info($"Restarting server '{Name}'...");
+        await StopAsync();
+        Start(savesDir, onExited: onExited);
+        Log.Info($"Server '{Name}' restarted successfully");
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
@@ -360,6 +369,12 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
 
+                        if (output == Ipc.Messages.RestartMessage)
+                        {
+                            RestartRequested?.Invoke();
+                            return;
+                        }
+
                         // Ignore any messages that are part of the IPC message protocol
                         if (Ipc.Messages.AllMessages.Any(msg => output.StartsWith($"{msg}:", StringComparison.Ordinal)))
                         {
@@ -410,6 +425,7 @@ public partial class ServerEntry : ObservableObject
 
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processId) => new(saveDir, onExited, isEmbedded, processId);
         public event Action<int>? PlayerCountChanged;
+        public event Action? RestartRequested;
 
         /// <summary>
         ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.

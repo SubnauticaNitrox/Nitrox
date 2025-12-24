@@ -40,6 +40,7 @@ public class Server
     public int Port => serverConfig?.ServerPort ?? -1;
 
     public event Action<int>? PlayerCountChanged;
+    public event Action? RestartRequested;
 
     public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Models.Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
     {
@@ -337,6 +338,16 @@ public class Server
         }
         world.TimeKeeper.StartCounting();
         Log.Info("Server has resumed");
+    }
+
+    public void RequestRestart()
+    {
+        if (!IsRunning)
+        {
+            return;
+        }
+        Log.Info("Server restart requested");
+        RestartRequested?.Invoke();
     }
 
     private static List<ServerListing> GetSaves()
