@@ -13,7 +13,7 @@ public static class ByteArrayExtensions
         // See: https://en.wikipedia.org/wiki/Endianness
         if (BitConverter.IsLittleEndian)
         {
-            return array.Reverse().ToArray();
+            return Enumerable.Reverse(array).ToArray();
         }
         return array;
     }
