@@ -108,13 +108,45 @@
                                                 HorizontalAlignment="Left"
                                                 Orientation="Horizontal">
                                                 <Panel>
-                                                    <StackPanel IsVisible="{Binding IsOnline}" Orientation="Horizontal">
-                                                        <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
-                                                        <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel.IsVisible>
+                                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                                <Binding Path="IsStarting" />
+                                                                <Binding Path="!IsLoading" />
+                                                            </MultiBinding>
+                                                        </StackPanel.IsVisible>
+                                                        <Ellipse Fill="{DynamicResource BrandWarning}" Margin="0,0,6,0" />
+                                                        <TextBlock Text="Starting..." />
                                                     </StackPanel>
-                                                    <StackPanel IsVisible="{Binding !IsOnline}" Orientation="Horizontal">
+                                                    <StackPanel IsVisible="{Binding IsLoading}" Orientation="Horizontal">
+                                                        <Ellipse Fill="{DynamicResource BrandWarning}" Margin="0,0,6,0" />
+                                                        <TextBlock>
+                                                            <Run Text="Loading" />
+                                                            <Run Text="{Binding LoadingProgress}" />
+                                                            <Run Text="%" />
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel.IsVisible>
+                                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                                <Binding Path="IsOnline" />
+                                                                <Binding Path="!IsLoading" />
+                                                                <Binding Path="!IsStarting" />
+                                                            </MultiBinding>
+                                                        </StackPanel.IsVisible>
+                                                        <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
+                                                        <TextBlock Text="Online" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel.IsVisible>
+                                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                                <Binding Path="!IsOnline" />
+                                                                <Binding Path="!IsLoading" />
+                                                                <Binding Path="!IsStarting" />
+                                                            </MultiBinding>
+                                                        </StackPanel.IsVisible>
                                                         <Ellipse Fill="{DynamicResource BrandOffColor}" Margin="0,0,6,0" />
-                                                        <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
+                                                        <TextBlock Text="Offline" />
                                                     </StackPanel>
                                                 </Panel>
                                                 <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
