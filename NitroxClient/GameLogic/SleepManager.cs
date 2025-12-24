@@ -42,19 +42,6 @@ public class SleepManager(IPacketSender packetSender)
         uGUI_PlayerSleep.main.StartSleepScreen();
     }
 
-    public void OnSleepCancelled()
-    {
-        if (IsInBed)
-        {
-            currentBed.ExitInUseMode(Player.main);
-            Player.main.timeLastSleep = timeLastSleepBeforeEntering;
-        }
-
-        uGUI_PlayerSleep.main.StopSleepScreen();
-        currentBed = null;
-        isSleepInProgress = false;
-    }
-
     public void OnSleepComplete()
     {
         if (IsInBed)

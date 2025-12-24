@@ -13,12 +13,9 @@ public class SleepStatusUpdate : Packet
     [IgnoredMember]
     public bool AllPlayersInBed => PlayersInBed >= TotalPlayers;
 
-    public bool WasCancelled { get; }
-
-    public SleepStatusUpdate(int playersInBed, int totalPlayers, bool wasCancelled = false)
+    public SleepStatusUpdate(int playersInBed, int totalPlayers)
     {
         PlayersInBed = playersInBed;
         TotalPlayers = totalPlayers;
-        WasCancelled = wasCancelled;
     }
 }

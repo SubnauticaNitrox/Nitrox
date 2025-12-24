@@ -38,12 +38,7 @@ public class SleepManager(PlayerManager playerManager, TimeKeeper timeKeeper)
             return;
         }
 
-        bool wasCancelled = isSleepInProgress;
-        if (wasCancelled)
-        {
-            CancelSleep();
-        }
-        BroadcastStatus(wasCancelled);
+        BroadcastStatus();
     }
 
     public void PlayerDisconnected(Player player)
@@ -63,7 +58,7 @@ public class SleepManager(PlayerManager playerManager, TimeKeeper timeKeeper)
         int remainingPlayers = playerManager.GetConnectedPlayers().Count - 1;
             
         // Send to all players except the disconnecting one
-        SleepStatusUpdate packet = new(playerIdsInBed.Count, remainingPlayers, false);
+        SleepStatusUpdate packet = new(playerIdsInBed.Count, remainingPlayers);
         foreach (Player connectedPlayer in playerManager.GetConnectedPlayers())
         {
             if (connectedPlayer.Id != player.Id)
@@ -85,10 +80,10 @@ public class SleepManager(PlayerManager playerManager, TimeKeeper timeKeeper)
         return totalPlayers > 0 && playerIdsInBed.Count >= totalPlayers;
     }
 
-    private void BroadcastStatus(bool wasCancelled = false)
+    private void BroadcastStatus()
     {
         int totalPlayers = playerManager.GetConnectedPlayers().Count;
-        playerManager.SendPacketToAllPlayers(new SleepStatusUpdate(playerIdsInBed.Count, totalPlayers, wasCancelled));
+        playerManager.SendPacketToAllPlayers(new SleepStatusUpdate(playerIdsInBed.Count, totalPlayers));
     }
 
     private void StartSleep()
@@ -110,16 +105,5 @@ public class SleepManager(PlayerManager playerManager, TimeKeeper timeKeeper)
         sleepTimer?.Start();
 
         playerIdsInBed.Clear();
-    }
-
-    private void CancelSleep()
-    {
-        if (sleepTimer != null)
-        {
-            sleepTimer.Stop();
-            sleepTimer.Dispose();
-            sleepTimer = null;
-        }
-        isSleepInProgress = false;
     }
 }

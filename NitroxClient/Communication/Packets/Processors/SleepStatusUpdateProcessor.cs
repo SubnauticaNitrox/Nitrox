@@ -15,13 +15,6 @@ public class SleepStatusUpdateProcessor : ClientPacketProcessor<SleepStatusUpdat
 
     public override void Process(SleepStatusUpdate packet)
     {
-        if (packet.WasCancelled)
-        {
-            sleepManager.OnSleepCancelled();
-            Log.InGame(Language.main.Get("Nitrox_SleepCancelled"));
-            return;
-        }
-
         if (packet.PlayersInBed > 0)
         {
             Log.InGame(Language.main.Get("Nitrox_SleepingPlayers").Replace("{SLEEPING}", packet.PlayersInBed.ToString()).Replace("{TOTAL}", packet.TotalPlayers.ToString()));
