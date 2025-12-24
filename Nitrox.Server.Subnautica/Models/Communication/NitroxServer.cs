@@ -26,13 +26,15 @@ public abstract class NitroxServer
     protected readonly Dictionary<int, INitroxConnection> connectionsByRemoteIdentifier = new();
     protected internal readonly PlayerManager playerManager;
     protected readonly JoiningManager joiningManager;
+    protected readonly SleepManager sleepManager;
 
-    public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig)
+    public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SleepManager sleepManager, SubnauticaServerConfig serverConfig)
     {
         this.packetHandler = packetHandler;
         this.playerManager = playerManager;
         this.joiningManager = joiningManager;
         this.entitySimulation = entitySimulation;
+        this.sleepManager = sleepManager;
 
         portNumber = serverConfig.ServerPort;
         maxConnections = serverConfig.MaxConnections;
@@ -53,6 +55,7 @@ public abstract class NitroxServer
             return;
         }
 
+        sleepManager.PlayerDisconnected(player);
         playerManager.PlayerDisconnected(connection);
 
         Disconnect disconnect = new(player.Id);

@@ -191,5 +191,20 @@ public class TimeKeeper
         return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), RealTimeElapsed, ntpSyncer.OnlineMode, ntpSyncer.CorrectionOffset.Ticks);
     }
 
+    /// <summary>
+    /// Skips time by the specified amount and broadcasts the update to all players.
+    /// </summary>
+    public void SkipTime(double skipAmount)
+    {
+        if (skipAmount <= 0)
+        {
+            return;
+        }
+
+        ElapsedSeconds += skipAmount;
+        TimeSkipped?.Invoke(skipAmount);
+        playerManager.SendPacketToAllPlayers(MakeTimePacket());
+    }
+
     public delegate void TimeSkippedEventHandler(double skipAmount);
 }

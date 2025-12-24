@@ -12,8 +12,13 @@ public sealed partial class DayNightCycle_Update_Patch : NitroxPatch, IDynamicPa
 
     public static bool Prefix(DayNightCycle __instance)
     {
-        // Essential part of the Update() method to have it running all of the time and have the local time set to the real server time
         __instance.timePassedAsDouble = Resolve<TimeManager>().CalculateCurrentTime();
+
+        if (__instance.IsInSkipTimeMode() && __instance.timePassed >= __instance.skipModeEndTime)
+        {
+            __instance.StopSkipTimeMode();
+        }
+
         __instance.UpdateAtmosphere();
         __instance.UpdateDayNightMessage();
         return false;
