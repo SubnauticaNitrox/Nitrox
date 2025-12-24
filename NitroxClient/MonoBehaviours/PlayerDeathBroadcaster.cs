@@ -1,6 +1,5 @@
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.InGame;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;

@@ -1,13 +1,12 @@
 using System.IO;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using NitroxModel.Packets;
 
-namespace NitroxServer.ConsoleCommands;
+namespace Nitrox.Server.Subnautica.Models.Commands;
 
 internal class SetDeathMarkersCommand : Command
 {
