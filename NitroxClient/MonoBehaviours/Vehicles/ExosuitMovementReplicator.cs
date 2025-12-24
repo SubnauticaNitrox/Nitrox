@@ -1,7 +1,5 @@
 using FMOD.Studio;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.FMOD;
-using NitroxClient.GameLogic.Helper;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
@@ -12,7 +10,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 {
     private const string DRILL_LOOP_SOUND_PATH = "event:/sub/exo/drill_loop";
 
-    private Exosuit exosuit;
+    private Exosuit exosuit = null!;
 
     public Vector3 velocity;
     private float jetLoopingSoundDistance;
