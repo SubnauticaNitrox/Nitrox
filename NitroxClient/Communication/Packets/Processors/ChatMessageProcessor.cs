@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using System.Linq;
+using Nitrox.Model.DataStructures;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.Settings;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -16,15 +17,14 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly PlayerManager remotePlayerManager;
         private readonly LocalPlayer localPlayer;
-        private readonly PlayerChatManager playerChatManager;
+        private readonly PlayerChatManager playerChatManager = PlayerChatManager.Instance;
 
         private readonly Color32 serverMessageColor = new Color32(0x8c, 0x00, 0xFF, 0xFF);
 
-        public ChatMessageProcessor(PlayerManager remotePlayerManager, LocalPlayer localPlayer, PlayerChatManager playerChatManager)
+        public ChatMessageProcessor(PlayerManager remotePlayerManager, LocalPlayer localPlayer)
         {
             this.remotePlayerManager = remotePlayerManager;
             this.localPlayer = localPlayer;
-            this.playerChatManager = playerChatManager;
         }
 
         public override void Process(ChatMessage message)

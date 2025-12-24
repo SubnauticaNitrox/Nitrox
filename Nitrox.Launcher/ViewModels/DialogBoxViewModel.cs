@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Reactive.Disposables;
-using System.Threading.Tasks;
-using Avalonia.Controls;
+using System.ComponentModel;
 using Avalonia.Input;
-using Avalonia.Input.Platform;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -18,13 +12,13 @@ namespace Nitrox.Launcher.ViewModels;
 /// </summary>
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
-    [ObservableProperty] private string windowTitle;
+    [ObservableProperty] private string? windowTitle;
 
-    [ObservableProperty] private string title;
+    [ObservableProperty] private string title = "";
     [ObservableProperty] private double titleFontSize = 24;
     [ObservableProperty] private FontWeight titleFontWeight = FontWeight.Bold;
 
-    [ObservableProperty] private string description;
+    [ObservableProperty] private string description = "";
     [ObservableProperty] private double descriptionFontSize = 14;
     [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 
@@ -34,41 +28,24 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     public KeyGesture NoHotkey { get; } = new(Key.Escape);
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);
 
-    public DialogBoxViewModel()
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        this.WhenActivated(disposables =>
+        switch (e.PropertyName)
         {
-            this.WhenAnyValue(model => model.Title, model => model.Description)
-                .Subscribe(tuple =>
+            case nameof(Title):
+            case nameof(Description):
+                if (WindowTitle is null or "")
                 {
-                    (string titleText, string descriptionText) = tuple;
-                    WindowTitle ??= string.IsNullOrEmpty(titleText) ? WindowTitle : titleText;
-                    WindowTitle ??= string.IsNullOrEmpty(descriptionText) ? WindowTitle : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}...";
-                })
-                .DisposeWith(disposables);
-        });
-    }
-
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task CopyToClipboard(ContentControl commandControl)
-    {
-        string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
-        IClipboard clipboard = commandControl.GetWindow().Clipboard;
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(text);
-
-            if (commandControl != null)
-            {
-                object previousContent = commandControl.Content;
-                commandControl.Content = "Copied!";
-                await Dispatcher.UIThread.InvokeAsync(async () =>
+                    WindowTitle = string.IsNullOrEmpty(Title) ? WindowTitle : Title;
+                }
+                if (WindowTitle is null or "" && Description is not (null or ""))
                 {
-                    await Task.Delay(3000);
-                    commandControl.Content = previousContent;
-                });
-            }
+                    WindowTitle = $"{Description[..Math.Min(30, Description.Length)]}...";
+                }
+                break;
         }
+
+        base.OnPropertyChanged(e);
     }
 }
 

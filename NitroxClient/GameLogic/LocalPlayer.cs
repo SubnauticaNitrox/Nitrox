@@ -3,13 +3,15 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
@@ -72,7 +74,23 @@ public class LocalPlayer : ILocalNitroxPlayer
     {
         if (PlayerId.HasValue)
         {
-            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, (int)type, (int)state));
+            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, new(type, state)));
+        }
+    }
+
+    public void InPrecursorChange(bool inPrecursor)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new UpdateInPrecursor(inPrecursor));
+        }
+    }
+
+    public void DisplaySurfaceWaterChange(bool displaySurfaceWater)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new UpdateDisplaySurfaceWater(displaySurfaceWater));
         }
     }
 
@@ -119,6 +137,14 @@ public class LocalPlayer : ILocalNitroxPlayer
     }
 
     public void BroadcastQuickSlotsBindingChanged(Optional<NitroxId>[] slotItemIds) => throttledPacketSender.SendThrottled(new PlayerQuickSlotsBindingChanged(slotItemIds), (packet) => 1);
+
+    public void BroadcastBenchChanged(NitroxId bench, BenchChanged.BenchChangeState changeState)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new BenchChanged(PlayerId.Value, bench, changeState));
+        }
+    }
 
     private GameObject CreateBodyPrototype()
     {

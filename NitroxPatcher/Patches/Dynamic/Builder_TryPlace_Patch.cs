@@ -5,11 +5,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxPatcher.Helper;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
@@ -90,6 +89,8 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
         }
         else
         {
+            ModuleEntitySpawner.MoveToGlobalRoot(ghostObject);
+            
             ModuleEntity module = ModuleEntitySpawner.From(constructable);
             module.Id = ghostId;
             module.ParentId = parentId;

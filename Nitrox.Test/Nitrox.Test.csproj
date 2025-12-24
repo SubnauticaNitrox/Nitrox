@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -10,27 +10,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.6.1" />
-        <PackageReference Include="CompareNETObjects" Version="4.83.0" />
-        <PackageReference Include="coverlet.collector" Version="6.0.2">
+        <PackageReference Include="Bogus" />
+        <PackageReference Include="CompareNETObjects" />
+        <PackageReference Include="coverlet.collector">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FluentAssertions" Version="6.12.2" />
-        <PackageReference Include="FluentAssertions.Analyzers" Version="0.34.1">
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="FluentAssertions.Analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="MSTest" Version="3.6.2" />
-        <PackageReference Include="NSubstitute" Version="5.3.0" />
+        <PackageReference Include="MSTest" />
+        <PackageReference Include="NSubstitute" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
-        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+        <ProjectReference Include="..\Nitrox.Model\Nitrox.Model.csproj" />
         <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
-        <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
-        <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+        <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" />
     </ItemGroup>
 
     <Target Name="MoveNitroxAssetsToTestOutput" AfterTargets="Build">

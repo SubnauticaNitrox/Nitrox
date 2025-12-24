@@ -1,13 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    
+
+    <PropertyGroup>
+        <_GitShortHashFilePath>$(IntermediateOutputPath)git_short_hash.cache</_GitShortHashFilePath>
+    </PropertyGroup>
+
+    <Target Name="_CreateGitShortHashCacheFile" Inputs="$(_GitRefHashFilePath)" Outputs="$(_GitShortHashFilePath)" Condition="Exists('$(_GitRefHashFilePath)')">
+        <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true" EchoOff="true" StandardOutputImportance="low" StandardErrorImportance="low">
+            <Output TaskParameter="ConsoleOutput" PropertyName="_GitShortHash" />
+        </Exec>
+        <WriteLinesToFile Lines="$(_GitShortHash)" File="$(_GitShortHashFilePath)" Overwrite="True" WriteOnlyWhenDifferent="True" />
+        <ItemGroup>
+            <FileWrites Include="$(_GitShortHashFilePath)" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="_NitroxEmbedAssemblyInfo" AfterTargets="GetAssemblyAttributes" DependsOnTargets="PrepareForBuild;_CreateGitShortHashCacheFile">
+        <PropertyGroup>
+            <_GitShortHash Condition="'$(_GitShortHash)' == '' and Exists('$(_GitShortHashFilePath)')">$([System.IO.File]::ReadAllText('$(_GitShortHashFilePath)').Trim())</_GitShortHash>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>BuildDate</_Parameter1>
+                <_Parameter2>$([System.DateTimeOffset]::Now.ToString("O"))</_Parameter2>
+            </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitHash</_Parameter1>
+                <_Parameter2>$(_GitHash)</_Parameter2>
+            </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitShortHash</_Parameter1>
+                <_Parameter2>$(_GitShortHash)</_Parameter2>
+            </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GameMinimumVersion</_Parameter1>
+                <_Parameter2>$(GameMinimumVersion)</_Parameter2>
+            </AssemblyAttribute>
+        </ItemGroup>
+
+        <ItemGroup>
+            <_AllHexAttributes Include="@(AssemblyAttribute)" Condition="$([System.String]::new('%(AssemblyAttribute._Parameter1)').EndsWith('Hash'))" />
+        </ItemGroup>
+        <Error Condition="'%(_AllHexAttributes._Parameter2)' != '' and !$([System.Text.RegularExpressions.Regex]::IsMatch('%(_AllHexAttributes._Parameter2)', '^[0-9a-fA-F]+$'))" Text="'Metadata attribute %(_AllHexAttributes._Parameter1) must be a suitable hexidecimal hash value but is '%(_AllHexAttributes._Parameter2)'" />
+    </Target>
+
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">
-        <DiscoverGame GameName="Subnautica" IntermediateOutputPath="$(IntermediateOutputPath)">
+        <DiscoverGame GameName="$(GameName)" IntermediateOutputPath="$(IntermediateOutputPath)">
             <Output TaskParameter="GamePath" PropertyName="GameDir" />
         </DiscoverGame>
-        <Error Condition="'$(GameDir)' == ''" Text="Failed to find the game 'Subnautica' on your machine" />
+        <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game '$(GameName)' on your machine" />
         <PropertyGroup>
-            <GameDir>$(GameDir)\</GameDir>
+            <GameDir Condition="Exists('$(GameDir)')">$(GameDir)\</GameDir>
+            <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)\</GameDir>
             <GameDataFolder>Subnautica_Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">
@@ -16,12 +61,11 @@
         <PropertyGroup>
             <GameManagedDir>$(GameDir)$(GameDataFolder)\Managed\</GameManagedDir>
             <GameVersionFile>$(GameDir)$(GameDataFolder)\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
-            <GameLegacyVersion>68598</GameLegacyVersion>
         </PropertyGroup>
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />
         </ReadLinesFromFile>
-        <Error Condition="@(GameVersion) &lt;= $(GameLegacyVersion)" Text="Subnautica must not be on legacy branch. Expected version &gt;$(GameLegacyVersion) but was @(GameVersion)" />
+        <Error Condition="@(GameVersion) &lt; $(GameMinimumVersion)" Text="$(GameName) version is outdated. Expected version &gt;=$(GameMinimumVersion) but was @(GameVersion)" />
         <Message Importance="high" Text="Game found at: '$(GameDir)' with version @(GameVersion)" />
 
         <ItemGroup>
@@ -146,6 +190,10 @@
             </Reference>
             <Reference Include="UnityEngine.InputModule">
                 <HintPath>$(GameManagedDir)UnityEngine.InputModule.dll</HintPath>
+                <Private>$(TestLibrary)</Private>
+            </Reference>
+            <Reference Include="UnityEngine.InputSystem">
+                <HintPath>$(GameManagedDir)Unity.InputSystem.dll</HintPath>
                 <Private>$(TestLibrary)</Private>
             </Reference>
             <Reference Include="UnityEngine.JSONSerializeModule">

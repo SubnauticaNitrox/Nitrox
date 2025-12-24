@@ -4,21 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UWE;
 
@@ -30,6 +28,7 @@ namespace NitroxClient.GameLogic
         private readonly ThrottledPacketSender throttledPacketSender;
         private readonly EntityMetadataManager entityMetadataManager;
         private readonly SimulationOwnership simulationOwnership;
+        private readonly Terrain terrain;
 
         private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
@@ -37,31 +36,34 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
         public List<Entity> EntitiesToSpawn { get; private init; }
-        private bool spawningEntities;
+        public List<AbsoluteEntityCell> CellsToSpawn { get; private init; }
+        public bool SpawningEntities { get; private set; }
 
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
-        private readonly List<SimulatedEntity> pendingSimulatedEntities = new();
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership, Terrain terrain)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
             this.entityMetadataManager = entityMetadataManager;
             this.simulationOwnership = simulationOwnership;
-            EntitiesToSpawn = new();
+            this.terrain = terrain;
+
+            EntitiesToSpawn = [];
+            CellsToSpawn = [];
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(PathBasedChildEntity)] = new PathBasedChildEntitySpawner();
             entitySpawnersByType[typeof(InstalledModuleEntity)] = new InstalledModuleEntitySpawner();
             entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
-            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
+            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(entityMetadataManager);
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this, simulationOwnership);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(EscapePodEntity)] = new EscapePodEntitySpawner(localPlayer);
+            entitySpawnersByType[typeof(PlayerEntity)] = new PlayerEntitySpawner(playerManager, localPlayer);
+            entitySpawnersByType[typeof(VehicleEntity)] = new VehicleEntitySpawner();
             entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BaseLeakEntity)] = new BaseLeakEntitySpawner(liveMixinManager);
@@ -118,35 +120,40 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity, requireRespawn));
         }
 
-        private IEnumerator SpawnNewEntities()
+        private IEnumerator SpawnNewEntities(bool coldStart = false)
         {
-            bool restarted = false;
-            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
+            if (coldStart)
             {
-                Log.Error(exception);
-                if (EntitiesToSpawn.Count > 0)
-                {
-                    restarted = true;
-                    // It's safe to run a new time because the processed entity is removed first so it won't infinitely throw errors
-                    CoroutineHost.StartCoroutine(SpawnNewEntities());
-                }
-            });
-            spawningEntities = restarted;
-            if (!spawningEntities)
-            {
-                entityMetadataManager.ClearNewerMetadata();
-                deletedEntitiesIds.Clear();
-                simulationOwnership.ClearNewerSimulations();
+                yield return null; // Skips a frame
             }
+
+            // The coroutine waits a frame after SpawnBatchAsync finishes, and another entity may be enqueued then, so a loop is needed
+            while (EntitiesToSpawn.Count > 0)
+            {
+                yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
+            }
+
+            SpawningEntities = false;
+
+            entityMetadataManager.ClearNewerMetadata();
+            deletedEntitiesIds.Clear();
+            simulationOwnership.ClearNewerSimulations();
+
+            foreach (AbsoluteEntityCell absoluteEntityCell in CellsToSpawn)
+            {
+                terrain.AddFullySpawnedCell(absoluteEntityCell);
+            }
+            CellsToSpawn.Clear();
         }
 
-        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
+        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue, List<AbsoluteEntityCell> cellsToSpawn, bool coldStart = false)
         {
             EntitiesToSpawn.InsertRange(0, entitiesToEnqueue);
-            if (!spawningEntities)
+            CellsToSpawn.AddRange(cellsToSpawn);
+            if (!SpawningEntities)
             {
-                spawningEntities = true;
-                CoroutineHost.StartCoroutine(SpawnNewEntities());
+                SpawningEntities = true;
+                CoroutineHost.StartCoroutine(SpawnNewEntities(coldStart));
             }
         }
 
@@ -218,7 +225,7 @@ namespace NitroxClient.GameLogic
                 MarkAsSpawned(entity);
 
                 // Finding out about all children (can be hidden in the object's hierarchy or in a pending list)
-                
+
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
                     batch.AddRange(entity.ChildEntities);
@@ -231,7 +238,7 @@ namespace NitroxClient.GameLogic
                         pendingParentEntitiesByParentId.Remove(entity.Id);
                     }
                 }
-                
+
                 // Skip a frame to maintain FPS
                 if (Time.realtimeSinceStartup >= timeLimit && skipFrames)
                 {
@@ -256,9 +263,37 @@ namespace NitroxClient.GameLogic
 
                 if (gameObject.HasValue)
                 {
-                    UnityEngine.Object.Destroy(gameObject.Value);
+                    DestroyObject(gameObject.Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Either perform a special operation (e.g. for plants) or a simple <see cref="UnityEngine.Object.Destroy"/>
+        /// </summary>
+        public static void DestroyObject(GameObject gameObject)
+        {
+            if (gameObject.TryGetComponent(out Plantable plantable))
+            {
+                plantable.FreeSpot();
+                return;
+            }
+            if (gameObject.TryGetComponent(out GrownPlant grownPlant))
+            {
+                grownPlant.seed.AliveOrNull()?.FreeSpot();
+                return;
+            }
+
+            if (gameObject.TryGetComponent(out Pickupable pickupable))
+            {
+                using (PacketSuppressor<ModuleRemoved>.Suppress())
+                {
+                    // Running this now means it won't get ran in OnDestroy() at the end of the frame, so no packets get sent
+                    pickupable.SetInventoryItem(null);
+                }
+            }
+
+            UnityEngine.Object.Destroy(gameObject);
         }
 
         private void UpdateEntity(Entity entity)
@@ -314,12 +349,7 @@ namespace NitroxClient.GameLogic
 
         public bool IsParentReady(NitroxId id)
         {
-            return WasParentSpawned(id) || NitroxEntity.TryGetObjectFrom(id, out GameObject _);
-        }
-
-        public bool WasParentSpawned(NitroxId id)
-        {
-            return spawnedAsType.ContainsKey(id);
+            return NitroxEntity.TryGetObjectFrom(id, out _);
         }
 
         public void MarkAsSpawned(Entity entity)

@@ -1,6 +1,7 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -27,3 +28,5 @@ public class BaseDeconstructedProcessor : BuildProcessor<BaseDeconstructed> { }
 public class PieceDeconstructedProcessor : BuildProcessor<PieceDeconstructed> { }
 
 public class WaterParkDeconstructedProcessor : BuildProcessor<WaterParkDeconstructed> { }
+
+public class LargeWaterParkDeconstructedProcessor : BuildProcessor<LargeWaterParkDeconstructed> { }

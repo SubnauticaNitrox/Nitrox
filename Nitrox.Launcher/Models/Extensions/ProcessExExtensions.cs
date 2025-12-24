@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Platforms.OS.Windows;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.OS.Windows;
 
 namespace Nitrox.Launcher.Models.Extensions;
 
@@ -9,7 +9,7 @@ public static class ProcessExExtensions
 {
     public static void SetForegroundWindowAndRestore(this ProcessEx process)
     {
-        if (Avalonia.Controls.Design.IsDesignMode)
+        if (IsDesignMode)
         {
             return;
         }

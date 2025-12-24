@@ -1,10 +1,11 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
-using static NitroxModel.Packets.EntityTransformUpdates;
+using static Nitrox.Model.Subnautica.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -30,13 +31,16 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
 
             RemotelyControlled remotelyControlled = gameObject.EnsureComponent<RemotelyControlled>();
 
+            Vector3 position = update.Position.ToUnity();
+            Quaternion rotation = update.Rotation.ToUnity();
+
             if (update is SplineTransformUpdate splineUpdate)
             {
-                remotelyControlled.UpdateKnownSplineUser(splineUpdate.Position.ToUnity(), splineUpdate.Rotation.ToUnity(), splineUpdate.DestinationPosition.ToUnity(), splineUpdate.DestinationDirection.ToUnity(), splineUpdate.Velocity);
+                remotelyControlled.UpdateKnownSplineUser(position, rotation, splineUpdate.DestinationPosition.ToUnity(), splineUpdate.DestinationDirection.ToUnity(), splineUpdate.Velocity);
             }
             else
             {
-                remotelyControlled.UpdateOrientation(update.Position.ToUnity(), update.Rotation.ToUnity());
+                remotelyControlled.UpdateOrientation(position, rotation);
             }
         }
     }

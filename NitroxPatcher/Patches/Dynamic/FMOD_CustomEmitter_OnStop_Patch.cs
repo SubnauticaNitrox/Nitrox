@@ -2,10 +2,8 @@ using System.Reflection;
 using FMOD.Studio;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

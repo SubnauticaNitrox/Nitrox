@@ -1,6 +1,4 @@
 using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
@@ -9,23 +7,23 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.DataStructures;
-using ReactiveUI;
+using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Launcher.ViewModels;
 
 /// <summary>
 ///     Each (embedded) running server should have its own ViewModel.
 /// </summary>
-public partial class EmbeddedServerViewModel : RoutableViewModelBase
+internal partial class EmbeddedServerViewModel : RoutableViewModelBase
 {
     private readonly CircularBuffer<string> commandHistory = new(1000);
     private int? selectedHistoryIndex;
 
     [ObservableProperty]
-    private string serverCommand;
+    private string? serverCommand;
 
     [ObservableProperty]
     private ServerEntry serverEntry;
@@ -33,26 +31,26 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process.Output;
-
-    public EmbeddedServerViewModel()
-    {
-    }
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
         this.serverEntry = serverEntry;
-        this.WhenActivated(disposables =>
+        this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
-            this.WhenAnyValue(model => model.ServerEntry.IsOnline)
-                .Where(isOnline => !isOnline)
-                .Subscribe(_ => HostScreen.BackAsync().ConfigureAwait(false))
-                .DisposeWith(disposables);
+            if (status.ProcessId != model.ServerEntry.Process?.Id)
+            {
+                return;
+            }
+            if (!status.IsOnline)
+            {
+                model.Back();
+            }
         });
     }
     
     [RelayCommand]
-    private async Task BackAsync() => await HostScreen.BackToAsync<ServersViewModel>();
+    private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
@@ -75,7 +73,15 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
                 LogText = $"> {ServerCommand}"
             });
         }
-        await ServerEntry.Process.SendCommandAsync(ServerCommand);
+        string command = ServerCommand.TrimStart('/');
+        if (!string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase))
+        {
+            await ServerEntry.Process.SendCommandAsync(command);
+        }
+        else
+        {
+            await StopServerAsync();
+        }
         ClearInput(textBox);
     }
     

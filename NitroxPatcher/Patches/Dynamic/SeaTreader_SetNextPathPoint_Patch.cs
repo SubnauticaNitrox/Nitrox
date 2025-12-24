@@ -1,9 +1,8 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -11,7 +10,7 @@ public sealed partial class SeaTreader_SetNextPathPoint_Patch : NitroxPatch, IDy
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaTreader t) => t.SetNextPathPoint());
 
-    public static void Prefix(SeaTreader __instance)
+    public static void Postfix(SeaTreader __instance)
     {
         if (__instance.TryGetNitroxId(out NitroxId creatureId) &&
             Resolve<SimulationOwnership>().HasAnyLockType(creatureId))

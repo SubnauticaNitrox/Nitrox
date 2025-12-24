@@ -4,9 +4,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

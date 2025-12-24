@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Subnautica.Helper;
 using UnityEngine;
 using Mathf = UnityEngine.Mathf;
 
@@ -15,7 +17,6 @@ namespace NitroxClient.Debuggers;
 public sealed class SceneExtraDebugger : BaseDebugger
 {
     private readonly SceneDebugger sceneDebugger;
-    private readonly IMap map;
 
     private const KeyCode RAY_CAST_KEY = KeyCode.F9;
 
@@ -49,10 +50,9 @@ public sealed class SceneExtraDebugger : BaseDebugger
         }
     }
 
-    public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
+    public SceneExtraDebugger(SceneDebugger sceneDebugger) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
     {
         this.sceneDebugger = sceneDebugger;
-        this.map = map;
         ActiveTab = AddTab("Tools", RenderTabTools);
 
         // ReSharper disable once Unity.PreferAddressByIdToGraphicsParams
@@ -251,6 +251,28 @@ public sealed class SceneExtraDebugger : BaseDebugger
                         GUILayout.Label($"There is no component named \"{gameObjectSearch.Substring(2)}\"", "error");
                     }
                 }
+                else if (gameObjectSearch.StartsWith("id:"))
+                {
+                    string id = gameObjectSearch.Split(':')[1];
+                    try
+                    {
+                        NitroxId foundId = new(id);
+                        if (NitroxEntity.TryGetObjectFrom(foundId, out GameObject gameObject))
+                        {
+                            gameObjectResults = [gameObject];
+                        }
+                        else
+                        {
+                            GUILayout.Label($"No GameObject found with NitroxId \"{foundId}\"");
+                            gameObjectResults = [];
+                        }
+                    }
+                    catch
+                    {
+                        GUILayout.Label($"Id \"{id}\" is not a valid NitroxId");
+                        gameObjectResults = [];
+                    }
+                }
                 else
                 {
                     gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().
@@ -283,7 +305,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
             gameObjectResults.Clear();
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(ray, map.DimensionsInMeters.X, int.MaxValue);
+            RaycastHit[] hits = Physics.RaycastAll(ray, SubnauticaMap.DimensionsInMeters.X, int.MaxValue);
 
             foreach (RaycastHit hit in hits)
             {

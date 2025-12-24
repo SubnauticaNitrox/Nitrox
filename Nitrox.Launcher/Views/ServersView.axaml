@@ -1,13 +1,19 @@
 <UserControl
+    d:DesignHeight="500"
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.ServersView"
     x:DataType="vm:ServersViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
     <Design.DataContext>
-        <vm:ServersViewModel />
+        <designer:DesignServersViewModel />
     </Design.DataContext>
     <Panel Background="{DynamicResource BrandWhite}" Classes="viewPadding">
         <Panel IsVisible="{Binding !Servers.Count}">
@@ -50,7 +56,7 @@
                 Grid.Row="0"
                 Text="Servers" />
             <controls:RichTextBlock Grid.Row="1">Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server)</controls:RichTextBlock>
-            <ScrollViewer Grid.Row="2" Margin="0,40,0,13">
+            <ScrollViewer Grid.Row="2" Margin="0,40,0,13" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Servers}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -62,12 +68,15 @@
                             <Border Classes="serverEntry" Margin="0,13">
                                 <DockPanel VerticalAlignment="Center">
                                     <Border
+                                        Height="56"
+                                        Width="56"
                                         ClipToBounds="True"
                                         CornerRadius="12"
-                                        DockPanel.Dock="Left">
+                                        DockPanel.Dock="Left"
+                                        ToolTip.Tip="{Binding Name}">
                                         <Grid>
                                             <Image IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" Source="/Assets/Images/subnautica-icon.png" />
-                                            <Border Height="56" Width="56">
+                                            <Border>
                                                 <Border.Background>
                                                     <ImageBrush Source="{Binding ServerIcon}" Stretch="UniformToFill" />
                                                 </Border.Background>
@@ -81,72 +90,78 @@
                                             </controls:GrayscaleControl>
                                         </Grid>
                                     </Border>
-                                    <StackPanel
-                                        DockPanel.Dock="Left"
-                                        Margin="16,0"
-                                        VerticalAlignment="Center">
-                                        <TextBlock
-                                            FontSize="16"
-                                            FontWeight="600"
-                                            Text="{Binding Name}" />
+                                    <Grid ColumnDefinitions="*,Auto">
                                         <StackPanel
-                                            Classes="description"
-                                            HorizontalAlignment="Left"
-                                            Orientation="Horizontal">
-                                            <Panel>
-                                                <StackPanel IsVisible="{Binding IsOnline}" Orientation="Horizontal">
-                                                    <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
-                                                    <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
-                                                </StackPanel>
-                                                <StackPanel IsVisible="{Binding !IsOnline}" Orientation="Horizontal">
-                                                    <Ellipse Fill="{DynamicResource BrandOffColor}" Margin="0,0,6,0" />
-                                                    <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
-                                                </StackPanel>
-                                            </Panel>
-                                            <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
-                                            <TextBlock>
-                                                <Run Text="{Binding Players}" />
-                                                <Run Text="/" />
-                                                <Run Text="{Binding MaxPlayers}" />
-                                                <Run Text=" playing" />
-                                            </TextBlock>
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="16 0 0 0"
+                                            VerticalAlignment="Center"
+                                            Background="Transparent">
+                                            <TextBlock
+                                                FontSize="16"
+                                                FontWeight="600"
+                                                TextWrapping="NoWrap"
+                                                TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
+                                                Text="{Binding Name}" />
+                                            <WrapPanel
+                                                Classes="description"
+                                                HorizontalAlignment="Left"
+                                                Orientation="Horizontal">
+                                                <Panel>
+                                                    <StackPanel IsVisible="{Binding IsOnline}" Orientation="Horizontal">
+                                                        <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
+                                                        <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
+                                                    </StackPanel>
+                                                    <StackPanel IsVisible="{Binding !IsOnline}" Orientation="Horizontal">
+                                                        <Ellipse Fill="{DynamicResource BrandOffColor}" Margin="0,0,6,0" />
+                                                        <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
+                                                    </StackPanel>
+                                                </Panel>
+                                                <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
+                                                <TextBlock TextWrapping="NoWrap">
+                                                    <Run Text="{Binding Players}" />
+                                                    <Run Text="/" />
+                                                    <Run Text="{Binding MaxPlayers}" />
+                                                    <Run Text="playing" />
+                                                </TextBlock>
+                                            </WrapPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel
-                                        DockPanel.Dock="Right"
-                                        HorizontalAlignment="Right"
-                                        Orientation="Horizontal"
-                                        Spacing="8">
-                                        <Button Command="{Binding OpenSaveFolderCommand}" Content="Open world folder" />
-                                        <Button
-                                            Content="Manage"
-                                            Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
-                                            CommandParameter="{Binding}"
-                                            IsVisible="{Binding !IsOnline}" />
-                                        <Button
-                                            Classes="primary"
-                                            Content="Console"
-                                            Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
-                                            CommandParameter="{Binding}">
-                                            <Button.IsVisible>
-                                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                                    <Binding Path="IsOnline" />
-                                                    <Binding Path="IsEmbedded" />
-                                                </MultiBinding>
-                                            </Button.IsVisible>
-                                        </Button>
-                                        <Button
-                                            Classes="abort"
-                                            Command="{Binding StopCommand}"
-                                            Content="Stop"
-                                            IsVisible="{Binding IsOnline}" />
-                                        <Button
-                                            Classes="primary"
-                                            Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}"
-                                            CommandParameter="{Binding}"
-                                            Content="Start"
-                                            IsVisible="{Binding !IsOnline}" />
-                                    </StackPanel>
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal">
+                                            <Button Command="{Binding OpenSaveFolderCommand}" Content="Open world folder" />
+                                            <Button
+                                                Content="Manage"
+                                                Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
+                                                CommandParameter="{Binding}"
+                                                IsVisible="{Binding !IsOnline}" />
+                                            <Button
+                                                Classes="primary"
+                                                Content="Console"
+                                                Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}"
+                                                CommandParameter="{Binding}"
+                                                IsEnabled="{Binding !IsServerClosing}">
+                                                <Button.IsVisible>
+                                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                        <Binding Path="IsOnline" />
+                                                        <Binding Path="IsEmbedded" />
+                                                    </MultiBinding>
+                                                </Button.IsVisible>
+                                            </Button>
+                                            <Button
+                                                Classes="abort"
+                                                Command="{Binding StopCommand}"
+                                                Content="Stop"
+                                                IsVisible="{Binding IsOnline}" />
+                                            <Button
+                                                Classes="primary"
+                                                Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}"
+                                                CommandParameter="{Binding}"
+                                                Content="Start"
+                                                IsVisible="{Binding !IsOnline}" />
+                                        </StackPanel>
+                                    </Grid>
                                 </DockPanel>
                             </Border>
                         </DataTemplate>

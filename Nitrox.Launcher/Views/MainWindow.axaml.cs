@@ -1,23 +1,28 @@
-using System;
 using Avalonia.Controls;
-using Nitrox.Launcher.Models.Utils;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Reactive;
 using Nitrox.Launcher.ViewModels;
 
 namespace Nitrox.Launcher.Views;
 
-public partial class MainWindow : Abstract.WindowEx<MainWindowViewModel>
+internal partial class MainWindow : Abstract.WindowEx<MainWindowViewModel>
 {
     public MainWindow()
     {
         InitializeComponent();
 
-        PointerPressedEvent.Raised.Subscribe(args =>
+        PointerPressedEvent.Raised.Subscribe(new AnonymousObserver<(object, RoutedEventArgs)>(args =>
         {
-            if (args.Item2 is { Handled: false, Source: Control { Tag: string url } control } && control.Classes.Contains("link"))
+            if (args.Item2 is PointerPressedEventArgs pArgs &&
+                pArgs.GetCurrentPoint(null).Properties.IsLeftButtonPressed &&
+                pArgs.Handled == false &&
+                pArgs.Source is Control { Tag: string url } control &&
+                control.Classes.Contains("link"))
             {
-                ProcessUtils.OpenUrl(url);
+                OpenUri(url);
                 args.Item2.Handled = true;
             }
-        });
+        }));
     }
 }

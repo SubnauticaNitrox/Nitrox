@@ -1,5 +1,6 @@
-﻿using System;
-using NitroxModel.Packets;
+using System;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication;
 
@@ -9,20 +10,20 @@ namespace NitroxClient.Communication;
 /// <typeparam name="T">The packet type to suppress.</typeparam>
 public readonly struct PacketSuppressor<T> : IDisposable where T : Packet
 {
-    private static bool isSuppressed;
-    public static bool IsSuppressed => isSuppressed;
+    private static int suppressCount;
+    public static bool IsSuppressed => suppressCount > 0;
 
     private static readonly PacketSuppressor<T> instance = new();
 
     public static PacketSuppressor<T> Suppress()
     {
-        isSuppressed = true;
+        suppressCount++;
         return instance;
     }
 
     public void Dispose()
     {
-        isSuppressed = false;
+        suppressCount--;
     }
 }
 

@@ -8,10 +8,12 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.MonoBehaviours.Vehicles;
-using NitroxClient.Unity.Helper;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.Server;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
 using UWE;
 
@@ -103,6 +105,9 @@ public class RemotePlayer : INitroxPlayer
         SetupSkyAppliers();
         SetupPlayerSounds();
         SetupMixins();
+
+        PlayerAnimation animation = PlayerContext.Animation;
+        UpdateAnimationAndCollider((AnimChangeType)animation.Type, (AnimChangeState)animation.State);
 
         vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
@@ -201,7 +206,7 @@ public class RemotePlayer : INitroxPlayer
             }
             else
             {
-                cyclopsMovementReplicator = SubRoot.GetComponent<CyclopsMovementReplicator>();
+                cyclopsMovementReplicator = SubRoot.gameObject.EnsureComponent<CyclopsMovementReplicator>();
             }
 
             if (PilotingChair)
@@ -249,7 +254,7 @@ public class RemotePlayer : INitroxPlayer
             if (newSubRoot)
             {
                 Attach(newSubRoot.transform, true);
-                
+
                 // Register in new cyclops
                 if (newSubRoot.TryGetComponent(out NitroxCyclops nitroxCyclops))
                 {
@@ -357,6 +362,7 @@ public class RemotePlayer : INitroxPlayer
     {
         Log.Info($"{PlayerName} left the game");
         Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName));
+        ResetStates();
         NitroxEntity.RemoveFrom(Body);
         Object.DestroyImmediate(Body);
     }
@@ -367,11 +373,6 @@ public class RemotePlayer : INitroxPlayer
         {
             case AnimChangeType.UNDERWATER:
                 AnimationController["is_underwater"] = state != AnimChangeState.OFF;
-                break;
-            case AnimChangeType.BENCH:
-                AnimationController["cinematics_enabled"] = state != AnimChangeState.UNSET;
-                AnimationController["bench_sit"] = state == AnimChangeState.ON;
-                AnimationController["bench_stand_up"] = state == AnimChangeState.OFF;
                 break;
             case AnimChangeType.INFECTION_REVEAL:
                 AnimationController["player_infected"] = state != AnimChangeState.UNSET;
@@ -490,20 +491,6 @@ public class RemotePlayer : INitroxPlayer
         {
             Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(BreathingSound)} but linked sound is not whitelisted: ({breathingSoundCustomEmitter.asset.path})");
         }
-
-        // Diving
-        WaterAmbience waterAmbience = Player.main.GetComponentInChildren<WaterAmbience>(true);
-        FMOD_CustomEmitter diveStartCustomEmitter = remotePlayerSoundsRoot.AddComponent<FMOD_CustomEmitter>();
-        CopyEmitter(waterAmbience.diveStartSplash, diveStartCustomEmitter);
-
-        if (fmodWhitelist.IsWhitelisted(diveStartCustomEmitter.asset.path, out float diveSoundRadius))
-        {
-            emitterController.AddEmitter(diveStartCustomEmitter.asset.path, diveStartCustomEmitter, diveSoundRadius);
-        }
-        else
-        {
-            Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(WaterAmbience)} but linked sound is not whitelisted: ({diveStartCustomEmitter.asset.path})");
-        }
     }
 
     /// <summary>
@@ -551,6 +538,7 @@ public class RemotePlayer : INitroxPlayer
     {
         if (vitals)
         {
+            // TODO: only show health and oxygen in freedom mode
             bool visible = PlayerContext.GameMode != NitroxGameMode.CREATIVE;
             vitals.SetStatsVisible(visible);
         }

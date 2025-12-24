@@ -3,11 +3,11 @@ using System.Linq;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.MonoBehaviours.Discord;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
-using NitroxModel.MultiplayerSession;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Helper;
+using Nitrox.Model.MultiplayerSession;
+using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -52,8 +52,14 @@ public class PlayerManager
 
     public HashSet<GameObject> GetAllPlayerObjects()
     {
-        HashSet<GameObject> remotePlayerObjects = GetAll().Select(player => player.Body).ToSet();
-        remotePlayerObjects.Add(Player.mainObject);
+        HashSet<GameObject> remotePlayerObjects = GetAll()
+                                                  .Select(player => player.Body)
+                                                  .Where(body => body != null)
+                                                  .ToSet();
+        if (Player.mainObject != null)
+        {
+            remotePlayerObjects.Add(Player.mainObject);    
+        }
         return remotePlayerObjects;
     }
 

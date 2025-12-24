@@ -1,10 +1,11 @@
 using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Helper;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -51,7 +52,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
 
-            VehicleWorldEntity vehicleEntity = Vehicles.BuildVehicleWorldEntity(gameObject, id, techType);
+            VehicleEntity vehicleEntity = Vehicles.BuildVehicleEntity(gameObject, id, techType);
             
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 

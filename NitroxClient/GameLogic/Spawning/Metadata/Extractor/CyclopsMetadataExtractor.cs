@@ -1,6 +1,5 @@
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 using static NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor;
 

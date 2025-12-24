@@ -2,7 +2,6 @@
     Height="720"
     MinHeight="600"
     MinWidth="800"
-    Title="Nitrox Launcher"
     Width="1200"
     WindowStartupLocation="CenterScreen"
     d:DesignHeight="450"
@@ -20,9 +19,18 @@
     xmlns:views="clr-namespace:Nitrox.Launcher.Views"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
+    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    xmlns:core="clr-namespace:Nitrox.Model.Core;assembly=Nitrox.Model">
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0} - V{1} ({2})">
+            <Binding Source="{x:Static core:NitroxEnvironment.AppName}" />
+            <Binding Source="{x:Static core:NitroxEnvironment.Version}" />
+            <Binding Source="{x:Static core:NitroxEnvironment.GitShortHash}" />
+        </MultiBinding>
+    </Window.Title>
     <Design.DataContext>
-        <vm:MainWindowViewModel />
+        <designer:DesignMainWindowViewModel />
     </Design.DataContext>
     <Window.Styles>
         <Style Selector="Border.nav">
@@ -52,23 +60,40 @@
                 <Setter Property="ToolTip.Placement" Value="Pointer" />
                 <Setter Property="Template">
                     <ControlTemplate>
-                        <Panel Background="{TemplateBinding Background}" HorizontalAlignment="Stretch">
-                            <StackPanel
-                                Margin="{TemplateBinding Padding}"
-                                Orientation="Horizontal"
-                                Spacing="10">
-                                <Image Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}" />
-                                <TextBlock FontSize="{TemplateBinding FontSize}" Text="{TemplateBinding Content}" />
-                            </StackPanel>
+                        <Panel Background="{TemplateBinding Background}"
+                               HorizontalAlignment="Stretch">
+                            <Grid Margin="{TemplateBinding Padding}"
+                                  ColumnDefinitions="48,*">
+                                <controls:RecolorImage Grid.Column="0"
+                                                       Height="24" Width="24"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Center"
+                                                       Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}" />
+                                <TextBlock Grid.Column="1"
+                                           TextAlignment="Start"
+                                           VerticalAlignment="Center"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           Text="{TemplateBinding Content}" />
+                            </Grid>
+                            <!-- Update Available green dot -->
+                            <Border Height="10" Width="10" CornerRadius="5" 
+                                    Background="{DynamicResource BrandOnColor}"
+                                    BorderBrush="{DynamicResource BrandPanelBackground}"
+                                    BorderThickness="2"
+                                    HorizontalAlignment="Left"
+                                    Margin="49.25,13.5,0,0"
+                                    IsVisible="False"
+                                    ToolTip.Tip="New Nitrox update available" />
                         </Panel>
                     </ControlTemplate>
                 </Setter>
+                
+                <Style Selector="^.updates Border">
+                    <Setter Property="IsVisible" Value="{Binding UpdateAvailableOrUnofficial}" />
+                </Style>
 
-                <Style Selector="^ Image">
-                    <Setter Property="Width" Value="24" />
-                    <Setter Property="Height" Value="24" />
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
+                <Style Selector="^:pointerover">
+                    <Setter Property="Opacity" Value="0.4" />
                 </Style>
 
                 <Style Selector="^[IsChecked=True]">
@@ -232,9 +257,10 @@
                             Margin="0,0,0,20"
                             VerticalAlignment="Bottom">
                             <RadioButton
+                                Classes="updates"
                                 Command="{Binding OpenUpdatesViewCommand}"
                                 Content="Updates"
-                                Tag="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}"
+                                Tag="/Assets/Images/tabs-icons/update.png"
                                 ToolTip.Tip="Check latest updates from Nitrox">
                                 <RadioButton.IsChecked>
                                     <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
@@ -272,7 +298,7 @@
                 Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}"
                 Grid.Column="1">
                 <ContentControl.ContentTemplate>
-                    <design:MultiDataTemplate>
+                    <design:MultiDataTemplate UseCache="False">
                         <!--  Null view (which will be a string, see TargetNullValue)  -->
                         <DataTemplate x:DataType="system:String">
                             <TextBox
@@ -369,13 +395,15 @@
                             Padding="5,10,10,10">
                             <Grid ColumnDefinitions="50,*,20">
                                 <Svg
-                                    Classes="theme icon"
+                                    Classes="icon"
+                                    Css="* { fill: #fff; stroke: #fff; }"
                                     Grid.Column="0"
                                     Margin="0,0,5,0"
                                     VerticalAlignment="Center"
                                     Width="25" />
                                 <TextBlock
                                     Grid.Column="1"
+                                    Foreground="White"
                                     Text="{Binding Message}"
                                     VerticalAlignment="Center" />
                                 <Button
@@ -385,7 +413,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top">
                                     <Svg
-                                        Classes="theme"
+                                        Css="* { fill: #fff; stroke: #fff; }"
                                         Path="/Assets/Icons/close.svg"
                                         VerticalAlignment="Top"
                                         Width="10" />

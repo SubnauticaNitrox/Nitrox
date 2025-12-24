@@ -1,5 +1,5 @@
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
@@ -11,6 +11,6 @@ public class SeamothMetadataExtractor : EntityMetadataExtractor<SeaMoth, Seamoth
         LiveMixin liveMixin = seamoth.liveMixin;
         SubName subName = seamoth.subName;
 
-        return new(lightsOn, liveMixin.health, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
+        return new(lightsOn, liveMixin.health, seamoth.precursorOutOfWater, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
     }
 }

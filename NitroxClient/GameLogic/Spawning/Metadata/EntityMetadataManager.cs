@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata;
@@ -52,6 +51,13 @@ public class EntityMetadataManager
         }
 
         return Optional.Empty;
+    }
+
+    public bool TryExtract(object o, out EntityMetadata metadata)
+    {
+        Optional<EntityMetadata> opMetadata = Extract(o);
+        metadata = opMetadata.Value;
+        return opMetadata.HasValue;
     }
 
     public Optional<IEntityMetadataProcessor> FromMetaData(EntityMetadata metadata)

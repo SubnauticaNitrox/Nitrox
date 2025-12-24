@@ -1,13 +1,11 @@
 using System;
 using System.Collections;
+using Nitrox.Model.DataStructures;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -34,6 +32,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
     public static GhostEntity From(ConstructableBase constructableBase)
     {
         GhostEntity ghost = GhostEntity.MakeEmpty();
+        ghost.Level = (int)LargeWorldEntity.CellLevel.Global;
         ModuleEntitySpawner.FillObject(ghost, constructableBase);
 
         if (constructableBase.moduleFace.HasValue)

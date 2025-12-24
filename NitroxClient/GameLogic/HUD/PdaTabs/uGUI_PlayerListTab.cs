@@ -4,7 +4,7 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxModel.Core;
+using Nitrox.Model.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -75,7 +75,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             {
                 if (asset.name.Equals("player_list_tab@3x"))
                 {
-                    nitroxPDATabManager.AddTabSprite(asset.name, new Atlas.Sprite(sprite));
+                    nitroxPDATabManager.AddTabSprite(asset.name, sprite);
                 }
                 assets.Add(asset.name, sprite);
             }

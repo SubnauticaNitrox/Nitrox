@@ -63,7 +63,7 @@
                     Spacing="10">
                     <Button
                         Background="Transparent"
-                        Command="{Binding CopyToClipboardCommand}"
+                        Command="{x:Static design:StaticCommands.CopyToClipboardCommand}"
                         CommandParameter="{Binding $self}"
                         Content="Copy to clipboard"
                         HotKey="Ctrl+Shift+C" />

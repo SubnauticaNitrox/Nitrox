@@ -1,0 +1,25 @@
+using System;
+using Nitrox.Model.Packets;
+
+namespace Nitrox.Model.Subnautica.Packets;
+
+[Serializable]
+public class PvPAttack : Packet
+{
+    public ushort TargetPlayerId { get; }
+    public float Damage { get; set; }
+    public AttackType Type { get; }
+
+    public PvPAttack(ushort targetPlayerId, float damage, AttackType type)
+    {
+        TargetPlayerId = targetPlayerId;
+        Damage = damage;
+        Type = type;
+    }
+
+    public enum AttackType : byte
+    {
+        KnifeHit,
+        HeatbladeHit
+    }
+}

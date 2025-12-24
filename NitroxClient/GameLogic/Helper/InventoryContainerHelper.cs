@@ -1,9 +1,7 @@
 using System.Text.RegularExpressions;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+using Nitrox.Model.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
@@ -12,11 +10,22 @@ namespace NitroxClient.GameLogic.Helper
     {
         private static readonly Regex LockerRegex = new(@"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
         private const string LOCKER_BASE_NAME = "submarine_locker_01_0";
-        private const string PLAYER_OBJECT_NAME = "Player";
         private const string ESCAPEPOD_OBJECT_NAME = "EscapePod";
-        
+
+        /// <summary>
+        ///     Gets inventory container of game object. Returns player inventory first, then child inventories.
+        /// </summary>
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
+            if (owner.IsLocalPlayer())
+            {
+                return Optional.Of(Inventory.main.container);
+            }
+            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
+            if (remotePlayerId)
+            {
+                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
+            }
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
             if (seamothStorageContainer)
             {
@@ -32,15 +41,6 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(baseBioReactor.container);
             }
-            if (owner.name == PLAYER_OBJECT_NAME)
-            {
-                return Optional.Of(Inventory.Get().container);
-            }
-            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
-            if (remotePlayerId)
-            {
-                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
-            }
 
             return Optional.Empty;
         }
@@ -55,8 +55,16 @@ namespace NitroxClient.GameLogic.Helper
                 ownerId = null;
                 return false;
             }
+            // TODO: in the future maybe use a switch on the PrefabId (it's always the same structure in a prefab)
+            // and then statically look for the right object because we'll know exactly which one it is
 
-            if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>().AliveOrNull())
+            // To treat the WaterPark in parent case, we need its case to happen before the IBaseModule one because
+            // IBaseModule will get the WaterPark but not get the id on the right object like in the first case
+            if (parent.TryGetComponent(out WaterPark waterPark))
+            {
+                return waterPark.planter.TryGetIdOrWarn(out ownerId);
+            }
+            else if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>().AliveOrNull())
             {
                 return parent.TryGetIdOrWarn(out ownerId);
             }
@@ -65,6 +73,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return true;
             }
+            // For regular water parks, the main object contains the StorageRoot and the planter at the same level
             else if (LockerRegex.IsMatch(ownerTransform.gameObject.name))
             {
                 string lockerId = ownerTransform.gameObject.name.Substring(7, 1);

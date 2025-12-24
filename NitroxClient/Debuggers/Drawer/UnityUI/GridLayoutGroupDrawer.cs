@@ -1,6 +1,6 @@
 ﻿using System;
 using NitroxClient.Debuggers.Drawer.Unity;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using NitroxModel.Helper;
+using System.Reflection;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -17,6 +16,17 @@ public sealed partial class CyclopsHelmHUDManager_Update_Patch : NitroxPatch, ID
         else if (!__instance.hudActive)
         {
             __instance.hudActive = true;
+        }
+        if (__instance.subLiveMixin.IsAlive())
+        {
+            if (__instance.motorMode.engineOn)
+            {
+                __instance.engineToggleAnimator.SetTrigger("EngineOn");
+            }
+            else
+            {
+                __instance.engineToggleAnimator.SetTrigger("EngineOff");
+            }
         }
     }
 }

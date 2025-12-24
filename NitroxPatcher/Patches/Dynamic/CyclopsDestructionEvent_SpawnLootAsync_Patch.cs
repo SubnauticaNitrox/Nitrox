@@ -6,11 +6,11 @@ using HarmonyLib;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 
@@ -30,7 +30,7 @@ public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : Nitro
     {
         return new CodeMatcher(instructions)
                .MatchStartForward(new CodeMatch(OpCodes.Switch))
-               .InsertAndAdvance(new CodeInstruction(OpCodes.Call, Reflect.Method(() => PrefixCallback(default))))
+               .InsertAndAdvance(new CodeInstruction(OpCodes.Call, Reflect.Method(() => TrampolineCallback(default))))
                .InstructionEnumeration()
                .InsertAfterMarker(PATTERN, "SpawnObject", [
                     new(OpCodes.Dup),
@@ -51,7 +51,7 @@ public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : Nitro
         Resolve<Entities>().BroadcastEntitySpawnedByClient(lootEntity);
     }
 
-    public static int PrefixCallback(int originalIndex)
+    public static int TrampolineCallback(int originalIndex)
     {
         // Immediately return from iterator block if called from within CyclopsMetadataProcessor
         return PacketSuppressor<EntitySpawnedByClient>.IsSuppressed ? int.MaxValue : originalIndex;

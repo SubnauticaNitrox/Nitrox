@@ -1,12 +1,13 @@
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel_Subnautica.DataStructures;
-using System.Collections.Generic;
-using UWE;
-using UnityEngine;
 using System;
-using NitroxModel.Core;
+using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic.Helper;
 
@@ -29,7 +30,18 @@ public static class BatteryChildEntityHelper
 
     public static void PopulateInstalledBattery(EnergyMixin energyMixin, List<Entity> toPopulate, NitroxId parentId)
     {
-        InstalledBatteryEntity installedBattery = new(new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, new List<Entity>());
+        EnergyMixin[] components = NitroxEntity.RequireObjectFrom(parentId).GetAllComponentsInChildren<EnergyMixin>();
+        int componentIndex = 0;
+        for (int i = 0; i < components.Length; i++)
+        {
+            if (components[i] == energyMixin)
+            {
+                componentIndex = i;
+                break;
+            }
+        }
+
+        InstalledBatteryEntity installedBattery = new(componentIndex, new NitroxId(), energyMixin.defaultBattery.ToDto(), null, parentId, new List<Entity>());
         toPopulate.Add(installedBattery);
 
         CoroutineHost.StartCoroutine(entities.Value.SpawnEntityAsync(installedBattery));

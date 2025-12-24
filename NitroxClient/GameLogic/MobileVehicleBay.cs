@@ -1,8 +1,9 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -40,7 +41,7 @@ public class MobileVehicleBay
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
-        VehicleWorldEntity vehicleEntity = Vehicles.BuildVehicleWorldEntity(constructedObject, constructedObjectId, techType, constructorId);
+        VehicleEntity vehicleEntity = Vehicles.BuildVehicleEntity(constructedObject, constructedObjectId, techType, constructorId);
 
         packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
         // TODO: Fix remote players treating the SimulationOwnership change on the vehicle (they can't find it) even tho they're still in the

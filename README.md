@@ -9,6 +9,7 @@ An open-source, multiplayer modification for the game <a href="https://unknownwo
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/SubnauticaNitrox/Nitrox)](https://github.com/SubnauticaNitrox/Nitrox/releases)
 [![Translation status](https://hosted.weblate.org/widgets/subnauticanitrox/-/svg-badge.svg)](https://hosted.weblate.org/engage/subnauticanitrox/)
 [![Discord](https://img.shields.io/discord/525437013403631617?logo=discord&logoColor=white)](https://discord.gg/E8B4X9s)
+[![Build](https://github.com/SubnauticaNitrox/Nitrox/actions/workflows/buildingMaster.yml/badge.svg)](https://github.com/SubnauticaNitrox/Nitrox/actions/workflows/buildingMaster.yml)
 
 ## FAQ
 

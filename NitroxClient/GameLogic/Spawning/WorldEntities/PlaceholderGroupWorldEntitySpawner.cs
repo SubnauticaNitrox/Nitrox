@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -120,6 +119,9 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                 }
             }
         }
+
+        // Handle setting isKinematic on Floating Stones
+        prefabPlaceholderGroup.OnPrefabGroupSpawned?.Invoke();
 
         result.Set(prefabPlaceholderGroupGameObject);
     }

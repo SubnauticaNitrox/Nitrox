@@ -1,8 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.Helpers;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -20,7 +18,7 @@ public sealed partial class BuilderTool_Construct_Patch : NitroxPatch, IDynamicP
         bool isAllowed = true;
         string message = string.Empty;
 
-        Constructable_DeconstructionAllowed_Patch.DeconstructionAllowed(parentId, ref isAllowed, ref message);
+        BuildUtils.DeconstructionAllowed(parentId, ref isAllowed, ref message);
         if (!isAllowed)
         {
             Log.InGame(message);

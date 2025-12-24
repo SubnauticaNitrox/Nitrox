@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper;
@@ -28,6 +28,13 @@ public static class VehicleChildEntityHelper
         typeof(WeldablePoint),
         typeof(CyclopsVehicleStorageTerminalManager),
         typeof(CyclopsLightingPanel)
+    };
+
+    // The seamoth and exosuit both have an EnergyMixin at the top level, the exosuit has a second one under BatterySlot2
+    private static readonly HashSet<string> batteryRelativePaths = new HashSet<string>
+    {
+        "",
+        "BatterySlot2"
     };
 
     public static void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)
@@ -55,9 +62,9 @@ public static class VehicleChildEntityHelper
                 }
             }
         }
-        else
+
+        if (batteryRelativePaths.Contains(relativePathName))
         {
-            // both seamoth and exosuit have energymixin as a direct component. populate the battery if it exists
             BatteryChildEntityHelper.TryPopulateInstalledBattery(current, toPopulate, vehicleId);
         }
 

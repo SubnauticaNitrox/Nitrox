@@ -1,0 +1,38 @@
+name: Building Master
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        runtime: [win-x64, linux-x64, linux-arm64]
+    steps:
+    - name: Build
+      run: dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c ${{ matrix.configuration }} -r ${{ matrix.runtime }}
+
+  test:
+    needs: build
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Run Tests
+      continue-on-error: true
+      run: dotnet test Nitrox.Test/Nitrox.Test.csproj --logger trx --results-directory "test_results"
+
+    - name: Upload Test Results
+      uses: EnricoMi/publish-unit-test-result-action/linux@3a74b2957438d0b6e2e61d67b05318aa25c9e6c6 # v2.20.0
+      if: (!cancelled())
+      with:
+        files: |
+          test_results/*.trx

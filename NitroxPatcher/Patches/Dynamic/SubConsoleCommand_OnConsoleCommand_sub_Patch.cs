@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -21,7 +20,7 @@ public sealed partial class SubConsoleCommand_OnConsoleCommand_sub_Patch : Nitro
     {
         if (Resolve<LocalPlayer>().Permissions < Perms.MODERATOR)
         {
-            Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", Perms.MODERATOR.ToString()));
+            Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", nameof(Perms.MODERATOR)));
             return false;
         }
 

@@ -1,10 +1,13 @@
+// Disabled because these patches cause certain animations to break (such as https://github.com/SubnauticaNitrox/Nitrox/issues/2287)
+// TODO: reenable after the 1.8 release and fix animations
+#if false
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
+using Nitrox.Model.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -37,3 +40,4 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
         Resolve<PlayerCinematics>().StartCinematicMode(Resolve<IMultiplayerSession>().Reservation.PlayerId, entity.Id, identifier, __instance.playerViewAnimationName);
     }
 }
+#endif

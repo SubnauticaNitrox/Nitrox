@@ -10,6 +10,10 @@
     "Instant launch \"world\"": {
       "commandName": "Project",
       "commandLineArgs": "instantlaunch --save \"world\" --players \"Player1\""
+    },
+    "Instant launch \"world\" (2 player)": {
+      "commandName": "Project",
+      "commandLineArgs": "instantlaunch --save \"world\" --players \"Player1\" \"Player2\""
     }
   }
 }

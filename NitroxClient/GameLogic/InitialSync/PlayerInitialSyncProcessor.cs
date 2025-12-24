@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Text;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Server;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -34,6 +36,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
+        AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow));
         AddStep(sync => SetPlayerKeepInventoryOnDeath(sync.KeepInventoryOnDeath));
         AddStep(sync => SetPlayerMarkDeathPointsWithBeacon(sync.MarkDeathPointsWithBeacon));
     }
@@ -61,7 +64,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         Log.Info($"Received initial sync player GameObject Id: {id}");
     }
 
-    private void SetupEscapePod(bool firstTimeConnecting)
+    private static void SetupEscapePod(bool firstTimeConnecting)
     {
         EscapePod escapePod = EscapePod.main;
         if (escapePod)
@@ -97,7 +100,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
                 Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                 pickupable.Initialize();
 
-                item.Created(gameObject);
+                item.PickedUp(gameObject, techType);
                 itemContainers.AddItem(gameObject, localPlayerId);
             }
         }
@@ -138,9 +141,26 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
     }
 
-    private void SetPlayerKeepInventoryOnDeath(bool keepInventoryOnDeath)
+    private void ApplySettings(bool keepInventoryOnDeath, bool fastHatch, bool fastGrow)
     {
         localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
+        NoCostConsoleCommand.main.fastHatchCheat = fastHatch;
+        NoCostConsoleCommand.main.fastGrowCheat = fastGrow;
+        if (!fastHatch && !fastGrow)
+        {
+            return;
+        }
+
+        StringBuilder cheatsEnabled = new("Cheats enabled:");
+        if (fastHatch)
+        {
+            cheatsEnabled.Append(" fastHatch");
+        }
+        if (fastGrow)
+        {
+            cheatsEnabled.Append(" fastGrow");
+        }
+        Log.InGame(cheatsEnabled.ToString());
     }
 
     private void SetPlayerMarkDeathPointsWithBeacon(bool markDeathPointsWithBeacon)

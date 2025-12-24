@@ -1,25 +1,23 @@
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
-using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.Serialization.World;
-using NitroxServer_Subnautica;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
+using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
-namespace NitroxServer.Serialization;
+namespace Nitrox.Server.Subnautica.Models.Serialization;
 
 [TestClass]
 public class WorldPersistenceTest
 {
     private static readonly string tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
     private static PersistedWorldData worldData;
-    public static PersistedWorldData[] WorldsDataAfter { get; private set; }
+    public static PersistedWorldData[]? WorldsDataAfter { get; private set; }
     public static IServerSerializer[] ServerSerializers { get; private set; }
 
     [ClassInitialize]
@@ -145,6 +143,12 @@ public class WorldPersistenceTest
         AssertHelper.IsListEqual(worldData.EntityData.Entities.OrderBy(x => x.Id), worldDataAfter.EntityData.Entities.OrderBy(x => x.Id), EntityTest);
     }
 
+    [DataTestMethod, DynamicWorldDataAfter]
+    public void GlobalRootDataTest(PersistedWorldData worldDataAfter, string serializerName)
+    {
+        AssertHelper.IsListEqual(worldData.GlobalRootData.Entities.OrderBy(x => x.Id), worldDataAfter.GlobalRootData.Entities.OrderBy(x => x.Id), EntityTest);
+    }
+
     private static void EntityTest(Entity entity, Entity entityAfter)
     {
         Assert.AreEqual(entity.Id, entityAfter.Id);
@@ -199,8 +203,9 @@ public class WorldPersistenceTest
             case BatteryMetadata metadata when entityAfter.Metadata is BatteryMetadata metadataAfter:
                 Assert.AreEqual(metadata.Charge, metadataAfter.Charge);
                 break;
-            case RepairedComponentMetadata metadata when entityAfter.Metadata is RepairedComponentMetadata metadataAfter:
-                Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
+            case EscapePodMetadata metadata when entityAfter.Metadata is EscapePodMetadata metadataAfter:
+                Assert.AreEqual(metadata.PodRepaired, metadataAfter.PodRepaired);
+                Assert.AreEqual(metadata.RadioRepaired, metadataAfter.RadioRepaired);
                 break;
             case CrafterMetadata metadata when entityAfter.Metadata is CrafterMetadata metadataAfter:
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
@@ -208,7 +213,13 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.Duration, metadataAfter.Duration);
                 break;
             case PlantableMetadata metadata when entityAfter.Metadata is PlantableMetadata metadataAfter:
-                Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
+                Assert.AreEqual(metadata.TimeStartGrowth, metadataAfter.TimeStartGrowth);
+                Assert.AreEqual(metadata.SlotID, metadataAfter.SlotID);
+                // FruitPlantMetadata field is not checked before it's only temporary
+                break;
+            case FruitPlantMetadata metadata when entityAfter.Metadata is FruitPlantMetadata metadataAfter:
+                Assert.IsTrue(metadata.PickedStates.SequenceEqual(metadataAfter.PickedStates));
+                Assert.AreEqual(metadata.TimeNextFruit, metadataAfter.TimeNextFruit);
                 break;
             case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
                 Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
@@ -311,6 +322,10 @@ public class WorldPersistenceTest
             case StayAtLeashPositionMetadata metadata when entityAfter.Metadata is StayAtLeashPositionMetadata metadataAfter:
                 Assert.AreEqual(metadata.LeashPosition, metadataAfter.LeashPosition);
                 break;
+            case EggMetadata metadata when entityAfter.Metadata is EggMetadata metadataAfter:
+                Assert.AreEqual(metadata.TimeStartHatching, metadataAfter.TimeStartHatching);
+                Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
@@ -337,9 +352,9 @@ public class WorldPersistenceTest
                         case PlaceholderGroupWorldEntity placeholderGroupWorldEntity when worldEntityAfter is PlaceholderGroupWorldEntity placeholderGroupWorldEntityAfter:
                             Assert.AreEqual(placeholderGroupWorldEntity.ComponentIndex, placeholderGroupWorldEntityAfter.ComponentIndex);
                             break;
-                        case CellRootEntity _ when worldEntityAfter is CellRootEntity _:
+                        case CellRootEntity when worldEntityAfter is CellRootEntity:
                             break;
-                        case PlacedWorldEntity _ when worldEntityAfter is PlacedWorldEntity _:
+                        case PlacedWorldEntity when worldEntityAfter is PlacedWorldEntity:
                             break;
                         case OxygenPipeEntity oxygenPipeEntity when worldEntityAfter is OxygenPipeEntity oxygenPipeEntityAfter:
                             Assert.AreEqual(oxygenPipeEntity.ParentPipeId, oxygenPipeEntityAfter.ParentPipeId);
@@ -351,7 +366,7 @@ public class WorldPersistenceTest
                             break;
                         case SerializedWorldEntity serializedWorldEntity when entityAfter is SerializedWorldEntity serializedWorldEntityAfter:
                             Assert.AreEqual(serializedWorldEntity.AbsoluteEntityCell, serializedWorldEntityAfter.AbsoluteEntityCell);
-                            AssertHelper.IsListEqual(serializedWorldEntity.Components.OrderBy(c => c.GetHashCode()), serializedWorldEntityAfter.Components.OrderBy(c => c.GetHashCode()), (SerializedComponent c1, SerializedComponent c2) => c1.Equals(c2));
+                            AssertHelper.IsListEqual(serializedWorldEntity.Components.OrderBy(c => c.GetHashCode()), serializedWorldEntityAfter.Components.OrderBy(c => c.GetHashCode()), (c1, c2) => c1.Equals(c2));
                             Assert.AreEqual(serializedWorldEntity.Layer, serializedWorldEntityAfter.Layer);
                             Assert.AreEqual(serializedWorldEntity.BatchId, serializedWorldEntityAfter.BatchId);
                             Assert.AreEqual(serializedWorldEntity.CellId, serializedWorldEntityAfter.CellId);
@@ -380,9 +395,8 @@ public class WorldPersistenceTest
                                     case BuildEntity buildEntity when globalRootEntityAfter is BuildEntity buildEntityAfter:
                                         Assert.AreEqual(buildEntity.BaseData, buildEntityAfter.BaseData);
                                         break;
-                                    case EscapePodWorldEntity escapePodWorldEntity when globalRootEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
-                                        Assert.AreEqual(escapePodWorldEntity.Damaged, escapePodWorldEntityAfter.Damaged);
-                                        Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
+                                    case EscapePodEntity escapePodEntity when globalRootEntityAfter is EscapePodEntity escapePodEntityAfter:
+                                        Assert.IsTrue(escapePodEntity.Players.SequenceEqual(escapePodEntityAfter.Players));
                                         break;
                                     case InteriorPieceEntity interiorPieceEntity when globalRootEntityAfter is InteriorPieceEntity interiorPieceEntityAfter:
                                         Assert.AreEqual(interiorPieceEntity.BaseFace, interiorPieceEntityAfter.BaseFace);
@@ -411,13 +425,13 @@ public class WorldPersistenceTest
                                     case MoonpoolEntity moonpoolEntity when globalRootEntityAfter is MoonpoolEntity moonpoolEntityAfter:
                                         Assert.AreEqual(moonpoolEntity.Cell, moonpoolEntityAfter.Cell);
                                         break;
-                                    case PlanterEntity _ when globalRootEntityAfter is PlanterEntity:
+                                    case PlanterEntity when globalRootEntityAfter is PlanterEntity:
                                         break;
-                                    case PlayerWorldEntity _ when globalRootEntityAfter is PlayerWorldEntity:
+                                    case PlayerEntity when globalRootEntityAfter is PlayerEntity:
                                         break;
-                                    case VehicleWorldEntity vehicleWorldEntity when globalRootEntityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
-                                        Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
-                                        Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                                    case VehicleEntity vehicleEntity when globalRootEntityAfter is VehicleEntity vehicleEntityAfter:
+                                        Assert.AreEqual(vehicleEntity.SpawnerId, vehicleEntityAfter.SpawnerId);
+                                        Assert.AreEqual(vehicleEntity.ConstructionTime, vehicleEntityAfter.ConstructionTime);
                                         break;
                                     case RadiationLeakEntity radiationLeakEntity when globalRootEntityAfter is RadiationLeakEntity radiationLeakEntityAfter:
                                         Assert.AreEqual(radiationLeakEntity.ObjectIndex, radiationLeakEntityAfter.ObjectIndex);
@@ -449,7 +463,7 @@ public class WorldPersistenceTest
             case PathBasedChildEntity pathBasedChildEntity when entityAfter is PathBasedChildEntity pathBasedChildEntityAfter:
                 Assert.AreEqual(pathBasedChildEntity.Path, pathBasedChildEntityAfter.Path);
                 break;
-            case InstalledBatteryEntity _ when entityAfter is InstalledBatteryEntity _:
+            case InstalledBatteryEntity when entityAfter is InstalledBatteryEntity:
                 break;
             case InstalledModuleEntity installedModuleEntity when entityAfter is InstalledModuleEntity installedModuleEntityAfter:
                 Assert.AreEqual(installedModuleEntity.Slot, installedModuleEntityAfter.Slot);
@@ -483,7 +497,7 @@ public class DynamicWorldDataAfterAttribute : Attribute, ITestDataSource
 {
     public IEnumerable<object[]> GetData(MethodInfo methodInfo)
     {
-        return WorldPersistenceTest.WorldsDataAfter.Select((t, i) => new object[] { t, WorldPersistenceTest.ServerSerializers[i].GetType().Name });
+        return (WorldPersistenceTest.WorldsDataAfter ?? []).Select((t, i) => new object[] { t, WorldPersistenceTest.ServerSerializers[i].GetType().Name });
     }
 
     public string GetDisplayName(MethodInfo methodInfo, object[] data)

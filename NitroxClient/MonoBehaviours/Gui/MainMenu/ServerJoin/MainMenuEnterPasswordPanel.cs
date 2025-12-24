@@ -1,9 +1,9 @@
 using System;
+using System.Collections;
 using System.Linq;
 using FMODUnity;
+using Nitrox.Model.DataStructures;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +14,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
 {
     public const string NAME = "MultiplayerEnterPassword";
+
+    public static MainMenuEnterPasswordPanel Instance { get; private set; }
 
     private TMP_InputField passwordInput;
     private mGUI_Change_Legend_On_Select legendChange;
@@ -27,6 +29,8 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
 
     public void Setup(GameObject savedGamesRef)
     {
+        Instance = this;
+
         GameObject multiplayerButtonRef = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
         GameObject generalTextRef = multiplayerButtonRef.GetComponentInChildren<TextMeshProUGUI>().gameObject;
         GameObject inputFieldRef = GameObject.Find("/Menu canvas/Panel/MainMenu/RightSide/Home/EmailBox/InputField");
@@ -37,7 +41,7 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         passwordInput = passwordInputGameObject.GetComponent<TMP_InputField>();
         passwordInput.characterValidation = TMP_InputField.CharacterValidation.None;
         passwordInput.onSubmit = new TMP_InputField.SubmitEvent();
-        passwordInput.onSubmit.AddListener(_ => { SelectItemInDirection(0, 1); });
+        passwordInput.onSubmit.AddListener(_ => OnConfirmButtonClicked());
         passwordInput.placeholder.GetComponent<TranslationLiveUpdate>().translationKey = Language.main.Get("Nitrox_JoinServerPlaceholder");
         GameObject passwordInputDesc = Instantiate(generalTextRef, passwordInputGameObject.transform, false);
         passwordInputDesc.transform.localPosition = new Vector3(-200, 0, 0);
@@ -66,10 +70,24 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         legendChange.legendButtonConfiguration = confirmButtonButton.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration.Take(1).ToArray();
     }
 
+    public void FocusPasswordField()
+    {
+        StartCoroutine(Coroutine());
+
+        IEnumerator Coroutine()
+        {
+            passwordInput.Select();
+            EventSystem.current.SetSelectedGameObject(passwordInput.gameObject);
+            yield return null;
+            passwordInput.MoveToEndOfLine(false, true);
+        }
+    }
+
     private void OnConfirmButtonClicked()
     {
         lastEnteredPassword = passwordInput.text;
         MainMenuRightSide.main.OpenGroup(MainMenuJoinServerPanel.NAME);
+        MainMenuJoinServerPanel.Instance.FocusNameInputField();
     }
 
     private static void OnCancelClick()

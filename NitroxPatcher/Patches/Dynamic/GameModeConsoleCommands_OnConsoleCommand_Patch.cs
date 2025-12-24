@@ -2,9 +2,9 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
-using NitroxModel.Server;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

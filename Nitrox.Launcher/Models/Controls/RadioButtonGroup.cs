@@ -1,8 +1,7 @@
 using System;
-using System.Reactive;
 using Avalonia;
 using Avalonia.Controls;
-using ReactiveUI;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Nitrox.Launcher.Models.Controls;
 
@@ -11,12 +10,12 @@ public class RadioButtonGroup : ItemsControl
     public static readonly DirectProperty<RadioButtonGroup, Type> EnumProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, Type>(nameof(Enum), o => o.Enum, (o, v) => o.Enum = v);
     public static readonly StyledProperty<object> SelectedItemProperty = AvaloniaProperty.Register<RadioButtonGroup, object>(nameof(SelectedItem));
 
-    public static readonly DirectProperty<RadioButtonGroup, ReactiveCommand<Button, Unit>> ItemClickCommandProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, ReactiveCommand<Button, Unit>>(nameof(ItemClickCommand), o => o.ItemClickCommand, (o, v) => o.ItemClickCommand = v);
+    public static readonly DirectProperty<RadioButtonGroup, RelayCommand<Button>> ItemClickCommandProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, RelayCommand<Button>>(nameof(ItemClickCommand), o => o.ItemClickCommand, (o, v) => o.ItemClickCommand = v);
 
-    private Type @enum;
-    private ReactiveCommand<Button, Unit> itemClickCommand;
+    private Type? @enum;
+    private RelayCommand<Button> itemClickCommand;
 
-    public Type Enum
+    public Type? Enum
     {
         get => @enum;
         set
@@ -31,13 +30,13 @@ public class RadioButtonGroup : ItemsControl
         }
     }
 
-    public ReactiveCommand<Button, Unit> ItemClickCommand
+    public RelayCommand<Button> ItemClickCommand
     {
         get => itemClickCommand;
         private set => SetAndRaise(ItemClickCommandProperty, ref itemClickCommand, value);
     }
 
-    public object SelectedItem
+    public object? SelectedItem
     {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
@@ -45,7 +44,7 @@ public class RadioButtonGroup : ItemsControl
 
     public RadioButtonGroup()
     {
-        itemClickCommand = ReactiveCommand.Create<Button>(param => SelectedItem = param.Tag);
+        itemClickCommand = new RelayCommand<Button>(param => SelectedItem = param.Tag);
     }
 
     protected override Type StyleKeyOverride { get; } = typeof(ItemsControl);

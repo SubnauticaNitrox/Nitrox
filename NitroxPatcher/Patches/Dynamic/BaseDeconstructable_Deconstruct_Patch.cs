@@ -5,11 +5,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.Helper;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
@@ -180,11 +179,22 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
         BuildingHandler.Main.EnsureTracker(baseId).LocalOperations++;
         int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(baseId);
 
-        PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
-            new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), operationId) :
-            new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
+        PieceDeconstructed pieceDeconstructed;
+        if (Temp.MovedChildrenIdsByNewHostId != null)
+        {
+            pieceDeconstructed = new LargeWaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.MovedChildrenIdsByNewHostId, operationId);
+        }
+        else
+        {
+            pieceDeconstructed = Temp.NewWaterPark == null ?
+                new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), operationId) :
+                new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
+        }
+        
         Log.Verbose($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
+
+        Temp.Dispose();
     }
 }

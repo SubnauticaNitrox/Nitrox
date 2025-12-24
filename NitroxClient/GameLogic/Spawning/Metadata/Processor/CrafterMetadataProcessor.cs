@@ -1,7 +1,7 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
@@ -13,26 +13,25 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
 
     public override void ProcessMetadata(GameObject gameObject, CrafterMetadata metadata)
     {
-        if (metadata.TechType == null)
+        CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
+
+        if (metadata.TechType == NitroxTechType.None || metadata.Amount == 0)
         {
-            EnsureCrafterReset(gameObject);
+            EnsureCrafterReset(crafterLogic);
         }
         else
         {
-            SpawnItemInCrafter(gameObject, metadata);
+            SpawnItemInCrafter(crafterLogic, metadata);
         }
     }
 
-    private void EnsureCrafterReset(GameObject gameObject)
+    private static void EnsureCrafterReset(CrafterLogic crafterLogic)
     {
-        CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
         crafterLogic.ResetCrafter();
     }
 
-    private void SpawnItemInCrafter(GameObject gameObject, CrafterMetadata metadata)
+    private static void SpawnItemInCrafter(CrafterLogic crafterLogic, CrafterMetadata metadata)
     {
-        GhostCrafter ghostCrafter = gameObject.RequireComponentInChildren<GhostCrafter>(true);
-
         float elapsedFromStart = DayNightCycle.main.timePassedAsFloat - metadata.StartTime;
 
         // If a craft started way in the past, set duration to 0.01 (the craft function will not work with 0)
@@ -40,6 +39,21 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
         // when an item is being crafted or not picked up yet. 
         float duration = Mathf.Max(metadata.Duration - elapsedFromStart + ANTI_GRIEF_DURATION_BUFFER, 0.01f);
 
-        ghostCrafter.logic.Craft(metadata.TechType.ToUnity(), duration);
+        crafterLogic.linkedIndex = metadata.LinkedIndex;
+        if (metadata.LinkedIndex == -1)
+        {
+            crafterLogic.Craft(metadata.TechType.ToUnity(), duration);
+        }
+        else
+        {
+            // Ensure craft is finished and has the right data
+            crafterLogic.craftingTechType = metadata.TechType.ToUnity();
+            crafterLogic.timeCraftingBegin = metadata.StartTime;
+            crafterLogic.timeCraftingEnd = DayNightCycle.main.timePassedAsFloat;
+            crafterLogic.NotifyChanged(crafterLogic.currentTechType);
+            crafterLogic.NotifyProgress(1f);
+        }
+        // Override this value in case some of the crafted items were already picked up
+        crafterLogic.numCrafted = metadata.Amount;
     }
 }

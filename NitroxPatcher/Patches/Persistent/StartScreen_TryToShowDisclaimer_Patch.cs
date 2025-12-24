@@ -1,6 +1,5 @@
 ﻿#if DEBUG
 using System.Reflection;
-using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 

@@ -1,24 +1,19 @@
 ﻿using System.Linq;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HanumanInstitute.MvvmDialogs;
-using ReactiveUI;
+using CommunityToolkit.Mvvm.Messaging;
+using Nitrox.Launcher.Models;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
 /// <summary>
 ///     Base class for (popup) dialog ViewModels.
 /// </summary>
-public abstract partial class ModalViewModelBase : ObservableValidator, IModalDialogViewModel, IActivatableViewModel
+public abstract partial class ModalViewModelBase : ObservableValidator, IMessageReceiver
 {
     [ObservableProperty] private ButtonOptions? selectedOption;
-
-    bool? IModalDialogViewModel.DialogResult => (bool)this;
-
-    public ViewModelActivator Activator { get; } = new();
 
     protected ModalViewModelBase()
     {
@@ -42,6 +37,11 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
         {
             SelectedOption = buttonOptions;
         }
-        ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.CloseByUser();
+        ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.CloseByUser(this);
+    }
+
+    public virtual void Dispose()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 }

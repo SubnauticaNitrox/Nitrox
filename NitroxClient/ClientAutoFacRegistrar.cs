@@ -1,6 +1,3 @@
-global using NitroxClient.Helpers;
-global using NitroxModel.Logger;
-global using static NitroxModel.Extensions;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
@@ -11,7 +8,6 @@ using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.InitialSync.Abstract;
@@ -23,12 +19,12 @@ using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxModel;
-using NitroxModel.Core;
-using NitroxModel.GameLogic.FMOD;
-using NitroxModel.Helper;
-using NitroxModel.Networking;
-using NitroxModel_Subnautica.Helper;
+using Nitrox.Model;
+using Nitrox.Model.Core;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Subnautica.Helper;
 
 namespace NitroxClient
 {
@@ -66,7 +62,7 @@ namespace NitroxClient
                             .AsSelf()
                             .SingleInstance();
 #endif
-            containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(NitroxModel)}.dll"));
+            containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(Nitrox)}.{nameof(Nitrox.Model)}.dll"));
 
             containerBuilder.RegisterType<UnityPreferenceStateProvider>()
                             .As<IPreferenceStateProvider>()
@@ -88,17 +84,12 @@ namespace NitroxClient
                             .As<ILocalNitroxPlayer>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<SubnauticaMap>()
-                            .As<IMap>()
-                            .InstancePerLifetimeScope();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();

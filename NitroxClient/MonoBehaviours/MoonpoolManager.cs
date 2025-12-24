@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -51,10 +49,13 @@ public class MoonpoolManager : MonoBehaviour
     public void LateAssignNitroxEntity(NitroxId baseId)
     {
         this.baseId = baseId;
+        NitroxId nextId = baseId.Increment(); // To be recognizable, we need it to be deterministic
         foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
             moonpoolEntity.ParentId = baseId;
-            moonpoolEntity.Id = new(); // Generate a new id in case
+            moonpoolEntity.Id = nextId;
+            
+            nextId = nextId.Increment();
         }
     }
 
@@ -84,7 +85,11 @@ public class MoonpoolManager : MonoBehaviour
 
     public Optional<GameObject> RegisterMoonpool(Transform constructableTransform, NitroxId moonpoolId)
     {
-        Int3 absoluteCell = Absolute(constructableTransform.position);
+        return RegisterMoonpool(Absolute(constructableTransform.position), moonpoolId);
+    }
+
+    public Optional<GameObject> RegisterMoonpool(Int3 absoluteCell, NitroxId moonpoolId)
+    {
         moonpoolsByCell[absoluteCell] = new(moonpoolId, baseId, absoluteCell.ToDto());
         TaskResult<Optional<GameObject>> resultObject = new();
         AssignNitroxEntityToMoonpool(absoluteCell, moonpoolId, resultObject);
@@ -116,7 +121,7 @@ public class MoonpoolManager : MonoBehaviour
     {
         foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
-            VehicleWorldEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleWorldEntity>().FirstOrFallback(null);
+            VehicleEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleEntity>().FirstOrFallback(null);
             if (moonpoolVehicleEntity != null)
             {
                 yield return entities.SpawnEntityAsync(moonpoolVehicleEntity);

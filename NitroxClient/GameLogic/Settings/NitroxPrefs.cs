@@ -1,4 +1,5 @@
 using System;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Settings
@@ -12,11 +13,11 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
         public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);
         /// <summary>
-        /// In seconds. <see cref="MonoBehaviours.Vehicles.MovementReplicator"/>
+        /// In seconds. <see cref="MovementReplicator"/>
         /// </summary>
         public static readonly NitroxPref<float> LatencyUpdatePeriod = new("Nitrox.latencyUpdatePeriod", 10);
         /// <summary>
-        /// In milliseconds. <see cref="MonoBehaviours.Vehicles.MovementReplicator"/>
+        /// In milliseconds. <see cref="MovementReplicator"/>
         /// </summary>
         public static readonly NitroxPref<float> SafetyLatencyMargin = new("Nitrox.safetyLatencyMargin", 0.05f);
         /// <summary>

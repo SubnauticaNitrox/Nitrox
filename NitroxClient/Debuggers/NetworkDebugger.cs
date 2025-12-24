@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Unity.Helper;
-using NitroxModel;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers
@@ -19,7 +19,7 @@ namespace NitroxClient.Debuggers
         {
             nameof(PlayerMovement), nameof(EntityTransformUpdates), nameof(PlayerStats), nameof(SpawnEntities), nameof(VehicleMovements), nameof(PlayerCinematicControllerCall),
             nameof(FMODAssetPacket), nameof(FMODEventInstancePacket), nameof(FMODCustomEmitterPacket), nameof(FMODStudioEmitterPacket), nameof(FMODCustomLoopingEmitterPacket), 
-            nameof(SimulationOwnershipChange), nameof(CellVisibilityChanged), nameof(PlayerInCyclopsMovement), nameof(CreatureActionChanged),
+            nameof(SimulationOwnershipChange), nameof(CellVisibilityChanged), nameof(PlayerInCyclopsMovement), nameof(CreatureActionChanged), nameof(FootstepPacket)
         };
         private readonly List<PacketDebugWrapper> packets = new List<PacketDebugWrapper>(PACKET_STORED_COUNT);
 

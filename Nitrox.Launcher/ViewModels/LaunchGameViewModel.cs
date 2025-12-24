@@ -3,43 +3,45 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery.Models;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Platforms.Store;
-using NitroxModel.Platforms.Store.Interfaces;
+using Nitrox.Model.Core;
+using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.Store;
+using Nitrox.Model.Platforms.Store.Interfaces;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class LaunchGameViewModel : RoutableViewModelBase
+internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
+    : RoutableViewModelBase
 {
-    public static Task<string> LastFindSubnauticaTask;
+    public static Task<string>? LastFindSubnauticaTask;
     private static bool hasInstantLaunched;
+    private readonly DialogService dialogService = dialogService;
+    private readonly IKeyValueStore keyValueStore = keyValueStore;
 
-    private readonly OptionsViewModel optionsViewModel;
-    private readonly ServerService serverService;
-    private readonly IKeyValueStore keyValueStore;
-    private readonly IDialogService dialogService;
+    private readonly ServerService serverService = serverService;
 
     [ObservableProperty]
     private Platform gamePlatform;
 
     [ObservableProperty]
-    private string platformToolTip;
+    private string? platformToolTip;
 
-    public Bitmap[] GalleryImageSources { get; } = [
+    public Bitmap[] GalleryImageSources { get; } =
+    [
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-1.png", static stream => new Bitmap(stream)),
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-2.png", static stream => new Bitmap(stream)),
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-3.png", static stream => new Bitmap(stream)),
@@ -49,26 +51,14 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
 
-    public LaunchGameViewModel()
-    {
-    }
-
-    public LaunchGameViewModel(IDialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
-    {
-        this.dialogService = dialogService;
-        this.serverService = serverService;
-        this.optionsViewModel = optionsViewModel;
-        this.keyValueStore = keyValueStore;
-    }
-
-    internal override async Task ViewContentLoadAsync()
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         await Task.Run(() =>
         {
             NitroxUser.GamePlatformChanged += UpdateGamePlatform;
             UpdateGamePlatform();
             HandleInstantLaunchForDevelopment();
-        });
+        }, cancellationToken);
     }
 
     internal override Task ViewContentUnloadAsync()
@@ -80,21 +70,21 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartSingleplayerAsync()
     {
-        if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica))
+        if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica) && !keyValueStore.GetIsMultipleGameInstancesAllowed())
         {
             return;
         }
 
         Log.Info("Launching Subnautica in singleplayer mode");
-
         try
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
-                await HostScreen.ShowAsync(optionsViewModel);
+                ChangeView(optionsViewModel);
                 LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                 return;
             }
+
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
             await StartSubnauticaAsync();
         }
@@ -105,8 +95,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         }
     }
 
+    /// <summary>
+    ///     Prepares Subnautica to load Nitrox, then starts Subnautica.
+    /// </summary>
     [RelayCommand]
-    private async Task StartMultiplayerAsync(string[] args = null)
+    private async Task StartMultiplayerAsync(string[]? args = null)
     {
         Log.Info("Launching Subnautica in multiplayer mode");
         try
@@ -115,7 +108,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             {
                 if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
                 {
-                    await Dispatcher.UIThread.InvokeAsync(async () => await HostScreen.ShowAsync(optionsViewModel));
+                    ChangeView(optionsViewModel);
                     LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                     return false;
                 }
@@ -124,7 +117,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                     LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
                     return false;
                 }
-                if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica))
+                if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica) && !keyValueStore.GetIsMultipleGameInstancesAllowed())
                 {
                     return false;
                 }
@@ -161,8 +154,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 {
                     await LastFindSubnauticaTask;
                 }
-                NitroxEntryPatch.Remove(NitroxUser.GamePath);
-                NitroxEntryPatch.Apply(NitroxUser.GamePath);
+                await NitroxEntryPatch.Apply(NitroxUser.GamePath);
 
                 if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
                 {
@@ -183,14 +175,16 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in multiplayer mode:");
-            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode"));
+            await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode");
         }
     }
-    
+
     [RelayCommand]
     private void OpenContributionsOfYear()
     {
-        Process.Start(new ProcessStartInfo($"https://github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):yyyy/M/d}")}") { UseShellExecute = true, Verb = "open" })?.Dispose();
+        string fromValue = HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):M/d/yyyy}");
+        string toValue = HttpUtility.UrlEncode($"{DateTime.UtcNow:M/d/yyyy}");
+        OpenUri($"github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={fromValue}&to={toValue}");
     }
 
     /// <summary>
@@ -211,7 +205,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         Task.Run(async () =>
         {
             // Start the server
-            ServerEntry server = await serverService.GetOrCreateServerAsync(App.InstantLaunch.SaveName);
+            ServerEntry? server = await serverService.GetOrCreateServerAsync(App.InstantLaunch.SaveName);
+            if (server == null)
+            {
+                throw new Exception("Failed to create new server save files");
+            }
             server.Name = App.InstantLaunch.SaveName;
             Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serverService.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player
@@ -224,11 +222,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         }).ContinueWithHandleError();
     }
 
-    private async Task StartSubnauticaAsync(string[] args = null)
+    private async Task StartSubnauticaAsync(string[]? args = null)
     {
         LauncherNotifier.Info("Starting game");
         string subnauticaPath = NitroxUser.GamePath;
-        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? Environment.GetCommandLineArgs())}";
+        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
         string subnauticaExe;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -238,20 +236,18 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         {
             subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
         }
-
         if (!File.Exists(subnauticaExe))
         {
             throw new FileNotFoundException("Unable to find Subnautica executable");
         }
-        
-        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
 
         // Start game & gaming platform if needed.
+        IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
         using ProcessEx game = platform switch
         {
-            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId),
+            Steam s => await s.StartGameAsync(subnauticaExe, subnauticaLaunchArguments, GameInfo.Subnautica.SteamAppId, ShouldSkipSteam(subnauticaLaunchArguments), keyValueStore.GetUseBigPictureMode()),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
-            MSStore m => await m.StartGameAsync(subnauticaExe),
+            MSStore m => await m.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             Discord d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game platform is unsupported by Nitrox.")
         };
@@ -262,9 +258,38 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         }
     }
 
+    private bool ShouldSkipSteam(string args)
+    {
+        // Check if Steam overlay is enabled by user setting
+        if (keyValueStore.GetUseBigPictureMode())
+        {
+            return false; // Use Steam if overlay is enabled
+        }
+
+        if (App.InstantLaunch != null)
+        {
+            // Running through Steam is fine if single instance.
+            return App.InstantLaunch is { PlayerNames.Length: > 1 };
+        }
+        if (args.Contains("-vrmode none", StringComparison.OrdinalIgnoreCase))
+        {
+            if (keyValueStore.GetIsMultipleGameInstancesAllowed())
+            {
+                return true;
+            }
+        }
+        else if (args.Contains("-vrmode", StringComparison.OrdinalIgnoreCase))
+        {
+            // VR Mode. Can only work if NOT going through Steam as it will always add '-vrmode none' due to hard coded default Steam "launch option" args. See: https://steamdb.info/app/264710/config/
+            return true;
+        }
+
+        return false; // Default: use Steam unless explicitly disabled for special cases
+    }
+
     private void UpdateGamePlatform()
     {
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
     }
 }

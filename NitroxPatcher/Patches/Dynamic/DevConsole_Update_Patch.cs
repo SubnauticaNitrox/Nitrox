@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxModel.Helper;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
@@ -9,7 +9,7 @@ using static System.Reflection.Emit.OpCodes;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-///     Keeps DevConsole disabled when enter is pressed.
+///     Keeps DevConsole disabled when enter is pressed while the Nitrox chat input is selected.
 /// </summary>
 public sealed partial class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
 {
@@ -29,6 +29,12 @@ public sealed partial class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        return instructions.ChangeAtMarker(devConsoleSetStateTruePattern, "ConsoleEnableFlag", i => i.opcode = Ldc_I4_0);
+        return instructions.ChangeAtMarker(devConsoleSetStateTruePattern, "ConsoleEnableFlag", i =>
+        {
+            i.opcode = Call;
+            i.operand = Reflect.Method(() => ShouldEnableConsole());
+        });
     }
+
+    private static bool ShouldEnableConsole() => !PlayerChatManager.Instance.IsChatSelected;
 }

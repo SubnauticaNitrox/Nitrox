@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication;
 
@@ -49,5 +48,25 @@ public class PacketSuppressorTest
         Assert.IsFalse(PacketSuppressor<FMODCustomEmitterPacket>.IsSuppressed);
         Assert.IsFalse(PacketSuppressor<FMODCustomLoopingEmitterPacket>.IsSuppressed);
         Assert.IsFalse(PacketSuppressor<FMODStudioEmitterPacket>.IsSuppressed);
+    }
+
+    [TestMethod]
+    public void NestedSuppress()
+    {
+        Assert.IsFalse(PacketSuppressor<BedEnter>.IsSuppressed);
+
+        using (PacketSuppressor<BedEnter>.Suppress())
+        {
+            Assert.IsTrue(PacketSuppressor<BedEnter>.IsSuppressed);
+
+            using (PacketSuppressor<BedEnter>.Suppress())
+            {
+                Assert.IsTrue(PacketSuppressor<BedEnter>.IsSuppressed);
+            }
+
+            Assert.IsTrue(PacketSuppressor<BedEnter>.IsSuppressed);
+        }
+
+        Assert.IsFalse(PacketSuppressor<BedEnter>.IsSuppressed);
     }
 }

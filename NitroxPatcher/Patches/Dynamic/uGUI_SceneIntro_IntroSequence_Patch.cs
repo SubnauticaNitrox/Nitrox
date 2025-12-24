@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -26,11 +25,11 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                )
                .SetAndAdvance(OpCodes.Call, Reflect.Method(() => IsWorldSettledAndInitialSyncCompleted()))
                .RemoveInstruction()
-               // Replace GameInput.AnyKeyDown() check with AnyKeyDownOrModeCompleted()
+               // Replace GameInput.AnyKeyDown check with AnyKeyDownOrSubstitute()
                .MatchEndForward(
-                   new CodeMatch(OpCodes.Call, Reflect.Method(() => GameInput.AnyKeyDown()))
+                   new CodeMatch(OpCodes.Call, Reflect.Property(() => GameInput.AnyKeyDown).GetMethod)
                )
-               .SetOperandAndAdvance(Reflect.Method(() => AnyKeyDownOrModeCompleted()))
+               .SetOperandAndAdvance(Reflect.Method(() => AnyKeyDownOrSubstitute()))
                // Insert custom check if cinematic should be started => waiting for other player & enable skip functionality
                .MatchEndForward(
                    new CodeMatch(OpCodes.Ldfld, Reflect.Field((uGUI_SceneIntro si) => si.moveNext)),
@@ -92,9 +91,11 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
-    private static bool AnyKeyDownOrModeCompleted()
+    private static bool AnyKeyDownOrSubstitute()
     {
-        return GameInput.AnyKeyDown() || Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED;
+        return GameInput.AnyKeyDown ||
+               !NitroxEnvironment.IsReleaseMode ||
+               Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED;
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
@@ -112,22 +113,24 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             return true;
         }
 
-        if (GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
+        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
         {
-            SkipLocalCinematic(uGuiSceneIntro); // Skipping intro if Creative like in normal SN
+            SkipLocalCinematic(uGuiSceneIntro, false);
             return false;
         }
 
-        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
+        // Skipping intro if creative like in normal SN or in debug configuration
+        if (!NitroxEnvironment.IsReleaseMode ||
+            GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
         {
-            SkipLocalCinematic(uGuiSceneIntro);
+            SkipLocalCinematic(uGuiSceneIntro, true);
             return false;
         }
 
         if (!packetSend)
         {
             uGuiSceneIntro.skipHintStartTime = Time.time;
-            uGuiSceneIntro.mainText.SetText(Language.main.GetFormat("Nitrox_IntroWaitingPartner", uGUI.FormatButton(GameInput.Button.UIMenu)));
+            uGuiSceneIntro.mainText.SetText(Language.main.GetFormat("Nitrox_IntroWaitingPartner", GameInput.FormatButton(GameInput.Button.UIMenu)));
             uGuiSceneIntro.mainText.SetState(true);
 
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.WAITING);
@@ -197,9 +200,23 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     private static bool IsPartnerValid() => partner != null && Resolve<PlayerManager>().Find(partner.PlayerId).HasValue;
 
-    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro)
+    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro, bool wasNewPlayer)
     {
+        LiveMixin radioLiveMixin = EscapePod.main.radioSpawner.spawnedObj.GetComponent<Radio>().liveMixin;
+        float radioHealthBefore = radioLiveMixin.health;
+
         uGuiSceneIntro.Stop(true);
+
+        if (!wasNewPlayer)
+        {
+            // EscapePod.DamageRadio() is called by GuiSceneIntro.Stop(true) but is undesired. We revert it here
+            radioLiveMixin.health = radioHealthBefore;
+        }
+
+        if (radioLiveMixin.IsFullHealth())
+        {
+            Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
+        }
 
         Transform introFireHolder = EscapePod.main.transform.Find("Intro");
         if (introFireHolder) // Can be null if called very early

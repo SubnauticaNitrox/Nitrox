@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net472;net9.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" />
+        <PackageReference Include="LiteNetLib" />
+        <PackageReference Include="Microsoft.Win32.Registry" />
+        <PackageReference Include="Mono.Nat" />
+        <PackageReference Include="Newtonsoft.Json" NoWarn="NU1091;NU1092;NU1903;NU1904" />
+        <PackageReference Include="Nitrox.BinaryPack" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.Sinks.Async" />
+        <PackageReference Include="Serilog.Sinks.File" />
+        <PackageReference Include="Serilog.Sinks.Map" />
+        <PackageReference Include="System.Buffers" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" />
+        <PackageReference Include="System.Numerics.Vectors" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
+        <PackageReference Include="System.Text.Json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="protobuf-net">
+            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <Choose>
+        <When Condition="'$(TargetFramework)' == 'net472'">
+            <ItemGroup>
+                <!-- .NET Framework 4.7.2 specific references -->
+                <Reference Include="System.Net.Http" />
+                <PackageReference Include="System.ComponentModel" />
+                <PackageReference Include="System.IO.Compression" />
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <ItemGroup>
+                <!-- Modern .NET specific references -->
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
+</Project>

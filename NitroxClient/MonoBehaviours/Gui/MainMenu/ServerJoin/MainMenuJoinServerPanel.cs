@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -65,6 +64,9 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         playerNameInputField.textComponent.fontSizeMax = 21;
         playerNameInputField.textComponent.GetComponent<RectTransform>().sizeDelta = new Vector2(-20, 42);
         playerNameInputField.characterLimit = 25; // See this.OnJoinClick()
+        playerNameInputField.onFocusSelectAll = false;
+        playerNameInputField.onSubmit.AddListener(_ => OnJoinClick());
+        playerNameInputField.onSubmit.AddListener(_ => DeselectAllItems());
         playerNameInputField.ActivateInputField();
 
         //Prepares player color picker
@@ -131,6 +133,17 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     {
         playerNameInputField.text = playerName;
         colorPicker.SetHSB(hsb);
+    }
+
+    public void FocusNameInputField()
+    {
+        StartCoroutine(Coroutine());
+        IEnumerator Coroutine()
+        {
+            SelectFirstItem();
+            yield return new WaitForEndOfFrame();
+            playerNameInputField.MoveToEndOfLine(false, true);
+        }
     }
 
     public bool OnButtonDown(GameInput.Button button)
@@ -205,7 +218,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         if (selectedItem == selectableItems[1])
         {
             colorPicker.pointer.GetComponent<Image>().color = Color.cyan;
-            if (GameInput.GetPrimaryDevice() == GameInput.Device.Controller)
+            if (GameInput.PrimaryDevice == GameInput.Device.Controller)
             {
                 colorPickerPreview.OnPointerDown(null);
             }
@@ -246,7 +259,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             Image colorPickerPointer = selectedColorPicker.pointer.GetComponent<Image>();
 
             if (colorPickerPointer.color != Color.white &&
-                GameInput.GetPrimaryDevice() == GameInput.Device.Controller)
+                GameInput.PrimaryDevice == GameInput.Device.Controller)
             {
                 colorPickerPreview.OnPointerUp(null);
             }

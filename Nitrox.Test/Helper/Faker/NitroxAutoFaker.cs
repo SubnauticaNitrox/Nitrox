@@ -1,12 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using BinaryPack.Attributes;
-using NitroxModel.Logger;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -172,6 +166,13 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
                                 foreach (dynamic createdValue in ((IEnumerable)parameterValues[index]))
                                 {
                                     origColl.Add(createdValue);
+                                }
+
+                                break;
+                            case NitroxCollectionFaker.CollectionType.QUEUE:
+                                foreach (dynamic createdValue in ((IEnumerable)parameterValues[index]))
+                                {
+                                    origColl.Enqueue(createdValue);
                                 }
 
                                 break;

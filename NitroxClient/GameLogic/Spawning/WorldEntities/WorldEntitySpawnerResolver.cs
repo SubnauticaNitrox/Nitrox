@@ -1,19 +1,16 @@
 using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class WorldEntitySpawnerResolver
 {
     private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new();
-    private readonly VehicleWorldEntitySpawner vehicleWorldEntitySpawner;
 
     private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner;
     private readonly PlaceholderGroupWorldEntitySpawner placeholderGroupWorldEntitySpawner;
-    private readonly PlayerWorldEntitySpawner playerWorldEntitySpawner;
     private readonly SerializedWorldEntitySpawner serializedWorldEntitySpawner;
     private readonly GeyserWorldEntitySpawner geyserWorldEntitySpawner;
     private readonly ReefbackEntitySpawner reefbackEntitySpawner;
@@ -22,20 +19,18 @@ public class WorldEntitySpawnerResolver
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
+    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
-        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(entityMetadataManager);
+        customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
-        vehicleWorldEntitySpawner = new(entities);
-        prefabPlaceholderEntitySpawner = new(defaultEntitySpawner);
+        prefabPlaceholderEntitySpawner = new PrefabPlaceholderEntitySpawner(defaultEntitySpawner);
         placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, entityMetadataManager, prefabPlaceholderEntitySpawner);
-        playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
-        geyserWorldEntitySpawner = new(entities);
+        geyserWorldEntitySpawner = new GeyserWorldEntitySpawner(entities);
         reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();
         reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner);
-        creatureRespawnEntitySpawner = new(simulationOwnership);
+        creatureRespawnEntitySpawner = new CreatureRespawnEntitySpawner(simulationOwnership);
     }
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
@@ -46,10 +41,6 @@ public class WorldEntitySpawnerResolver
                 return prefabPlaceholderEntitySpawner;
             case PlaceholderGroupWorldEntity:
                 return placeholderGroupWorldEntitySpawner;
-            case PlayerWorldEntity:
-                return playerWorldEntitySpawner;
-            case VehicleWorldEntity:
-                return vehicleWorldEntitySpawner;
             case SerializedWorldEntity:
                 return serializedWorldEntitySpawner;
             case GeyserWorldEntity:

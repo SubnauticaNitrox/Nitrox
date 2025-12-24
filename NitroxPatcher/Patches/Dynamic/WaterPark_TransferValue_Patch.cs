@@ -2,10 +2,8 @@ using System.Reflection;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.Helper;
+using Nitrox.Model.DataStructures;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -41,6 +39,7 @@ public sealed partial class WaterPark_TransferValue_Patch : NitroxPatch, IDynami
             NitroxId newId = Temp.NewWaterPark?.Id ?? new();
             Log.Debug($"Changed id when transferring value, from nothing to {newId} [source: {sourceId}]");
             NitroxEntity.SetNewId(dstWaterPark.gameObject, newId);
+            BuildingPostSpawner.SetupWaterPark(dstWaterPark, newId);
             if (Temp.NewWaterPark == null)
             {
                 Temp.NewWaterPark = InteriorPieceEntitySpawner.From(dstWaterPark, Resolve<EntityMetadataManager>());
@@ -48,9 +47,16 @@ public sealed partial class WaterPark_TransferValue_Patch : NitroxPatch, IDynami
             }
             return;
         }
+
         // Happens when you place a piece at the bottom of a waterpark
         // We simply take the existing water park entity to avoid unnecessary actions
         // its BaseFace will be updated with updatedChildren field in UpdateBase packet
         NitroxEntity.SetNewId(dstWaterPark.gameObject, sourceId);
+        BuildingPostSpawner.SetupWaterPark(dstWaterPark, sourceId);
+
+        // This is a little "cheat" on our own system because it means that we're cleaning any planter entity
+        // because plants aren't transferred during this operation so we need the server to understand it
+        // see BuildingManager.UpdateBase how ChildrenTransfer works to understand better
+        Temp.ChildrenTransfer = (sourceId, sourceId);
     }
 }

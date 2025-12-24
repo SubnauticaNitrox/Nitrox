@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxServer.Serialization.World;
-using ReactiveUI;
+using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -22,30 +20,27 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
     private AvaloniaList<BackupItem> backups = [];
 
     [ObservableProperty]
-    private string saveFolderDirectory;
+    private string? saveFolderDirectory;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand))]
     [NotifyDataErrorInfo]
     [Backup]
-    private BackupItem selectedBackup;
+    private BackupItem? selectedBackup;
 
     [ObservableProperty]
-    private string title;
+    private string? title;
 
-    public BackupRestoreViewModel()
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        this.WhenActivated(disposables =>
+        base.OnPropertyChanged(e);
+        switch (e.PropertyName)
         {
-            this.WhenAnyValue(model => model.SaveFolderDirectory)
-                .Where(x => !string.IsNullOrWhiteSpace(x) && Directory.Exists(x))
-                .Subscribe(owner =>
-                {
-                    Backups.Clear();
-                    Backups.AddRange(GetBackups(SaveFolderDirectory));
-                })
-                .DisposeWith(disposables);
-        });
+            case nameof(SaveFolderDirectory) when !string.IsNullOrWhiteSpace(SaveFolderDirectory) && Directory.Exists(SaveFolderDirectory):
+                Backups.Clear();
+                Backups.AddRange(GetBackups(SaveFolderDirectory));
+                break;
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
@@ -53,7 +48,7 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
 
     public bool CanRestoreBackup() => !HasErrors;
 
-    private static IEnumerable<BackupItem> GetBackups(string saveDirectory)
+    private static IEnumerable<BackupItem> GetBackups(string? saveDirectory)
     {
         IEnumerable<string> GetBackupFilePaths(string backupRootDir) =>
             Directory.EnumerateFiles(backupRootDir, "*.zip")
@@ -68,6 +63,14 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
 
                          string dateTimePart = fileName["Backup - ".Length..];
                          return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+                     })
+                     .OrderByDescending(file =>
+                     {
+                         string fileName = Path.GetFileNameWithoutExtension(file);
+                         string dateTimePart = fileName["Backup - ".Length..];
+                         return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate)
+                             ? parsedDate
+                             : File.GetCreationTime(file);
                      });
 
         if (saveDirectory == null)
@@ -80,13 +83,16 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
             yield break;
         }
 
+        int i = 0;
         foreach (string backupPath in GetBackupFilePaths(backupDir))
         {
             if (!DateTime.TryParseExact(Path.GetFileNameWithoutExtension(backupPath)["Backup - ".Length..], WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime backupDate))
             {
                 backupDate = File.GetCreationTime(backupPath);
             }
-            yield return new BackupItem(backupDate, backupPath);
+            i++;
+            string backupName = $"[b]Backup {i})[/b]\t{backupDate}";
+            yield return new BackupItem(backupName, backupPath);
         }
     }
 }

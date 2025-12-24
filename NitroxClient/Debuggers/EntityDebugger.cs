@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
+using Nitrox.Model.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers

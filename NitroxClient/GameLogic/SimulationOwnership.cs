@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -24,7 +25,7 @@ namespace NitroxClient.GameLogic
         }
         public bool PlayerHasMinLockType(NitroxId id, SimulationLockType lockType)
         {
-            if (simulatedIdsByLockType.TryGetValue(id, out SimulationLockType playerLock))
+            if (id != null && simulatedIdsByLockType.TryGetValue(id, out SimulationLockType playerLock))
             {
                 return playerLock <= lockType;
             }

@@ -1,11 +1,14 @@
 using System.Collections;
+using Nitrox.Model.DataStructures;
+using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
@@ -28,7 +31,7 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         {
             return false;
         }
-        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
         SetupObject(entity, gameObject);
 
         result.Set(gameObject);
@@ -39,18 +42,82 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
     {
         LargeWorldEntity largeWorldEntity = gameObject.EnsureComponent<LargeWorldEntity>();
         largeWorldEntity.cellLevel = LargeWorldEntity.CellLevel.Global;
+        
         LargeWorld.main.streamer.cellManager.RegisterEntity(largeWorldEntity);
-        if (entity.ParentId != null && NitroxEntity.TryGetComponentFrom(entity.ParentId, out Transform parentTransform))
-        {
-            gameObject.transform.parent = parentTransform;
-        }
+        largeWorldEntity.Start();
+
         gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
         gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
         gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
+        if (entity.ParentId != null && NitroxEntity.TryGetComponentFrom(entity.ParentId, out Transform parentTransform))
+        {
+            // WaterParks have a child named "items_root" where the fish are put
+            if (parentTransform.TryGetComponent(out WaterPark waterPark))
+            {
+                SetupObjectInWaterPark(gameObject, largeWorldEntity, waterPark);
+
+                // TODO: When metadata is reworked (it'll be possible to give different metadatas to the same entity)
+                // this will no longer be needed because the entity metadata will set this to false accordingly
+
+                // If fishes are in a WaterPark, it means that they were once picked up
+                if (gameObject.TryGetComponent(out CreatureDeath creatureDeath))
+                {
+                    // This is set to false when picking up a fish or when a fish is born in the WaterPark
+                    creatureDeath.respawn = false;
+                }
+            }
+            else
+            {
+                gameObject.transform.SetParent(parentTransform, false);
+            }
+        }
+
         if (gameObject.GetComponent<PlaceTool>())
         {
             PlacedWorldEntitySpawner.AdditionalSpawningSteps(gameObject);
+        }
+    }
+
+    public static void SetupObjectInWaterPark(GameObject gameObject, LargeWorldEntity largeWorldEntity, WaterPark waterPark)
+    {
+        // Fishes in water parks are GlobalRootEntities on server-side but client-side needs them at a regular cell level (not GlobalRoot)
+        // initialCellLevel refers to the prefab's cell level which is the value we'll use
+        largeWorldEntity.cellLevel = largeWorldEntity.initialCellLevel;
+
+        gameObject.transform.SetParent(waterPark.itemsRoot, false);
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+        {
+            waterPark.AddItem(gameObject.EnsureComponent<Pickupable>());
+
+            // While being fully loaded, the base is inactive so GameObject.SendMessage doesn't work and we need to execute their callbacks manually
+            if (!Multiplayer.Main || Multiplayer.Main.InitialSyncCompleted)
+            {
+                return;
+            }
+
+            // Below are distinct incompatible cases
+            if (gameObject.TryGetComponent(out CreatureEgg creatureEgg) && !creatureEgg.insideWaterPark)
+            {
+                creatureEgg.OnAddToWaterPark();
+            }
+            else if (gameObject.TryGetComponent(out CuteFish cuteFish))
+            {
+                cuteFish.OnAddToWaterPark(null);
+            }
+            else if (gameObject.TryGetComponent(out CrabSnake crabSnake))
+            {
+                // This callback interacts with an animator, but this behaviour needs to be initialized (probably during Start) before it can be modified
+                IEnumerator PostponedCallback()
+                {
+                    yield return new WaitUntil(() => !crabSnake || crabSnake.animationController.animator.isInitialized);
+                    if (crabSnake)
+                    {
+                        crabSnake.OnAddToWaterPark();
+                    }
+                }
+                CoroutineHost.StartCoroutine(PostponedCallback());
+            }
         }
     }
 

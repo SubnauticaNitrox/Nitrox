@@ -1,6 +1,5 @@
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;

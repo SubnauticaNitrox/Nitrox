@@ -5,12 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HarmonyX" Version="2.10.0" />
+        <PackageReference Include="HarmonyX" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
-        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+        <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
 
     <Target Name="IncludeGameReferences" AfterTargets="FindGameAndIncludeReferences">

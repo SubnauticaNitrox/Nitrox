@@ -1,5 +1,3 @@
-using System;
-
 namespace Nitrox.Test.Helper;
 
 public static class TypeExtension

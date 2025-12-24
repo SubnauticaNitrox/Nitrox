@@ -3,7 +3,6 @@ using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -16,11 +15,7 @@ public partial class NotificationItem : ObservableObject
     [ObservableProperty]
     private bool dismissed;
 
-    public NotificationItem()
-    {
-    }
-
-    public NotificationItem(string message, NotificationType type = NotificationType.Information, ICommand closeCommand = null)
+    public NotificationItem(string message, NotificationType type = NotificationType.Information, ICommand? closeCommand = null)
     {
         Message = message;
         Type = type;

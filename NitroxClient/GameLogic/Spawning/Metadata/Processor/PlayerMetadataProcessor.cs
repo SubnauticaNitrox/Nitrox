@@ -2,12 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
-using static NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -38,12 +35,12 @@ public class PlayerMetadataProcessor : EntityMetadataProcessor<PlayerMetadata>
         }
     }
 
-    private void UpdateForLocalPlayer(PlayerMetadata metadata)
+    private static void UpdateForLocalPlayer(PlayerMetadata metadata)
     {
         ItemsContainer currentItems = Inventory.Get().container;
         Equipment equipment = Inventory.main.equipment;
 
-        foreach (EquippedItem equippedItem in metadata.EquippedItems)
+        foreach (PlayerMetadata.EquippedItem equippedItem in metadata.EquippedItems)
         {
             InventoryItem inventoryItem = currentItems.FirstOrDefault(item => item.item.TryGetNitroxId(out NitroxId id) && equippedItem.Id == id);
 
@@ -66,9 +63,8 @@ public class PlayerMetadataProcessor : EntityMetadataProcessor<PlayerMetadata>
         }
     }
 
-    private void UpdateForRemotePlayer(GameObject gameObject, PlayerMetadata metadata)
+    private static void UpdateForRemotePlayer(GameObject gameObject, PlayerMetadata metadata)
     {
-        Log.Info("Calling UpdateForRemotePlayer");
         RemotePlayerIdentifier remotePlayerId = gameObject.RequireComponent<RemotePlayerIdentifier>();
 
         List<TechType> equippedTechTypes = metadata.EquippedItems.Select(x => x.TechType.ToUnity()).ToList();

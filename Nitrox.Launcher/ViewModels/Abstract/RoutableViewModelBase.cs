@@ -1,23 +1,37 @@
-﻿using System.Reactive.Disposables;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Nitrox.Launcher.Models.Design;
-using ReactiveUI;
+using CommunityToolkit.Mvvm.Messaging;
+using Nitrox.Launcher.Models;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class RoutableViewModelBase : ViewModelBase
+internal abstract class RoutableViewModelBase : ViewModelBase
 {
-    public IRoutingScreen HostScreen { get; } = AppViewLocator.HostScreen;
-
-    protected RoutableViewModelBase()
+    /// <summary>
+    ///     Updates the current view container to show a different view, as is known by the TViewModel type.
+    /// </summary>
+    protected void ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : RoutableViewModelBase
     {
-        this.WhenActivated(disposables => Disposable.Create(this, model => model.ViewContentUnloadAsync()).DisposeWith(disposables));
+        WeakReferenceMessenger.Default.Send(new ShowViewMessage
+        {
+            ViewModel = viewModel
+        });
+    }
+
+    protected void ChangeViewToPrevious()
+    {
+        WeakReferenceMessenger.Default.Send(new ShowPreviousViewMessage());
+    }
+
+    protected void ChangeViewToPrevious<T>() where T : RoutableViewModelBase
+    {
+        WeakReferenceMessenger.Default.Send(new ShowPreviousViewMessage(typeof(T)));
     }
 
     /// <summary>
     ///     Loads content that the view should show. While the returned task is running a loading indicator will be visible.
     /// </summary>
-    internal virtual Task ViewContentLoadAsync() => Task.CompletedTask;
+    internal virtual Task ViewContentLoadAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 
     internal virtual Task ViewContentUnloadAsync() => Task.CompletedTask;
 }

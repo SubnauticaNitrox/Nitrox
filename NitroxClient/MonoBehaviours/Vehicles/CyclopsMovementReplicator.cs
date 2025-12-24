@@ -1,5 +1,8 @@
+using FMOD.Studio;
 using NitroxClient.GameLogic;
-using NitroxModel.Packets;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
@@ -11,13 +14,17 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
 
     private SubControl subControl;
 
-    private RemotePlayer drivingPlayer;
+    private FMOD_CustomLoopingEmitter rpmSound;
+    private float radiusRpmSound;
+
+    private RemotePlayer? drivingPlayer;
     private bool throttleApplied;
     private float steeringWheelYaw;
 
     public void Awake()
     {
         subControl = GetComponent<SubControl>();
+        SetupSound();
     }
 
     public new void Update()
@@ -57,8 +64,8 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
             return;
         }
 
-        steeringWheelYaw = vehicleMovementData.SteeringWheelYaw;
-        float steeringWheelPitch = vehicleMovementData.SteeringWheelPitch;
+        steeringWheelYaw = drivingPlayer != null ? vehicleMovementData.SteeringWheelYaw : 0f;
+        float steeringWheelPitch = drivingPlayer != null ? vehicleMovementData.SteeringWheelPitch : 0f;
 
         // See SubControl.UpdateAnimation
         subControl.steeringWheelYaw = steeringWheelYaw;
@@ -75,7 +82,23 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
             }
         }
 
-        throttleApplied = vehicleMovementData.ThrottleApplied;
+        // Adjusting volume for the engine Sound
+        float distanceToPlayer = Vector3.Distance(Player.main.transform.position, transform.position);
+        float volumeRpmSound = SoundHelper.CalculateVolume(distanceToPlayer, radiusRpmSound, 1f);
+        rpmSound.GetEventInstance().setVolume(volumeRpmSound);
+
+        throttleApplied = vehicleMovementData.ThrottleApplied && drivingPlayer != null;
+    }
+    
+    private void SetupSound()
+    {
+        rpmSound = subControl.engineRPMManager.engineRpmSFX;
+
+        rpmSound.followParent = true;
+
+        this.Resolve<FMODWhitelist>().IsWhitelisted(rpmSound.asset.path, out radiusRpmSound);
+        rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusRpmSound);
     }
     
     public override void Enter(RemotePlayer drivingPlayer)

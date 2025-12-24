@@ -1,20 +1,22 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Logger;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class BlogViewModel : RoutableViewModelBase
+internal sealed partial class BlogViewModel : RoutableViewModelBase
 {
+    private readonly NitroxBlogService? nitroxBlogService;
     public static Bitmap FallbackImage { get; } = AssetHelper.GetAssetFromStream("/Assets/Images/blog/vines.png", static stream => new Bitmap(stream));
 
     [ObservableProperty]
@@ -24,9 +26,14 @@ public partial class BlogViewModel : RoutableViewModelBase
     {
     }
 
-    internal override async Task ViewContentLoadAsync()
+    public BlogViewModel(NitroxBlogService nitroxBlogService)
     {
-        if (Design.IsDesignMode)
+        this.nitroxBlogService = nitroxBlogService;
+    }
+
+    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
+    {
+        if (IsDesignMode)
         {
             return;
         }
@@ -37,7 +44,17 @@ public partial class BlogViewModel : RoutableViewModelBase
                 try
                 {
                     NitroxBlogs.Clear();
-                    NitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
+                    await foreach (NitroxBlog? blog in nitroxBlogService?.GetBlogPostsAsync(cancellationToken)!)
+                    {
+                        NitroxBlogs.Add(blog);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        LauncherNotifier.Error("Failed to fetch Nitrox blogs");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -50,6 +67,6 @@ public partial class BlogViewModel : RoutableViewModelBase
     [RelayCommand]
     private void BlogEntryClick(string blogUrl)
     {
-        ProcessUtils.OpenUrl(blogUrl);
+        OpenUri(blogUrl);
     }
 }

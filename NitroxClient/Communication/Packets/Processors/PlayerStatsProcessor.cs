@@ -1,7 +1,8 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
-using NitroxModel.Packets;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -19,10 +20,13 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
         if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
         {
             RemotePlayerVitals vitals = remotePlayer.vitals;
-            vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
-            vitals.SetHealth(playerStats.Health);
-            vitals.SetFood(playerStats.Food);
-            vitals.SetWater(playerStats.Water);
+            if (vitals)
+            {
+                vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
+                vitals.SetHealth(playerStats.Health);
+                vitals.SetFood(playerStats.Food);
+                vitals.SetWater(playerStats.Water);
+            }
             remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
         }
     }
