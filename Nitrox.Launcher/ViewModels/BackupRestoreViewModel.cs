@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -62,13 +63,13 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
                          }
 
                          string dateTimePart = fileName["Backup - ".Length..];
-                         return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+                         return DateTime.TryParseExact(dateTimePart, PersistanceConstants.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
                      })
                      .OrderByDescending(file =>
                      {
                          string fileName = Path.GetFileNameWithoutExtension(file);
                          string dateTimePart = fileName["Backup - ".Length..];
-                         return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate)
+                         return DateTime.TryParseExact(dateTimePart, PersistanceConstants.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate)
                              ? parsedDate
                              : File.GetCreationTime(file);
                      });
@@ -86,7 +87,7 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
         int i = 0;
         foreach (string backupPath in GetBackupFilePaths(backupDir))
         {
-            if (!DateTime.TryParseExact(Path.GetFileNameWithoutExtension(backupPath)["Backup - ".Length..], WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime backupDate))
+            if (!DateTime.TryParseExact(Path.GetFileNameWithoutExtension(backupPath)["Backup - ".Length..], PersistanceConstants.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime backupDate))
             {
                 backupDate = File.GetCreationTime(backupPath);
             }

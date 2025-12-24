@@ -3,13 +3,15 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class ChatMessageProcessor : AuthenticatedPacketProcessor<ChatMessage>
+    sealed class ChatMessageProcessor : AuthenticatedPacketProcessor<ChatMessage>
     {
         private readonly PlayerManager playerManager;
+        private readonly ILogger<ChatMessageProcessor> logger;
 
-        public ChatMessageProcessor(PlayerManager playerManager)
+        public ChatMessageProcessor(PlayerManager playerManager, ILogger<ChatMessageProcessor> logger)
         {
             this.playerManager = playerManager;
+            this.logger = logger;
         }
 
         public override void Process(ChatMessage packet, Player player)
@@ -19,7 +21,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
                 player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You're currently muted"));
                 return;
             }
-            Log.Info($"<{player.Name}>: {packet.Text}");
+            logger.ZLogInformation($"<{player.Name}>: {packet.Text}");
             playerManager.SendPacketToAllPlayers(packet);
         }
     }

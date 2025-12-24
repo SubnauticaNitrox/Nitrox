@@ -2,31 +2,30 @@
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
+using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
 namespace Nitrox.Server.Subnautica.Models.Commands
 {
 
     internal class DebugStartMapCommand : Command
     {
-        private readonly RandomStartGenerator nitroxRandomStart;
+        private readonly RandomStartResource randomStartResource;
+        private readonly IOptions<SubnauticaServerOptions> options;
         private readonly PlayerManager playerManager;
-        private readonly World world;
 
-        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) :
+        public DebugStartMapCommand(PlayerManager playerManager, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options) :
             base("debugstartmap", Perms.ADMIN, "Spawns blocks at spawn positions")
         {
             this.playerManager = playerManager;
-            this.nitroxRandomStart = nitroxRandomStart;
-            this.world = world;
+            this.randomStartResource = randomStartResource;
+            this.options = options;
         }
 
         protected override void Execute(CallArgs args)
         {
-            List<NitroxVector3> randomStartPositions = nitroxRandomStart.GenerateRandomStartPositions(world.Seed);
+            List<NitroxVector3> randomStartPositions = randomStartResource.RandomStartGenerator.GenerateRandomStartPositions(options.Value.Seed ?? throw new InvalidOperationException());
 
             playerManager.SendPacketToAllPlayers(new DebugStartMapPacket(randomStartPositions));
             SendMessage(args.Sender, $"Rendered {randomStartPositions.Count} spawn positions");

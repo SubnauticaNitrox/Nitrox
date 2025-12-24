@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Players;
@@ -37,7 +36,7 @@ public class PersistedPlayerData
     public PlayerStatsData CurrentStats { get; set; }
 
     [DataMember(Order = 9)]
-    public NitroxGameMode GameMode { get; set; }
+    public SubnauticaGameMode GameMode { get; set; }
 
     [DataMember(Order = 10)]
     public NitroxId SubRootId { get; set; }

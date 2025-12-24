@@ -6,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
+internal sealed class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
 {
     private readonly PlayerManager playerManager;
     private readonly EntitySimulation entitySimulation;
@@ -23,7 +23,7 @@ public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<Entit
     {
         entitySimulation.EntityDestroyed(packet.Id);
 
-        if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity entity))
+        if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity? entity))
         {
             if (entity is VehicleEntity vehicleEntity)
             {

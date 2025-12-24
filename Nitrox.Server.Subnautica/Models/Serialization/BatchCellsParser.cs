@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,13 +20,15 @@ namespace Nitrox.Server.Subnautica.Models.Serialization
     public class BatchCellsParser
     {
         private readonly EntitySpawnPointFactory entitySpawnPointFactory;
-        private readonly ServerProtoBufSerializer serializer;
+        private readonly SubnauticaServerProtoBufSerializer serializer;
+        private readonly IOptions<ServerStartOptions> options;
         private readonly Dictionary<string, Type> surrogateTypes;
 
-        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ServerProtoBufSerializer serializer)
+        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, SubnauticaServerProtoBufSerializer serializer, IOptions<ServerStartOptions> options)
         {
             this.entitySpawnPointFactory = entitySpawnPointFactory;
             this.serializer = serializer;
+            this.options = options;
 
             surrogateTypes = new Dictionary<string, Type>
             {
@@ -54,7 +55,7 @@ namespace Nitrox.Server.Subnautica.Models.Serialization
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "Build18");
+            string path = options.Value.GetSubnauticaBuild18Path();
             string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
             if (!File.Exists(fileName))

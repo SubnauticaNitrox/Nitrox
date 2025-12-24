@@ -68,7 +68,7 @@ public partial class TimeManager
 
     public void AttemptNtpSync()
     {
-        ntpSyncer.Setup(false, (onlineMode, correction) =>
+        ntpSyncer.Setup((onlineMode, correction) =>
         {
             if (onlineMode)
             {

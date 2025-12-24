@@ -5,7 +5,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcessor<RemoveCreatureCorpse>
+internal sealed class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcessor<RemoveCreatureCorpse>
 {
     private readonly PlayerManager playerManager;
     private readonly EntitySimulation entitySimulation;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nitrox.Model.Core;
@@ -9,8 +8,10 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
 {
+    // TODO: Refactor to a new command system that doesn't use base class (only interfaces and attributes).
     public abstract partial class Command
     {
+        private static ILogger? logger;
         private int optional, required;
 
         public virtual IEnumerable<string> Aliases { get; }
@@ -21,6 +22,8 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
         public PermsFlag Flags { get; }
         public bool AllowedArgOverflow { get; set; }
         public List<IParameter<object>> Parameters { get; }
+
+        private static ILogger Logger => logger ??= NitroxServiceLocator.LocateService<ILoggerFactory>().CreateLogger(nameof(Command));
 
         protected Command(string name, Perms perms, PermsFlag flag, string description) : this(name, perms, description)
         {
@@ -35,12 +38,45 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
             Flags = PermsFlag.NONE;
             RequiredPermLevel = perms;
             AllowedArgOverflow = false;
-            Aliases = Array.Empty<string>();
+            Aliases = [];
             Parameters = new List<IParameter<object>>();
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
         protected abstract void Execute(CallArgs args);
+
+        /// <summary>
+        ///     Send a message to an existing player
+        /// </summary>
+        public static void SendMessageToPlayer(Optional<Player> player, string message)
+        {
+            if (player.HasValue)
+            {
+                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
+            }
+        }
+
+        /// <summary>
+        ///     Send a message to an existing player and logs it in the console
+        /// </summary>
+        public static void SendMessage(Optional<Player> player, string message)
+        {
+            SendMessageToPlayer(player, message);
+            if (!player.HasValue)
+            {
+                Logger.ZLogInformation($"{message}");
+            }
+        }
+
+        /// <summary>
+        ///     Send a message to all connected players
+        /// </summary>
+        public static void SendMessageToAllPlayers(string message)
+        {
+            PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
+            Logger.ZLogInformation($"[BROADCAST] {message}");
+        }
 
         public void TryExecute(Optional<Player> sender, Span<string> args)
         {
@@ -56,18 +92,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
                 return;
             }
 
-            try
-            {
-                Execute(new CallArgs(this, sender, args));
-            }
-            catch (ArgumentException ex)
-            {
-                SendMessage(sender, $"Error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Fatal error while trying to execute the command");
-            }
+            Execute(new CallArgs(this, sender, args));
         }
 
         public bool CanExecute(Perms treshold)
@@ -109,39 +134,6 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Abstract
             {
                 optional++;
             }
-        }
-
-        /// <summary>
-        /// Send a message to an existing player
-        /// </summary>
-        public static void SendMessageToPlayer(Optional<Player> player, string message)
-        {
-            if (player.HasValue)
-            {
-                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-            }
-        }
-
-        /// <summary>
-        /// Send a message to an existing player and logs it in the console
-        /// </summary>
-        public static void SendMessage(Optional<Player> player, string message)
-        {
-            SendMessageToPlayer(player, message);
-            if (!player.HasValue)
-            {
-                Log.Info(message);
-            }
-        }
-
-        /// <summary>
-        /// Send a message to all connected players
-        /// </summary>
-        public static void SendMessageToAllPlayers(string message)
-        {
-            PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
-            Log.Info($"[BROADCAST] {message}");
         }
     }
 }
