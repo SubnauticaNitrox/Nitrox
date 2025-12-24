@@ -1,5 +1,4 @@
-using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.InGame;

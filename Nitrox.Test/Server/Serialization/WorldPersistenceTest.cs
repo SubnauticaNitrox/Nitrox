@@ -1,6 +1,8 @@
+using Nitrox.Model;
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
 using Nitrox.Model.Core;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
@@ -23,6 +25,10 @@ public class WorldPersistenceTest
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
+        if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+        {
+            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+        }
         NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar(), new TestAutoFacRegistrar());
         NitroxServiceLocator.BeginNewLifetimeScope();
 
@@ -326,6 +332,10 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TimeStartHatching, metadataAfter.TimeStartHatching);
                 Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
                 break;
+            case DrillableMetadata metadata when entityAfter.Metadata is DrillableMetadata metadataAfter:
+                Assert.IsTrue(metadata.ChunkHealth.SequenceEqual(metadataAfter.ChunkHealth));
+                Assert.AreEqual(metadata.TimeLastDrilled, metadataAfter.TimeLastDrilled);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
@@ -463,7 +473,8 @@ public class WorldPersistenceTest
             case PathBasedChildEntity pathBasedChildEntity when entityAfter is PathBasedChildEntity pathBasedChildEntityAfter:
                 Assert.AreEqual(pathBasedChildEntity.Path, pathBasedChildEntityAfter.Path);
                 break;
-            case InstalledBatteryEntity when entityAfter is InstalledBatteryEntity:
+            case InstalledBatteryEntity installedBatteryEntity when entityAfter is InstalledBatteryEntity installedBatteryEntityAfter:
+                Assert.AreEqual(installedBatteryEntity.ComponentIndex, installedBatteryEntityAfter.ComponentIndex);
                 break;
             case InstalledModuleEntity installedModuleEntity when entityAfter is InstalledModuleEntity installedModuleEntityAfter:
                 Assert.AreEqual(installedModuleEntity.Slot, installedModuleEntityAfter.Slot);

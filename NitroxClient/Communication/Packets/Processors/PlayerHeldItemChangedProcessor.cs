@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Helper;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -67,6 +66,10 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                     tool.mainCollider.enabled = false;
                 }
                 tool.GetComponent<Rigidbody>().isKinematic = true;
+                if (tool.TryGetComponent(out Floater floater))
+                {
+                    floater.collider.enabled = false;
+                }
                 item.SetActive(true);
                 tool.SetHandIKTargetsEnabled(true);
                 SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
@@ -87,6 +90,10 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                     tool.mainCollider.enabled = true;
                 }
                 tool.GetComponent<Rigidbody>().isKinematic = false;
+                if (tool.TryGetComponent(out floater))
+                {
+                    floater.collider.enabled = true;
+                }
                 pickupable.inventoryItem.item.Reparent(inventory.tr);
                 foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
                 {

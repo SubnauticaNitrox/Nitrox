@@ -10,6 +10,6 @@ public sealed partial class ExosuitDrillArm_OnUseUp_Patch : NitroxPatch, IDynami
 
     public static void Prefix(ExosuitDrillArm __instance)
     {
-        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance, ExosuitArmAction.END_USE_TOOL);
+        Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance.exosuit, __instance, ExosuitArmAction.END_USE_TOOL);
     }
 }

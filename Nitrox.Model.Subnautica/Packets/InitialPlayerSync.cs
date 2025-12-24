@@ -68,8 +68,7 @@ namespace Nitrox.Model.Subnautica.Packets
             bool keepInventoryOnDeath,
             SessionSettings sessionSettings,
             bool inPrecursor,
-            bool displaySurfaceWater)
-            bool keepInventoryOnDeath,
+            bool displaySurfaceWater,
             bool markDeathPointsWithBeacon)
         {
             AssignedEscapePodId = assignedEscapePodId;
@@ -128,8 +127,7 @@ namespace Nitrox.Model.Subnautica.Packets
             bool keepInventoryOnDeath,
             SessionSettings sessionSettings,
             bool inPrecursor,
-            bool displaySurfaceWater)
-            bool keepInventoryOnDeath,
+            bool displaySurfaceWater,
             bool markDeathPointsWithBeacon)
         {
             AssignedEscapePodId = assignedEscapePodId;

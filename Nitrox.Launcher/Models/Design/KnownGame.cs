@@ -1,4 +1,4 @@
-using Nitrox.Model.Discovery.Models;
+using Nitrox.Model.Platforms.Discovery.Models;
 
 namespace Nitrox.Launcher.Models.Design;
 

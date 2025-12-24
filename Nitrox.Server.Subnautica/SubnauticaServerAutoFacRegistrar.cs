@@ -98,6 +98,7 @@ namespace Nitrox.Server.Subnautica
             containerBuilder.Register(c => c.Resolve<World>().ScheduleKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().WorldEntityManager).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().JoiningManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().EntityRegistry).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().EntitySimulation).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().EscapePodManager).SingleInstance();

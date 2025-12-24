@@ -11,7 +11,6 @@ using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
@@ -283,14 +282,10 @@ namespace NitroxClient.GameLogic
                 grownPlant.seed.AliveOrNull()?.FreeSpot();
                 return;
             }
-
             if (gameObject.TryGetComponent(out Pickupable pickupable))
             {
-                using (PacketSuppressor<ModuleRemoved>.Suppress())
-                {
-                    // Running this now means it won't get ran in OnDestroy() at the end of the frame, so no packets get sent
-                    pickupable.SetInventoryItem(null);
-                }
+                // Running this now means it won't get ran in OnDestroy() at the end of the frame, so no packets get sent
+                pickupable.SetInventoryItem(null);
             }
 
             UnityEngine.Object.Destroy(gameObject);

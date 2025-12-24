@@ -19,6 +19,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
     private const string PRECURSOR_STEP_SOUND_PATH = "event:/player/footstep_precursor_base";
     private const string METAL_STEP_SOUND_PATH = "event:/player/footstep_metal";
     private const string LAND_STEP_SOUND_PATH = "event:/player/footstep_dirt";
+    private const string EXOSUIT_STEP_SOUND_PATH = "event:/sub/exo/step";
 
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((FootstepSounds t) => t.OnStep(default));
 
@@ -64,19 +65,22 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
     // This method is called very often and should therefore be performant
     private static float CalculateVolume(float originalVolume, FootstepSounds instance, FMODAsset asset, Transform xform)
     {
-        // For exosuits only "event:/sub/exo/step" is used inside FootstepSounds
-        if (asset.path.Equals(LAND_STEP_SOUND_PATH, StringComparison.Ordinal) && (!Player.main.currentMountedVehicle || Player.main.currentMountedVehicle.gameObject != instance.gameObject))
+        // Handle Exosuit footsteps for remote Exosuits
+        if (asset.path.Equals(EXOSUIT_STEP_SOUND_PATH, StringComparison.Ordinal))
         {
-            // Origin is Exosuit which is controlled by remote player
-            return FMODSystem.CalculateVolume(xform.position, Player.main.transform.position, stepSoundRadius.Value, originalVolume);
+            // If local player is not in any vehicle, or is in a different vehicle than the one making footsteps
+            if (!Player.main.currentMountedVehicle || Player.main.currentMountedVehicle.gameObject != instance.gameObject)
+            {
+                return FMODSystem.CalculateVolume(xform.position, Player.main.transform.position, exosuitStepSoundRadius.Value, originalVolume);
+            }
         }
 
         return originalVolume;
     }
 
-    private static readonly Lazy<float> stepSoundRadius = new(() =>
+    private static readonly Lazy<float> exosuitStepSoundRadius = new(() =>
     {
-        Resolve<FMODWhitelist>().TryGetSoundData(LAND_STEP_SOUND_PATH, out SoundData soundData);
+        Resolve<FMODWhitelist>().TryGetSoundData(EXOSUIT_STEP_SOUND_PATH, out SoundData soundData);
         return soundData.Radius;
     });
 

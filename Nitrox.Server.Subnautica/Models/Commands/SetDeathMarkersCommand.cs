@@ -1,10 +1,11 @@
 using System.IO;
-using NitroxModel.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Serialization;
+using Nitrox.Server.Subnautica;
+using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.GameLogic;
 using NitroxModel.Packets;
-using NitroxModel.Serialization;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Abstract.Type;
-using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands;
 

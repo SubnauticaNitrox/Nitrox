@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Packets;
 
 namespace NitroxModel.Packets;
 
