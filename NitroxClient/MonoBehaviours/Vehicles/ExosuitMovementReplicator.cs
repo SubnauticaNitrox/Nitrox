@@ -1,6 +1,5 @@
 using FMOD.Studio;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.FMOD;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
@@ -9,10 +8,13 @@ namespace NitroxClient.MonoBehaviours.Vehicles;
 
 public class ExosuitMovementReplicator : VehicleMovementReplicator
 {
-    private Exosuit exosuit;
+    private const string DRILL_LOOP_SOUND_PATH = "event:/sub/exo/drill_loop";
+
+    private Exosuit exosuit = null!;
 
     public Vector3 velocity;
     private float jetLoopingSoundDistance;
+    private float drillLoopSoundDistance;
     private float thrustPower;
     private bool jetsActive;
     private float timeJetsActiveChanged;
@@ -36,13 +38,20 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
         velocity = (positionAfter - positionBefore) / Time.deltaTime;
 
+        // Calculate distance once and reuse for all sound volume calculations
+        float distanceToPlayer = Vector3.Distance(transform.position, Player.main.transform.position);
 
-        float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
-        EventInstance soundHandle = exosuit.loopingJetSound.playing ? exosuit.loopingJetSound.evt : exosuit.loopingJetSound.evtStop;
-        if (soundHandle.hasHandle())
+        // Update jet sound volume based on distance
+        float jetVolume = SoundHelper.CalculateVolume(distanceToPlayer, jetLoopingSoundDistance, 1f);
+        EventInstance jetSoundHandle = exosuit.loopingJetSound.playing ? exosuit.loopingJetSound.evt : exosuit.loopingJetSound.evtStop;
+        if (jetSoundHandle.hasHandle())
         {
-            soundHandle.setVolume(volume);
+            jetSoundHandle.setVolume(jetVolume);
         }
+
+        // Update drill sound volume based on distance for both arms
+        UpdateDrillArmSoundVolume(exosuit.leftArm, distanceToPlayer);
+        UpdateDrillArmSoundVolume(exosuit.rightArm, distanceToPlayer);
 
         // See Exosuit.Update, thrust power simulation
 
@@ -120,8 +129,13 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     private void SetupSound()
     {
-        this.Resolve<FMODWhitelist>().TryGetSoundData(exosuit.loopingJetSound.asset.path, out SoundData jetSoundData);
+        FMODWhitelist whitelist = this.Resolve<FMODWhitelist>();
+
+        whitelist.TryGetSoundData(exosuit.loopingJetSound.asset.path, out SoundData jetSoundData);
         jetLoopingSoundDistance = jetSoundData.Radius;
+
+        whitelist.TryGetSoundData(DRILL_LOOP_SOUND_PATH, out SoundData drillSoundData);
+        drillLoopSoundDistance = drillSoundData.Radius;
         
         if (FMODUWE.IsInvalidParameterId(exosuit.fmodIndexSpeed))
         {
@@ -130,6 +144,28 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         if (FMODUWE.IsInvalidParameterId(exosuit.fmodIndexRotate))
         {
             exosuit.fmodIndexRotate = exosuit.ambienceSound.GetParameterIndex("rotate");
+        }
+    }
+
+    private void UpdateDrillArmSoundVolume(IExosuitArm arm, float distanceToPlayer)
+    {
+        if (arm is not ExosuitDrillArm drillArm)
+        {
+            return;
+        }
+
+        float drillVolume = SoundHelper.CalculateVolume(distanceToPlayer, drillLoopSoundDistance, 1f);
+
+        // Update drill loop sound volume
+        if (drillArm.loop && drillArm.loop.playing && drillArm.loop.evt.hasHandle())
+        {
+            drillArm.loop.evt.setVolume(drillVolume);
+        }
+
+        // Update drill hit loop sound volume
+        if (drillArm.loopHit && drillArm.loopHit.playing && drillArm.loopHit.evt.hasHandle())
+        {
+            drillArm.loopHit.evt.setVolume(drillVolume);
         }
     }
 
