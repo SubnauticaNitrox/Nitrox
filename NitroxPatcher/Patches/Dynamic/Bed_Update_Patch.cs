@@ -27,7 +27,7 @@ public sealed partial class Bed_Update_Patch : NitroxPatch, IDynamicPatch
             HandReticle.main.SetText(HandReticle.TextType.Hand, "Get Up", true, GameInput.Button.Exit);
             HandReticle.main.SetIcon(HandReticle.IconType.None, 1f);
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (GameInput.GetButtonDown(GameInput.Button.Exit))
             {
                 sleepManager.ExitBed();
             }
