@@ -5,9 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Nitrox.Model.Core;
+using Nitrox.Model.Extensions;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
@@ -277,7 +279,8 @@ public class Server
 
     private async Task LogHowToConnectAsync()
     {
-        Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
+        Task<(IPAddress Address, string NetworkName, AddressFamily AddressFamily)[]> lanAddressInfosTask =
+            Task.Run(() => NetHelper.GetLanAddressInfos().ToArray());
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
         Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(NetHelper.GetVpnIps);
 
@@ -295,11 +298,12 @@ public class Server
             }
             options.Add($"{vpnAddress.TryExtractMappedIPv4()} - Friends using {vpnName} (VPN)");
         }
-        // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
-        IPAddress? lanAddress = await localIp;
-        if (lanAddress != null)
+        (IPAddress Address, string NetworkName, AddressFamily AddressFamily)[] lanAddressInfos = await lanAddressInfosTask;
+        foreach ((IPAddress lanAddress, string networkName, AddressFamily addressFamily) in lanAddressInfos)
         {
-            options.Add($"{lanAddress.TryExtractMappedIPv4()} - Friends on same internet network (LAN)");
+            string versionLabel = addressFamily == AddressFamily.InterNetwork ? "LAN IPv4" : "LAN IPv6";
+            string visibilityLabel = lanAddress.IsPrivate() ? "private" : "public";
+            options.Add($"{lanAddress.TryExtractMappedIPv4()} - Friends on {networkName} ({versionLabel}, {visibilityLabel})");
         }
 
         Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryExtractMappedIPv4() ?? IPAddress.None);

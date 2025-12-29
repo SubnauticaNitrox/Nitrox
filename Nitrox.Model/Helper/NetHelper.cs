@@ -48,36 +48,70 @@ public static class NetHelper
             }
         }
 
-        IPAddress? ipv6Candidate = null;
+        List<(IPAddress Address, string NetworkName, AddressFamily AddressFamily)> lanAddresses = GetLanAddressInfos().ToList();
+        foreach (AddressFamily family in new[] { AddressFamily.InterNetwork, AddressFamily.InterNetworkV6 })
+        {
+            foreach ((IPAddress address, _, AddressFamily addressFamily) in lanAddresses)
+            {
+                if (addressFamily != family)
+                {
+                    continue;
+                }
+
+                lock (lanIpLock)
+                {
+                    return lanIpCache = address;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static IEnumerable<IPAddress> GetLanIps() => GetLanAddressInfos().Select(static info => info.Address);
+
+    public static IEnumerable<(IPAddress Address, string NetworkName, AddressFamily AddressFamily)> GetLanAddressInfos()
+    {
+        HashSet<IPAddress> seenAddresses = new();
         foreach (NetworkInterface ni in GetInternetInterfaces())
         {
             foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
             {
                 IPAddress address = ip.Address.TryExtractMappedIPv4();
-                if (address.AddressFamily == AddressFamily.InterNetwork)
+                if (!IsLanAddress(address) || !seenAddresses.Add(address))
                 {
-                    lock (lanIpLock)
-                    {
-                        return lanIpCache = address;
-                    }
+                    continue;
                 }
 
-                if (ipv6Candidate == null && address is { AddressFamily: AddressFamily.InterNetworkV6, IsIPv6LinkLocal: false, IsIPv6Multicast: false })
-                {
-                    ipv6Candidate = address;
-                }
+                yield return (address, ni.Name, address.AddressFamily);
             }
         }
+    }
 
-        if (ipv6Candidate != null)
+    private static bool IsLanAddress(IPAddress address)
+    {
+        if (IPAddress.IsLoopback(address))
         {
-            lock (lanIpLock)
+            return false;
+        }
+        if (address.AddressFamily == AddressFamily.InterNetwork)
+        {
+            if (address.Equals(IPAddress.Any) || address.Equals(IPAddress.None))
             {
-                return lanIpCache = ipv6Candidate;
+                return false;
             }
+            return true;
+        }
+        if (address.AddressFamily == AddressFamily.InterNetworkV6)
+        {
+            if (address.Equals(IPAddress.IPv6Any) || address.IsIPv6LinkLocal || address.IsIPv6Multicast)
+            {
+                return false;
+            }
+            return true;
         }
 
-        return null;
+        return false;
     }
 
     public static async Task<IPAddress?> GetWanIpAsync()
