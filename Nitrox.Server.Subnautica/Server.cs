@@ -280,15 +280,26 @@ public class Server
     private async Task LogHowToConnectAsync()
     {
         List<string> options = [$"{IPAddress.Loopback} - You (Local)"];
+        List<IPAddress> publicIps = [];
         foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
         {
-            string? option = origin switch
+            string? option;
+            switch (origin)
             {
-                NetHelper.MachineIpOrigin.LAN => $"{address} - Friends on same internet network (LAN)",
-                NetHelper.MachineIpOrigin.VPN => $"{address} - Friends using {networkName} (VPN)",
-                NetHelper.MachineIpOrigin.WAN => $"{address} - Friends on another internet network (requires port forwarding)",
-                _ => null
-            };
+                case NetHelper.MachineIpOrigin.LAN:
+                    option = $"{address} - Friends on same internet network (LAN)";
+                    break;
+                case NetHelper.MachineIpOrigin.VPN:
+                    option = $"{address} - Friends using {networkName} (VPN)";
+                    break;
+                case NetHelper.MachineIpOrigin.WAN:
+                    option = $"{{ip_{publicIps.Count}:l}} - Friends on another internet network (requires port forwarding)";
+                    publicIps.Add(address);
+                    break;
+                default:
+                    option = null;
+                    break;
+            }
             if (option == null)
             {
                 continue;
@@ -296,7 +307,8 @@ public class Server
             options.Add(option);
         }
 
-        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}");
+        // Note: keep the object args parameter value. It is required for sensitive logging to work.
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", [..publicIps]);
     }
 
     public void StopAndWait(bool shouldSave = true)
