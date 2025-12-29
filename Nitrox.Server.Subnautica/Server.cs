@@ -5,9 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Nitrox.Model.Core;
+using Nitrox.Model.Extensions;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
@@ -277,32 +279,24 @@ public class Server
 
     private async Task LogHowToConnectAsync()
     {
-        Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
-        Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
-        Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(NetHelper.GetVpnIps);
-
         List<string> options = [$"{IPAddress.Loopback} - You (Local)"];
-        IPAddress? wanAddress = await wanIp;
-        if (wanAddress != null)
+        foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
         {
-            options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
-        }
-        foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIps)
-        {
-            if (vpnAddress == null)
+            string? option = origin switch
+            {
+                NetHelper.MachineIpOrigin.LAN => $"{address} - Friends on same internet network (LAN)",
+                NetHelper.MachineIpOrigin.VPN => $"{address} - Friends using {networkName} (VPN)",
+                NetHelper.MachineIpOrigin.WAN => $"{address} - Friends on another internet network (requires port forwarding)",
+                _ => null
+            };
+            if (option == null)
             {
                 continue;
             }
-            options.Add($"{vpnAddress.TryExtractMappedIPv4()} - Friends using {vpnName} (VPN)");
-        }
-        // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
-        IPAddress? lanAddress = await localIp;
-        if (lanAddress != null)
-        {
-            options.Add($"{lanAddress.TryExtractMappedIPv4()} - Friends on same internet network (LAN)");
+            options.Add(option);
         }
 
-        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryExtractMappedIPv4() ?? IPAddress.None);
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}");
     }
 
     public void StopAndWait(bool shouldSave = true)

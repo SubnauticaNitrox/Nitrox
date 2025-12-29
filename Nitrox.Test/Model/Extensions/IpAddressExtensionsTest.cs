@@ -48,9 +48,9 @@ public class IpAddressExtensionsTest
         IPAddress.Parse("127.0.0.1").IsLocalhost().Should().BeTrue();
         IPAddress.Parse("127.0.0.2").IsLocalhost().Should().BeTrue();
         IPAddress.Parse("192.168.0.255").IsLocalhost().Should().BeFalse();
-        NetHelper.GetLanIp().IsLocalhost().Should().BeTrue();
-        IPAddress differentIp = GetSlightlyDifferentIp(NetHelper.GetLanIp());
-        differentIp.Should().NotBeEquivalentTo(NetHelper.GetLanIp());
+        NetHelper.GetLanUsableIp().IsLocalhost().Should().BeTrue();
+        IPAddress differentIp = GetSlightlyDifferentIp(NetHelper.GetLanUsableIp()!);
+        differentIp.Should().NotBeEquivalentTo(NetHelper.GetLanUsableIp());
         differentIp.IsLocalhost().Should().BeFalse();
 
         IPAddress GetSlightlyDifferentIp(IPAddress address)
