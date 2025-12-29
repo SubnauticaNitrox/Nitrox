@@ -279,34 +279,24 @@ public class Server
 
     private async Task LogHowToConnectAsync()
     {
-        Task<(IPAddress Address, string NetworkName, AddressFamily AddressFamily)[]> lanAddressInfosTask =
-            Task.Run(() => NetHelper.GetLanAddressInfos().ToArray());
-        Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
-        Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(NetHelper.GetVpnIps);
-
         List<string> options = [$"{IPAddress.Loopback} - You (Local)"];
-        IPAddress? wanAddress = await wanIp;
-        if (wanAddress != null)
+        foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
         {
-            options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
-        }
-        foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIps)
-        {
-            if (vpnAddress == null)
+            string? option = origin switch
+            {
+                NetHelper.MachineIpOrigin.LAN => $"{address} - Friends on same internet network (LAN)",
+                NetHelper.MachineIpOrigin.VPN => $"{address} - Friends using {networkName} (VPN)",
+                NetHelper.MachineIpOrigin.WAN => $"{address} - Friends on another internet network (requires port forwarding)",
+                _ => null
+            };
+            if (option == null)
             {
                 continue;
             }
-            options.Add($"{vpnAddress.TryExtractMappedIPv4()} - Friends using {vpnName} (VPN)");
-        }
-        (IPAddress Address, string NetworkName, AddressFamily AddressFamily)[] lanAddressInfos = await lanAddressInfosTask;
-        foreach ((IPAddress lanAddress, string networkName, AddressFamily addressFamily) in lanAddressInfos)
-        {
-            string versionLabel = addressFamily == AddressFamily.InterNetwork ? "LAN IPv4" : "LAN IPv6";
-            string visibilityLabel = lanAddress.IsPrivate() ? "private" : "public";
-            options.Add($"{lanAddress.TryExtractMappedIPv4()} - Friends on {networkName} ({versionLabel}, {visibilityLabel})");
+            options.Add(option);
         }
 
-        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanAddress?.TryExtractMappedIPv4() ?? IPAddress.None);
+        Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}");
     }
 
     public void StopAndWait(bool shouldSave = true)

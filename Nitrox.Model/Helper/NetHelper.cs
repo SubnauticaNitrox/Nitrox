@@ -38,7 +38,13 @@ public static class NetHelper
                         .OrderBy(n => n.NetworkInterfaceType is NetworkInterfaceType.Ethernet ? 1 : 0)
                         .ThenBy(n => n.Name);
 
-    public static IPAddress? GetLanIp()
+    /// <summary>
+    ///     Tries to get the most convenient LAN-usable IP address.
+    /// </summary>
+    /// <remarks>
+    ///     If IPv6 is returned, no IPv4 is available and this IP might also be usable for WAN.
+    /// </remarks>
+    public static IPAddress? GetLanUsableIp()
     {
         lock (lanIpLock)
         {
@@ -48,70 +54,15 @@ public static class NetHelper
             }
         }
 
-        List<(IPAddress Address, string NetworkName, AddressFamily AddressFamily)> lanAddresses = GetLanAddressInfos().ToList();
-        foreach (AddressFamily family in new[] { AddressFamily.InterNetwork, AddressFamily.InterNetworkV6 })
+        IPAddress? ipAddress = GetLocalMachineAttachedIpAddresses().OrderBy(a => a.Address.AddressFamily == AddressFamily.InterNetwork ? 0 : 1).FirstOrDefault()?.Address;
+        if (ipAddress == null)
         {
-            foreach ((IPAddress address, _, AddressFamily addressFamily) in lanAddresses)
-            {
-                if (addressFamily != family)
-                {
-                    continue;
-                }
-
-                lock (lanIpLock)
-                {
-                    return lanIpCache = address;
-                }
-            }
+            return null;
         }
-
-        return null;
-    }
-
-    public static IEnumerable<IPAddress> GetLanIps() => GetLanAddressInfos().Select(static info => info.Address);
-
-    public static IEnumerable<(IPAddress Address, string NetworkName, AddressFamily AddressFamily)> GetLanAddressInfos()
-    {
-        HashSet<IPAddress> seenAddresses = new();
-        foreach (NetworkInterface ni in GetInternetInterfaces())
+        lock (lanIpLock)
         {
-            foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
-            {
-                IPAddress address = ip.Address.TryExtractMappedIPv4();
-                if (!IsLanAddress(address) || !seenAddresses.Add(address))
-                {
-                    continue;
-                }
-
-                yield return (address, ni.Name, address.AddressFamily);
-            }
+            return lanIpCache = ipAddress;
         }
-    }
-
-    private static bool IsLanAddress(IPAddress address)
-    {
-        if (IPAddress.IsLoopback(address))
-        {
-            return false;
-        }
-        if (address.AddressFamily == AddressFamily.InterNetwork)
-        {
-            if (address.Equals(IPAddress.Any) || address.Equals(IPAddress.None))
-            {
-                return false;
-            }
-            return true;
-        }
-        if (address.AddressFamily == AddressFamily.InterNetworkV6)
-        {
-            if (address.Equals(IPAddress.IPv6Any) || address.IsIPv6LinkLocal || address.IsIPv6Multicast)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        return false;
     }
 
     public static async Task<IPAddress?> GetWanIpAsync()
@@ -192,6 +143,44 @@ public static class NetHelper
     /// </summary>
     public static IEnumerable<(IPAddress Address, string NetworkName)> GetVpnIps() => GetVpnIps("Hamachi", "Radmin VPN");
 
+    public static async Task<IEnumerable<MachineKnownIp>> GetAllKnownIpsAsync()
+    {
+        Task<MachineKnownIp[]> machineKnownIps = Task.Run(() => GetLocalMachineAttachedIpAddresses().ToArray());
+        Task<IPAddress> wanIp = GetWanIpAsync();
+        Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIps = Task.Run(GetVpnIps);
+
+        await Task.WhenAll(machineKnownIps, wanIp, vpnIps);
+
+        List<MachineKnownIp> knownIps = [];
+        foreach (MachineKnownIp knownIp in await machineKnownIps)
+        {
+            if (knownIp.Address.IsPrivate())
+            {
+                knownIps.Add(new MachineKnownIp(knownIp.Address.TryExtractMappedIPv4(), MachineIpOrigin.LAN, knownIp.NetworkName));
+            }
+        }
+        if (await wanIp is { } wanAddress && !wanAddress.IsPrivate())
+        {
+            knownIps.Add(new MachineKnownIp(wanAddress, MachineIpOrigin.WAN));
+        }
+        foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIps)
+        {
+            if (vpnAddress == null)
+            {
+                continue;
+            }
+            knownIps.Add(new MachineKnownIp(vpnAddress.TryExtractMappedIPv4(), MachineIpOrigin.VPN, vpnName));
+        }
+        foreach (MachineKnownIp knownIp in await machineKnownIps)
+        {
+            if (!knownIp.Address.IsPrivate())
+            {
+                knownIps.Add(new MachineKnownIp(knownIp.Address.TryExtractMappedIPv4(), MachineIpOrigin.WAN, knownIp.NetworkName));
+            }
+        }
+        return knownIps;
+    }
+
     public static bool HasInternetConnectivity()
     {
         lock (connectivityLock)
@@ -221,4 +210,53 @@ public static class NetHelper
                 return stats.BytesReceived + stats.BytesSent;
             });
     }
+
+    /// <summary>
+    ///     Gets the addresses assigned to the network interfaces that are attached to the current machine.
+    /// </summary>
+    private static IEnumerable<MachineKnownIp> GetLocalMachineAttachedIpAddresses()
+    {
+        HashSet<IPAddress> seenAddresses = [];
+        foreach (NetworkInterface ni in GetInternetInterfaces())
+        {
+            foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+            {
+                IPAddress address = ip.Address.TryExtractMappedIPv4();
+                if (!IsIpForSharing(address) || HasSeen(address))
+                {
+                    continue;
+                }
+
+                yield return new MachineKnownIp(address, address.IsPrivate() ? MachineIpOrigin.LAN : MachineIpOrigin.WAN, ni.Name);
+            }
+        }
+
+        bool HasSeen(IPAddress address) => !seenAddresses.Add(address);
+
+        static bool IsIpForSharing(IPAddress address)
+        {
+            if (IPAddress.IsLoopback(address))
+            {
+                return false;
+            }
+            return address switch
+            {
+                { AddressFamily: AddressFamily.InterNetwork } when address.Equals(IPAddress.Any) => false,
+                { AddressFamily: AddressFamily.InterNetwork } when address.Equals(IPAddress.None) => false,
+                { AddressFamily: AddressFamily.InterNetworkV6 } when address.Equals(IPAddress.IPv6Any) => false,
+                { AddressFamily: AddressFamily.InterNetworkV6, IsIPv6LinkLocal: true } => false,
+                { AddressFamily: AddressFamily.InterNetworkV6, IsIPv6Multicast: true } => false,
+                _ => true
+            };
+        }
+    }
+
+    public enum MachineIpOrigin
+    {
+        LAN,
+        VPN,
+        WAN
+    }
+
+    public record MachineKnownIp(IPAddress Address, MachineIpOrigin Origin, string? NetworkName = null);
 }
