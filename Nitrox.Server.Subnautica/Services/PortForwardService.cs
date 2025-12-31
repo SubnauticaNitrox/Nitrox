@@ -53,8 +53,8 @@ internal class PortForwardService(IOptionsMonitor<SubnauticaServerOptions> optio
             foreach (KeyValuePair<ushort, bool> pair in openedPorts)
             {
                 await ClosePortAsync(pair.Key, CancellationToken.None);
-                openedPorts.TryRemove(pair.Key, out bool _);
             }
+            openedPorts.Clear();
             throw;
         }
 
