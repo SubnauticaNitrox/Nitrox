@@ -17,23 +17,26 @@ internal sealed class IpRedactor : IRedactor
                 endpoint = new IPEndPoint(address, 0);
             }
         }
-        // TODO: Handle IPv6
-        if (endpoint is not { AddressFamily: AddressFamily.InterNetwork })
+        if (endpoint is null)
         {
             return RedactResult.Fail();
         }
 
-        if (!endpoint.Address.IsLocalhost() && !endpoint.Address.IsPrivate())
+        bool isTrimmedIp = false;
+        if (!endpoint.Address.IsPrivate())
         {
             Span<byte> ipBytes = endpoint.Address.GetAddressBytes().AsSpan();
             ipBytes.Slice(int.Max(1, ipBytes.Length / 4)).Fill(0);
             endpoint.Address = new IPAddress(ipBytes);
+            isTrimmedIp = true;
         }
 
         if (endpoint.Port > 0)
         {
-            return RedactResult.Ok($"{endpoint.Address}:{endpoint.Port}");
+            return RedactResult.Ok($"{endpoint.Address}:{endpoint.Port}{GetPostFix(isTrimmedIp)}");
         }
-        return RedactResult.Ok(endpoint.Address.ToString());
+        return RedactResult.Ok($"{endpoint.Address.ToString()}{GetPostFix(isTrimmedIp)}");
     }
+
+    public string GetPostFix(bool isTrimmedIp) => isTrimmedIp ? " (REDACTED)" : "";
 }
