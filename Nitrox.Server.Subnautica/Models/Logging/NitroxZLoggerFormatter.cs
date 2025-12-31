@@ -56,6 +56,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
         {
             yield return new WriteLogLoggerMiddleware();
         }
+        yield return new WriteExceptionLoggerMiddleware();
         yield return new WriteNewLineLoggerMiddleware();
     }
 
