@@ -8,13 +8,12 @@ using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
-using Nitrox.Model.Server;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class CreateServerViewModel : ModalViewModelBase
 {
-    private readonly IKeyValueStore keyValueStore;
+    private readonly IKeyValueStore? keyValueStore;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
@@ -23,7 +22,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [FileName]
     [NotEndsWith(".")]
     [NitroxUniqueSaveName(nameof(SavesFolderDir))]
-    private string name;
+    private string name = "";
 
     [ObservableProperty]
     private SubnauticaGameMode selectedGameMode = SubnauticaGameMode.SURVIVAL;
@@ -39,16 +38,16 @@ public partial class CreateServerViewModel : ModalViewModelBase
         this.keyValueStore = keyValueStore;
     }
 
-    public void CreateEmptySave(string saveName, SubnauticaGameMode saveGameMode)
+    public async Task CreateEmptySave(string saveName, SubnauticaGameMode saveGameMode)
     {
         string saveDir = Path.Combine(SavesFolderDir, saveName);
-        ServerEntry.CreateNew(saveDir, saveGameMode);
+        await ServerEntry.CreateNew(saveDir, saveGameMode);
     }
 
     [RelayCommand(CanExecute = nameof(CanCreate))]
     private async Task CreateAsync()
     {
-        await Task.Run(() => CreateEmptySave(Name, SelectedGameMode));
+        await Task.Run(async () => await CreateEmptySave(Name, SelectedGameMode));
         Close(ButtonOptions.Ok);
     }
 
