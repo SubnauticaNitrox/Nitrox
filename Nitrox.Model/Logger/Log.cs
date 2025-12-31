@@ -381,7 +381,12 @@ namespace Nitrox.Model.Logger
             {
                 foreach (KeyValuePair<string, LogEventPropertyValue> prop in originalProps)
                 {
-                    if (!sensitiveLogParameters.Contains(prop.Key))
+                    string key = prop.Key;
+                    if (key.IndexOf('_') is var index and > 0)
+                    {
+                        key = prop.Key.Substring(0, index);
+                    }
+                    if (!sensitiveLogParameters.Contains(key))
                     {
                         continue;
                     }

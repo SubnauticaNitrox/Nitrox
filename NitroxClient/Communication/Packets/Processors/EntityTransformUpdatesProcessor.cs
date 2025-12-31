@@ -29,7 +29,7 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
                 continue;
             }
 
-            RemotelyControlled remotelyControlled = gameObject.EnsureComponent<RemotelyControlled>();
+            RemotelyControlled remotelyControlled = RemotelyControlled.Ensure(gameObject);;
 
             Vector3 position = update.Position.ToUnity();
             Quaternion rotation = update.Rotation.ToUnity();

@@ -15,6 +15,7 @@ internal sealed class LiteNetLibServer : IHostedService
     private readonly PlayerManager playerManager;
     private readonly JoiningManager joiningManager;
     private readonly EntitySimulation entitySimulation;
+    private readonly SleepManager sleepManager;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly ILogger<LiteNetLibServer> logger;
     private readonly Dictionary<int, INitroxConnection> connectionsByRemoteIdentifier = [];
@@ -26,12 +27,13 @@ internal sealed class LiteNetLibServer : IHostedService
         Packet.InitSerializer();
     }
 
-    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, IOptions<SubnauticaServerOptions> options, ILogger<LiteNetLibServer> logger)
+    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SleepManager sleepManager, IOptions<SubnauticaServerOptions> options, ILogger<LiteNetLibServer> logger)
     {
         this.packetHandler = packetHandler;
         this.playerManager = playerManager;
         this.joiningManager = joiningManager;
         this.entitySimulation = entitySimulation;
+        this.sleepManager = sleepManager;
         this.options = options;
         this.logger = logger;
         listener = new EventBasedNetListener();
@@ -86,7 +88,7 @@ internal sealed class LiteNetLibServer : IHostedService
         server.Stop();
     }
 
-    public void ClientDisconnected(INitroxConnection connection)
+    protected void ClientDisconnected(INitroxConnection connection)
     {
         Player? player = playerManager.GetPlayer(connection);
         if (player == null)
@@ -95,6 +97,7 @@ internal sealed class LiteNetLibServer : IHostedService
             return;
         }
 
+        sleepManager.PlayerDisconnected(player);
         playerManager.PlayerDisconnected(connection);
 
         Disconnect disconnect = new(player.Id);

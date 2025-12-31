@@ -162,6 +162,21 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
         }
     }
 
+    /// <summary>
+    /// Skips time by the specified amount and broadcasts the update to all players.
+    /// </summary>
+    public void SkipTime(TimeSpan skipAmount)
+    {
+        if (skipAmount <= TimeSpan.Zero)
+        {
+            return;
+        }
+
+        GameTime += skipAmount;
+        TimeSkipped?.Invoke(skipAmount);
+        playerManager.SendPacketToAllPlayers(MakeTimePacket());
+    }
+
     private void StartNtpTimer()
     {
         Timer retryTimer = new(TimeSpan.FromSeconds(NTP_RETRY_INTERVAL_SECONDS).TotalMilliseconds)

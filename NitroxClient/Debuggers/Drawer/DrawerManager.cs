@@ -72,6 +72,7 @@ public class DrawerManager
         AddDrawer<TransformDrawer, Transform>(new(sceneDebugger, vectorDrawer));
         AddDrawer<UnityEventDrawer, UnityEvent>(unityEventDrawer);
         AddDrawer<UnityEventDrawer, UnityEvent<bool>>(unityEventDrawer);
+        AddDrawer<VFXControllerDrawer, VFXController>(new(vectorDrawer, sceneDebugger));
         AddDrawer<AnimatorDrawer, Animator>();
         AddDrawer<CharacterControllerDrawer, CharacterController>(new(vectorDrawer));
 

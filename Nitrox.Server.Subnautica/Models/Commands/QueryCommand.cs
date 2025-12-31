@@ -31,7 +31,7 @@ internal class QueryCommand : Command
         if (entityRegistry.TryGetEntityById(nitroxId, out Entity entity))
         {
             logger.ZLogInformation($"{entity}");
-            if (entity is WorldEntity worldEntity && worldEntity.Transform != null)
+            if (entity is WorldEntity worldEntity && worldEntity.Transform != null && worldEntity is not GlobalRootEntity)
             {
                 logger.ZLogInformation($"{worldEntity.AbsoluteEntityCell}");
             }

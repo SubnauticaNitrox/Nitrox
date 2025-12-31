@@ -55,28 +55,26 @@ internal sealed class StatusService(
 
         async Task LogIps()
         {
-            Task<IPAddress> lanIpTask = Task.Run(NetHelper.GetLanIp, cancellationToken);
-            Task<IPAddress> wanIpTask = NetHelper.GetWanIpAsync();
-            Task<IEnumerable<(IPAddress Address, string NetworkName)>> vpnIpsTasks = Task.Run(NetHelper.GetVpnIps, cancellationToken);
-            await Task.WhenAll(lanIpTask, wanIpTask, vpnIpsTasks);
             logger.ZLogInformation($"Use IP to connect:");
             using (logger.BeginPlainScope())
             {
                 using (logger.BeginPrefixScope("\t"))
                 {
-                    logger.ZLogInformation($"127.0.0.1 - You (Local)");
-                    if (wanIpTask.Result is {} wanIp)
+                    logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
+                    foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
                     {
-                        logger.LogWanIp(wanIp.TryExtractMappedIPv4());
-                    }
-                    foreach ((IPAddress? vpnAddress, string? vpnName) in await vpnIpsTasks)
-                    {
-                        logger.LogVpnIp(vpnName, vpnAddress);
-                    }
-                    // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
-                    if (lanIpTask.Result is {} lanIp)
-                    {
-                        logger.LogLanIp(lanIp);
+                        switch (origin)
+                        {
+                            case NetHelper.MachineIpOrigin.LAN:
+                                logger.LogLanIp(address);
+                                break;
+                            case NetHelper.MachineIpOrigin.VPN:
+                                logger.LogVpnIp(networkName!, address);
+                                break;
+                            case NetHelper.MachineIpOrigin.WAN:
+                                logger.LogWanIp(address);
+                                break;
+                        }
                     }
                 }
                 logger.ZLogInformation($"");
