@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Nitrox.Model;
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
@@ -14,6 +15,9 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 namespace Nitrox.Server.Subnautica.Models.Serialization.World;
 
 [TestClass]
+[SuppressMessage("Usage", "MSTEST0002:Test classes should have valid layout", Justification = "Necessary because PersistedWorldData is internal now.")]
+[SuppressMessage("Usage", "MSTEST0010:ClassInitialize methods should have valid layout", Justification = "Necessary because PersistedWorldData is internal now.")]
+[SuppressMessage("Usage", "MSTEST0011:ClassCleanup methods should have valid layout", Justification = "Necessary because PersistedWorldData is internal now.")]
 internal sealed class WorldServiceTest
 {
     private static readonly string tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
@@ -22,7 +26,7 @@ internal sealed class WorldServiceTest
     public static IServerSerializer[] ServerSerializers { get; private set; }
 
     [ClassInitialize]
-    public static void ClassInitialize(TestContext context)
+    public static void ClassInitialize(TestContext testContext)
     {
         if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
         {
