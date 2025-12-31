@@ -9,14 +9,14 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
-public class BuildingManager
+internal sealed class BuildingManager
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly ILogger<BuildingManager> logger;
 
-    internal BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
+    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
