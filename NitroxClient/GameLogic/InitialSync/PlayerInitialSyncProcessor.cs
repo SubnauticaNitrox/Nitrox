@@ -36,7 +36,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
-        AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow));
+        AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow, sync.MarkDeathPointsWithBeacon));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -139,9 +139,10 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
     }
 
-    private void ApplySettings(bool keepInventoryOnDeath, bool fastHatch, bool fastGrow)
+    private void ApplySettings(bool keepInventoryOnDeath, bool fastHatch, bool fastGrow, bool markDeathPointsWithBeacon)
     {
         localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
+        localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
         NoCostConsoleCommand.main.fastHatchCheat = fastHatch;
         NoCostConsoleCommand.main.fastGrowCheat = fastGrow;
         if (!fastHatch && !fastGrow)
@@ -159,5 +160,10 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
             cheatsEnabled.Append(" fastGrow");
         }
         Log.InGame(cheatsEnabled.ToString());
+    }
+
+    private void SetPlayerMarkDeathPointsWithBeacon(bool markDeathPointsWithBeacon)
+    {
+        localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
     }
 }
