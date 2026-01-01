@@ -93,6 +93,14 @@ public class Program
             {
                 _ = ipc.SendOutput($"{Ipc.Messages.PlayerCountMessage}:[{count}]");
             };
+            server.LoadingProgressChanged += progress =>
+            {
+                _ = ipc.SendOutput($"{Ipc.Messages.LoadingProgressMessage}:[{progress}]");
+            };
+            server.ServerStarted += () =>
+            {
+                _ = ipc.SendOutput(Ipc.Messages.ServerStartedMessage);
+            };
             string serverSaveName = Server.GetSaveName(args);
             Log.SaveName = serverSaveName;
 
