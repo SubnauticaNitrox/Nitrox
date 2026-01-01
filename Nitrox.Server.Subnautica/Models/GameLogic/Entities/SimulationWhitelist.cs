@@ -3,11 +3,15 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-public class SimulationWhitelist : ISimulationWhitelist
+internal static class SimulationWhitelist
 {
-    /// <inheritdoc cref="ISimulationWhitelist.MovementWhitelist" />
-    public static readonly HashSet<NitroxTechType> MovementWhitelist = new()
-    {
+    /// <summary>
+    ///     We don't want to give out simulation to all entities that the server sent out because there is a lot of stationary items and junk (TechType.None).
+    ///     It is easier to maintain a list of items we should simulate than try to blacklist items. This list should not be checked for non-server spawned items
+    ///     as they were probably dropped by the player and are mostly guaranteed to move.
+    /// </summary>
+    public static readonly HashSet<NitroxTechType> MovementWhitelist =
+    [
         TechType.Shocker.ToDto(),
         TechType.Biter.ToDto(),
         TechType.Blighter.ToDto(),
@@ -66,15 +70,15 @@ public class SimulationWhitelist : ISimulationWhitelist
         TechType.Peeper.ToDto(),
         TechType.Jumper.ToDto(),
         TechType.Constructor.ToDto(),
-        TechType.PipeSurfaceFloater.ToDto(),
-    };
+        TechType.PipeSurfaceFloater.ToDto()
+    ];
 
-    /// <inheritdoc cref="ISimulationWhitelist.UtilityWhitelist" />
+    /// <summary>
+    ///     We differentiate the entities which should be simulated because of one of their behaviour (ie for utility)
+    ///     from those are simulated for their movements.
+    /// </summary>
     public static readonly HashSet<NitroxTechType> UtilityWhitelist = new()
     {
         TechType.CrashHome.ToDto()
     };
-
-    HashSet<NitroxTechType> ISimulationWhitelist.MovementWhitelist => MovementWhitelist;
-    HashSet<NitroxTechType> ISimulationWhitelist.UtilityWhitelist => UtilityWhitelist;
 }

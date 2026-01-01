@@ -1,13 +1,13 @@
-using System;
 using System.Collections.Generic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
+sealed class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
 {
     private readonly PlayerManager playerManager;
+    private readonly ILogger<DefaultServerPacketProcessor> logger;
 
     private readonly HashSet<Type> loggingPacketBlackList = new()
     {
@@ -38,21 +38,22 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(GameModeChanged), typeof(DropSimulationOwnership),
     };
 
-    public DefaultServerPacketProcessor(PlayerManager playerManager)
+    public DefaultServerPacketProcessor(PlayerManager playerManager, ILogger<DefaultServerPacketProcessor> logger)
     {
         this.playerManager = playerManager;
+        this.logger = logger;
     }
 
     public override void Process(Packet packet, Player player)
     {
         if (!loggingPacketBlackList.Contains(packet.GetType()))
         {
-            Log.Debug($"Using default packet processor for: {packet} and player {player.Id}");
+            logger.ZLogDebug($"Using default packet processor for: {packet} and player {player.Id}");
         }
 
         if (defaultPacketProcessorBlacklist.Contains(packet.GetType()))
         {
-            Log.ErrorOnce($"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
+            logger.ZLogErrorOnce($"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
             return;
         }
         playerManager.SendPacketToOtherPlayers(packet, player);

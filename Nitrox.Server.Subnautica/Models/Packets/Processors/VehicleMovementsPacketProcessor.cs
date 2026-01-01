@@ -6,19 +6,21 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<VehicleMovements>
+internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<VehicleMovements>
 {
     private static readonly NitroxVector3 CyclopsSteeringWheelRelativePosition = new(-0.05f, 0.97f, -23.54f);
 
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
     private readonly SimulationOwnershipData simulationOwnershipData;
+    private readonly ILogger<VehicleMovementsPacketProcessor> logger;
 
-    public VehicleMovementsPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData)
+    public VehicleMovementsPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<VehicleMovementsPacketProcessor> logger)
     {
         this.playerManager = playerManager;
         this.entityRegistry = entityRegistry;
         this.simulationOwnershipData = simulationOwnershipData;
+        this.logger = logger;
     }
 
     public override void Process(VehicleMovements packet, Player player)
@@ -28,7 +30,7 @@ public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<Vehi
             MovementData movementData = packet.Data[i];
             if (simulationOwnershipData.GetPlayerForLock(movementData.Id) != player)
             {
-                Log.WarnOnce($"Player {player.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
+                logger.ZLogErrorOnce($"Player {player.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
                 // TODO: In the future, add "packet.Data.RemoveAt(i);" and "continue;" to prevent those abnormal situations
             }
 

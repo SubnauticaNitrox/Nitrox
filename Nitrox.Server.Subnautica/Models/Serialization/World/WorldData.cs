@@ -6,16 +6,16 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 namespace Nitrox.Server.Subnautica.Models.Serialization.World
 {
     [DataContract]
-    public class WorldData
+    internal class WorldData
     {
         [DataMember(Order = 1)]
-        public List<NitroxInt3> ParsedBatchCells { get; set; } = [];
+        public List<NitroxInt3>? ParsedBatchCells { get; set; } = [];
 
         [DataMember(Order = 2)]
-        public GameData GameData { get; set; }
+        public GameData? GameData { get; set; }
 
         [DataMember(Order = 3)]
-        public string Seed { get; set; }
+        public string? Seed { get; set; }
 
         public bool IsValid()
         {

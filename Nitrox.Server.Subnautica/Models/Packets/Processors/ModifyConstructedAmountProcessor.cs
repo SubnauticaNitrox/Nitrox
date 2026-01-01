@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class ModifyConstructedAmountProcessor : BuildingProcessor<ModifyConstructedAmount>
+internal sealed class ModifyConstructedAmountProcessor : BuildingProcessor<ModifyConstructedAmount>
 {
     public ModifyConstructedAmountProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
 

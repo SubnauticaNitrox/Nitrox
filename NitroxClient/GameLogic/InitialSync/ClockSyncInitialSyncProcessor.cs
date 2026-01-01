@@ -5,13 +5,12 @@ using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Modals;
 using Nitrox.Model.Networking;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
+internal sealed class ClockSyncInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly TimeManager timeManager;
     private readonly NtpSyncer ntpSyncer;
@@ -23,17 +22,17 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
         this.ntpSyncer = ntpSyncer;
         liteNetLibClient = (LiteNetLibClient)client;
 
-        AddStep(initialSync => NTPSync(initialSync.TimeData.TimePacket));
+        AddStep(initialSync => NtpSync(initialSync.TimeData.TimePacket));
     }
 
-    public IEnumerator NTPSync(TimeChange timeData)
+    public IEnumerator NtpSync(TimeChange timeData)
     {
         timeManager.SetServerCorrectionData(timeData.OnlineMode, timeData.UtcCorrectionTicks);
 
-        ntpSyncer.Setup(true);
+        ntpSyncer.Setup(optionalLogger: Log.CreateLogger<NtpSyncer>());
         ntpSyncer.RequestNtpService();
 
-        yield return new WaitUntil(() => ntpSyncer.Finished);
+        yield return new WaitUntil(() => ntpSyncer.IsComplete);
 
         if (ntpSyncer.OnlineMode)
         {
@@ -58,7 +57,7 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
         int procedureDuration = (int)NitroxPrefs.OfflineClockSyncDuration.Value; // seconds
         using ClockSyncProcedure clockSyncProcedure = ClockSyncProcedure.Start(liteNetLibClient, procedureDuration);
         yield return new WaitForSecondsRealtime(procedureDuration);
-        bool success = clockSyncProcedure.TryGetSafeAverageRTD(out long remoteTimeDelta);
+        bool success = clockSyncProcedure.TryGetSafeAverageRtd(out long remoteTimeDelta);
 
         Log.Info($"[success: {success}] calculated RTD: {remoteTimeDelta}");
         timeManager.SetCorrectionDelta(remoteTimeDelta);

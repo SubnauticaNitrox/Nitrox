@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class BedExitProcessor : AuthenticatedPacketProcessor<BedExit>
+internal sealed class BedExitProcessor : AuthenticatedPacketProcessor<BedExit>
 {
     private readonly SleepManager sleepManager;
 

@@ -148,7 +148,7 @@ public static class NitroxUser
         GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 
-    public static string? ExecutableRootPath
+    public static string ExecutableRootPath
     {
         get
         {
@@ -159,10 +159,10 @@ public static class NitroxUser
             string exePath = ExecutableFilePath;
             if (exePath == null)
             {
-                return null;
+                throw new Exception("Executable root path is unavailable");
             }
 
-            return executableRootPath = Path.GetDirectoryName(exePath);
+            return executableRootPath = Path.GetDirectoryName(exePath) ?? throw new Exception("Executable root path is unavailable");
         }
     }
 

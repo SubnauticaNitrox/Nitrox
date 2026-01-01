@@ -1,6 +1,8 @@
 using System;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 namespace Nitrox.Model.Subnautica.MultiplayerSession;
@@ -14,7 +16,7 @@ public class PlayerContext
     public bool WasBrandNewPlayer { get; }
     public PlayerSettings PlayerSettings { get; }
     public bool IsMuted { get; set; }
-    public NitroxGameMode GameMode { get; set; }
+    public SubnauticaGameMode GameMode { get; set; }
     /// <summary>
     /// Not null if the player is currently driving a vehicle.
     /// </summary>
@@ -23,7 +25,7 @@ public class PlayerContext
     public PlayerAnimation Animation { get; set; }
 
     public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
-                         NitroxGameMode gameMode, NitroxId drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation)
+                         SubnauticaGameMode gameMode, NitroxId drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation)
     {
         PlayerName = playerName;
         PlayerId = playerId;
