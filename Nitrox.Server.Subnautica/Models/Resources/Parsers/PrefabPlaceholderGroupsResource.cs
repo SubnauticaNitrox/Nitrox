@@ -358,6 +358,9 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
 
         IPrefabAsset[] prefabPlaceholders = new IPrefabAsset[prefabPlaceholdersOnGroup.Count];
 
+        AssetTypeValueField rootGameObjectField = amInst.GetBaseField(assetFileInst, rootGameObjectInfo);
+        string rootGameObjectName = rootGameObjectField["m_Name"].AsString;
+
         for (int index = 0; index < prefabPlaceholdersOnGroup.Count; index++)
         {
             AssetTypeValueField prefabPlaceholderPtr = prefabPlaceholdersOnGroup[index];
@@ -365,9 +368,10 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
 
             AssetTypeValueField gameObjectPtr = prefabPlaceholder["m_GameObject"];
             AssetTypeValueField gameObjectField = amInst.GetExtAsset(assetFileInst, gameObjectPtr).baseField;
-            NitroxTransform transform = amInst.GetTransformFromGameObject(assetFileInst, gameObjectField);
+            IPrefabAsset asset = GetAndCacheAsset(amInst, prefabPlaceholder["prefabClassId"].AsString);
+            bool isEntitySlotAsset = asset is PrefabPlaceholderAsset prefabPlaceholderAsset && prefabPlaceholderAsset.EntitySlot.HasValue;
+            NitroxTransform transform = amInst.GetTransformFromGameObject(assetFileInst, gameObjectField, rootGameObjectName, isEntitySlotAsset);
             string prefabAssetClassId = prefabPlaceholder["prefabClassId"].AsString;
-            IPrefabAsset asset = GetAndCacheAsset(amInst, prefabAssetClassId);
             if (asset == null)
             {
                 throw new InvalidOperationException($"Prefab asset with id '{prefabAssetClassId}' must not be null");
@@ -377,8 +381,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         }
 
         PrefabPlaceholdersGroupAsset prefabPlaceholdersGroup = new(classId, prefabPlaceholders);
-        AssetTypeValueField rootGameObjectField = amInst.GetBaseField(assetFileInst, rootGameObjectInfo);
-        NitroxTransform groupTransform = amInst.GetTransformFromGameObject(assetFileInst, rootGameObjectField);
+        NitroxTransform groupTransform = amInst.GetTransformFromGameObject(assetFileInst, rootGameObjectField, rootGameObjectName, false);
         prefabPlaceholdersGroup.Transform = groupTransform;
 
         groupsByClassId[classId] = prefabPlaceholdersGroup;
@@ -422,7 +425,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         {
             // See SpawnRandom.Start
             AssetTypeValueField spawnRandom = am.GetBaseField(assetFileInst, spawnRandomInfo);
-            List<string> classIds = new();
+            List<string> classIds = [];
             foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
             {
                 classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
