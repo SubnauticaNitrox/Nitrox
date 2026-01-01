@@ -7,7 +7,6 @@ internal sealed class ConditionalGroupLoggerMiddleware : ILoggerMiddleware
     public required Func<ILoggerMiddleware.Context, bool> Condition { get; init; } = _ => true;
     public required ILoggerMiddleware[] Group { get; init; } = [];
 
-
     public void ExecuteLogMiddleware(ref ILoggerMiddleware.Context context, ILoggerMiddleware.NextCall next)
     {
         if (Condition(context))
