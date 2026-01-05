@@ -8,10 +8,11 @@ using Microsoft.Extensions.Logging.Console;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.AppEvents.Triggers;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Processor;
 using Nitrox.Server.Subnautica.Models.Communication;
-using Nitrox.Server.Subnautica.Models.Events;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
@@ -46,7 +47,11 @@ internal static partial class ServiceCollectionExtensions
 
     public static IServiceCollection AddHostedSingletonService<T>(this IServiceCollection services) where T : class, IHostedService => services.AddSingleton<T>().AddHostedService(provider => provider.GetRequiredService<T>());
 
-    public static IServiceCollection AddSingletonLazyArrayProvider<T>(this IServiceCollection services) => services.AddSingleton<Func<T[]>>(provider => () => provider.GetRequiredService<IEnumerable<T>>().ToArray());
+    public static IServiceCollection TryAddSingletonLazyArrayProvider<T>(this IServiceCollection services)
+    {
+        services.TryAddSingleton<Func<T[]>>(provider => () => provider.GetRequiredService<IEnumerable<T>>().ToArray());
+        return services;
+    }
 
     public static IServiceCollection AddNitroxOptions(this IServiceCollection services)
     {
@@ -203,17 +208,15 @@ internal static partial class ServiceCollectionExtensions
             .AddHostedSingletonService<SaveService>()
             .AddHostedSingletonService<AutoSaveService>();
 
-    public static IServiceCollection AddSummarization(this IServiceCollection services) =>
-        services.AddSummarizers()
-                .AddSingletonLazyArrayProvider<ISummarize>();
+    public static IServiceCollection AddAppEvents(this IServiceCollection services) =>
+        services
+            .AddEvents()
+            .AddEventTriggers();
 
-    public static IServiceCollection AddHibernation(this IServiceCollection services) =>
-        services.AddHostedSingletonService<HibernateService>()
-                .AddHibernators()
-                .AddSingletonLazyArrayProvider<IHibernate>();
-
-    private static IServiceCollection AddSummarizer<T>(this IServiceCollection services) => services.AddSingleton(provider => (ISummarize)provider.GetService<T>());
-    private static IServiceCollection AddHibernator<T>(this IServiceCollection services) => services.AddSingleton(provider => (IHibernate)provider.GetService<T>());
+    private static IServiceCollection AddEvent<TImplementation, TEventArgs>(this IServiceCollection services) =>
+        services
+            .TryAddSingletonLazyArrayProvider<IEvent<TEventArgs>>()
+            .AddSingleton(provider => (IEvent<TEventArgs>)provider.GetRequiredService<TImplementation>());
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IGameResource), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
     private static partial IServiceCollection AddGameResources(this IServiceCollection services);
@@ -231,9 +234,9 @@ internal static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AssignableTo = typeof(Command), Lifetime = ServiceLifetime.Scoped)]
     private static partial IServiceCollection AddCommandHandlers(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(ISummarize), CustomHandler = nameof(AddSummarizer))]
-    private static partial IServiceCollection AddSummarizers(this IServiceCollection services);
+    [GenerateServiceRegistrations(AssignableTo = typeof(EventTrigger<>), AsSelf = true, AsImplementedInterfaces = false, Lifetime = ServiceLifetime.Singleton)]
+    private static partial IServiceCollection AddEventTriggers(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(IHibernate), CustomHandler = nameof(AddHibernator))]
-    private static partial IServiceCollection AddHibernators(this IServiceCollection services);
+    [GenerateServiceRegistrations(AssignableTo = typeof(IEvent<>), Lifetime = ServiceLifetime.Singleton, CustomHandler = nameof(AddEvent))]
+    private static partial IServiceCollection AddEvents(this IServiceCollection services);
 }

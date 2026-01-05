@@ -1,6 +1,6 @@
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Events;
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Helper;
 
@@ -181,12 +181,14 @@ internal sealed class StoryManager : ISummarize
         StoryGoalData.RadioQueue.Enqueue(goalKey);
     }
 
-    public async Task LogSummaryAsync(Perms viewerPerms)
+    Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
     {
         logger.ZLogInformation($"Aurora's state: {GetAuroraStateSummary()}");
         logger.ZLogInformation($"Scheduled goals stored: {StoryGoalData.ScheduledGoals.Count}");
         logger.ZLogInformation($"Story goals completed: {StoryGoalData.CompletedGoals.Count}");
         logger.ZLogInformation($"Unplayed radio messages: {StoryGoalData.RadioQueue.Count}");
+
+        return Task.CompletedTask;
 
         string GetAuroraStateSummary()
         {

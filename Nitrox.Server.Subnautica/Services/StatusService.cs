@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Events;
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Services;
@@ -16,7 +16,7 @@ internal sealed class StatusService(
     [FromKeyedServices("startup")] Stopwatch appStartStopWatch,
     GameInfo gameInfo,
     PlayerManager playerManager,
-    Func<ISummarize[]> summarizersProvider,
+    ISummarize.Trigger summarizeTrigger,
     IOptions<SubnauticaServerOptions> options,
     IOptions<ServerStartOptions> startOptions,
     ILogger<StatusService> logger) : IHostedLifecycleService, ISummarize
@@ -26,7 +26,7 @@ internal sealed class StatusService(
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly PlayerManager playerManager = playerManager;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
-    private readonly Func<ISummarize[]> summarizersProvider = summarizersProvider;
+    private readonly ISummarize.Trigger summarizeTrigger = summarizeTrigger;
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
@@ -102,19 +102,16 @@ internal sealed class StatusService(
             logger.ZLogInformation($"");
             using (logger.BeginPrefixScope(" - "))
             {
-                foreach (ISummarize summarizer in summarizersProvider())
-                {
-                    await summarizer.LogSummaryAsync(viewerPerms);
-                }
+                await summarizeTrigger.InvokeAsync(new(viewerPerms));
             }
             logger.ZLogInformation($"");
         }
     }
 
-    public Task LogSummaryAsync(Perms viewerPerms)
+    Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
     {
         logger.ZLogInformation($"Game mode: {options.Value.GameMode}");
-        if (viewerPerms >= Perms.HOST)
+        if (args.ViewerPerms >= Perms.HOST)
         {
             logger.ZLogInformation($"Save location: {startOptions.Value.GetServerSavePath():@Path}");
         }

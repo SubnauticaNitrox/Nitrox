@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Events;
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
@@ -111,7 +111,7 @@ internal sealed class PdaManager(ILogger<PdaManager> logger) : ISummarize
 
     public bool ContainsLog(string pdaEntryId) => PdaState.PdaLog.Any(entry => entry.Key == pdaEntryId);
 
-    public Task LogSummaryAsync(Perms viewerPerms)
+    Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
     {
         logger.ZLogInformation($"Known tech: {PdaState.KnownTechTypes.Count}");
         logger.ZLogInformation($"Encyclopedia entries: {PdaState.EncyclopediaEntries.Count}");

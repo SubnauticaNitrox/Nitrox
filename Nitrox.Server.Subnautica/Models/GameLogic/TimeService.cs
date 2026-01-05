@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Networking;
-using Nitrox.Server.Subnautica.Models.Events;
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Services;
 using Timer = System.Timers.Timer;
 
@@ -31,9 +31,9 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
     private const int NTP_RETRY_INTERVAL_SECONDS = 60;
 
     private readonly ILogger<TimeService> logger = logger;
+    private readonly ILoggerFactory loggerFactory = loggerFactory;
 
     private readonly NtpSyncer ntpSyncer = ntpSyncer;
-    private readonly ILoggerFactory loggerFactory = loggerFactory;
     private readonly PlayerManager playerManager = playerManager;
 
     private readonly PeriodicTimer resyncTimer = new(TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS));
@@ -121,25 +121,19 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
         return new(GameTime.TotalSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), ActiveTime.TotalMilliseconds, ntpSyncer.OnlineMode, ntpSyncer.CorrectionOffset.Ticks);
     }
 
-    public Task LogSummaryAsync(Perms viewerPerms)
+    /// <summary>
+    ///     Skips time by the specified amount and broadcasts the update to all players.
+    /// </summary>
+    public void SkipTime(TimeSpan skipAmount)
     {
-        logger.ZLogInformation($"Current time: day {GameDay} ({Math.Floor(GameTime.TotalSeconds)}s)");
-        return Task.CompletedTask;
-    }
+        if (skipAmount <= TimeSpan.Zero)
+        {
+            return;
+        }
 
-    public Task SleepAsync()
-    {
-        stopWatch.Stop();
-        resyncTimer.Period = TimeSpan.FromMicroseconds(uint.MaxValue); // uint.MaxValue removes internal .NET timer from ever ticking.
-        return Task.CompletedTask;
-    }
-
-    public Task WakeAsync()
-    {
-        stopWatch.Start();
-        resyncTimer.Period = TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS);
+        GameTime += skipAmount;
+        TimeSkipped?.Invoke(skipAmount);
         playerManager.SendPacketToAllPlayers(MakeTimePacket());
-        return Task.CompletedTask;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -162,19 +156,25 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
         }
     }
 
-    /// <summary>
-    /// Skips time by the specified amount and broadcasts the update to all players.
-    /// </summary>
-    public void SkipTime(TimeSpan skipAmount)
+    Task IEvent<IHibernate.SleepArgs>.OnEventAsync(IHibernate.SleepArgs args)
     {
-        if (skipAmount <= TimeSpan.Zero)
-        {
-            return;
-        }
+        stopWatch.Stop();
+        resyncTimer.Period = TimeSpan.FromMicroseconds(uint.MaxValue); // uint.MaxValue removes internal .NET timer from ever ticking.
+        return Task.CompletedTask;
+    }
 
-        GameTime += skipAmount;
-        TimeSkipped?.Invoke(skipAmount);
+    Task IEvent<IHibernate.WakeArgs>.OnEventAsync(IHibernate.WakeArgs args)
+    {
+        stopWatch.Start();
+        resyncTimer.Period = TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS);
         playerManager.SendPacketToAllPlayers(MakeTimePacket());
+        return Task.CompletedTask;
+    }
+
+    Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
+    {
+        logger.ZLogInformation($"Current time: day {GameDay} ({Math.Floor(GameTime.TotalSeconds)}s)");
+        return Task.CompletedTask;
     }
 
     private void StartNtpTimer()

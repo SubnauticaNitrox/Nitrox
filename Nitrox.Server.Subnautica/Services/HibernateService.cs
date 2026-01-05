@@ -1,10 +1,11 @@
-using Nitrox.Server.Subnautica.Models.Events;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 
 namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class HibernateService(Func<IHibernate[]> hibernatorsProvider, ILogger<HibernateService> logger) : IHostedLifecycleService
+internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHibernate.WakeTrigger wakeTrigger, ILogger<HibernateService> logger) : IHostedLifecycleService
 {
-    private readonly Func<IHibernate[]> hibernatorsProvider = hibernatorsProvider;
+    private readonly IHibernate.SleepTrigger sleepTrigger = sleepTrigger;
+    private readonly IHibernate.WakeTrigger wakeTrigger = wakeTrigger;
     private readonly ILogger<HibernateService> logger = logger;
     private bool isSleeping;
     public bool IsSleeping => Interlocked.CompareExchange(ref isSleeping, true, true);
@@ -20,10 +21,7 @@ internal sealed class HibernateService(Func<IHibernate[]> hibernatorsProvider, I
         }
         logger.ZLogInformation($"Entering power saving mode...");
         Interlocked.Exchange(ref isSleeping, true);
-        foreach (IHibernate hibernator in hibernatorsProvider())
-        {
-            await hibernator.SleepAsync();
-        }
+        await sleepTrigger.InvokeAsync();
     }
 
     /// <summary>
@@ -37,10 +35,7 @@ internal sealed class HibernateService(Func<IHibernate[]> hibernatorsProvider, I
         }
         logger.ZLogInformation($"Entering full operation mode...");
         Interlocked.Exchange(ref isSleeping, false);
-        foreach (IHibernate hibernator in hibernatorsProvider())
-        {
-            await hibernator.WakeAsync();
-        }
+        await wakeTrigger.InvokeAsync();
     }
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;

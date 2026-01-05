@@ -8,7 +8,7 @@ namespace Nitrox.Server.Subnautica.Models.Logging;
 /// </summary>
 internal abstract class MiddlewareZLoggerFormatter : IZLoggerFormatter
 {
-    public ILoggerMiddleware[] Middleware { get; protected set; } = [];
+    protected ILoggerMiddleware[] Middleware { get; init; } = [];
 
     /// <remarks>
     ///     ZLogger always writes newlines if true. So we set this to false as to only write new line character when something
