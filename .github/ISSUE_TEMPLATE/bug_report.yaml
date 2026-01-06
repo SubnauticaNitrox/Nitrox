@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         # This no place to seek help with installation or connection problems. For that visit our [Discord](https://discord.com/invite/E8B4X9s).
-        ## Thanks for filling out a bug report. Please be sure that a similar issue wasn't already created by searching [here](https://github.com/SubnauticaNitrox/Nitrox/issues) with general keywords. If it's a new issue please fill out as much detail as possible.
+        ## Thanks for filling out a bug report. Please be sure that a similar issue wasn't already created by searching [here](https://github.com/SubnauticaNitrox/Nitrox/issues?q=is%3Aissue) with general keywords. If it's a new issue please fill out as much detail as possible.
         
   - type: dropdown
     id: nitrox_version
