@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Nitrox.Model.Configuration;
 
 namespace Nitrox.Model.Serialization;
@@ -48,19 +49,19 @@ public static class NitroxConfig
         return result;
     }
 
-    public static T Load<T>(string dirPath) where T : class, new()
+    public static T Load<T>(string dirPath, ILogger? logger = null) where T : class, new()
     {
         T config = new();
-        LoadIntoObject(Path.Combine(dirPath, SerializableFileNameAttribute.GetFileName<T>()), config);
+        LoadIntoObject(Path.Combine(dirPath, SerializableFileNameAttribute.GetFileName<T>()), config, logger);
         return config;
     }
 
-    public static void LoadIntoObject<TConfig>(string filePath, TConfig config) where TConfig : class
+    public static void LoadIntoObject<TConfig>(string filePath, TConfig config, ILogger? logger = null) where TConfig : class
     {
         lock (locker)
         {
             Type type = typeof(TConfig);
-            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<TConfig>();
+            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<TConfig>(logger);
             HashSet<MemberInfo> unserializedMembers = new(typeCachedDict.Values);
             IDictionary<string, string> properties;
             try
@@ -124,13 +125,13 @@ public static class NitroxConfig
                                              .ToArray();
                 if (unserializedProps.Length > 0)
                 {
-                    Log.Warn($"{Path.GetFileName(filePath)} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
+                    logger?.LogWarning($"{Path.GetFileName(filePath)} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
                 }
             }
         }
     }
 
-    public static void CreateFile<TConfig>(string filePath, TConfig config) where TConfig : class
+    public static void CreateFile<TConfig>(string filePath, TConfig config, ILogger? logger = null) where TConfig : class
     {
         if (Directory.Exists(filePath))
         {
@@ -140,7 +141,7 @@ public static class NitroxConfig
         lock (locker)
         {
             Type type = typeof(TConfig);
-            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<TConfig>();
+            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<TConfig>(logger);
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new ArgumentException(nameof(filePath)));
@@ -168,14 +169,14 @@ public static class NitroxConfig
             }
             catch (UnauthorizedAccessException)
             {
-                Log.Error($"Config file {Path.GetFileName(filePath)} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
+                logger?.LogError($"Config file {Path.GetFileName(filePath)} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
             }
         }
     }
 
     public static void CreateFile<TConfig>(string filePath) where TConfig : class, new() => CreateFile(filePath, new TConfig());
 
-    private static Dictionary<string, MemberInfo> GetTypeCacheDictionary<T>() where T : class
+    private static Dictionary<string, MemberInfo> GetTypeCacheDictionary<T>(ILogger? logger = null) where T : class
     {
         if (NitroxConfig<T>.TypeCache.Count == 0)
         {
@@ -200,7 +201,7 @@ public static class NitroxConfig
             }
             catch (ArgumentException e)
             {
-                Log.Error(e, $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
+                logger?.LogError(e, $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
                 throw;
             }
         }
@@ -208,7 +209,7 @@ public static class NitroxConfig
         return NitroxConfig<T>.TypeCache;
     }
 
-    private static string StringifyValue(object value) => value switch
+    private static string? StringifyValue(object? value) => value switch
     {
         string _ => $@"""{value}""",
         null => @"""""",
@@ -217,7 +218,7 @@ public static class NitroxConfig
 
     private static bool SetMemberValue(object instance, MemberInfo member, string valueFromFile)
     {
-        object ConvertFromStringOrDefault(Type typeOfValue, out bool isDefault, object defaultValue = null)
+        object? ConvertFromStringOrDefault(Type typeOfValue, out bool isDefault, object? defaultValue = null)
         {
             try
             {
@@ -246,7 +247,7 @@ public static class NitroxConfig
         }
     }
 
-    private static void WriteProperty<TMember>(TMember member, object value, StreamWriter stream) where TMember : MemberInfo
+    private static void WriteProperty<TMember>(TMember member, object? value, StreamWriter stream) where TMember : MemberInfo
     {
         stream.Write(member.Name);
         stream.Write('=');
