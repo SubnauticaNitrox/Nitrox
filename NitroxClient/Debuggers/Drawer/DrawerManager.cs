@@ -52,6 +52,7 @@ public class DrawerManager
         AddDrawer<ContentSizeFitterDrawer, ContentSizeFitter>();
         AddDrawer<DropdownDrawer, Dropdown>(new(sceneDebugger, selectableDrawer));
         AddDrawer<EventTriggerDrawer, EventTrigger>(new(sceneDebugger));
+        AddDrawer<FixedJointDrawer, FixedJoint>(new(sceneDebugger, vectorDrawer));
         AddDrawer<GraphicRaycasterDrawer, GraphicRaycaster>();
         AddDrawer<GridLayoutGroupDrawer, GridLayoutGroup>(new(vectorDrawer, rectDrawer));
         AddDrawer<LayoutGroupDrawer, HorizontalLayoutGroup>(layoutGroupDrawer);
@@ -71,6 +72,7 @@ public class DrawerManager
         AddDrawer<TransformDrawer, Transform>(new(sceneDebugger, vectorDrawer));
         AddDrawer<UnityEventDrawer, UnityEvent>(unityEventDrawer);
         AddDrawer<UnityEventDrawer, UnityEvent<bool>>(unityEventDrawer);
+        AddDrawer<VFXControllerDrawer, VFXController>(new(vectorDrawer, sceneDebugger));
         AddDrawer<AnimatorDrawer, Animator>();
         AddDrawer<CharacterControllerDrawer, CharacterController>(new(vectorDrawer));
 

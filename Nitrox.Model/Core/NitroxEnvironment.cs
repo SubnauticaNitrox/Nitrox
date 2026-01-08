@@ -12,8 +12,8 @@ namespace Nitrox.Model.Core;
 public static class NitroxEnvironment
 {
     private static bool hasSet;
-
     private static string[]? commandLineArgs;
+
     public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
     public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -85,6 +85,35 @@ public static class NitroxEnvironment
 #endif
         }
     }
+
+    /// <summary>
+    ///     Gets the current platform name (windows, linux, macos).
+    /// </summary>
+    public static string PlatformName
+    {
+        get
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "windows";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "macos";
+            }
+            return "linux";
+        }
+    }
+
+    /// <summary>
+    ///     Gets the current CPU architecture name (x64, arm64).
+    /// </summary>
+    public static string ArchitectureName => RuntimeInformation.OSArchitecture switch
+    {
+        Architecture.X64 => "x64",
+        Architecture.Arm64 => "arm64",
+        _ => "x64"
+    };
 
     /// <summary>
     ///     Gets the command line arguments as passed to the program on start.

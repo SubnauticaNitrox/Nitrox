@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Nitrox.Model.Core;
-using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
 using Nitrox.Model.Platforms.Store.Interfaces;
@@ -186,6 +185,10 @@ public static class NitroxUser
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 path = new Uri(path).LocalPath;
+            }
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                path = Path.GetFileNameWithoutExtension(path);
             }
             return executablePath = path;
         }

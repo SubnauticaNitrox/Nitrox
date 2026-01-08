@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.Spawning.Abstract;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using NitroxClient.GameLogic.Spawning.Abstract;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -35,7 +35,6 @@ internal sealed class OxygenPipeEntitySpawner(WorldEntitySpawner worldEntitySpaw
         }
 
         SetupObject(entity, gameObject, oxygenPipe);
-        gameObject.SetActive(true);
 
         result.Set(Optional.Of(gameObject));
     }
@@ -54,7 +53,6 @@ internal sealed class OxygenPipeEntitySpawner(WorldEntitySpawner worldEntitySpaw
         }
 
         SetupObject(entity, gameObject, oxygenPipe);
-        gameObject.SetActive(true);
 
         result.Set(gameObject);
         return true;
@@ -112,6 +110,8 @@ internal sealed class OxygenPipeEntitySpawner(WorldEntitySpawner worldEntitySpaw
         }
 
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(oxygenPipe.rigidBody, true, false);
+        gameObject.SetActive(true);
+        // UpdatePipe spawns VFX and thus should be called after the object is set active
         oxygenPipe.UpdatePipe();
     }
 }

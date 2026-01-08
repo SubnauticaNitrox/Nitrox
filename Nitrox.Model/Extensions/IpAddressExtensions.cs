@@ -40,7 +40,7 @@ public static class IpAddressExtensions
     ///     Returns true if the given IP address is reserved for private networks.
     /// </summary>
     /// <remarks>
-    ///     See reversed <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv4">IPv4</a> and
+    ///     See reserved <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv4">IPv4</a> and
     ///     <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv6">IPv6</a> address ranges.
     /// </remarks>
     public static bool IsPrivate(this IPAddress address)
@@ -103,7 +103,7 @@ public static class IpAddressExtensions
         ];
 
         /// <remarks>
-        ///     See <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv6">all reversed IPv6 address ranges</a>.
+        ///     See <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv6">all reserved IPv6 address ranges</a>.
         /// </remarks>
         public static readonly Cidr[] PrivateIPv6Networks =
         [

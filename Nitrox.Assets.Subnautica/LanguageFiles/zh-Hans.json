@@ -45,7 +45,7 @@
     "Nitrox_Kick": "踢出{PLAYER}",
     "Nitrox_KickQuestion": "是否踢出{PLAYER}？",
     "Nitrox_LaunchGame": "正在启动游戏…",
-    "Nitrox_Loading": "加载中",
+    "Nitrox_Loading": "加载中…",
     "Nitrox_LoadingScreenWarn": "存在漏洞",
     "Nitrox_LostConnection": "失去与服务器的连接",
     "Nitrox_LostConnectionWarn": "与服务器的连接已断开",
