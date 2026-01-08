@@ -186,6 +186,10 @@ public static class NitroxUser
             {
                 path = new Uri(path).LocalPath;
             }
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                path = Path.Combine(Path.GetDirectoryName(path) ?? throw new InvalidOperationException($"Failed to get directory from path: '{path}'"), Path.GetFileNameWithoutExtension(path));
+            }
             return executablePath = path;
         }
     }
