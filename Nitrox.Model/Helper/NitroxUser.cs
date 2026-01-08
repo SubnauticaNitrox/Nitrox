@@ -186,6 +186,10 @@ public static class NitroxUser
             {
                 path = new Uri(path).LocalPath;
             }
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                path = Path.GetFileNameWithoutExtension(path);
+            }
             return executablePath = path;
         }
     }
