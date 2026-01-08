@@ -5,14 +5,14 @@ using System.IO;
 namespace Nitrox.Model.Configuration.Validators;
 
 /// <summary>
-///     Validates the value is a valid and accessible directory.
+///     Validates the value is a rooted path.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-public class DirectoryPathAttribute : ValidationAttribute
+public class RootedPathAttribute : ValidationAttribute
 {
-    public DirectoryPathAttribute()
+    public RootedPathAttribute()
     {
-        ErrorMessage = "not a valid or accessible directory.";
+        ErrorMessage = "not a rooted path.";
     }
 
     public override bool IsValid(object value)
@@ -21,6 +21,10 @@ public class DirectoryPathAttribute : ValidationAttribute
         {
             return false;
         }
-        return Directory.Exists(str);
+        if (!Path.IsPathRooted(str))
+        {
+            return false;
+        }
+        return true;
     }
 }

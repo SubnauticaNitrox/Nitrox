@@ -22,6 +22,7 @@ public sealed partial record ServerStartOptions
     [ConfigurationKeyName("game-path")]
     [Required]
     [DirectoryPath]
+    [RootedPath]
     public string? GamePath { get; set; }
 
     /// <summary>
@@ -30,6 +31,7 @@ public sealed partial record ServerStartOptions
     [ConfigurationKeyName("data-path")]
     [Required]
     [DirectoryPath]
+    [RootedPath]
     public string? NitroxAppDataPath { get; set; }
 
     /// <summary>
@@ -38,6 +40,7 @@ public sealed partial record ServerStartOptions
     [ConfigurationKeyName("assets-path")]
     [Required]
     [DirectoryPath]
+    [RootedPath]
     public string? NitroxAssetsPath { get; set; }
 
     [ConfigurationKeyName("embedded")]
