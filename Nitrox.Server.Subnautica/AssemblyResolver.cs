@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Nitrox.Server.Subnautica;
 
@@ -99,11 +98,7 @@ internal static class AssemblyResolver
             return null;
         }
         // Try find game managed libraries
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return Path.Combine(GamePath, "Resources", "Data", "Managed", dllName);
-        }
-        return Path.Combine(GamePath, "Subnautica_Data", "Managed", dllName);
+        return Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", dllName);
     }
 
     private static string GetExecutableDirectory()
