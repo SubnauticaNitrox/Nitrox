@@ -128,7 +128,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 {
                     const string PATCHER_DLL_NAME = "NitroxPatcher.dll";
 
-                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath ?? "", "lib", "net472", PATCHER_DLL_NAME);
+                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath, "lib", "net472", PATCHER_DLL_NAME);
                     if (!File.Exists(patcherDllPath))
                     {
                         LauncherNotifier.Error("Launcher files seems corrupted, please contact us");
