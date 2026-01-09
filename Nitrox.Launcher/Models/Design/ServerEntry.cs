@@ -347,7 +347,14 @@ public partial class ServerEntry : ObservableObject
     {
         if (!cts.IsCancellationRequested)
         {
-            await cts.CancelAsync();
+            try
+            {
+                await cts.CancelAsync().WaitAsync(TimeSpan.FromSeconds(3));
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
+            }
         }
         cts = new();
         cts.Token.Register(async void () =>
