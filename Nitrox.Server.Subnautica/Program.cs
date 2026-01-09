@@ -517,7 +517,7 @@ public class Program
     /// </summary>
     private static void LogAssemblyPathFromException(Exception ex)
     {
-        string assemblyName = ex switch
+        string? assemblyName = ex switch
         {
             TypeLoadException tle => ExtractAssemblyNameFromTypeLoadException(tle),
             FileLoadException fle => fle.FileName,
