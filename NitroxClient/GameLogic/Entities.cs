@@ -29,16 +29,16 @@ namespace NitroxClient.GameLogic
         private readonly SimulationOwnership simulationOwnership;
         private readonly Terrain terrain;
 
-        private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
-        private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
+        private readonly Dictionary<NitroxId, Type> spawnedAsType = [];
+        private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = [];
 
-        private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
+        private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = [];
 
         public List<Entity> EntitiesToSpawn { get; private init; }
         public List<AbsoluteEntityCell> CellsToSpawn { get; private init; }
         public bool SpawningEntities { get; private set; }
 
-        private readonly HashSet<NitroxId> deletedEntitiesIds = new();
+        private readonly HashSet<NitroxId> deletedEntitiesIds = [];
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership, Terrain terrain)
         {

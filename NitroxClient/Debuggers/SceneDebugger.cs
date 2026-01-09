@@ -222,6 +222,10 @@ public class SceneDebugger : BaseDebugger
             {
                 GUILayout.Label($"GameObject: {SelectedObject.name}", "bold", GUILayout.Height(25));
                 GUILayout.Space(5);
+                if (GUILayout.Button("State to clipboard"))
+                {
+                    GUIUtility.systemCopyBuffer = SelectedObject.GetStateAsTextForComparison();
+                }
             }
 
             foreach (Component component in SelectedObject.GetComponents<Component>())
