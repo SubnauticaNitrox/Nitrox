@@ -532,7 +532,7 @@ public class Program
 
         // Extract just the assembly name without version info
         string shortName = assemblyName.Split(',')[0].Trim();
-        Assembly loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
+        Assembly? loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
             .FirstOrDefault(a => a.GetName().Name?.Equals(shortName, StringComparison.OrdinalIgnoreCase) == true);
 
         if (loadedAssembly != null)
