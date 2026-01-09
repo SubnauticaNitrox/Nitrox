@@ -94,6 +94,7 @@ public static class IpAddressExtensions
         /// </remarks>
         public static readonly Cidr[] PrivateIPv4Networks =
         [
+            "0.0.0.0/8", // "This" network
             "10.0.0.0/8",
             "127.0.0.0/8", // Loopback
             "172.16.0.0/12",
@@ -107,6 +108,7 @@ public static class IpAddressExtensions
         /// </remarks>
         public static readonly Cidr[] PrivateIPv6Networks =
         [
+            "::/128", // Unspecified address
             "::1/128", // Loopback
             "fc00::/7", // Unique local address
             "fe80::/10", // Link-local address
