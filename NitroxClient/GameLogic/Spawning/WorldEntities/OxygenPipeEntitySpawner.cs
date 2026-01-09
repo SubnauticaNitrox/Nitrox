@@ -8,16 +8,11 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
+internal sealed class OxygenPipeEntitySpawner(WorldEntitySpawner worldEntitySpawner) : SyncEntitySpawner<OxygenPipeEntity>
 {
-    private readonly WorldEntitySpawner worldEntitySpawner;
+    private readonly WorldEntitySpawner worldEntitySpawner = worldEntitySpawner;
 
     private readonly Dictionary<NitroxId, List<OxygenPipe>> childrenPipeEntitiesByParentId = new();
-
-    public OxygenPipeEntitySpawner(WorldEntitySpawner worldEntitySpawner)
-    {
-        this.worldEntitySpawner = worldEntitySpawner;
-    }
 
     protected override IEnumerator SpawnAsync(OxygenPipeEntity entity, TaskResult<Optional<GameObject>> result)
     {
