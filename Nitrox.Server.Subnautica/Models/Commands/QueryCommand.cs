@@ -29,7 +29,7 @@ internal class QueryCommand : Command
         if (entityRegistry.Value.TryGetEntityById(nitroxId, out Entity entity))
         {
             Log.Info(entity);
-            if (entity is WorldEntity worldEntity && worldEntity.Transform != null)
+            if (entity is WorldEntity worldEntity && worldEntity.Transform != null && worldEntity is not GlobalRootEntity)
             {
                 Log.Info(worldEntity.AbsoluteEntityCell);
             }
