@@ -489,6 +489,7 @@ public class Program
         if (e.ExceptionObject is Exception ex)
         {
             Log.Error(ex);
+            LogAssemblyPathFromException(ex);
         }
         if (!Environment.UserInteractive || Console.IsInputRedirected || Console.In == StreamReader.Null)
         {
@@ -509,5 +510,53 @@ public class Program
         }
 
         Environment.Exit(1);
+    }
+
+    /// <summary>
+    ///     Logs the file path of assemblies referenced in type-related exceptions to help diagnose version conflicts.
+    /// </summary>
+    private static void LogAssemblyPathFromException(Exception ex)
+    {
+        string assemblyName = ex switch
+        {
+            TypeLoadException tle => ExtractAssemblyNameFromTypeLoadException(tle),
+            FileLoadException fle => fle.FileName,
+            FileNotFoundException fnfe => fnfe.FileName,
+            _ => null
+        };
+
+        if (string.IsNullOrWhiteSpace(assemblyName))
+        {
+            return;
+        }
+
+        // Extract just the assembly name without version info
+        string shortName = assemblyName.Split(',')[0].Trim();
+        Assembly loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => a.GetName().Name?.Equals(shortName, StringComparison.OrdinalIgnoreCase) == true);
+
+        if (loadedAssembly != null)
+        {
+            Log.Error($"Loaded assembly '{loadedAssembly.GetName().Name}' v{loadedAssembly.GetName().Version} from: {loadedAssembly.Location}");
+        }
+    }
+
+    private static string ExtractAssemblyNameFromTypeLoadException(TypeLoadException ex)
+    {
+        // TypeLoadException message format: "Could not load type 'X' from assembly 'AssemblyName, Version=...'"
+        string message = ex.Message;
+        if (string.IsNullOrEmpty(message))
+        {
+            return null;
+        }
+        const string marker = "from assembly '";
+        int startIndex = message.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (startIndex < 0)
+        {
+            return null;
+        }
+        startIndex += marker.Length;
+        int endIndex = message.IndexOf('\'', startIndex);
+        return endIndex > startIndex ? message.Substring(startIndex, endIndex - startIndex) : null;
     }
 }
