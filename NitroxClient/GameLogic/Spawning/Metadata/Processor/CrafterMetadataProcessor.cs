@@ -74,19 +74,23 @@ public class CrafterMetadataProcessor : EntityMetadataProcessor<CrafterMetadata>
             return true;
         }
 
-        if (gameObject.TryGetComponent(out CrafterLogic crafterLogic))
+        if (!gameObject.TryGetComponent(out CrafterLogic crafterLogic))
         {
-            Base parentBase = gameObject.GetComponentInParent<Base>();
-            if (parentBase)
+            return false;
+        }
+
+        Base parentBase = gameObject.GetComponentInParent<Base>();
+        if (!parentBase)
+        {
+            return false;
+        }
+
+        foreach (GhostCrafter crafter in parentBase.GetComponentsInChildren<GhostCrafter>(true))
+        {
+            if (crafter._logic == crafterLogic)
             {
-                foreach (GhostCrafter crafter in parentBase.GetComponentsInChildren<GhostCrafter>(true))
-                {
-                    if (crafter._logic == crafterLogic)
-                    {
-                        ghostCrafter = crafter;
-                        return true;
-                    }
-                }
+                ghostCrafter = crafter;
+                return true;
             }
         }
 
