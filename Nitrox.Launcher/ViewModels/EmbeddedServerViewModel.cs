@@ -48,7 +48,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
             }
         });
     }
-    
+
     [RelayCommand]
     private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
@@ -84,7 +84,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
         }
         ClearInput(textBox);
     }
-    
+
     [RelayCommand]
     private async Task StopServerAsync()
     {
