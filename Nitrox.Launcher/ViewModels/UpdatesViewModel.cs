@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -21,12 +22,13 @@ using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi, DialogService dialogService, ServerService serverService, Func<Window> mainWindowProvider) : RoutableViewModelBase
+internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi, DialogService dialogService, ServerService serverService, Func<Window> mainWindowProvider, BackupService backupService) : RoutableViewModelBase
 {
     private readonly DialogService dialogService = dialogService;
     private readonly ServerService serverService = serverService;
     private readonly Func<Window> mainWindowProvider = mainWindowProvider;
     private readonly NitroxWebsiteApiService nitroxWebsiteApi = nitroxWebsiteApi;
+    private readonly BackupService backupService = backupService;
     private CancellationTokenSource? downloadCts;
 
     [ObservableProperty]
@@ -46,6 +48,9 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
 
     [ObservableProperty]
     private bool usingOfficialVersion;
+
+    [ObservableProperty]
+    private AvaloniaList<BackupInfo> availableBackups = [];
 
     [ObservableProperty]
     private string? version;
@@ -85,6 +90,9 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
             {
                 NitroxChangelogs.Clear();
                 NitroxChangelogs.AddRange(await nitroxWebsiteApi.GetChangeLogsAsync(cancellationToken)! ?? []);
+
+                // Load available backups
+                RefreshBackups();
             }
             catch (OperationCanceledException)
             {
@@ -209,6 +217,38 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
         }
 
         DownloadProgress = 0;
+        DownloadStatus = "Creating backup...";
+
+        // Create backup before updating
+        string? backupPath = await backupService.CreateBackupAsync(
+            includeSaves: true,
+            progress: new Progress<(int Progress, string Status)>(p =>
+            {
+                DownloadProgress = p.Progress * 0.1; // Backup is 10% of total progress
+                DownloadStatus = p.Status;
+            })
+        );
+
+        if (backupPath == null)
+        {
+            DialogBoxViewModel backupFailedResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+            {
+                model.Title = "Backup failed";
+                model.Description = "Failed to create a backup of your current installation. Do you want to continue with the update anyway?";
+                model.ButtonOptions = ButtonOptions.YesNo;
+            });
+            if (!backupFailedResult)
+            {
+                DownloadProgress = 0;
+                DownloadStatus = null;
+                return;
+            }
+        }
+        else
+        {
+            LauncherNotifier.Success($"Backup created: {Path.GetFileName(backupPath)}");
+        }
+
         DownloadStatus = "Starting download...";
         using (downloadCts = new CancellationTokenSource())
         {
@@ -312,4 +352,100 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
     }
 
     private bool CanCancelDownload() => downloadCts is { IsCancellationRequested: false };
+
+    [RelayCommand]
+    private void RefreshBackups()
+    {
+        AvailableBackups.Clear();
+        AvailableBackups.AddRange(backupService.GetAvailableBackups());
+    }
+
+    [RelayCommand]
+    private async Task DeleteBackup(BackupInfo? backup)
+    {
+        if (backup == null)
+        {
+            return;
+        }
+
+        DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        {
+            model.Title = "Delete backup?";
+            model.Description = $"Are you sure you want to delete the backup '{backup.FileName}'?\nThis action cannot be undone.";
+            model.ButtonOptions = ButtonOptions.YesNo;
+        });
+
+        if (confirmResult && backupService.DeleteBackup(backup.FilePath))
+        {
+            AvailableBackups.Remove(backup);
+            LauncherNotifier.Success("Backup deleted");
+        }
+    }
+
+    [RelayCommand]
+    private async Task RestoreBackup(BackupInfo? backup)
+    {
+        if (backup == null)
+        {
+            return;
+        }
+
+        DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        {
+            model.Title = "Restore backup?";
+            model.Description = $"This will restore Nitrox to version {backup.Version} and overwrite your current installation.";
+            if (backup.IncludesSaves)
+            {
+                model.Description += "\n\nThis backup includes save files which will also be restored, potentially overwriting your current saves.";
+            }
+            model.Description += "\n\nThe launcher will close and restart after the restore is complete.\n\nDo you want to continue?";
+            model.ButtonOptions = ButtonOptions.YesNo;
+        });
+
+        if (!confirmResult)
+        {
+            return;
+        }
+
+        string? scriptPath = await backupService.CreateRestoreScriptAsync(backup.FilePath);
+        if (scriptPath == null)
+        {
+            LauncherNotifier.Error("Failed to create restore script");
+            return;
+        }
+
+        LauncherNotifier.Success("Restoring backup... The launcher will restart.");
+
+        // Start the restore script and exit
+        using Process? script = ProcessEx.StartProcessDetached(new ProcessStartInfo
+        {
+            FileName = scriptPath,
+            CreateNoWindow = true
+        });
+        mainWindowProvider().CloseByCode();
+    }
+
+    [RelayCommand]
+    private void OpenBackupsFolder()
+    {
+        string backupsDir = BackupService.BackupsDirectory;
+        if (!Directory.Exists(backupsDir))
+        {
+            Directory.CreateDirectory(backupsDir);
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = backupsDir,
+                Verb = "open",
+                UseShellExecute = true
+            })?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            LauncherNotifier.Error($"Failed to open backups folder: {ex.Message}");
+        }
+    }
 }
