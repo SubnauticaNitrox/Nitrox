@@ -547,11 +547,11 @@ public class Program
         try
         {
             // Extract just the assembly name without version info
-            AssemblyName name = new(assemblyName);
             Assembly? loadedAssembly = AppDomain
                                        .CurrentDomain
                                        .GetAssemblies()
-                                       .FirstOrDefault(a => a.GetName().Name?.Equals(name.Name, StringComparison.OrdinalIgnoreCase) == true);
+                                       .OrderBy(a => a.GetName().FullName.Equals(assemblyName) ? 0 : 1) // Sorts full matches before weak matches.
+                                       .FirstOrDefault(a => a.GetName().Name?.Equals(new AssemblyName(assemblyName).Name, StringComparison.OrdinalIgnoreCase) == true);
 
             if (loadedAssembly != null && loadedAssembly.GetName() is { } asmName)
             {
