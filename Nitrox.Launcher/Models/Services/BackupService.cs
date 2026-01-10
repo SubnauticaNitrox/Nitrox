@@ -32,7 +32,7 @@ public class BackupService(IKeyValueStore keyValueStore)
     {
         string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         string backupName = $"nitrox_backup_{NitroxEnvironment.Version}_{timestamp}";
-        string backupPath = Path.Combine(BackupsDirectory, $"{backupName}.zip");
+        string backupFilePath = Path.Combine(BackupsDirectory, $"{backupName}.zip");
 
         try
         {
@@ -47,7 +47,7 @@ public class BackupService(IKeyValueStore keyValueStore)
 
             progress?.Report((0, "Creating backup..."));
 
-            await using FileStream zipStream = new(backupPath, FileMode.Create);
+            await using FileStream zipStream = new(backupFilePath, FileMode.Create);
             using ZipArchive archive = new(zipStream, ZipArchiveMode.Create);
 
             // Backup installation files
@@ -78,24 +78,24 @@ public class BackupService(IKeyValueStore keyValueStore)
                     InstallationPath = launcherPath,
                     SavesPath = keyValueStore.GetSavesFolderDir()
                 };
-                await JsonSerializer.SerializeAsync(entryStream, metadata, JsonSerializerOptions.Default);
+                await JsonSerializer.SerializeAsync(entryStream, metadata, JsonSerializerOptions.Default, cancellationToken);
             }
 
             progress?.Report((100, "Backup complete"));
-            Log.Info($"Backup created: {backupPath}");
-            return backupPath;
+            Log.Info($"Backup created: {backupFilePath}");
+            return backupFilePath;
         }
         catch (OperationCanceledException)
         {
             // Clean up partial backup
-            TryDeleteFile(backupPath);
+            TryDeleteFile(backupFilePath);
             throw;
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Failed to create backup");
             // Clean up partial backup
-            TryDeleteFile(backupPath);
+            TryDeleteFile(backupFilePath);
             return null;
         }
     }
@@ -231,7 +231,7 @@ public class BackupService(IKeyValueStore keyValueStore)
                 throw new ArgumentException("Saves directory must be an absolute path", nameof(savesDir));
             }
 
-            string tempDir = Path.Combine(Path.GetTempPath(), "NitroxRestore");
+            string tempDir = Path.Combine(Path.GetTempPath(), $"NitroxRestore {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
             Directory.CreateDirectory(tempDir);
 
             string extractPath = Path.Combine(tempDir, "extract");

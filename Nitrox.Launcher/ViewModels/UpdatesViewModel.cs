@@ -254,12 +254,10 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
             try
             {
                 string currentDir = NitroxUser.LauncherPath ?? AppDomain.CurrentDomain.BaseDirectory;
-                string tempDir = Path.Combine(Path.GetTempPath(), "NitroxUpdate");
+                string tempDir = Path.Combine(Path.GetTempPath(), $"NitroxUpdate {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
                 string zipPath = Path.Combine(tempDir, $"Nitrox_{latestRelease.Version}.zip");
                 string extractPath = Path.Combine(tempDir, "extract");
 
-                // Clean up any previous update attempt
-                TryDeleteDirectory(tempDir, true);
                 Directory.CreateDirectory(tempDir);
 
                 // Download the update
