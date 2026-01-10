@@ -47,7 +47,7 @@ public class BackupService(IKeyValueStore keyValueStore)
 
             progress?.Report((0, "Creating backup..."));
 
-            using FileStream zipStream = new(backupPath, FileMode.Create);
+            await using FileStream zipStream = new(backupPath, FileMode.Create);
             using ZipArchive archive = new(zipStream, ZipArchiveMode.Create);
 
             // Backup installation files
@@ -88,20 +88,14 @@ public class BackupService(IKeyValueStore keyValueStore)
         catch (OperationCanceledException)
         {
             // Clean up partial backup
-            if (File.Exists(backupPath))
-            {
-                File.Delete(backupPath);
-            }
+            TryDeleteFile(backupPath);
             throw;
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Failed to create backup");
             // Clean up partial backup
-            if (File.Exists(backupPath))
-            {
-                File.Delete(backupPath);
-            }
+            TryDeleteFile(backupPath);
             return null;
         }
     }
@@ -195,9 +189,8 @@ public class BackupService(IKeyValueStore keyValueStore)
     {
         try
         {
-            if (File.Exists(backupPath))
+            if (TryDeleteFile(backupPath))
             {
-                File.Delete(backupPath);
                 Log.Info($"Deleted backup: {backupPath}");
                 return true;
             }

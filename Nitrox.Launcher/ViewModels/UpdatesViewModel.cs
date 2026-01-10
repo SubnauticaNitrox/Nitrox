@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -260,10 +259,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
                 string extractPath = Path.Combine(tempDir, "extract");
 
                 // Clean up any previous update attempt
-                if (Directory.Exists(tempDir))
-                {
-                    Directory.Delete(tempDir, true);
-                }
+                TryDeleteDirectory(tempDir, true);
                 Directory.CreateDirectory(tempDir);
 
                 // Download the update
@@ -299,10 +295,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
 
                 // Extract the update
                 DownloadStatus = "Extracting...";
-                if (Directory.Exists(extractPath))
-                {
-                    Directory.Delete(extractPath, true);
-                }
+                TryDeleteDirectory(extractPath, true);
                 ZipFile.ExtractToDirectory(zipPath, extractPath);
 
                 // Find the Nitrox folder inside the extracted content

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Avalonia.Controls;
 using Nitrox.Model.Platforms.OS.Shared;
 
@@ -13,6 +14,35 @@ internal static class GlobalStatic
 
     /// <inheritdoc cref="ProcessEx.OpenDirectory" />
     public static bool OpenDirectory(string? directory) => ProcessEx.OpenDirectory(directory);
+
+    public static bool TryDeleteFile(string filePath)
+    {
+        try
+        {
+            File.Delete(filePath);
+            return true;
+        }
+        catch (Exception ex) when (ex is FileNotFoundException or UnauthorizedAccessException)
+        {
+            // ignored
+        }
+        return false;
+    }
+
+    /// <inheritdoc cref="Directory.Delete(string, bool)" />
+    public static bool TryDeleteDirectory(string directory, bool recursive = false)
+    {
+        try
+        {
+            Directory.Delete(directory, recursive);
+            return true;
+        }
+        catch (Exception ex) when (ex is DirectoryNotFoundException or UnauthorizedAccessException)
+        {
+            // ignored
+        }
+        return false;
+    }
 
     public static string GetServerExeName()
     {
