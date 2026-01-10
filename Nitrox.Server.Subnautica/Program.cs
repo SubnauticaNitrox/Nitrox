@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -12,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Autofac.Core;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -517,46 +517,50 @@ public class Program
     /// </summary>
     private static void LogAssemblyPathFromException(Exception ex)
     {
+        while (true)
+        {
+            if (ex is AggregateException { InnerException: { } inner })
+            {
+                ex = inner;
+            }
+            else if (ex is DependencyResolutionException { InnerException: { } dependencyInner })
+            {
+                ex = dependencyInner;
+            }
+            else
+            {
+                break;
+            }
+        }
         string? assemblyName = ex switch
         {
-            TypeLoadException tle => ExtractAssemblyNameFromTypeLoadException(tle),
-            FileLoadException fle => fle.FileName,
-            FileNotFoundException fnfe => fnfe.FileName,
+            TypeLoadException t => t.GetType().GetField("_assemblyName", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ex) as string,
+            FileLoadException f => f.FileName,
+            FileNotFoundException f => f.FileName,
             _ => null
         };
-
         if (string.IsNullOrWhiteSpace(assemblyName))
         {
             return;
         }
 
-        // Extract just the assembly name without version info
-        string shortName = assemblyName.Split(',')[0].Trim();
-        Assembly? loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
-            .FirstOrDefault(a => a.GetName().Name?.Equals(shortName, StringComparison.OrdinalIgnoreCase) == true);
+        try
+        {
+            // Extract just the assembly name without version info
+            AssemblyName name = new(assemblyName);
+            Assembly? loadedAssembly = AppDomain
+                                       .CurrentDomain
+                                       .GetAssemblies()
+                                       .FirstOrDefault(a => a.GetName().Name?.Equals(name.Name, StringComparison.OrdinalIgnoreCase) == true);
 
-        if (loadedAssembly != null)
-        {
-            Log.Error($"Loaded assembly '{loadedAssembly.GetName().Name}' v{loadedAssembly.GetName().Version} from: {loadedAssembly.Location}");
+            if (loadedAssembly != null && loadedAssembly.GetName() is { } asmName)
+            {
+                Log.Error($"Error originates from '{asmName.Name}' v{asmName.Version}, file: {loadedAssembly.Location}");
+            }
         }
-    }
-
-    private static string ExtractAssemblyNameFromTypeLoadException(TypeLoadException ex)
-    {
-        // TypeLoadException message format: "Could not load type 'X' from assembly 'AssemblyName, Version=...'"
-        string message = ex.Message;
-        if (string.IsNullOrEmpty(message))
+        catch
         {
-            return null;
+            // ignored
         }
-        const string marker = "from assembly '";
-        int startIndex = message.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
-        if (startIndex < 0)
-        {
-            return null;
-        }
-        startIndex += marker.Length;
-        int endIndex = message.IndexOf('\'', startIndex);
-        return endIndex > startIndex ? message.Substring(startIndex, endIndex - startIndex) : null;
     }
 }
