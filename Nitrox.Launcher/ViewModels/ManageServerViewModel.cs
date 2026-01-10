@@ -338,13 +338,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void OpenWorldFolder() =>
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = SaveFolderDirectory,
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+    private void OpenWorldFolder() => OpenDirectory(SaveFolderDirectory);
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()

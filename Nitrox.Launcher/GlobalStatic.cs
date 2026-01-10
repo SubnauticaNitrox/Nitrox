@@ -11,6 +11,9 @@ internal static class GlobalStatic
     /// <inheritdoc cref="ProcessEx.OpenUri" />
     public static void OpenUri(string url) => ProcessEx.OpenUri(url);
 
+    /// <inheritdoc cref="ProcessEx.OpenDirectory" />
+    public static bool OpenDirectory(string? directory) => ProcessEx.OpenDirectory(directory);
+
     public static string GetServerExeName()
     {
         string serverExeName = "Nitrox.Server.Subnautica.exe";

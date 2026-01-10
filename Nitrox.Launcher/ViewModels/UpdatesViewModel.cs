@@ -433,12 +433,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
 
         try
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = backupsDir,
-                Verb = "open",
-                UseShellExecute = true
-            })?.Dispose();
+            OpenDirectory(backupsDir);
         }
         catch (Exception ex)
         {
