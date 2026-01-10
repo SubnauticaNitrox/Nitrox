@@ -49,7 +49,7 @@ public static class NitroxEntryPatch
             else
             {
                 Log.Debug($"{GAME_ASSEMBLY_MODIFIED_NAME} already exists, removing it");
-                Exception copyError = RetryWait(() => File.Delete(modifiedAssemblyCSharp), 100, 5);
+                Exception copyError = RetryWait(() => TryDeleteFile(modifiedAssemblyCSharp), 100, 5);
                 if (copyError != null)
                 {
                     throw copyError;
@@ -112,7 +112,7 @@ public static class NitroxEntryPatch
 
         // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
         Log.Debug($"Deleting {GAME_ASSEMBLY_NAME}");
-        Exception? error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
+        Exception? error = RetryWait(() => TryDeleteFile(assemblyCSharp), 100, 5);
         if (error != null)
         {
             throw error;
