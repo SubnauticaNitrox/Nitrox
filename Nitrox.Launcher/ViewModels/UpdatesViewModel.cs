@@ -429,10 +429,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
     private void OpenBackupsFolder()
     {
         string backupsDir = BackupService.BackupsDirectory;
-        if (!Directory.Exists(backupsDir))
-        {
-            Directory.CreateDirectory(backupsDir);
-        }
+        Directory.CreateDirectory(backupsDir);
 
         try
         {

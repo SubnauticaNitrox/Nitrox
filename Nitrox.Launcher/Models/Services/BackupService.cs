@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Model.Core;
@@ -66,14 +67,18 @@ public class BackupService(IKeyValueStore keyValueStore)
 
             // Add metadata file
             progress?.Report((90, "Finalizing backup..."));
-            ZipArchiveEntry metadataEntry = archive.CreateEntry("backup_info.txt");
-            await using (StreamWriter writer = new(metadataEntry.Open()))
+            ZipArchiveEntry metadataEntry = archive.CreateEntry("backup_info.json");
+            await using (Stream entryStream = metadataEntry.Open())
             {
-                await writer.WriteLineAsync($"Nitrox Version: {NitroxEnvironment.Version}");
-                await writer.WriteLineAsync($"Backup Date: {DateTime.Now:F}");
-                await writer.WriteLineAsync($"Includes Saves: {includeSaves}");
-                await writer.WriteLineAsync($"Installation Path: {launcherPath}");
-                await writer.WriteLineAsync($"Saves Path: {keyValueStore.GetSavesFolderDir()}");
+                BackupMetadata metadata = new()
+                {
+                    NitroxVersion = NitroxEnvironment.Version.ToString(),
+                    BackupDate = DateTime.Now,
+                    IncludesSaves = includeSaves,
+                    InstallationPath = launcherPath,
+                    SavesPath = keyValueStore.GetSavesFolderDir()
+                };
+                await JsonSerializer.SerializeAsync(entryStream, metadata, JsonSerializerOptions.Default);
             }
 
             progress?.Report((100, "Backup complete"));
@@ -131,20 +136,39 @@ public class BackupService(IKeyValueStore keyValueStore)
             FileInfo fileInfo = new(backupPath);
             string fileName = Path.GetFileNameWithoutExtension(backupPath);
 
-            // Parse version and date from filename: nitrox_backup_1.8.0.1_2024-01-15_12-30-45
-            string[] parts = fileName.Split('_');
-            string version = parts.Length > 2 ? parts[2] : "Unknown";
+            // Try to read metadata from JSON file inside the archive
+            string version = "Unknown";
             DateTime? date = null;
-
-            if (parts.Length > 4 && DateTime.TryParse($"{parts[3]} {parts[4].Replace('-', ':')}", out DateTime parsedDate))
-            {
-                date = parsedDate;
-            }
-
             bool includesSaves = false;
+
             using (ZipArchive archive = ZipFile.OpenRead(backupPath))
             {
-                includesSaves = archive.Entries.Any(e => e.FullName.StartsWith("saves/", StringComparison.OrdinalIgnoreCase));
+                ZipArchiveEntry? metadataEntry = archive.GetEntry("backup_info.json");
+                if (metadataEntry != null)
+                {
+                    using Stream stream = metadataEntry.Open();
+                    BackupMetadata? metadata = JsonSerializer.Deserialize<BackupMetadata>(stream);
+                    if (metadata != null)
+                    {
+                        version = metadata.NitroxVersion;
+                        date = metadata.BackupDate;
+                        includesSaves = metadata.IncludesSaves;
+                    }
+                }
+                else
+                {
+                    // Fallback: parse version and date from filename for older backups
+                    // Format: nitrox_backup_1.8.0.1_2024-01-15_12-30-45
+                    string[] parts = fileName.Split('_');
+                    version = parts.Length > 2 ? parts[2] : "Unknown";
+
+                    if (parts.Length > 4 && DateTime.TryParse($"{parts[3]} {parts[4].Replace('-', ':')}", out DateTime parsedDate))
+                    {
+                        date = parsedDate;
+                    }
+
+                    includesSaves = archive.Entries.Any(e => e.FullName.StartsWith("saves/", StringComparison.OrdinalIgnoreCase));
+                }
             }
 
             return new BackupInfo
@@ -352,4 +376,13 @@ public class BackupInfo
         < 1024 * 1024 => $"{SizeBytes / 1024.0:F1} KB",
         _ => $"{SizeBytes / 1024.0 / 1024.0:F1} MB"
     };
+}
+
+public class BackupMetadata
+{
+    public string NitroxVersion { get; set; } = "";
+    public DateTime BackupDate { get; set; }
+    public bool IncludesSaves { get; set; }
+    public string InstallationPath { get; set; } = "";
+    public string SavesPath { get; set; } = "";
 }
