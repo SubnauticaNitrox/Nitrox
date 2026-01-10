@@ -324,12 +324,7 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
     public void OpenSaveFolder()
     {
-        System.Diagnostics.Process.Start(new ProcessStartInfo
-        {
-            FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name!),
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name!));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
