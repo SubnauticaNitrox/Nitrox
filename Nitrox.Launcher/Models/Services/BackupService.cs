@@ -59,10 +59,7 @@ public class BackupService(IKeyValueStore keyValueStore)
             {
                 progress?.Report((50, "Backing up save files..."));
                 string savesDir = keyValueStore.GetSavesFolderDir();
-                if (Directory.Exists(savesDir))
-                {
-                    await AddDirectoryToArchiveAsync(archive, savesDir, "saves", cancellationToken);
-                }
+                await AddDirectoryToArchiveAsync(archive, savesDir, "saves", cancellationToken);
             }
 
             // Add metadata file
