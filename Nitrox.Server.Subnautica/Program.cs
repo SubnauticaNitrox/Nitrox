@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -12,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Autofac.Core;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -489,6 +489,7 @@ public class Program
         if (e.ExceptionObject is Exception ex)
         {
             Log.Error(ex);
+            LogAssemblyPathFromException(ex);
         }
         if (!Environment.UserInteractive || Console.IsInputRedirected || Console.In == StreamReader.Null)
         {
@@ -509,5 +510,57 @@ public class Program
         }
 
         Environment.Exit(1);
+    }
+
+    /// <summary>
+    ///     Logs the file path of assemblies referenced in type-related exceptions to help diagnose version conflicts.
+    /// </summary>
+    private static void LogAssemblyPathFromException(Exception ex)
+    {
+        while (true)
+        {
+            if (ex is AggregateException { InnerException: { } inner })
+            {
+                ex = inner;
+            }
+            else if (ex is DependencyResolutionException { InnerException: { } dependencyInner })
+            {
+                ex = dependencyInner;
+            }
+            else
+            {
+                break;
+            }
+        }
+        string? assemblyName = ex switch
+        {
+            TypeLoadException t => t.GetType().GetField("_assemblyName", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ex) as string,
+            FileLoadException f => f.FileName,
+            FileNotFoundException f => f.FileName,
+            _ => null
+        };
+        if (string.IsNullOrWhiteSpace(assemblyName))
+        {
+            return;
+        }
+
+        try
+        {
+            // Extract just the assembly name without version info
+            Assembly? loadedAssembly = AppDomain
+                                       .CurrentDomain
+                                       .GetAssemblies()
+                                       .OrderBy(a => a.GetName().FullName.Equals(assemblyName) ? 0 : 1) // Sorts full matches before weak matches.
+                                       .FirstOrDefault(a => a.GetName().Name?.Equals(new AssemblyName(assemblyName).Name, StringComparison.OrdinalIgnoreCase) == true);
+
+            if (loadedAssembly != null && loadedAssembly.GetName() is { } asmName)
+            {
+                Log.Error($"Error originates from '{asmName.Name}' v{asmName.Version}, file: {loadedAssembly.Location}");
+            }
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }
