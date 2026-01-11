@@ -19,8 +19,9 @@ public class PlayerCinematics
 
     /// <summary>
     /// Some cinematics should not be played. Example the intro as it's completely handled by a dedicated system.
+    /// Bench and chair cinematics are handled by the BenchChanged packet system instead.
     /// </summary>
-    private readonly HashSet<string> blacklistedKeys = ["escapepod_intro", "reaper_attack"];
+    private readonly HashSet<string> blacklistedKeys = ["escapepod_intro", "reaper_attack", "bench_sit", "bench_stand_up", "chair_sit", "chair_stand_up"];
 
     public PlayerCinematics(IPacketSender packetSender, LocalPlayer localPlayer)
     {
