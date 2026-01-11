@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.GameLogic.Settings;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -68,8 +69,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public static void ResetTimer()
         {
-            timeLeftUntilAutoClose = PlayerChat.CHAT_VISIBILITY_TIME_LENGTH;
-            FreezeTime = false;
+            float duration = NitroxPrefs.ChatVisibilityDuration.Value;
+            timeLeftUntilAutoClose = duration;
+            // If duration is 0 (chat disabled), freeze time so it doesn't immediately hide
+            FreezeTime = duration <= 0f;
         }
 
         private void Update()

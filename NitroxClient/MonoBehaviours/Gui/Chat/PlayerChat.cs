@@ -52,7 +52,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;
-            if (NitroxPrefs.SilenceChat.Value)
+            if (NitroxPrefs.ChatVisibilityDuration.Value <= 0f)
             {
                 Log.InGame(Language.main.Get("Nitrox_SilencedChatNotif"));
             }
