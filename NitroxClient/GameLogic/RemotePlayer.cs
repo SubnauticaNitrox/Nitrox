@@ -101,6 +101,7 @@ public class RemotePlayer : INitroxPlayer
         CoroutineUtils.StartCoroutineSmart(playerModelManager.AttachPing(this));
         playerModelManager.BeginApplyPlayerColor(this);
         playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
+        UpdateEquipmentVisibility([]);
         SetupBody();
         SetupSkyAppliers();
         SetupPlayerSounds();
