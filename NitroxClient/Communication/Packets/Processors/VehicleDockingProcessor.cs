@@ -11,9 +11,10 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal sealed class VehicleDockingProcessor(Vehicles vehicles) : IClientPacketProcessor<VehicleDocking>
+internal sealed class VehicleDockingProcessor(Vehicles vehicles, PlayerManager playerManager) : IClientPacketProcessor<VehicleDocking>
 {
     private readonly Vehicles vehicles = vehicles;
+    private readonly PlayerManager playerManager = playerManager;
 
     public Task Process(ClientProcessorContext context, VehicleDocking packet)
     {
@@ -35,37 +36,64 @@ internal sealed class VehicleDockingProcessor(Vehicles vehicles) : IClientPacket
             Log.Debug($"[{nameof(VehicleDockingProcessor)}] Disabled VehicleMovementReplicator on {packet.VehicleId}");
         }
 
-        vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.SessionId));
+        // Set InCinematic on the remote player to prevent movement packets from interfering during docking
+        if (playerManager.TryFind(packet.SessionId, out RemotePlayer player))
+        {
+            player.InCinematic = true;
+        }
+
+        vehicle.StartCoroutine(InterpolateAndDockVehicle(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.SessionId));
         return Task.CompletedTask;
     }
 
-    private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, SessionId sessionId)
+    private IEnumerator InterpolateAndDockVehicle(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay dockingBay, NitroxId vehicleId, SessionId sessionId)
     {
-        // Consider the vehicle movement latency (we don't teleport the vehicle to the docking position)
-        if (vehicleMovementReplicator)
+        // Get the target docking position based on vehicle type (same logic as VehicleDockingBay.UpdateDockedPosition)
+        Transform dockingEndPos = vehicle is Exosuit ? dockingBay.dockingEndPosExo : dockingBay.dockingEndPos;
+
+        // Store starting position for interpolation
+        Vector3 startPosition = vehicle.transform.position;
+        Quaternion startRotation = vehicle.transform.rotation;
+
+        // Use the same interpolation time as the game (default is 1 second)
+        float interpolationTime = dockingBay.interpolationTime;
+        float elapsedTime = 0f;
+
+        // Interpolate vehicle position to docking bay (replicates VehicleDockingBay.LateUpdate behavior)
+        while (elapsedTime < interpolationTime)
         {
-            // NB: We don't have a lifetime ahead of us
-            float waitTime = Mathf.Clamp(vehicleMovementReplicator.maxAllowedLatency, 0f, 2f);
-            yield return new WaitForSeconds(waitTime);
-        }
-        else
-        {
-            yield return Yielders.WaitFor1Second;
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / interpolationTime);
+
+            vehicle.transform.position = Vector3.Lerp(startPosition, dockingEndPos.position, t);
+            vehicle.transform.rotation = Quaternion.Lerp(startRotation, dockingEndPos.rotation, t);
+
+            yield return null;
         }
 
-        // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
-        // Therefore disable kinematic (again) to remove the bouncing behavior
-        DockRemoteVehicle(vehicleDockingBay, vehicle);
+        // Ensure final position is exact
+        vehicle.transform.position = dockingEndPos.position;
+        vehicle.transform.rotation = dockingEndPos.rotation;
+
+        // Now dock the vehicle
+        DockRemoteVehicle(dockingBay, vehicle);
         vehicle.useRigidbody.isKinematic = false;
 
+        // Wait for the docking cinematic to complete before disabling pilot mode
         yield return Yielders.WaitFor2Seconds;
+
+        // Clear the remote player's vehicle state since they're now exiting
+        if (playerManager.TryFind(sessionId, out RemotePlayer player))
+        {
+            player.InCinematic = false;
+            player.SetVehicle(null);
+        }
+
         vehicles.SetOnPilotMode(vehicleId, sessionId, false);
     }
 
-    /// Copy of
-    /// <see cref="VehicleDockingBay.DockVehicle" />
-    /// without the player centric bits
-    private void DockRemoteVehicle(VehicleDockingBay bay, Vehicle vehicle)
+    /// Copy of <see cref="VehicleDockingBay.DockVehicle"/> without the player centric bits
+    private static void DockRemoteVehicle(VehicleDockingBay bay, Vehicle vehicle)
     {
         bay.dockedVehicle = vehicle;
         LargeWorldStreamer.main.cellManager.UnregisterEntity(bay.dockedVehicle.gameObject);
