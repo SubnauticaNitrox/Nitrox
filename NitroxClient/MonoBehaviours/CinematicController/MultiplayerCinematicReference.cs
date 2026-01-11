@@ -24,12 +24,14 @@ public class MultiplayerCinematicReference : MonoBehaviour
 
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
-            throw new KeyNotFoundException($"There was no entry for the key {key} at {gameObject.GetFullHierarchyPath()}");
+            Log.Warn($"[{nameof(MultiplayerCinematicReference)}] No entry for key '{key}' at {gameObject.GetFullHierarchyPath()}");
+            return;
         }
 
         if (!controllers.TryGetValue(identifier, out MultiplayerCinematicController controller))
         {
-            throw new KeyNotFoundException($"There was no entry for the identifier {identifier} at {gameObject.GetFullHierarchyPath()}");
+            Log.Warn($"[{nameof(MultiplayerCinematicReference)}] No entry for identifier {identifier} with key '{key}' at {gameObject.GetFullHierarchyPath()}");
+            return;
         }
 
         controller.CallStartCinematicMode(player);
@@ -41,12 +43,14 @@ public class MultiplayerCinematicReference : MonoBehaviour
 
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
-            throw new KeyNotFoundException($"There was no entry for the key {key} at {gameObject.GetFullHierarchyPath()}");
+            Log.Warn($"[{nameof(MultiplayerCinematicReference)}] No entry for key '{key}' at {gameObject.GetFullHierarchyPath()}");
+            return;
         }
 
         if (!controllers.TryGetValue(identifier, out MultiplayerCinematicController controller))
         {
-            throw new KeyNotFoundException($"There was no entry for the identifier {identifier} at {gameObject.GetFullHierarchyPath()}");
+            Log.Warn($"[{nameof(MultiplayerCinematicReference)}] No entry for identifier {identifier} with key '{key}' at {gameObject.GetFullHierarchyPath()}");
+            return;
         }
 
         controller.CallCinematicModeEnd(player);
