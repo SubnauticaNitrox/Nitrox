@@ -77,6 +77,55 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void Update()
         {
+            // Check for click outside the chat to close it (especially important when FreezeTime is true)
+            if (UnityEngine.Input.GetMouseButtonDown(0) && PlayerChat.IsReady)
+            {
+                EventSystem eventSystem = EventSystem.current;
+                if (eventSystem != null)
+                {
+                    bool clickedOnChat = false;
+                    
+                    // Check if currently selected object is part of the chat
+                    GameObject currentSelected = eventSystem.currentSelectedGameObject;
+                    if (currentSelected != null && currentSelected.transform.IsChildOf(playerChatManager.PlayerChatTransform))
+                    {
+                        clickedOnChat = true;
+                    }
+                    
+                    // Also check if we're hovering over the chat using raycast
+                    if (!clickedOnChat)
+                    {
+                        PointerEventData pointerData = new(eventSystem)
+                        {
+                            position = UnityEngine.Input.mousePosition
+                        };
+                        List<RaycastResult> results = new();
+                        eventSystem.RaycastAll(pointerData, results);
+                        
+                        foreach (RaycastResult result in results)
+                        {
+                            if (result.gameObject.transform.IsChildOf(playerChatManager.PlayerChatTransform))
+                            {
+                                clickedOnChat = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!clickedOnChat)
+                    {
+                        // Clicked outside the chat area
+                        if (selected)
+                        {
+                            playerChatManager.DeselectChat();
+                        }
+                        playerChatManager.HideChat();
+                        FreezeTime = true;
+                        return;
+                    }
+                }
+            }
+
             if (FreezeTime)
             {
                 return;
