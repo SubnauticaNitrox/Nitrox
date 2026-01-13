@@ -1,6 +1,5 @@
 using System;
 using System.Buffers.Binary;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -13,7 +12,7 @@ public static class ByteArrayExtensions
         // See: https://en.wikipedia.org/wiki/Endianness
         if (BitConverter.IsLittleEndian)
         {
-            return Enumerable.Reverse(array).ToArray();
+            Array.Reverse(array);
         }
         return array;
     }
