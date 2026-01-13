@@ -7,77 +7,99 @@ namespace Nitrox.Model.Extensions;
 
 public static class ByteArrayExtensions
 {
-    public static byte[] AsNetworkOrder(this byte[] array)
+    extension(byte[] self)
     {
-        // See: https://en.wikipedia.org/wiki/Endianness
-        if (BitConverter.IsLittleEndian)
+        /// <summary>
+        ///     Returns a new array that has the result of the bitwise operation.
+        /// </summary>
+        public static byte[] operator &(byte[] a, byte[] b)
         {
-            Array.Reverse(array);
-        }
-        return array;
-    }
-
-    public static byte[] BitwiseLeftShift(this byte[] data, int count)
-    {
-        if (count < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(count), count, "Value must not be negative");
-        }
-        if (count == 0)
-        {
-            return data;
-        }
-        Span<int> span = MemoryMarshal.Cast<byte, int>((Span<byte>)data);
-        int lengthFromBitLength;
-        int bitLength = data.Length * 8;
-        if (count < bitLength)
-        {
-            int index1 = (int)((uint)(bitLength - 1) / 32U);
-            lengthFromBitLength = Math.DivRem(count, 32, out int remainder);
-            if (remainder == 0)
+            if (a.Length != b.Length)
             {
-                span.Slice(0, index1 + 1 - lengthFromBitLength).CopyTo(span.Slice(lengthFromBitLength));
+                throw new ArgumentOutOfRangeException(nameof(a), $"Array '{nameof(b)}' must have the same length as array '{nameof(a)}'.");
+            }
+
+            a = a.CreateCopy();
+            for (int i = 0; i < a.Length; i++)
+            {
+                a[i] = (byte)(a[i] & b[i]);
+            }
+            return a;
+        }
+
+        /// <summary>
+        ///     Left shifts the array by the given amount.
+        /// </summary>
+        public static byte[] operator <<(byte[] array, int amount)
+        {
+            if (amount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), amount, "Value must not be negative");
+            }
+            if (amount == 0)
+            {
+                return array;
+            }
+            Span<int> span = MemoryMarshal.Cast<byte, int>((Span<byte>)array);
+            int lengthFromBitLength;
+            int bitLength = array.Length * 8;
+            if (amount < bitLength)
+            {
+                int index1 = (int)((uint)(bitLength - 1) / 32U);
+                lengthFromBitLength = Math.DivRem(amount, 32, out int remainder);
+                if (remainder == 0)
+                {
+                    span.Slice(0, index1 + 1 - lengthFromBitLength).CopyTo(span.Slice(lengthFromBitLength));
+                }
+                else
+                {
+                    int index2 = index1 - lengthFromBitLength;
+                    while (index2 > 0)
+                    {
+                        int num1 = ReverseIfBigEndian(span[index2]) << remainder;
+                        uint num2 = (uint)(ReverseIfBigEndian(span[--index2]) >>> (32 /*0x20*/ - remainder));
+                        span[index1] = ReverseIfBigEndian(num1 | (int)num2);
+                        --index1;
+                    }
+                    span[index1] = ReverseIfBigEndian(ReverseIfBigEndian(span[index2]) << remainder);
+                }
             }
             else
             {
-                int index2 = index1 - lengthFromBitLength;
-                while (index2 > 0)
-                {
-                    int num1 = ReverseIfBigEndian(span[index2]) << remainder;
-                    uint num2 = (uint)(ReverseIfBigEndian(span[--index2]) >>> (32 /*0x20*/ - remainder));
-                    span[index1] = ReverseIfBigEndian(num1 | (int)num2);
-                    --index1;
-                }
-                span[index1] = ReverseIfBigEndian(ReverseIfBigEndian(span[index2]) << remainder);
+                lengthFromBitLength = GetInt32ArrayLengthFromBitLength(bitLength);
+            }
+            span.Slice(0, lengthFromBitLength).Clear();
+            return array;
+
+            static int GetInt32ArrayLengthFromBitLength(int bitLength) => (int)(((uint)bitLength + 31u) >> 5);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static int ReverseIfBigEndian(int value) => BitConverter.IsLittleEndian ? value : BinaryPrimitives.ReverseEndianness(value);
+        }
+
+        /// <summary>
+        ///     Reverses the contents of the array if current machine is not Little Endian.
+        /// </summary>
+        public void AsNetworkOrder()
+        {
+            // See: https://en.wikipedia.org/wiki/Endianness
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(self);
             }
         }
-        else
+
+        public void Fill(byte value)
         {
-            lengthFromBitLength = GetInt32ArrayLengthFromBitLength(bitLength);
+            Span<byte> span = self.AsSpan();
+            span.Fill(value);
         }
-        span.Slice(0, lengthFromBitLength).Clear();
-        return data;
 
-        static int GetInt32ArrayLengthFromBitLength(int bitLength) => (int)(((uint)bitLength + 31u) >> 5);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static int ReverseIfBigEndian(int value) => BitConverter.IsLittleEndian ? value : BinaryPrimitives.ReverseEndianness(value);
-    }
-
-    public static byte[] CreateCopy(this byte[] array)
-    {
-        byte[] copy = new byte[array.Length];
-        Array.Copy(array, copy, copy.Length);
-        return copy;
-    }
-
-    public static byte[] BitwiseAnd(this byte[] a, byte[] b)
-    {
-        int shortestLength = Math.Min(a.Length, b.Length);
-        for (int i = 0; i < shortestLength; i++)
+        private byte[] CreateCopy()
         {
-            a[i] = (byte)(a[i] & b[i]);
+            byte[] copy = new byte[self.Length];
+            Array.Copy(self, copy, copy.Length);
+            return copy;
         }
-        return a;
     }
 }

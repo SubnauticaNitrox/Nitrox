@@ -149,12 +149,12 @@ public static class IpAddressExtensions
                 }
                 default:
                 {
-                    byte[] networkBitMask = GetAllBitsSetArray(hostAddress.Length).BitwiseLeftShift(hostAddressBitSize - NetworkMaskBitSize).AsNetworkOrder();
-                    return hostAddress.CreateCopy().BitwiseAnd(networkBitMask).SequenceEqual(NotationBytes.CreateCopy().BitwiseAnd(networkBitMask));
+                    byte[] networkBitMask = new byte[hostAddress.Length];
+                    networkBitMask.Fill(byte.MaxValue);
+                    (networkBitMask << (hostAddressBitSize - NetworkMaskBitSize)).AsNetworkOrder();
+                    return (hostAddress & networkBitMask).SequenceEqual(NotationBytes & networkBitMask);
                 }
             }
         }
-
-        private static byte[] GetAllBitsSetArray(int byteSize) => Enumerable.Repeat(byte.MaxValue, byteSize).ToArray();
     }
 }
