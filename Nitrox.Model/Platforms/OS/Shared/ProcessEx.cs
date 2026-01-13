@@ -188,7 +188,7 @@ public class ProcessEx : IDisposable
             Verb = "open",
             UseShellExecute = true
         });
-        return proc != null;
+        return true;
     }
 
     public static ProcessEx? GetFirstProcess(string procName, Func<ProcessEx, bool>? predicate = null)
