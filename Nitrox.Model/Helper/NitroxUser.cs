@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Nitrox.Model.Core;
-using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
 using Nitrox.Model.Platforms.Store.Interfaces;
@@ -149,7 +148,7 @@ public static class NitroxUser
         GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 
-    public static string? ExecutableRootPath
+    public static string ExecutableRootPath
     {
         get
         {
@@ -160,10 +159,10 @@ public static class NitroxUser
             string exePath = ExecutableFilePath;
             if (exePath == null)
             {
-                return null;
+                throw new Exception("Executable root path is unavailable");
             }
 
-            return executableRootPath = Path.GetDirectoryName(exePath);
+            return executableRootPath = Path.GetDirectoryName(exePath) ?? throw new Exception("Executable root path is unavailable");
         }
     }
 
@@ -186,6 +185,10 @@ public static class NitroxUser
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 path = new Uri(path).LocalPath;
+            }
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                path = Path.Combine(Path.GetDirectoryName(path) ?? throw new InvalidOperationException($"Failed to get directory from path: '{path}'"), Path.GetFileNameWithoutExtension(path));
             }
             return executablePath = path;
         }

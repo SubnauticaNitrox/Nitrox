@@ -11,7 +11,7 @@ public sealed partial class Vehicle_OnKill_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(Vehicle __instance)
     {
-        if (__instance.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasExclusiveLock(id))
+        if (__instance.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
         {
             Resolve<SimulationOwnership>().StopSimulatingEntity(id);
             Resolve<Vehicles>().BroadcastDestroyedVehicle(id);

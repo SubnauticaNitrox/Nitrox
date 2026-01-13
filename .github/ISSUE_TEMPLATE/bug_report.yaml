@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         # This no place to seek help with installation or connection problems. For that visit our [Discord](https://discord.com/invite/E8B4X9s).
-        ## Thanks for filling out a bug report. Please be sure that a similar issue wasn't already created by searching [here](https://github.com/SubnauticaNitrox/Nitrox/issues) with general keywords. If it's a new issue please fill out as much detail as possible.
+        ## Thanks for filling out a bug report. Please be sure that a similar issue wasn't already created by searching [here](https://github.com/SubnauticaNitrox/Nitrox/issues?q=is%3Aissue) with general keywords. If it's a new issue please fill out as much detail as possible.
         
   - type: dropdown
     id: nitrox_version
@@ -15,7 +15,8 @@ body:
       label: Which version are you playing on?
       description: If playing on older versions, you should try updating first.
       options:
-        - 1.8.0.1 (Latest release)
+        - 1.8.1.0 (Latest release)
+        - 1.8.0.1
         - 1.8.0.0
         - 1.7.1.0
         - Latest commit (Only for experts)

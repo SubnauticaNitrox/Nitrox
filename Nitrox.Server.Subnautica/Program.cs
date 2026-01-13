@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -12,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Autofac.Core;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -489,6 +489,7 @@ public class Program
         if (e.ExceptionObject is Exception ex)
         {
             Log.Error(ex);
+            LogAssemblyPathFromException(ex);
         }
         if (!Environment.UserInteractive || Console.IsInputRedirected || Console.In == StreamReader.Null)
         {
@@ -511,104 +512,55 @@ public class Program
         Environment.Exit(1);
     }
 
-    private static class AssemblyResolver
+    /// <summary>
+    ///     Logs the file path of assemblies referenced in type-related exceptions to help diagnose version conflicts.
+    /// </summary>
+    private static void LogAssemblyPathFromException(Exception ex)
     {
-        private static string currentExecutableDirectory = string.Empty;
-        private static readonly Dictionary<string, AssemblyCacheEntry> resolvedAssemblyCache = [];
-
-        public static Assembly? Handler(object sender, ResolveEventArgs args)
+        while (true)
         {
-            static Assembly? ResolveFromLib(ReadOnlySpan<char> dllName)
+            if (ex is AggregateException { InnerException: { } inner })
             {
-                dllName = dllName.Slice(0, Math.Max(dllName.IndexOf(','), 0));
-                if (dllName.IsEmpty)
-                {
-                    return null;
-                }
-                if (!dllName.EndsWith(".dll"))
-                {
-                    dllName = string.Concat(dllName, ".dll");
-                }
-                if (dllName.EndsWith(".resources.dll"))
-                {
-                    return null;
-                }
-                string dllNameStr = dllName.ToString();
-                // If available, return cached assembly
-                if (resolvedAssemblyCache.TryGetValue(dllNameStr, out AssemblyCacheEntry cacheEntry) && cacheEntry is { Assembly: { } cachedAssembly })
-                {
-                    return cachedAssembly;
-                }
-                if (cacheEntry == null)
-                {
-                    cacheEntry = new AssemblyCacheEntry(0, null);
-                    resolvedAssemblyCache[dllNameStr] = cacheEntry;
-                }
-
-                // Load DLLs where this program (exe) is located
-                string dllPath = Path.Combine(GetExecutableDirectory(), "lib", dllNameStr);
-                // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
-                if (dllPath.Contains("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) || !File.Exists(dllPath))
-                {
-                    if (NitroxUser.GamePath != null)
-                    {
-                        // Try find game managed libraries
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            dllPath = Path.Combine(NitroxUser.GamePath, "Resources", "Data", "Managed", dllNameStr);
-                        }
-                        else
-                        {
-                            dllPath = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", dllNameStr);
-                        }
-                    }
-                }
-
-                try
-                {
-                    // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-                    cacheEntry.Assembly = Assembly.Load(File.ReadAllBytes(dllPath));
-                    return cacheEntry.Assembly;
-                }
-                catch
-                {
-                    cacheEntry.Attempts++;
-                    if (cacheEntry.Attempts >= 5)
-                    {
-                        throw new FileNotFoundException($"Failed to load DLL '{dllName}' at: {dllPath}");
-                    }
-                    return null;
-                }
+                ex = inner;
             }
-
-            Assembly assembly = ResolveFromLib(args.Name);
-            if (assembly == null && !args.Name.Contains(".resources"))
+            else if (ex is DependencyResolutionException { InnerException: { } dependencyInner })
             {
-                assembly = Assembly.Load(args.Name);
+                ex = dependencyInner;
             }
-
-            return assembly;
+            else
+            {
+                break;
+            }
+        }
+        string? assemblyName = ex switch
+        {
+            TypeLoadException t => t.GetType().GetField("_assemblyName", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ex) as string,
+            FileLoadException f => f.FileName,
+            FileNotFoundException f => f.FileName,
+            _ => null
+        };
+        if (string.IsNullOrWhiteSpace(assemblyName))
+        {
+            return;
         }
 
-        private static string GetExecutableDirectory()
+        try
         {
-            if (!string.IsNullOrEmpty(currentExecutableDirectory))
-            {
-                return currentExecutableDirectory;
-            }
-            string pathAttempt = Assembly.GetEntryAssembly()?.Location;
-            if (string.IsNullOrWhiteSpace(pathAttempt))
-            {
-                using Process proc = Process.GetCurrentProcess();
-                pathAttempt = proc.MainModule?.FileName;
-            }
-            return currentExecutableDirectory = new Uri(Path.GetDirectoryName(pathAttempt ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
-        }
+            // Extract just the assembly name without version info
+            Assembly? loadedAssembly = AppDomain
+                                       .CurrentDomain
+                                       .GetAssemblies()
+                                       .OrderBy(a => a.GetName().FullName.Equals(assemblyName) ? 0 : 1) // Sorts full matches before weak matches.
+                                       .FirstOrDefault(a => a.GetName().Name?.Equals(new AssemblyName(assemblyName).Name, StringComparison.OrdinalIgnoreCase) == true);
 
-        private record AssemblyCacheEntry(int Attempts, Assembly? Assembly)
+            if (loadedAssembly != null && loadedAssembly.GetName() is { } asmName)
+            {
+                Log.Error($"Error originates from '{asmName.Name}' v{asmName.Version}, file: {loadedAssembly.Location}");
+            }
+        }
+        catch
         {
-            public int Attempts { get; set; } = Attempts;
-            public Assembly? Assembly { get; set; } = Assembly;
+            // ignored
         }
     }
 }

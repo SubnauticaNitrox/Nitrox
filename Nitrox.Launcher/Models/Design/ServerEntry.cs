@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,6 @@ using Nitrox.Model.Logger;
 using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
 using Nitrox.Server.Subnautica.Models.Serialization;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -162,12 +162,26 @@ public partial class ServerEntry : ObservableObject
         Version serverVersion;
         using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            serverVersion = config.SerializerMode switch
+            switch (config.SerializerMode)
             {
-                ServerSerializerMode.JSON => new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                ServerSerializerMode.PROTOBUF => new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version,
-                _ => throw new NotImplementedException()
-            };
+                case ServerSerializerMode.JSON:
+                    SaveFileVersion versionModel;
+                    try
+                    {
+                        versionModel = JsonSerializer.Deserialize<SaveFileVersion>(stream);
+                    }
+                    catch (Exception)
+                    {
+                        versionModel = new SaveFileVersion(NitroxEnvironment.Version);
+                    }
+                    serverVersion = versionModel.Version;
+                    break;
+                case ServerSerializerMode.PROTOBUF:
+                    serverVersion = new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         Name = Path.GetFileName(saveDir);
@@ -247,12 +261,7 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
     public void OpenSaveFolder()
     {
-        System.Diagnostics.Process.Start(new ProcessStartInfo
-        {
-            FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name!),
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name!));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

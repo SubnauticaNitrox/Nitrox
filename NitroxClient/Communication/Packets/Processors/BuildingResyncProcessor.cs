@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
@@ -10,13 +15,6 @@ using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -163,7 +161,8 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         for (int i = @base.transform.childCount - 1; i >= 0; i--)
         {
             Transform child = @base.transform.GetChild(i);
-            if (child.GetComponent<IBaseModule>().AliveOrNull() || child.GetComponent<Constructable>())
+            if (child.GetComponent<IBaseModule>().AliveOrNull() || child.GetComponent<Constructable>() ||
+                child.GetComponent<PlaceTool>())
             {
                 UnityEngine.Object.Destroy(child.gameObject);
             }

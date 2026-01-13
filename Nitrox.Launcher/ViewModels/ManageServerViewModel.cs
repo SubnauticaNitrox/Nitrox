@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -22,7 +21,6 @@ using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Config = Nitrox.Model.Serialization.SubnauticaServerConfig;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -338,13 +336,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void OpenWorldFolder() =>
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = SaveFolderDirectory,
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+    private void OpenWorldFolder() => OpenDirectory(SaveFolderDirectory);
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()
@@ -368,7 +360,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                 bool isEmbedded = ServerEmbedded;
                 foreach (string file in Directory.GetFiles(SaveFolderDirectory, "*"))
                 {
-                    File.Delete(file);
+                    TryDeleteFile(file);
                 }
                 ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
                 Server!.RefreshFromDirectory(SaveFolderDirectory);
@@ -414,7 +406,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
         try
         {
-            Directory.Delete(SaveFolderDirectory, true);
+            TryDeleteDirectory(SaveFolderDirectory, true);
             WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
             ChangeViewToPrevious();
         }

@@ -45,7 +45,7 @@
     "Nitrox_Kick": "Выгнать {PLAYER}",
     "Nitrox_KickQuestion": "Выгнать {PLAYER}?",
     "Nitrox_LaunchGame": "Загрузка игры…",
-    "Nitrox_Loading": "Загрузка",
+    "Nitrox_Loading": "Загрузка…",
     "Nitrox_LoadingScreenWarn": "Осторожно, иногда могут возникать ошибки",
     "Nitrox_LostConnection": "Потеряно соединение с сервером",
     "Nitrox_LostConnectionWarn": "Больше не подключается к серверу",
