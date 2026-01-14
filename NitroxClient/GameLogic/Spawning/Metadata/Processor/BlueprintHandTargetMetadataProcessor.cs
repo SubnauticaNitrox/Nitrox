@@ -8,14 +8,14 @@ namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 /// Processes DataBox (BlueprintHandTarget) metadata updates from other players.
 /// When another player opens a DataBox, this applies the visual state change locally.
 /// </summary>
-public class BlueprintHandTargetMetadataProcessor : EntityMetadataProcessor<BlueprintHandTargetMetadata>
+public sealed class BlueprintHandTargetMetadataProcessor : EntityMetadataProcessor<BlueprintHandTargetMetadata>
 {
     public override void ProcessMetadata(GameObject gameObject, BlueprintHandTargetMetadata metadata)
     {
         BlueprintHandTarget blueprintHandTarget = gameObject.GetComponent<BlueprintHandTarget>();
         if (!blueprintHandTarget)
         {
-            Log.Warn($"[BlueprintHandTargetMetadataProcessor] No BlueprintHandTarget component found on {gameObject.name}");
+            Log.Error($"[BlueprintHandTargetMetadataProcessor] No BlueprintHandTarget component found on {gameObject.name}");
             return;
         }
 
@@ -24,8 +24,6 @@ public class BlueprintHandTargetMetadataProcessor : EntityMetadataProcessor<Blue
         {
             return;
         }
-
-        Log.Debug($"[BlueprintHandTargetMetadataProcessor] Processing metadata for {gameObject.name}: Used={metadata.Used}");
 
         blueprintHandTarget.used = metadata.Used;
 
