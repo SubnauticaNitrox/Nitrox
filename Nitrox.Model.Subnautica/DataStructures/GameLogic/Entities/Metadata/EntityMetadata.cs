@@ -41,6 +41,8 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(82, typeof(PlantableMetadata))]
     [ProtoInclude(83, typeof(FruitPlantMetadata))]
     [ProtoInclude(84, typeof(DrillableMetadata))]
+    [ProtoInclude(85, typeof(PrecursorComputerTerminalMetadata))]
+    [ProtoInclude(86, typeof(GenericConsoleMetadata))]
     public abstract class EntityMetadata
     {
     }
