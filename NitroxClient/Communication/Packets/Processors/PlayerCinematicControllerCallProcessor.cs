@@ -26,10 +26,11 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             return Task.CompletedTask;
         }
 
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.SessionId);
-        Validate.IsPresent(opPlayer);
-
-        RemotePlayer remotePlayer = opPlayer.Value;
+        if (!playerManager.TryFind(packet.SessionId, out RemotePlayer remotePlayer))
+        {
+            Log.Warn($"Couldn't find remote player {packet.SessionId} for cinematic");
+            return Task.CompletedTask;
+        }
 
         if (packet.StartPlaying)
         {
@@ -44,22 +45,6 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             // Clear InCinematic flag to allow movement packets to control animations again
             remotePlayer.InCinematic = false;
             remotePlayer.AnimationController.UpdatePlayerAnimations = true;
-
-            // Handle special cases where cinematic end should trigger state changes
-            HandleCinematicEndSideEffects(entity, packet.Key);
-        }
-    }
-
-    /// <summary>
-    /// Some cinematics trigger state changes when they end (e.g., BulkheadDoor toggles open/closed).
-    /// This method handles those side effects for remote players.
-    /// </summary>
-    private static void HandleCinematicEndSideEffects(GameObject entity, string cinematicKey)
-    {
-        // BulkheadDoor toggles its state when the cinematic ends
-        if (entity.TryGetComponent(out BulkheadDoor bulkheadDoor))
-        {
-            bulkheadDoor.SetState(!bulkheadDoor.opened);
         }
         return Task.CompletedTask;
     }
