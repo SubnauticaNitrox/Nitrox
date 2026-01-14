@@ -34,7 +34,7 @@ public class NitroxSettingsManager
     /// </summary>
     private void MakeSettings()
     {
-        AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_SilenceChat", NitroxPrefs.SilenceChat, silence => NitroxPrefs.SilenceChat.Value = silence));
+        AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_Settings_ChatVisibilityDuration", NitroxPrefs.ChatVisibilityDuration, duration => NitroxPrefs.ChatVisibilityDuration.Value = (int)duration, 0f, 15f, NitroxPrefs.ChatVisibilityDuration.DefaultValue, 1f, SliderLabelMode.Int, "0", "Nitrox_Settings_ChatVisibilityDuration_Tooltip"));
         AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_HideIp", NitroxPrefs.HideIp, hide =>
         {
             NitroxPrefs.HideIp.Value = hide;

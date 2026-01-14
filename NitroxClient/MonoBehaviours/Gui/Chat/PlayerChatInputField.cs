@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.GameLogic.Settings;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -68,12 +69,15 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public static void ResetTimer()
         {
-            timeLeftUntilAutoClose = PlayerChat.CHAT_VISIBILITY_TIME_LENGTH;
+            float duration = NitroxPrefs.ChatVisibilityDuration.Value;
+            timeLeftUntilAutoClose = duration;
+            // Unfreeze time so the countdown can start (unless duration is 0, which means chat is disabled)
             FreezeTime = false;
         }
 
         private void Update()
         {
+            // Early return if time is frozen (chat hidden or slider at 0)
             if (FreezeTime)
             {
                 return;
@@ -81,9 +85,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
-                if (!string.IsNullOrWhiteSpace(InputField.text))
+                if (UnityEngine.Input.GetKey(KeyCode.Return) || UnityEngine.Input.GetKey(KeyCode.KeypadEnter))
                 {
-                    if (UnityEngine.Input.GetKey(KeyCode.Return))
+                    if (!string.IsNullOrWhiteSpace(InputField.text))
                     {
                         if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
                         {
@@ -114,10 +118,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                             playerChatManager.DeselectChat(); // return to game after message sent
                         }
                     }
-                }
-                else
-                {
-                    if (UnityEngine.Input.GetKey(KeyCode.Return))
+                    else
                     {
                         ResetTimer();
                         playerChatManager.DeselectChat();
@@ -167,5 +168,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             yield return null;
             InputField.MoveTextEnd(false);
         }
+
     }
 }
