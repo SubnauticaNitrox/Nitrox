@@ -77,12 +77,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void Update()
         {
-            // When slider is at 0, chat won't auto-hide, so allow click-outside to close it
-            if (FreezeTime && UnityEngine.Input.GetMouseButtonDown(0) && PlayerChat.IsReady)
-            {
-                CheckClickOutsideChat();
-            }
-
             // Early return if time is frozen (chat hidden or slider at 0)
             if (FreezeTime)
             {
@@ -178,24 +172,5 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             InputField.MoveTextEnd(false);
         }
 
-        private void HideIfClickOutsideChat()
-        {
-            if (!GetMouseButtonDown(0))
-            {
-                return;
-            }
-            if (RectTransformUtility.RectangleContainsScreenPoint(playerChatManager.PlayerChatTransform.GetComponent<RectTransform>(), mousePosition))
-            {
-                return;
-            }
-
-            // Clicked outside the chat area
-            if (selected)
-            {
-                playerChatManager.DeselectChat();
-            }
-            playerChatManager.HideChat();
-            FreezeTime = true;
-        }
     }
 }
