@@ -23,6 +23,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GameObject logEntryPrefab;
 
         private bool transparent;
+        private Coroutine fadeCoroutine;
 
         public static bool IsReady { get; private set; }
 
@@ -90,12 +91,22 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         public void Show()
         {
             PlayerChatInputField.ResetTimer();
-            StartCoroutine(ToggleChatFade(true));
+            // Stop any existing fade to prevent race condition
+            if (fadeCoroutine != null)
+            {
+                StopCoroutine(fadeCoroutine);
+            }
+            fadeCoroutine = StartCoroutine(ToggleChatFade(true));
         }
 
         public void Hide()
         {
-            StartCoroutine(ToggleChatFade(false));
+            // Stop any existing fade to prevent race condition
+            if (fadeCoroutine != null)
+            {
+                StopCoroutine(fadeCoroutine);
+            }
+            fadeCoroutine = StartCoroutine(ToggleChatFade(false));
         }
 
         public void Select()

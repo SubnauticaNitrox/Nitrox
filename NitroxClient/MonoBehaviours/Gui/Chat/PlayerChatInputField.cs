@@ -71,8 +71,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             float duration = NitroxPrefs.ChatVisibilityDuration.Value;
             timeLeftUntilAutoClose = duration;
-            // If duration is 0 (chat disabled), freeze time so it doesn't immediately hide
-            FreezeTime = duration <= 0f;
+            // Unfreeze time so the countdown can start (unless duration is 0, which means chat is disabled)
+            FreezeTime = false;
         }
 
         private void Update()
@@ -85,9 +85,11 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
+                bool enterPressed = UnityEngine.Input.GetKey(KeyCode.Return) || UnityEngine.Input.GetKey(KeyCode.KeypadEnter);
+                
                 if (!string.IsNullOrWhiteSpace(InputField.text))
                 {
-                    if (UnityEngine.Input.GetKey(KeyCode.Return))
+                    if (enterPressed)
                     {
                         if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
                         {
@@ -121,7 +123,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 }
                 else
                 {
-                    if (UnityEngine.Input.GetKey(KeyCode.Return))
+                    if (enterPressed)
                     {
                         ResetTimer();
                         playerChatManager.DeselectChat();
