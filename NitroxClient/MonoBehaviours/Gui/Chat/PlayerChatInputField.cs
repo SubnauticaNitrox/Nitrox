@@ -85,11 +85,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
-                bool enterPressed = UnityEngine.Input.GetKey(KeyCode.Return) || UnityEngine.Input.GetKey(KeyCode.KeypadEnter);
-                
-                if (!string.IsNullOrWhiteSpace(InputField.text))
+                if (UnityEngine.Input.GetKey(KeyCode.Return) || UnityEngine.Input.GetKey(KeyCode.KeypadEnter))
                 {
-                    if (enterPressed)
+                    if (!string.IsNullOrWhiteSpace(InputField.text))
                     {
                         if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
                         {
@@ -120,10 +118,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                             playerChatManager.DeselectChat(); // return to game after message sent
                         }
                     }
-                }
-                else
-                {
-                    if (enterPressed)
+                    else
                     {
                         ResetTimer();
                         playerChatManager.DeselectChat();
