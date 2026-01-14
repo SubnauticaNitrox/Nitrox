@@ -178,42 +178,24 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             InputField.MoveTextEnd(false);
         }
 
-        private void CheckClickOutsideChat()
+        private void HideIfClickOutsideChat()
         {
-            EventSystem eventSystem = EventSystem.current;
-            if (eventSystem == null)
+            if (!GetMouseButtonDown(0))
+            {
+                return;
+            }
+            if (RectTransformUtility.RectangleContainsScreenPoint(playerChatManager.PlayerChatTransform.GetComponent<RectTransform>(), mousePosition))
             {
                 return;
             }
 
-            // Check where the click actually landed using raycast
-            PointerEventData pointerData = new(eventSystem)
+            // Clicked outside the chat area
+            if (selected)
             {
-                position = UnityEngine.Input.mousePosition
-            };
-            List<RaycastResult> results = new();
-            eventSystem.RaycastAll(pointerData, results);
-            
-            bool clickedOnChat = false;
-            foreach (RaycastResult result in results)
-            {
-                if (result.gameObject.transform.IsChildOf(playerChatManager.PlayerChatTransform))
-                {
-                    clickedOnChat = true;
-                    break;
-                }
+                playerChatManager.DeselectChat();
             }
-
-            if (!clickedOnChat)
-            {
-                // Clicked outside the chat area
-                if (selected)
-                {
-                    playerChatManager.DeselectChat();
-                }
-                playerChatManager.HideChat();
-                FreezeTime = true;
-            }
+            playerChatManager.HideChat();
+            FreezeTime = true;
         }
     }
 }
