@@ -1,10 +1,8 @@
-using Nitrox.Model.DataStructures;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using Nitrox.Model.Helper;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -32,10 +30,11 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
             return;
         }
 
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
-        Validate.IsPresent(opPlayer);
-
-        RemotePlayer remotePlayer = opPlayer.Value;
+        if (!playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        {
+            Log.Warn($"Couldn't find remote player {packet.PlayerId} for cinematic");
+            return;
+        }
 
         if (packet.StartPlaying)
         {
@@ -50,22 +49,6 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
             // Clear InCinematic flag to allow movement packets to control animations again
             remotePlayer.InCinematic = false;
             remotePlayer.AnimationController.UpdatePlayerAnimations = true;
-
-            // Handle special cases where cinematic end should trigger state changes
-            HandleCinematicEndSideEffects(entity, packet.Key);
-        }
-    }
-
-    /// <summary>
-    /// Some cinematics trigger state changes when they end (e.g., BulkheadDoor toggles open/closed).
-    /// This method handles those side effects for remote players.
-    /// </summary>
-    private static void HandleCinematicEndSideEffects(GameObject entity, string cinematicKey)
-    {
-        // BulkheadDoor toggles its state when the cinematic ends
-        if (entity.TryGetComponent(out BulkheadDoor bulkheadDoor))
-        {
-            bulkheadDoor.SetState(!bulkheadDoor.opened);
         }
     }
 }

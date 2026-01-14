@@ -82,6 +82,8 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
         vehicleDockingBay.dockedVehicle = null;
         vehicleDockingBay.CancelInvoke(nameof(VehicleDockingBay.RepairVehicle));
         vehicle.docked = false;
+        // We look up the player again (instead of passing from StartVehicleUndocking) because
+        // the player could have disconnected between the start and finish packets
         if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))
         {
             // Clear InCinematic flag now that undocking is complete
