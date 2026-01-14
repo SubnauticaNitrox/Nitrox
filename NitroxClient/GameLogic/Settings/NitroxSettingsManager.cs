@@ -41,16 +41,15 @@ public class NitroxSettingsManager
             MainMenuServerListPanel.Main.RefreshServerEntries();
         }));
 
-        AddSetting("Nitrox_ResyncSettings", new Setting("Nitrox_ResyncBuildings", () =>
+        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
+        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
+        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_ResyncBuildings", () =>
         {
             if (BuildingHandler.Main)
             {
                 BuildingHandler.Main.AskForResync();
             }
         }));
-
-        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
-        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
 
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_LatencyUpdatePeriod", NitroxPrefs.LatencyUpdatePeriod, latencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value = (int)latencyUpdatePeriod, 1, 60, NitroxPrefs.LatencyUpdatePeriod.DefaultValue, 1, SliderLabelMode.Int, tooltip: "Nitrox_Settings_HigherForUnstable_Tooltip"));
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_SafetyLatencyMargin", NitroxPrefs.SafetyLatencyMargin, safetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value = safetyLatencyMargin, 0.01f, 0.5f, NitroxPrefs.SafetyLatencyMargin.DefaultValue, 0.01f, SliderLabelMode.Float, "0.00", "Nitrox_Settings_HigherForUnstable_Tooltip"));
