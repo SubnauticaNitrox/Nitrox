@@ -99,7 +99,7 @@ public class ProcessEx : IDisposable
         return From(startInfo);
     }
 
-#if NET9_0_OR_GREATER
+#if NET10_0_OR_GREATER
     public static Process? StartProcessDetached(ProcessStartInfo startInfo)
     {
         if (!string.IsNullOrWhiteSpace(startInfo.Arguments))
@@ -347,7 +347,7 @@ public class ProcessModuleEx
     public int ModuleMemorySize { get; set; }
 }
 
-#if NET9_0_OR_GREATER
+#if NET10_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
 public sealed class WindowsProcessEx : ProcessExBase
@@ -518,7 +518,7 @@ public sealed class WindowsProcessEx : ProcessExBase
     private static extern int ResumeThread(IntPtr hThread);
 }
 
-#if NET9_0_OR_GREATER
+#if NET10_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("linux")]
 #endif
 public sealed class LinuxProcessEx : ProcessExBase
@@ -747,7 +747,7 @@ public sealed class LinuxProcessEx : ProcessExBase
     }
 }
 
-#if NET9_0_OR_GREATER
+#if NET10_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("maccatalyst")]
 [System.Runtime.Versioning.SupportedOSPlatform("macos")]
 #endif
