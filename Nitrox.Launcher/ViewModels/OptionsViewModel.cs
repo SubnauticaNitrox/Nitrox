@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -173,19 +172,12 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     [RelayCommand]
     private void OpenFolder(string? dir = null)
     {
-        if (!Directory.Exists(dir))
-        {
-            LauncherNotifier.Error("Can't open. Directory does not exist.");
-            return;
-        }
         try
         {
-            Process.Start(new ProcessStartInfo
+            if (!OpenDirectory(dir))
             {
-                FileName = dir,
-                Verb = "open",
-                UseShellExecute = true
-            })?.Dispose();
+                LauncherNotifier.Error("Can't open. Directory does not exist.");
+            }
         }
         catch (Exception ex)
         {
