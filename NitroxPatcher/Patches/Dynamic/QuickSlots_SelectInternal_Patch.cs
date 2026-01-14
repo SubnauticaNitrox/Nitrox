@@ -19,7 +19,8 @@ public sealed partial class QuickSlots_SelectInternal_Patch : NitroxPatch, IDyna
         {
             return;
         }
-        __state = Player.main.IsToolUsed(item.item.GetTechType()) ? item.item.GetTechType().ToDto() : null;
+        // Send the TechType if this is the first time using the tool (not yet in usedTools)
+        __state = Player.main.IsToolUsed(item.item.GetTechType()) ? null : item.item.GetTechType().ToDto();
     }
 
     public static void Postfix(InventoryItem ____heldItem, NitroxTechType __state)

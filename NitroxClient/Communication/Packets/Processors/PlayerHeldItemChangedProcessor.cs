@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Helper;
@@ -73,7 +73,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 item.SetActive(true);
                 tool.SetHandIKTargetsEnabled(true);
                 SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
-                opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime == null;
+                opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
 
                 if (item.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated
                 {
