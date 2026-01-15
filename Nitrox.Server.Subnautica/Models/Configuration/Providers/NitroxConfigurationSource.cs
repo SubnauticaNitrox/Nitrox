@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 
@@ -10,9 +11,11 @@ internal sealed class NitroxConfigurationSource : FileConfigurationSource
     /// </summary>
     public required string Section { get; init; }
 
-    public NitroxConfigurationSource(string path, bool optional = true, IFileProvider? fileProvider = null)
+    [SetsRequiredMembers]
+    public NitroxConfigurationSource(string path, string configSection = "", bool optional = true, IFileProvider? fileProvider = null)
     {
         Path = path;
+        Section = configSection;
         Optional = optional;
         FileProvider = fileProvider;
         ReloadOnChange = true;
