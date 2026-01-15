@@ -1,11 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -36,6 +35,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => SetPlayerGameObjectId(sync.PlayerGameObjectId));
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
+        AddStep(sync => SetUsedItems(sync.UsedItems));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
         AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow));
     }
@@ -132,6 +132,15 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         // We need to start it at least once for everything that's in the PDA to load
         Player.main.GetPDA().Open(PDATab.Inventory);
         Player.main.GetPDA().Close();
+    }
+
+    private static void SetUsedItems(List<NitroxTechType> usedItems)
+    {
+        foreach (NitroxTechType usedItem in usedItems)
+        {
+            Player.main.usedTools.Add(usedItem.ToUnity());
+        }
+        Log.Info($"Received initial sync packet with {usedItems.Count} used items");
     }
 
     private static void SetPlayerGameMode(SubnauticaGameMode gameMode)
