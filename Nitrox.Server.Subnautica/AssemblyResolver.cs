@@ -10,16 +10,11 @@ internal static class AssemblyResolver
 {
     private static string currentExecutableDirectory = string.Empty;
     private static readonly Dictionary<string, AssemblyCacheEntry> resolvedAssemblyCache = [];
-    private static string? gamePath;
 
     /// <summary>
     ///     The path to the game files so that game code can be loaded when needed.
     /// </summary>
-    public static string? GamePath
-    {
-        get => Interlocked.Exchange(ref gamePath, gamePath);
-        set => Interlocked.Exchange(ref gamePath, value);
-    }
+    public static string? GamePath { get; set; }
 
     public static Assembly? Handler(object sender, ResolveEventArgs args)
     {
