@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using UWE;
@@ -8,7 +9,7 @@ internal class SubnauticaUweWorldEntityFactory(WorldEntitiesResource resource) :
 {
     private readonly WorldEntitiesResource resource = resource;
 
-    public bool TryFind(string classId, out UweWorldEntity? uweWorldEntity)
+    public bool TryFind(string classId, [NotNullWhen(true)] out UweWorldEntity? uweWorldEntity)
     {
         if (resource.WorldEntitiesByClassId.TryGetValue(classId, out WorldEntityInfo worldEntityInfo))
         {
