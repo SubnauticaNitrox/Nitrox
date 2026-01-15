@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -34,8 +34,7 @@ namespace Nitrox.Launcher.Models.Design;
 public partial class ServerEntry : ObservableObject
 {
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
-    private static readonly Dictionary<string, ServerEntry> entriesByDirectory = [];
-    private static readonly Lock entriesByDirectoryLocker = new();
+    private static readonly ConcurrentDictionary<string, ServerEntry> entriesByDirectory = [];
 
     private static readonly SubnauticaServerOptions serverDefaults = new();
 
@@ -140,14 +139,7 @@ public partial class ServerEntry : ObservableObject
 
     public static async Task<ServerEntry?> FromDirectoryAsync(string saveDir)
     {
-        ServerEntry entry;
-        lock (entriesByDirectoryLocker)
-        {
-            if (!entriesByDirectory.TryGetValue(saveDir, out entry))
-            {
-                entriesByDirectory[saveDir] = entry = new();
-            }
-        }
+        ServerEntry entry = entriesByDirectory.GetOrAdd(saveDir, static _ => new());
         await entry.RefreshFromDirectoryAsync(saveDir);
         return entry;
     }
