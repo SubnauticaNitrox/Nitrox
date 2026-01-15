@@ -1,5 +1,11 @@
 namespace Nitrox.Server.Subnautica.Services;
 
+/// <summary>
+///     Without bugs in code, this service isn't needed.
+///     However, we use AssetsTools.NET which holds open file handlers without a way to close them (without reflection).
+///     That's where this <see cref="MemoryService" /> comes in, to force the GC to check if any file handler (pointers)
+///     are reachable and if not, deallocate them.
+/// </summary>
 internal sealed class MemoryService(ILogger<MemoryService> logger) : BackgroundService
 {
     private readonly ILogger<MemoryService> logger = logger;
@@ -8,6 +14,9 @@ internal sealed class MemoryService(ILogger<MemoryService> logger) : BackgroundS
     /// <summary>
     ///     Queues a memory compaction loop to be executed as soon as possible.
     /// </summary>
+    /// <remarks>
+    ///     This forces the GC to check on dangling memory in case of bad memory management. Ideally, this method should not exist.
+    /// </remarks>
     public void QueueCompact()
     {
         memCompactBarrier.Signal();
