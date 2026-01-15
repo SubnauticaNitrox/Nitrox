@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -155,6 +156,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     public async Task StopServerAsync() => await Server!.StopAsync();
 
+    [MemberNotNull(nameof(Server))]
     public void LoadFrom(ServerEntry serverEntry)
     {
         Server = serverEntry;
@@ -203,6 +205,23 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+        if (ServerName == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerName)} must not be null");
+        }
+        if (ServerPassword == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerPassword)} must not be null");
+        }
+        if (ServerSeed == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerSeed)} must not be null");
+        }
+
         // If world name was changed, rename save folder to match it
         string newPath = Path.Combine(SavesFolderDir, ServerName);
         if (SaveFolderDirectory != newPath)
@@ -265,6 +284,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         ServerName = Server.Name;
         ServerIcon = Server.ServerIcon;
         ServerPassword = Server.Password;
@@ -321,6 +345,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task ShowAdvancedSettings()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         ObjectPropertyEditorViewModel result = await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
         {
             model.Title = $"Server '{ServerName}' config editor";
@@ -341,6 +370,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         BackupRestoreViewModel result = await dialogService.ShowAsync<BackupRestoreViewModel>(model =>
         {
             model.Title = $"Restore a Backup for '{ServerName}'";
@@ -362,8 +396,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                 {
                     TryDeleteFile(file);
                 }
-                ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
-                await Server!.RefreshFromDirectoryAsync(SaveFolderDirectory);
+                await ZipFile.ExtractToDirectoryAsync(backupFile, SaveFolderDirectory, true);
+                await Server.RefreshFromDirectoryAsync(SaveFolderDirectory);
                 LoadFrom(Server);
                 ServerEmbedded = isEmbedded; // Preserve the original IsEmbedded value
                 LauncherNotifier.Success("Backup restored successfully.");
@@ -391,6 +425,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     private async Task CoreDeleteServerAsync(bool force = false)
     {
+        if (ServerName == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerName)} must not be null");
+        }
+
         if (!force)
         {
             DialogBoxViewModel modal = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
@@ -420,6 +459,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     partial void OnServerEmbeddedChanged(bool value)
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         Server.IsEmbedded = value || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
     }
 
