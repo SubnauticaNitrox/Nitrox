@@ -23,7 +23,7 @@ internal static class AssemblyResolver
 
     public static Assembly? Handler(object sender, ResolveEventArgs args)
     {
-        Assembly assembly = ResolveFromLib(args.Name);
+        Assembly? assembly = ResolveFromLib(args.Name);
         if (assembly == null && !args.Name.Contains(".resources"))
         {
             assembly = Assembly.Load(args.Name);
