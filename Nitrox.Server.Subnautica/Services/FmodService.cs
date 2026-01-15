@@ -15,6 +15,7 @@ sealed class FmodService(GameInfo gameInfo) : IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
+        whitelist?.Dispose();
         return Task.CompletedTask;
     }
 
