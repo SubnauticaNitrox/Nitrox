@@ -104,8 +104,14 @@ internal static class ConfigurationBuilderExtensions
             }
         }
 
+        string? baseDirectory = CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFile);
+        if (baseDirectory == null)
+        {
+            return optional ? builder : throw new Exception($"Failed to get parent directory from JSON file: {fileName}");
+        }
+
         // On Linux, polling is needed to detect file changes.
-        builder.AddJsonFile(new PhysicalFileProvider(CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFile) ?? throw new Exception($"Failed to get parent directory from JSON file: {fileName}"))
+        builder.AddJsonFile(new PhysicalFileProvider(baseDirectory)
         {
             UseActivePolling = OperatingSystem.IsLinux(),
             UsePollingFileWatcher = OperatingSystem.IsLinux()
