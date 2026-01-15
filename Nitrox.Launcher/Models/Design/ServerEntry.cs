@@ -115,14 +115,14 @@ public partial class ServerEntry : ObservableObject
     /// </summary>
     public int LastProcessId
     {
-        get => ProcessId == 0 ? lastProcessId : lastProcessId = ProcessId;
+        get => ProcessId <= 0 ? lastProcessId : lastProcessId = ProcessId;
     }
 
     public int ProcessId
     {
         get
         {
-            int processId = Process?.Id ?? 0;
+            int processId = Process?.Id ?? -1;
             if (processId > 0)
             {
                 lastProcessId = processId;
@@ -280,7 +280,7 @@ public partial class ServerEntry : ObservableObject
         return true;
     }
 
-    public void Start(string savesDir, int existingProcessId = 0)
+    public void Start(string savesDir, int existingProcessId = -1)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -385,13 +385,13 @@ public partial class ServerEntry : ObservableObject
     internal class ServerProcess : IDisposable
     {
         private Process? serverProcess;
-        public int Id => serverProcess?.Id ?? 0;
+        public int Id => serverProcess?.Id ?? -1;
         public bool IsRunning => serverProcess != null;
 
-        private ServerProcess(string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = 0)
+        private ServerProcess(string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = -1)
         {
             cts.Token.Register(Dispose);
-            if (processId == 0)
+            if (processId <= 0)
             {
                 string saveName = Path.GetFileName(saveDir);
                 string launcherPath = NitroxUser.ExecutableRootPath;
