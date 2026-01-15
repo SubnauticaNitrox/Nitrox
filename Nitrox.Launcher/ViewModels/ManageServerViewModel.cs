@@ -6,7 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
@@ -177,7 +176,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerAllowCommands = Server.AllowCommands;
         ServerAllowPvP = Server.AllowPvP;
         ServerAllowKeepInventory = Server.AllowKeepInventory;
-        ServerEmbedded = Server.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
+        // On non-windows, IsEmbedded should always be true.
+        if (OperatingSystem.IsWindows())
+        {
+            ServerEmbedded = Server.IsEmbedded;
+        }
     }
 
     private bool HasChanges() => Server != null &&
@@ -456,16 +459,6 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     private bool CanDeleteServer() => !ServerIsOnline;
-
-    partial void OnServerEmbeddedChanged(bool value)
-    {
-        if (Server == null)
-        {
-            throw new InvalidOperationException($"{nameof(Server)} must not be null");
-        }
-
-        Server.IsEmbedded = value || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
-    }
 
     private Config LoadConfig() => NitroxConfig.Load<Config>(Path.Combine(SaveFolderDirectory, typeof(Config).GetCustomAttribute<SerializableFileNameAttribute>()?.FileName ?? throw new InvalidOperationException()));
 

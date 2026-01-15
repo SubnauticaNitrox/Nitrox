@@ -179,7 +179,6 @@ public partial class ServerEntry : ObservableObject
         if (Process is { IsRunning: true })
         {
             // Even though it wasn't started as embedded, using gRPC we can manage server as embedded.
-            IsEmbedded = true; // This enables embedded server view in launcher.
             IsOnline = true;
         }
         return Task.FromResult(true);
@@ -261,7 +260,6 @@ public partial class ServerEntry : ObservableObject
         AllowKeepInventory = config.KeepInventoryOnDeath;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
         Version = serverVersion;
-        IsEmbedded = RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                      ?
                                                      // This file is affected by server saving

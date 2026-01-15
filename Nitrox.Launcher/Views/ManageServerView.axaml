@@ -449,6 +449,14 @@
                                          ToolTip.ShowOnDisabled="True"
                                          ToolTip.Tip="Run server in embedded mode within the launcher UI" />
                         </OnPlatform.macOS>
+
+                        <OnPlatform.Linux>
+                            <RadioButton Content="Embedded"
+                                         GroupName="Choose runtime option"
+                                         IsChecked="True"
+                                         ToolTip.ShowOnDisabled="True"
+                                         ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+                        </OnPlatform.Linux>
                     </OnPlatform>
                 </StackPanel>
 
