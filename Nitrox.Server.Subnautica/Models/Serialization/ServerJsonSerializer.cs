@@ -18,7 +18,7 @@ public class ServerJsonSerializer : IServerSerializer
 
         serializer.Error += delegate (object _, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            logger.ZLogError(e.ErrorContext.Error, $"serialization error: ");
+            logger.ZLogError($"serialization error: {e.ErrorContext.Error}");
         };
 
         serializer.TypeNameHandling = TypeNameHandling.Auto;
