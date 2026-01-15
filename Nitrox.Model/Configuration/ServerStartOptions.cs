@@ -44,7 +44,7 @@ public sealed partial record ServerStartOptions
     public string? NitroxAssetsPath { get; set; }
 
     [ConfigurationKeyName("embedded")]
-    public bool IsEmbedded { get; set; } = !Environment.UserInteractive || Console.IsInputRedirected || Console.IsOutputRedirected;
+    public bool IsEmbedded { get; set; }
 
     [OptionsValidator]
     public partial class Validator : IValidateOptions<ServerStartOptions>;

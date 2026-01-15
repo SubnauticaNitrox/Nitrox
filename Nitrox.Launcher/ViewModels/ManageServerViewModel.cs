@@ -74,7 +74,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private Perms serverDefaultPlayerPerm;
 
     [ObservableProperty]
-    private bool serverEmbedded = true;
+    private bool serverEmbedded;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -138,6 +138,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         this.keyValueStore = keyValueStore;
         this.serverService = serverService;
 
+        ServerEmbedded = keyValueStore.GetPreferEmbedded();
+
         this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {
             if (vm.server?.Process?.Id != status.ProcessId)
@@ -150,10 +152,24 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public async Task StartServerAsync() => await serverService.StartServerAsync(Server!);
+    public async Task StartServerAsync()
+    {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} should not be null");
+        }
+        await serverService.StartServerAsync(Server);
+    }
 
     [RelayCommand]
-    public async Task StopServerAsync() => await Server!.StopAsync();
+    public async Task StopServerAsync()
+    {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} should not be null");
+        }
+        await Server.StopAsync();
+    }
 
     [MemberNotNull(nameof(Server))]
     public void LoadFrom(ServerEntry serverEntry)
@@ -176,11 +192,6 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerAllowCommands = Server.AllowCommands;
         ServerAllowPvP = Server.AllowPvP;
         ServerAllowKeepInventory = Server.AllowKeepInventory;
-        // On non-windows, IsEmbedded should always be true.
-        if (OperatingSystem.IsWindows())
-        {
-            ServerEmbedded = Server.IsEmbedded;
-        }
     }
 
     private bool HasChanges() => Server != null &&
@@ -394,7 +405,6 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     throw new FileNotFoundException("Selected backup file not found.", backupFile);
                 }
 
-                bool isEmbedded = ServerEmbedded;
                 foreach (string file in Directory.GetFiles(SaveFolderDirectory, "*"))
                 {
                     TryDeleteFile(file);
@@ -402,7 +412,6 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                 await ZipFile.ExtractToDirectoryAsync(backupFile, SaveFolderDirectory, true);
                 await Server.RefreshFromDirectoryAsync(SaveFolderDirectory);
                 LoadFrom(Server);
-                ServerEmbedded = isEmbedded; // Preserve the original IsEmbedded value
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)
@@ -456,6 +465,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         {
             await dialogService.ShowErrorAsync(ex, $"Error while deleting world \"{ServerName}\"");
         }
+    }
+
+    partial void OnServerEmbeddedChanged(bool value)
+    {
+        keyValueStore.SetPreferEmbedded(value);
     }
 
     private bool CanDeleteServer() => !ServerIsOnline;

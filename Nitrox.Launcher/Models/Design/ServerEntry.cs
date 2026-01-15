@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
@@ -31,9 +30,10 @@ namespace Nitrox.Launcher.Models.Design;
 /// <summary>
 ///     Manager object for a server. Used to start/stop a server and change its settings.
 /// </summary>
-public partial class ServerEntry : ObservableObject
+internal sealed partial class ServerEntry : ObservableObject
 {
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
+
     private static readonly ConcurrentDictionary<string, ServerEntry> entriesByDirectory = [];
 
     private static readonly SubnauticaServerOptions serverDefaults = new();
@@ -59,6 +59,9 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private SubnauticaGameMode gameMode = serverDefaults.GameMode;
 
+    /// <summary>
+    ///     Should not be set to persist <see cref="IsEmbedded"/> change. Use <see cref="IKeyValueStore" /> instead.
+    /// </summary>
     [ObservableProperty]
     private bool isEmbedded;
 
@@ -158,7 +161,7 @@ public partial class ServerEntry : ObservableObject
             _ => throw new NotImplementedException()
         };
 
-        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{fileEnding}"), contents: (string?)null);
+        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{fileEnding}"), (string?)null);
         config.GameMode = saveGameMode;
         NitroxConfig.CreateFile(saveDir, config);
 
@@ -178,7 +181,6 @@ public partial class ServerEntry : ObservableObject
         }
         if (Process is { IsRunning: true })
         {
-            // Even though it wasn't started as embedded, using gRPC we can manage server as embedded.
             IsOnline = true;
         }
         return Task.FromResult(true);
@@ -270,7 +272,7 @@ public partial class ServerEntry : ObservableObject
         return true;
     }
 
-    public void Start(string savesDir, int existingProcessId = -1)
+    public void Start(string savesDir, bool embedded, int existingProcessId = -1)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -287,7 +289,8 @@ public partial class ServerEntry : ObservableObject
 
         // Start server and add notify when server closed.
         ResetCts();
-        Process = ServerProcess.Start(Path.Combine(savesDir, Name), cts, IsEmbedded, existingProcessId);
+        IsEmbedded = embedded;
+        Process = ServerProcess.Start(Path.Combine(savesDir, Name), cts, embedded, existingProcessId);
 
         Output.Clear();
         IsNewServer = false;
