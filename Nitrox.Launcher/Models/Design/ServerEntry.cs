@@ -269,7 +269,6 @@ public partial class ServerEntry : ObservableObject
         AllowKeepInventory = config.KeepInventoryOnDeath;
         IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
         Version = serverVersion;
-        // TODO: Store default option "IsEmbedded" in launcher cfg, not server.cfg
         IsEmbedded = RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
                                                      ?
