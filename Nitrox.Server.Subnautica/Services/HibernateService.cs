@@ -7,8 +7,12 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
     private readonly IHibernate.SleepTrigger sleepTrigger = sleepTrigger;
     private readonly IHibernate.WakeTrigger wakeTrigger = wakeTrigger;
     private readonly ILogger<HibernateService> logger = logger;
-    private bool isSleeping;
-    public bool IsSleeping => Interlocked.CompareExchange(ref isSleeping, true, true);
+
+    public bool IsSleeping
+    {
+        get => Interlocked.CompareExchange(ref field, true, true);
+        private set => Interlocked.Exchange(ref field, value);
+    }
 
     /// <summary>
     ///     Puts server in power saving mode. Should still allow server to wake up as if it never slept.
@@ -20,7 +24,7 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
             return;
         }
         logger.ZLogInformation($"Entering power saving mode...");
-        Interlocked.Exchange(ref isSleeping, true);
+        IsSleeping = true;
         await sleepTrigger.InvokeAsync();
     }
 
@@ -34,7 +38,7 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
             return;
         }
         logger.ZLogInformation($"Entering full operation mode...");
-        Interlocked.Exchange(ref isSleeping, false);
+        IsSleeping = false;
         await wakeTrigger.InvokeAsync();
     }
 
