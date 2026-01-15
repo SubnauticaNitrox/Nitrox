@@ -15,3 +15,4 @@ global using Nitrox.Model.Subnautica.Extensions;
 global using Nitrox.Server.Subnautica.Extensions;
 global using ZLogger;
 global using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+global using Debug = System.Diagnostics.Debug;
