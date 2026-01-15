@@ -1,4 +1,4 @@
-#if MODERN_DOTNET
+#if NET
 global using LockObject = System.Threading.Lock;
 #else
 global using LockObject = object;

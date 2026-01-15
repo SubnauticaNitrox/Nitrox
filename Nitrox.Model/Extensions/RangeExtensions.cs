@@ -1,4 +1,4 @@
-#if MODERN_DOTNET
+#if NET
 using System;
 
 namespace Nitrox.Model.Extensions;
