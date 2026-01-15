@@ -16,7 +16,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands
         protected override void Execute(CallArgs args)
         {
             saveService.QueueSave();
-            SendMessageToPlayer(args.Sender, "World is saving...");
+            SendMessageToPlayer(args.Sender, "Saving world...");
         }
     }
 }
