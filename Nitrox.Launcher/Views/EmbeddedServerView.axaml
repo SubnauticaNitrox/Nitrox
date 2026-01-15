@@ -55,11 +55,13 @@
                 VerticalAlignment="Center" />
         </Grid>
         <ScrollViewer
-            Grid.Row="1" BringIntoViewOnFocusChange="False"
+            Grid.Row="1"
             Margin="0,20,0,20"
             x:Name="ScrollViewer">
             <!--  Transparent background for improved QoL selecting text (otherwise, putting the cursor between lines won't allow for text selection)  -->
-            <ItemsControl x:Name="ItemsControl" Background="Transparent" HorizontalAlignment="Left"
+            <ItemsControl x:Name="ItemsControl"
+                          Background="Transparent"
+                          HorizontalAlignment="Left"
                           SizeChanged="ItemsControl_OnSizeChanged"
                           ItemsSource="{Binding ServerOutput}">
                 <ItemsControl.Styles>
@@ -92,7 +94,7 @@
                 <ItemsControl.ItemTemplate>
                     <!--  TODO: Fix highlighting only happening one line at a time  -->
                     <DataTemplate x:DataType="design:OutputLine">
-                        <controls:ServerOutputSelectableTextBlock Focusable="False" FontFamily="/Assets/Fonts#Roboto Mono">
+                        <controls:ServerOutputSelectableTextBlock FontFamily="/Assets/Fonts#Roboto Mono">
                             <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
                             <Run Text="" />
                             <Run Text="{Binding LogText}"
