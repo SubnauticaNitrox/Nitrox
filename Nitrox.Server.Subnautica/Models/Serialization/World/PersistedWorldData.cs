@@ -21,7 +21,7 @@ namespace Nitrox.Server.Subnautica.Models.Serialization.World
 
         public bool IsValid()
         {
-            return WorldData.IsValid() &&
+            return WorldData?.IsValid() == true &&
                    PlayerData != null &&
                    GlobalRootData != null &&
                    EntityData != null;
