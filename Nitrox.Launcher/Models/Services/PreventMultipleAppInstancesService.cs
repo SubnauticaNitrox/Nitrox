@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Services;
@@ -22,7 +23,7 @@ internal sealed class PreventMultipleAppInstancesService : IHostedLifecycleServi
 
         try
         {
-            using ProcessEx process = ProcessEx.GetFirstProcess("Nitrox.Launcher", process => process.Id != Environment.ProcessId && process.IsRunning);
+            using ProcessEx process = ProcessEx.GetFirstProcess(NitroxConstants.LAUNCHER_APP_NAME, process => process.Id != Environment.ProcessId && process.IsRunning);
             if (process is not null)
             {
                 process.SetForegroundWindowAndRestore();

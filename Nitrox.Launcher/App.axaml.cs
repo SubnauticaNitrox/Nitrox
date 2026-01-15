@@ -105,7 +105,7 @@ internal class App : Application
             WebApplicationBuilder hostBuilder = WebApplication.CreateBuilder(new WebApplicationOptions
             {
                 EnvironmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"),
-                ApplicationName = "Nitrox.Launcher",
+                ApplicationName = NitroxConstants.LAUNCHER_APP_NAME,
                 Args = NitroxEnvironment.CommandLineArgs
             });
             hostBuilder.Logging

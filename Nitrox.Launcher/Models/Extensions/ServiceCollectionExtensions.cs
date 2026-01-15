@@ -15,6 +15,7 @@ using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using Nitrox.Launcher.Views.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
 using ServiceScan.SourceGenerator;
 
@@ -106,7 +107,7 @@ public static partial class ServiceCollectionExtensions
                            .AddHttpMessageHandler<LogRequestDelegatingHandler>();
                     builder.ConfigureHttpClient(client =>
                     {
-                        client.DefaultRequestHeaders.UserAgent.ParseAdd("Nitrox.Launcher");
+                        client.DefaultRequestHeaders.UserAgent.ParseAdd(NitroxConstants.LAUNCHER_APP_NAME);
                         client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(1) };
                         client.Timeout = TimeSpan.FromSeconds(10);
                     });
