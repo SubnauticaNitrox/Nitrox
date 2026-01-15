@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using static LootDistributionData;
@@ -10,7 +11,7 @@ internal class SubnauticaUwePrefabFactory(EntityDistributionsResource distributi
     private readonly EntityDistributionsResource resource = distributionData;
     private readonly Dictionary<string, List<UwePrefab>> cache = new();
 
-    public bool TryGetPossiblePrefabs(string? biome, out List<UwePrefab>? prefabs)
+    public bool TryGetPossiblePrefabs(string? biome, [NotNullWhen(true)] out List<UwePrefab>? prefabs)
     {
         if (biome == null)
         {

@@ -349,7 +349,7 @@ sealed class BatchEntitySpawner : IEntitySpawner
         return allChildren;
     }
 
-    private List<Entity> SpawnEntities(List<EntitySpawnPoint> entitySpawnPoints, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
+    private List<Entity> SpawnEntities(List<EntitySpawnPoint> entitySpawnPoints, DeterministicGenerator deterministicBatchGenerator, WorldEntity? parentEntity = null)
     {
         List<Entity> entities = [];
         foreach (EntitySpawnPoint esp in entitySpawnPoints)
