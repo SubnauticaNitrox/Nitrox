@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Sockets;
 using Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Logging.Redaction;
@@ -38,5 +37,5 @@ internal sealed class IpRedactor : IRedactor
         return RedactResult.Ok($"{endpoint.Address.ToString()}{GetPostFix(isTrimmedIp)}");
     }
 
-    public string GetPostFix(bool isTrimmedIp) => isTrimmedIp ? " (REDACTED)" : "";
+    private string GetPostFix(bool isTrimmedIp) => isTrimmedIp ? " (REDACTED)" : "";
 }
