@@ -166,7 +166,7 @@ public partial class ServerEntry : ObservableObject
             _ => throw new NotImplementedException()
         };
 
-        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{fileEnding}"), (string?)null);
+        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{fileEnding}"), contents: (string?)null);
         config.GameMode = saveGameMode;
         NitroxConfig.CreateFile(saveDir, config);
 
