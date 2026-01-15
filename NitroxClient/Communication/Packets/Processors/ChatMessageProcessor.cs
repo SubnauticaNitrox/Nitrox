@@ -64,7 +64,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             
             playerChatManager.AddMessage(playerName, message.Text, color.ToUnity());
-            if (NitroxPrefs.ChatVisibilityDuration.Value > 0f)
+            if (NitroxPrefs.ChatAutoOpen.Value && NitroxPrefs.ChatVisibilityDuration.Value > 0f)
             {
                 playerChatManager.ShowChat();
             }
@@ -73,7 +73,7 @@ namespace NitroxClient.Communication.Packets.Processors
         private void LogServerMessage(ChatMessage message)
         {
             playerChatManager.AddMessage("Server", message.Text, serverMessageColor);
-            if (NitroxPrefs.ChatVisibilityDuration.Value > 0f)
+            if (NitroxPrefs.ChatAutoOpen.Value && NitroxPrefs.ChatVisibilityDuration.Value > 0f)
             {
                 playerChatManager.ShowChat();
             }

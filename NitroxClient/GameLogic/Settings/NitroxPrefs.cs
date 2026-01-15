@@ -13,6 +13,10 @@ namespace NitroxClient.GameLogic.Settings
         /// 0 = chat is disabled (won't show when others chat).
         /// </summary>
         public static readonly NitroxPref<float> ChatVisibilityDuration = new("Nitrox.chatVisibilityDuration", 6f);
+        /// <summary>
+        /// Whether the chat window should automatically open when receiving messages.
+        /// </summary>
+        public static readonly NitroxPref<bool> ChatAutoOpen = new("Nitrox.chatAutoOpen", true);
         public static readonly NitroxPref<bool> ChatUsed = new("Nitrox.chatUsed");
         public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
         public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);

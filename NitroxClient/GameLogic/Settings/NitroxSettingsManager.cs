@@ -35,6 +35,7 @@ public class NitroxSettingsManager
     private void MakeSettings()
     {
         AddSetting("Nitrox_Settings_Privacy", new Setting("Nitrox_Settings_ChatVisibilityDuration", NitroxPrefs.ChatVisibilityDuration, duration => NitroxPrefs.ChatVisibilityDuration.Value = (int)duration, 0f, 15f, NitroxPrefs.ChatVisibilityDuration.DefaultValue, 1f, SliderLabelMode.Int, "0", "Nitrox_Settings_ChatVisibilityDuration_Tooltip"));
+        AddSetting("Nitrox_Settings_Privacy", new Setting("Nitrox_Settings_ChatAutoOpen", NitroxPrefs.ChatAutoOpen, autoOpen => NitroxPrefs.ChatAutoOpen.Value = autoOpen));
         AddSetting("Nitrox_Settings_Privacy", new Setting("Nitrox_HideIp", NitroxPrefs.HideIp, hide =>
         {
             NitroxPrefs.HideIp.Value = hide;
