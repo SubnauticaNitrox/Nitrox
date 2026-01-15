@@ -45,6 +45,14 @@
         <Error Condition="'%(_AllHexAttributes._Parameter2)' != '' and !$([System.Text.RegularExpressions.Regex]::IsMatch('%(_AllHexAttributes._Parameter2)', '^[0-9a-fA-F]+$'))" Text="'Metadata attribute %(_AllHexAttributes._Parameter1) must be a suitable hexidecimal hash value but is '%(_AllHexAttributes._Parameter2)'" />
     </Target>
 
+    <Target Name="_NitroxAddDefineConstants" AfterTargets="AddImplicitDefineConstants">
+        <!-- Adds "MODERN_DOTNET" constant but only if modern .NET is available. This prevents the need to update Preprocessor Directives on every .NET release. -->
+        <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(TargetFramework), '^net\d+\.\d+$'))">
+            <_TargetFrameworkAsDefineConstant>$(TargetFramework.Replace('.', '_').ToUpper())_OR_GREATER</_TargetFrameworkAsDefineConstant>
+            <DefineConstants Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*$(_TargetFrameworkAsDefineConstant)(;.*)*$'))">$(DefineConstants);MODERN_DOTNET</DefineConstants>
+        </PropertyGroup>
+    </Target>
+
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">
         <DiscoverGame GameName="$(GameName)" IntermediateOutputPath="$(IntermediateOutputPath)">
             <Output TaskParameter="GamePath" PropertyName="GameDir" />

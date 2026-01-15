@@ -162,7 +162,7 @@ namespace Nitrox.Server.Subnautica.Models.Serialization
 
                 Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
 
-#if NET5_0_OR_GREATER
+#if MODERN_DOTNET
                 object component = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
 #else
                 object component = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);

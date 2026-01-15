@@ -1,4 +1,4 @@
-#if NET9_0_OR_GREATER
+#if MODERN_DOTNET
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
