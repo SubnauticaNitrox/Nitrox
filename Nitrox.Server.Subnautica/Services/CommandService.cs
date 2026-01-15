@@ -13,7 +13,7 @@ internal sealed class CommandService(TextCommandProcessor textCommandProcessor, 
 {
     private readonly TextCommandProcessor textCommandProcessor = textCommandProcessor;
     private readonly Channel<Task> runningCommands = Channel.CreateUnbounded<Task>();
-    private Task commandWaiterTask;
+    private Task? commandWaiterTask;
 
     public void ExecuteCommand(string command)
     {
@@ -39,10 +39,15 @@ internal sealed class CommandService(TextCommandProcessor textCommandProcessor, 
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
+        if (commandWaiterTask == null)
+        {
+            return;
+        }
         if (commandWaiterTask.IsCompletedSuccessfully)
         {
             return;
         }
+
         logger.ZLogTrace($"Waiting for commands to finish processing...");
         await commandWaiterTask;
         logger.ZLogTrace($"Done waiting for commands");
