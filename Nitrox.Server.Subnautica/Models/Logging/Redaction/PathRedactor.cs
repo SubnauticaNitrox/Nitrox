@@ -15,6 +15,8 @@ internal sealed class PathRedactor : IRedactor
         {
             return RedactResult.Ok($"{GenericUserHomeTag}{value[userProfilePath.Length..]}");
         }
-        return RedactResult.Fail();
+
+        // Path looks ok to show as normal, say we "redacted" but show original value.
+        return RedactResult.Ok(value);
     }
 }
