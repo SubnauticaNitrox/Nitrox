@@ -23,7 +23,7 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
         {
             return;
         }
-        logger.ZLogInformation($"Entering power saving mode...");
+        logger.ZLogTrace($"No players connected, entering power saving mode...");
         IsSleeping = true;
         await sleepTrigger.InvokeAsync();
     }
@@ -37,7 +37,7 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
         {
             return;
         }
-        logger.ZLogInformation($"Entering full operation mode...");
+        logger.ZLogInformation($"Server has paused, waiting for players to connect");
         IsSleeping = false;
         await wakeTrigger.InvokeAsync();
     }
