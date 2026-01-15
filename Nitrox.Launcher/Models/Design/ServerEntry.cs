@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -54,7 +55,7 @@ public partial class ServerEntry : ObservableObject
     private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
 
     public Channel<string> CommandQueue = Channel.CreateUnbounded<string>();
-    private CancellationTokenSource cts = new();
+    private CancellationTokenSource? cts;
 
     [ObservableProperty]
     private SubnauticaGameMode gameMode = serverDefaults.GameMode;
@@ -180,6 +181,7 @@ public partial class ServerEntry : ObservableObject
         }
         if (Process?.Id != processId)
         {
+            ResetCts();
             Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, false, processId);
         }
         if (Process is { IsRunning: true })
@@ -222,7 +224,7 @@ public partial class ServerEntry : ObservableObject
         }
 
         Version serverVersion;
-        using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
+        await using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
             switch (config.SerializerMode)
             {
@@ -250,7 +252,7 @@ public partial class ServerEntry : ObservableObject
         Name = Path.GetFileName(saveDir);
         if (prevName != Name)
         {
-            await ResetAsync();
+            ResetCts();
         }
         ServerIcon = icon;
         Password = config.ServerPassword;
@@ -295,6 +297,7 @@ public partial class ServerEntry : ObservableObject
         }
 
         // Start server and add notify when server closed.
+        ResetCts();
         Process = ServerProcess.Start(Path.Combine(savesDir, Name), cts, IsEmbedded, existingProcessId);
 
         Output.Clear();
@@ -305,7 +308,10 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task StopAsync()
     {
-        await cts.CancelAsync();
+        if (cts != null)
+        {
+            await cts.CancelAsync();
+        }
         // Ensure the server is dead before continuing. On Linux, if launcher process closes it could otherwise abruptly kill the embedded servers.
         using CancellationTokenSource waitProcessExitCts = new(TimeSpan.FromSeconds(20));
         try
@@ -338,19 +344,10 @@ public partial class ServerEntry : ObservableObject
         base.OnPropertyChanged(e);
     }
 
-    internal async Task ResetAsync()
+    [MemberNotNull(nameof(cts))]
+    internal void ResetCts()
     {
-        if (!cts.IsCancellationRequested)
-        {
-            try
-            {
-                await cts.CancelAsync().WaitAsync(TimeSpan.FromSeconds(3));
-            }
-            catch (OperationCanceledException)
-            {
-                // ignored
-            }
-        }
+        cts?.Dispose();
         cts = new();
         cts.Token.Register(async void () =>
         {
@@ -394,6 +391,7 @@ public partial class ServerEntry : ObservableObject
 
         private ServerProcess(string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = 0)
         {
+            cts.Token.Register(Dispose);
             if (processId == 0)
             {
                 string saveName = Path.GetFileName(saveDir);
@@ -432,7 +430,6 @@ public partial class ServerEntry : ObservableObject
             {
                 serverProcess = System.Diagnostics.Process.GetProcessById(processId);
             }
-            cts.Token.Register(Dispose);
         }
 
         public static ServerProcess Start(string saveDir, CancellationTokenSource cts, bool isEmbedded, int processId) => new(saveDir, cts, isEmbedded, processId);

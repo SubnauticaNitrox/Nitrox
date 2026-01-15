@@ -75,10 +75,7 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
     protected override async ValueTask OnDisconnected()
     {
         ServerEntry? entry = serverService.GetServerEntryByAnyOf(processId, saveName);
-        if (entry != null)
-        {
-            await entry.ResetAsync();
-        }
+        entry?.ResetCts();
         processId = 0;
         saveName = "";
         await cts.CancelAsync();
