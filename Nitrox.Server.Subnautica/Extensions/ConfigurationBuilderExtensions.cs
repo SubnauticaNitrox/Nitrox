@@ -11,6 +11,8 @@ internal static class ConfigurationBuilderExtensions
     public static IConfigurationBuilder AddNitroxConfigFile<TOptions>(this IConfigurationBuilder configurationBuilder, string filePath, string configSectionPath = "", bool optional = false, bool reloadOnChange = false) where TOptions : class, new()
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
+        reloadOnChange = reloadOnChange && CanChangeDetect();
+
         string dirPath = Path.GetDirectoryName(filePath) ?? throw new ArgumentException(nameof(filePath));
         Directory.CreateDirectory(dirPath);
         if (!File.Exists(filePath))
@@ -69,7 +71,9 @@ internal static class ConfigurationBuilderExtensions
         {
             return builder;
         }
+        reloadOnChange = reloadOnChange && CanChangeDetect();
 
+        string? parentAppSettingsFile = null;
         if (reloadOnChange)
         {
             try
@@ -78,7 +82,7 @@ internal static class ConfigurationBuilderExtensions
                 string current = AppContext.BaseDirectory.TrimEnd('/', '\\');
                 while ((current = Path.GetDirectoryName(current)) is not null)
                 {
-                    string parentAppSettingsFile = Path.Combine(current, fileName);
+                    parentAppSettingsFile = Path.Combine(current, fileName);
                     if (File.Exists(parentAppSettingsFile))
                     {
                         FileInfo appSettingsFile = new(Path.Combine(AppContext.BaseDirectory, fileName));
@@ -101,7 +105,7 @@ internal static class ConfigurationBuilderExtensions
         }
 
         // On Linux, polling is needed to detect file changes.
-        builder.AddJsonFile(new PhysicalFileProvider(AppContext.BaseDirectory)
+        builder.AddJsonFile(new PhysicalFileProvider(CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFile) ?? throw new Exception($"Failed to get parent directory from JSON file: {fileName}"))
         {
             UseActivePolling = OperatingSystem.IsLinux(),
             UsePollingFileWatcher = OperatingSystem.IsLinux()
@@ -119,14 +123,15 @@ internal static class ConfigurationBuilderExtensions
 
         // Symbolic link the first parent JSON file found. Required for change detection when file is in a parent directory.
         string current = AppContext.BaseDirectory.TrimEnd('/', '\\');
+        string? parentAppSettingsFilePath = null;
         while ((current = Path.GetDirectoryName(current)) is not null)
         {
             if (!IsSolutionRootWithProject(current, projectName))
             {
                 continue;
             }
-            string parentAppSettingsFilePath = Path.Combine(current, projectName, fileName);
-            if (File.Exists(parentAppSettingsFilePath))
+            parentAppSettingsFilePath = Path.Combine(current, projectName, fileName);
+            if (CanChangeDetect() && File.Exists(parentAppSettingsFilePath))
             {
                 FileInfo appSettingsFile = new(Path.Combine(AppContext.BaseDirectory, fileName));
                 if (appSettingsFile.Exists && appSettingsFile.LinkTarget != null)
@@ -138,7 +143,7 @@ internal static class ConfigurationBuilderExtensions
             break;
         }
 
-        builder.AddJsonFile(new PhysicalFileProvider(AppContext.BaseDirectory)
+        builder.AddJsonFile(new PhysicalFileProvider(CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFilePath) ?? throw new Exception($"Failed to get parent folder of json file: {fileName}"))
         {
             UseActivePolling = OperatingSystem.IsLinux(),
             UsePollingFileWatcher = OperatingSystem.IsLinux()
@@ -164,4 +169,7 @@ internal static class ConfigurationBuilderExtensions
             return isSolutionRoot && projectExists;
         }
     }
+
+    // TODO: Handle Windows differently because symbolic link requires admin perms there. Copy file over?
+    private static bool CanChangeDetect() => !OperatingSystem.IsWindows(); // For now change detection does not work on Windows.
 }
