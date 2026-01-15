@@ -8,14 +8,13 @@ internal sealed class NitroxConfigurationSource : FileConfigurationSource
     /// <summary>
     ///     The config section to insert the parsed keys into.
     /// </summary>
-    public string Section { get; init; }
+    public required string Section { get; init; }
 
-    public NitroxConfigurationSource(string path, string configSection = "", bool optional = true, IFileProvider? fileProvider = null)
+    public NitroxConfigurationSource(string path, bool optional = true, IFileProvider? fileProvider = null)
     {
         Path = path;
         Optional = optional;
         FileProvider = fileProvider;
-        Section = configSection;
         ReloadOnChange = true;
     }
 

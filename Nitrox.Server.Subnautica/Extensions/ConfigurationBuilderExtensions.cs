@@ -47,8 +47,9 @@ internal static class ConfigurationBuilderExtensions
             UsePollingFileWatcher = true,
             UseActivePolling = true
         };
-        return configurationBuilder.Add(new NitroxConfigurationSource(filePath, configSectionPath, optional, fileProvider)
+        return configurationBuilder.Add(new NitroxConfigurationSource(filePath, optional, fileProvider)
         {
+            Section = configSectionPath,
             ReloadOnChange = reloadOnChange,
             Optional = optional
         });
