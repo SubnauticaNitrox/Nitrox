@@ -143,7 +143,13 @@ internal static class ConfigurationBuilderExtensions
             break;
         }
 
-        builder.AddJsonFile(new PhysicalFileProvider(CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFilePath) ?? throw new Exception($"Failed to get parent folder of json file: {fileName}"))
+        string? baseDirectory = CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFilePath);
+        if (baseDirectory == null)
+        {
+            return optional ? builder : throw new Exception($"Failed to get parent directory from JSON file: {fileName}");
+        }
+
+        builder.AddJsonFile(new PhysicalFileProvider(baseDirectory)
         {
             UseActivePolling = OperatingSystem.IsLinux(),
             UsePollingFileWatcher = OperatingSystem.IsLinux()
