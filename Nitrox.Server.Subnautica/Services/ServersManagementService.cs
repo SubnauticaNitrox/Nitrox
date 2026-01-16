@@ -1,5 +1,5 @@
+using System.Buffers;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Channels;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -10,24 +10,23 @@ using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.MagicOnion;
 using Nitrox.Server.Subnautica.Models.Commands.Processor;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Logging.Scopes;
+using Nitrox.Server.Subnautica.Models.Logging.ZLogger;
 
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
 ///     Connects to a locally running app that might want to track this server. Nitrox.Launcher is expected.
 /// </summary>
-internal sealed partial class ServersManagementService(PlayerManager playerManager, TextCommandProcessor commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
+internal sealed class ServersManagementService(PlayerManager playerManager, TextCommandProcessor commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
 {
-    public static readonly Channel<string> LogQueue = Channel.CreateBounded<string>(new BoundedChannelOptions(1000) { FullMode = BoundedChannelFullMode.DropOldest });
+    public static readonly Channel<LogEntry> LogQueue = Channel.CreateBounded<LogEntry>(new BoundedChannelOptions(1000) { FullMode = BoundedChannelFullMode.DropOldest });
     private readonly TextCommandProcessor commandProcessor = commandProcessor;
     private readonly ILogger<ServersManagementService> logger = logger;
     private readonly IOptions<ServerStartOptions> options = options;
     private readonly PlayerManager playerManager = playerManager;
     private GrpcChannel? channel;
     private Task? pushLogsTask;
-
-    [GeneratedRegex(@"(?:\[(?<timestamp>\d{2}:\d{2}:\d{2}\.\d{3})\]\s\[(?<level>\w+)\]\s(?<category>\w+):\s)?(?<logText>(?:.|\n)*?(?=$|\n\[))")]
-    private static partial Regex LogRegex { get; }
 
     public override void Dispose() => channel?.Dispose();
 
@@ -110,22 +109,31 @@ internal sealed partial class ServersManagementService(PlayerManager playerManag
 
     private async Task PushLogsAsync(IServersManagement api, CancellationToken cancellationToken)
     {
-        await foreach (string log in LogQueue.Reader.ReadAllAsync(cancellationToken))
+        await foreach (LogEntry log in LogQueue.Reader.ReadAllAsync(cancellationToken))
         {
-            if (LogRegex.Match(log) is not { Success: true } match)
+            string category = log.Entry.LogInfo.Category.ToString();
+            DateTimeOffset time = log.Entry.LogInfo.Timestamp.Local;
+            int level = log.Entry.LogInfo.LogLevel switch
+            {
+                LogLevel.Information => 0,
+                LogLevel.Debug => 1,
+                LogLevel.Warning => 2,
+                LogLevel.Error => 3,
+                _ => 0
+            };
+            bool isPlain = log.Entry.TryGetProperty(out PlainScope _);
+            string? message = log.Generator(log.Entry, log.Formatter, log.Writer); // Generator will dispose of the log data, so this needs to be called "last".
+            if (message is "")
             {
                 continue;
             }
-
-            int level = match.Groups["level"].Value switch
+            // Omit last "new line" occurrence, as it is implied.
+            if (message.LastIndexOf(Environment.NewLine, StringComparison.Ordinal) is var newlineIndex and > -1)
             {
-                "info" => 0,
-                "dbug" => 1,
-                "warn" => 2,
-                "fail" => 3,
-                _ => 0
-            };
-            await api.AddOutputLine(match.Groups["category"].Value, match.Groups["timestamp"].Value, level, match.Groups["logText"].Value);
+                message = message.Substring(0, newlineIndex);
+            }
+
+            await api.AddOutputLine(category, isPlain ? null : time, level, message);
         }
     }
 
@@ -161,4 +169,6 @@ internal sealed partial class ServersManagementService(PlayerManager playerManag
     {
         public void OnCommand(string command) => commandProcessor.ProcessCommand(command, Optional.Empty, Perms.HOST);
     }
+
+    internal record LogEntry(IZLoggerEntry Entry, IZLoggerFormatter Formatter, ZLoggerPlainOptions.LogGeneratorCall Generator, ArrayBufferWriter<byte> Writer);
 }

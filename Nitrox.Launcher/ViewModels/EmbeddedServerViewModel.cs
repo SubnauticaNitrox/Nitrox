@@ -69,7 +69,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
             ServerOutput.Add(new OutputLine
             {
                 Type = OutputLineType.COMMAND,
-                Timestamp = $@"{TimeSpan.FromTicks(DateTime.Now.Ticks):hh\:mm\:ss\.fff}",
+                LocalTime = DateTimeOffset.Now,
                 LogText = $"> {ServerCommand}"
             });
         }

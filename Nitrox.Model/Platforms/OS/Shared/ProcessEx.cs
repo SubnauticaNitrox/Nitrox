@@ -375,14 +375,41 @@ public sealed class WindowsProcessEx : ProcessExBase
     public override IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
     public override string? MainWindowTitle => Process?.MainWindowTitle;
 
+    public override bool IsRunning
+    {
+        get
+        {
+            if (!base.IsRunning)
+            {
+                return false;
+            }
+            if (Id < 1)
+            {
+                return false;
+            }
+            Process? proc = null;
+            try
+            {
+                proc = Process.GetProcessById(Id);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                proc?.Dispose();
+            }
+        }
+    }
+
     public WindowsProcessEx(int id) : base(id)
     {
-
     }
 
     public WindowsProcessEx(Process process) : base(process.Id)
     {
-
     }
 
     public new static bool IsElevated()

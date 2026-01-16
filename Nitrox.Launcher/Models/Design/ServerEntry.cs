@@ -168,22 +168,29 @@ internal sealed partial class ServerEntry : ObservableObject
         return await FromDirectoryAsync(saveDir);
     }
 
-    public Task<bool> RefreshFromProcessAsync(int processId)
+    public async Task<bool> RefreshFromProcessAsync(int processId)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            return Task.FromResult(false);
+            return false;
         }
         if (Process?.Id != processId)
         {
-            ResetCts();
-            Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, false, processId);
+            await ResetCtsAsync();
+            Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, ShouldAttachAsEmbedded(), processId);
         }
         if (Process is { IsRunning: true })
         {
             IsOnline = true;
         }
-        return Task.FromResult(true);
+        return true;
+
+        static bool ShouldAttachAsEmbedded()
+        {
+            // On Windows, we expect external servers to always have a command window open. Otherwise, they would have been started through the launcher as embedded.
+            // On Unix, command windows won't be visible. In this case, we default to "embedded" so we can manage the server via grpc.
+            return !OperatingSystem.IsWindows();
+        }
     }
 
     public async Task<bool> RefreshFromDirectoryAsync(string saveDir)
@@ -245,7 +252,7 @@ internal sealed partial class ServerEntry : ObservableObject
         Name = Path.GetFileName(saveDir);
         if (prevName != Name)
         {
-            ResetCts();
+            await ResetCtsAsync();
         }
         ServerIcon = icon;
         Password = config.ServerPassword;
@@ -272,7 +279,7 @@ internal sealed partial class ServerEntry : ObservableObject
         return true;
     }
 
-    public void Start(string savesDir, bool embedded, int existingProcessId = -1)
+    public async Task StartAsync(string savesDir, bool embedded, int existingProcessId = -1)
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -288,7 +295,7 @@ internal sealed partial class ServerEntry : ObservableObject
         }
 
         // Start server and add notify when server closed.
-        ResetCts();
+        await ResetCtsAsync();
         IsEmbedded = embedded;
         Process = ServerProcess.Start(Path.Combine(savesDir, Name), cts, embedded, existingProcessId);
 
@@ -337,8 +344,12 @@ internal sealed partial class ServerEntry : ObservableObject
     }
 
     [MemberNotNull(nameof(cts))]
-    internal void ResetCts()
+    internal async Task ResetCtsAsync(bool cancelPreexisting = false)
     {
+        if (cancelPreexisting && cts is {} c)
+        {
+            await c.CancelAsync();
+        }
         cts?.Dispose();
         cts = new();
         cts.Token.Register(async void () =>

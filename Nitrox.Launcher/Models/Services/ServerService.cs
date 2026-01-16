@@ -106,7 +106,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         {
             server.Version = NitroxEnvironment.Version;
             bool preferEmbedded = keyValueStore.GetPreferEmbedded();
-            server.Start(keyValueStore.GetSavesFolderDir(), preferEmbedded);
+            server.StartAsync(keyValueStore.GetSavesFolderDir(), preferEmbedded);
             if (preferEmbedded)
             {
                 await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));

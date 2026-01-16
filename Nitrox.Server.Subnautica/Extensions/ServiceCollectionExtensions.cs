@@ -103,16 +103,20 @@ internal static partial class ServiceCollectionExtensions
                .AddNitroxZLoggerPlain(options =>
                {
                    options.IncludeScopes = true;
-                   options.UseNitroxFormatter(o => o.OmitWhenCaptured = true).OutputFunc = async (_, log) => await ServersManagementService.LogQueue.Writer.WriteAsync(log);
+                   options.UseNitroxFormatter(o =>
+                   {
+                       o.OmitWhenCaptured = true;
+                       o.IsPlain = true;
+                   }).OutputFunc = async (entry, formatter, generator, writer) => await ServersManagementService.LogQueue.Writer.WriteAsync(new ServersManagementService.LogEntry(entry, formatter, generator, writer));
                })
                .AddNitroxZLoggerPlain(options =>
                {
                    options.IncludeScopes = true;
-                   options.UseNitroxFormatter().OutputFunc = (entry, log) =>
+                   options.UseNitroxFormatter().OutputFunc = (entry, formatter, generator, writer) =>
                    {
                        if (entry.TryGetProperty(out CaptureScope scope))
                        {
-                           scope.Capture(log);
+                           scope.Capture(generator(entry, formatter, writer));
                        }
                        return Task.CompletedTask;
                    };

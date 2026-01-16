@@ -31,7 +31,7 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
         return CompletedTask;
     }
 
-    public ValueTask AddOutputLine(string category, string time, int level, string message)
+    public ValueTask AddOutputLine(string category, DateTimeOffset? localTime, int level, string message)
     {
         try
         {
@@ -39,7 +39,7 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
             entry?.Output.Add(new OutputLine
             {
                 LogText = message,
-                Timestamp = time,
+                LocalTime = localTime,
                 Type = (OutputLineType)level
             });
         }
@@ -75,7 +75,7 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
     protected override async ValueTask OnDisconnected()
     {
         ServerEntry? entry = serverService.GetServerEntryByAnyOf(processId, saveName);
-        entry?.ResetCts();
+        entry?.ResetCtsAsync(true);
         processId = 0;
         saveName = "";
         await cts.CancelAsync();

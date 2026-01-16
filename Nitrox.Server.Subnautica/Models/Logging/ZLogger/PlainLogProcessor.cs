@@ -20,21 +20,20 @@ internal sealed class PlainLogProcessor : IAsyncLogProcessor, IDisposable
         {
             return;
         }
-        ArrayBufferWriter<byte> writer = ArrayBufferWriterPool.Rent();
-        try
+        ArrayBufferWriter<byte> pooledWriter = ArrayBufferWriterPool.Rent();
+        outputFunc(entry, Formatter, static (loggerEntry, formatter, writer) =>
         {
-            Formatter.FormatLogEntry(writer, entry);
-            if (writer.WrittenCount < 1)
+            try
             {
-                return;
+                formatter.FormatLogEntry(writer, loggerEntry);
+                return writer.WrittenCount < 1 ? "" : Encoding.UTF8.GetString(writer.WrittenSpan);
             }
-            outputFunc(entry, Encoding.UTF8.GetString(writer.WrittenSpan));
-        }
-        finally
-        {
-            entry.Return();
-            ArrayBufferWriterPool.Return(writer);
-        }
+            finally
+            {
+                loggerEntry.Return();
+                ArrayBufferWriterPool.Return(writer);
+            }
+        }, pooledWriter);
     }
 
     ValueTask IAsyncDisposable.DisposeAsync()

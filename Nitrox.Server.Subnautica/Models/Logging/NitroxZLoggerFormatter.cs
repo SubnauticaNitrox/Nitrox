@@ -36,18 +36,21 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
                 }
             }
         };
-        yield return new ConditionalGroupLoggerMiddleware
+        if (!options.IsPlain)
         {
-            Condition = static context => !context.Entry.TryGetProperty(out PlainScope _),
-            Group =
-            [
-                new WriteTimeLoggerMiddleware { Format = options.TimestampFormat ?? "" },
-                new GroupLoggerMiddleware { Group = GetLogLevelMiddleware(options).ToArray() },
-                new WriteLoggerMiddleware { Writer = static (ref context) => context.Writer.Write(" "u8) },
-                new WriteCategoryLoggerMiddleware(),
-                new WriteLoggerMiddleware { Writer = static (ref context) => context.Writer.Write(": "u8) },
-            ]
-        };
+            yield return new ConditionalGroupLoggerMiddleware
+            {
+                Condition = static context => !context.Entry.TryGetProperty(out PlainScope _),
+                Group =
+                [
+                    new WriteTimeLoggerMiddleware { Format = options.TimestampFormat ?? "" },
+                    new GroupLoggerMiddleware { Group = GetLogLevelMiddleware(options).ToArray() },
+                    new WriteLoggerMiddleware { Writer = static (ref context) => context.Writer.Write(" "u8) },
+                    new WriteCategoryLoggerMiddleware(),
+                    new WriteLoggerMiddleware { Writer = static (ref context) => context.Writer.Write(": "u8) },
+                ]
+            };
+        }
         if (options.UseRedaction)
         {
             yield return new WriteRedactedLogLoggerMiddleware { Redactors = options.Redactors };

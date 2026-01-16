@@ -16,6 +16,11 @@ internal sealed class NitroxFormatterOptions : ConsoleFormatterOptions
     /// </summary>
     public bool OmitWhenCaptured { get; set; }
 
+    /// <summary>
+    ///     If true, logs will be simplified to a basic message. No log level, category, time or other metadata.
+    /// </summary>
+    public bool IsPlain { get; set; }
+
     public IRedactor[] Redactors { get; set; } = [];
 
     public NitroxFormatterOptions()

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using MagicOnion;
 
@@ -9,7 +10,7 @@ namespace Nitrox.Model.MagicOnion;
 public interface IServersManagement : IStreamingHub<IServersManagement, IServerManagementReceiver>
 {
     ValueTask SetPlayerCount(int playerCount);
-    ValueTask AddOutputLine(string category, string time, int level, string message);
+    ValueTask AddOutputLine(string category, DateTimeOffset? localTime, int level, string message);
 }
 
 /// <summary>

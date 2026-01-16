@@ -19,8 +19,7 @@ internal static class ArrayBufferWriterPool
 
     public static ArrayBufferWriter<byte> Rent()
     {
-        ArrayBufferWriter<byte> result;
-        return cache.TryDequeue(out result) ? result : new ArrayBufferWriter<byte>(256);
+        return cache.TryDequeue(out ArrayBufferWriter<byte> result) ? result : new ArrayBufferWriter<byte>(256);
     }
 
     public static void Return(ArrayBufferWriter<byte> writer)
