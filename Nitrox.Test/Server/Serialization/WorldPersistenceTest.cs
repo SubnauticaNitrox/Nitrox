@@ -342,6 +342,9 @@ public class WorldPersistenceTest
             case GenericConsoleMetadata metadata when entityAfter.Metadata is GenericConsoleMetadata metadataAfter:
                 Assert.AreEqual(metadata.GotUsed, metadataAfter.GotUsed);
                 break;
+            case BlueprintHandTargetMetadata metadata when entityAfter.Metadata is BlueprintHandTargetMetadata metadataAfter:
+                Assert.AreEqual(metadata.Used, metadataAfter.Used);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
