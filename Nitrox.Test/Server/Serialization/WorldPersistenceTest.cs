@@ -342,6 +342,9 @@ public class WorldPersistenceTest
             case GenericConsoleMetadata metadata when entityAfter.Metadata is GenericConsoleMetadata metadataAfter:
                 Assert.AreEqual(metadata.GotUsed, metadataAfter.GotUsed);
                 break;
+            case PrecursorDisableGunTerminalMetadata metadata when entityAfter.Metadata is PrecursorDisableGunTerminalMetadata metadataAfter:
+                Assert.AreEqual(metadata.FirstUse, metadataAfter.FirstUse);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;

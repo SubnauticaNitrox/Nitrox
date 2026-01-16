@@ -189,6 +189,17 @@ namespace NitroxClient.GameLogic
                     UpdateEntity(entity);
                     continue;
                 }
+                // World entities can be streamed by the game before Nitrox spawns them.
+                // In this case, we just need to apply metadata and mark as spawned.
+                else if (entity is WorldEntity && NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject existingObject))
+                {
+                    Log.Debug($"[Entities] World entity already exists, applying metadata: {entity.Id} ({entity.GetType().Name})");
+                    entityMetadataManager.ApplyMetadata(existingObject, entity.Metadata);
+                    simulationOwnership.ApplyNewerSimulation(entity.Id);
+                    MarkAsSpawned(entity);
+                    batch.AddRange(entity.ChildEntities);
+                    continue;
+                }
                 else if (entity.ParentId != null && !IsParentReady(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
