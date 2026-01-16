@@ -374,9 +374,9 @@ public partial class ServerEntry : ObservableObject
 
     internal class ServerProcess : IDisposable
     {
-        private Process? serverProcess;
+        private ProcessEx? serverProcess;
         public int Id => serverProcess?.Id ?? -1;
-        public bool IsRunning => serverProcess != null;
+        public bool IsRunning => serverProcess is { IsRunning: true };
 
         private ServerProcess(string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = -1)
         {
@@ -413,11 +413,11 @@ public partial class ServerEntry : ObservableObject
                 }
                 Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
-                serverProcess = System.Diagnostics.Process.Start(startInfo);
+                serverProcess = ProcessEx.From(startInfo);
             }
             else
             {
-                serverProcess = System.Diagnostics.Process.GetProcessById(processId);
+                serverProcess = ProcessEx.From(System.Diagnostics.Process.GetProcessById(processId));
             }
         }
 
