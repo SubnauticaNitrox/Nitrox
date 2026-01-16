@@ -34,7 +34,7 @@ internal sealed class WriteConsoleColorLoggerMiddleware : ILoggerMiddleware
         }
     }
 
-    public required ColorSelect ColorSelector { get; set; } = (ref ILoggerMiddleware.Context _) => (null, null);
+    public required ColorSelect ColorSelector { get; set; } = (ref _) => (null, null);
 
     public void ExecuteLogMiddleware(ref ILoggerMiddleware.Context context, ILoggerMiddleware.NextCall next)
     {

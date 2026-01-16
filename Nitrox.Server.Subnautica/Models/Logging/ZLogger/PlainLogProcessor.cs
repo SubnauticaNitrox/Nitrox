@@ -10,7 +10,7 @@ internal sealed class PlainLogProcessor : IAsyncLogProcessor, IDisposable
 
     public IZLoggerFormatter Formatter { get; internal set; } = null!;
 
-    public void Post(IZLoggerEntry log)
+    public void Post(IZLoggerEntry entry)
     {
         if (isDisposed)
         {
@@ -23,16 +23,16 @@ internal sealed class PlainLogProcessor : IAsyncLogProcessor, IDisposable
         ArrayBufferWriter<byte> writer = ArrayBufferWriterPool.Rent();
         try
         {
-            Formatter.FormatLogEntry(writer, log);
+            Formatter.FormatLogEntry(writer, entry);
             if (writer.WrittenCount < 1)
             {
                 return;
             }
-            outputFunc(log, Encoding.UTF8.GetString(writer.WrittenSpan));
+            outputFunc(entry, Encoding.UTF8.GetString(writer.WrittenSpan));
         }
         finally
         {
-            log.Return();
+            entry.Return();
             ArrayBufferWriterPool.Return(writer);
         }
     }

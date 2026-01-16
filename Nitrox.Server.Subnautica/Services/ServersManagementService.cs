@@ -14,7 +14,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
-///     Connects to locally running app that might want to track this server. Nitrox.Launcher is expected.
+///     Connects to a locally running app that might want to track this server. Nitrox.Launcher is expected.
 /// </summary>
 internal sealed partial class ServersManagementService(PlayerManager playerManager, TextCommandProcessor commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
 {

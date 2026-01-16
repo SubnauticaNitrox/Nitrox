@@ -7,7 +7,7 @@ internal sealed class PasswordRedactor : IRedactor
     /// <summary>
     ///     Small passwords will be redacted as this many stars to obfuscate security weaknesses.
     /// </summary>
-    private const int PASSWORD_LENGTH_PADDING_THRESHOLD = 8;
+    private const int PASSWORD_PAD_LENGTH = 8;
 
     public string[] RedactableKeys { get; } = ["password"];
 
@@ -17,6 +17,6 @@ internal sealed class PasswordRedactor : IRedactor
         {
             return ReadOnlySpan<char>.Empty;
         }
-        return new string('*', int.Max(PASSWORD_LENGTH_PADDING_THRESHOLD, value.Length));
+        return new string('*', int.Max(PASSWORD_PAD_LENGTH, value.Length));
     }
 }

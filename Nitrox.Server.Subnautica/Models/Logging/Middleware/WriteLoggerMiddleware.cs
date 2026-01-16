@@ -6,7 +6,7 @@ internal sealed record WriteLoggerMiddleware : ILoggerMiddleware
 {
     public delegate void WriteCall(ref ILoggerMiddleware.Context context);
 
-    public required WriteCall Writer { get; init; } = (ref ILoggerMiddleware.Context _) => { };
+    public required WriteCall Writer { get; init; } = (ref _) => { };
 
     public void ExecuteLogMiddleware(ref ILoggerMiddleware.Context context, ILoggerMiddleware.NextCall next)
     {

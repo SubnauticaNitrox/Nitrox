@@ -24,11 +24,11 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
     {
         if (options.OmitWhenCaptured)
         {
-            yield return new BreakLoggerMiddleware { BreakCondition = static (ref ILoggerMiddleware.Context context) => context.Entry.TryGetProperty(out CaptureScope _) };
+            yield return new BreakLoggerMiddleware { BreakCondition = static (ref context) => context.Entry.TryGetProperty(out CaptureScope _) };
         }
         yield return new WriteLoggerMiddleware
         {
-            Writer = static (ref ILoggerMiddleware.Context context) =>
+            Writer = static (ref context) =>
             {
                 if (context.Entry.TryGetProperty(out PrefixScope scope))
                 {
@@ -43,9 +43,9 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
             [
                 new WriteTimeLoggerMiddleware { Format = options.TimestampFormat ?? "" },
                 new GroupLoggerMiddleware { Group = GetLogLevelMiddleware(options).ToArray() },
-                new WriteLoggerMiddleware { Writer = static (ref ILoggerMiddleware.Context context) => context.Writer.Write(" "u8) },
+                new WriteLoggerMiddleware { Writer = static (ref context) => context.Writer.Write(" "u8) },
                 new WriteCategoryLoggerMiddleware(),
-                new WriteLoggerMiddleware { Writer = static (ref ILoggerMiddleware.Context context) => context.Writer.Write(": "u8) },
+                new WriteLoggerMiddleware { Writer = static (ref context) => context.Writer.Write(": "u8) },
             ]
         };
         if (options.UseRedaction)
@@ -66,7 +66,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
         {
             yield return new WriteConsoleColorLoggerMiddleware
             {
-                ColorSelector = (ref ILoggerMiddleware.Context context) => context.Entry.LogInfo.LogLevel switch
+                ColorSelector = (ref context) => context.Entry.LogInfo.LogLevel switch
                 {
                     LogLevel.Trace => (ConsoleColor.Gray, ConsoleColor.Black),
                     LogLevel.Debug => (ConsoleColor.Gray, ConsoleColor.Black),
@@ -80,7 +80,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
         }
         yield return new WriteLoggerMiddleware
         {
-            Writer = (ref ILoggerMiddleware.Context context) => context.Writer.Write(context.Entry.LogInfo.LogLevel switch
+            Writer = (ref context) => context.Writer.Write(context.Entry.LogInfo.LogLevel switch
             {
                 LogLevel.Trace => "[trce]"u8,
                 LogLevel.Debug => "[dbug]"u8,
