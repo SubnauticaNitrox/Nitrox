@@ -187,7 +187,7 @@ public static class NitroxConfig
             }
 
             IEnumerable<MemberInfo> members = type.GetFields()
-                                                  .Where(f => f.Attributes != FieldAttributes.NotSerialized && !f.IsLiteral)
+                                                  .Where(f => !f.IsLiteral)
                                                   .Concat(type.GetProperties()
                                                               .Where(p => p.CanWrite)
                                                               .Cast<MemberInfo>());
@@ -201,7 +201,7 @@ public static class NitroxConfig
             }
             catch (ArgumentException e)
             {
-                logger?.LogError(e, $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
+                logger?.LogError(e, "Type {0} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.", type.FullName);
                 throw;
             }
         }

@@ -88,7 +88,7 @@ internal sealed class LiteNetLibServer : IHostedService
         server.Stop();
     }
 
-    protected void ClientDisconnected(INitroxConnection connection)
+    private void ClientDisconnected(INitroxConnection connection)
     {
         Player? player = playerManager.GetPlayer(connection);
         if (player == null)

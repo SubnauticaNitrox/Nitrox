@@ -133,6 +133,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, Text
                 message = message.Substring(0, newlineIndex);
             }
 
+            await Task.Delay(1000);
             await api.AddOutputLine(category, isPlain ? null : time, level, message);
         }
     }

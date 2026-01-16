@@ -106,7 +106,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         {
             server.Version = NitroxEnvironment.Version;
             bool preferEmbedded = keyValueStore.GetPreferEmbedded();
-            server.StartAsync(keyValueStore.GetSavesFolderDir(), preferEmbedded);
+            await server.StartAsync(keyValueStore.GetSavesFolderDir(), preferEmbedded);
             if (preferEmbedded)
             {
                 await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));
@@ -163,9 +163,9 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
                         continue;
                     }
                     ServerEntry entryFromDir = await Task.Run(() => ServerEntry.FromDirectoryAsync(saveDir), cancellationToken);
-                    if (entryFromDir != null)
+                    if (entryFromDir is { Name: {} name} )
                     {
-                        serversOnDisk.Add(entryFromDir.Name, (entryFromDir, true));
+                        serversOnDisk.Add(name, (entryFromDir, true));
                     }
                     loggedErrorDirectories.Remove(saveDir);
                 }
