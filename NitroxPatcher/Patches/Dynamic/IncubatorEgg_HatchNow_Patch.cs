@@ -26,7 +26,11 @@ public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicP
         Utils.PlayFMODAsset(__instance.hatchSound, __instance.transform, 30f);
 
         NitroxEntity serverKnownParent = __instance.GetComponentInParent<NitroxEntity>();
-        Validate.NotNull(serverKnownParent, "Could not find a server known parent for incubator egg");
+        if (!serverKnownParent)
+        {
+            Log.Error("Could not find a server known parent for incubator egg");
+            return false;
+        }
 
         bool isSimulating = Resolve<SimulationOwnership>().HasAnyLockType(serverKnownParent.Id);
 
