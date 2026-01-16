@@ -76,7 +76,7 @@ internal class LanBroadcastService(IOptionsMonitor<SubnauticaServerOptions> opti
             pollTimer.Period = TimeSpan.FromMilliseconds(ACTIVE_POLL_INTERVAL_MS);
             if (runAsUser && change)
             {
-                logger.ZLogInformation($"enabled");
+                logger.ZLogTrace($"enabled");
             }
             logger.ZLogDebug($"Broadcasting on port {selectedPort:@Port}");
         }
@@ -87,7 +87,7 @@ internal class LanBroadcastService(IOptionsMonitor<SubnauticaServerOptions> opti
             pollTimer.Period = TimeSpan.FromMilliseconds(INACTIVE_POLL_INTERVAL_MS);
             if (runAsUser && change)
             {
-                logger.ZLogInformation($"Disabled");
+                logger.ZLogTrace($"Disabled");
             }
         }
     }

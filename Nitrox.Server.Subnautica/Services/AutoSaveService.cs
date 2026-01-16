@@ -11,7 +11,7 @@ internal sealed class AutoSaveService(SaveService saveService, HibernateService 
 
     public Task StartedAsync(CancellationToken cancellationToken)
     {
-        logger.ZLogInformation($"{(options.Value.ShouldAutoSave() ? $"ENABLED ({TimeSpan.FromMilliseconds(options.Value.SaveInterval).TotalMinutes} min)" : "DISABLED")}");
+        logger.ZLogTrace($"{(options.Value.ShouldAutoSave() ? $"ENABLED ({TimeSpan.FromMilliseconds(options.Value.SaveInterval).TotalMinutes} min)" : "DISABLED")}");
         return Task.CompletedTask;
     }
 
