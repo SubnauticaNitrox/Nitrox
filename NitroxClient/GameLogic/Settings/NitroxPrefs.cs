@@ -10,7 +10,6 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> HideIp = new("Nitrox.hideIp");
         /// <summary>
         /// How long the chat window stays visible after receiving a message (in seconds).
-        /// 0 = chat is disabled (won't show when others chat).
         /// </summary>
         public static readonly NitroxPref<float> ChatVisibilityDuration = new("Nitrox.chatVisibilityDuration", 6f);
         /// <summary>
