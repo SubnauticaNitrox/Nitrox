@@ -71,7 +71,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             float duration = NitroxPrefs.ChatVisibilityDuration.Value;
             timeLeftUntilAutoClose = duration;
-            // Unfreeze time so the countdown can start (unless duration is 0, which means chat is disabled)
+            // Unfreeze time so the countdown can start
             FreezeTime = false;
         }
 

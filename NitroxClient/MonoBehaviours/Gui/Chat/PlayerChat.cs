@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.GameLogic.Settings;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,10 +52,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;
-            if (NitroxPrefs.ChatVisibilityDuration.Value <= 0f)
-            {
-                Log.InGame(Language.main.Get("Nitrox_SilencedChatNotif"));
-            }
         }
 
         public IEnumerator WriteLogEntry(string playerName, string message, Color color)
