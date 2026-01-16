@@ -20,8 +20,10 @@ public static class Ipc
         public static string StopMessage => "__SERVER_STOPPED__";
         public static string SaveNameMessage => "__SAVE_NAME__";
         public static string PlayerCountMessage => "__PLAYER_COUNT__";
+        public static string LoadingProgressMessage => "__LOADING_PROGRESS__";
+        public static string ServerStartedMessage => "__SERVER_STARTED__";
 
-        public static List<string> AllMessages { get; } = [StopMessage, SaveNameMessage, PlayerCountMessage];
+        public static List<string> AllMessages { get; } = [StopMessage, SaveNameMessage, PlayerCountMessage, LoadingProgressMessage, ServerStartedMessage];
     }
 
     public sealed class ServerIpc : IDisposable

@@ -42,6 +42,8 @@ public class Server
     public int Port => serverConfig?.ServerPort ?? -1;
 
     public event Action<int>? PlayerCountChanged;
+    public event Action<int>? LoadingProgressChanged;
+    public event Action? ServerStarted;
 
     public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Models.Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
     {
@@ -208,7 +210,7 @@ public class Server
                 Log.Info($"{entityRegistry.GetAllEntities().Count} entities already cached");
                 if (entityRegistry.GetAllEntities().Count < 504732)
                 {
-                    worldEntityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
+                    worldEntityManager.LoadAllUnspawnedEntities(serverCancelSource.Token, progress => LoadingProgressChanged?.Invoke(progress));
 
                     Log.Info("Saving newly cached entities.");
                     Save();
@@ -231,6 +233,7 @@ public class Server
         Log.Info($"Autobackup: {(serverConfig.DisableAutoBackup || serverConfig.MaxBackups == 0 ? "DISABLED" : "ENABLED")} (Max Backups: {serverConfig.MaxBackups})");
         Log.Info($"Loaded save\n{GetSaveSummary()}");
 
+        ServerStarted?.Invoke();
         PauseServer();
 
         return true;

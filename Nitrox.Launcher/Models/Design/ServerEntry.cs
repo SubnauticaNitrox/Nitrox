@@ -69,6 +69,15 @@ public partial class ServerEntry : ObservableObject
     private bool isServerClosing;
 
     [ObservableProperty]
+    private int loadingProgress;
+
+    [ObservableProperty]
+    private bool isLoading;
+
+    [ObservableProperty]
+    private bool isStarting;
+
+    [ObservableProperty]
     private DateTime lastAccessedTime = DateTime.Now;
 
     [ObservableProperty]
@@ -237,9 +246,17 @@ public partial class ServerEntry : ObservableObject
         if (Process != null)
         {
             Process.PlayerCountChanged += count => Dispatcher.UIThread.Post(() => Players = count);
+            Process.LoadingProgressChanged += progress => Dispatcher.UIThread.Post(() =>
+            {
+                LoadingProgress = progress;
+                IsLoading = progress > 0 && progress < 100;
+                IsStarting = false;
+            });
+            Process.ServerStartedEvent += () => Dispatcher.UIThread.Post(() => IsStarting = false);
         }
 
         IsNewServer = false;
+        IsStarting = true;
         IsOnline = true;
     }
 
@@ -256,6 +273,9 @@ public partial class ServerEntry : ObservableObject
 
         IsOnline = false;
         IsServerClosing = false;
+        IsStarting = false;
+        IsLoading = false;
+        LoadingProgress = 0;
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
@@ -355,8 +375,23 @@ public partial class ServerEntry : ObservableObject
                             return;
                         }
 
+                        if (output.StartsWith($"{Ipc.Messages.LoadingProgressMessage}:", StringComparison.Ordinal))
+                        {
+                            if (int.TryParse(output[$"{Ipc.Messages.LoadingProgressMessage}:".Length..].Trim('[', ']'), out int progress))
+                            {
+                                LoadingProgressChanged?.Invoke(progress);
+                            }
+                            return;
+                        }
+
+                        if (output == Ipc.Messages.ServerStartedMessage)
+                        {
+                            ServerStartedEvent?.Invoke();
+                            return;
+                        }
+
                         // Ignore any messages that are part of the IPC message protocol
-                        if (Ipc.Messages.AllMessages.Any(msg => output.StartsWith($"{msg}:", StringComparison.Ordinal)))
+                        if (Ipc.Messages.AllMessages.Any(msg => output.StartsWith($"{msg}:", StringComparison.Ordinal) || output == msg))
                         {
                             return;
                         }
@@ -405,6 +440,8 @@ public partial class ServerEntry : ObservableObject
 
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded, int processId) => new(saveDir, onExited, isEmbedded, processId);
         public event Action<int>? PlayerCountChanged;
+        public event Action<int>? LoadingProgressChanged;
+        public event Action? ServerStartedEvent;
 
         /// <summary>
         ///     Tries to close the server gracefully with a timeout of 7 seconds. If it fails, returns false.
