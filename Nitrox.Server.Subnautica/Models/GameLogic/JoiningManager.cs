@@ -185,7 +185,8 @@ public sealed class JoiningManager
             serverConfig.KeepInventoryOnDeath,
             sessionSettings,
             player.InPrecursor,
-            player.DisplaySurfaceWater
+            player.DisplaySurfaceWater,
+            serverConfig.MarkDeathPointsWithBeacon
         );
 
         player.SendPacket(initialPlayerSync);

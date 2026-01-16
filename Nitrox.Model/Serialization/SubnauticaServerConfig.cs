@@ -30,6 +30,9 @@ namespace Nitrox.Model.Serialization
         [PropertyDescription("Prevents players from losing items on death")]
         public bool KeepInventoryOnDeath { get; set; } = false;
 
+        [PropertyDescription("Places a beacon where players die")]
+        public bool MarkDeathPointsWithBeacon { get; set; } = true;
+
         [PropertyDescription("Measured in milliseconds")]
         public int SaveInterval
         {
