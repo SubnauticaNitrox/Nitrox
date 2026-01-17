@@ -10,10 +10,9 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// Handles the Sea Emperor baby hatching sequence in multiplayer.
-/// The simulating player spawns the babies and broadcasts them to other players.
-/// The simulating player also runs the full animation sequence which triggers SwimToMother().
-/// Non-simulating players just see the egg animation - their babies are spawned via server
-/// broadcast and will swim to mother via SeaEmperorBaby_Start_Patch.
+/// All players see the full hatching animation for better visual consistency.
+/// The simulating player spawns the real networked baby that will call SwimToMother().
+/// Non-simulating players create temporary babies just for the animation sequence.
 /// </summary>
 public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicPatch
 {
@@ -34,15 +33,15 @@ public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicP
 
         bool isSimulating = Resolve<SimulationOwnership>().HasAnyLockType(serverKnownParent.Id);
 
+        // Create baby GameObject for animation (networked for simulating player, temporary for others)
+        GameObject baby = Object.Instantiate(__instance.seaEmperorBabyPrefab);
+        baby.transform.SetParent(__instance.attachPoint);
+        baby.transform.localPosition = Vector3.zero;
+        baby.transform.localRotation = Quaternion.identity;
+
         if (isSimulating)
         {
-            // Simulating player: spawn baby locally and run full animation sequence
-            GameObject baby = Object.Instantiate(__instance.seaEmperorBabyPrefab);
-            baby.transform.SetParent(__instance.attachPoint);
-            baby.transform.localPosition = Vector3.zero;
-            baby.transform.localRotation = Quaternion.identity;
-
-            // Broadcast the baby entity to other players
+            // Simulating player: make this baby networked and broadcast it
             NitroxId babyId = NitroxEntity.GenerateNewId(baby);
             WorldEntity entity = new(
                 baby.transform.position.ToDto(),
@@ -55,20 +54,17 @@ public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicP
                 babyId,
                 null);
             Resolve<Entities>().BroadcastEntitySpawnedByClient(entity);
-
-            // Set up the baby reference and start the full animation sequence
-            // The animation callback OnHatchAnimationEnd() will call baby.SwimToMother()
-            __instance.babyGO = baby;
-            __instance.animationController.StartHatchAnimation(__instance.babyIdentifier, __instance.animParameter, baby);
-            __instance.Invoke("PlayFxOnBaby", 2f);
         }
         else
         {
-            // Non-simulating player: just play the egg animation
-            // The baby will be spawned by server broadcast and SeaEmperorBaby_Start_Patch
-            // will make it swim to mother
-            SafeAnimator.SetBool(__instance.animationController.eggAnimator, __instance.animParameter, true);
+            // Non-simulating player: mark baby as temporary (will be cleaned up after animation)
+            baby.name += "_NitroxTemporary";
         }
+
+        // All players run the full animation sequence
+        __instance.babyGO = baby;
+        __instance.animationController.StartHatchAnimation(__instance.babyIdentifier, __instance.animParameter, baby);
+        __instance.Invoke("PlayFxOnBaby", 2f);
 
         return false;
     }

@@ -12,6 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// 1. SeaEmperor.main exists (we're in the prison aquarium)
 /// 2. The baby has no parent (not attached to an egg - means it's a remote spawn)
 /// 3. The baby doesn't already have a swim target (not already swimming)
+/// 4. The baby is not a temporary animation baby
 /// </summary>
 public sealed partial class SeaEmperorBaby_Start_Patch : NitroxPatch, IDynamicPatch
 {
@@ -21,6 +22,12 @@ public sealed partial class SeaEmperorBaby_Start_Patch : NitroxPatch, IDynamicPa
     {
         // Only trigger swim to mother for remotely spawned babies
         if (!SeaEmperor.main)
+        {
+            return;
+        }
+
+        // Skip temporary babies created for animation
+        if (__instance.name.Contains("_NitroxTemporary"))
         {
             return;
         }
