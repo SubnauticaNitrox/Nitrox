@@ -5,8 +5,6 @@ using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -138,11 +136,6 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
 
     private static void SetUsedItems(List<NitroxTechType> usedItems)
     {
-        if (usedItems == null)
-        {
-            return;
-        }
-
         foreach (NitroxTechType usedItem in usedItems)
         {
             Player.main.usedTools.Add(usedItem.ToUnity());
@@ -150,7 +143,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         Log.Info($"Received initial sync packet with {usedItems.Count} used items");
     }
 
-    private static void SetPlayerGameMode(NitroxGameMode gameMode)
+    private static void SetPlayerGameMode(SubnauticaGameMode gameMode)
     {
         Log.Info($"Received initial sync packet with gamemode {gameMode}");
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);

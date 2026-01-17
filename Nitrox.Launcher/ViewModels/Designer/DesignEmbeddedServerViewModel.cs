@@ -13,7 +13,7 @@ internal class DesignEmbeddedServerViewModel : EmbeddedServerViewModel
             {
                 Type = OutputLineType.INFO_LOG,
                 LogText = "Server output line 1",
-                Timestamp = DateTime.Now.ToString("hh:mm:ss.fff")
+                LocalTime = DateTimeOffset.Now
             }
         ]);
         ServerCommand = "quit";

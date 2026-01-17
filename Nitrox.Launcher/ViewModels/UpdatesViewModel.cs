@@ -14,6 +14,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -158,7 +159,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
             scriptContent = $"""
                              #!/bin/bash
                              echo "Waiting for Nitrox Launcher to close..."
-                             while pgrep -x "Nitrox.Launcher" > /dev/null; do
+                             while pgrep -x "{NitroxConstants.LAUNCHER_APP_NAME}" > /dev/null; do
                                  sleep 1
                              done
                              echo "Cleaning old installation..."

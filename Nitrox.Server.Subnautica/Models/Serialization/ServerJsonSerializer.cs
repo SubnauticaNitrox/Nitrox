@@ -12,13 +12,13 @@ public class ServerJsonSerializer : IServerSerializer
 
     private readonly JsonSerializer serializer;
 
-    public ServerJsonSerializer()
+    public ServerJsonSerializer(ILogger<ServerJsonSerializer> logger)
     {
         serializer = new JsonSerializer();
 
         serializer.Error += delegate (object _, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            Log.Error(e.ErrorContext.Error, "Json serialization error: ");
+            logger.ZLogError($"serialization error: {e.ErrorContext.Error}");
         };
 
         serializer.TypeNameHandling = TypeNameHandling.Auto;

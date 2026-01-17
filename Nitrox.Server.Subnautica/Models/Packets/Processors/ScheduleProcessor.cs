@@ -4,20 +4,20 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class ScheduleProcessor : AuthenticatedPacketProcessor<Schedule>
+    internal sealed class ScheduleProcessor : AuthenticatedPacketProcessor<Schedule>
     {
         private readonly PlayerManager playerManager;
-        private readonly ScheduleKeeper scheduleKeeper;
+        private readonly StoryScheduler storyScheduler;
 
-        public ScheduleProcessor(PlayerManager playerManager, ScheduleKeeper scheduleKeeper)
+        public ScheduleProcessor(PlayerManager playerManager, StoryScheduler storyScheduler)
         {
             this.playerManager = playerManager;
-            this.scheduleKeeper = scheduleKeeper;
+            this.storyScheduler = storyScheduler;
         }
 
         public override void Process(Schedule packet, Player player)
         {
-            scheduleKeeper.ScheduleGoal(NitroxScheduledGoal.From(packet.TimeExecute, packet.Key, packet.Type));
+            storyScheduler.ScheduleStory(NitroxScheduledGoal.From(packet.TimeExecute, packet.Key, packet.Type));
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

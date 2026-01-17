@@ -77,34 +77,38 @@ public static class NetHelper
 
         IPAddress ip = await NatHelper.GetExternalIpAsync();
 #if RELEASE
-            if (ip == null || ip.IsPrivate())
+        if (ip == null || ip.IsPrivate())
+        {
+            Regex regex = new(@"(?:[0-2]??[0-9]{1,2}\.){3}[0-2]??[0-9]+");
+            string[] sites =
             {
-                Regex regex = new(@"(?:[0-2]??[0-9]{1,2}\.){3}[0-2]??[0-9]+");
-                string[] sites =
+                "https://ipv4.icanhazip.com/",
+                "https://checkip.amazonaws.com/",
+                "https://api.ipify.org/",
+                "https://api4.my-ip.io/ip",
+                "https://ifconfig.me/",
+                "https://showmyip.com/",
+            };
+            using HttpClient client = new();
+            foreach (string site in sites)
+            {
+                try
                 {
-                    "https://ipv4.icanhazip.com/",
-                    "https://checkip.amazonaws.com/",
-                    "https://api.ipify.org/",
-                    "https://api4.my-ip.io/ip",
-                    "https://ifconfig.me/",
-                    "https://showmyip.com/",
-                };
-                using HttpClient client = new();
-                foreach (string site in sites)
+                    using HttpResponseMessage response = await client.GetAsync(site);
+                    string content = await response.Content.ReadAsStringAsync();
+                    ip = IPAddress.Parse(regex.Match(content).Value);
+                    if (ip.IsPrivate())
+                    {
+                        continue;
+                    }
+                    break;
+                }
+                catch
                 {
-                    try
-                    {
-                        using HttpResponseMessage response = await client.GetAsync(site);
-                        string content = await response.Content.ReadAsStringAsync();
-                        ip = IPAddress.Parse(regex.Match(content).Value);
-                        break;
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
+                    // ignore
                 }
             }
+        }
 #endif
 
         lock (wanIpLock)

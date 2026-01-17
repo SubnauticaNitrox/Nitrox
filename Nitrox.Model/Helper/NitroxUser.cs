@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
@@ -28,7 +29,7 @@ public static class NitroxUser
         () =>
         {
             Assembly currentAsm = Assembly.GetEntryAssembly();
-            if (currentAsm?.GetName().Name?.Equals("Nitrox.Launcher") ?? false)
+            if (currentAsm?.GetName().Name?.Equals(NitroxConstants.LAUNCHER_APP_NAME) ?? false)
             {
                 return Path.GetDirectoryName(currentAsm.Location);
             }
@@ -53,7 +54,7 @@ public static class NitroxUser
         },
         () =>
         {
-            using ProcessEx proc = ProcessEx.GetFirstProcess("Nitrox.Launcher");
+            using ProcessEx proc = ProcessEx.GetFirstProcess(NitroxConstants.LAUNCHER_APP_NAME);
             string executable = proc?.MainModule.FileName;
             return !string.IsNullOrWhiteSpace(executable) ? Path.GetDirectoryName(executable) : null;
         }

@@ -1,18 +1,17 @@
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    public class KnownTechEntryAddProcessor : AuthenticatedPacketProcessor<KnownTechEntryAdd>
+    internal sealed class KnownTechEntryAddProcessor : AuthenticatedPacketProcessor<KnownTechEntryAdd>
     {
         private readonly PlayerManager playerManager;
-        private readonly PDAStateData pdaStateData;
+        private readonly PdaManager pdaManager;
 
-        public KnownTechEntryAddProcessor(PlayerManager playerManager, PDAStateData pdaStateData)
+        public KnownTechEntryAddProcessor(PlayerManager playerManager, PdaManager pdaManager)
         {
             this.playerManager = playerManager;
-            this.pdaStateData = pdaStateData;
+            this.pdaManager = pdaManager;
         }
 
         public override void Process(KnownTechEntryAdd packet, Player player)
@@ -20,10 +19,10 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors
             switch (packet.Category)
             {
                 case KnownTechEntryAdd.EntryCategory.KNOWN:
-                    pdaStateData.AddKnownTechType(packet.TechType, packet.PartialTechTypesToRemove);
+                    pdaManager.AddKnownTechType(packet.TechType, packet.PartialTechTypesToRemove);
                     break;
                 case KnownTechEntryAdd.EntryCategory.ANALYZED:
-                    pdaStateData.AddAnalyzedTechType(packet.TechType);
+                    pdaManager.AddAnalyzedTechType(packet.TechType);
                     break;
             }
 

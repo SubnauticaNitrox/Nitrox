@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -141,7 +142,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void ClearSessionState()
         {
             IpAddress = null;
-            ServerPort = ServerList.DEFAULT_PORT;
+            ServerPort = SubnauticaServerConstants.DEFAULT_PORT;
             SessionPolicy = null;
             PlayerSettings = null;
             AuthenticationContext = null;

@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class AttackCyclopsTargetChangedProcessor(
+internal sealed class AttackCyclopsTargetChangedProcessor(
     PlayerManager playerManager,
     EntityRegistry entityRegistry
 ) : TransmitIfCanSeePacketProcessor<AttackCyclopsTargetChanged>(playerManager, entityRegistry)

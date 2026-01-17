@@ -12,10 +12,15 @@ namespace Nitrox.Model.Core;
 public static class NitroxEnvironment
 {
     private static bool hasSet;
+    private static Assembly? executingAssembly;
+
     private static string[]? commandLineArgs;
 
+    private static string? appName;
+
+    private static Assembly ExecutingAssembly => executingAssembly ??= Assembly.GetExecutingAssembly();
     public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
-    public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
+    public static Version Version => ExecutingAssembly.GetName().Version ?? new Version(1, 0);
 
     public static string VersionInfo
     {
@@ -33,7 +38,7 @@ public static class NitroxEnvironment
     {
         get
         {
-            string buildDateText = Assembly.GetExecutingAssembly().GetMetaData("BuildDate");
+            string buildDateText = ExecutingAssembly.GetMetaData("BuildDate");
             return DateTimeOffset.TryParse(buildDateText, out DateTimeOffset result) ? result : default;
         }
     }
@@ -42,7 +47,7 @@ public static class NitroxEnvironment
     {
         get
         {
-            if (Assembly.GetExecutingAssembly().GetMetaData("GitShortHash") is { Length: > 0 } shortHash)
+            if (ExecutingAssembly.GetMetaData("GitShortHash") is { Length: > 0 } shortHash)
             {
                 return shortHash;
             }
@@ -60,7 +65,7 @@ public static class NitroxEnvironment
     {
         get
         {
-            if (!int.TryParse(Assembly.GetExecutingAssembly().GetMetaData(nameof(GameMinimumVersion)), out int result))
+            if (!int.TryParse(ExecutingAssembly.GetMetaData(nameof(GameMinimumVersion)), out int result))
             {
                 throw new Exception("Failed to extract compatible game version number from embedded metadata");
             }
@@ -68,7 +73,7 @@ public static class NitroxEnvironment
         }
     }
 
-    public static string GitHash => Assembly.GetExecutingAssembly().GetMetaData("GitHash") ?? "";
+    public static string GitHash => ExecutingAssembly.GetMetaData("GitHash") ?? "";
 
     public static Types Type { get; private set; } = Types.NORMAL;
     public static bool IsTesting => Type == Types.TESTING;
@@ -137,7 +142,27 @@ public static class NitroxEnvironment
         }
     }
 
-    public static string AppName => (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name).Replace(".", " ");
+    public static string AppName => appName ??= (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name)?.Replace(".", " ") ?? "Nitrox Program";
+
+    public static string DotnetEnvironment
+    {
+        get
+        {
+            string? env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+            if (env is null)
+            {
+                const string COMPILE_ENV =
+#if DEBUG
+                        "Development"
+#else
+                        "Production"
+#endif
+                    ;
+                Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", env = COMPILE_ENV);
+            }
+            return env;
+        }
+    }
 
     public static void Set(Types value)
     {

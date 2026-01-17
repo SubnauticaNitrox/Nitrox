@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class SeaDragonSwatAttackProcessor(
+internal sealed class SeaDragonSwatAttackProcessor(
     PlayerManager playerManager,
     EntityRegistry entityRegistry
 ) : TransmitIfCanSeePacketProcessor<SeaDragonSwatAttack>(playerManager, entityRegistry)

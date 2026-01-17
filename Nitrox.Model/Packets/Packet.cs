@@ -14,8 +14,18 @@ namespace Nitrox.Model.Packets
     public abstract class Packet
     {
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
-        private static readonly StringBuilder toStringBuilder = new();
+        private static readonly object cachedPropertiesByTypeLocker = new();
+
+        [ThreadStatic]
+        private static StringBuilder? toStringBuilder;
+
         private static readonly object lockObject = new();
+
+        [IgnoredMember]
+        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
+
+        [IgnoredMember]
+        public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public static void InitSerializer()
         {
@@ -68,18 +78,6 @@ namespace Nitrox.Model.Packets
             }
         }
 
-        [IgnoredMember]
-        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
-
-        [IgnoredMember]
-        public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
-        
-        public enum UdpChannelId : byte
-        {
-            DEFAULT = 0,
-            MOVEMENTS = 1,
-        }
-
         public byte[] Serialize()
         {
             return BinaryConverter.Serialize(new Wrapper(this));
@@ -94,13 +92,18 @@ namespace Nitrox.Model.Packets
         {
             Type packetType = GetType();
 
-            if (!cachedPropertiesByType.TryGetValue(packetType, out PropertyInfo[] properties))
+            PropertyInfo[] properties;
+            lock (cachedPropertiesByTypeLocker)
             {
-                properties = packetType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                       .Where(x => x.Name is not nameof(DeliveryMethod) and not nameof(UdpChannel)).ToArray();
-                cachedPropertiesByType.Add(packetType, properties);
+                if (!cachedPropertiesByType.TryGetValue(packetType, out properties))
+                {
+                    properties = packetType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                           .Where(x => x.Name is not nameof(DeliveryMethod) and not nameof(UdpChannel)).ToArray();
+                    cachedPropertiesByType.Add(packetType, properties);
+                }
             }
 
+            toStringBuilder ??= new();
             toStringBuilder.Clear();
             toStringBuilder.Append($"[{packetType.Name}: ");
             foreach (PropertyInfo property in properties)
@@ -126,8 +129,8 @@ namespace Nitrox.Model.Packets
         ///     Wrapper which is used to serialize packets in BinaryPack.
         ///     We cannot serialize Packets directly because
         ///     <p>
-        ///     1) We will not know what type to deserialize to and
-        ///     2) The root object must have a callable constructor so it can't be abstract
+        ///         1) We will not know what type to deserialize to and
+        ///         2) The root object must have a callable constructor so it can't be abstract
         ///     </p>
         ///     This type solves both problems and only adds a single byte to the data.
         /// </summary>
@@ -139,6 +142,12 @@ namespace Nitrox.Model.Packets
             {
                 Packet = packet;
             }
+        }
+
+        public enum UdpChannelId : byte
+        {
+            DEFAULT = 0,
+            MOVEMENTS = 1,
         }
     }
 }

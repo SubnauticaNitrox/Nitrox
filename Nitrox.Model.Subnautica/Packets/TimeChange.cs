@@ -7,21 +7,24 @@ namespace Nitrox.Model.Subnautica.Packets;
 public class TimeChange : Packet
 {
     /// <summary>
-    /// Time in seconds
+    ///     Game time which is the <see cref="RealTimeElapsed" /> with the default game start offset.
     /// </summary>
     public double CurrentTime { get; }
+
     /// <summary>
-    /// Real time at which the CurrentTime was observed
+    ///     Real time at which the CurrentTime was observed
     /// </summary>
     public long UpdateTime { get; }
+
     /// <summary>
-    /// Real time elapsed in seconds
+    ///     Total active time in seconds that the server has been simulating the game.
     /// </summary>
     public double RealTimeElapsed { get; }
 
     public bool OnlineMode { get; }
+
     /// <summary>
-    /// UTC offset correction with global NTP servers
+    ///     UTC offset correction with global NTP servers
     /// </summary>
     public long UtcCorrectionTicks { get; }
 

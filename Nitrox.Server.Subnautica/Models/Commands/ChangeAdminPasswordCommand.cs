@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
+﻿using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
 
@@ -8,26 +6,22 @@ namespace Nitrox.Server.Subnautica.Models.Commands
 {
     internal class ChangeAdminPasswordCommand : Command
     {
-        private readonly Server server;
-        private readonly SubnauticaServerConfig serverConfig;
+        private readonly IOptions<SubnauticaServerOptions> options;
+        private readonly ILogger<ChangeAdminPasswordCommand> logger;
 
-        public ChangeAdminPasswordCommand(Server server, SubnauticaServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
+        public ChangeAdminPasswordCommand(IOptions<SubnauticaServerOptions> options, ILogger<ChangeAdminPasswordCommand> logger) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             AddParameter(new TypeString("password", true, "The new admin password"));
 
-            this.server = server;
-            this.serverConfig = serverConfig;
+            this.options = options;
+            this.logger = logger;
         }
 
         protected override void Execute(CallArgs args)
         {
-            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name);
-            using (serverConfig.Update(saveDir))
-            {
-                string newPassword = args.Get(0);
-                serverConfig.AdminPassword = newPassword;
-                Log.InfoSensitive("Admin password changed to {password} by {playername}", newPassword, args.SenderName);
-            }
+            string newPassword = args.Get(0);
+            options.Value.AdminPassword = newPassword;
+            logger.ZLogInformation($"Admin password changed to {newPassword:@password} by {args.SenderName:@playername}");
 
             SendMessageToPlayer(args.Sender, "Admin password has been updated");
         }

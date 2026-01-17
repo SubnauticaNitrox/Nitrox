@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class RangedAttackLastTargetUpdateProcessor(
+sealed class RangedAttackLastTargetUpdateProcessor(
     PlayerManager playerManager,
     EntityRegistry entityRegistry
 ) : TransmitIfCanSeePacketProcessor<RangedAttackLastTargetUpdate>(playerManager, entityRegistry)

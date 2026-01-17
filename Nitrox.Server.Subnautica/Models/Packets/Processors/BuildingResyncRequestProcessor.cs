@@ -7,7 +7,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class BuildingResyncRequestProcessor : AuthenticatedPacketProcessor<BuildingResyncRequest>
+sealed class BuildingResyncRequestProcessor : AuthenticatedPacketProcessor<BuildingResyncRequest>
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;

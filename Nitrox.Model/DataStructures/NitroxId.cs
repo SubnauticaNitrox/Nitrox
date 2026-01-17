@@ -41,7 +41,7 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
         guid = new Guid(bytes);
     }
 
-    protected NitroxId(SerializationInfo info, StreamingContext context)
+    private NitroxId(SerializationInfo info, StreamingContext context)
     {
         byte[] bytes = (byte[])info.GetValue("id", typeof(byte[]));
         guid = new Guid(bytes);

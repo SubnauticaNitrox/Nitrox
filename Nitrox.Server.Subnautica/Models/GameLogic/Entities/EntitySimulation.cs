@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
@@ -7,23 +6,23 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-public class EntitySimulation
+sealed class EntitySimulation
 {
     private const SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
 
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
     private readonly PlayerManager playerManager;
-    private readonly ISimulationWhitelist simulationWhitelist;
+    private readonly ILogger<EntitySimulation> logger;
     private readonly SimulationOwnershipData simulationOwnershipData;
 
-    public EntitySimulation(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, ISimulationWhitelist simulationWhitelist)
+    public EntitySimulation(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, ILogger<EntitySimulation> logger)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
         this.simulationOwnershipData = simulationOwnershipData;
         this.playerManager = playerManager;
-        this.simulationWhitelist = simulationWhitelist;
+        this.logger = logger;
     }
 
     public List<SimulatedEntity> GetSimulationChangesForCell(Player player, AbsoluteEntityCell cell)
@@ -123,7 +122,7 @@ public class EntitySimulation
             {
                 bool doesEntityMove = entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
 
-                Log.Verbose($"Player {player.Name} has taken over simulating {id}");
+                logger.ZLogTrace($"Player {player.Name} has taken over simulating {id}");
                 simulatedEntity = new(id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
                 return true;
             }
@@ -143,12 +142,12 @@ public class EntitySimulation
 
     public bool ShouldSimulateEntity(WorldEntity entity)
     {
-        return simulationWhitelist.UtilityWhitelist.Contains(entity.TechType) || ShouldSimulateEntityMovement(entity);
+        return SimulationWhitelist.UtilityWhitelist.Contains(entity.TechType) || ShouldSimulateEntityMovement(entity);
     }
 
     public bool ShouldSimulateEntityMovement(WorldEntity entity)
     {
-        return !entity.SpawnedByServer || simulationWhitelist.MovementWhitelist.Contains(entity.TechType);    
+        return !entity.SpawnedByServer || SimulationWhitelist.MovementWhitelist.Contains(entity.TechType);
     }
 
     public bool ShouldSimulateEntityMovement(NitroxId entityId)

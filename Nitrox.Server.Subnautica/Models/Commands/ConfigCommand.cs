@@ -1,10 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
+﻿using System.Diagnostics;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Platforms.OS.Shared;
-using Nitrox.Model.Serialization;
 using Nitrox.Server.Subnautica.Models.Commands.Abstract;
 
 namespace Nitrox.Server.Subnautica.Models.Commands
@@ -12,43 +8,34 @@ namespace Nitrox.Server.Subnautica.Models.Commands
     internal class ConfigCommand : Command
     {
         private readonly SemaphoreSlim configOpenLock = new(1);
-        private readonly Server server;
-        private readonly SubnauticaServerConfig serverConfig;
+        private readonly IOptions<ServerStartOptions> options;
+        private readonly ILogger<ConfigCommand> logger;
 
-        public ConfigCommand(Server server, SubnauticaServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
+        public ConfigCommand(IOptions<ServerStartOptions> options, ILogger<ConfigCommand> logger) : base("config", Perms.HOST, "Opens the server configuration file")
         {
-            this.server = server;
-            this.serverConfig = serverConfig;
+            this.options = options;
+            this.logger = logger;
         }
 
         protected override void Execute(CallArgs args)
         {
             if (!configOpenLock.Wait(0))
             {
-                Log.Warn("Waiting on previous config command to close the configuration file.");
+                logger.ZLogWarning($"Waiting on previous config command to close the configuration file.");
                 return;
-            }
-
-            // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name);
-            string configFile = Path.Combine(saveDir, serverConfig.FileName);
-            if (!File.Exists(configFile))
-            {
-                serverConfig.Serialize(saveDir);
             }
 
             Task.Run(async () =>
                 {
                     try
                     {
-                        await StartWithDefaultProgramAsync(configFile);
+                        await StartWithDefaultProgramAsync(options.Value.GetServerConfigFilePath());
                     }
                     finally
                     {
                         configOpenLock.Release();
                     }
-                    serverConfig.Deserialize(saveDir); // Notifies user if deserialization failed.
-                    Log.Info("If you made changes, restart the server for them to take effect.");
+                    logger.ZLogInformation($"If you made changes, restart the server for them to take effect.");
                 })
                 .ContinueWith(t =>
                 {

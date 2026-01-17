@@ -1,6 +1,4 @@
 #if DEBUG
-using System;
-using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -14,11 +12,15 @@ namespace Nitrox.Server.Subnautica.Models.Commands;
 
 internal class QueryCommand : Command
 {
-    private readonly Lazy<EntityRegistry> entityRegistry = new(NitroxServiceLocator.LocateService<EntityRegistry>);
-    private readonly Lazy<SimulationOwnershipData> simulationOwnershipData = new(NitroxServiceLocator.LocateService<SimulationOwnershipData>);
+    private readonly EntityRegistry entityRegistry;
+    private readonly SimulationOwnershipData simulationOwnershipData;
+    private readonly ILogger<QueryCommand> logger;
 
-    public QueryCommand() : base("query", Perms.CONSOLE, "Query the entity associated with the given NitroxId")
+    public QueryCommand(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<QueryCommand> logger) : base("query", Perms.HOST, "Query the entity associated with the given NitroxId")
     {
+        this.entityRegistry = entityRegistry;
+        this.simulationOwnershipData = simulationOwnershipData;
+        this.logger = logger;
         AddParameter(new TypeNitroxId("entityId", true, "NitroxId of the queried entity"));
     }
 
@@ -26,25 +28,25 @@ internal class QueryCommand : Command
     {
         NitroxId nitroxId = args.Get<NitroxId>(0);
 
-        if (entityRegistry.Value.TryGetEntityById(nitroxId, out Entity entity))
+        if (entityRegistry.TryGetEntityById(nitroxId, out Entity entity))
         {
-            Log.Info(entity);
+            logger.ZLogInformation($"{entity}");
             if (entity is WorldEntity worldEntity && worldEntity.Transform != null && worldEntity is not GlobalRootEntity)
             {
-                Log.Info(worldEntity.AbsoluteEntityCell);
+                logger.ZLogInformation($"{worldEntity.AbsoluteEntityCell}");
             }
-            if (simulationOwnershipData.Value.TryGetLock(nitroxId, out SimulationOwnershipData.PlayerLock playerLock))
+            if (simulationOwnershipData.TryGetLock(nitroxId, out SimulationOwnershipData.PlayerLock playerLock))
             {
-                Log.Info($"Lock owner: {playerLock.Player.Name}");
+                logger.ZLogInformation($"Lock owner: {playerLock.Player.Name}");
             }
             else
             {
-                Log.Info("Not locked");
+                logger.ZLogInformation($"Not locked");
             }
         }
         else
         {
-            Log.Error($"Entity with id {nitroxId} not found");
+            logger.ZLogError($"Entity with id {nitroxId} not found");
         }
     }
 }

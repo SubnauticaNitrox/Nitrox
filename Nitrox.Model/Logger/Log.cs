@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using LiteNetLib;
+using Microsoft.Extensions.Logging;
 using Nitrox.Model.Helper;
 using Serilog;
 using Serilog.Configuration;
@@ -20,8 +21,8 @@ namespace Nitrox.Model.Logger
 {
     public static class Log
     {
-        private static ILogger logger = Serilog.Core.Logger.None;
-        private static ILogger inGameLogger = Serilog.Core.Logger.None;
+        private static Serilog.ILogger logger = Serilog.Core.Logger.None;
+        private static Serilog.ILogger inGameLogger = Serilog.Core.Logger.None;
         private static readonly HashSet<int> logOnceCache = new();
         private static bool isSetup;
         private static string logFileName;
@@ -429,6 +430,11 @@ namespace Nitrox.Model.Logger
                 return sw.ToString();
             }
         }
+
+        public static ILogger<T> CreateLogger<T>()
+        {
+            return new NitroxMsLogger<T>(logger);
+        }
     }
 
     public enum LogLevel
@@ -438,5 +444,54 @@ namespace Nitrox.Model.Logger
         Information = 2,
         Warning = 3,
         Error = 4
+    }
+
+    internal class NitroxMsLogger<T>(Serilog.ILogger innerLogger) : ILogger<T>
+    {
+        private readonly Serilog.ILogger innerLogger = innerLogger;
+        public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            switch (logLevel)
+            {
+                case Microsoft.Extensions.Logging.LogLevel.Information:
+                    innerLogger.Information(formatter(state, exception));
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Debug:
+                    innerLogger.Debug(formatter(state, exception));
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Warning:
+                    innerLogger.Warning(formatter(state, exception));
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Error:
+                    innerLogger.Error(formatter(state, exception));
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Trace:
+                    innerLogger.Verbose(formatter(state, exception));
+                    break;
+                case Microsoft.Extensions.Logging.LogLevel.Critical:
+                    innerLogger.Fatal(formatter(state, exception));
+                    break;
+                default:
+                    throw new NotImplementedException($"Log level '{logLevel}' is not implemented");
+            }
+        }
+
+        public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel) => innerLogger.IsEnabled(MsLevelToSerilogLevel(logLevel));
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        private LogEventLevel MsLevelToSerilogLevel(Microsoft.Extensions.Logging.LogLevel logLevel)
+        {
+            return logLevel switch
+            {
+                Microsoft.Extensions.Logging.LogLevel.Critical => LogEventLevel.Fatal,
+                Microsoft.Extensions.Logging.LogLevel.Error => LogEventLevel.Error,
+                Microsoft.Extensions.Logging.LogLevel.Information => LogEventLevel.Information,
+                Microsoft.Extensions.Logging.LogLevel.Debug => LogEventLevel.Debug,
+                Microsoft.Extensions.Logging.LogLevel.Trace => LogEventLevel.Verbose,
+                Microsoft.Extensions.Logging.LogLevel.Warning => LogEventLevel.Warning,
+                _ => LogEventLevel.Information
+            };
+        }
     }
 }

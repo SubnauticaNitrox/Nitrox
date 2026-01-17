@@ -4,14 +4,21 @@
         <TargetFramework>net10.0</TargetFramework>
         <OutputType>Exe</OutputType>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" />
+        <PackageReference Include="MagicOnion.Client" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
         <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="ZLogger" />
+        <PackageReference Include="ServiceScan.SourceGenerator">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -19,11 +26,32 @@
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
-
+    
     <ItemGroup>
         <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" Visible="false" />
         <Content Include="..\Nitrox.Assets.Subnautica\**\*.csv" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <_ServerDevelopmentJsonFilePath>$(MSBuildThisFileDirectory)\server.Development.json</_ServerDevelopmentJsonFilePath>
+    </PropertyGroup>
+    
+    <Target Name="GenerateServerDevelopmentJson" BeforeTargets="BeforeBuild" Condition="'$(_ServerDevelopmentJsonFilePath)' != '' and !Exists('$(_ServerDevelopmentJsonFilePath)')">
+        <PropertyGroup>
+            <_ServerDevelopmentJsonContent>
+                <![CDATA[
+{
+  "GameServer": {
+    "PortForward": false,
+    "LanDiscovery": false,
+    "SaveInterval": 0
+  }
+}
+]]>
+            </_ServerDevelopmentJsonContent>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(_ServerDevelopmentJsonFilePath)" Lines="$(_ServerDevelopmentJsonContent)" />
+    </Target>
 
     <Import Project="..\Nitrox.Shared.targets" />
 </Project>

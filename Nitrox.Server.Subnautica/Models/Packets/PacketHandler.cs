@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Server.Subnautica.Models.Communication;
@@ -9,17 +8,19 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Packets
 {
-    public class PacketHandler
+    internal sealed class PacketHandler
     {
         private readonly PlayerManager playerManager;
         private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;
+        private readonly ILogger<PacketHandler> logger;
         private readonly Dictionary<Type, PacketProcessor> packetProcessorAuthCache = new();
         private readonly Dictionary<Type, PacketProcessor> packetProcessorUnauthCache = new();
 
-        public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
+        public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor, ILogger<PacketHandler> logger)
         {
             this.playerManager = playerManager;
             defaultServerPacketProcessor = packetProcessor;
+            this.logger = logger;
         }
 
         public void Process(Packet packet, INitroxConnection connection)
@@ -52,7 +53,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error in packet processor {processor.GetType()}");
+                    logger.ZLogError(ex, $"Error in packet processor {processor.GetType()}");
                 }
             }
             else
@@ -71,7 +72,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets
             }
             if (processor == null)
             {
-                Log.Warn($"Received invalid, unauthenticated packet: {packet}");
+                logger.ZLogWarning($"Received invalid, unauthenticated packet: {packet}");
                 return;
             }
 
@@ -81,7 +82,7 @@ namespace Nitrox.Server.Subnautica.Models.Packets
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Error in packet processor {processor.GetType()}");
+                logger.ZLogError(ex, $"Error in packet processor {processor.GetType()}");
             }
         }
     }

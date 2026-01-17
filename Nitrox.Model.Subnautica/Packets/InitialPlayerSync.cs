@@ -7,6 +7,7 @@ using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Server;
+using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 
@@ -30,7 +31,7 @@ namespace Nitrox.Model.Subnautica.Packets
         public List<PlayerContext> OtherPlayers { get; }
         public List<Entity> GlobalRootEntities { get; }
         public List<SimulatedEntity> InitialSimulationOwnerships { get; }
-        public NitroxGameMode GameMode { get; }
+        public SubnauticaGameMode GameMode { get; }
         public Perms Permissions { get; }
         public IntroCinematicMode IntroCinematicMode { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
@@ -57,7 +58,7 @@ namespace Nitrox.Model.Subnautica.Packets
             IEnumerable<PlayerContext> otherPlayers,
             IEnumerable<Entity> globalRootEntities,
             IEnumerable<SimulatedEntity> initialSimulationOwnerships,
-            NitroxGameMode gameMode,
+            SubnauticaGameMode gameMode,
             Perms perms,
             IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
@@ -114,7 +115,7 @@ namespace Nitrox.Model.Subnautica.Packets
             List<PlayerContext> otherPlayers,
             List<Entity> globalRootEntities,
             List<SimulatedEntity> initialSimulationOwnerships,
-            NitroxGameMode gameMode,
+            SubnauticaGameMode gameMode,
             Perms permissions,
             IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,

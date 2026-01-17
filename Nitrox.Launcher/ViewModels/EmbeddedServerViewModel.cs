@@ -31,14 +31,14 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Output;
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
         this.serverEntry = serverEntry;
         this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
-            if (status.ProcessId != model.ServerEntry.Process?.Id)
+            if (status.ProcessId != model.ServerEntry.LastProcessId)
             {
                 return;
             }
@@ -55,7 +55,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
     {
-        if (ServerEntry.Process == null)
+        if (!ServerEntry.IsOnline)
         {
             return;
         }
@@ -69,14 +69,14 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
             ServerOutput.Add(new OutputLine
             {
                 Type = OutputLineType.COMMAND,
-                Timestamp = $@"[{TimeSpan.FromTicks(DateTime.Now.Ticks):hh\:mm\:ss\.fff}]",
+                LocalTime = DateTimeOffset.Now,
                 LogText = $"> {ServerCommand}"
             });
         }
         string command = ServerCommand.TrimStart('/');
         if (!string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase))
         {
-            await ServerEntry.Process.SendCommandAsync(command);
+            await ServerEntry.CommandQueue.Writer.WriteAsync(command);
         }
         else
         {

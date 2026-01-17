@@ -93,8 +93,7 @@
                     <!--  TODO: Fix highlighting only happening one line at a time  -->
                     <DataTemplate x:DataType="design:OutputLine">
                         <controls:ServerOutputSelectableTextBlock Focusable="False" FontFamily="/Assets/Fonts#Roboto Mono">
-                            <Run Text="{Binding Timestamp}" Foreground="{DynamicResource BrandSubText}" />
-                            <Run Text="" />
+                            <Run Text="{Binding LocalTimeText}" Foreground="{DynamicResource BrandSubText}" />
                             <Run Text="{Binding LogText}"
                                  Classes.command="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.COMMAND}}"
                                  Classes.debug="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static design:OutputLineType.DEBUG_LOG}}"

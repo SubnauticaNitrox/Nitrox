@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Reflection;
 using HarmonyLib;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using NitroxClient.Communication.Abstract;
@@ -46,8 +47,8 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
             if (args[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) && args.Length > i + 1)
             {
                 playerName = args[i + 1];
-                Log.Info($"Detected instant launch, connecting to {IPAddress.Loopback}:11000 as {playerName}");
-                _ = JoinServerBackend.StartDetachedMultiplayerClientAsync(IPAddress.Loopback, 11000, SessionConnectionStateChangedHandler);
+                Log.Info($"Detected instant launch, connecting to {IPAddress.Loopback}:{SubnauticaServerConstants.DEFAULT_PORT} as {playerName}");
+                _ = JoinServerBackend.StartDetachedMultiplayerClientAsync(IPAddress.Loopback, SubnauticaServerConstants.DEFAULT_PORT, SessionConnectionStateChangedHandler);
             }
         }
 #endif

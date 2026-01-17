@@ -99,7 +99,7 @@ public class ProcessEx : IDisposable
         return From(startInfo);
     }
 
-#if NET10_0_OR_GREATER
+#if NET
     public static Process? StartProcessDetached(ProcessStartInfo startInfo)
     {
         if (!string.IsNullOrWhiteSpace(startInfo.Arguments))
@@ -347,7 +347,7 @@ public class ProcessModuleEx
     public int ModuleMemorySize { get; set; }
 }
 
-#if NET10_0_OR_GREATER
+#if NET
 [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
 public sealed class WindowsProcessEx : ProcessExBase
@@ -375,14 +375,41 @@ public sealed class WindowsProcessEx : ProcessExBase
     public override IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
     public override string? MainWindowTitle => Process?.MainWindowTitle;
 
+    public override bool IsRunning
+    {
+        get
+        {
+            if (!base.IsRunning)
+            {
+                return false;
+            }
+            if (Id < 1)
+            {
+                return false;
+            }
+            Process? proc = null;
+            try
+            {
+                proc = Process.GetProcessById(Id);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                proc?.Dispose();
+            }
+        }
+    }
+
     public WindowsProcessEx(int id) : base(id)
     {
-
     }
 
     public WindowsProcessEx(Process process) : base(process.Id)
     {
-
     }
 
     public new static bool IsElevated()
@@ -518,7 +545,7 @@ public sealed class WindowsProcessEx : ProcessExBase
     private static extern int ResumeThread(IntPtr hThread);
 }
 
-#if NET10_0_OR_GREATER
+#if NET
 [System.Runtime.Versioning.SupportedOSPlatform("linux")]
 #endif
 public sealed class LinuxProcessEx : ProcessExBase
@@ -747,7 +774,7 @@ public sealed class LinuxProcessEx : ProcessExBase
     }
 }
 
-#if NET10_0_OR_GREATER
+#if NET
 [System.Runtime.Versioning.SupportedOSPlatform("maccatalyst")]
 [System.Runtime.Versioning.SupportedOSPlatform("macos")]
 #endif

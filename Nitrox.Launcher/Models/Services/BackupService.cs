@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -285,7 +286,7 @@ public class BackupService(IKeyValueStore keyValueStore)
                 scriptContent = $"""
                                  #!/bin/bash
                                  echo "Waiting for Nitrox Launcher to close..."
-                                 while pgrep -x "Nitrox.Launcher" > /dev/null; do
+                                 while pgrep -x "{NitroxConstants.LAUNCHER_APP_NAME}" > /dev/null; do
                                      sleep 1
                                  done
                                  echo "Extracting backup..."

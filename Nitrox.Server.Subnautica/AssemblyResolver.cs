@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Nitrox.Server.Subnautica;
 
@@ -13,9 +11,14 @@ internal static class AssemblyResolver
     private static string currentExecutableDirectory = string.Empty;
     private static readonly Dictionary<string, AssemblyCacheEntry> resolvedAssemblyCache = [];
 
+    /// <summary>
+    ///     The path to the game files so that game code can be loaded when needed.
+    /// </summary>
+    public static string? GamePath { get; set; }
+
     public static Assembly? Handler(object sender, ResolveEventArgs args)
     {
-        Assembly assembly = ResolveFromLib(args.Name);
+        Assembly? assembly = ResolveFromLib(args.Name);
         if (assembly == null && !args.Name.Contains(".resources"))
         {
             assembly = Assembly.Load(args.Name);
@@ -85,16 +88,12 @@ internal static class AssemblyResolver
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static string? TryGetDllFromGameInstall(string dllName)
     {
-        if (string.IsNullOrWhiteSpace(NitroxUser.GamePath))
+        if (string.IsNullOrWhiteSpace(GamePath))
         {
             return null;
         }
         // Try find game managed libraries
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return Path.Combine(NitroxUser.GamePath, "Resources", "Data", "Managed", dllName);
-        }
-        return Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", dllName);
+        return Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", dllName);
     }
 
     private static string GetExecutableDirectory()

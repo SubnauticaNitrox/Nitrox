@@ -4,15 +4,15 @@ using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-public class SleepManager(PlayerManager playerManager, TimeKeeper timeKeeper)
+internal sealed class SleepManager(PlayerManager playerManager, TimeService timeService)
 {
     /// <summary>Duration of the sleep animation/screen fade in seconds.</summary>
     private const float SLEEP_DURATION = 5f;
     /// <summary>Time to skip when sleeping. From Bed.kSleepEndTime - Bed.kSleepStartTime (1188 - 792 = 396).</summary>
-    private const float SLEEP_TIME_SKIP = 396f;
+    private const float SLEEP_TIME_SKIP_SECONDS = 396f;
 
     private readonly PlayerManager playerManager = playerManager;
-    private readonly TimeKeeper timeKeeper = timeKeeper;
+    private readonly TimeService timeService = timeService;
     private readonly ThreadSafeSet<ushort> playerIdsInBed = [];
     private bool isSleepInProgress;
     private Timer? sleepTimer;
@@ -96,7 +96,7 @@ public class SleepManager(PlayerManager playerManager, TimeKeeper timeKeeper)
         };
         sleepTimer.Elapsed += delegate
         {
-            timeKeeper.SkipTime(SLEEP_TIME_SKIP);
+            timeService.SkipTime(TimeSpan.FromSeconds(SLEEP_TIME_SKIP_SECONDS));
             playerManager.SendPacketToAllPlayers(new SleepComplete());
             isSleepInProgress = false;
             sleepTimer.Dispose();

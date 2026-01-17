@@ -152,7 +152,7 @@ namespace Nitrox.Model.DataStructures
 
         public static implicit operator Optional<T>(T obj)
         {
-            return Optional.Of(obj);
+            return Optional.OfNullable(obj);
         }
 
         public static explicit operator T(Optional<T> value)

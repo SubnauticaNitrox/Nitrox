@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;

@@ -10,6 +10,8 @@ public class IpAddressExtensionsTest
     public void ShouldMatchPrivateIps()
     {
         // IPv4
+        IPAddress.Parse("0.0.0.0").IsPrivate().Should().BeTrue();
+        IPAddress.Parse("0.255.255.255").IsPrivate().Should().BeTrue();
         IPAddress.Parse("10.0.0.0").IsPrivate().Should().BeTrue();
         IPAddress.Parse("10.0.0.255").IsPrivate().Should().BeTrue();
         IPAddress.Parse("127.0.0.1").IsPrivate().Should().BeTrue();
@@ -22,6 +24,7 @@ public class IpAddressExtensionsTest
         IPAddress.Parse("198.18.0.1").IsPrivate().Should().BeTrue();
         IPAddress.Parse("198.19.255.255").IsPrivate().Should().BeTrue();
 
+        IPAddress.Parse("1.0.0.0").IsPrivate().Should().BeFalse();
         IPAddress.Parse("9.255.255.255").IsPrivate().Should().BeFalse();
         IPAddress.Parse("91.63.176.12").IsPrivate().Should().BeFalse();
         IPAddress.Parse("172.32.0.1").IsPrivate().Should().BeFalse();
@@ -30,6 +33,7 @@ public class IpAddressExtensionsTest
         IPAddress.Parse("198.20.0.0").IsPrivate().Should().BeFalse();
 
         // IPv6
+        IPAddress.Parse("::").IsPrivate().Should().BeTrue();
         IPAddress.Parse("::1").IsPrivate().Should().BeTrue();
         IPAddress.Parse("fc00:ff00::").IsPrivate().Should().BeTrue();
         IPAddress.Parse("fe80::").IsPrivate().Should().BeTrue();

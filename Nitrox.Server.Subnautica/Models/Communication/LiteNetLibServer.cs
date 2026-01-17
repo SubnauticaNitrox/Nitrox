@@ -1,22 +1,41 @@
 using System.Buffers;
-using System.Threading;
+using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using Mono.Nat;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Packets;
+using Nitrox.Model.DataStructures;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
-public class LiteNetLibServer : NitroxServer
+internal sealed class LiteNetLibServer : IHostedService
 {
+    private readonly PacketHandler packetHandler;
+    private readonly PlayerManager playerManager;
+    private readonly JoiningManager joiningManager;
+    private readonly EntitySimulation entitySimulation;
+    private readonly SleepManager sleepManager;
+    private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly ILogger<LiteNetLibServer> logger;
+    private readonly Dictionary<int, INitroxConnection> connectionsByRemoteIdentifier = [];
     private readonly EventBasedNetListener listener;
     private readonly NetManager server;
 
-    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SleepManager sleepManager, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, joiningManager, entitySimulation, sleepManager, serverConfig)
+    static LiteNetLibServer()
     {
+        Packet.InitSerializer();
+    }
+
+    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SleepManager sleepManager, IOptions<SubnauticaServerOptions> options, ILogger<LiteNetLibServer> logger)
+    {
+        this.packetHandler = packetHandler;
+        this.playerManager = playerManager;
+        this.joiningManager = joiningManager;
+        this.entitySimulation = entitySimulation;
+        this.sleepManager = sleepManager;
+        this.options = options;
+        this.logger = logger;
         listener = new EventBasedNetListener();
         server = new NetManager(listener)
         {
@@ -24,7 +43,19 @@ public class LiteNetLibServer : NitroxServer
         };
     }
 
-    public override bool Start(CancellationToken ct = default)
+    public void OnConnectionRequest(ConnectionRequest request)
+    {
+        if (server.ConnectedPeersCount < options.Value.MaxConnections)
+        {
+            request.AcceptIfKey("nitrox");
+        }
+        else
+        {
+            request.Reject();
+        }
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         listener.PeerConnectedEvent += PeerConnected;
         listener.PeerDisconnectedEvent += PeerDisconnected;
@@ -40,49 +71,11 @@ public class LiteNetLibServer : NitroxServer
         server.DisconnectTimeout = 300000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
 
-        if (!server.Start(portNumber))
-        {
-            return false;
-        }
-        if (useUpnpPortForwarding)
-        {
-            _ = PortForwardAsync((ushort)portNumber, ct);
-        }
-        if (useLANBroadcast)
-        {
-            LANBroadcastServer.Start(ct);
-        }
-
-        return true;
+        server.Start(options.Value.ServerPort);
+        return Task.CompletedTask;
     }
 
-    private async Task PortForwardAsync(ushort port, CancellationToken ct = default)
-    {
-        if (await NatHelper.GetPortMappingAsync(port, Protocol.Udp, ct) != null)
-        {
-            Log.Info($"Port {port} UDP is already port forwarded");
-            return;
-        }
-
-        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp, ct);
-        if (!ct.IsCancellationRequested)
-        {
-            switch (mappingResult)
-            {
-                case NatHelper.ResultCodes.SUCCESS:
-                    Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
-                    break;
-                case NatHelper.ResultCodes.CONFLICT_IN_MAPPING_ENTRY:
-                    Log.Warn($"Port forward for {port} UDP failed. It appears to already be port forwarded or it conflicts with another port forward rule.");
-                    break;
-                case NatHelper.ResultCodes.UNKNOWN_ERROR:
-                    Log.Warn($"Failed to port forward {port} UDP through UPnP. If using Hamachi or you've manually port-forwarded, please disregard this warning. To disable this feature you can go into the server settings.");
-                    break;
-            }
-        }
-    }
-
-    public override void Stop()
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
         if (!server.IsRunning)
         {
@@ -91,40 +84,49 @@ public class LiteNetLibServer : NitroxServer
 
         playerManager.SendPacketToAllPlayers(new ServerStopped());
         // We want every player to receive this packet
-        Thread.Sleep(500);
+        await Task.Delay(500, cancellationToken);
         server.Stop();
-        if (useUpnpPortForwarding)
+    }
+
+    private void ClientDisconnected(INitroxConnection connection)
+    {
+        Player? player = playerManager.GetPlayer(connection);
+        if (player == null)
         {
-            if (NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp, CancellationToken.None).GetAwaiter().GetResult())
-            {
-                Log.Debug($"Port forward rule removed for {portNumber} UDP");
-            }
-            else
-            {
-                Log.Warn($"Failed to remove port forward rule {portNumber} UDP");
-            }
+            joiningManager.JoiningPlayerDisconnected(connection);
+            return;
         }
-        if (useLANBroadcast)
+
+        sleepManager.PlayerDisconnected(player);
+        playerManager.PlayerDisconnected(connection);
+
+        Disconnect disconnect = new(player.Id);
+        playerManager.SendPacketToAllPlayers(disconnect);
+
+        List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
+
+        if (ownershipChanges.Count > 0)
         {
-            LANBroadcastServer.Stop();
+            SimulationOwnershipChange ownershipChange = new(ownershipChanges);
+            playerManager.SendPacketToAllPlayers(ownershipChange);
         }
     }
 
-    public void OnConnectionRequest(ConnectionRequest request)
+    public void ProcessIncomingData(INitroxConnection connection, Packet packet)
     {
-        if (server.ConnectedPeersCount < maxConnections)
+        try
         {
-            request.AcceptIfKey("nitrox");
+            packetHandler.Process(packet, connection);
         }
-        else
+        catch (Exception ex)
         {
-            request.Reject();
+            logger.ZLogError(ex, $"Exception while processing packet: {packet}");
         }
     }
 
     private void PeerConnected(NetPeer peer)
     {
-        LiteNetLibConnection connection = new(peer);
+        LiteNetLibConnection connection = new(peer, logger);
         lock (connectionsByRemoteIdentifier)
         {
             connectionsByRemoteIdentifier[peer.Id] = connection;
@@ -133,7 +135,12 @@ public class LiteNetLibServer : NitroxServer
 
     private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
-        ClientDisconnected(GetConnection(peer.Id));
+        INitroxConnection connection = GetConnection(peer.Id);
+        if (connection == null)
+        {
+            return;
+        }
+        ClientDisconnected(connection);
     }
 
     private void NetworkDataReceived(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
@@ -153,7 +160,7 @@ public class LiteNetLibServer : NitroxServer
         }
     }
 
-    private INitroxConnection GetConnection(int remoteIdentifier)
+    private INitroxConnection? GetConnection(int remoteIdentifier)
     {
         INitroxConnection connection;
         lock (connectionsByRemoteIdentifier)

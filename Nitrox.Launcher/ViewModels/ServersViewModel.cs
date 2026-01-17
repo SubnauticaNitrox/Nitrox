@@ -59,7 +59,6 @@ internal partial class ServersViewModel : RoutableViewModelBase
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         Servers = [..await serverService.GetServersAsync()];
-        await serverService.DetectAndAttachRunningServersAsync();
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
@@ -73,7 +72,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
 
         try
         {
-            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result!.Name)));
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectoryAsync(Path.Join(keyValueStore.GetSavesFolderDir(), result!.Name)));
             if (serverEntry == null)
             {
                 throw new Exception("Failed to create save file");

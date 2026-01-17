@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class BaseDeconstructedProcessor : BuildingProcessor<BaseDeconstructed>
+internal sealed class BaseDeconstructedProcessor : BuildingProcessor<BaseDeconstructed>
 {
     public BaseDeconstructedProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
 
