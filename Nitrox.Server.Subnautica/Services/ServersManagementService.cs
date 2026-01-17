@@ -46,25 +46,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, Text
                     await WaitNextAsync();
                     continue;
                 }
-                // Init gRPC channel or update
-                if (channel == null || api == null || !channel.Target.EndsWith(launcherGrpcPortAsync.ToString(), StringComparison.Ordinal))
-                {
-                    channel?.Dispose();
-                    channel = GrpcChannel.ForAddress($"http://localhost:{launcherGrpcPortAsync}");
-                    if (api == null)
-                    {
-                        StreamingHubClientOptions grpcOptions = StreamingHubClientOptions.CreateWithDefault()
-                                                                                         .WithCallOptions(new CallOptions(new Metadata
-                                                                                         {
-                                                                                             { "ProcessId", Environment.ProcessId.ToString() },
-                                                                                             { "SaveName", options.Value.SaveName }
-                                                                                         }));
-                        api = await StreamingHubClient.ConnectAsync<IServersManagement, IServerManagementReceiver>(channel,
-                                                                                                                   receiver,
-                                                                                                                   cancellationToken: stoppingToken,
-                                                                                                                   options: grpcOptions);
-                    }
-                }
+                await RefreshConnectionAsync(launcherGrpcPortAsync);
 
                 // Push data
                 await PushPollDataAsync(api);
@@ -84,6 +66,35 @@ internal sealed class ServersManagementService(PlayerManager playerManager, Text
         }
 
         ValueTask<bool> WaitNextAsync() => refreshTimer.WaitForNextTickAsync(stoppingToken);
+
+        async Task RefreshConnectionAsync(int? grpcPort)
+        {
+            if (channel?.Target.EndsWith(grpcPort.ToString(), StringComparison.Ordinal) == false)
+            {
+                channel?.Dispose();
+                channel = null;
+                if (api != null)
+                {
+                    await api.DisposeAsync();
+                }
+                api = null;
+            }
+
+            channel ??= GrpcChannel.ForAddress($"http://localhost:{grpcPort}");
+            if (api == null)
+            {
+                StreamingHubClientOptions grpcOptions = StreamingHubClientOptions.CreateWithDefault()
+                                                                                 .WithCallOptions(new CallOptions(new Metadata
+                                                                                 {
+                                                                                     { "ProcessId", Environment.ProcessId.ToString() },
+                                                                                     { "SaveName", options.Value.SaveName }
+                                                                                 }));
+                api = await StreamingHubClient.ConnectAsync<IServersManagement, IServerManagementReceiver>(channel,
+                                                                                                           receiver,
+                                                                                                           cancellationToken: stoppingToken,
+                                                                                                           options: grpcOptions);
+            }
+        }
 
         Task CreateLoopingTask(Func<IServersManagement, CancellationToken, Task> action, IServersManagement service, CancellationToken cancellationToken) =>
             Task.Run(async () =>
