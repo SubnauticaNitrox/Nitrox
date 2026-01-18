@@ -1,28 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[Alias("w", "msg", "m")]
+[RequiresPermission(Perms.PLAYER)]
+internal class WhisperCommand(IPacketSender packetSender) : ICommandHandler<Player, string>
 {
-    internal class WhisperCommand : Command
+    [Description("Sends a private message to a player")]
+    public async Task Execute(ICommandContext context, [Description("The players name to message")] Player targetPlayer, [Description("The message to send")] string message)
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "w", "msg", "m" };
-
-        public WhisperCommand() : base("whisper", Perms.PLAYER, "Sends a private message to a player")
-        {
-            AddParameter(new TypePlayer("name", true, "The players name to message"));
-            AddParameter(new TypeString("msg", true, "The message to send"));
-
-            AllowedArgOverflow = true;
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            Player foundPlayer = args.Get<Player>(0);
-            string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
-
-            SendMessageToPlayer(foundPlayer, message);
-        }
+        await packetSender.SendPacket(new ChatMessage(context.OriginId, $"[{context.OriginName} -> YOU]: {message}"), targetPlayer.SessionId);
     }
 }

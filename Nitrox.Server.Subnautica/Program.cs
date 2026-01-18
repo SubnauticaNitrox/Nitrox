@@ -62,6 +62,18 @@ internal sealed class Program
 
     private static async Task StartServerAsync(string[] args)
     {
+        // TODO: Verify "SendTo" in commands is correct with always using server origin.
+
+        // TODO: Persist changed back to config file on world save.
+
+        // TODO: Handle simulation ownership changes on player disconnect:
+        // List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
+        // if (revokedEntities.Count > 0)
+        // {
+        //     SimulationOwnershipChange ownershipChange = new(revokedEntities);
+        //     playerManager.SendPacketToAllPlayers(ownershipChange);
+        // }
+
         HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings
         {
             DisableDefaults = true,

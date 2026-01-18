@@ -1,68 +1,25 @@
-﻿using System.Diagnostics;
-using Nitrox.Model.DataStructures.GameLogic;
+﻿using System.ComponentModel;
+using System.IO;
 using Nitrox.Model.Platforms.OS.Shared;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresOrigin(CommandOrigin.SERVER)]
+internal sealed class ConfigCommand(IOptions<ServerStartOptions> optionsProvider) : ICommandHandler
 {
-    internal class ConfigCommand : Command
+    private readonly IOptions<ServerStartOptions> optionsProvider = optionsProvider;
+
+    [Description("Opens the server configuration file")]
+    public async Task Execute(ICommandContext context)
     {
-        private readonly SemaphoreSlim configOpenLock = new(1);
-        private readonly IOptions<ServerStartOptions> options;
-        private readonly ILogger<ConfigCommand> logger;
-
-        public ConfigCommand(IOptions<ServerStartOptions> options, ILogger<ConfigCommand> logger) : base("config", Perms.HOST, "Opens the server configuration file")
+        string filePath = optionsProvider.Value.GetServerConfigFilePath();
+        if (!File.Exists(filePath))
         {
-            this.options = options;
-            this.logger = logger;
+            // TODO: Handle this case to generate config?
+            await context.ReplyAsync("No configuration file exists");
         }
 
-        protected override void Execute(CallArgs args)
-        {
-            if (!configOpenLock.Wait(0))
-            {
-                logger.ZLogWarning($"Waiting on previous config command to close the configuration file.");
-                return;
-            }
-
-            Task.Run(async () =>
-                {
-                    try
-                    {
-                        await StartWithDefaultProgramAsync(options.Value.GetServerConfigFilePath());
-                    }
-                    finally
-                    {
-                        configOpenLock.Release();
-                    }
-                    logger.ZLogInformation($"If you made changes, restart the server for them to take effect.");
-                })
-                .ContinueWith(t =>
-                {
-#if DEBUG
-                    if (t.Exception != null)
-                    {
-                        throw t.Exception;
-                    }
-#endif
-                });
-        }
-
-        private async Task StartWithDefaultProgramAsync(string fileToOpen)
-        {
-            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
-            await process.WaitForExitAsync();
-            try
-            {
-                while (!process.HasExited)
-                {
-                    await Task.Delay(100);
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
+        FileSystem.Instance.OpenOrExecuteFile(filePath);
     }
 }

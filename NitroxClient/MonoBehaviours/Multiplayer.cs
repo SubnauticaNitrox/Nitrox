@@ -240,7 +240,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void OnPlayerChat(string message)
         {
-            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, message));
+            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.SessionId, message));
         }
 
         private void OnPlayerCommand(string command)

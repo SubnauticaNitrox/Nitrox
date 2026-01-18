@@ -1,47 +1,35 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class UnmuteCommand : ICommandHandler<Player>
 {
-    internal class UnmuteCommand : Command
+    [Description("Removes a mute from a player")]
+    public async Task Execute(ICommandContext context, [Description("Player to unmute")] Player targetPlayer)
     {
-        private readonly PlayerManager playerManager;
-
-        public UnmuteCommand(PlayerManager playerManager) : base("unmute", Perms.MODERATOR, "Removes a mute from a player")
+        if (context.OriginId == targetPlayer.SessionId)
         {
-            this.playerManager = playerManager;
-            AddParameter(new TypePlayer("name", true, "Player to unmute"));
+            await context.ReplyAsync("You can't unmute yourself");
+            return;
+        }
+        if (targetPlayer.Permissions >= context.Permissions)
+        {
+            await context.ReplyAsync($"You're not allowed to unmute {targetPlayer.Name}");
+            return;
+        }
+        if (!targetPlayer.PlayerContext.IsMuted)
+        {
+            await context.ReplyAsync($"{targetPlayer.Name} is already unmuted");
+            await context.ReplyAsync(new MutePlayer(targetPlayer.SessionId, false));
+            return;
         }
 
-        protected override void Execute(CallArgs args)
-        {
-            Player targetPlayer = args.Get<Player>(0);
-
-            if (args.SenderName == targetPlayer.Name)
-            {
-                SendMessage(args.Sender, "You can't unmute yourself");
-                return;
-            }
-
-            if (!args.IsConsole && targetPlayer.Permissions >= args.Sender.Value.Permissions)
-            {
-                SendMessage(args.Sender, $"You're not allowed to unmute {targetPlayer.Name}");
-                return;
-            }
-
-            if (!targetPlayer.PlayerContext.IsMuted)
-            {
-                SendMessage(args.Sender, $"{targetPlayer.Name} is already unmuted");
-                args.Sender.Value.SendPacket(new MutePlayer(targetPlayer.Id, targetPlayer.PlayerContext.IsMuted));
-                return;
-            }
-
-            targetPlayer.PlayerContext.IsMuted = false;
-            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.PlayerContext.IsMuted));
-            SendMessage(targetPlayer, "You're no longer muted");
-            SendMessage(args.Sender, $"Unmuted {targetPlayer.Name}");
-        }
+        targetPlayer.PlayerContext.IsMuted = false;
+        await context.SendToAllAsync(new MutePlayer(targetPlayer.SessionId, targetPlayer.PlayerContext.IsMuted));
+        await context.SendAsync(targetPlayer.SessionId, "You're no longer muted");
+        await context.ReplyAsync($"Unmuted {targetPlayer.Name}");
     }
 }

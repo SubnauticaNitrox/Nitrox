@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -81,6 +82,11 @@ namespace Nitrox.Model.Packets
         public byte[] Serialize()
         {
             return BinaryConverter.Serialize(new Wrapper(this));
+        }
+
+        public void SerializeInto(Stream stream)
+        {
+            BinaryConverter.Serialize(new Wrapper(this), stream);
         }
 
         public static Packet Deserialize(byte[] data)

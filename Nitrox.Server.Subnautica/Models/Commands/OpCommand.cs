@@ -1,25 +1,20 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class OpCommand : ICommandHandler<Player>
 {
-    internal class OpCommand : Command
+    public async Task Execute(ICommandContext context, [Description("The players name to make an admin")] Player targetPlayer)
     {
-        public OpCommand() : base("op", Perms.ADMIN, "Sets a user as admin")
-        {
-            AddParameter(new TypePlayer("name", true, "The players name to make an admin"));
-        }
+        Perms newPerms = Perms.ADMIN;
+        targetPlayer.Permissions = newPerms;
 
-        protected override void Execute(CallArgs args)
-        {
-            Player targetPlayer = args.Get<Player>(0);
-            targetPlayer.Permissions = Perms.ADMIN;
-
-            // We need to notify this player that he can show all the admin-related stuff
-            targetPlayer.SendPacket(new PermsChanged(targetPlayer.Permissions));
-            SendMessage(targetPlayer, "You were promoted to ADMIN");
-            SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to ADMIN");
-        }
+        // We need to notify this player that he can show all the admin-related stuff
+        targetPlayer.SendPacket(new PermsChanged(newPerms));
+        await context.SendAsync(targetPlayer.SessionId, $"You were promoted to {newPerms}");
+        await context.ReplyAsync($"Updated {targetPlayer.Name}\'s permissions to {newPerms}");
     }
 }

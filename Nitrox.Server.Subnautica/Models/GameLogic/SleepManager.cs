@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Timer = System.Timers.Timer;
 
@@ -13,13 +14,13 @@ internal sealed class SleepManager(PlayerManager playerManager, TimeService time
 
     private readonly PlayerManager playerManager = playerManager;
     private readonly TimeService timeService = timeService;
-    private readonly ThreadSafeSet<ushort> playerIdsInBed = [];
+    private readonly ThreadSafeSet<SessionId> playerIdsInBed = [];
     private bool isSleepInProgress;
     private Timer? sleepTimer;
 
     public void PlayerEnteredBed(Player player)
     {
-        if (!playerIdsInBed.Add(player.Id))
+        if (!playerIdsInBed.Add(player.SessionId))
         {
             return;
         }
@@ -33,7 +34,7 @@ internal sealed class SleepManager(PlayerManager playerManager, TimeService time
 
     public void PlayerExitedBed(Player player)
     {
-        if (!playerIdsInBed.Remove(player.Id))
+        if (!playerIdsInBed.Remove(player.SessionId))
         {
             return;
         }
@@ -43,7 +44,7 @@ internal sealed class SleepManager(PlayerManager playerManager, TimeService time
 
     public void PlayerDisconnected(Player player)
     {
-        playerIdsInBed.Remove(player.Id);
+        playerIdsInBed.Remove(player.SessionId);
         // If sleep is already in progress, let it complete - don't cancel just because someone disconnected
         if (isSleepInProgress)
         {

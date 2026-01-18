@@ -37,7 +37,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     /// <summary>
     ///     Gets the player id. The session is lost on disconnect so this can return null.
     /// </summary>
-    public ushort? PlayerId => multiplayerSession?.Reservation?.PlayerId;
+    public ushort? PlayerId => multiplayerSession?.Reservation?.SessionId;
     public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
     public Perms Permissions { get; set; }

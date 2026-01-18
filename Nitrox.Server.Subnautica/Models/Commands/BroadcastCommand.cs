@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[Alias("say")]
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class BroadcastCommand(ILogger<BroadcastCommand> logger) : ICommandHandler<string>
 {
-    internal class BroadcastCommand : Command
+    private readonly ILogger<BroadcastCommand> logger = logger;
+
+    [Description("Broadcasts a message on the server")]
+    public async Task Execute(ICommandContext context, string messageToBroadcast)
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "say" };
-
-        public BroadcastCommand() : base("broadcast", Perms.MODERATOR, "Broadcasts a message on the server")
-        {
-            AddParameter(new TypeString("message", true, "The message to be broadcast"));
-
-            AllowedArgOverflow = true;
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            SendMessageToAllPlayers(args.GetTillEnd());
-        }
+        await context.SendToAllAsync(messageToBroadcast);
+        logger.ZLogInformation($"Player {context.OriginName} #{context.OriginId:@SessionId} sent a message to everyone: '{messageToBroadcast:@ChatMessage}'");
     }
 }

@@ -1,17 +1,19 @@
-﻿using Nitrox.Model.DataStructures;
-using Nitrox.Server.Subnautica.Models.Commands.Processor;
+﻿using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class ServerCommandProcessor(TextCommandProcessor cmdProcessor, ILogger<ServerCommandProcessor> logger) : AuthenticatedPacketProcessor<ServerCommand>
+internal sealed class ServerCommandProcessor(CommandService cmdProcessor, IPacketSender packetSender, ILogger<ServerCommandProcessor> logger) : AuthenticatedPacketProcessor<ServerCommand>
 {
-    private readonly TextCommandProcessor cmdProcessor = cmdProcessor;
+    private readonly CommandService cmdProcessor = cmdProcessor;
     private readonly ILogger<ServerCommandProcessor> logger = logger;
+    private readonly IPacketSender packetSender = packetSender;
 
     public override void Process(ServerCommand packet, Player player)
     {
         logger.ZLogInformation($"{player.Name} issued command '/{packet.Cmd}'");
-        cmdProcessor.ProcessCommand(packet.Cmd, Optional.Of(player), player.Permissions);
+        cmdProcessor.ExecuteCommand(packet.Cmd, new PlayerToServerCommandContext(packetSender, player));
     }
 }

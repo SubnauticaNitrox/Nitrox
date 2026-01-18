@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
 
         public void RequestSimulationLock(NitroxId id, SimulationLockType lockType)
         {
-            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(multiplayerSession.Reservation.PlayerId, id, lockType);
+            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(multiplayerSession.Reservation.SessionId, id, lockType);
             packetSender.Send(ownershipRequest);
         }
 
@@ -83,7 +83,7 @@ namespace NitroxClient.GameLogic
 
         public void TreatSimulatedEntity(SimulatedEntity simulatedEntity)
         {
-            bool isLocalPlayerNewOwner = multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId;
+            bool isLocalPlayerNewOwner = multiplayerSession.Reservation.SessionId == simulatedEntity.PlayerId;
 
             if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
                 newerSimulationById.ContainsKey(simulatedEntity.Id))

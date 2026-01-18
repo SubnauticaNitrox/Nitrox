@@ -110,7 +110,7 @@ public class Vehicles
     {
         if (gameObject.TryGetIdOrWarn(out NitroxId vehicleId))
         {
-            VehicleOnPilotModeChanged packet = new(vehicleId, multiplayerSession.Reservation.PlayerId, isPiloting);
+            VehicleOnPilotModeChanged packet = new(vehicleId, multiplayerSession.Reservation.SessionId, isPiloting);
             packetSender.Send(packet);
         }
     }

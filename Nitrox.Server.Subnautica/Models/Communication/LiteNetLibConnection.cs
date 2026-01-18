@@ -5,20 +5,14 @@ using Nitrox.Model.Networking;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
-public class LiteNetLibConnection : INitroxConnection, IEquatable<LiteNetLibConnection>
+public class LiteNetLibConnection(NetPeer peer, ILogger logger) : INitroxConnection, IEquatable<LiteNetLibConnection>
 {
     private readonly NetDataWriter dataWriter = new();
-    private readonly NetPeer peer;
-    private readonly ILogger logger;
+    private readonly NetPeer peer = peer;
+    private readonly ILogger logger = logger;
 
     public IPEndPoint Endpoint => peer;
     public NitroxConnectionState State => peer.ConnectionState.ToNitrox();
-
-    public LiteNetLibConnection(NetPeer peer, ILogger logger)
-    {
-        this.peer = peer;
-        this.logger = logger;
-    }
 
     public void SendPacket(Packet packet)
     {
@@ -47,7 +41,7 @@ public class LiteNetLibConnection : INitroxConnection, IEquatable<LiteNetLibConn
         return !Equals(left, right);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null)
         {

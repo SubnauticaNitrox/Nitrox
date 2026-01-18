@@ -1,31 +1,25 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.PLAYER)]
+internal sealed class WhoisCommand : ICommandHandler<Player>
 {
-    internal class WhoisCommand : Command
+    [Description("Shows informations over a player")]
+    public async Task Execute(ICommandContext context, Player targetPlayer)
     {
-        public WhoisCommand() : base("whois", Perms.PLAYER, "Shows informations over a player")
-        {
-            AddParameter(new TypePlayer("name", true, "The players name"));
-        }
+        StringBuilder builder = new($"==== {targetPlayer.Name} ====\n");
+        builder.AppendLine($"ID: {targetPlayer.Id}");
+        builder.AppendLine($"Role: {targetPlayer.Permissions}");
+        builder.AppendLine($"Position: {targetPlayer.Position.X}, {targetPlayer.Position.Y}, {targetPlayer.Position.Z}");
+        builder.AppendLine($"Oxygen: {targetPlayer.Stats.Oxygen}/{targetPlayer.Stats.MaxOxygen}");
+        builder.AppendLine($"Food: {targetPlayer.Stats.Food}");
+        builder.AppendLine($"Water: {targetPlayer.Stats.Water}");
+        builder.AppendLine($"Infection: {targetPlayer.Stats.InfectionAmount}");
 
-        protected override void Execute(CallArgs args)
-        {
-            Player player = args.Get<Player>(0);
-
-            StringBuilder builder = new($"==== {player.Name} ====\n");
-            builder.AppendLine($"ID: {player.Id}");
-            builder.AppendLine($"Role: {player.Permissions}");
-            builder.AppendLine($"Position: {player.Position.X}, {player.Position.Y}, {player.Position.Z}");
-            builder.AppendLine($"Oxygen: {player.Stats.Oxygen}/{player.Stats.MaxOxygen}");
-            builder.AppendLine($"Food: {player.Stats.Food}");
-            builder.AppendLine($"Water: {player.Stats.Water}");
-            builder.AppendLine($"Infection: {player.Stats.InfectionAmount}");
-
-            SendMessage(args.Sender, builder.ToString());
-        }
+        await context.ReplyAsync(builder.ToString());
     }
 }

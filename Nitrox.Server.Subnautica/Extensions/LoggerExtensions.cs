@@ -1,5 +1,6 @@
 using System.Net;
 using System.Runtime.CompilerServices;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.Logging;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 
@@ -98,4 +99,7 @@ internal static partial class LoggerExtensions
 
     [ZLoggerMessage(Level = LogLevel.Information, Message = "Server password changed to '{Password}' by player '{PlayerName}'")]
     public static partial void LogServerPasswordChanged(this ILogger logger, string password, string playerName);
+
+    [ZLoggerMessage(Level = LogLevel.Trace, Message = "Adding {handler}")]
+    public static partial void LogCommandHandlerAdded(this ILogger logger, CommandHandlerEntry handler);
 }

@@ -8,20 +8,21 @@ using Nitrox.Model.Constants;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.MagicOnion;
-using Nitrox.Server.Subnautica.Models.Commands.Processor;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Logging.ZLogger;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
 ///     Connects to a locally running app that might want to track this server. Nitrox.Launcher is expected.
 /// </summary>
-internal sealed class ServersManagementService(PlayerManager playerManager, TextCommandProcessor commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
+internal sealed class ServersManagementService(PlayerManager playerManager, IPacketSender packetSender, CommandService commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
 {
     public static readonly Channel<LogEntry> LogQueue = Channel.CreateBounded<LogEntry>(new BoundedChannelOptions(1000) { FullMode = BoundedChannelFullMode.DropOldest });
-    private readonly TextCommandProcessor commandProcessor = commandProcessor;
+    private readonly CommandService commandProcessor = commandProcessor;
     private readonly ILogger<ServersManagementService> logger = logger;
     private readonly IOptions<ServerStartOptions> options = options;
     private readonly PlayerManager playerManager = playerManager;
@@ -32,7 +33,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, Text
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        ServerManagementReceiver? receiver = new(commandProcessor);
+        ServerManagementReceiver? receiver = new(commandProcessor, packetSender);
         IServersManagement api = null;
 
         using PeriodicTimer refreshTimer = new(TimeSpan.FromSeconds(5));
@@ -176,9 +177,9 @@ internal sealed class ServersManagementService(PlayerManager playerManager, Text
         return null;
     }
 
-    private class ServerManagementReceiver(TextCommandProcessor commandProcessor) : IServerManagementReceiver
+    private class ServerManagementReceiver(CommandService commandProcessor, IPacketSender packetSender) : IServerManagementReceiver
     {
-        public void OnCommand(string command) => commandProcessor.ProcessCommand(command, Optional.Empty, Perms.HOST);
+        public void OnCommand(string command) => commandProcessor.ExecuteCommand(command, new HostToServerCommandContext(packetSender));
     }
 
     internal record LogEntry(IZLoggerEntry Entry, IZLoggerFormatter Formatter, ZLoggerPlainOptions.LogGeneratorCall Generator, ArrayBufferWriter<byte> Writer);

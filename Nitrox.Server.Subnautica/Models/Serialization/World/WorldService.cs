@@ -338,7 +338,7 @@ internal class WorldService : IHostedService
 
         foreach (Player player in pWorldData.PlayerData.GetPlayers())
         {
-            playerManager.AddPlayer(player);
+            playerManager.AddSavedPlayer(player);
         }
         batchEntitySpawner.SerializableParsedBatches = pWorldData.WorldData.ParsedBatchCells;
         // Pda

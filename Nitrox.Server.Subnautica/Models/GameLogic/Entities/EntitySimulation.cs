@@ -35,7 +35,7 @@ sealed class EntitySimulation
         foreach (WorldEntity entity in addedEntities)
         {
             bool doesEntityMove = ShouldSimulateEntityMovement(entity);
-            ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+            ownershipChanges.Add(new SimulatedEntity(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
         }
 
         return ownershipChanges;
@@ -74,7 +74,7 @@ sealed class EntitySimulation
         if (simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
         {
             bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
-            simulatedEntity = new(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+            simulatedEntity = new(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
             return true;
         }
 
@@ -93,7 +93,7 @@ sealed class EntitySimulation
                 continue;
             }
             bool doesEntityMove = ShouldSimulateEntityMovement(entity);
-            SimulatedEntity simulatedEntity = new(entity.Id, playerLock.Player.Id, doesEntityMove, playerLock.LockType);
+            SimulatedEntity simulatedEntity = new(entity.Id, playerLock.Player.SessionId, doesEntityMove, playerLock.LockType);
             simulatedEntities.Add(simulatedEntity);
         }
         return simulatedEntities;
@@ -123,7 +123,7 @@ sealed class EntitySimulation
                 bool doesEntityMove = entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
 
                 logger.ZLogTrace($"Player {player.Name} has taken over simulating {id}");
-                simulatedEntity = new(id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+                simulatedEntity = new(id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
                 return true;
             }
         }

@@ -28,7 +28,7 @@ internal sealed class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttac
         {
             return;
         }
-        if (!playerManager.TryGetPlayerById(packet.TargetPlayerId, out Player targetPlayer))
+        if (!playerManager.TryGetPlayerBySessionId(packet.TargetPlayerId, out Player targetPlayer))
         {
             return;
         }

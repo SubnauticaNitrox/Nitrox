@@ -1,26 +1,34 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.GameLogic;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.MODERATOR)]
+[RequiresOrigin(CommandOrigin.PLAYER)]
+internal sealed class BackCommand(PlayerManager playerManager, ILogger<BackCommand> logger) : ICommandHandler
 {
-    internal class BackCommand : Command
+    private readonly ILogger<BackCommand> logger = logger;
+    private readonly PlayerManager playerManager = playerManager;
+
+    [Description("Teleports you back on your last location")]
+    public Task Execute(ICommandContext context)
     {
-        public BackCommand() : base("back", Perms.MODERATOR, PermsFlag.NO_CONSOLE, "Teleports you back on your last location")
+        if (!playerManager.TryGetPlayerBySessionId(context.OriginId, out Player player))
         {
+            logger.ZLogError($"Failed to get player instance from session #{context.OriginId}");
+            return Task.CompletedTask;
         }
 
-        protected override void Execute(CallArgs args)
+        if (player.LastStoredPosition == null)
         {
-            Player player = args.Sender.Value;
-
-            if (player.LastStoredPosition == null)
-            {
-                SendMessage(args.Sender, "No previous location...");
-                return;
-            }
-
-            player.Teleport(player.LastStoredPosition.Value, player.LastStoredSubRootID);
-            SendMessage(args.Sender, $"Teleported back to {player.LastStoredPosition.Value}");
+            context.ReplyAsync("No previous location...");
+            return Task.CompletedTask;
         }
+
+        player.Teleport(player.LastStoredPosition.Value, player.LastStoredSubRootID);
+        context.ReplyAsync($"Teleported back to {player.LastStoredPosition.Value}");
+        return Task.CompletedTask;
     }
 }

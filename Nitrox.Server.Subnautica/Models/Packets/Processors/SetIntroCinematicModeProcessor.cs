@@ -36,8 +36,8 @@ internal sealed class SetIntroCinematicModeProcessor : AuthenticatedPacketProces
 
             allWaitingPlayers[0].PlayerContext.IntroCinematicMode = allWaitingPlayers[1].PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
 
-            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[0].Id, IntroCinematicMode.START, allWaitingPlayers[1].Id));
-            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[1].Id, IntroCinematicMode.START, allWaitingPlayers[0].Id));
+            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[0].SessionId, IntroCinematicMode.START, allWaitingPlayers[1].SessionId));
+            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[1].SessionId, IntroCinematicMode.START, allWaitingPlayers[0].SessionId));
         }
     }
 }

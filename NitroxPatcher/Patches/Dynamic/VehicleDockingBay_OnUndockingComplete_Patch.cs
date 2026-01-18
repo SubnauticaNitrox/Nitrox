@@ -18,6 +18,6 @@ public sealed partial class VehicleDockingBay_OnUndockingComplete_Patch : Nitrox
             return;
         }
 
-        Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId, false));
+        Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.SessionId, false));
     }
 }

@@ -65,7 +65,7 @@ public class PlayerManager
     public RemotePlayer Create(PlayerContext playerContext)
     {
         Validate.NotNull(playerContext);
-        Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
+        Validate.IsFalse(playersById.ContainsKey(playerContext.SessionId));
 
         RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
 

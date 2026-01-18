@@ -46,7 +46,7 @@ public class RemotePlayer : INitroxPlayer
     public Transform ItemAttachPoint { get; private set; }
     public RemotePlayerVitals vitals { get; private set; }
 
-    public ushort PlayerId => PlayerContext.PlayerId;
+    public ushort PlayerId => PlayerContext.SessionId;
     public string PlayerName => PlayerContext.PlayerName;
     public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 

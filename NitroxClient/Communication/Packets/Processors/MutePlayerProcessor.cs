@@ -21,11 +21,11 @@ public class MutePlayerProcessor : ClientPacketProcessor<MutePlayer>
     public override void Process(MutePlayer packet)
     {
         // We only need to notice if that's another player than local player
-        Optional<RemotePlayer> player = playerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> player = playerManager.Find(packet.SessionId);
         if (player.HasValue)
         {
             player.Value.PlayerContext.IsMuted = packet.Muted;
         }
-        OnPlayerMuted(packet.PlayerId, packet.Muted);
+        OnPlayerMuted(packet.SessionId, packet.Muted);
     }
 }

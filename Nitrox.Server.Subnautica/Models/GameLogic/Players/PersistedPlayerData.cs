@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
@@ -24,7 +25,7 @@ public class PersistedPlayerData
     public Dictionary<string, NitroxId> EquippedItems { get; set; } = [];
 
     [DataMember(Order = 5)]
-    public ushort Id { get; set; }
+    public PeerId Id { get; set; }
 
     [DataMember(Order = 6)]
     public NitroxVector3 SpawnPosition { get; set; }

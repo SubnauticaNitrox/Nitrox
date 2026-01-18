@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
@@ -20,7 +21,8 @@ namespace Nitrox.Server.Subnautica.Models
         public INitroxConnection Connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
-        public ushort Id { get; }
+        public PeerId Id { get; init; }
+        public SessionId SessionId { get; init; }
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
@@ -35,17 +37,18 @@ namespace Nitrox.Server.Subnautica.Models
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
-        public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set ;}
+        public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set; }
         public ThreadSafeSet<NitroxId> OutOfCellVisibleEntities { get; set; } = [];
         public bool InPrecursor { get; set; }
         public bool DisplaySurfaceWater { get; set; }
 
         public PlayerEntity Entity { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
+        public Player(PeerId id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
-                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor, bool displaySurfaceWater)
+                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor,
+                      bool displaySurfaceWater)
         {
             Id = id;
             Name = name;
@@ -72,12 +75,12 @@ namespace Nitrox.Server.Subnautica.Models
             DisplaySurfaceWater = displaySurfaceWater;
         }
 
-        public static bool operator ==(Player left, Player right)
+        public static bool operator ==(Player? left, Player? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Player left, Player right)
+        public static bool operator !=(Player? left, Player? right)
         {
             return !Equals(left, right);
         }
@@ -102,14 +105,6 @@ namespace Nitrox.Server.Subnautica.Models
         public override int GetHashCode()
         {
             return Id.GetHashCode();
-        }
-
-        /// <summary>
-        /// Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells"/>, <see cref="RemoveCells"/> and <see cref="HasCellLoaded"/>.
-        /// </summary>
-        internal List<AbsoluteEntityCell> GetVisibleCells()
-        {
-            return [.. visibleCells];
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
@@ -156,7 +151,7 @@ namespace Nitrox.Server.Subnautica.Models
 
         public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID)
         {
-            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination, subRootID);
+            PlayerTeleported playerTeleported = new(Name, Position, destination, subRootID);
 
             Position = playerTeleported.DestinationTo;
             LastStoredPosition = playerTeleported.DestinationFrom;
@@ -166,12 +161,21 @@ namespace Nitrox.Server.Subnautica.Models
 
         public override string ToString()
         {
-            return $"[Player - Id: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
+            return $"[Player - SessionId: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
         }
 
         protected bool Equals(Player other)
         {
             return Id == other.Id;
+        }
+
+        /// <summary>
+        ///     Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells" />,
+        ///     <see cref="RemoveCells" /> and <see cref="HasCellLoaded" />.
+        /// </summary>
+        internal List<AbsoluteEntityCell> GetVisibleCells()
+        {
+            return [.. visibleCells];
         }
     }
 }

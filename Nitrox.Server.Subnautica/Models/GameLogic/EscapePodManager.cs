@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -16,10 +17,10 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly RandomStartResource randomStartResource = randomStartResource;
     private readonly IOptions<SubnauticaServerOptions> options = options;
-    private readonly ThreadSafeDictionary<ushort, EscapePodEntity> escapePodsByPlayerId = [];
+    private readonly ThreadSafeDictionary<PeerId, EscapePodEntity> escapePodsByPlayerId = [];
     private EscapePodEntity? podForNextPlayer;
 
-    public NitroxId AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodEntity> newlyCreatedPod)
+    public NitroxId AssignPlayerToEscapePod(PeerId playerId, out Optional<EscapePodEntity> newlyCreatedPod)
     {
         newlyCreatedPod = Optional.Empty;
         if (escapePodsByPlayerId.TryGetValue(playerId, out EscapePodEntity podEntity))

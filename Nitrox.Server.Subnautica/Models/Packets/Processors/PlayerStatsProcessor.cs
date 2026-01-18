@@ -20,7 +20,7 @@ class PlayerStatsProcessor : AuthenticatedPacketProcessor<PlayerStats>
         if (packet.PlayerId != player.Id)
         {
             logger.ZLogWarningOnce($"Player ID mismatch (received: {packet.PlayerId}, real: {player.Id})");
-            packet.PlayerId = player.Id;
+            packet.PlayerId = player.SessionId;
         }
         player.Stats = new PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
         playerManager.SendPacketToOtherPlayers(packet, player);

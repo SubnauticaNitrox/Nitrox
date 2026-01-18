@@ -24,7 +24,7 @@ internal sealed class SimulationOwnershipRequestProcessor : AuthenticatedPacketP
         if (aquiredLock)
         {
             bool shouldEntityMove = entitySimulation.ShouldSimulateEntityMovement(ownershipRequest.Id);
-            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, player.Id, ownershipRequest.LockType, shouldEntityMove);
+            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, player.SessionId, ownershipRequest.LockType, shouldEntityMove);
             playerManager.SendPacketToOtherPlayers(simulationOwnershipChange, player);
         }
 
