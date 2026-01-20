@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
+internal sealed class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
 {
+    private readonly IPacketSender packetSender;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly ILogger<DiscordRequestIPProcessor> logger;
 
     private string ipPort;
 
-    public DiscordRequestIPProcessor(IOptions<SubnauticaServerOptions> options, ILogger<DiscordRequestIPProcessor> logger)
+    public DiscordRequestIPProcessor(IPacketSender packetSender, IOptions<SubnauticaServerOptions> options, ILogger<DiscordRequestIPProcessor> logger)
     {
+        this.packetSender = packetSender;
         this.options = options;
         this.logger = logger;
     }
@@ -26,7 +29,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
         }
 
         packet.IpPort = ipPort;
-        player.SendPacket(packet);
+        packetSender.SendPacketAsync(packet, player.SessionId);
     }
 
     private async Task ProcessPacketAsync(DiscordRequestIP packet, Player player)
@@ -39,7 +42,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
         }
 
         packet.IpPort = ipPort = $"{result}:{options.Value.ServerPort}";
-        player.SendPacket(packet);
+        await packetSender.SendPacketAsync(packet, player.SessionId);
     }
 
     /// <summary>

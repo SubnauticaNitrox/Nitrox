@@ -10,7 +10,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Players;
 
 [DataContract]
-public class PersistedPlayerData
+internal sealed class PersistedPlayerData
 {
     [DataMember(Order = 1)]
     public string Name { get; set; }

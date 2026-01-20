@@ -7,7 +7,7 @@ internal interface IPacketSender
     /// <summary>
     ///     Sends a packet to the given session id, if still connected.
     /// </summary>
-    ValueTask SendPacket<T>(T packet, SessionId sessionId) where T : Packet;
-    ValueTask SendPacketToAll<T>(T packet) where T : Packet;
-    ValueTask SendPacketToOthers<T>(T packet, SessionId excludedSessionId) where T : Packet;
+    ValueTask SendPacketAsync<T>(T packet, SessionId sessionId) where T : Packet;
+    ValueTask SendPacketToAllAsync<T>(T packet) where T : Packet;
+    ValueTask SendPacketToOthersAsync<T>(T packet, SessionId excludedSessionId) where T : Packet;
 }

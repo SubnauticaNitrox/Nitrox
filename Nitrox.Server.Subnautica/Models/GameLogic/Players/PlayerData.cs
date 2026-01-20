@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Players
 {
     [DataContract]
-    public class PlayerData
+    internal sealed class PlayerData
     {
         [DataMember(Order = 1)]
         public List<PersistedPlayerData> Players = [];

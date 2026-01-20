@@ -2,19 +2,15 @@ using System.Linq;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIntroCinematicMode>
+internal sealed class SetIntroCinematicModeProcessor(IPacketSender packetSender, PlayerManager playerManager, ILogger<SetIntroCinematicModeProcessor> logger) : AuthenticatedPacketProcessor<SetIntroCinematicMode>
 {
-    private readonly PlayerManager playerManager;
-    private readonly ILogger<SetIntroCinematicModeProcessor> logger;
-
-    public SetIntroCinematicModeProcessor(PlayerManager playerManager, ILogger<SetIntroCinematicModeProcessor> logger)
-    {
-        this.playerManager = playerManager;
-        this.logger = logger;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly ILogger<SetIntroCinematicModeProcessor> logger = logger;
 
     public override void Process(SetIntroCinematicMode packet, Player player)
     {
@@ -26,7 +22,7 @@ internal sealed class SetIntroCinematicModeProcessor : AuthenticatedPacketProces
 
         packet.PartnerId = null; // Resetting incoming packets just to be safe we don't relay any PartnerId. Server has only authority.
         player.PlayerContext.IntroCinematicMode = packet.Mode;
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
         logger.ZLogDebug($"IntroCinematicMode set to {packet.Mode} for {player.PlayerContext.PlayerName}");
 
         Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
@@ -36,8 +32,8 @@ internal sealed class SetIntroCinematicModeProcessor : AuthenticatedPacketProces
 
             allWaitingPlayers[0].PlayerContext.IntroCinematicMode = allWaitingPlayers[1].PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
 
-            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[0].SessionId, IntroCinematicMode.START, allWaitingPlayers[1].SessionId));
-            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[1].SessionId, IntroCinematicMode.START, allWaitingPlayers[0].SessionId));
+            packetSender.SendPacketToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[0].SessionId, IntroCinematicMode.START, allWaitingPlayers[1].SessionId));
+            packetSender.SendPacketToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[1].SessionId, IntroCinematicMode.START, allWaitingPlayers[0].SessionId));
         }
     }
 }

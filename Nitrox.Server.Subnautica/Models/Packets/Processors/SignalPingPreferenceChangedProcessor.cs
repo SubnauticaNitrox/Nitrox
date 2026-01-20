@@ -2,7 +2,7 @@
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class SignalPingPreferenceChangedProcessor : AuthenticatedPacketProcessor<SignalPingPreferenceChanged>
+internal sealed class SignalPingPreferenceChangedProcessor : AuthenticatedPacketProcessor<SignalPingPreferenceChanged>
 {
     public override void Process(SignalPingPreferenceChanged packet, Player player)
     {

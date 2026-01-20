@@ -15,6 +15,8 @@ public readonly record struct SessionId
 
     private readonly ushort id;
 
+    public bool IsPlayer => id != SERVER_ID;
+
     private SessionId(ushort id)
     {
         this.id = id;

@@ -4,23 +4,18 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlayerUnseeOutOfCellEntityProcessor : AuthenticatedPacketProcessor<PlayerUnseeOutOfCellEntity>
+internal sealed class PlayerUnseeOutOfCellEntityProcessor(IPacketSender packetSender, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, EntitySimulation entitySimulation, EntityRegistry entityRegistry)
+    : AuthenticatedPacketProcessor<PlayerUnseeOutOfCellEntity>
 {
-    private readonly SimulationOwnershipData simulationOwnershipData;
-    private readonly PlayerManager playerManager;
-    private readonly EntitySimulation entitySimulation;
-    private readonly EntityRegistry entityRegistry;
-
-    public PlayerUnseeOutOfCellEntityProcessor(SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, EntitySimulation entitySimulation, EntityRegistry entityRegistry)
-    {
-        this.simulationOwnershipData = simulationOwnershipData;
-        this.playerManager = playerManager;
-        this.entitySimulation = entitySimulation;
-        this.entityRegistry = entityRegistry;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
 
     public override void Process(PlayerUnseeOutOfCellEntity packet, Player player)
     {
@@ -30,13 +25,11 @@ internal sealed class PlayerUnseeOutOfCellEntityProcessor : AuthenticatedPacketP
         {
             return;
         }
-
         // If player can still see the entity even after removing it from the OutOfCellVisibleEntities, then we don't need to change anything
         if (player.CanSee(entity))
         {
             return;
         }
-
         // If the player doesn't own the entity's simulation then we don't need to do anything
         if (!simulationOwnershipData.RevokeIfOwner(packet.EntityId, player))
         {
@@ -51,7 +44,7 @@ internal sealed class PlayerUnseeOutOfCellEntityProcessor : AuthenticatedPacketP
         else
         {
             // No player has taken simulation on the entity
-            playerManager.SendPacketToAllPlayers(new DropSimulationOwnership(packet.EntityId));
+            packetSender.SendPacketToAllAsync(new DropSimulationOwnership(packet.EntityId));
         }
     }
 }

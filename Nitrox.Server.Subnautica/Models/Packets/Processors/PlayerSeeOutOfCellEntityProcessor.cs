@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PlayerSeeOutOfCellEntityProcessor : AuthenticatedPacketProcessor<PlayerSeeOutOfCellEntity>
+internal sealed class PlayerSeeOutOfCellEntityProcessor : AuthenticatedPacketProcessor<PlayerSeeOutOfCellEntity>
 {
     private readonly EntityRegistry entityRegistry;
 

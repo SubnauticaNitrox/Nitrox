@@ -3,7 +3,7 @@ using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic
 {
-    public class SimulationOwnershipData
+    internal sealed class SimulationOwnershipData
     {
         public struct PlayerLock
         {

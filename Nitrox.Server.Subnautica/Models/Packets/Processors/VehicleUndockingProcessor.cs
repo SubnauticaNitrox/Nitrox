@@ -2,18 +2,19 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 internal sealed class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUndocking>
 {
-    private readonly PlayerManager playerManager;
+    private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
     private readonly ILogger<VehicleUndockingProcessor> logger;
 
-    public VehicleUndockingProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<VehicleUndockingProcessor> logger)
+    public VehicleUndockingProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, ILogger<VehicleUndockingProcessor> logger)
     {
-        this.playerManager = playerManager;
+        this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.logger = logger;
     }
@@ -37,6 +38,6 @@ internal sealed class VehicleUndockingProcessor : AuthenticatedPacketProcessor<V
             entityRegistry.RemoveFromParent(vehicleEntity);
         }
 
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
     }
 }

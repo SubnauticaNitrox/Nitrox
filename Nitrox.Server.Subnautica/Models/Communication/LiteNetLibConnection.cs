@@ -1,12 +1,14 @@
 using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
-public class LiteNetLibConnection(NetPeer peer, ILogger logger) : INitroxConnection, IEquatable<LiteNetLibConnection>
+public class LiteNetLibConnection(SessionId sessionId, NetPeer peer, ILogger logger) : INitroxConnection, IEquatable<LiteNetLibConnection>
 {
+    public SessionId SessionId { get; } = sessionId;
     private readonly NetDataWriter dataWriter = new();
     private readonly NetPeer peer = peer;
     private readonly ILogger logger = logger;

@@ -2,11 +2,12 @@
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class FMODAssetProcessor(PlayerManager playerManager, FmodService fmodService, ILogger<FMODAssetProcessor> logger) : AuthenticatedPacketProcessor<FMODAssetPacket>
+internal sealed class FMODAssetProcessor(IPacketSender packetSender, PlayerManager playerManager, FmodService fmodService, ILogger<FMODAssetProcessor> logger) : AuthenticatedPacketProcessor<FMODAssetPacket>
 {
     private readonly PlayerManager playerManager = playerManager;
     private readonly FmodService fmodService = fmodService;
@@ -26,7 +27,7 @@ sealed class FMODAssetProcessor(PlayerManager playerManager, FmodService fmodSer
             if (player != sendingPlayer && (soundData.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= soundData.Radius)
             {
                 packet.Volume = SoundHelper.CalculateVolume(distance, soundData.Radius, packet.Volume);
-                player.SendPacket(packet);
+                packetSender.SendPacketAsync(packet, player.SessionId);
             }
         }
     }

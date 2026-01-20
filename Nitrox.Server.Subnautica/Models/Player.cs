@@ -8,10 +8,11 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.Communication;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models
 {
-    public class Player : IProcessorContext
+    internal sealed class Player : IProcessorContext
     {
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
@@ -144,19 +145,14 @@ namespace Nitrox.Server.Subnautica.Models
             return true;
         }
 
-        public void SendPacket(Packet packet)
-        {
-            Connection.SendPacket(packet);
-        }
-
-        public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID)
+        public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID, IPacketSender packetSender)
         {
             PlayerTeleported playerTeleported = new(Name, Position, destination, subRootID);
 
             Position = playerTeleported.DestinationTo;
             LastStoredPosition = playerTeleported.DestinationFrom;
             LastStoredSubRootID = subRootID;
-            SendPacket(playerTeleported);
+            packetSender.SendPacketAsync(playerTeleported, SessionId);
         }
 
         public override string ToString()
@@ -164,7 +160,7 @@ namespace Nitrox.Server.Subnautica.Models
             return $"[Player - SessionId: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
         }
 
-        protected bool Equals(Player other)
+        private bool Equals(Player other)
         {
             return Id == other.Id;
         }

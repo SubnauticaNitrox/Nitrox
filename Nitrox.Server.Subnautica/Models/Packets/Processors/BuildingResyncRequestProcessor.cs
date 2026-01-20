@@ -4,19 +4,14 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class BuildingResyncRequestProcessor : AuthenticatedPacketProcessor<BuildingResyncRequest>
+sealed class BuildingResyncRequestProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager) : AuthenticatedPacketProcessor<BuildingResyncRequest>
 {
-    private readonly EntityRegistry entityRegistry;
-    private readonly WorldEntityManager worldEntityManager;
-
-    public BuildingResyncRequestProcessor(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager)
-    {
-        this.entityRegistry = entityRegistry;
-        this.worldEntityManager = worldEntityManager;
-    }
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
     public override void Process(BuildingResyncRequest packet, Player player)
     {
@@ -47,6 +42,6 @@ sealed class BuildingResyncRequestProcessor : AuthenticatedPacketProcessor<Build
             AddEntityToResync(entity);
         }
 
-        player.SendPacket(new BuildingResync(buildEntities, moduleEntities));
+        packetSender.SendPacketAsync(new BuildingResync(buildEntities, moduleEntities), player.SessionId);
     }
 }

@@ -2,14 +2,15 @@
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.ADMIN)]
 internal sealed class ChangeServerGamemodeCommand(PlayerManager playerManager, IOptions<SubnauticaServerOptions> serverConfig) : ICommandHandler<SubnauticaGameMode>
 {
-    private readonly PlayerManager playerManager = playerManager;
     private readonly IOptions<SubnauticaServerOptions> serverConfig = serverConfig;
+    private readonly PlayerManager playerManager = playerManager;
 
     [Description("Changes server gamemode")]
     public async Task Execute(ICommandContext context, [Description("Gamemode to change to")] SubnauticaGameMode newGameMode)
@@ -25,7 +26,7 @@ internal sealed class ChangeServerGamemodeCommand(PlayerManager playerManager, I
         {
             player.GameMode = newGameMode;
         }
-        playerManager.SendPacketToAllPlayers(GameModeChanged.ForAllPlayers(newGameMode));
+        await context.SendToAllAsync(GameModeChanged.ForAllPlayers(newGameMode));
         await context.SendToAllAsync($"Server gamemode changed to \"{newGameMode}\" by {context.OriginName}");
     }
 }

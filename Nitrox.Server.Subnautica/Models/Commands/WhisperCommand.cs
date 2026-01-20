@@ -12,6 +12,6 @@ internal class WhisperCommand(IPacketSender packetSender) : ICommandHandler<Play
     [Description("Sends a private message to a player")]
     public async Task Execute(ICommandContext context, [Description("The players name to message")] Player targetPlayer, [Description("The message to send")] string message)
     {
-        await packetSender.SendPacket(new ChatMessage(context.OriginId, $"[{context.OriginName} -> YOU]: {message}"), targetPlayer.SessionId);
+        await packetSender.SendPacketAsync(new ChatMessage(context.OriginId, $"[{context.OriginName} -> YOU]: {message}"), targetPlayer.SessionId);
     }
 }

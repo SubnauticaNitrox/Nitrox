@@ -4,6 +4,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
@@ -11,9 +12,11 @@ sealed class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
 {
     private readonly EntitySimulation entitySimulation;
     private readonly WorldEntityManager worldEntityManager;
+    private readonly IPacketSender packetSender;
 
-    public CellVisibilityChangedProcessor(EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
+    public CellVisibilityChangedProcessor(IPacketSender packetSender, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
     {
+        this.packetSender = packetSender;
         this.entitySimulation = entitySimulation;
         this.worldEntityManager = worldEntityManager;
     }
@@ -48,6 +51,6 @@ sealed class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
         }
 
         // We send this data whether or not it's empty because the client needs to know about it (see Terrain)
-        player.SendPacket(new SpawnEntities(totalEntities, packet.Added, true));
+        packetSender.SendPacketAsync(new SpawnEntities(totalEntities, packet.Added, true), player.SessionId);
     }
 }

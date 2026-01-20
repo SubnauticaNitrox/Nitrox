@@ -3,6 +3,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
@@ -10,14 +11,14 @@ internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProce
 {
     private static readonly NitroxVector3 CyclopsSteeringWheelRelativePosition = new(-0.05f, 0.97f, -23.54f);
 
-    private readonly PlayerManager playerManager;
+    private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
     private readonly SimulationOwnershipData simulationOwnershipData;
     private readonly ILogger<VehicleMovementsPacketProcessor> logger;
 
-    public VehicleMovementsPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<VehicleMovementsPacketProcessor> logger)
+    public VehicleMovementsPacketProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<VehicleMovementsPacketProcessor> logger)
     {
-        this.playerManager = playerManager;
+        this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.simulationOwnershipData = simulationOwnershipData;
         this.logger = logger;
@@ -58,7 +59,7 @@ internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProce
 
         if (packet.Data.Count > 0)
         {
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            packetSender.SendPacketToOthersAsync(packet, player.SessionId);
         }
     }
 }

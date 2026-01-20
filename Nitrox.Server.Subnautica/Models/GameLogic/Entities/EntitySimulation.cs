@@ -3,21 +3,24 @@ using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-sealed class EntitySimulation
+internal sealed class EntitySimulation
 {
     private const SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
 
+    private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
     private readonly PlayerManager playerManager;
     private readonly ILogger<EntitySimulation> logger;
     private readonly SimulationOwnershipData simulationOwnershipData;
 
-    public EntitySimulation(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, ILogger<EntitySimulation> logger)
+    public EntitySimulation(IPacketSender packetSender, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, ILogger<EntitySimulation> logger)
     {
+        this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
         this.simulationOwnershipData = simulationOwnershipData;
@@ -53,7 +56,7 @@ sealed class EntitySimulation
         if (ownershipChanges.Count > 0)
         {
             SimulationOwnershipChange ownershipChange = new(ownershipChanges);
-            playerManager.SendPacketToAllPlayers(ownershipChange);
+            packetSender.SendPacketToAllAsync(ownershipChange);
         }
     }
 

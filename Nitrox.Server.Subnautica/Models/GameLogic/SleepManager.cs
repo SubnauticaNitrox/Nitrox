@@ -1,22 +1,23 @@
-using System;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal sealed class SleepManager(PlayerManager playerManager, TimeService timeService)
+internal sealed class SleepManager(IPacketSender packetSender, PlayerManager playerManager, TimeService timeService)
 {
     /// <summary>Duration of the sleep animation/screen fade in seconds.</summary>
     private const float SLEEP_DURATION = 5f;
     /// <summary>Time to skip when sleeping. From Bed.kSleepEndTime - Bed.kSleepStartTime (1188 - 792 = 396).</summary>
     private const float SLEEP_TIME_SKIP_SECONDS = 396f;
 
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly IPacketSender packetSender = packetSender;
     private readonly TimeService timeService = timeService;
     private readonly ThreadSafeSet<SessionId> playerIdsInBed = [];
     private bool isSleepInProgress;
     private Timer? sleepTimer;
+    private readonly PlayerManager playerManager = playerManager;
 
     public void PlayerEnteredBed(Player player)
     {
@@ -60,13 +61,7 @@ internal sealed class SleepManager(PlayerManager playerManager, TimeService time
             
         // Send to all players except the disconnecting one
         SleepStatusUpdate packet = new(playerIdsInBed.Count, remainingPlayers);
-        foreach (Player connectedPlayer in playerManager.GetConnectedPlayers())
-        {
-            if (connectedPlayer.Id != player.Id)
-            {
-                connectedPlayer.SendPacket(packet);
-            }
-        }
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
 
         // Check if remaining players are now all sleeping (disconnected player was the only one awake)
         if (remainingPlayers > 0 && playerIdsInBed.Count >= remainingPlayers)
@@ -84,7 +79,7 @@ internal sealed class SleepManager(PlayerManager playerManager, TimeService time
     private void BroadcastStatus()
     {
         int totalPlayers = playerManager.GetConnectedPlayers().Count;
-        playerManager.SendPacketToAllPlayers(new SleepStatusUpdate(playerIdsInBed.Count, totalPlayers));
+        packetSender.SendPacketToAllAsync(new SleepStatusUpdate(playerIdsInBed.Count, totalPlayers));
     }
 
     private void StartSleep()
@@ -98,7 +93,7 @@ internal sealed class SleepManager(PlayerManager playerManager, TimeService time
         sleepTimer.Elapsed += delegate
         {
             timeService.SkipTime(TimeSpan.FromSeconds(SLEEP_TIME_SKIP_SECONDS));
-            playerManager.SendPacketToAllPlayers(new SleepComplete());
+            packetSender.SendPacketToAllAsync(new SleepComplete());
             isSleepInProgress = false;
             sleepTimer.Dispose();
             sleepTimer = null;

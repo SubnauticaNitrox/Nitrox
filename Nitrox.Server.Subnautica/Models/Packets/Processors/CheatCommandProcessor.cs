@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class CheatCommandProcessor(ILogger<CheatCommandProcessor> logger) : AuthenticatedPacketProcessor<CheatCommand>
+internal sealed class CheatCommandProcessor(ILogger<CheatCommandProcessor> logger) : AuthenticatedPacketProcessor<CheatCommand>
 {
     public override void Process(CheatCommand packet, Player player)
     {

@@ -113,6 +113,7 @@ internal sealed class Program
                .AddWorld()
                .AddSaving()
                .AddAppEvents()
+               .AddAdminFeatures()
                .AddKeyedSingleton("startup", serverStartStopWatch)
                .AddHostedSingletonService<HibernateService>()
                .AddHostedSingletonService<StatusService>()

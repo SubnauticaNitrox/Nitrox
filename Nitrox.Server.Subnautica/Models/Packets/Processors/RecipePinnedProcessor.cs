@@ -2,7 +2,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PinnedRecipeProcessor : AuthenticatedPacketProcessor<RecipePinned>
+internal sealed class PinnedRecipeProcessor : AuthenticatedPacketProcessor<RecipePinned>
 {
     public override void Process(RecipePinned packet, Player player)
     {

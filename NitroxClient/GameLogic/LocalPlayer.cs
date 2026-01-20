@@ -127,7 +127,7 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.Send(new WeldAction(id, healthAdded));
 
-    public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime)
+    public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType? isFirstTime)
     {
         if (PlayerId.HasValue)
         {

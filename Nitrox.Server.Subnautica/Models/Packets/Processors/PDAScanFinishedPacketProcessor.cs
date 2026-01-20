@@ -1,21 +1,15 @@
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDAScanFinished>
+internal sealed class PDAScanFinishedPacketProcessor(IPacketSender packetSender, PdaManager pdaManager, WorldEntityManager worldEntityManager) : AuthenticatedPacketProcessor<PDAScanFinished>
 {
-    private readonly PlayerManager playerManager;
-    private readonly PdaManager pdaManager;
-    private readonly WorldEntityManager worldEntityManager;
-
-    public PDAScanFinishedPacketProcessor(PlayerManager playerManager, PdaManager pdaManager, WorldEntityManager worldEntityManager)
-    {
-        this.playerManager = playerManager;
-        this.pdaManager = pdaManager;
-        this.worldEntityManager = worldEntityManager;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly PdaManager pdaManager = pdaManager;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
     public override void Process(PDAScanFinished packet, Player player)
     {
@@ -23,7 +17,7 @@ internal sealed class PDAScanFinishedPacketProcessor : AuthenticatedPacketProces
         {
             pdaManager.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
         }
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
 
         if (packet.Id != null)
         {

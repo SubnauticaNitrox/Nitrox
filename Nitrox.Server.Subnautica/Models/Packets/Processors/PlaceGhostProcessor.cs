@@ -1,17 +1,15 @@
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class PlaceGhostProcessor : BuildingProcessor<PlaceGhost>
+internal sealed class PlaceGhostProcessor(BuildingManager buildingManager, IPacketSender packetSender) : BuildingProcessor<PlaceGhost>(buildingManager, packetSender)
 {
-    public PlaceGhostProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
-
     public override void Process(PlaceGhost packet, Player player)
     {
-        if (buildingManager.AddGhost(packet))
+        if (BuildingManager.AddGhost(packet))
         {
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            PacketSender.SendPacketToOthersAsync(packet, player.SessionId);
         }
     }
 }

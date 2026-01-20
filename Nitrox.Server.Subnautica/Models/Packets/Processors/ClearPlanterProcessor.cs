@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class ClearPlanterProcessor(EntityRegistry entityRegistry, ILogger<ClearPlanterProcessor> logger) : AuthenticatedPacketProcessor<ClearPlanter>
+internal sealed class ClearPlanterProcessor(EntityRegistry entityRegistry, ILogger<ClearPlanterProcessor> logger) : AuthenticatedPacketProcessor<ClearPlanter>
 {
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly ILogger<ClearPlanterProcessor> logger = logger;

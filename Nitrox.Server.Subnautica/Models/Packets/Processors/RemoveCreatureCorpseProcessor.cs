@@ -2,21 +2,16 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcessor<RemoveCreatureCorpse>
+internal sealed class RemoveCreatureCorpseProcessor(IPacketSender packetSender, PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : AuthenticatedPacketProcessor<RemoveCreatureCorpse>
 {
-    private readonly PlayerManager playerManager;
-    private readonly EntitySimulation entitySimulation;
-    private readonly WorldEntityManager worldEntityManager;
-
-    public RemoveCreatureCorpseProcessor(PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
-    {
-        this.playerManager = playerManager;
-        this.worldEntityManager = worldEntityManager;
-        this.entitySimulation = entitySimulation;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
     public override void Process(RemoveCreatureCorpse packet, Player destroyingPlayer)
     {
@@ -30,7 +25,7 @@ internal sealed class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcess
                 if (isOtherPlayer && player.CanSee(entity))
                 {
                     player.OutOfCellVisibleEntities.Remove(entity.Id);
-                    player.SendPacket(packet);
+                    packetSender.SendPacketAsync(packet, player.SessionId);
                 }
             }
         }

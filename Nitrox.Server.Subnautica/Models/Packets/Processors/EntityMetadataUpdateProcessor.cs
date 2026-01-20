@@ -3,21 +3,16 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
+internal sealed class EntityMetadataUpdateProcessor(IPacketSender packetSender, PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger) : AuthenticatedPacketProcessor<EntityMetadataUpdate>
 {
-    private readonly PlayerManager playerManager;
-    private readonly EntityRegistry entityRegistry;
-    private readonly ILogger<EntityMetadataUpdateProcessor> logger;
-
-    public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger)
-    {
-        this.playerManager = playerManager;
-        this.entityRegistry = entityRegistry;
-        this.logger = logger;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly ILogger<EntityMetadataUpdateProcessor> logger = logger;
 
     public override void Process(EntityMetadataUpdate packet, Player sendingPlayer)
     {
@@ -39,10 +34,9 @@ internal sealed class EntityMetadataUpdateProcessor : AuthenticatedPacketProcess
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             bool updateVisibleToPlayer = player.CanSee(entity);
-
             if (player != sendingPlayer && updateVisibleToPlayer)
             {
-                player.SendPacket(packet);
+                packetSender.SendPacketAsync(packet, player.SessionId);
             }
         }
     }

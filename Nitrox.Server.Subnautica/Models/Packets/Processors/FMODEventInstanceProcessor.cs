@@ -2,22 +2,17 @@
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<FMODEventInstancePacket>
+internal sealed class FMODEventInstanceProcessor(IPacketSender packetSender, PlayerManager playerManager, FmodService fmodService, ILogger<FMODEventInstanceProcessor> logger) : AuthenticatedPacketProcessor<FMODEventInstancePacket>
 {
-    private readonly PlayerManager playerManager;
-    private readonly FmodService fmodService;
-    private readonly ILogger<FMODEventInstanceProcessor> logger;
-
-    public FMODEventInstanceProcessor(PlayerManager playerManager, FmodService fmodService, ILogger<FMODEventInstanceProcessor> logger)
-    {
-        this.playerManager = playerManager;
-        this.fmodService = fmodService;
-        this.logger = logger;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly FmodService fmodService = fmodService;
+    private readonly ILogger<FMODEventInstanceProcessor> logger = logger;
 
     public override void Process(FMODEventInstancePacket packet, Player sendingPlayer)
     {
@@ -35,7 +30,7 @@ internal sealed class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<
                 distance < soundData.Radius)
             {
                 packet.Volume = SoundHelper.CalculateVolume(distance, soundData.Radius, packet.Volume);
-                player.SendPacket(packet);
+                packetSender.SendPacketAsync(packet, player.SessionId);
             }
         }
     }

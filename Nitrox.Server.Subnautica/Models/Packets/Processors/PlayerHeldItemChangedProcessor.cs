@@ -1,25 +1,20 @@
 ﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class PlayerHeldItemChangedProcessor(IPacketSender packetSender) : AuthenticatedPacketProcessor<PlayerHeldItemChanged>
 {
-    internal sealed class PlayerHeldItemChangedProcessor : AuthenticatedPacketProcessor<PlayerHeldItemChanged>
+    private readonly IPacketSender packetSender = packetSender;
+
+    public override void Process(PlayerHeldItemChanged packet, Player player)
     {
-        private readonly PlayerManager playerManager;
-
-        public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
+        if (packet.IsFirstTime != null && !player.UsedItems.Contains(packet.IsFirstTime))
         {
-            this.playerManager = playerManager;
+            player.UsedItems.Add(packet.IsFirstTime);
         }
 
-        public override void Process(PlayerHeldItemChanged packet, Player player)
-        {
-            if (packet.IsFirstTime != null && !player.UsedItems.Contains(packet.IsFirstTime))
-            {
-                player.UsedItems.Add(packet.IsFirstTime);
-            }
-
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
     }
 }

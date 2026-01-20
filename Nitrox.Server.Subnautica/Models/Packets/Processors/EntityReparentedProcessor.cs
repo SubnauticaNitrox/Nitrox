@@ -2,13 +2,14 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class EntityReparentedProcessor(EntityRegistry entityRegistry, PlayerManager playerManager, ILogger<EntityReparentedProcessor> logger) : AuthenticatedPacketProcessor<EntityReparented>
+internal sealed class EntityReparentedProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, ILogger<EntityReparentedProcessor> logger) : AuthenticatedPacketProcessor<EntityReparented>
 {
+    private readonly IPacketSender packetSender = packetSender;
     private readonly EntityRegistry entityRegistry = entityRegistry;
-    private readonly PlayerManager playerManager = playerManager;
     private readonly ILogger<EntityReparentedProcessor> logger = logger;
 
     public override void Process(EntityReparented packet, Player player)
@@ -25,6 +26,6 @@ sealed class EntityReparentedProcessor(EntityRegistry entityRegistry, PlayerMana
         }
 
         entityRegistry.ReparentEntity(packet.Id, packet.NewParentId);
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
     }
 }

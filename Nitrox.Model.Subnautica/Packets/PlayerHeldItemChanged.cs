@@ -11,9 +11,9 @@ namespace Nitrox.Model.Subnautica.Packets
         public ushort PlayerId { get; }
         public NitroxId ItemId { get; }
         public ChangeType Type { get; }
-        public NitroxTechType IsFirstTime { get; } // If it's the first time the player used that item type it send the techType, if not null.
+        public NitroxTechType? IsFirstTime { get; } // If it's the first time the player used that item type it send the techType, if not null.
 
-        public PlayerHeldItemChanged(ushort playerId, NitroxId itemId, ChangeType type, NitroxTechType isFirstTime)
+        public PlayerHeldItemChanged(ushort playerId, NitroxId itemId, ChangeType type, NitroxTechType? isFirstTime)
         {
             PlayerId = playerId;
             ItemId = itemId;

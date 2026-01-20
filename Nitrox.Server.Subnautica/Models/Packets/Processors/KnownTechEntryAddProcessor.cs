@@ -1,32 +1,25 @@
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class KnownTechEntryAddProcessor(IPacketSender packetSender, PdaManager pdaManager) : AuthenticatedPacketProcessor<KnownTechEntryAdd>
 {
-    internal sealed class KnownTechEntryAddProcessor : AuthenticatedPacketProcessor<KnownTechEntryAdd>
+    private readonly PdaManager pdaManager = pdaManager;
+
+    public override void Process(KnownTechEntryAdd packet, Player player)
     {
-        private readonly PlayerManager playerManager;
-        private readonly PdaManager pdaManager;
-
-        public KnownTechEntryAddProcessor(PlayerManager playerManager, PdaManager pdaManager)
+        switch (packet.Category)
         {
-            this.playerManager = playerManager;
-            this.pdaManager = pdaManager;
+            case KnownTechEntryAdd.EntryCategory.KNOWN:
+                pdaManager.AddKnownTechType(packet.TechType, packet.PartialTechTypesToRemove);
+                break;
+            case KnownTechEntryAdd.EntryCategory.ANALYZED:
+                pdaManager.AddAnalyzedTechType(packet.TechType);
+                break;
         }
 
-        public override void Process(KnownTechEntryAdd packet, Player player)
-        {
-            switch (packet.Category)
-            {
-                case KnownTechEntryAdd.EntryCategory.KNOWN:
-                    pdaManager.AddKnownTechType(packet.TechType, packet.PartialTechTypesToRemove);
-                    break;
-                case KnownTechEntryAdd.EntryCategory.ANALYZED:
-                    pdaManager.AddAnalyzedTechType(packet.TechType);
-                    break;
-            }
-
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
     }
 }

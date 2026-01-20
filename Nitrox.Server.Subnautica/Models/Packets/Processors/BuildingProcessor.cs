@@ -4,21 +4,16 @@ using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> where T : Packet
+internal abstract class BuildingProcessor<T>(BuildingManager buildingManager, IPacketSender packetSender, EntitySimulation? entitySimulation = null) : AuthenticatedPacketProcessor<T>
+    where T : Packet
 {
-    internal readonly BuildingManager buildingManager;
-    internal readonly PlayerManager playerManager;
-    internal readonly EntitySimulation entitySimulation;
-
-    public BuildingProcessor(BuildingManager buildingManager, PlayerManager playerManager, EntitySimulation entitySimulation = null)
-    {
-        this.buildingManager = buildingManager;
-        this.playerManager = playerManager;
-        this.entitySimulation = entitySimulation;
-    }
+    protected readonly BuildingManager BuildingManager = buildingManager;
+    protected readonly IPacketSender PacketSender = packetSender;
+    private readonly EntitySimulation? entitySimulation = entitySimulation;
 
     public void SendToOtherPlayersWithOperationId(T packet, Player player, int operationId)
     {
@@ -26,7 +21,7 @@ internal abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> w
         {
             buildPacket.OperationId = operationId;
         }
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        PacketSender.SendPacketToOthersAsync(packet, player.SessionId);
     }
 
     /// <summary>
@@ -36,10 +31,11 @@ internal abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> w
     /// </summary>
     public void TryClaimBuildPiece(Entity entity, Player player)
     {
+        ArgumentNullException.ThrowIfNull(entitySimulation);
         if (entitySimulation.TryAssignEntityToPlayer(entity, player, false, out SimulatedEntity simulatedEntity))
         {
             SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
-            playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+            PacketSender.SendPacketToAllAsync(ownershipChangePacket);
         }
     }
 }

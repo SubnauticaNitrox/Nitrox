@@ -6,6 +6,7 @@ using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
@@ -15,7 +16,7 @@ namespace Nitrox.Server.Subnautica.Services;
 internal sealed class StatusService(
     [FromKeyedServices("startup")] Stopwatch appStartStopWatch,
     GameInfo gameInfo,
-    PlayerManager playerManager,
+    IPacketSender packetSender,
     ISummarize.Trigger summarizeTrigger,
     IOptions<SubnauticaServerOptions> options,
     IOptions<ServerStartOptions> startOptions,
@@ -24,7 +25,7 @@ internal sealed class StatusService(
     private readonly GameInfo gameInfo = gameInfo;
     private readonly ILogger<StatusService> logger = logger;
     private readonly IOptions<SubnauticaServerOptions> options = options;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly IPacketSender packetSender = packetSender;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
     private readonly ISummarize.Trigger summarizeTrigger = summarizeTrigger;
 
@@ -86,7 +87,7 @@ internal sealed class StatusService(
     {
         cancellationToken.ThrowIfCancellationRequested();
         logger.ZLogInformation($"Server is stopping...");
-        playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, "[BROADCAST] Server is shutting down..."));
+        packetSender.SendPacketToAllAsync(new ChatMessage(ChatMessage.SERVER_ID, "[BROADCAST] Server is shutting down..."));
         return Task.CompletedTask;
     }
 

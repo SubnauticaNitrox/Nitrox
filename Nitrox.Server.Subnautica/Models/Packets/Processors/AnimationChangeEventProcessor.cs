@@ -1,5 +1,6 @@
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
@@ -8,10 +9,12 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 /// </summary>
 internal sealed class AnimationChangeEventProcessor : AuthenticatedPacketProcessor<AnimationChangeEvent>
 {
+    private readonly IPacketSender packetSender;
     private readonly PlayerManager playerManager;
 
-    public AnimationChangeEventProcessor(PlayerManager playerManager)
+    public AnimationChangeEventProcessor(IPacketSender packetSender, PlayerManager playerManager)
     {
+        this.packetSender = packetSender;
         this.playerManager = playerManager;
     }
 
@@ -19,6 +22,6 @@ internal sealed class AnimationChangeEventProcessor : AuthenticatedPacketProcess
     {
         player.PlayerContext.Animation = packet.Animation;
 
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
     }
 }

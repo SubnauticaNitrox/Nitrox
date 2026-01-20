@@ -13,7 +13,7 @@ internal sealed class OpCommand : ICommandHandler<Player>
         targetPlayer.Permissions = newPerms;
 
         // We need to notify this player that he can show all the admin-related stuff
-        targetPlayer.SendPacket(new PermsChanged(newPerms));
+        await context.SendAsync(targetPlayer.SessionId, new PermsChanged(newPerms));
         await context.SendAsync(targetPlayer.SessionId, $"You were promoted to {newPerms}");
         await context.ReplyAsync($"Updated {targetPlayer.Name}\'s permissions to {newPerms}");
     }

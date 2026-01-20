@@ -3,21 +3,15 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
+internal sealed class EntityDestroyedPacketProcessor(IPacketSender packetSender, PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : AuthenticatedPacketProcessor<EntityDestroyed>
 {
-    private readonly PlayerManager playerManager;
-    private readonly EntitySimulation entitySimulation;
-    private readonly WorldEntityManager worldEntityManager;
-
-    public EntityDestroyedPacketProcessor(PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
-    {
-        this.playerManager = playerManager;
-        this.worldEntityManager = worldEntityManager;
-        this.entitySimulation = entitySimulation;
-    }
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
     public override void Process(EntityDestroyed packet, Player destroyingPlayer)
     {
@@ -35,7 +29,7 @@ internal sealed class EntityDestroyedPacketProcessor : AuthenticatedPacketProces
                 bool isOtherPlayer = player != destroyingPlayer;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    player.SendPacket(packet);
+                    packetSender.SendPacketAsync(packet, player.SessionId);
                 }
             }
         }

@@ -4,23 +4,17 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem>
+internal sealed class PickupItemPacketProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData)
+    : AuthenticatedPacketProcessor<PickupItem>
 {
-    private readonly EntityRegistry entityRegistry;
-    private readonly WorldEntityManager worldEntityManager;
-    private readonly PlayerManager playerManager;
-    private readonly SimulationOwnershipData simulationOwnershipData;
-
-    public PickupItemPacketProcessor(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, PlayerManager playerManager, SimulationOwnershipData simulationOwnershipData)
-    {
-        this.entityRegistry = entityRegistry;
-        this.worldEntityManager = worldEntityManager;
-        this.playerManager = playerManager;
-        this.simulationOwnershipData = simulationOwnershipData;
-    }
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
+    private readonly IPacketSender packetSender = packetSender;
 
     public override void Process(PickupItem packet, Player player)
     {
@@ -29,7 +23,7 @@ internal sealed class PickupItemPacketProcessor : AuthenticatedPacketProcessor<P
         {
             ushort serverId = ushort.MaxValue;
             SimulationOwnershipChange simulationOwnershipChange = new(id, serverId, SimulationLockType.TRANSIENT);
-            playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
+            packetSender.SendPacketToOthersAsync(simulationOwnershipChange, player.SessionId);
         }
 
         StopTrackingExistingWorldEntity(id);
@@ -37,14 +31,14 @@ internal sealed class PickupItemPacketProcessor : AuthenticatedPacketProcessor<P
         entityRegistry.AddOrUpdate(packet.Item);
 
         // Have other players respawn the item inside the inventory.
-        playerManager.SendPacketToOtherPlayers(new SpawnEntities(packet.Item, forceRespawn: true), player);
+        packetSender.SendPacketToOthersAsync(new SpawnEntities(packet.Item, forceRespawn: true), player.SessionId);
     }
 
     private void StopTrackingExistingWorldEntity(NitroxId id)
     {
         Optional<Entity> entity = entityRegistry.GetEntityById(id);
 
-        if (entity.HasValue && entity.Value is WorldEntity worldEntity)
+        if (entity is { HasValue: true, Value: WorldEntity worldEntity })
         {
             // Do not track this entity in the open world anymore.
             worldEntityManager.StopTrackingEntity(worldEntity);

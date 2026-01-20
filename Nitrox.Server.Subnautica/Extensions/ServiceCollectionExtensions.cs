@@ -6,8 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging.Console;
 using Nitrox.Model.Constants;
+using Nitrox.Model.Packets.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Administration.Core;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
@@ -42,8 +44,7 @@ internal static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AssignableTo = typeof(SaveDataUpgrade), Lifetime = ServiceLifetime.Scoped)]
     private static partial IServiceCollection AddSaveUpgraders(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(AuthenticatedPacketProcessor<>), ExcludeAssignableTo = typeof(DefaultServerPacketProcessor), Lifetime = ServiceLifetime.Scoped)]
-    [GenerateServiceRegistrations(AssignableTo = typeof(UnauthenticatedPacketProcessor<>), Lifetime = ServiceLifetime.Scoped)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(IPacketProcessor), Lifetime = ServiceLifetime.Scoped)]
     private static partial IServiceCollection AddPacketProcessors(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IRedactor), Lifetime = ServiceLifetime.Singleton)]
@@ -60,6 +61,9 @@ internal static partial class ServiceCollectionExtensions
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IArgConverter), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
     private static partial IServiceCollection AddCommandArgConverters(this IServiceCollection services);
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(IAdminFeature<>), CustomHandler = nameof(AddImplementedAdminFeatures))]
+    internal static partial IServiceCollection AddAdminFeatures(this IServiceCollection services);
 
     /// <summary>
     ///     Registers a single command and all of its handlers as can be known by the implemented interfaces.
@@ -80,6 +84,18 @@ internal static partial class ServiceCollectionExtensions
                 T owner = provider.GetRequiredService<T>();
                 return new CommandHandlerEntry(owner, handlerType);
             });
+        }
+    }
+
+    private static void AddImplementedAdminFeatures<TImplementation>(this IServiceCollection services) where TImplementation : class, IAdminFeature
+    {
+        foreach (Type featureInterfaceType in typeof(TImplementation).GetInterfaces()
+                                                                     .Where(i => typeof(IAdminFeature).IsAssignableFrom(i))
+                                                                     .Select(i => i.GetGenericArguments())
+                                                                     .Where(types => types.Length == 1)
+                                                                     .Select(types => types[0]))
+        {
+            services.AddSingleton(featureInterfaceType, provider => provider.GetRequiredService<TImplementation>());
         }
     }
 
@@ -175,7 +191,9 @@ internal static partial class ServiceCollectionExtensions
         {
             services.AddHostedSingletonService<LiteNetLibServer>()
                     .AddHostedSingletonService<PacketSerializationService>()
+                    .AddHostedSingletonService<PacketRegistryService>()
                     .AddPacketProcessors()
+                    .TryAddSingletonLazyArrayProvider<IPacketProcessor>()
                     .AddSingleton<DefaultServerPacketProcessor>()
                     .AddSingleton<PacketHandler>()
                     .AddSingleton<IPacketSender>(provider => provider.GetRequiredService<LiteNetLibServer>());

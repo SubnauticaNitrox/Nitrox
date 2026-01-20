@@ -133,7 +133,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         return new MultiplayerSessionReservation(correlationId, session.Id, reservationKey);
     }
 
-    public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+    public Player CreatePlayerData(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
     {
         PlayerContext playerContext = reservations[reservationKey];
         Validate.NotNull(playerContext);
@@ -186,9 +186,13 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     public int PlayerCount => connectedPlayersBySessionId.Count;
 
-    public void PlayerDisconnected(INitroxConnection connection)
+    public void RemovePlayer(SessionId sessionId)
     {
-        if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
+        if (!connectedPlayersBySessionId.TryGetValue(sessionId, out Player player))
+        {
+            return;
+        }
+        if (!assetsByConnection.TryGetValue(player.Connection, out ConnectionAssets assetPackage))
         {
             return;
         }
@@ -202,13 +206,12 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
         if (assetPackage.Player != null)
         {
-            Player player = assetPackage.Player;
             reservedPlayerNames.Remove(player.Name);
             connectedPlayersBySessionId.Remove(player.SessionId);
             logger.ZLogInformation($"{player.Name} left the game");
         }
 
-        assetsByConnection.Remove(connection);
+        assetsByConnection.Remove(player.Connection);
 
         if (!ConnectedPlayers().Any())
         {
@@ -243,27 +246,8 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         return false;
     }
 
-    public bool TryGetPlayerBySessionId(ushort playerId, [NotNullWhen(true)] out Player? player)
+    public bool TryGetPlayerBySessionId(SessionId sessionId, [NotNullWhen(true)] out Player? player)
     {
-        return connectedPlayersBySessionId.TryGetValue(playerId, out player);
-    }
-
-    public void SendPacketToAllPlayers(Packet packet)
-    {
-        foreach (Player player in ConnectedPlayers())
-        {
-            player.SendPacket(packet);
-        }
-    }
-
-    public void SendPacketToOtherPlayers(Packet packet, Player sendingPlayer)
-    {
-        foreach (Player player in ConnectedPlayers())
-        {
-            if (player != sendingPlayer)
-            {
-                player.SendPacket(packet);
-            }
-        }
+        return connectedPlayersBySessionId.TryGetValue(sessionId, out player);
     }
 }

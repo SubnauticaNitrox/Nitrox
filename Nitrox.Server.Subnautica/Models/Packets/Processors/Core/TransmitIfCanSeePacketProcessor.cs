@@ -4,16 +4,19 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 internal abstract class TransmitIfCanSeePacketProcessor<T> : AuthenticatedPacketProcessor<T> where T : Packet
 {
+    private readonly IPacketSender packetSender;
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
 
-    public TransmitIfCanSeePacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public TransmitIfCanSeePacketProcessor(IPacketSender packetSender, PlayerManager playerManager, EntityRegistry entityRegistry)
     {
+        this.packetSender = packetSender;
         this.playerManager = playerManager;
         this.entityRegistry = entityRegistry;
     }
@@ -41,7 +44,7 @@ internal abstract class TransmitIfCanSeePacketProcessor<T> : AuthenticatedPacket
         {
             if (entities.All(player.CanSee))
             {
-                player.SendPacket(packet);
+                packetSender.SendPacketAsync(packet, player.SessionId);
             }
         }
     }

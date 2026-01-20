@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using Nitrox.Model.Core;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
@@ -10,8 +11,9 @@ namespace Nitrox.Server.Subnautica.Models.Communication;
 ///     A session id will be reused when connections are lost. It will take at least 10 minutes before a session id is
 ///     reused to prevent impersonation and other bugs.
 /// </summary>
-internal sealed class SessionManager(ILogger<SessionManager> logger)
+internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger, ILogger<SessionManager> logger)
 {
+    private readonly ISessionCleaner.Trigger sessionCleanTrigger = sessionCleanTrigger;
     private readonly ILogger<SessionManager> logger = logger;
     private readonly List<(TimeSpan ReturnedTimeStamp, SessionId Id)> returnedSessionIds = [];
     private readonly Dictionary<IPEndPoint, SessionId> sessionIdByEndpoint = [];
@@ -66,17 +68,20 @@ internal sealed class SessionManager(ILogger<SessionManager> logger)
         return session;
     }
 
-    public bool DeleteSessionAsync(SessionId sessionId)
+    public async Task<bool> DeleteSessionAsync(SessionId sessionId)
     {
+        Session session;
         lock (sessionLock)
         {
-            if (!sessions.Remove(sessionId, out Session session))
+            if (!sessions.Remove(sessionId, out session))
             {
                 return false;
             }
             sessionIdByEndpoint.Remove(session.EndPoint);
             returnedSessionIds.Add((time.Elapsed, session.Id));
         }
+        logger.ZLogTrace($"Deleting session #{sessionId}");
+        await sessionCleanTrigger.InvokeAsync(new ISessionCleaner.Args(session));
         logger.ZLogTrace($"Deleted session #{sessionId}");
         return true;
     }
