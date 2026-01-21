@@ -14,6 +14,6 @@ internal sealed class BroadcastCommand(ILogger<BroadcastCommand> logger) : IComm
     public async Task Execute(ICommandContext context, string messageToBroadcast)
     {
         await context.SendToAllAsync(messageToBroadcast);
-        logger.ZLogInformation($"Player {context.OriginName} #{context.OriginId:@SessionId} sent a message to everyone: '{messageToBroadcast:@ChatMessage}'");
+        logger.ZLogInformation($"{context.OriginName} #{context.OriginId:@SessionId} sent a message to everyone: '{messageToBroadcast:@ChatMessage}'");
     }
 }

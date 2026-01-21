@@ -98,7 +98,7 @@ internal sealed record CommandHandlerEntry
             nameText = $"{Name}{nameText} ";
         }
 
-        return $"{nameText}{GetParametersInfo(Parameters)}- {Description}";
+        return $"{nameText}{GetParametersInfo(Parameters)}{(Description != "" ? $"- {Description}" : "")}";
 
         static string GetParametersInfo(params ParameterInfo[] parms)
         {

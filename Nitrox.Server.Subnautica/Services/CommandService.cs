@@ -193,7 +193,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
                 return;
             }
 
-            logger.ZLogInformation($"Command {$"{looselyCompatibleHandlers[0].Name} {argsInput}":@Command} failed to match to any command handlers.{Environment.NewLine}{GetErrorMessagesFromFailedHandlers(failedHandlers)}");
+            logger.ZLogInformation($"Command '{$"{looselyCompatibleHandlers[0].Name} {argsInput}":@Command}' failed to match to any command handlers.{Environment.NewLine}{GetErrorMessagesFromFailedHandlers(failedHandlers)}");
         }).ContinueWithHandleError(exception => logger.ZLogError(exception, $"Error while parsing '{argsInput}' to a command handler"));
         runningCommands.Writer.TryWrite(tryRunHandlerTask);
 

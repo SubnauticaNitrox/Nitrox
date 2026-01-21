@@ -1,5 +1,6 @@
 using System.Net;
 using System.Runtime.CompilerServices;
+using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.Logging;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
@@ -8,22 +9,6 @@ namespace Nitrox.Server.Subnautica.Extensions;
 
 internal static partial class LoggerExtensions
 {
-    /// <summary>
-    ///     Sets the logger into "plain" mode. Text will be logged without the time, category or log level info.
-    /// </summary>
-    public static IDisposable? BeginPlainScope(this ILogger logger) => logger.BeginScope(new PlainScope());
-
-    public static IDisposable? BeginPrefixScope(this ILogger logger, string prefix) => logger.BeginScope(new PrefixScope(prefix));
-
-    /// <inheritdoc cref="CaptureScope" />
-    public static CaptureScope BeginCaptureScope(this ILogger logger)
-    {
-        CaptureScope scope = new();
-        IDisposable disposable = logger.BeginScope(scope);
-        scope.InnerDisposable = disposable;
-        return scope;
-    }
-
     public static void ZLogWarningOnce(this ILogger logger,
                                        [InterpolatedStringHandlerArgument("logger")]
                                        ref DeduplicateWarningInterpolatedStringHandler message,
@@ -100,6 +85,34 @@ internal static partial class LoggerExtensions
     [ZLoggerMessage(Level = LogLevel.Information, Message = "Server password changed to '{Password}' by player '{PlayerName}'")]
     public static partial void LogServerPasswordChanged(this ILogger logger, string password, string playerName);
 
-    [ZLoggerMessage(Level = LogLevel.Trace, Message = "Adding {handler}")]
+    [ZLoggerMessage(Level = LogLevel.Trace, Message = "Adding {Handler}")]
     public static partial void LogCommandHandlerAdded(this ILogger logger, CommandHandlerEntry handler);
+
+    /// <summary>
+    ///     Logs a save request as being issued by the issuer.
+    /// </summary>
+    /// <param name="logger">The logger instance to use.</param>
+    /// <param name="name">Name of the issuer.</param>
+    /// <param name="sessionId">Session ID of the issuer.</param>
+    [ZLoggerMessage(Level = LogLevel.Information, Message = "Save requested by '{Name}' #{SessionId}")]
+    public static partial void LogSaveRequest(this ILogger logger, string name, SessionId sessionId);
+
+    extension(ILogger logger)
+    {
+        /// <summary>
+        ///     Sets the logger into "plain" mode. Text will be logged without the time, category or log level info.
+        /// </summary>
+        public IDisposable? BeginPlainScope() => logger.BeginScope(new PlainScope());
+
+        public IDisposable? BeginPrefixScope(string prefix) => logger.BeginScope(new PrefixScope(prefix));
+
+        /// <inheritdoc cref="CaptureScope" />
+        public CaptureScope BeginCaptureScope()
+        {
+            CaptureScope scope = new();
+            IDisposable disposable = logger.BeginScope(scope);
+            scope.InnerDisposable = disposable;
+            return scope;
+        }
+    }
 }
