@@ -109,7 +109,7 @@
             <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\$(Configuration)\$(TargetFramework)\Microsoft.Extensions.*.dll" />
         </ItemGroup>
 
-        <Error Text="Unable to find Microsoft.Extensions.* dll files from Nitrox.Server.Subnautica"
+        <Warning Text="Unable to find Microsoft.Extensions.* dll files from Nitrox.Server.Subnautica"
                Condition="@(_FilesToCopy->Count()) == 0" />
 
         <Copy SourceFiles="@(_FilesToCopy)"
