@@ -62,9 +62,7 @@ internal sealed class Program
 
     private static async Task StartServerAsync(string[] args)
     {
-        // TODO: Verify "SendTo" in commands is correct with always using server origin.
-
-        // TODO: Persist changed back to config file on world save.
+        // TODO: Verify "SendTo" in commands is correct with always using server origin in ChatMessage.
 
         // TODO: Handle simulation ownership changes on player disconnect:
         // List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
@@ -127,14 +125,6 @@ internal sealed class Program
                .AddSingleton<EntitySpawnPointFactory, SubnauticaEntitySpawnPointFactory>()
             ;
 
-        IHost host = builder.Build();
-
-        // TODO: Remove the need for NitroxServiceLocator in server.
-#pragma warning disable DIMA001
-        NitroxServiceLocator.Locator = host.Services.GetRequiredService;
-        NitroxServiceLocator.OptionalLocator = host.Services.GetService;
-#pragma warning restore DIMA001
-
-        await host.RunAsync();
+        await builder.Build().RunAsync();
     }
 }

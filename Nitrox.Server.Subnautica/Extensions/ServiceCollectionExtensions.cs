@@ -195,7 +195,6 @@ internal static partial class ServiceCollectionExtensions
                     .AddPacketProcessors()
                     .TryAddSingletonLazyArrayProvider<IPacketProcessor>()
                     .AddSingleton<DefaultServerPacketProcessor>()
-                    .AddSingleton<PacketHandler>()
                     .AddSingleton<IPacketSender>(provider => provider.GetRequiredService<LiteNetLibServer>());
             return services;
         }
