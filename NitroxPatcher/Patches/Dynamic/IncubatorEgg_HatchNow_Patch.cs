@@ -58,7 +58,7 @@ public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicP
         else
         {
             // Non-simulating player: mark baby as temporary (will be cleaned up after animation)
-            baby.name += "_NitroxTemporary";
+            baby.name += IncubatorEggAnimation_OnHatchAnimationEnd_Patch.TEMPORARY_BABY_MARKER;
         }
 
         // All players run the full animation sequence

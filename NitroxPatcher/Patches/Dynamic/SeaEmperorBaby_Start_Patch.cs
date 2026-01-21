@@ -27,7 +27,7 @@ public sealed partial class SeaEmperorBaby_Start_Patch : NitroxPatch, IDynamicPa
         }
 
         // Skip temporary babies created for animation
-        if (__instance.name.Contains("_NitroxTemporary"))
+        if (__instance.name.Contains(IncubatorEggAnimation_OnHatchAnimationEnd_Patch.TEMPORARY_BABY_MARKER))
         {
             return;
         }
