@@ -162,6 +162,7 @@ internal static partial class ServiceCollectionExtensions
             // Hack: Save service strongly depends on WorldService so it's a Func<WorldService> to prevent StackOverflow. TODO: Remove need for WorldService; each service should save / load its own data through a common interface.
             services.AddHostedSingletonService<WorldService>()
                     .AddHostedSingletonService<TimeService>()
+                    .AddHostedSingletonService<FmodService>()
                     .AddSingleton<Func<WorldService>>(provider => provider.GetRequiredService<WorldService>)
                     .AddSingleton<JoiningManager>()
                     .AddSingleton<BuildingManager>()
@@ -179,7 +180,8 @@ internal static partial class ServiceCollectionExtensions
                     .AddSingleton<EntityRegistry>()
                     .AddSingleton<SessionSettings>()
                     .AddSingleton<IUweWorldEntityFactory, SubnauticaUweWorldEntityFactory>()
-                    .AddSingleton<IEntityBootstrapperManager, SubnauticaEntityBootstrapperManager>();
+                    .AddSingleton<IEntityBootstrapperManager, SubnauticaEntityBootstrapperManager>()
+                    .AddSingleton<EntitySpawnPointFactory, SubnauticaEntitySpawnPointFactory>();
 
             return services;
         }

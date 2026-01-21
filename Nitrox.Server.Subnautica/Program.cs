@@ -117,13 +117,10 @@ internal sealed class Program
                .AddHostedSingletonService<StatusService>()
                .AddHostedSingletonService<PortForwardService>()
                .AddHostedSingletonService<LanBroadcastService>()
-               .AddHostedSingletonService<FmodService>()
                .AddHostedSingletonService<MemoryService>()
                .AddSingleton<NtpSyncer>()
                .AddSingleton<SubnauticaServerProtoBufSerializer>()
-               .AddSingleton<ServerJsonSerializer>()
-               .AddSingleton<EntitySpawnPointFactory, SubnauticaEntitySpawnPointFactory>()
-            ;
+               .AddSingleton<ServerJsonSerializer>();
 
         await builder.Build().RunAsync();
     }
