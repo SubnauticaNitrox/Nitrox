@@ -54,11 +54,11 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
         {
             if (!sessionIdByEndpoint.TryGetValue(endPoint, out SessionId id))
             {
-                SessionId nextSessionId = NextSessionId;
-                if (sessionIdByEndpoint.TryAdd(endPoint, nextSessionId))
+                id = NextSessionId;
+                if (sessionIdByEndpoint.TryAdd(endPoint, id))
                 {
-                    session = new Session(nextSessionId, endPoint);
-                    sessions.Add(nextSessionId, session);
+                    session = new Session(id, endPoint);
+                    sessions.Add(id, session);
                 }
             }
 
