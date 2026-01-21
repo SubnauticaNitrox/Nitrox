@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
@@ -40,6 +41,8 @@ public abstract class NitroxFaker
         { typeof(string), new NitroxActionFaker(typeof(string), f => f.Random.Word()) },
 
         // Nitrox types
+        { typeof(PeerId), new NitroxActionFaker(typeof(PeerId), f => (PeerId)f.Random.UInt() )},
+        { typeof(SessionId), new NitroxActionFaker(typeof(SessionId), f => (SessionId)f.Random.UShort() )},
         { typeof(NitroxTechType), new NitroxActionFaker(typeof(NitroxTechType), f => new NitroxTechType(f.PickRandom<TechType>().ToString())) },
         { typeof(NitroxId), new NitroxActionFaker(typeof(NitroxId), f => new NitroxId(f.Random.Guid())) },
     };
