@@ -4,18 +4,13 @@ using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.Communication.Packets.Processors.Core;
 
-/// <summary>
-///     Context used by <see cref="IAuthPacketProcessor{TPacket}" />.
-/// </summary>
-public record ClientProcessorContext : IPacketProcessContext<Player>
+public record ClientProcessorContext : IPacketProcessContext
 {
     private readonly IPacketSender packetSender;
-    public Player Sender { get; set; }
 
-    public ClientProcessorContext(Player sender, IPacketSender packetSender)
+    public ClientProcessorContext(IPacketSender packetSender)
     {
         this.packetSender = packetSender;
-        Sender = sender;
     }
 
     public void Send<T>(T packet) where T : Packet => packetSender.Send(packet);

@@ -17,6 +17,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.Packets.Core;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -26,11 +27,13 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
+        private ClientProcessorContext packetProcessorContext;
         private PacketProcessorsInvoker processorInvoker = null!;
         private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = [];
         private IClient client;
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
+        private IPacketSender packetSender;
         private ThrottledPacketSender throttledPacketSender;
         private GameLogic.Terrain terrain;
 
@@ -53,8 +56,10 @@ namespace NitroxClient.MonoBehaviours
             client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
+            packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
             terrain = NitroxServiceLocator.LocateService<GameLogic.Terrain>();
+            packetProcessorContext = new ClientProcessorContext(packetSender);
 
             Main = this;
             DontDestroyOnLoad(gameObject);
@@ -130,22 +135,22 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            packetReceiver.ConsumePackets(static (packet, registry) =>
+            packetReceiver.ConsumePackets(static (packet, context) =>
             {
                 try
                 {
-                    PacketProcessorsInvoker.Entry processor = registry.GetProcessor(packet.GetType());
+                    PacketProcessorsInvoker.Entry processor = context.processorInvoker.GetProcessor(packet.GetType());
                     if (processor == null)
                     {
                         throw new Exception($"Failed to find packet processor for packet {packet}");
                     }
-                    processor.Execute(null, packet).ContinueWithHandleError();
+                    processor.Execute(context.packetProcessorContext, packet).ContinueWithHandleError();
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, $"Error trying to process packet {packet}");
                 }
-            }, processorInvoker);
+            }, (processorInvoker, packetSender, packetProcessorContext));
         }
 
         public IEnumerator StartSession()
