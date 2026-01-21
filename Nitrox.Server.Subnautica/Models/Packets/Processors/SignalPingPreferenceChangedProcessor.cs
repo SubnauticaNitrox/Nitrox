@@ -1,11 +1,12 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+﻿using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class SignalPingPreferenceChangedProcessor : AuthenticatedPacketProcessor<SignalPingPreferenceChanged>
+internal sealed class SignalPingPreferenceChangedProcessor : IAuthPacketProcessor<SignalPingPreferenceChanged>
 {
-    public override void Process(SignalPingPreferenceChanged packet, Player player)
+    public Task Process(AuthProcessorContext context, SignalPingPreferenceChanged packet)
     {
-        player.PingInstancePreferences[packet.PingKey] = new(packet.Color, packet.Visible);
+        context.Sender.PingInstancePreferences[packet.PingKey] = new(packet.Color, packet.Visible);
+        return Task.CompletedTask;
     }
 }

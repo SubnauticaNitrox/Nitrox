@@ -290,11 +290,11 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
                         ref AnonProcessorContext context = ref lease.GetRef();
                         if (context == null)
                         {
-                            context = new AnonProcessorContext(peerContext.SessionId, this);
+                            context = new AnonProcessorContext((peerContext.SessionId, peerContext.Peer), this);
                         }
                         else
                         {
-                            context.Sender = peerContext.SessionId;
+                            context.Sender = (peerContext.SessionId, peerContext.Peer);
                         }
                         await processor.Execute(context, packet);
                     }

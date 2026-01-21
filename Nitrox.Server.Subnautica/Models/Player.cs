@@ -19,9 +19,8 @@ namespace Nitrox.Server.Subnautica.Models
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; }
 
-        public INitroxConnection Connection { get; set; }
-        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
-        public PlayerContext PlayerContext { get; set; }
+        public PlayerSettings? PlayerSettings => PlayerContext?.PlayerSettings;
+        public PlayerContext? PlayerContext { get; set; }
         public PeerId Id { get; init; }
         public SessionId SessionId { get; init; }
         public string Name { get; }
@@ -45,7 +44,7 @@ namespace Nitrox.Server.Subnautica.Models
 
         public PlayerEntity Entity { get; set; }
 
-        public Player(PeerId id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
+        public Player(PeerId id, string name, bool isPermaDeath, PlayerContext? playerContext,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor,
@@ -55,7 +54,6 @@ namespace Nitrox.Server.Subnautica.Models
             Name = name;
             IsPermaDeath = isPermaDeath;
             PlayerContext = playerContext;
-            Connection = connection;
             Position = position;
             Rotation = rotation;
             SubRootId = subRootId;

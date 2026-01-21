@@ -4,19 +4,17 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
+internal sealed class PlaceBaseProcessor(BuildingManager buildingManager, EntitySimulation entitySimulation) : BuildingProcessor<PlaceBase>(buildingManager, entitySimulation)
 {
-    public PlaceBaseProcessor(BuildingManager buildingManager, IPacketSender packetSender, EntitySimulation entitySimulation) : base(buildingManager, packetSender, entitySimulation){ }
-
-    public override void Process(PlaceBase packet, Player player)
+    public override async Task Process(AuthProcessorContext context, PlaceBase packet)
     {
         if (BuildingManager.CreateBase(packet))
         {
-            TryClaimBuildPiece(packet.BuildEntity, player);
+            await TryClaimBuildPieceAsync(context, packet.BuildEntity);
             
             // End-players can process elementary operations without this data (packet would be heavier for no reason)
             packet.Deflate();
-            PacketSender.SendPacketToOthersAsync(packet, player.SessionId);
+            await context.SendToOthersAsync(packet);
         }
     }
 }

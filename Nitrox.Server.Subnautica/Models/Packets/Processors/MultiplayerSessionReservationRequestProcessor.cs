@@ -1,26 +1,18 @@
 ﻿using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.MultiplayerSession;
-using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class MultiplayerSessionReservationRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionReservationRequest>
+internal sealed class MultiplayerSessionReservationRequestProcessor(PlayerManager playerManager, ILogger<MultiplayerSessionReservationRequestProcessor> logger)
+    : IAnonPacketProcessor<MultiplayerSessionReservationRequest>
 {
-    private readonly IPacketSender packetSender;
-    private readonly PlayerManager playerManager;
-    private readonly ILogger<MultiplayerSessionReservationRequestProcessor> logger;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly ILogger<MultiplayerSessionReservationRequestProcessor> logger = logger;
 
-    public MultiplayerSessionReservationRequestProcessor(IPacketSender packetSender, PlayerManager playerManager, ILogger<MultiplayerSessionReservationRequestProcessor> logger)
-    {
-        this.packetSender = packetSender;
-        this.playerManager = playerManager;
-        this.logger = logger;
-    }
-
-    public override void Process(MultiplayerSessionReservationRequest packet, INitroxConnection connection)
+    public async Task Process(AnonProcessorContext context, MultiplayerSessionReservationRequest packet)
     {
         logger.ZLogInformation($"Processing reservation request from {packet.AuthenticationContext.Username}");
 
@@ -28,13 +20,13 @@ internal sealed class MultiplayerSessionReservationRequestProcessor : Unauthenti
         PlayerSettings playerSettings = packet.PlayerSettings;
         AuthenticationContext authenticationContext = packet.AuthenticationContext;
         MultiplayerSessionReservation reservation = playerManager.ReservePlayerContext(
-            connection,
+            context.Sender.SessionId,
+            context.Sender.EndPoint,
             playerSettings,
             authenticationContext,
             correlationId);
 
         logger.ZLogInformation($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation}");
-
-        packetSender.SendPacketAsync(reservation, connection.SessionId);
+        await context.ReplyAsync(reservation);
     }
 }

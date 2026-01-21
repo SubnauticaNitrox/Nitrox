@@ -1,30 +1,22 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors
 {
-    internal class PlayerSyncFinishedProcessor : AuthenticatedPacketProcessor<PlayerSyncFinished>
+    internal class PlayerSyncFinishedProcessor(PlayerManager playerManager, JoiningManager joiningManager, HibernateService hibernateService)
+        : IAuthPacketProcessor<PlayerSyncFinished>
     {
-        private readonly PlayerManager playerManager;
-        private readonly JoiningManager joiningManager;
-        private readonly HibernateService hibernateService;
-        private readonly ILogger<PlayerSyncFinishedProcessor> logger;
+        private readonly PlayerManager playerManager = playerManager;
+        private readonly JoiningManager joiningManager = joiningManager;
+        private readonly HibernateService hibernateService = hibernateService;
 
-        public PlayerSyncFinishedProcessor(PlayerManager playerManager, JoiningManager joiningManager, HibernateService hibernateService, ILogger<PlayerSyncFinishedProcessor> logger)
-        {
-            this.playerManager = playerManager;
-            this.joiningManager = joiningManager;
-            this.hibernateService = hibernateService;
-            this.logger = logger;
-        }
-
-        public override void Process(PlayerSyncFinished packet, Player player)
+        public async Task Process(AuthProcessorContext context, PlayerSyncFinished packet)
         {
             // If this is the first player connecting we need to restart time at this exact moment
             if (playerManager.GetConnectedPlayers().Count == 1)
             {
-                hibernateService.WakeAsync().ContinueWithHandleError(ex => logger.ZLogError(ex, $"Error while trying to enter low power mode"));
+                await hibernateService.WakeAsync();
             }
 
             joiningManager.SyncFinishedCallback?.Invoke();

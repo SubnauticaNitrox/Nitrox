@@ -1,38 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
+internal sealed class DiscordRequestIPProcessor(IOptions<SubnauticaServerOptions> options, ILogger<DiscordRequestIPProcessor> logger) : IAuthPacketProcessor<DiscordRequestIP>
 {
-    private readonly IPacketSender packetSender;
-    private readonly IOptions<SubnauticaServerOptions> options;
-    private readonly ILogger<DiscordRequestIPProcessor> logger;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly ILogger<DiscordRequestIPProcessor> logger = logger;
 
     private string ipPort;
 
-    public DiscordRequestIPProcessor(IPacketSender packetSender, IOptions<SubnauticaServerOptions> options, ILogger<DiscordRequestIPProcessor> logger)
-    {
-        this.packetSender = packetSender;
-        this.options = options;
-        this.logger = logger;
-    }
-
-    public override void Process(DiscordRequestIP packet, Player player)
+    public async Task Process(AuthProcessorContext context, DiscordRequestIP packet)
     {
         if (string.IsNullOrEmpty(ipPort))
         {
-            Task.Run(() => ProcessPacketAsync(packet, player));
+            await ProcessPacketAsync(context, packet);
             return;
         }
 
         packet.IpPort = ipPort;
-        packetSender.SendPacketAsync(packet, player.SessionId);
+        await context.ReplyAsync(packet);
     }
 
-    private async Task ProcessPacketAsync(DiscordRequestIP packet, Player player)
+    private async Task ProcessPacketAsync(AuthProcessorContext context, DiscordRequestIP packet)
     {
         string result = await GetIpAsync();
         if (result == "")
@@ -42,7 +33,7 @@ internal sealed class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<D
         }
 
         packet.IpPort = ipPort = $"{result}:{options.Value.ServerPort}";
-        await packetSender.SendPacketAsync(packet, player.SessionId);
+        await context.ReplyAsync(packet);
     }
 
     /// <summary>

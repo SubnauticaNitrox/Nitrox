@@ -1,11 +1,11 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FastCheatChangedProcessor : ClientPacketProcessor<FastCheatChanged>
+internal sealed class FastCheatChangedProcessor : IClientPacketProcessor<FastCheatChanged>
 {
-    public override void Process(FastCheatChanged packet)
+    public Task Process(ClientProcessorContext context, FastCheatChanged packet)
     {
         switch (packet.Cheat)
         {
@@ -17,5 +17,6 @@ public class FastCheatChangedProcessor : ClientPacketProcessor<FastCheatChanged>
                 NoCostConsoleCommand.main.fastGrowCheat = packet.Value;
                 break;
         }
+        return Task.CompletedTask;
     }
 }

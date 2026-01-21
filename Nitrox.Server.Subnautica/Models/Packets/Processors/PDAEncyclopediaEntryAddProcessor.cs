@@ -1,17 +1,15 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+﻿using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PDAEncyclopediaEntryAddProcessor(IPacketSender packetSender, PdaManager pdaManager) : AuthenticatedPacketProcessor<PDAEncyclopediaEntryAdd>
+internal sealed class PDAEncyclopediaEntryAddProcessor(PdaManager pdaManager) : IAuthPacketProcessor<PDAEncyclopediaEntryAdd>
 {
-    private readonly IPacketSender packetSender = packetSender;
     private readonly PdaManager pdaManager = pdaManager;
 
-    public override void Process(PDAEncyclopediaEntryAdd packet, Player player)
+    public async Task Process(AuthProcessorContext context, PDAEncyclopediaEntryAdd packet)
     {
         pdaManager.AddEncyclopediaEntry(packet.Key);
-        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
+        await context.SendToOthersAsync(packet);
     }
 }

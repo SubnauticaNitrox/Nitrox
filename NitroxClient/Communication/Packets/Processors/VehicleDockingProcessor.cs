@@ -1,37 +1,31 @@
 using System.Collections;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
+internal sealed class VehicleDockingProcessor(Vehicles vehicles) : IClientPacketProcessor<VehicleDocking>
 {
-    private readonly Vehicles vehicles;
+    private readonly Vehicles vehicles = vehicles;
 
-    public VehicleDockingProcessor(Vehicles vehicles)
-    {
-        this.vehicles = vehicles;
-    }
-
-    public override void Process(VehicleDocking packet)
+    public Task Process(ClientProcessorContext context, VehicleDocking packet)
     {
         if (!NitroxEntity.TryGetComponentFrom(packet.VehicleId, out Vehicle vehicle))
         {
             Log.Error($"[{nameof(VehicleDockingProcessor)}] could not find Vehicle component on {packet.VehicleId}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (!NitroxEntity.TryGetComponentFrom(packet.DockId, out VehicleDockingBay dockingBay))
         {
             Log.Error($"[{nameof(VehicleDockingProcessor)}] could not find VehicleDockingBay component on {packet.DockId}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
@@ -41,6 +35,7 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         }
 
         vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.PlayerId));
+        return Task.CompletedTask;
     }
 
     private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
@@ -56,7 +51,7 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         {
             yield return Yielders.WaitFor1Second;
         }
-        
+
         // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
         // Therefore disable kinematic (again) to remove the bouncing behavior
         DockRemoteVehicle(vehicleDockingBay, vehicle);
@@ -66,7 +61,9 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         vehicles.SetOnPilotMode(vehicleId, playerId, false);
     }
 
-    /// Copy of <see cref="VehicleDockingBay.DockVehicle"/> without the player centric bits
+    /// Copy of
+    /// <see cref="VehicleDockingBay.DockVehicle" />
+    /// without the player centric bits
     private void DockRemoteVehicle(VehicleDockingBay bay, Vehicle vehicle)
     {
         bay.dockedVehicle = vehicle;
@@ -76,7 +73,7 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         bay.vehicle_docked_param = true;
         SkyEnvironmentChanged.Broadcast(vehicle.gameObject, bay.subRoot);
         bay.GetSubRoot().BroadcastMessage("UnlockDoors", SendMessageOptions.DontRequireReceiver);
-        
+
         // We are only actually adding the health if we have a lock on the vehicle so we're fine to keep this routine going on.
         // If vehicle ownership changes then it'll still be fine because the verification will still be on the vehicle ownership.
         bay.CancelInvoke(nameof(VehicleDockingBay.RepairVehicle));

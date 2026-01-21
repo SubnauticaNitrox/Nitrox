@@ -3,15 +3,13 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class BaseDeconstructedProcessor(BuildingManager buildingManager, IPacketSender packetSender) : BuildingProcessor<BaseDeconstructed>(buildingManager, packetSender)
+internal sealed class BaseDeconstructedProcessor(BuildingManager buildingManager) : BuildingProcessor<BaseDeconstructed>(buildingManager)
 {
-    private readonly IPacketSender packetSender = packetSender;
-
-    public override void Process(BaseDeconstructed packet, Player player)
+    public override async Task Process(AuthProcessorContext context, BaseDeconstructed packet)
     {
         if (BuildingManager.ReplaceBaseByGhost(packet))
         {
-            packetSender.SendPacketToOthersAsync(packet, player.SessionId);
+            await context.SendToOthersAsync(packet);
         }
     }
 }

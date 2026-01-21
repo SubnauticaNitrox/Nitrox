@@ -1,18 +1,18 @@
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class CheatCommandProcessor(ILogger<CheatCommandProcessor> logger) : AuthenticatedPacketProcessor<CheatCommand>
+internal sealed class CheatCommandProcessor(ILogger<CheatCommandProcessor> logger) : IAuthPacketProcessor<CheatCommand>
 {
-    public override void Process(CheatCommand packet, Player player)
+    public async Task Process(AuthProcessorContext context, CheatCommand packet)
     {
-        if (player.Permissions < Perms.MODERATOR)
+        if (context.Sender.Permissions < Perms.MODERATOR)
         {
-            logger.ZLogWarning($"{player.Name} used cheat command: '{packet.Command}' without sufficient permissions.");
+            logger.ZLogWarning($"{context.Sender.Name} used cheat command: '{packet.Command}' without sufficient permissions.");
             return;
         }
 
-        logger.ZLogInformation($"{player.Name} used cheat command: '{packet.Command}'");
+        logger.ZLogInformation($"{context.Sender.Name} used cheat command: '{packet.Command}'");
     }
 }

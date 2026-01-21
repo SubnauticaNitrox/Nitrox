@@ -1,12 +1,13 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PinnedRecipeMovedProcessor : AuthenticatedPacketProcessor<PinnedRecipeMoved>
+internal sealed class PinnedRecipeMovedProcessor : IAuthPacketProcessor<PinnedRecipeMoved>
 {
-    public override void Process(PinnedRecipeMoved packet, Player player)
+    public Task Process(AuthProcessorContext context, PinnedRecipeMoved packet)
     {
-        player.PinnedRecipePreferences.Clear();
-        player.PinnedRecipePreferences.AddRange(packet.RecipePins);
+        context.Sender.PinnedRecipePreferences.Clear();
+        context.Sender.PinnedRecipePreferences.AddRange(packet.RecipePins);
+        return Task.CompletedTask;
     }
 }

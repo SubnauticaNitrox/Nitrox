@@ -178,7 +178,7 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
                     {
                         inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
                     }
-                    catch (IndexOutOfRangeException)
+                    catch (Exception ex) when (ex is IndexOutOfRangeException or ArgumentOutOfRangeException)
                     {
                         // ignored
                     }

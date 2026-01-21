@@ -12,7 +12,7 @@ using static Nitrox.Model.Subnautica.Packets.RangedAttackLastTargetUpdate;
 
 namespace NitroxClient.GameLogic;
 
-public class AI
+public sealed class AI
 {
     private readonly IPacketSender packetSender;
     private readonly Dictionary<Creature, CreatureAction> actions = [];

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PvPAttackProcessor(IPacketSender packetSender, PlayerManager playerManager, IOptions<SubnauticaServerOptions> options) : AuthenticatedPacketProcessor<PvPAttack>
+internal sealed class PvPAttackProcessor(IPacketSender packetSender, PlayerManager playerManager, IOptions<SubnauticaServerOptions> options) : IAuthPacketProcessor<PvPAttack>
 {
     private readonly IPacketSender packetSender = packetSender;
     private readonly IOptions<SubnauticaServerOptions> options = options;
@@ -18,7 +17,7 @@ internal sealed class PvPAttackProcessor(IPacketSender packetSender, PlayerManag
         { PvPAttack.AttackType.HeatbladeHit, 1f }
     };
 
-    public override void Process(PvPAttack packet, Player player)
+    public async Task Process(AuthProcessorContext context, PvPAttack packet)
     {
         if (!options.Value.PvpEnabled)
         {
@@ -34,6 +33,6 @@ internal sealed class PvPAttackProcessor(IPacketSender packetSender, PlayerManag
         }
 
         packet.Damage *= multiplier;
-        packetSender.SendPacketAsync(packet, targetPlayer.SessionId);
+        await packetSender.SendPacketAsync(packet, targetPlayer.SessionId);
     }
 }

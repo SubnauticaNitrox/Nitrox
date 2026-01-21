@@ -1,20 +1,17 @@
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlayerMovementProcessor(IPacketSender packetSender, EntityRegistry entityRegistry) : AuthenticatedPacketProcessor<PlayerMovement>
+internal sealed class PlayerMovementProcessor(EntityRegistry entityRegistry) : IAuthPacketProcessor<PlayerMovement>
 {
-    private readonly IPacketSender packetSender = packetSender;
     private readonly EntityRegistry entityRegistry = entityRegistry;
 
-    public override void Process(PlayerMovement packet, Player player)
+    public async Task Process(AuthProcessorContext context, PlayerMovement packet)
     {
-        Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(player.PlayerContext.PlayerNitroxId);
+        Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(context.Sender.PlayerContext.PlayerNitroxId);
 
         if (playerEntity.HasValue)
         {
@@ -22,8 +19,8 @@ internal sealed class PlayerMovementProcessor(IPacketSender packetSender, Entity
             playerEntity.Value.Transform.Rotation = packet.BodyRotation;
         }
 
-        player.Position = packet.Position;
-        player.Rotation = packet.BodyRotation;
-        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
+        context.Sender.Position = packet.Position;
+        context.Sender.Rotation = packet.BodyRotation;
+        await context.SendToOthersAsync(packet);
     }
 }

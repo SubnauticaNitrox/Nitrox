@@ -1,31 +1,21 @@
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntitySpawnedByClientProcessor : AuthenticatedPacketProcessor<EntitySpawnedByClient>
+internal sealed class EntitySpawnedByClientProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
+    : IAuthPacketProcessor<EntitySpawnedByClient>
 {
-    private readonly IPacketSender packetSender;
-    private readonly PlayerManager playerManager;
-    private readonly EntityRegistry entityRegistry;
-    private readonly WorldEntityManager worldEntityManager;
-    private readonly EntitySimulation entitySimulation;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
 
-    public EntitySpawnedByClientProcessor(IPacketSender packetSender, PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
-    {
-        this.packetSender = packetSender;
-        this.playerManager = playerManager;
-        this.entityRegistry = entityRegistry;
-        this.worldEntityManager = worldEntityManager;
-        this.entitySimulation = entitySimulation;
-    }
-
-    public override void Process(EntitySpawnedByClient packet, Player playerWhoSpawned)
+    public async Task Process(AuthProcessorContext context, EntitySpawnedByClient packet)
     {
         Entity entity = packet.Entity;
 
@@ -39,19 +29,19 @@ internal sealed class EntitySpawnedByClientProcessor : AuthenticatedPacketProces
             worldEntityManager.TrackEntityInTheWorld(worldEntity);
         }
 
-        if (packet.RequireSimulation && entitySimulation.TryAssignEntityToPlayer(entity, playerWhoSpawned, true, out simulatedEntity))
+        if (packet.RequireSimulation && entitySimulation.TryAssignEntityToPlayer(entity, context.Sender, true, out simulatedEntity))
         {
             SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
-            packetSender.SendPacketToAllAsync(ownershipChangePacket);
+            await context.SendToAllAsync(ownershipChangePacket);
         }
 
         SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
-            bool isOtherPlayer = player != playerWhoSpawned;
+            bool isOtherPlayer = player != context.Sender;
             if (isOtherPlayer && player.CanSee(entity))
             {
-                packetSender.SendPacketAsync(spawnEntities, player.SessionId);
+                await context.SendAsync(spawnEntities, player.SessionId);
             }
         }
     }

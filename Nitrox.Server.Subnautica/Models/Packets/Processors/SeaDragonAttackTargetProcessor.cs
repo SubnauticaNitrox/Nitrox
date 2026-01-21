@@ -6,10 +6,9 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 internal sealed class SeaDragonAttackTargetProcessor(
-    IPacketSender packetSender,
     PlayerManager playerManager,
     EntityRegistry entityRegistry
-) : TransmitIfCanSeePacketProcessor<SeaDragonAttackTarget>(packetSender, playerManager, entityRegistry)
+) : TransmitIfCanSeePacketProcessor<SeaDragonAttackTarget>(playerManager, entityRegistry)
 {
-    public override void Process(SeaDragonAttackTarget packet, Player sender) => TransmitIfCanSeeEntities(packet, sender, [packet.SeaDragonId, packet.TargetId]);
+    public override async Task Process(AuthProcessorContext context, SeaDragonAttackTarget packet) => await TransmitIfCanSeeEntitiesAsync(context, packet, [packet.SeaDragonId, packet.TargetId]);
 }

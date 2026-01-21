@@ -52,7 +52,7 @@ public class RemotePlayer : INitroxPlayer
 
     public Vehicle Vehicle { get; private set; }
     public SubRoot SubRoot { get; private set; }
-    public EscapePod EscapePod { get; private set; }
+    public EscapePod? EscapePod { get; private set; }
     public PilotingChair PilotingChair { get; private set; }
     public InfectedMixin InfectedMixin { get; private set; }
     public LiveMixin LiveMixin { get; private set; }
@@ -272,7 +272,7 @@ public class RemotePlayer : INitroxPlayer
         }
     }
 
-    public void SetEscapePod(EscapePod newEscapePod)
+    public void SetEscapePod(EscapePod? newEscapePod)
     {
         if (EscapePod != newEscapePod)
         {

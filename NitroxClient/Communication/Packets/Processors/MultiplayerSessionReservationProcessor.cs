@@ -1,22 +1,16 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class MultiplayerSessionReservationProcessor(IMultiplayerSession multiplayerSession) : IClientPacketProcessor<MultiplayerSessionReservation>
 {
-    public class MultiplayerSessionReservationProcessor : ClientPacketProcessor<MultiplayerSessionReservation>
+    private readonly IMultiplayerSession multiplayerSession = multiplayerSession;
+
+    public Task Process(ClientProcessorContext context, MultiplayerSessionReservation packet)
     {
-        private readonly IMultiplayerSession multiplayerSession;
-
-        public MultiplayerSessionReservationProcessor(IMultiplayerSession multiplayerSession)
-        {
-            this.multiplayerSession = multiplayerSession;
-        }
-
-        public override void Process(MultiplayerSessionReservation packet)
-        {
-            multiplayerSession.ProcessReservationResponsePacket(packet);
-        }
+        multiplayerSession.ProcessReservationResponsePacket(packet);
+        return Task.CompletedTask;
     }
 }

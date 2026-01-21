@@ -1,14 +1,15 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 /// <summary>
 /// Stores the state of a player displaying surface water
 /// </summary>
-internal sealed class UpdateDisplaySurfaceWaterProcessor : AuthenticatedPacketProcessor<UpdateDisplaySurfaceWater>
+internal sealed class UpdateDisplaySurfaceWaterProcessor : IAuthPacketProcessor<UpdateDisplaySurfaceWater>
 {
-    public override void Process(UpdateDisplaySurfaceWater packet, Player player)
+    public Task Process(AuthProcessorContext context, UpdateDisplaySurfaceWater packet)
     {
-        player.DisplaySurfaceWater = packet.DisplaySurfaceWater;
+        context.Sender.DisplaySurfaceWater = packet.DisplaySurfaceWater;
+        return Task.CompletedTask;
     }
 }

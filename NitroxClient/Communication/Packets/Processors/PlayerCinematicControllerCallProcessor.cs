@@ -1,35 +1,29 @@
 using Nitrox.Model.DataStructures;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
-using Nitrox.Model.Helper;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<PlayerCinematicControllerCall>
+internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playerManager) : IClientPacketProcessor<PlayerCinematicControllerCall>
 {
-    private readonly PlayerManager playerManager;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public PlayerCinematicControllerCallProcessor(PlayerManager playerManager)
-    {
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(PlayerCinematicControllerCall packet)
+    public Task Process(ClientProcessorContext context, PlayerCinematicControllerCall packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.ControllerID, out GameObject entity))
         {
-            return; // Entity can be not spawned yet bc async.
+            return Task.CompletedTask;
         }
 
         if (!entity.TryGetComponent(out MultiplayerCinematicReference reference))
         {
             Log.Warn($"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
-            return;
+            return Task.CompletedTask;
         }
 
         Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
@@ -43,5 +37,6 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
         {
             reference.CallCinematicModeEnd(packet.Key, packet.ControllerNameHash, opPlayer.Value);
         }
+        return Task.CompletedTask;
     }
 }

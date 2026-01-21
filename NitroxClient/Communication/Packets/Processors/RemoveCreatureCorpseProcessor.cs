@@ -1,51 +1,21 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.Packets;
 using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class RemoveCreatureCorpseProcessor : ClientPacketProcessor<RemoveCreatureCorpse>
+internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixinManager liveMixinManager, SimulationOwnership simulationOwnership) : IClientPacketProcessor<RemoveCreatureCorpse>
 {
-    private readonly Entities entities;
-    private readonly LiveMixinManager liveMixinManager;
-    private readonly SimulationOwnership simulationOwnership;
-
-    public RemoveCreatureCorpseProcessor(Entities entities, LiveMixinManager liveMixinManager, SimulationOwnership simulationOwnership)
-    {
-        this.entities = entities;
-        this.liveMixinManager = liveMixinManager;
-        this.simulationOwnership = simulationOwnership;
-    }
-
-    public override void Process(RemoveCreatureCorpse packet)
-    {
-        entities.RemoveEntity(packet.CreatureId);
-
-        if (entities.SpawningEntities)
-        {
-            entities.MarkForDeletion(packet.CreatureId);
-        }
-
-        if (!NitroxEntity.TryGetComponentFrom(packet.CreatureId, out CreatureDeath creatureDeath))
-        {
-            Log.Warn($"[{nameof(RemoveCreatureCorpseProcessor)}] Could not find entity with id: {packet.CreatureId} to remove corpse from.");
-            return;
-        }
-
-        creatureDeath.transform.localPosition = packet.DeathPosition.ToUnity();
-        creatureDeath.transform.localRotation = packet.DeathRotation.ToUnity();
-
-        SafeOnKillAsync(creatureDeath, packet.CreatureId, simulationOwnership, liveMixinManager);
-    }
+    private readonly Entities entities = entities;
+    private readonly LiveMixinManager liveMixinManager = liveMixinManager;
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
 
     /// <summary>
-    /// Calls only some parts from <see cref="CreatureDeath.OnKillAsync"/> to avoid sending packets from it
-    /// or already synced behaviour (like spawning another respawner from the remote clients)
+    ///     Calls only some parts from <see cref="CreatureDeath.OnKillAsync" /> to avoid sending packets from it
+    ///     or already synced behaviour (like spawning another respawner from the remote clients)
     /// </summary>
     public static void SafeOnKillAsync(CreatureDeath creatureDeath, NitroxId creatureId, SimulationOwnership simulationOwnership, LiveMixinManager liveMixinManager)
     {
@@ -75,5 +45,27 @@ public class RemoveCreatureCorpseProcessor : ClientPacketProcessor<RemoveCreatur
         {
             CoroutineUtils.PumpCoroutine(creatureDeath.OnKillAsync());
         }
+    }
+
+    public Task Process(ClientProcessorContext context, RemoveCreatureCorpse packet)
+    {
+        entities.RemoveEntity(packet.CreatureId);
+
+        if (entities.SpawningEntities)
+        {
+            entities.MarkForDeletion(packet.CreatureId);
+        }
+
+        if (!NitroxEntity.TryGetComponentFrom(packet.CreatureId, out CreatureDeath creatureDeath))
+        {
+            Log.Warn($"[{nameof(RemoveCreatureCorpseProcessor)}] Could not find entity with id: {packet.CreatureId} to remove corpse from.");
+            return Task.CompletedTask;
+        }
+
+        creatureDeath.transform.localPosition = packet.DeathPosition.ToUnity();
+        creatureDeath.transform.localRotation = packet.DeathRotation.ToUnity();
+
+        SafeOnKillAsync(creatureDeath, packet.CreatureId, simulationOwnership, liveMixinManager);
+        return Task.CompletedTask;
     }
 }

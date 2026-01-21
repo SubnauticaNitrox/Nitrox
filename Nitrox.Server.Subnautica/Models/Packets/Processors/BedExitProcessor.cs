@@ -1,19 +1,15 @@
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class BedExitProcessor : AuthenticatedPacketProcessor<BedExit>
+internal sealed class BedExitProcessor(SleepManager sleepManager) : IAuthPacketProcessor<BedExit>
 {
-    private readonly SleepManager sleepManager;
+    private readonly SleepManager sleepManager = sleepManager;
 
-    public BedExitProcessor(SleepManager sleepManager)
+    public Task Process(AuthProcessorContext context, BedExit packet)
     {
-        this.sleepManager = sleepManager;
-    }
-
-    public override void Process(BedExit packet, Player player)
-    {
-        sleepManager.PlayerExitedBed(player);
+        sleepManager.PlayerExitedBed(context.Sender);
+        return Task.CompletedTask;
     }
 }

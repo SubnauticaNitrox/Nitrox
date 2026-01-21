@@ -1,22 +1,18 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlayerSeeOutOfCellEntityProcessor : AuthenticatedPacketProcessor<PlayerSeeOutOfCellEntity>
+internal sealed class PlayerSeeOutOfCellEntityProcessor(EntityRegistry entityRegistry) : IAuthPacketProcessor<PlayerSeeOutOfCellEntity>
 {
-    private readonly EntityRegistry entityRegistry;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
 
-    public PlayerSeeOutOfCellEntityProcessor(EntityRegistry entityRegistry)
-    {
-        this.entityRegistry = entityRegistry;
-    }
-
-    public override void Process(PlayerSeeOutOfCellEntity packet, Player player)
+    public Task Process(AuthProcessorContext context, PlayerSeeOutOfCellEntity packet)
     {
         if (entityRegistry.GetEntityById(packet.EntityId).HasValue)
         {
-            player.OutOfCellVisibleEntities.Add(packet.EntityId);
+            context.Sender.OutOfCellVisibleEntities.Add(packet.EntityId);
         }
+        return Task.CompletedTask;
     }
 }

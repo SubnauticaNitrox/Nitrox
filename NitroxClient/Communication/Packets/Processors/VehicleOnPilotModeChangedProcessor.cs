@@ -1,24 +1,17 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleOnPilotModeChangedProcessor : ClientPacketProcessor<VehicleOnPilotModeChanged>
+internal sealed class VehicleOnPilotModeChangedProcessor(Vehicles vehicles, PlayerManager playerManager) : IClientPacketProcessor<VehicleOnPilotModeChanged>
 {
-    private readonly Vehicles vehicles;
-    private readonly PlayerManager playerManager;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly Vehicles vehicles = vehicles;
 
-    public VehicleOnPilotModeChangedProcessor(Vehicles vehicles, PlayerManager playerManager)
-    {
-        this.vehicles = vehicles;
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(VehicleOnPilotModeChanged packet)
+    public Task Process(ClientProcessorContext context, VehicleOnPilotModeChanged packet)
     {
         if (NitroxEntity.TryGetObjectFrom(packet.VehicleId, out GameObject gameObject))
         {
@@ -28,10 +21,11 @@ public class VehicleOnPilotModeChangedProcessor : ClientPacketProcessor<VehicleO
             // before the animation completes on the remote player.)
             if (gameObject.TryGetComponent(out Vehicle vehicle) && vehicle.docked)
             {
-                return;
+                return Task.CompletedTask;
             }
 
             vehicles.SetOnPilotMode(gameObject, packet.PlayerId, packet.IsPiloting);
         }
+        return Task.CompletedTask;
     }
 }

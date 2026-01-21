@@ -8,24 +8,17 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
-internal abstract class TransmitIfCanSeePacketProcessor<T> : AuthenticatedPacketProcessor<T> where T : Packet
+internal abstract class TransmitIfCanSeePacketProcessor<T>(PlayerManager playerManager, EntityRegistry entityRegistry) : IAuthPacketProcessor<T>
+    where T : Packet
 {
-    private readonly IPacketSender packetSender;
-    private readonly PlayerManager playerManager;
-    private readonly EntityRegistry entityRegistry;
-
-    public TransmitIfCanSeePacketProcessor(IPacketSender packetSender, PlayerManager playerManager, EntityRegistry entityRegistry)
-    {
-        this.packetSender = packetSender;
-        this.playerManager = playerManager;
-        this.entityRegistry = entityRegistry;
-    }
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
 
     /// <summary>
     /// Transmits the provided <paramref name="packet"/> to all other players (excluding <paramref name="senderPlayer"/>)
     /// who can see (<see cref="Player.CanSee"/>) entities corresponding to the provided <paramref name="entityIds"/> only if all those entities are registered.
     /// </summary>
-    public void TransmitIfCanSeeEntities(Packet packet, Player senderPlayer, List<NitroxId> entityIds)
+    protected async Task TransmitIfCanSeeEntitiesAsync(AuthProcessorContext context, Packet packet, List<NitroxId> entityIds)
     {
         List<Entity> entities = [];
         foreach (NitroxId entityId in entityIds)
@@ -40,12 +33,14 @@ internal abstract class TransmitIfCanSeePacketProcessor<T> : AuthenticatedPacket
             }
         }
 
-        foreach (Player player in playerManager.GetConnectedPlayersExcept(senderPlayer))
+        foreach (Player player in playerManager.GetConnectedPlayersExcept(context.Sender))
         {
             if (entities.All(player.CanSee))
             {
-                packetSender.SendPacketAsync(packet, player.SessionId);
+                await context.SendAsync(packet, player.SessionId);
             }
         }
     }
+
+    public abstract Task Process(AuthProcessorContext context, T packet);
 }

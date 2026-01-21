@@ -5,11 +5,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class CreatureActionChangedProcessor(
-    IPacketSender packetSender,
-    PlayerManager playerManager,
-    EntityRegistry entityRegistry
-) : TransmitIfCanSeePacketProcessor<CreatureActionChanged>(packetSender, playerManager, entityRegistry)
+internal sealed class CreatureActionChangedProcessor(PlayerManager playerManager, EntityRegistry entityRegistry) : TransmitIfCanSeePacketProcessor<CreatureActionChanged>(playerManager, entityRegistry)
 {
-    public override void Process(CreatureActionChanged packet, Player sender) => TransmitIfCanSeeEntities(packet, sender, [packet.CreatureId]);
+    public override async Task Process(AuthProcessorContext context, CreatureActionChanged packet) => await TransmitIfCanSeeEntitiesAsync(context, packet, [packet.CreatureId]);
 }

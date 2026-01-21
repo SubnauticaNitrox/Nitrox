@@ -1,14 +1,13 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class KnownTechEntryAddProcessor(IPacketSender packetSender, PdaManager pdaManager) : AuthenticatedPacketProcessor<KnownTechEntryAdd>
+internal sealed class KnownTechEntryAddProcessor(PdaManager pdaManager) : IAuthPacketProcessor<KnownTechEntryAdd>
 {
     private readonly PdaManager pdaManager = pdaManager;
 
-    public override void Process(KnownTechEntryAdd packet, Player player)
+    public async Task Process(AuthProcessorContext context, KnownTechEntryAdd packet)
     {
         switch (packet.Category)
         {
@@ -20,6 +19,6 @@ internal sealed class KnownTechEntryAddProcessor(IPacketSender packetSender, Pda
                 break;
         }
 
-        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
+        await context.SendToOthersAsync(packet);
     }
 }

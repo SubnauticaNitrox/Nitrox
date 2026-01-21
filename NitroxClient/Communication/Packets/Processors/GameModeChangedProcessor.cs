@@ -1,22 +1,15 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
+internal sealed class GameModeChangedProcessor(LocalPlayer localPlayer, PlayerManager playerManager) : IClientPacketProcessor<GameModeChanged>
 {
-    private readonly LocalPlayer localPlayer;
-    private readonly PlayerManager playerManager;
+    private readonly LocalPlayer localPlayer = localPlayer;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public GameModeChangedProcessor(LocalPlayer localPlayer, PlayerManager playerManager)
-    {
-        this.localPlayer = localPlayer;
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(GameModeChanged packet)
+    public Task Process(ClientProcessorContext context, GameModeChanged packet)
     {
         if (packet.AllPlayers || packet.PlayerId == localPlayer.PlayerId)
         {
@@ -33,5 +26,6 @@ public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
         {
             remotePlayer.SetGameMode(packet.GameMode);
         }
+        return Task.CompletedTask;
     }
 }

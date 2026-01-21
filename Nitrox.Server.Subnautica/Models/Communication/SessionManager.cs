@@ -68,6 +68,23 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
         return session;
     }
 
+    public IPEndPoint? GetEndPoint(SessionId sessionId)
+    {
+        lock (sessionLock)
+        {
+            sessions.TryGetValue(sessionId, out Session session);
+            return session?.EndPoint;
+        }
+    }
+
+    public bool IsConnected(SessionId sessionId)
+    {
+        lock (sessionLock)
+        {
+            return sessions.ContainsKey(sessionId);
+        }
+    }
+
     public async Task<bool> DeleteSessionAsync(SessionId sessionId)
     {
         Session session;

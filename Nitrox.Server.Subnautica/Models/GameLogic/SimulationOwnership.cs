@@ -96,7 +96,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
             }
         }
 
-        public Player GetPlayerForLock(NitroxId id)
+        public Player? GetPlayerForLock(NitroxId id)
         {
             lock (playerLocksById)
             {

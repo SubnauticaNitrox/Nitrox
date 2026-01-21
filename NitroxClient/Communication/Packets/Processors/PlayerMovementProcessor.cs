@@ -1,21 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerMovementProcessor : ClientPacketProcessor<PlayerMovement>
+internal sealed class PlayerMovementProcessor(PlayerManager remotePlayerManager) : IClientPacketProcessor<PlayerMovement>
 {
-    private readonly PlayerManager remotePlayerManager;
+    private readonly PlayerManager remotePlayerManager = remotePlayerManager;
 
-    public PlayerMovementProcessor(PlayerManager remotePlayerManager)
-    {
-        this.remotePlayerManager = remotePlayerManager;
-    }
-
-    public override void Process(PlayerMovement movement)
+    public Task Process(ClientProcessorContext context, PlayerMovement movement)
     {
         if (remotePlayerManager.TryFind(movement.PlayerId, out RemotePlayer remotePlayer))
         {
@@ -24,5 +17,6 @@ public class PlayerMovementProcessor : ClientPacketProcessor<PlayerMovement>
                                         movement.BodyRotation.ToUnity(),
                                         movement.AimingRotation.ToUnity());
         }
+        return Task.CompletedTask;
     }
 }

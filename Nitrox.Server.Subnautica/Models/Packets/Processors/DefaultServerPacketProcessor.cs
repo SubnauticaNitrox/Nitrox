@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class DefaultServerPacketProcessor(IPacketSender packetSender, ILogger<DefaultServerPacketProcessor> logger) : AuthenticatedPacketProcessor<Packet>
+internal sealed class DefaultServerPacketProcessor(ILogger<DefaultServerPacketProcessor> logger) : IAuthPacketProcessor<Packet>
 {
     /// <summary>
     ///     Packet types which don't have a server packet processor but should not be transmitted
@@ -38,21 +37,19 @@ internal sealed class DefaultServerPacketProcessor(IPacketSender packetSender, I
         typeof(ToggleLights)
     ];
 
-    private readonly IPacketSender packetSender = packetSender;
-
-    public override void Process(Packet packet, Player player)
+    public async Task Process(AuthProcessorContext context, Packet packet)
     {
         Type packetType = packet.GetType();
         if (!loggingPacketBlackList.Contains(packetType))
         {
-            logger.ZLogDebug($"Using default packet processor for: {packet} and player {player.Id}");
+            logger.ZLogDebug($"Using default packet processor for: {packet} and player #{context.Sender.SessionId}");
         }
         if (defaultPacketProcessorBlacklist.Contains(packetType))
         {
-            logger.ZLogErrorOnce($"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
+            logger.ZLogErrorOnce($"Player {context.Sender.Name} #{context.Sender.SessionId} sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
             return;
         }
 
-        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
+        await context.SendToOthersAsync(packet);
     }
 }

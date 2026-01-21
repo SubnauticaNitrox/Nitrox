@@ -1,28 +1,22 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
+public sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketProcessor<EntityDestroyed>
 {
     public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
 
-    private readonly Entities entities;
+    private readonly Entities entities = entities;
 
-    public EntityDestroyedProcessor(Entities entities)
-    {
-        this.entities = entities;
-    }
-
-    public override void Process(EntityDestroyed packet)
+    public Task Process(ClientProcessorContext context, EntityDestroyed packet)
     {
         entities.RemoveEntity(packet.Id);
-        
+
         if (entities.SpawningEntities)
         {
             entities.MarkForDeletion(packet.Id);
@@ -31,7 +25,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
         {
             Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
-            return;
+            return Task.CompletedTask;
         }
 
         using (PacketSuppressor<EntityDestroyed>.Suppress())
@@ -54,6 +48,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
                 Entities.DestroyObject(gameObject);
             }
         }
+        return Task.CompletedTask;
     }
 
     private void DestroyVehicle(Vehicle vehicle)
@@ -62,7 +57,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         {
             vehicle.OnPilotModeEnd();
 
-            if (!Player.main.ToNormalMode(true))
+            if (!Player.main.ToNormalMode())
             {
                 Player.main.ToNormalMode(false);
                 Player.main.transform.parent = null;

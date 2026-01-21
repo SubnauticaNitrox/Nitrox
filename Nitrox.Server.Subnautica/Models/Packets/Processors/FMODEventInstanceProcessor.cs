@@ -1,20 +1,18 @@
 ﻿using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class FMODEventInstanceProcessor(IPacketSender packetSender, PlayerManager playerManager, FmodService fmodService, ILogger<FMODEventInstanceProcessor> logger) : AuthenticatedPacketProcessor<FMODEventInstancePacket>
+internal sealed class FMODEventInstanceProcessor(PlayerManager playerManager, FmodService fmodService, ILogger<FMODEventInstanceProcessor> logger) : IAuthPacketProcessor<FMODEventInstancePacket>
 {
-    private readonly IPacketSender packetSender = packetSender;
     private readonly PlayerManager playerManager = playerManager;
     private readonly FmodService fmodService = fmodService;
     private readonly ILogger<FMODEventInstanceProcessor> logger = logger;
 
-    public override void Process(FMODEventInstancePacket packet, Player sendingPlayer)
+    public async Task Process(AuthProcessorContext context, FMODEventInstancePacket packet)
     {
         if (!fmodService.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
@@ -25,12 +23,12 @@ internal sealed class FMODEventInstanceProcessor(IPacketSender packetSender, Pla
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             float distance = NitroxVector3.Distance(player.Position, packet.Position);
-            if (player != sendingPlayer &&
-                (soundData.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) &&
+            if (player != context.Sender &&
+                (soundData.IsGlobal || player.SubRootId.Equals(context.Sender.SubRootId)) &&
                 distance < soundData.Radius)
             {
                 packet.Volume = SoundHelper.CalculateVolume(distance, soundData.Radius, packet.Volume);
-                packetSender.SendPacketAsync(packet, player.SessionId);
+                await context.SendAsync(packet, player.SessionId);
             }
         }
     }

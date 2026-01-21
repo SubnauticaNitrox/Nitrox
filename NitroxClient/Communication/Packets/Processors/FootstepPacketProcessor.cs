@@ -3,22 +3,21 @@ using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using Nitrox.Model.DataStructures;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
-using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
+internal sealed class FootstepPacketProcessor : IClientPacketProcessor<FootstepPacket>
 {
-    private readonly PlayerManager remotePlayerManager;
-    private readonly Lazy<FootstepSounds> localFootstepSounds = new(() => Player.mainObject.GetComponent<FootstepSounds>());
-    private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
-    private readonly float footstepAudioRadius; // To modify this value, modify the last value in the SoundWhitelist_Subnautica.csv file
     private const float FOOTSTEP_AUDIO_MAX_VOLUME = 0.5f;
+    private readonly float footstepAudioRadius; // To modify this value, modify the last value in the SoundWhitelist_Subnautica.csv file
+    private readonly Lazy<FootstepSounds> localFootstepSounds = new(() => Player.mainObject.GetComponent<FootstepSounds>());
+    private readonly PlayerManager remotePlayerManager;
+    private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
 
     public FootstepPacketProcessor(PlayerManager remotePlayerManager, FMODWhitelist whitelist)
     {
@@ -27,7 +26,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
         footstepAudioRadius = soundData.Radius;
     }
 
-    public override void Process(FootstepPacket packet)
+    public Task Process(ClientProcessorContext context, FootstepPacket packet)
     {
         Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerID);
         if (player.HasValue)
@@ -54,5 +53,6 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
                 evt.release();
             }
         }
+        return Task.CompletedTask;
     }
 }

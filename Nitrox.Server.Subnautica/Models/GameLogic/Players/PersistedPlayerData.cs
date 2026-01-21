@@ -72,7 +72,6 @@ internal sealed class PersistedPlayerData
                           Name,
                           IsPermaDeath,
                           null, //no connection/context as this player is not connected.
-                          null,
                           SpawnPosition,
                           SpawnRotation,
                           NitroxId,

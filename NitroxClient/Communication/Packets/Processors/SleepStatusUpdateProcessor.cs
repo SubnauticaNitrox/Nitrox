@@ -1,19 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SleepStatusUpdateProcessor : ClientPacketProcessor<SleepStatusUpdate>
+internal sealed class SleepStatusUpdateProcessor(SleepManager sleepManager) : IClientPacketProcessor<SleepStatusUpdate>
 {
-    private readonly SleepManager sleepManager;
+    private readonly SleepManager sleepManager = sleepManager;
 
-    public SleepStatusUpdateProcessor(SleepManager sleepManager)
-    {
-        this.sleepManager = sleepManager;
-    }
-
-    public override void Process(SleepStatusUpdate packet)
+    public Task Process(ClientProcessorContext context, SleepStatusUpdate packet)
     {
         if (packet.PlayersInBed > 0)
         {
@@ -24,5 +19,6 @@ public class SleepStatusUpdateProcessor : ClientPacketProcessor<SleepStatusUpdat
         {
             sleepManager.OnAllPlayersSleeping();
         }
+        return Task.CompletedTask;
     }
 }

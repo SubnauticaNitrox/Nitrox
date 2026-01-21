@@ -1,32 +1,26 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class BenchChangedProcessor : ClientPacketProcessor<BenchChanged>
+internal sealed class BenchChangedProcessor(PlayerManager remotePlayerManager) : IClientPacketProcessor<BenchChanged>
 {
-    private readonly PlayerManager remotePlayerManager;
+    private readonly PlayerManager remotePlayerManager = remotePlayerManager;
 
-    public BenchChangedProcessor(PlayerManager remotePlayerManager)
-    {
-        this.remotePlayerManager = remotePlayerManager;
-    }
-
-    public override void Process(BenchChanged benchChanged)
+    public Task Process(ClientProcessorContext context, BenchChanged benchChanged)
     {
         if (!remotePlayerManager.TryFind(benchChanged.PlayerId, out RemotePlayer remotePlayer))
         {
             Log.Error($"Couldn't find {nameof(RemotePlayer)} for {benchChanged.PlayerId}");
-            return;
+            return Task.CompletedTask;
         }
         if (!NitroxEntity.TryGetObjectFrom(benchChanged.BenchId, out GameObject bench))
         {
             Log.Error($"Couldn't find GameObject for {benchChanged.BenchId}");
-            return;
+            return Task.CompletedTask;
         }
 
         remotePlayer.AnimationController["cinematics_enabled"] = benchChanged.ChangeState != BenchChanged.BenchChangeState.UNSET;
@@ -45,7 +39,7 @@ public class BenchChangedProcessor : ClientPacketProcessor<BenchChanged>
         else
         {
             Log.Error($"Couldn't find Constructable component on {benchChanged.BenchId} or its parent");
-            return;
+            return Task.CompletedTask;
         }
 
         switch (benchChanged.ChangeState)
@@ -57,5 +51,6 @@ public class BenchChangedProcessor : ClientPacketProcessor<BenchChanged>
                 benchBlocker.RemovePlayerFromBench(remotePlayer);
                 break;
         }
+        return Task.CompletedTask;
     }
 }

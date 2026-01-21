@@ -1,22 +1,15 @@
-using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using Story;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class StoryGoalExecutedClientProcessor : ClientPacketProcessor<StoryGoalExecuted>
+internal sealed class StoryGoalExecutedClientProcessor(IPacketSender packetSender) : IClientPacketProcessor<StoryGoalExecuted>
 {
-    private readonly IPacketSender packetSender;
+    private readonly IPacketSender packetSender = packetSender;
 
-    public StoryGoalExecutedClientProcessor(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
-
-    public override void Process(StoryGoalExecuted packet)
+    public Task Process(ClientProcessorContext context, StoryGoalExecuted packet)
     {
         StoryGoalScheduler.main.schedule.RemoveAllFast(packet.Key, static (goal, packetGoalKey) => goal.goalKey == packetGoalKey);
 
@@ -27,5 +20,6 @@ public class StoryGoalExecutedClientProcessor : ClientPacketProcessor<StoryGoalE
         {
             StoryGoal.Execute(packet.Key, packet.Type.ToUnity());
         }
+        return Task.CompletedTask;
     }
 }

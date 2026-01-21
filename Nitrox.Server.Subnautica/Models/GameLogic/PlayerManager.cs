@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
@@ -24,7 +25,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     private readonly ThreadSafeDictionary<string, Player> allPlayersByName = [];
     private readonly ThreadSafeDictionary<SessionId, Player> connectedPlayersBySessionId = [];
-    private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
+    private readonly ThreadSafeDictionary<SessionId, ConnectionAssets> assetsBySessionId = [];
     private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
@@ -39,7 +40,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     public IEnumerable<Player> ConnectedPlayers()
     {
-        return assetsByConnection.Values
+        return assetsBySessionId.Values
                                  .Where(assetPackage => assetPackage.Player != null)
                                  .Select(assetPackage => assetPackage.Player);
     }
@@ -49,11 +50,6 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
     public List<Player> GetConnectedPlayersExcept(Player excludePlayer)
     {
         return ConnectedPlayers().Where(player => player != excludePlayer).ToList();
-    }
-
-    public Player? GetPlayer(INitroxConnection connection)
-    {
-        return assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage) ? assetPackage.Player : null;
     }
 
     public PlayerContext? GetPlayerContext(string reservationKey)
@@ -68,7 +64,8 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
     }
 
     public MultiplayerSessionReservation ReservePlayerContext(
-        INitroxConnection connection,
+        SessionId sessionId,
+        IPEndPoint endPoint,
         PlayerSettings playerSettings,
         AuthenticationContext authenticationContext,
         string correlationId)
@@ -107,11 +104,11 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
             return new MultiplayerSessionReservation(correlationId, rejectedState);
         }
 
-        assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
+        assetsBySessionId.TryGetValue(sessionId, out ConnectionAssets assetPackage);
         if (assetPackage == null)
         {
             assetPackage = new ConnectionAssets();
-            assetsByConnection.Add(connection, assetPackage);
+            assetsBySessionId.Add(sessionId, assetPackage);
             reservedPlayerNames.Add(playerName);
         }
 
@@ -121,7 +118,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
         PlayerAnimation animation = new(AnimChangeType.UNDERWATER, AnimChangeState.ON);
 
-        SessionManager.Session session = sessionManager.GetOrCreateSession(connection.Endpoint);
+        SessionManager.Session session = sessionManager.GetOrCreateSession(endPoint);
 
         // TODO: At some point, store the muted state of a player
         PlayerContext playerContext = new(playerName, session.Id, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);
@@ -133,11 +130,11 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         return new MultiplayerSessionReservation(correlationId, session.Id, reservationKey);
     }
 
-    public Player CreatePlayerData(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+    public Player CreatePlayerData(SessionId sessionId, string reservationKey, out bool wasBrandNewPlayer)
     {
         PlayerContext playerContext = reservations[reservationKey];
         Validate.NotNull(playerContext);
-        ConnectionAssets assetPackage = assetsByConnection[connection];
+        ConnectionAssets assetPackage = assetsBySessionId[sessionId];
         Validate.NotNull(assetPackage);
 
         wasBrandNewPlayer = playerContext.WasBrandNewPlayer;
@@ -148,7 +145,6 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
                                 playerContext.PlayerName,
                                 false,
                                 playerContext,
-                                connection,
                                 NitroxVector3.Zero,
                                 NitroxQuaternion.Identity,
                                 playerContext.PlayerNitroxId,
@@ -172,7 +168,6 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
         // TODO: make a ConnectedPlayer wrapper so this is not stateful
         player.PlayerContext = playerContext;
-        player.Connection = connection;
 
         // reconnecting players need to have their cell visibility refreshed
         player.ClearVisibleCells();
@@ -192,7 +187,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         {
             return;
         }
-        if (!assetsByConnection.TryGetValue(player.Connection, out ConnectionAssets assetPackage))
+        if (!assetsBySessionId.TryGetValue(player.SessionId, out ConnectionAssets assetPackage))
         {
             return;
         }
@@ -211,7 +206,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
             logger.ZLogInformation($"{player.Name} left the game");
         }
 
-        assetsByConnection.Remove(player.Connection);
+        assetsBySessionId.Remove(player.SessionId);
 
         if (!ConnectedPlayers().Any())
         {

@@ -1,11 +1,11 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class GoalCompletedProcessor : AuthenticatedPacketProcessor<GoalCompleted>
+internal sealed class GoalCompletedProcessor : IAuthPacketProcessor<GoalCompleted>
 {
-    public override void Process(GoalCompleted packet, Player player)
+    public async Task Process(AuthProcessorContext context, GoalCompleted packet)
     {
-        player.PersonalCompletedGoalsWithTimestamp.Add(packet.CompletedGoal, packet.CompletionTime);
+        context.Sender.PersonalCompletedGoalsWithTimestamp.Add(packet.CompletedGoal, packet.CompletionTime);
     }
 }

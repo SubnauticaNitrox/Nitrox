@@ -1,20 +1,19 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAttackTarget>
+internal sealed class SeaDragonAttackTargetProcessor : IClientPacketProcessor<SeaDragonAttackTarget>
 {
-    public override void Process(SeaDragonAttackTarget packet)
+    public Task Process(ClientProcessorContext context, SeaDragonAttackTarget packet)
     {
         if (!NitroxEntity.TryGetComponentFrom(packet.SeaDragonId, out SeaDragonMeleeAttack seaDragonMeleeAttack) ||
             !NitroxEntity.TryGetObjectFrom(packet.TargetId, out GameObject target))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         seaDragonMeleeAttack.seaDragon.Aggression.Value = packet.Aggression;
@@ -24,9 +23,8 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
             seaDragonMeleeAttack.animator.SetTrigger("shove");
             seaDragonMeleeAttack.SendMessage("OnMeleeAttack", target, SendMessageOptions.DontRequireReceiver);
             seaDragonMeleeAttack.timeLastBite = Time.time;
-            return;
+            return Task.CompletedTask;
         }
-
 
         // SeaDragonMeleeAttack.OnTouchFront's useful part about local player attack
         Collider collider;
@@ -40,7 +38,7 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
         }
         else
         {
-            return;
+            return Task.CompletedTask;
         }
 
         seaDragonMeleeAttack.timeLastBite = Time.time;
@@ -48,9 +46,10 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
         {
             using (PacketSuppressor<FMODAssetPacket>.Suppress())
             {
-                Utils.PlayEnvSound(seaDragonMeleeAttack.attackSound, collider.transform.position, 20f);
+                Utils.PlayEnvSound(seaDragonMeleeAttack.attackSound, collider.transform.position);
             }
         }
         seaDragonMeleeAttack.OnTouch(collider);
+        return Task.CompletedTask;
     }
 }

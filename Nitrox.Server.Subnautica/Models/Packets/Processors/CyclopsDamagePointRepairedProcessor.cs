@@ -1,14 +1,11 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.Packets.Core;
+﻿using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class CyclopsDamagePointRepairedProcessor(IPacketSender packetSender) : AuthenticatedPacketProcessor<CyclopsDamagePointRepaired>
+internal sealed class CyclopsDamagePointRepairedProcessor : IAuthPacketProcessor<CyclopsDamagePointRepaired>
 {
-    private readonly IPacketSender packetSender = packetSender;
-
-    public override void Process(CyclopsDamagePointRepaired packet, Player simulatingPlayer)
+    public async Task Process(AuthProcessorContext context, CyclopsDamagePointRepaired packet)
     {
-        packetSender.SendPacketToOthersAsync(packet, simulatingPlayer.SessionId);
+        await context.SendToOthersAsync(packet);
     }
 }

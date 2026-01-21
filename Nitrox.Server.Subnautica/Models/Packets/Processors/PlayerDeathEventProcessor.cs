@@ -1,34 +1,25 @@
 ﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlayerDeathEventProcessor : AuthenticatedPacketProcessor<PlayerDeathEvent>
+internal sealed class PlayerDeathEventProcessor(IOptions<SubnauticaServerOptions> config) : IAuthPacketProcessor<PlayerDeathEvent>
 {
-    private readonly IPacketSender packetSender;
-    private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly IOptions<SubnauticaServerOptions> options = config;
 
-    public PlayerDeathEventProcessor(IPacketSender packetSender, IOptions<SubnauticaServerOptions> config)
-    {
-        this.packetSender = packetSender;
-        options = config;
-    }
-
-    public override void Process(PlayerDeathEvent packet, Player player)
+    public async Task Process(AuthProcessorContext context, PlayerDeathEvent packet)
     {
         if (options.Value.IsHardcore())
         {
-            player.IsPermaDeath = true;
-            packetSender.SendPacketAsync(new PlayerKicked("Permanent death from hardcore mode"), player.SessionId);
+            context.Sender.IsPermaDeath = true;
+            await context.ReplyAsync(new PlayerKicked("Permanent death from hardcore mode"));
         }
-        player.LastStoredPosition = packet.DeathPosition;
-        player.LastStoredSubRootID = player.SubRootId;
-        if (player.Permissions > Perms.MODERATOR)
+        context.Sender.LastStoredPosition = packet.DeathPosition;
+        context.Sender.LastStoredSubRootID = context.Sender.SubRootId;
+        if (context.Sender.Permissions > Perms.MODERATOR)
         {
-            packetSender.SendPacketAsync(new ChatMessage(ChatMessage.SERVER_ID, "You can use /back to go to your death location"), player.SessionId);
+            await context.ReplyAsync(new ChatMessage(ChatMessage.SERVER_ID, "You can use /back to go to your death location"));
         }
-        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
+        await context.SendToOthersAsync(packet);
     }
 }
