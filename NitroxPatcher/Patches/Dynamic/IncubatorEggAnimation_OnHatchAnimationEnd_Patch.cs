@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
