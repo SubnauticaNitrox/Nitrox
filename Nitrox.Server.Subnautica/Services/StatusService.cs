@@ -11,7 +11,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
-///     Service which prints out information at appropriate time in the app life cycle.
+///     Service which prints out information at an appropriate time in the app life cycle.
 /// </summary>
 internal sealed class StatusService(
     [FromKeyedServices("startup")] Stopwatch appStartStopWatch,

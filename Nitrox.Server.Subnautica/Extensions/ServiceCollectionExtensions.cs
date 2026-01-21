@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using AssetsTools.NET.Extra;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging.Console;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Packets.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -19,24 +17,26 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
-using Nitrox.Server.Subnautica.Models.Logging.Scopes;
-using Nitrox.Server.Subnautica.Models.Packets;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Processors;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 using Nitrox.Server.Subnautica.Services;
 using ServiceScan.SourceGenerator;
-using ZLogger.Providers;
 
 namespace Nitrox.Server.Subnautica.Extensions;
 
 internal static partial class ServiceCollectionExtensions
 {
     private static readonly Lazy<string> newWorldSeed = new(() => StringHelper.GenerateRandomString(10));
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(IRedactor), Lifetime = ServiceLifetime.Singleton)]
+    internal static partial IServiceCollection AddRedactors(this IServiceCollection services);
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(IAdminFeature<>), CustomHandler = nameof(AddImplementedAdminFeatures))]
+    internal static partial IServiceCollection AddAdminFeatures(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IGameResource), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
     private static partial IServiceCollection AddGameResources(this IServiceCollection services);
@@ -46,9 +46,6 @@ internal static partial class ServiceCollectionExtensions
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IPacketProcessor), Lifetime = ServiceLifetime.Scoped)]
     private static partial IServiceCollection AddPacketProcessors(this IServiceCollection services);
-
-    [GenerateServiceRegistrations(AssignableTo = typeof(IRedactor), Lifetime = ServiceLifetime.Singleton)]
-    internal static partial IServiceCollection AddRedactors(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(EventTrigger<>), AsSelf = true, AsImplementedInterfaces = false, Lifetime = ServiceLifetime.Singleton)]
     private static partial IServiceCollection AddEventTriggers(this IServiceCollection services);
@@ -61,9 +58,6 @@ internal static partial class ServiceCollectionExtensions
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IArgConverter), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
     private static partial IServiceCollection AddCommandArgConverters(this IServiceCollection services);
-
-    [GenerateServiceRegistrations(AssignableTo = typeof(IAdminFeature<>), CustomHandler = nameof(AddImplementedAdminFeatures))]
-    internal static partial IServiceCollection AddAdminFeatures(this IServiceCollection services);
 
     /// <summary>
     ///     Registers a single command and all of its handlers as can be known by the implemented interfaces.
@@ -157,6 +151,9 @@ internal static partial class ServiceCollectionExtensions
                     .AddCommandArgConverters()
                     .AddSingleton<IHostLifetime, ConsoleInputService.NoCtrlCCancelLifetime>();
 
+        /// <summary>
+        ///     Adds all the services and managers necessary to simulate a Subnautica world.
+        /// </summary>
         public IServiceCollection AddWorld()
         {
             // Hack: Save service strongly depends on WorldService so it's a Func<WorldService> to prevent StackOverflow. TODO: Remove need for WorldService; each service should save / load its own data through a common interface.
