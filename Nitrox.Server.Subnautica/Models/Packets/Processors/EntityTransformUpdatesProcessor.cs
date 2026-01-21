@@ -7,19 +7,17 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityTransformUpdatesProcessor(IPacketSender packetSender, PlayerManager playerManager, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData) : IAuthPacketProcessor<EntityTransformUpdates>
+internal sealed class EntityTransformUpdatesProcessor(PlayerManager playerManager, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData) : IAuthPacketProcessor<EntityTransformUpdates>
 {
-    private readonly IPacketSender packetSender = packetSender;
     private readonly PlayerManager playerManager = playerManager;
     private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
-    public Task Process(AuthProcessorContext context, EntityTransformUpdates packet)
+    public async Task Process(AuthProcessorContext context, EntityTransformUpdates packet)
     {
         Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = InitializeVisibleUpdateMapWithOtherPlayers(context.Sender);
         AssignVisibleUpdatesToPlayers(context.Sender, packet.Updates, visibleUpdatesByPlayer);
-        SendUpdatesToPlayers(visibleUpdatesByPlayer);
-        return Task.CompletedTask;
+        await SendUpdatesToPlayersAsync(context, visibleUpdatesByPlayer);
     }
 
     private Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(Player simulatingPlayer)
@@ -62,7 +60,7 @@ internal sealed class EntityTransformUpdatesProcessor(IPacketSender packetSender
         }
     }
 
-    private void SendUpdatesToPlayers(Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
+    private async Task SendUpdatesToPlayersAsync(AuthProcessorContext context, Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
     {
         foreach (KeyValuePair<Player, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
         {
@@ -71,8 +69,7 @@ internal sealed class EntityTransformUpdatesProcessor(IPacketSender packetSender
 
             if (updates.Count > 0)
             {
-                EntityTransformUpdates updatesPacket = new EntityTransformUpdates(updates);
-                packetSender.SendPacketAsync(updatesPacket, player.SessionId);
+                await context.SendAsync(new EntityTransformUpdates(updates), player.SessionId);
             }
         }
     }
