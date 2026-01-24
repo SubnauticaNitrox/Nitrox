@@ -52,7 +52,7 @@ public sealed class PacketProcessorsInvoker
 
             lookup[entry.PacketType] = new Entry(entry.Processor, entry.InterfaceType, entry.PacketType);
         }
-#if NET9_0_OR_GREATER
+#if NET
         packetTypeToProcessorEntry = lookup.ToFrozenDictionary();
 #else
         packetTypeToProcessorEntry = lookup;
@@ -62,12 +62,14 @@ public sealed class PacketProcessorsInvoker
     public Entry? GetProcessor(Type packetType)
     {
         Type current = packetType;
-        while (current != null)
+        Type? prior = null;
+        while (current != prior)
         {
             if (packetTypeToProcessorEntry.TryGetValue(packetType, out Entry processor))
             {
                 return processor;
             }
+            prior = current;
             current = packetType.BaseType;
         }
 

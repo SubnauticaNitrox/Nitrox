@@ -142,7 +142,7 @@ namespace NitroxClient.MonoBehaviours
                     PacketProcessorsInvoker.Entry processor = context.processorInvoker.GetProcessor(packet.GetType());
                     if (processor == null)
                     {
-                        throw new Exception($"Failed to find packet processor for packet {packet}");
+                        throw new Exception($"Failed to find packet processor for packet {packet.GetType()}");
                     }
                     processor.Execute(context.packetProcessorContext, packet).ContinueWithHandleError();
                 }
