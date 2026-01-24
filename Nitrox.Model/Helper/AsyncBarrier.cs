@@ -1,3 +1,4 @@
+#if NET
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,3 +35,4 @@ public sealed class AsyncBarrier
         return tcs.Task.GetAwaiter();
     }
 }
+#endif
