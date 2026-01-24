@@ -40,7 +40,7 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
         }
     }
 
-    private void SubmitInput(string input) => commandService.ExecuteCommand(input, new HostToServerCommandContext(packetSender));
+    private void SubmitInput(string input) => commandService.ExecuteCommand(input, new HostToServerCommandContext(packetSender), out _);
 
     private async Task HandleInputAsync(CancellationToken cancellationToken)
     {

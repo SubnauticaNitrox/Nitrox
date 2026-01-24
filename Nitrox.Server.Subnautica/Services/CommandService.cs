@@ -24,17 +24,13 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
     [GeneratedRegex(@"""(?:[^""\\]|\\.)*""|\S+", RegexOptions.NonBacktracking | RegexOptions.ExplicitCapture)]
     private static partial Regex ArgumentsRegex { get; }
 
-    /// <summary>
-    ///     Tries to execute the command that matches the input.
-    /// </summary>
-    /// <param name="inputText">The text input which should be interpreted as a command.</param>
-    /// <param name="context">The context that should be given to the command handler if found.</param>
-    public void ExecuteCommand(ReadOnlySpan<char> inputText, ICommandContext context)
+    public bool ExecuteCommand(ReadOnlySpan<char> inputText, ICommandContext context, out Task<bool>? commandTask)
     {
+        commandTask = null;
         inputText = inputText.Trim();
         if (inputText.IsEmpty)
         {
-            return;
+            return false;
         }
 
         // Extract command name from command input.
@@ -48,7 +44,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         if (!registry.TryGetHandlersByCommandName(context, commandName, out List<CommandHandlerEntry> handlers))
         {
             logger.ZLogInformation($"Unknown command {commandName.ToString():@CommandName}");
-            return;
+            return false;
         }
 
         ReadOnlySpan<char> commandArgs = inputText[endOfNameIndex ..].Trim();
@@ -63,7 +59,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
             if (rangeIndex >= MAX_ARGS)
             {
                 logger.ZLogError($"Too many arguments passed to command {commandName.ToString():@CommandName}");
-                return;
+                return false;
             }
             ranges[rangeIndex++] = new Range(match.Index, match.Index + match.Length);
         }
@@ -111,21 +107,22 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         if (!inputHasCorrectParameterCount)
         {
             logger.ZLogInformation($"Command {commandName.ToString():@CommandName} does not support the provided arguments. See below for more information.");
-            ExecuteCommand($"help {commandName}", context);
-            return;
+            ExecuteCommand($"help {commandName}", context, out commandTask);
+            return false;
         }
         if (handler == null)
         {
             if (almostMatchingHandlers.Count == 0)
             {
                 logger.ZLogInformation($"Command {commandName.ToString():@CommandName} failed");
-                return;
+                return false;
             }
-            QueueTryRunFirstArgConvertedHandler(context, almostMatchingHandlers, commandArgs.ToString(), ranges);
-            return;
+            commandTask = QueueTryRunFirstArgConvertedHandler(context, almostMatchingHandlers, commandArgs.ToString(), ranges);
+            return true;
         }
 
         RunHandler(handler, args[.. (handler.Parameters.Length + 1)], inputText.ToString());
+        return true;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -165,7 +162,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         }
     }
 
-    private void QueueTryRunFirstArgConvertedHandler(ICommandContext context, List<CommandHandlerEntry> looselyCompatibleHandlers, string argsInput, ReadOnlySpan<Range> argRanges)
+    private Task<bool> QueueTryRunFirstArgConvertedHandler(ICommandContext context, List<CommandHandlerEntry> looselyCompatibleHandlers, string argsInput, ReadOnlySpan<Range> argRanges)
     {
         List<string> args = [];
         foreach (Range range in argRanges)
@@ -177,25 +174,27 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
             args.Add(argsInput[range]);
         }
 
-        Task tryRunHandlerTask = Task.Run(async () =>
+        Task<bool> tryRunHandlerTask = Task.Run(async () =>
         {
             List<(CommandHandlerEntry handler, ConvertResult[][] conversions)> failedHandlers = [];
             foreach (CommandHandlerEntry handler in looselyCompatibleHandlers)
             {
                 ConvertResult[][] values = await TryConvertStringParamsToObjectParams(registry, args, handler.ParameterTypes);
-                if (values.Any(v => v.LastOrDefault().Success != true))
+                if (values.Any(v => !v.LastOrDefault().Success))
                 {
                     failedHandlers.Add((handler, values));
                     continue;
                 }
 
                 RunHandler(handler, [context, ..values.Select(v => v.LastOrDefault().Value).ToArray()], argsInput);
-                return;
+                return true;
             }
 
             logger.ZLogInformation($"Command '{$"{looselyCompatibleHandlers[0].Name} {argsInput}":@Command}' failed to match to any command handlers.{Environment.NewLine}{GetErrorMessagesFromFailedHandlers(failedHandlers)}");
-        }).ContinueWithHandleError(exception => logger.ZLogError(exception, $"Error while parsing '{argsInput}' to a command handler"));
+            return false;
+        });
         runningCommands.Writer.TryWrite(tryRunHandlerTask);
+        return tryRunHandlerTask;
 
         static async Task<ConvertResult[][]> TryConvertStringParamsToObjectParams(CommandRegistry registry, List<string> args, Type[] parameterTypes)
         {

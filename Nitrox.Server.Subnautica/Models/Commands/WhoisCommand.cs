@@ -12,7 +12,7 @@ internal sealed class WhoisCommand : ICommandHandler<Player>
     public async Task Execute(ICommandContext context, Player targetPlayer)
     {
         StringBuilder builder = new($"==== {targetPlayer.Name} ====\n");
-        builder.AppendLine($"ID: {targetPlayer.Id}");
+        builder.AppendLine($"SessionId: {targetPlayer.SessionId}");
         builder.AppendLine($"Role: {targetPlayer.Permissions}");
         builder.AppendLine($"Position: {targetPlayer.Position.X}, {targetPlayer.Position.Y}, {targetPlayer.Position.Z}");
         builder.AppendLine($"Oxygen: {targetPlayer.Stats.Oxygen}/{targetPlayer.Stats.MaxOxygen}");

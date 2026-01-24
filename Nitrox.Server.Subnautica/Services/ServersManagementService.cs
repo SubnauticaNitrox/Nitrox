@@ -5,8 +5,6 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using MagicOnion.Client;
 using Nitrox.Model.Constants;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.MagicOnion;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
@@ -179,7 +177,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
 
     private class ServerManagementReceiver(CommandService commandProcessor, IPacketSender packetSender) : IServerManagementReceiver
     {
-        public void OnCommand(string command) => commandProcessor.ExecuteCommand(command, new HostToServerCommandContext(packetSender));
+        public void OnCommand(string command) => commandProcessor.ExecuteCommand(command, new HostToServerCommandContext(packetSender), out _);
     }
 
     internal record LogEntry(IZLoggerEntry Entry, IZLoggerFormatter Formatter, ZLoggerPlainOptions.LogGeneratorCall Generator, ArrayBufferWriter<byte> Writer);
