@@ -111,9 +111,20 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         }
         if (!inputHasCorrectParameterCount)
         {
-            logger.ZLogInformation($"Command {commandName.ToString():@CommandName} does not support the provided arguments. See below for more information.");
-            ExecuteCommand($"help {commandName}", context, out commandTask);
-            return false;
+            // Try pass incorrect arguments to first handler with ONLY a string argument as a "catch all".
+            handler = handlers.FirstOrDefault(h => h.ParameterTypes.SequenceEqual([typeof(string)]));
+            if (handler != null)
+            {
+                args[1] = commandArgs.ToString();
+            }
+
+            // No catch-all handler, return help page...
+            if (handler == null)
+            {
+                logger.ZLogInformation($"Command {commandName.ToString():@CommandName} does not support the provided arguments. See below for more information.");
+                ExecuteCommand($"help {commandName}", context, out commandTask);
+                return false;
+            }
         }
         if (handler == null)
         {
