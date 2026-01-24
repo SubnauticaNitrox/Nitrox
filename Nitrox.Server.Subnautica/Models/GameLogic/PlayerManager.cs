@@ -142,6 +142,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out Player player))
         {
             player = new Player(++currentPlayerId,
+                                sessionId,
                                 playerContext.PlayerName,
                                 false,
                                 playerContext,
@@ -162,6 +163,10 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
                                 true
             );
             allPlayersByName[playerContext.PlayerName] = player;
+        }
+        else
+        {
+            player.SessionId = sessionId;
         }
 
         connectedPlayersBySessionId.Add(playerContext.SessionId, player);

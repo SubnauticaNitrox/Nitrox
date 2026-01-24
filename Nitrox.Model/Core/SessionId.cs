@@ -1,3 +1,5 @@
+using System;
+
 namespace Nitrox.Model.Core;
 
 /// <summary>
@@ -8,7 +10,7 @@ namespace Nitrox.Model.Core;
 ///     same id.
 ///     Force a 10 minute "hands-off" time before which this session id can be reused.
 /// </remarks>
-public readonly record struct SessionId
+public readonly record struct SessionId : IComparable<SessionId>
 {
     public const int DELAY_REUSE_MINUTES = 10;
     public const ushort SERVER_ID = (ushort)PeerId.SERVER_ID;
@@ -31,6 +33,8 @@ public readonly record struct SessionId
     {
         return new SessionId(id);
     }
+
+    public int CompareTo(SessionId other) => id.CompareTo(other.id);
 
     public override string ToString() => id.ToString();
 }

@@ -7,7 +7,6 @@ using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
-using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models
@@ -22,7 +21,7 @@ namespace Nitrox.Server.Subnautica.Models
         public PlayerSettings? PlayerSettings => PlayerContext?.PlayerSettings;
         public PlayerContext? PlayerContext { get; set; }
         public PeerId Id { get; init; }
-        public SessionId SessionId { get; init; }
+        public SessionId SessionId { get; set; }
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
@@ -44,13 +43,14 @@ namespace Nitrox.Server.Subnautica.Models
 
         public PlayerEntity Entity { get; set; }
 
-        public Player(PeerId id, string name, bool isPermaDeath, PlayerContext? playerContext,
+        public Player(PeerId id, SessionId sessionId, string name, bool isPermaDeath, PlayerContext? playerContext,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor,
                       bool displaySurfaceWater)
         {
             Id = id;
+            SessionId = sessionId;
             Name = name;
             IsPermaDeath = isPermaDeath;
             PlayerContext = playerContext;

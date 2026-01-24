@@ -69,6 +69,7 @@ internal sealed class PersistedPlayerData
     public Player ToPlayer()
     {
         return new Player(Id,
+                          0,
                           Name,
                           IsPermaDeath,
                           null, //no connection/context as this player is not connected.

@@ -92,13 +92,11 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         PeerContext? context;
         lock (contextLock)
         {
-            if (!contextBySessionId.TryGetValue(sessionId, out context))
-            {
-                return ValueTask.CompletedTask;
-            }
+            contextBySessionId.TryGetValue(sessionId, out context);
         }
         if (context == null)
         {
+            logger.ZLogWarning($"Unable to send packet {typeof(T)} because no context is set for session #{sessionId}");
             return ValueTask.CompletedTask;
         }
         SendPacket(packet, context.Peer);
@@ -281,6 +279,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         PacketProcessorsInvoker.Entry? processor = packetRegistryService.GetProcessor(packetType);
         if (processor == null)
         {
+            logger.ZLogWarning($"No packet processor for packet type {packetType}");
             return;
         }
 
