@@ -1,20 +1,14 @@
 using System.Collections;
 using Nitrox.Model.DataStructures;
 using NitroxClient.GameLogic.Spawning.Abstract;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
+internal sealed class PlacedWorldEntitySpawner(WorldEntitySpawner worldEntitySpawner) : SyncEntitySpawner<PlacedWorldEntity>
 {
-    private readonly WorldEntitySpawner worldEntitySpawner;
-
-    public PlacedWorldEntitySpawner(WorldEntitySpawner worldEntitySpawner)
-    {
-        this.worldEntitySpawner = worldEntitySpawner;
-    }
+    private readonly WorldEntitySpawner worldEntitySpawner = worldEntitySpawner;
 
     protected override IEnumerator SpawnAsync(PlacedWorldEntity entity, TaskResult<Optional<GameObject>> result)
     {

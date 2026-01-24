@@ -52,7 +52,6 @@ namespace NitroxClient.MonoBehaviours
         public void Awake()
         {
             NitroxServiceLocator.LifetimeScopeEnded += (_, _) => packetProcessorCache.Clear();
-            processorInvoker = new PacketProcessorsInvoker(NitroxServiceLocator.LocateService<IEnumerable<IPacketProcessor>>());
             client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
@@ -60,6 +59,7 @@ namespace NitroxClient.MonoBehaviours
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
             terrain = NitroxServiceLocator.LocateService<GameLogic.Terrain>();
             packetProcessorContext = new ClientProcessorContext(packetSender);
+            processorInvoker = new PacketProcessorsInvoker(NitroxServiceLocator.LocateService<IEnumerable<IPacketProcessor>>());
 
             Main = this;
             DontDestroyOnLoad(gameObject);

@@ -22,6 +22,7 @@ using Nitrox.Model;
 using Nitrox.Model.Core;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Networking;
+using Nitrox.Model.Packets.Core;
 using NitroxClient.Communication.Packets.Processors.Core;
 
 namespace NitroxClient
@@ -136,6 +137,7 @@ namespace NitroxClient
             containerBuilder
                 .RegisterAssemblyTypes(currentAssembly)
                 .AsClosedTypesOf(typeof(IClientPacketProcessor<>))
+                .As<IPacketProcessor>()
                 .InstancePerLifetimeScope();
         }
 

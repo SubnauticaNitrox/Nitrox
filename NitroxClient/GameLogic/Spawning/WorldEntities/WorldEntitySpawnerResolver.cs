@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -19,7 +18,7 @@ public class WorldEntitySpawnerResolver
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
+    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
