@@ -76,11 +76,14 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
 
         await SendPacketToAllAsync(new ServerStopped());
         // We want every player to receive this packet
-        await Task.Delay(500, cancellationToken);
+        await Task.Delay(500, CancellationToken.None);
         taskChannel.Writer.TryComplete();
-        await foreach (Task task in taskChannel.Reader.ReadAllAsync(cancellationToken))
+        using (CancellationTokenSource cts = new(TimeSpan.FromSeconds(5)))
         {
-            await task;
+            await foreach (Task task in taskChannel.Reader.ReadAllAsync(cts.Token))
+            {
+                await task;
+            }
         }
         server.Stop();
     }
