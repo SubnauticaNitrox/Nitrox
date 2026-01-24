@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -89,10 +90,7 @@ namespace Nitrox.Model.Packets
             BinaryConverter.Serialize(new Wrapper(this), stream);
         }
 
-        public static Packet Deserialize(byte[] data)
-        {
-            return BinaryConverter.Deserialize<Wrapper>(data).Packet;
-        }
+        public static Packet? Deserialize(byte[] data) => BinaryConverter.Deserialize<Wrapper>(data).Packet;
 
         public override string ToString()
         {
@@ -140,14 +138,9 @@ namespace Nitrox.Model.Packets
         ///     </p>
         ///     This type solves both problems and only adds a single byte to the data.
         /// </summary>
-        public readonly struct Wrapper
+        public readonly struct Wrapper(Packet packet)
         {
-            public Packet Packet { get; init; } = null;
-
-            public Wrapper(Packet packet)
-            {
-                Packet = packet;
-            }
+            public Packet? Packet { get; init; } = packet;
         }
 
         public enum UdpChannelId : byte

@@ -248,7 +248,11 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         try
         {
             reader.GetBytes(packetData, packetDataLength);
-            Packet packet = Packet.Deserialize(packetData);
+            Packet? packet = Packet.Deserialize(packetData);
+            if (packet == null)
+            {
+                return;
+            }
             PeerContext context;
             lock (contextLock)
             {
@@ -375,8 +379,5 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         AUTHENTICATED
     }
 
-    private record PeerContext(SessionId SessionId, NetPeer Peer)
-    {
-        public INitroxConnection Connection { get; init; } = new LiteNetLibConnection(SessionId, Peer, NullLogger.Instance);
-    }
+    private record PeerContext(SessionId SessionId, NetPeer Peer);
 }
