@@ -74,8 +74,6 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         }
 
         await SendPacketToAllAsync(new ServerStopped());
-        // We want every player to receive this packet
-        await Task.Delay(500, CancellationToken.None);
         taskChannel.Writer.TryComplete();
         using (CancellationTokenSource cts = new(TimeSpan.FromSeconds(5)))
         {
@@ -172,6 +170,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             }
         }
         await SendPacketAsync(new PlayerKicked(reason), sessionId);
+        await Task.Delay(100); // Give time for LiteNetLib to send the packet out before disconnecting. Otherwise, no kick modal will show on client.
         server.DisconnectPeer(context.Peer); // This will trigger client disconnect, which will handle the session (data) migration.
         return true;
     }

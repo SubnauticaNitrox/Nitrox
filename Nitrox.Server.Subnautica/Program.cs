@@ -7,7 +7,6 @@ using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Server.Subnautica.Models;
-using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Services;
 

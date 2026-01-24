@@ -19,7 +19,7 @@ internal sealed class UserKickedProcessor(IMultiplayerSession session) : IClient
         }
 
         session.Disconnect();
-        Modal.Get<KickedModal>()?.Show(message);
+        Modal.Get<KickedModal>().Show(message);
         return Task.CompletedTask;
     }
 }
