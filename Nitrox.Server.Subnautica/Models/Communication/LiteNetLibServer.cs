@@ -6,11 +6,11 @@ using System.Net;
 using System.Threading.Channels;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using Microsoft.Extensions.Logging.Abstractions;
 using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Administration;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
@@ -18,7 +18,7 @@ using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
-internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPlayer
+internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
 {
     private readonly Dictionary<int, PeerContext> contextByPeerId = [];
     private readonly Dictionary<SessionId, PeerContext> contextBySessionId = [];
@@ -176,6 +176,12 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         return true;
     }
 
+    public async Task OnEventAsync(ISessionCleaner.Args args)
+    {
+        Disconnect disconnect = new(args.Session.Id);
+        await SendPacketToAllAsync(disconnect);
+    }
+
     private void OnConnectionRequest(ConnectionRequest request)
     {
         if (request.Data.GetString() != "nitrox")
@@ -215,28 +221,10 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             return;
         }
 
-        if (!taskChannel.Writer.TryWrite(sessionManager.DeleteSessionAsync(context.SessionId)))
+        if (!taskChannel.Writer.TryWrite(sessionManager.RemoveSessionAsync(context.SessionId)))
         {
             logger.ZLogWarning($"Failed to queue client disconnect task for {peer as EndPoint:@EndPoint}");
         }
-
-        // TODO: Handle disconnect via app event:
-        // Player? player = playerManager.GetPlayer(connection);
-        // if (player == null)
-        // {
-        //     joiningManager.JoiningPlayerDisconnected(connection);
-        //     return;
-        // }
-        // sleepManager.PlayerDisconnected(player);
-        // playerManager.PlayerDisconnected(connection);
-        // Disconnect disconnect = new(player.SessionId);
-        // playerManager.SendPacketToAllPlayers(disconnect);
-        // List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
-        // if (ownershipChanges.Count > 0)
-        // {
-        //     SimulationOwnershipChange ownershipChange = new(ownershipChanges);
-        //     playerManager.SendPacketToAllPlayers(ownershipChange);
-        // }
     }
 
     private void NetworkDataReceived(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)

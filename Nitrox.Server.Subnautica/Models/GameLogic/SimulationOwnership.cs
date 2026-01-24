@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic
@@ -65,15 +66,15 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
             }
         }
 
-        public List<NitroxId> RevokeAllForOwner(Player player)
+        public List<NitroxId> RevokeAllForOwner(SessionId sessionId)
         {
             lock (playerLocksById)
             {
-                List<NitroxId> revokedIds = new List<NitroxId>();
+                List<NitroxId> revokedIds = [];
 
                 foreach (KeyValuePair<NitroxId, PlayerLock> idWithPlayerLock in playerLocksById)
                 {
-                    if (idWithPlayerLock.Value.Player == player)
+                    if (idWithPlayerLock.Value.Player.SessionId == sessionId)
                     {
                         revokedIds.Add(idWithPlayerLock.Key);
                     }

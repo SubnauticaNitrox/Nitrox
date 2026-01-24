@@ -11,7 +11,7 @@ internal sealed class PlayerStatsProcessor(PlayerManager playerManager) : IClien
 
     public Task Process(ClientProcessorContext context, PlayerStats playerStats)
     {
-        if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(playerStats.SessionId, out RemotePlayer remotePlayer))
         {
             RemotePlayerVitals vitals = remotePlayer.vitals;
             if (vitals)

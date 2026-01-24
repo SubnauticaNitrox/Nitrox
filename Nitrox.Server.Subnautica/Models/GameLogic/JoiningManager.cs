@@ -106,7 +106,6 @@ internal sealed class JoiningManager(
                     {
                         await packetSender.SendPacketAsync(new PlayerKicked("Initial sync took too long and timed out"), sessionId);
                     }
-                    playerManager.RemovePlayer(sessionId);
                 }
                 else
                 {

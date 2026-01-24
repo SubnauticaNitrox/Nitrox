@@ -6,7 +6,7 @@ namespace Nitrox.Server.Subnautica.Models.AppEvents;
 
 internal interface ISessionCleaner : IEvent<ISessionCleaner.Args>
 {
-    public record Args(SessionManager.Session Session);
+    public record Args(SessionManager.Session Session, int NewPlayerTotal);
 
     public class Trigger(Func<IEvent<Args>[]> lazyHandlersProvider) : SequentialTrigger<Args>(lazyHandlersProvider);
 }

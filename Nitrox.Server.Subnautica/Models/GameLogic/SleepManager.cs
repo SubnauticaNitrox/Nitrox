@@ -1,11 +1,12 @@
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal sealed class SleepManager(IPacketSender packetSender, PlayerManager playerManager, TimeService timeService)
+internal sealed class SleepManager(IPacketSender packetSender, PlayerManager playerManager, TimeService timeService) : ISessionCleaner
 {
     /// <summary>Duration of the sleep animation/screen fade in seconds.</summary>
     private const float SLEEP_DURATION = 5f;
@@ -43,33 +44,6 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         BroadcastStatus();
     }
 
-    public void PlayerDisconnected(Player player)
-    {
-        playerIdsInBed.Remove(player.SessionId);
-        // If sleep is already in progress, let it complete - don't cancel just because someone disconnected
-        if (isSleepInProgress)
-        {
-            return;
-        }
-        if (playerIdsInBed.Count <= 0)
-        {
-            return;
-        }
-
-        // Note: The disconnecting player is still in playerManager at this point, so we subtract 1
-        int remainingPlayers = playerManager.GetConnectedPlayers().Count - 1;
-            
-        // Send to all players except the disconnecting one
-        SleepStatusUpdate packet = new(playerIdsInBed.Count, remainingPlayers);
-        packetSender.SendPacketToOthersAsync(packet, player.SessionId);
-
-        // Check if remaining players are now all sleeping (disconnected player was the only one awake)
-        if (remainingPlayers > 0 && playerIdsInBed.Count >= remainingPlayers)
-        {
-            StartSleep();
-        }
-    }
-
     private bool AreAllPlayersInBed()
     {
         int totalPlayers = playerManager.GetConnectedPlayers().Count;
@@ -101,5 +75,30 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         sleepTimer?.Start();
 
         playerIdsInBed.Clear();
+    }
+
+    public Task OnEventAsync(ISessionCleaner.Args args)
+    {
+        playerIdsInBed.Remove(args.Session.Id);
+        // If sleep is already in progress, let it complete - don't cancel just because someone disconnected
+        if (isSleepInProgress)
+        {
+            return Task.CompletedTask;
+        }
+        if (playerIdsInBed.Count <= 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        // Send to all players except the disconnecting one
+        SleepStatusUpdate packet = new(playerIdsInBed.Count, args.NewPlayerTotal);
+        packetSender.SendPacketToOthersAsync(packet, args.Session.Id);
+
+        // Check if remaining players are now all sleeping (disconnected player was the only one awake)
+        if (args.NewPlayerTotal > 0 && playerIdsInBed.Count >= args.NewPlayerTotal)
+        {
+            StartSleep();
+        }
+        return Task.CompletedTask;
     }
 }

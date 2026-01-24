@@ -64,14 +64,6 @@ internal sealed class Program
     {
         // TODO: Verify "SendTo" in commands is correct with always using server origin in ChatMessage.
 
-        // TODO: Handle simulation ownership changes on player disconnect:
-        // List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
-        // if (revokedEntities.Count > 0)
-        // {
-        //     SimulationOwnershipChange ownershipChange = new(revokedEntities);
-        //     playerManager.SendPacketToAllPlayers(ownershipChange);
-        // }
-
         HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings
         {
             DisableDefaults = true,

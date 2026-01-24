@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net;
 using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
@@ -91,21 +92,23 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
         }
     }
 
-    public async Task<bool> DeleteSessionAsync(SessionId sessionId)
+    public async Task<bool> RemoveSessionAsync(SessionId sessionId)
     {
         Session session;
+        int sessionCountAfter;
         lock (sessionLock)
         {
             if (!sessions.Remove(sessionId, out session))
             {
                 return false;
             }
+            sessionCountAfter = sessions.Count;
             sessionIdByEndpoint.Remove(ToKey(session.EndPoint));
             returnedSessionIds.Add((time.Elapsed, session.Id));
         }
-        logger.ZLogTrace($"Deleting session #{sessionId}");
-        await sessionCleanTrigger.InvokeAsync(new ISessionCleaner.Args(session));
-        logger.ZLogTrace($"Deleted session #{sessionId}");
+        logger.ZLogTrace($"Removing session #{sessionId}");
+        await sessionCleanTrigger.InvokeAsync(new ISessionCleaner.Args(session, sessionCountAfter));
+        logger.ZLogTrace($"Removed session #{sessionId}");
         return true;
     }
 

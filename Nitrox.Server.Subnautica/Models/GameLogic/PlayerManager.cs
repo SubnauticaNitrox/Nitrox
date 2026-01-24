@@ -11,13 +11,13 @@ using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Communication;
-using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 // TODO: This manager should only handle player data. Move connection related state to other managers.
-internal sealed partial class PlayerManager(SessionManager sessionManager, IOptions<SubnauticaServerOptions> options, HibernateService hibernateService, ILogger<PlayerManager> logger)
+internal sealed partial class PlayerManager(SessionManager sessionManager, IOptions<SubnauticaServerOptions> options, ILogger<PlayerManager> logger) : ISessionCleaner
 {
     // https://regex101.com/r/eTWiEs/2/
     [GeneratedRegex(@"^[a-zA-Z0-9._-]{3,25}$", RegexOptions.NonBacktracking)]
@@ -31,7 +31,6 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     private readonly SessionManager sessionManager = sessionManager;
     private readonly IOptions<SubnauticaServerOptions> options = options;
-    private readonly HibernateService hibernateService = hibernateService;
     private readonly ILogger<PlayerManager> logger = logger;
     private PeerId currentPlayerId;
 
@@ -50,6 +49,11 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
     public List<Player> GetConnectedPlayersExcept(Player excludePlayer)
     {
         return ConnectedPlayers().Where(player => player != excludePlayer).ToList();
+    }
+
+    public List<Player> GetConnectedPlayersExcept(SessionId excludeSessionId)
+    {
+        return ConnectedPlayers().Where(player => player.SessionId != excludeSessionId).ToList();
     }
 
     public PlayerContext? GetPlayerContext(string reservationKey)
@@ -186,40 +190,6 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     public int PlayerCount => connectedPlayersBySessionId.Count;
 
-    public void RemovePlayer(SessionId sessionId)
-    {
-        if (!connectedPlayersBySessionId.TryGetValue(sessionId, out Player player))
-        {
-            return;
-        }
-        if (!assetsBySessionId.TryGetValue(player.SessionId, out ConnectionAssets assetPackage))
-        {
-            return;
-        }
-
-        if (assetPackage.ReservationKey != null)
-        {
-            PlayerContext playerContext = reservations[assetPackage.ReservationKey];
-            reservedPlayerNames.Remove(playerContext.PlayerName);
-            reservations.Remove(assetPackage.ReservationKey);
-        }
-
-        if (assetPackage.Player != null)
-        {
-            reservedPlayerNames.Remove(player.Name);
-            connectedPlayersBySessionId.Remove(player.SessionId);
-            logger.ZLogInformation($"{player.Name} left the game");
-        }
-
-        assetsBySessionId.Remove(player.SessionId);
-
-        if (!ConnectedPlayers().Any())
-        {
-            // TODO: Make this function async
-            _ = hibernateService.SleepAsync().ContinueWithHandleError();
-        }
-    }
-
     public bool SetPlayerProperty<T>(SessionId playerId, T value, Action<Player, T> action)
     {
         if (!TryGetPlayerBySessionId(playerId, out Player? player))
@@ -249,5 +219,34 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
     public bool TryGetPlayerBySessionId(SessionId sessionId, [NotNullWhen(true)] out Player? player)
     {
         return connectedPlayersBySessionId.TryGetValue(sessionId, out player);
+    }
+
+    public Task OnEventAsync(ISessionCleaner.Args args)
+    {
+        if (!connectedPlayersBySessionId.TryGetValue(args.Session.Id, out Player player))
+        {
+            return Task.CompletedTask;
+        }
+        if (!assetsBySessionId.TryGetValue(player.SessionId, out ConnectionAssets assetPackage))
+        {
+            return Task.CompletedTask;
+        }
+
+        if (assetPackage.ReservationKey != null)
+        {
+            PlayerContext playerContext = reservations[assetPackage.ReservationKey];
+            reservedPlayerNames.Remove(playerContext.PlayerName);
+            reservations.Remove(assetPackage.ReservationKey);
+        }
+
+        if (assetPackage.Player != null)
+        {
+            reservedPlayerNames.Remove(player.Name);
+            connectedPlayersBySessionId.Remove(player.SessionId);
+            logger.ZLogInformation($"{player.Name} left the game");
+        }
+
+        assetsBySessionId.Remove(player.SessionId);
+        return Task.CompletedTask;
     }
 }
