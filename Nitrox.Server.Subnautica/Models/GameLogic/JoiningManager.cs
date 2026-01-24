@@ -88,7 +88,7 @@ internal sealed class JoiningManager(
 
                 SyncFinishedCallback = () => { syncFinished = true; };
 
-                while (!syncFinished && !source.IsCancellationRequested)
+                while (!syncFinished && sessionManager.IsConnected(sessionId) && !source.IsCancellationRequested)
                 {
                     await Task.Delay(10, source.Token);
                 }
@@ -110,11 +110,12 @@ internal sealed class JoiningManager(
                 }
                 else
                 {
-                    if (playerManager.TryGetPlayerBySessionId(sessionId, out Player? player))
+                    logger.ZLogInformation($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
+                    if (!playerManager.TryGetPlayerBySessionId(sessionId, out Player? player))
                     {
-                        logger.ZLogInformation($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
-                        BroadcastPlayerJoined(player);
+                        throw new Exception($"Failed to get player object for session #{sessionId}");
                     }
+                    BroadcastPlayerJoined(player);
                 }
             }
             catch (Exception e)
