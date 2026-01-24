@@ -74,6 +74,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         }
 
         await SendPacketToAllAsync(new ServerStopped());
+        await Task.Delay(200, CancellationToken.None); // Gives some time for the last few tasks to be queued up.
         taskChannel.Writer.TryComplete();
         using (CancellationTokenSource cts = new(TimeSpan.FromSeconds(5)))
         {
