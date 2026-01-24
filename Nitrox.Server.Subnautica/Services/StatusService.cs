@@ -5,6 +5,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
@@ -55,30 +56,36 @@ internal sealed class StatusService(
 
         async Task LogIps()
         {
-            logger.ZLogInformation($"Use IP to connect:");
-            using (logger.BeginPlainScope())
+            // Capture and log so that logs are written in one go. This prevents different log lines being inserted in-between.
+            string logMessage;
+            using (CaptureScope captureScope = logger.BeginCaptureScope())
             {
-                using (logger.BeginPrefixScope("\t"))
+                using (logger.BeginPlainScope())
                 {
-                    logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
-                    foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
+                    logger.ZLogInformation($"Use IP to connect:");
+                    using (logger.BeginPrefixScope("\t"))
                     {
-                        switch (origin)
+                        logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
+                        foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
                         {
-                            case NetHelper.MachineIpOrigin.LAN:
-                                logger.LogLanIp(address);
-                                break;
-                            case NetHelper.MachineIpOrigin.VPN:
-                                logger.LogVpnIp(networkName!, address);
-                                break;
-                            case NetHelper.MachineIpOrigin.WAN:
-                                logger.LogWanIp(address);
-                                break;
+                            switch (origin)
+                            {
+                                case NetHelper.MachineIpOrigin.LAN:
+                                    logger.LogLanIp(address);
+                                    break;
+                                case NetHelper.MachineIpOrigin.VPN:
+                                    logger.LogVpnIp(networkName!, address);
+                                    break;
+                                case NetHelper.MachineIpOrigin.WAN:
+                                    logger.LogWanIp(address);
+                                    break;
+                            }
                         }
                     }
                 }
-                logger.ZLogInformation($"");
+                logMessage = $"{string.Join("", captureScope.Logs).Trim(Environment.NewLine)}{Environment.NewLine}";
             }
+            logger.ZLogInformation($"{logMessage}");
         }
     }
 
