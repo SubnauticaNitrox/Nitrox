@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -19,8 +20,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic;
 // TODO: This manager should only handle player data. Move connection related state to other managers.
 internal sealed partial class PlayerManager(SessionManager sessionManager, IOptions<SubnauticaServerOptions> options, ILogger<PlayerManager> logger) : ISessionCleaner
 {
-    // https://regex101.com/r/eTWiEs/2/
-    [GeneratedRegex(@"^[a-zA-Z0-9._-]{3,25}$", RegexOptions.NonBacktracking)]
+    [GeneratedRegex(NitroxConstants.PLAYER_NAME_VALID_REGEX, RegexOptions.NonBacktracking)]
     private static partial Regex PlayerNameRegex();
 
     private readonly ThreadSafeDictionary<string, Player> allPlayersByName = [];
