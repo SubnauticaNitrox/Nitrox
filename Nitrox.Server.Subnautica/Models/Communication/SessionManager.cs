@@ -13,10 +13,10 @@ namespace Nitrox.Server.Subnautica.Models.Communication;
 /// </summary>
 internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger, ILogger<SessionManager> logger)
 {
-    private readonly ISessionCleaner.Trigger sessionCleanTrigger = sessionCleanTrigger;
     private readonly ILogger<SessionManager> logger = logger;
     private readonly List<(TimeSpan ReturnedTimeStamp, SessionId Id)> returnedSessionIds = [];
-    private readonly Dictionary<IPEndPoint, SessionId> sessionIdByEndpoint = [];
+    private readonly ISessionCleaner.Trigger sessionCleanTrigger = sessionCleanTrigger;
+    private readonly Dictionary<EndpointKey, SessionId> sessionIdByEndpoint = [];
     private readonly Lock sessionLock = new();
     private readonly Dictionary<SessionId, Session> sessions = [];
     private readonly Stopwatch time = Stopwatch.StartNew();
@@ -50,21 +50,27 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
     public Session GetOrCreateSession(IPEndPoint endPoint)
     {
         Session session;
+        EndpointKey key = ToKey(endPoint);
+        bool created = false;
         lock (sessionLock)
         {
-            if (!sessionIdByEndpoint.TryGetValue(endPoint, out SessionId id))
+            if (!sessionIdByEndpoint.TryGetValue(key, out SessionId id))
             {
                 id = NextSessionId;
-                if (sessionIdByEndpoint.TryAdd(endPoint, id))
+                if (sessionIdByEndpoint.TryAdd(key, id))
                 {
                     session = new Session(id, endPoint);
                     sessions.Add(id, session);
+                    created = true;
                 }
             }
 
             session = sessions[id];
         }
-        logger.ZLogTrace($"Created session #{session.Id}");
+        if (created)
+        {
+            logger.ZLogInformation($"Created session #{session.Id} for connection {endPoint}");
+        }
         return session;
     }
 
@@ -94,7 +100,7 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
             {
                 return false;
             }
-            sessionIdByEndpoint.Remove(session.EndPoint);
+            sessionIdByEndpoint.Remove(ToKey(session.EndPoint));
             returnedSessionIds.Add((time.Elapsed, session.Id));
         }
         logger.ZLogTrace($"Deleting session #{sessionId}");
@@ -103,5 +109,9 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
         return true;
     }
 
+    private EndpointKey ToKey(IPEndPoint endPoint) => new(endPoint.Address, (ushort)endPoint.Port);
+
     public record Session(SessionId Id, IPEndPoint EndPoint);
+
+    private record EndpointKey(IPAddress Address, ushort Port);
 }

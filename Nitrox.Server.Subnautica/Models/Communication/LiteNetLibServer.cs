@@ -49,7 +49,6 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        listener.PeerConnectedEvent += PeerConnected;
         listener.PeerDisconnectedEvent += PeerDisconnected;
         listener.NetworkReceiveEvent += NetworkDataReceived;
         listener.ConnectionRequestEvent += OnConnectionRequest;
@@ -201,8 +200,6 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             contextByPeerId.TryAdd(peer.Id, context);
         }
     }
-
-    private void PeerConnected(NetPeer peer) => logger.ZLogInformation($"Connection made by {peer.Address:@IP}:{peer.Port}");
 
     private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
