@@ -3,13 +3,15 @@ using System.IO;
 using System.Linq;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class SaveService(Func<WorldService> worldServiceProvider, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> startOptions, ILogger<SaveService> logger) : BackgroundService, IHostedLifecycleService
+internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISaveState.Trigger saveStateTrigger, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> startOptions, ILogger<SaveService> logger) : BackgroundService, IHostedLifecycleService
 {
     private readonly Func<WorldService> worldServiceProvider = worldServiceProvider;
+    private readonly ISaveState.Trigger saveStateTrigger = saveStateTrigger;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<SaveService> logger = logger;
@@ -26,6 +28,7 @@ internal sealed class SaveService(Func<WorldService> worldServiceProvider, IOpti
             {
                 continue;
             }
+            await saveStateTrigger.InvokeAsync(new ISaveState.Args(savePath));
             ExecutePostSaveCommand();
             BackUp(savePath);
         }

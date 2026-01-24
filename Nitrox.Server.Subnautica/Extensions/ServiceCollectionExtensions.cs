@@ -136,6 +136,7 @@ internal static partial class ServiceCollectionExtensions
                             _ => options.Seed
                         };
                     });
+            services.AddHostedSingletonService<PersistNitroxSerializableConfigService>();
             return services;
         }
 

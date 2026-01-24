@@ -12,14 +12,20 @@ internal sealed class AutoSaveCommand(IOptions<SubnauticaServerOptions> serverOp
     [Description("Whether autosave should be on or off")]
     public async Task Execute(ICommandContext context, bool toggle)
     {
+        SubnauticaServerOptions options = serverOptionsProvider.Value;
         if (toggle)
         {
-            serverOptionsProvider.Value.AutoSave = false;
+            // Ensure save interval is a sensible value before turning on auto saving.
+            if (options.SaveInterval <= 1000)
+            {
+                options.SaveInterval = new SubnauticaServerOptions().SaveInterval;
+            }
+            options.AutoSave = true;
             await context.ReplyAsync("Enabled periodical saving");
         }
         else
         {
-            serverOptionsProvider.Value.AutoSave = true;
+            options.AutoSave = false;
             await context.ReplyAsync("Disabled periodical saving");
         }
     }
