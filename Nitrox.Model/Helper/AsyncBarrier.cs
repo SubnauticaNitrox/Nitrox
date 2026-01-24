@@ -1,4 +1,3 @@
-#if NET
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,43 +9,28 @@ namespace Nitrox.Model.Helper;
 /// </summary>
 public sealed class AsyncBarrier
 {
-    private readonly LockObject locker = new();
     private TaskCompletionSource signal = new();
 
     public void Signal()
     {
-        lock (locker)
-        {
-            signal.TrySetResult();
-        }
+        TaskCompletionSource tcs = Interlocked.CompareExchange(ref signal, null, null);
+        tcs.TrySetResult();
     }
 
-    public async Task WaitForSignalAsync(CancellationToken cancellationToken) => await AtomicRefreshTcs(ref signal).WaitAsync(cancellationToken);
+    public async Task WaitForSignalAsync(CancellationToken cancellationToken)
+    {
+        TaskCompletionSource tcs = Interlocked.CompareExchange(ref signal, null, null);
+        if (tcs.Task.IsCompleted)
+        {
+            tcs = new TaskCompletionSource();
+            Interlocked.Exchange(ref signal, tcs);
+        }
+        await tcs.Task.WaitAsync(cancellationToken);
+    }
 
     public TaskAwaiter GetAwaiter()
     {
-        lock (locker)
-        {
-            return signal.Task.GetAwaiter();
-        }
-    }
-
-    private Task AtomicRefreshTcs(ref TaskCompletionSource tcs)
-    {
-        Task tcsTask;
-        lock (locker)
-        {
-            tcsTask = tcs.Task;
-        }
-        if (tcsTask.IsCompletedSuccessfully)
-        {
-            lock (locker)
-            {
-                tcs = new TaskCompletionSource();
-                return tcs.Task;
-            }
-        }
-        return tcsTask;
+        TaskCompletionSource tcs = Interlocked.CompareExchange(ref signal, null, null);
+        return tcs.Task.GetAwaiter();
     }
 }
-#endif
