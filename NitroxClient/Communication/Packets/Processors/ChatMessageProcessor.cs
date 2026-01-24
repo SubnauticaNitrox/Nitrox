@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.Packets;
@@ -21,7 +22,7 @@ internal sealed class ChatMessageProcessor(PlayerManager remotePlayerManager, Lo
 
     public Task Process(ClientProcessorContext context, ChatMessage message)
     {
-        if (message.PlayerId != ChatMessage.SERVER_ID)
+        if (message.PlayerId != SessionId.SERVER_ID)
         {
             LogClientMessage(message);
         }

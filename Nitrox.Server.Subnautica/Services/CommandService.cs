@@ -244,6 +244,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
                         }
                     }
                     indent--;
+                    sb.AppendLine();
                 }
             }
             return sb.ToString();

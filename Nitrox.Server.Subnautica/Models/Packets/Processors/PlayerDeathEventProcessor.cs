@@ -1,4 +1,5 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
+﻿using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
@@ -18,7 +19,7 @@ internal sealed class PlayerDeathEventProcessor(IOptions<SubnauticaServerOptions
         context.Sender.LastStoredSubRootID = context.Sender.SubRootId;
         if (context.Sender.Permissions > Perms.MODERATOR)
         {
-            await context.ReplyAsync(new ChatMessage(ChatMessage.SERVER_ID, "You can use /back to go to your death location"));
+            await context.ReplyAsync(new ChatMessage(SessionId.SERVER_ID, "You can use /back to go to your death location"));
         }
         await context.SendToOthersAsync(packet);
     }

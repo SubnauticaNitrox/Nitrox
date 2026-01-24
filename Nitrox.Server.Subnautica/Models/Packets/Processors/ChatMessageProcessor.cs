@@ -1,4 +1,5 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Core;
+﻿using Nitrox.Model.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
@@ -10,7 +11,7 @@ internal sealed class ChatMessageProcessor(ILogger<ChatMessageProcessor> logger)
     {
         if (context.Sender.PlayerContext.IsMuted)
         {
-            await context.ReplyAsync(new ChatMessage(ChatMessage.SERVER_ID, "You're currently muted"));
+            await context.ReplyAsync(new ChatMessage(SessionId.SERVER_ID, "You're currently muted"));
             return;
         }
         logger.ZLogInformation($"<{context.Sender.Name}>: {packet.Text}");

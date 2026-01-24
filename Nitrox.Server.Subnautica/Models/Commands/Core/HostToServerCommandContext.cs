@@ -59,7 +59,7 @@ internal sealed record HostToServerCommandContext : ICommandContext
                 await packetSender.SendPacketToOthersAsync(packet, OriginId);
                 break;
             case string message when !string.IsNullOrWhiteSpace(message):
-                await packetSender.SendPacketToOthersAsync(new ChatMessage(ChatMessage.SERVER_ID, message), OriginId);
+                await packetSender.SendPacketToOthersAsync(new ChatMessage(SessionId.SERVER_ID, message), OriginId);
                 break;
             default:
                 ICommandContext.ThrowNotSupportedData(data);
@@ -75,7 +75,7 @@ internal sealed record HostToServerCommandContext : ICommandContext
                 await packetSender.SendPacketAsync(packet, sessionId);
                 break;
             case string message when !string.IsNullOrWhiteSpace(message):
-                await packetSender.SendPacketAsync(new ChatMessage(ChatMessage.SERVER_ID, message), sessionId);
+                await packetSender.SendPacketAsync(new ChatMessage(SessionId.SERVER_ID, message), sessionId);
                 break;
             default:
                 ICommandContext.ThrowNotSupportedData(data);

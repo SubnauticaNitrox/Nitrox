@@ -15,7 +15,7 @@ internal sealed class ListCommand(IOptions<SubnauticaServerOptions> options, Pla
     [Description("Shows who's online")]
     public async Task Execute(ICommandContext context)
     {
-        IList<string> players = playerManager.GetConnectedPlayers().Select(player => player.Name).ToList();
+        IList<string> players = playerManager.GetConnectedPlayers().Select(player => $"{player.Name} #{player.SessionId}").ToList();
 
         StringBuilder builder = new($"List of players ({players.Count}/{options.Value.MaxConnections}):\n");
         builder.Append(string.Join(", ", players));

@@ -263,7 +263,6 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
     private async Task ProcessPacket(PeerContext peerContext, Packet packet)
     {
         Type packetType = packet.GetType();
-        logger.ZLogTrace($"Incoming packet {packetType.Name:@TypeName} by session #{peerContext.SessionId:@SessionId}");
         PacketProcessorsInvoker.Entry? processor = packetRegistryService.GetProcessor(packetType);
         if (processor == null)
         {

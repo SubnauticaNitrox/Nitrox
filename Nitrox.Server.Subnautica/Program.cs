@@ -62,8 +62,6 @@ internal sealed class Program
 
     private static async Task StartServerAsync(string[] args)
     {
-        // TODO: Verify "SendTo" in commands is correct with always using server origin in ChatMessage.
-
         HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings
         {
             DisableDefaults = true,

@@ -86,7 +86,7 @@ internal sealed class StatusService(
     {
         cancellationToken.ThrowIfCancellationRequested();
         logger.ZLogInformation($"Server is stopping...");
-        packetSender.SendPacketToAllAsync(new ChatMessage(ChatMessage.SERVER_ID, "[BROADCAST] Server is shutting down..."));
+        packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, "[BROADCAST] Server is shutting down..."));
         return Task.CompletedTask;
     }
 
