@@ -56,7 +56,7 @@ internal sealed partial record WriteRedactedLogLoggerMiddleware : ILoggerMiddlew
         foreach (ValueMatch match in ParameterTagRegex.EnumerateMatches(originalFormat))
         {
             // Write text before current match first.
-            Range beforeRange = lastMatch ?? new Range(0, match.Index);
+            Range beforeRange = lastMatch != null ? new Range(lastMatch.Value.End, match.Index) : new Range(0, match.Index);
             if (!beforeRange.IsEmpty())
             {
                 context.Writer.Write(originalFormat[beforeRange]);
