@@ -121,7 +121,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
                 logger.ZLogInformation($"Command {commandName.ToString():@CommandName} failed");
                 return;
             }
-            QueueTryRunFirstArgConvertedHandler(almostMatchingHandlers, commandArgs.ToString(), ranges);
+            QueueTryRunFirstArgConvertedHandler(context, almostMatchingHandlers, commandArgs.ToString(), ranges);
             return;
         }
 
@@ -165,7 +165,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         }
     }
 
-    private void QueueTryRunFirstArgConvertedHandler(List<CommandHandlerEntry> looselyCompatibleHandlers, string argsInput, ReadOnlySpan<Range> argRanges)
+    private void QueueTryRunFirstArgConvertedHandler(ICommandContext context, List<CommandHandlerEntry> looselyCompatibleHandlers, string argsInput, ReadOnlySpan<Range> argRanges)
     {
         List<string> args = [];
         foreach (Range range in argRanges)
@@ -189,7 +189,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
                     continue;
                 }
 
-                RunHandler(handler, values.Select(v => v.LastOrDefault().Value).ToArray(), argsInput);
+                RunHandler(handler, [context, ..values.Select(v => v.LastOrDefault().Value).ToArray()], argsInput);
                 return;
             }
 

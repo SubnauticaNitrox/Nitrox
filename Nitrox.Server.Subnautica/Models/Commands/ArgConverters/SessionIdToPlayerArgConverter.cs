@@ -1,4 +1,3 @@
-using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
@@ -7,11 +6,11 @@ namespace Nitrox.Server.Subnautica.Models.Commands.ArgConverters;
 /// <summary>
 ///     Converts a player ID to a player object, if known.
 /// </summary>
-internal class SessionIdToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<SessionId, Player>
+internal class SessionIdToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<ushort, Player>
 {
     private readonly PlayerManager playerManager = playerManager;
 
-    public Task<ConvertResult> ConvertAsync(SessionId sessionId)
+    public Task<ConvertResult> ConvertAsync(ushort sessionId)
     {
         if (sessionId < 1)
         {

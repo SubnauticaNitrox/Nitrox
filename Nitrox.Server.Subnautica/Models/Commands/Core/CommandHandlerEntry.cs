@@ -78,7 +78,7 @@ internal sealed record CommandHandlerEntry
     {
         if (defaultValues.Length > 0)
         {
-            return (Task)execute.Invoke(Owner, [..args, ..defaultValues])!;
+            return (Task)execute.Invoke(Owner, new Span<object?>([..args, ..defaultValues]))!;
         }
         return (Task)execute.Invoke(Owner, args)!;
     }
