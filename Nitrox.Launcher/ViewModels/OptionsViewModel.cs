@@ -74,42 +74,30 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-        await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+        await Task.Run(() => SetTargetedSubnauticaPath(SelectedGame.PathToGame), cancellationToken).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
-    public async Task SetTargetedSubnauticaPathAsync(string path)
+    private void SetTargetedSubnauticaPath(string path)
     {
         if (!Directory.Exists(path))
         {
             return;
         }
 
-        if (LaunchGameViewModel.LastFindSubnauticaTask != null)
+        PirateDetection.TriggerOnDirectory(path);
+        if (!FileSystem.Instance.IsWritable(Directory.GetCurrentDirectory()) || !FileSystem.Instance.IsWritable(path))
         {
-            await LaunchGameViewModel.LastFindSubnauticaTask;
+            // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
+            if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
+            {
+                LauncherNotifier.Error("Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.");
+                return;
+            }
         }
 
-        LaunchGameViewModel.LastFindSubnauticaTask = Task.Run(() =>
-        {
-            PirateDetection.TriggerOnDirectory(path);
-
-            if (!FileSystem.Instance.IsWritable(Directory.GetCurrentDirectory()) || !FileSystem.Instance.IsWritable(path))
-            {
-                // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
-                if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
-                {
-                    LauncherNotifier.Error("Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.");
-                    return null;
-                }
-            }
-
-            // Save game path as preferred for future sessions.
-            NitroxUser.PreferredGamePath = path;
-
-            return path;
-        });
-
-        await LaunchGameViewModel.LastFindSubnauticaTask;
+        // Save game path as preferred for future sessions.
+        NitroxUser.PreferredGamePath = path;
+        NitroxUser.SetGamePathAndPlatform(path, null);
     }
 
     [RelayCommand]
@@ -129,7 +117,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
         if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
-            await SetTargetedSubnauticaPathAsync(selectedDirectory);
+            await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LauncherNotifier.Success("Applied changes");
         }
