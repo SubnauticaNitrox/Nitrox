@@ -61,7 +61,17 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
                 logger.ZLogError($"Too many arguments passed to command {commandName.ToString():@CommandName}");
                 return false;
             }
-            ranges[rangeIndex++] = new Range(match.Index, match.Index + match.Length);
+            Range newRange = new(match.Index, match.Index + match.Length);
+
+            // Trim new range if it's a quoted string.
+            newRange = commandArgs[newRange] switch
+            {
+                ['"', .., '"'] => new Range(newRange.Start.Value + 1, newRange.End.Value - 1),
+                ['\'', .., '\''] => new Range(newRange.Start.Value + 1, newRange.End.Value - 1),
+                _ => newRange
+            };
+
+            ranges[rangeIndex++] = newRange;
         }
 
         // Convert text ranges into object args. First arg is always the context (and should be accounted for in algorithm below).
@@ -78,12 +88,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
             inputHasCorrectParameterCount = true;
             for (int i = 0; i < currentHandler.ParameterTypes.Length; i++)
             {
-                ReadOnlySpan<char> part = commandArgs[ranges[i]] switch
-                {
-                    ['"', .., '"'] s when s.IndexOf("\\\"") >= 0 => s[1..^1].ToString().Replace(@"\""", @""""),
-                    ['"', .., '"'] s => s[1..^1],
-                    var s => s
-                };
+                ReadOnlySpan<char> part = commandArgs[ranges[i]];
                 object? parsedValue = registry.TryParseToType(part, currentHandler.ParameterTypes[i]);
                 if (parsedValue == null)
                 {

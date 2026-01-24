@@ -10,12 +10,12 @@ internal class PlayerNameToPlayerArgConverter(PlayerManager playerManager) : IAr
 {
     private readonly PlayerManager playerManager = playerManager;
 
-    public async Task<ConvertResult> ConvertAsync(string playerName)
+    public Task<ConvertResult> ConvertAsync(string playerName)
     {
         if (!playerManager.TryGetPlayerByName(playerName, out Player? player))
         {
-            return ConvertResult.Fail($"No player found by name '{playerName}'");
+            return Task.FromResult(ConvertResult.Fail($"No player found by name '{playerName}'"));
         }
-        return ConvertResult.Ok(player);
+        return Task.FromResult(ConvertResult.Ok(player));
     }
 }
