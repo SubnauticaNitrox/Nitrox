@@ -19,7 +19,7 @@ internal sealed class ChangeServerPasswordCommand(ILogger<ChangeServerPasswordCo
     private async Task SetPasswordAsync(ICommandContext context, string password)
     {
         serverConfig.Value.ServerPassword = password;
-        logger.LogServerPasswordChanged(password, context.OriginName);
+        logger.LogServerPasswordChanged(password, context.OriginName, context.OriginId);
         await context.ReplyAsync("Server password has been updated");
     }
 }

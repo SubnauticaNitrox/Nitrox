@@ -12,7 +12,8 @@ internal sealed class LoginCommand(IOptions<SubnauticaServerOptions> optionsProv
     [Description("Log in to server as admin (requires password)")]
     public async Task Execute(ICommandContext context, [Description("The admin password for the server")] string adminPassword)
     {
-        if (string.IsNullOrWhiteSpace(optionsProvider.Value.AdminPassword))
+        string activePassword = optionsProvider.Value.AdminPassword;
+        if (string.IsNullOrWhiteSpace(activePassword))
         {
             await context.ReplyAsync("Logging in with admin password is disabled");
             return;
@@ -21,7 +22,7 @@ internal sealed class LoginCommand(IOptions<SubnauticaServerOptions> optionsProv
         switch (context)
         {
             case PlayerToServerCommandContext { Player: { Permissions: < Perms.ADMIN } player }:
-                if (optionsProvider.Value.AdminPassword == adminPassword)
+                if (activePassword == adminPassword)
                 {
                     player.Permissions = Perms.ADMIN;
                     await context.ReplyAsync($"You've been made {nameof(Perms.ADMIN)} on this server!");
