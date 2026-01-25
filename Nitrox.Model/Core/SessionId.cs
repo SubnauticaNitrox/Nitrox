@@ -3,7 +3,7 @@ using System;
 namespace Nitrox.Model.Core;
 
 /// <summary>
-///     The session id (index) of a connection. The server uses 0, players will be start from 1.
+///     The session id (index) of a connection. The server uses 0, players will start from 1.
 /// </summary>
 /// <remarks>
 ///     It's important that, once a session id is assigned by the server, no other connection can impersonate by using the
