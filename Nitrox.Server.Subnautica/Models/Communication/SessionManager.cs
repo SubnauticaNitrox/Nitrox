@@ -15,7 +15,7 @@ namespace Nitrox.Server.Subnautica.Models.Communication;
 internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger, ILogger<SessionManager> logger)
 {
     private readonly ILogger<SessionManager> logger = logger;
-    private readonly List<(TimeSpan ReturnedTimeStamp, SessionId Id)> returnedSessionIds = [];
+    private readonly Queue<(TimeSpan ReturnedTimeStamp, SessionId Id)> returnedSessionIds = [];
     private readonly ISessionCleaner.Trigger sessionCleanTrigger = sessionCleanTrigger;
     private readonly Dictionary<EndpointKey, SessionId> sessionIdByEndpoint = [];
     private readonly Lock sessionLock = new();
@@ -32,10 +32,9 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
             lock (sessionLock)
             {
                 SessionId id = 0;
-                if (returnedSessionIds.Count > 0 && (time.Elapsed - returnedSessionIds[0].ReturnedTimeStamp).TotalMinutes >= SessionId.DELAY_REUSE_MINUTES)
+                if (returnedSessionIds.Count > 0 && returnedSessionIds.TryPeek(out (TimeSpan ReturnedTimeStamp, SessionId Id) entry) && (time.Elapsed - entry.ReturnedTimeStamp).TotalMinutes >= SessionId.DELAY_REUSE_MINUTES)
                 {
-                    id = returnedSessionIds[0].Id;
-                    returnedSessionIds.RemoveAt(0);
+                    id = returnedSessionIds.Dequeue().Id;
                 }
 
                 if (id == 0)
@@ -104,7 +103,7 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
             }
             sessionCountAfter = sessions.Count;
             sessionIdByEndpoint.Remove(ToKey(session.EndPoint));
-            returnedSessionIds.Add((time.Elapsed, session.Id));
+            returnedSessionIds.Enqueue((time.Elapsed, session.Id));
         }
         logger.ZLogTrace($"Removing session #{sessionId}");
         await sessionCleanTrigger.InvokeAsync(new ISessionCleaner.Args(session, sessionCountAfter));
