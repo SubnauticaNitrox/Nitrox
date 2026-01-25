@@ -88,6 +88,17 @@ public class PlayerManager
         }
     }
 
+    /// <summary>
+    /// Removes all remote players
+    /// </summary>
+    public void RemoveAllPlayers()
+    {
+        foreach (ushort playerId in playersById.Keys.ToList())
+        {
+            RemovePlayer(playerId);
+        }
+    }
+
     /// <returns>Remote players + You => X + 1</returns>
     public int GetTotalPlayerCount() => playersById.Count + 1;
 

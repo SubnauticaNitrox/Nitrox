@@ -19,6 +19,7 @@ public class VirtualCyclops : MonoBehaviour
     public const string NAME = "VirtualCyclops";
 
     private static readonly Dictionary<TechType, GameObject> cacheColliderCopy = [];
+    private static bool isDisposed;
     private readonly Dictionary<string, Openable> virtualOpenableByName = [];
     private readonly Dictionary<string, Openable> realOpenableByName = [];
     private readonly Dictionary<GameObject, GameObject> virtualConstructableByRealGameObject = [];
@@ -31,14 +32,30 @@ public class VirtualCyclops : MonoBehaviour
 
     public static void Initialize()
     {
+        isDisposed = false;
         CreateVirtualCyclops();
         Multiplayer.OnAfterMultiplayerEnd += Dispose;
     }
 
     public static void Dispose()
     {
-        Destroy(Instance.gameObject);
-        Instance = null;
+        isDisposed = true;
+
+        // Destroy cached collider copies from previous session
+        foreach (GameObject cachedCollider in cacheColliderCopy.Values)
+        {
+            if (cachedCollider)
+            {
+                Destroy(cachedCollider);
+            }
+        }
+        cacheColliderCopy.Clear();
+
+        if (Instance)
+        {
+            Destroy(Instance.gameObject);
+            Instance = null;
+        }
         Multiplayer.OnAfterMultiplayerEnd -= Dispose;
     }
 
@@ -99,6 +116,10 @@ public class VirtualCyclops : MonoBehaviour
         TaskResult<GameObject> result = new();
         foreach (TechType techType in constructableTechTypes)
         {
+            if (isDisposed)
+            {
+                yield break;
+            }
             yield return DefaultWorldEntitySpawner.RequestPrefab(techType, result);
             if (result.value && result.value.GetComponent<Constructable>())
             {
@@ -234,7 +255,7 @@ public class VirtualCyclops : MonoBehaviour
     /// </summary>
     public static GameObject CreateColliderCopy(GameObject realObject, TechType techType)
     {
-        if (cacheColliderCopy.TryGetValue(techType, out GameObject colliderCopy))
+        if (cacheColliderCopy.TryGetValue(techType, out GameObject colliderCopy) && colliderCopy)
         {
             return GameObject.Instantiate(colliderCopy);
         }
@@ -276,7 +297,7 @@ public class VirtualCyclops : MonoBehaviour
             child.SetParent(colliderCopy.transform, false);
         }
 
-        cacheColliderCopy.Add(techType, colliderCopy);
+        cacheColliderCopy[techType] = colliderCopy;
         return GameObject.Instantiate(colliderCopy);
     }
 
