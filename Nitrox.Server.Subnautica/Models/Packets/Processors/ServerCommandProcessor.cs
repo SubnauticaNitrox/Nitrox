@@ -36,7 +36,7 @@ internal sealed class ServerCommandProcessor(CommandService cmdProcessor, IPacke
         }
         else if (!string.IsNullOrWhiteSpace(commandOutput))
         {
-            logger.ZLogInformation($"{commandOutput}");
+            logger.ZLogInformation($"{commandOutput.TrimEnd(Environment.NewLine.ToCharArray())}");
         }
     }
 }
