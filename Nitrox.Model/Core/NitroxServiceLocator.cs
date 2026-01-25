@@ -53,7 +53,14 @@ public static class NitroxServiceLocator
             throw new InvalidOperationException("You must install an Autofac container before initializing a new lifetime scope.");
         }
 
-        CurrentLifetimeScope?.Dispose();
+        // If there's an existing scope, invalidate caches before disposing
+        // Should allow us to handle instances of stale refs for issue 2545
+        if (CurrentLifetimeScope != null)
+        {
+            OnLifetimeScopeEnded();
+            CurrentLifetimeScope.Dispose();
+        }
+
         CurrentLifetimeScope = DependencyContainer.BeginLifetimeScope();
     }
 

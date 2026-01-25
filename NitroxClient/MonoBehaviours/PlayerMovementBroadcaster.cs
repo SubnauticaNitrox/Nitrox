@@ -8,12 +8,13 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class PlayerMovementBroadcaster : MonoBehaviour
+public class PlayerMovementBroadcaster : NitroxSessionBehaviour
 {
     private LocalPlayer localPlayer;
 
-    public void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         localPlayer = this.Resolve<LocalPlayer>();
     }
 

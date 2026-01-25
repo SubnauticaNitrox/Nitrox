@@ -15,7 +15,7 @@ public abstract class NitroxSessionBehaviour : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        Multiplayer.OnAfterMultiplayerEnd += OnSessionEnd;
+        Multiplayer.OnAfterMultiplayerEnd -= OnSessionEnd;
     }
 
     protected virtual void OnSessionEnd(){ }
