@@ -5,7 +5,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands.ArgConverters;
 /// <summary>
 ///     Converts a word to a bool value.
 /// </summary>
-internal class WordToBoolArgConverter : IArgConverter<string, bool>
+internal sealed class WordToBoolArgConverter : IArgConverter<string, bool>
 {
     public Task<ConvertResult> ConvertAsync(string value) =>
         Task.FromResult(value switch

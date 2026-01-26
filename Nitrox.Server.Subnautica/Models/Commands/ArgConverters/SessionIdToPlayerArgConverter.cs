@@ -6,7 +6,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands.ArgConverters;
 /// <summary>
 ///     Converts a player ID to a player object, if known.
 /// </summary>
-internal class SessionIdToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<ushort, Player>
+internal sealed class SessionIdToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<ushort, Player>
 {
     private readonly PlayerManager playerManager = playerManager;
 

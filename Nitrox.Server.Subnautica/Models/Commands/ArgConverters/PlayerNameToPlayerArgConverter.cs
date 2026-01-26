@@ -6,7 +6,7 @@ namespace Nitrox.Server.Subnautica.Models.Commands.ArgConverters;
 /// <summary>
 ///     Converts a player name to a player object, if known.
 /// </summary>
-internal class PlayerNameToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<string, Player>
+internal sealed class PlayerNameToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<string, Player>
 {
     private readonly PlayerManager playerManager = playerManager;
 
