@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Net;
 using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.AppEvents;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
@@ -111,12 +110,6 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
         return true;
     }
 
-    private EndpointKey ToKey(IPEndPoint endPoint) => new(endPoint.Address, (ushort)endPoint.Port);
-
-    public record Session(SessionId Id, IPEndPoint EndPoint);
-
-    private record EndpointKey(IPAddress Address, ushort Port);
-
     public int GetSessionCount()
     {
         lock (sessionLock)
@@ -124,4 +117,10 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
             return sessions.Count;
         }
     }
+
+    private EndpointKey ToKey(IPEndPoint endPoint) => new(endPoint.Address, (ushort)endPoint.Port);
+
+    public record Session(SessionId Id, IPEndPoint EndPoint);
+
+    private record EndpointKey(IPAddress Address, ushort Port);
 }
