@@ -21,7 +21,7 @@ internal sealed class PickupItemPacketProcessor(EntityRegistry entityRegistry, W
         if (simulationOwnershipData.RevokeOwnerOfId(id))
         {
             SimulationOwnershipChange simulationOwnershipChange = new(id, SessionId.SERVER_ID, SimulationLockType.TRANSIENT);
-            await context.SendToOthersAsync(simulationOwnershipChange);
+            await context.SendToAllAsync(simulationOwnershipChange);
         }
 
         StopTrackingExistingWorldEntity(id);
