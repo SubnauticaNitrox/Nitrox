@@ -7,7 +7,6 @@
     
     <ItemGroup>
         <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
-        <ProjectReference Include="..\Nitrox.Model\Nitrox.Model.csproj" />
     </ItemGroup>
 
     <ItemGroup>
