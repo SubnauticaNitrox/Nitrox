@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
@@ -50,6 +51,9 @@ public class VirtualCyclops : MonoBehaviour
             }
         }
         cacheColliderCopy.Clear();
+
+        // Clear pawn controllers from previous session
+        CyclopsPawn.ClearControllers();
 
         if (Instance)
         {
