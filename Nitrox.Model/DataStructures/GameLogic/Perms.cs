@@ -11,7 +11,7 @@ public enum Perms : byte
     NONE,
 
     /// <summary>
-    ///     Default player permission, cannot use cheat and have access to basic server commands (e.g: help, list, whisper,
+    ///     Default player permission, cannot use cheats and only have access to basic server commands (e.g: help, list, whisper,
     ///     whois, ...)
     /// </summary>
     PLAYER,
