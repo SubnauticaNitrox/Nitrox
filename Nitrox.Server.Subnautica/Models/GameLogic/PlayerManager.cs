@@ -190,9 +190,9 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     public int PlayerCount => connectedPlayersBySessionId.Count;
 
-    public bool SetPlayerProperty<T>(SessionId playerId, T value, Action<Player, T> action)
+    public bool SetPlayerProperty<T>(SessionId sessionId, T value, Action<Player, T> action)
     {
-        if (!TryGetPlayerBySessionId(playerId, out Player? player))
+        if (!TryGetPlayerBySessionId(sessionId, out Player? player))
         {
             return false;
         }

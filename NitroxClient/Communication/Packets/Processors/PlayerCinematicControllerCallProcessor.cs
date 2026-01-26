@@ -26,7 +26,7 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             return Task.CompletedTask;
         }
 
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.SessionId);
         Validate.IsPresent(opPlayer);
 
         if (packet.StartPlaying)

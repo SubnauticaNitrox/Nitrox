@@ -13,7 +13,7 @@ internal sealed class SubRootChangedProcessor(PlayerManager remotePlayerManager)
 
     public Task Process(ClientProcessorContext context, SubRootChanged packet)
     {
-        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.SessionId);
 
         if (remotePlayer.HasValue)
         {

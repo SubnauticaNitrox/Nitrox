@@ -12,9 +12,9 @@ internal sealed class BenchChangedProcessor(PlayerManager remotePlayerManager) :
 
     public Task Process(ClientProcessorContext context, BenchChanged benchChanged)
     {
-        if (!remotePlayerManager.TryFind(benchChanged.PlayerId, out RemotePlayer remotePlayer))
+        if (!remotePlayerManager.TryFind(benchChanged.SessionId, out RemotePlayer remotePlayer))
         {
-            Log.Error($"Couldn't find {nameof(RemotePlayer)} for {benchChanged.PlayerId}");
+            Log.Error($"Couldn't find {nameof(RemotePlayer)} for {benchChanged.SessionId}");
             return Task.CompletedTask;
         }
         if (!NitroxEntity.TryGetObjectFrom(benchChanged.BenchId, out GameObject bench))

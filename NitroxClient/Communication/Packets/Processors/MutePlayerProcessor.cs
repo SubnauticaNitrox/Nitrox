@@ -1,4 +1,5 @@
-﻿using Nitrox.Model.DataStructures;
+﻿using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
@@ -7,7 +8,7 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 internal sealed class MutePlayerProcessor(PlayerManager playerManager) : IClientPacketProcessor<MutePlayer>
 {
-    public delegate void PlayerMuted(ushort playerId, bool muted);
+    public delegate void PlayerMuted(SessionId sessionId, bool muted);
 
     private readonly PlayerManager playerManager = playerManager;
     public PlayerMuted OnPlayerMuted;

@@ -13,7 +13,7 @@ internal sealed class EscapePodChangedProcessor(PlayerManager remotePlayerManage
 
     public Task Process(ClientProcessorContext context, EscapePodChanged packet)
     {
-        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.SessionId);
 
         if (remotePlayer.HasValue)
         {

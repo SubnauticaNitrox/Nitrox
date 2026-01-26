@@ -10,7 +10,7 @@ internal sealed class PlayerMovementProcessor(PlayerManager remotePlayerManager)
 
     public Task Process(ClientProcessorContext context, PlayerMovement movement)
     {
-        if (remotePlayerManager.TryFind(movement.PlayerId, out RemotePlayer remotePlayer))
+        if (remotePlayerManager.TryFind(movement.SessionId, out RemotePlayer remotePlayer))
         {
             remotePlayer.UpdatePosition(movement.Position.ToUnity(),
                                         movement.Velocity.ToUnity(),

@@ -28,7 +28,7 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
 
     public Task Process(ClientProcessorContext context, PlayerHeldItemChanged packet)
     {
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.SessionId);
         Validate.IsPresent(opPlayer);
 
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 
@@ -15,7 +15,7 @@ public class PlayerCinematics
 
     private IntroCinematicMode lastModeToSend = IntroCinematicMode.NONE;
 
-    public ushort? IntroCinematicPartnerId = null;
+    public SessionId? IntroCinematicPartnerId = null;
 
     /// <summary>
     /// Some cinematics should not be played. Example the intro as it's completely handled by a dedicated system.
@@ -28,27 +28,27 @@ public class PlayerCinematics
         this.localPlayer = localPlayer;
     }
 
-    public void StartCinematicMode(ushort playerId, NitroxId controllerID, int controllerNameHash, string key)
+    public void StartCinematicMode(SessionId sessionId, NitroxId controllerID, int controllerNameHash, string key)
     {
         if (!blacklistedKeys.Contains(key))
         {
-            packetSender.Send(new PlayerCinematicControllerCall(playerId, controllerID, controllerNameHash, key, true));
+            packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, true));
         }
     }
 
-    public void EndCinematicMode(ushort playerId, NitroxId controllerID, int controllerNameHash, string key)
+    public void EndCinematicMode(SessionId sessionId, NitroxId controllerID, int controllerNameHash, string key)
     {
         if (!blacklistedKeys.Contains(key))
         {
-            packetSender.Send(new PlayerCinematicControllerCall(playerId, controllerID, controllerNameHash, key, false));
+            packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, false));
         }
     }
 
     public void SetLocalIntroCinematicMode(IntroCinematicMode introCinematicMode)
     {
-        if (!localPlayer.PlayerId.HasValue)
+        if (!localPlayer.SessionId.HasValue)
         {
-            Log.Error($"PlayerId was null while setting IntroCinematicMode to {introCinematicMode}");
+            Log.Error($"{nameof(SessionId)} was null while setting IntroCinematicMode to {introCinematicMode}");
             return;
         }
 
@@ -62,7 +62,7 @@ public class PlayerCinematics
         // This method can be called before client is joined. To prevent sending as an unauthenticated packet we delay it.
         if (Multiplayer.Joined)
         {
-            packetSender.Send(new SetIntroCinematicMode(localPlayer.PlayerId.Value, introCinematicMode));
+            packetSender.Send(new SetIntroCinematicMode(localPlayer.SessionId.Value, introCinematicMode));
             return;
         }
 

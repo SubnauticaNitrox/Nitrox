@@ -22,6 +22,6 @@ public class DeferredPacketReceiverTest
         storedPacket.Should().NotBeNull();
         packetReceiver.GetNextPacket().Should().BeNull();
         storedPacket.Should().Be(packet);
-        packet.PlayerId.Should().Be(PLAYER_ID);
+        packet.SessionId.Should().Be(PLAYER_ID);
     }
 }

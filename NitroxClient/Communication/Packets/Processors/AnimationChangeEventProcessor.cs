@@ -36,7 +36,7 @@ internal sealed class AnimationChangeEventProcessor(PlayerManager remotePlayerMa
 
     private void UpdateAnimation(AnimationChangeEvent animEvent)
     {
-        Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(animEvent.PlayerId);
+        Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(animEvent.SessionId);
         if (opPlayer.HasValue)
         {
             PlayerAnimation playerAnimation = animEvent.Animation;

@@ -40,6 +40,6 @@ public class PlayerContext
 
     public override string ToString()
     {
-        return $"[{nameof(PlayerContext)} PlayerName: {PlayerName}, PlayerId: {SessionId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}, IntroCinematicMode: {IntroCinematicMode}, Animation: {Animation}]";
+        return $"[{nameof(PlayerContext)} PlayerName: {PlayerName}, {nameof(SessionId)}: {SessionId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}, IntroCinematicMode: {IntroCinematicMode}, Animation: {Animation}]";
     }
 }

@@ -28,7 +28,7 @@ internal sealed class FootstepPacketProcessor : IClientPacketProcessor<FootstepP
 
     public Task Process(ClientProcessorContext context, FootstepPacket packet)
     {
-        Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerID);
+        Optional<RemotePlayer> player = remotePlayerManager.Find(packet.SessionId);
         if (player.HasValue)
         {
             FMODAsset asset = packet.AssetIndex switch

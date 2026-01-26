@@ -105,7 +105,7 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
             zNormed = 0.7f;
         }
 
-        NitroxVector3 lastEscapePodPosition = escapePods[escapePods.Count - 1].Transform.Position;
+        NitroxVector3 lastEscapePodPosition = escapePods[^1].Transform.Position;
 
         float x = xNormed * 100 - 50;
         float z = zNormed * 100 - 50;
@@ -136,7 +136,7 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
         {
             foreach (EscapePodEntity pod in escapePods)
             {
-                foreach (ushort playerId in pod.Players)
+                foreach (PeerId playerId in pod.Players)
                 {
                     escapePodsByPlayerId[playerId] = pod;
                 }

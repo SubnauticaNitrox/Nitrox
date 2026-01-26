@@ -24,7 +24,7 @@ internal sealed class VehicleOnPilotModeChangedProcessor(Vehicles vehicles, Play
                 return Task.CompletedTask;
             }
 
-            vehicles.SetOnPilotMode(gameObject, packet.PlayerId, packet.IsPiloting);
+            vehicles.SetOnPilotMode(gameObject, packet.SessionId, packet.IsPiloting);
         }
         return Task.CompletedTask;
     }

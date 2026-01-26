@@ -10,7 +10,7 @@ internal sealed class StasisSphereHitProcessor(BulletManager bulletManager) : IC
 
     public Task Process(ClientProcessorContext context, StasisSphereHit packet)
     {
-        bulletManager.StasisSphereHit(packet.PlayerId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.ChargeNormalized, packet.Consumption);
+        bulletManager.StasisSphereHit(packet.SessionId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.ChargeNormalized, packet.Consumption);
         return Task.CompletedTask;
     }
 }

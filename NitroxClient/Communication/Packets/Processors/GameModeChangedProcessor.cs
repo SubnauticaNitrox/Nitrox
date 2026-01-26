@@ -11,7 +11,7 @@ internal sealed class GameModeChangedProcessor(LocalPlayer localPlayer, PlayerMa
 
     public Task Process(ClientProcessorContext context, GameModeChanged packet)
     {
-        if (packet.AllPlayers || packet.PlayerId == localPlayer.PlayerId)
+        if (packet.AllPlayers || packet.SessionId == localPlayer.SessionId)
         {
             GameModeUtils.SetGameMode((GameModeOption)(int)packet.GameMode, GameModeOption.None);
         }
@@ -22,7 +22,7 @@ internal sealed class GameModeChangedProcessor(LocalPlayer localPlayer, PlayerMa
                 remotePlayer.SetGameMode(packet.GameMode);
             }
         }
-        else if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        else if (playerManager.TryFind(packet.SessionId, out RemotePlayer remotePlayer))
         {
             remotePlayer.SetGameMode(packet.GameMode);
         }

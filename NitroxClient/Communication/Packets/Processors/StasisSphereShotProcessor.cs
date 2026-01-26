@@ -10,7 +10,7 @@ internal sealed class StasisSphereShotProcessor(BulletManager bulletManager) : I
 
     public Task Process(ClientProcessorContext context, StasisSphereShot packet)
     {
-        bulletManager.ShootStasisSphere(packet.PlayerId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.Speed, packet.LifeTime, packet.ChargeNormalized);
+        bulletManager.ShootStasisSphere(packet.SessionId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.Speed, packet.LifeTime, packet.ChargeNormalized);
         return Task.CompletedTask;
     }
 }

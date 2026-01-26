@@ -15,14 +15,14 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
 
     private readonly IPacketSender packetSender = packetSender;
     private readonly TimeService timeService = timeService;
-    private readonly ThreadSafeSet<SessionId> playerIdsInBed = [];
+    private readonly ThreadSafeSet<SessionId> sessionIdsInBed = [];
     private bool isSleepInProgress;
     private Timer? sleepTimer;
     private readonly PlayerManager playerManager = playerManager;
 
     public void PlayerEnteredBed(Player player)
     {
-        if (!playerIdsInBed.Add(player.SessionId))
+        if (!sessionIdsInBed.Add(player.SessionId))
         {
             return;
         }
@@ -36,7 +36,7 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
 
     public void PlayerExitedBed(Player player)
     {
-        if (!playerIdsInBed.Remove(player.SessionId))
+        if (!sessionIdsInBed.Remove(player.SessionId))
         {
             return;
         }
@@ -47,13 +47,13 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
     private bool AreAllPlayersInBed()
     {
         int totalPlayers = playerManager.GetConnectedPlayers().Count;
-        return totalPlayers > 0 && playerIdsInBed.Count >= totalPlayers;
+        return totalPlayers > 0 && sessionIdsInBed.Count >= totalPlayers;
     }
 
     private void BroadcastStatus()
     {
         int totalPlayers = playerManager.GetConnectedPlayers().Count;
-        packetSender.SendPacketToAllAsync(new SleepStatusUpdate(playerIdsInBed.Count, totalPlayers));
+        packetSender.SendPacketToAllAsync(new SleepStatusUpdate(sessionIdsInBed.Count, totalPlayers));
     }
 
     private void StartSleep()
@@ -74,28 +74,28 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         };
         sleepTimer?.Start();
 
-        playerIdsInBed.Clear();
+        sessionIdsInBed.Clear();
     }
 
     public Task OnEventAsync(ISessionCleaner.Args args)
     {
-        playerIdsInBed.Remove(args.Session.Id);
+        sessionIdsInBed.Remove(args.Session.Id);
         // If sleep is already in progress, let it complete - don't cancel just because someone disconnected
         if (isSleepInProgress)
         {
             return Task.CompletedTask;
         }
-        if (playerIdsInBed.Count <= 0)
+        if (sessionIdsInBed.Count <= 0)
         {
             return Task.CompletedTask;
         }
 
         // Send to all players except the disconnecting one
-        SleepStatusUpdate packet = new(playerIdsInBed.Count, args.NewPlayerTotal);
+        SleepStatusUpdate packet = new(sessionIdsInBed.Count, args.NewPlayerTotal);
         packetSender.SendPacketToOthersAsync(packet, args.Session.Id);
 
         // Check if remaining players are now all sleeping (disconnected player was the only one awake)
-        if (args.NewPlayerTotal > 0 && playerIdsInBed.Count >= args.NewPlayerTotal)
+        if (args.NewPlayerTotal > 0 && sessionIdsInBed.Count >= args.NewPlayerTotal)
         {
             StartSleep();
         }

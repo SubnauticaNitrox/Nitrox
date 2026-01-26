@@ -13,7 +13,7 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager
 
     public Task Process(ClientProcessorContext context, SetIntroCinematicMode packet)
     {
-        if (localPlayer.PlayerId == packet.PlayerId)
+        if (localPlayer.SessionId == packet.SessionId)
         {
             if (packet.PartnerId.HasValue)
             {
@@ -24,13 +24,13 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager
             return Task.CompletedTask;
         }
 
-        if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(packet.SessionId, out RemotePlayer remotePlayer))
         {
             remotePlayer.PlayerContext.IntroCinematicMode = packet.Mode;
             return Task.CompletedTask;
         }
 
-        Log.Debug($"SetIntroCinematicMode couldn't find Player with id {packet.PlayerId}. This is normal if player has not yet officially joined.");
+        Log.Debug($"SetIntroCinematicMode couldn't find Player with id {packet.SessionId}. This is normal if player has not yet officially joined.");
         return Task.CompletedTask;
     }
 }

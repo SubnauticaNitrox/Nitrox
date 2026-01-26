@@ -314,14 +314,14 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             logger.ZLogError(ex, $"Error in packet processor {processor.GetType().Name:@TypeName}");
         }
 
-        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId session, PlayerManager playerManager, [NotNullIfNotNull(nameof(player))] out Player? player)
+        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, [NotNullIfNotNull(nameof(player))] out Player? player)
         {
             player = null;
             if (processor == null)
             {
                 return ProcessorTarget.INVALID;
             }
-            if (typeof(IAuthPacketProcessor).IsAssignableFrom(processor.InterfaceType) && session is { IsPlayer: true } && playerManager.TryGetPlayerBySessionId(session, out player))
+            if (typeof(IAuthPacketProcessor).IsAssignableFrom(processor.InterfaceType) && sessionId is { IsPlayer: true } && playerManager.TryGetPlayerBySessionId(sessionId, out player))
             {
                 return ProcessorTarget.AUTHENTICATED;
             }

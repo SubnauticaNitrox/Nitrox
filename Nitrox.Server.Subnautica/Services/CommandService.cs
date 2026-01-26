@@ -245,11 +245,16 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
             {
                 for (int argIndex = 0; argIndex < handlerResult.conversions.Length; argIndex++)
                 {
+                    string[] messages = handlerResult.conversions[argIndex].Where(c => c is { Success: false, Value: string }).Select(c => c.Value).OfType<string>().ToArray();
+                    if (messages is [])
+                    {
+                        continue;
+                    }
+
                     sb.Append("Arg ")
                       .Append(argIndex.ToString())
                       .AppendLine(": ");
                     indent++;
-                    string[] messages = handlerResult.conversions[argIndex].Where(c => c is { Success: false, Value: string }).Select(c => c.Value).OfType<string>().ToArray();
                     for (int i = 0; i < messages.Length; i++)
                     {
                         sb.Append(GetIndentText()).Append("- ").Append(messages[i]);

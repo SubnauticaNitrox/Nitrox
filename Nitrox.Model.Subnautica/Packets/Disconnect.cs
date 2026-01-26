@@ -5,7 +5,7 @@ using Nitrox.Model.Packets;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class Disconnect(SessionId playerId) : Packet
+public class Disconnect(SessionId sessionId) : Packet
 {
-    public SessionId PlayerId { get; } = playerId;
+    public SessionId SessionId { get; } = sessionId;
 }

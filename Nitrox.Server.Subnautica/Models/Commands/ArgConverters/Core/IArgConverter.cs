@@ -10,7 +10,7 @@ internal interface IArgConverter
 /// </summary>
 internal interface IArgConverter<in TFrom, TTo> : IArgConverter
 {
-    Task<ConvertResult> ConvertAsync(TFrom playerId);
+    Task<ConvertResult> ConvertAsync(TFrom from);
 
     Task<ConvertResult> IArgConverter.ConvertAsync(object from) => ConvertAsync(from is TFrom tFrom ? tFrom : default);
 }

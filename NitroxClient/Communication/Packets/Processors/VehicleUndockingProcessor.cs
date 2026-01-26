@@ -46,11 +46,11 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
         vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
         SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
 
-        if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))
+        if (remotePlayerManager.TryFind(packet.SessionId, out RemotePlayer player))
         {
             // It can happen that the player turns in circles around himself in the vehicle. This stops it.
             player.RigidBody.angularVelocity = Vector3.zero;
-            vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+            vehicles.SetOnPilotMode(packet.VehicleId, packet.SessionId, true);
         }
         vehicleDockingBay.StartCoroutine(StartUndockingAnimation(vehicleDockingBay));
 
@@ -70,7 +70,7 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
         vehicleDockingBay.dockedVehicle = null;
         vehicleDockingBay.CancelInvoke(nameof(VehicleDockingBay.RepairVehicle));
         vehicle.docked = false;
-        if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))
+        if (remotePlayerManager.TryFind(packet.SessionId, out RemotePlayer player))
         {
             // Sometimes the player is not set accordingly which stretches the player's model instead of putting them in place
             // after undocking. This fixes it (the player rigid body seems to not be set right sometimes)
@@ -78,7 +78,7 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
             player.SetVehicle(null);
             player.SetVehicle(vehicle);
         }
-        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+        vehicles.SetOnPilotMode(packet.VehicleId, packet.SessionId, true);
 
         if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
         {

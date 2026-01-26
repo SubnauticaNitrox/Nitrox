@@ -1,4 +1,5 @@
 using System.Collections;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
@@ -34,11 +35,11 @@ internal sealed class VehicleDockingProcessor(Vehicles vehicles) : IClientPacket
             Log.Debug($"[{nameof(VehicleDockingProcessor)}] Disabled VehicleMovementReplicator on {packet.VehicleId}");
         }
 
-        vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.PlayerId));
+        vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.SessionId));
         return Task.CompletedTask;
     }
 
-    private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+    private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, SessionId sessionId)
     {
         // Consider the vehicle movement latency (we don't teleport the vehicle to the docking position)
         if (vehicleMovementReplicator)
@@ -58,7 +59,7 @@ internal sealed class VehicleDockingProcessor(Vehicles vehicles) : IClientPacket
         vehicle.useRigidbody.isKinematic = false;
 
         yield return Yielders.WaitFor2Seconds;
-        vehicles.SetOnPilotMode(vehicleId, playerId, false);
+        vehicles.SetOnPilotMode(vehicleId, sessionId, false);
     }
 
     /// Copy of

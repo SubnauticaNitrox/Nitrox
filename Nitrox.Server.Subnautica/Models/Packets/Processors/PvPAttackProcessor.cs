@@ -23,7 +23,7 @@ internal sealed class PvPAttackProcessor(IPacketSender packetSender, PlayerManag
         {
             return;
         }
-        if (!playerManager.TryGetPlayerBySessionId(packet.TargetPlayerId, out Player targetPlayer))
+        if (!playerManager.TryGetPlayerBySessionId(packet.TargetSessionId, out Player targetPlayer))
         {
             return;
         }

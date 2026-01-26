@@ -22,7 +22,7 @@ internal sealed class ChatMessageProcessor(PlayerManager remotePlayerManager, Lo
 
     public Task Process(ClientProcessorContext context, ChatMessage message)
     {
-        if (message.PlayerId != SessionId.SERVER_ID)
+        if (message.SessionId != SessionId.SERVER_ID)
         {
             LogClientMessage(message);
         }
@@ -38,19 +38,19 @@ internal sealed class ChatMessageProcessor(PlayerManager remotePlayerManager, Lo
         // The message can come from either the local player or other players
         string playerName;
         NitroxColor color;
-        if (localPlayer.PlayerId == message.PlayerId)
+        if (localPlayer.SessionId == message.SessionId)
         {
             playerName = localPlayer.PlayerName;
             color = localPlayer.PlayerSettings.PlayerColor;
         }
         else
         {
-            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.PlayerId);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.SessionId);
             if (!remotePlayer.HasValue)
             {
-                string playerTableFormatted = string.Join("\n", remotePlayerManager.GetAll().Select(ply => $"Name: '{ply.PlayerName}', Id: {ply.PlayerId}"));
-                Log.Error($"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
-                throw new Exception($"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
+                string playerTableFormatted = string.Join("\n", remotePlayerManager.GetAll().Select(ply => $"Name: '{ply.PlayerName}', Id: {ply.SessionId}"));
+                Log.Error($"Tried to add chat message for remote player that could not be found with id '${message.SessionId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
+                throw new Exception($"Tried to add chat message for remote player that could not be found with id '${message.SessionId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
             }
 
             playerName = remotePlayer.Value.PlayerName;

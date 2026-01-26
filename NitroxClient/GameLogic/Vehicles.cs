@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -8,8 +9,6 @@ using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Packets;
@@ -115,9 +114,9 @@ public class Vehicles
         }
     }
 
-    public void SetOnPilotMode(GameObject gameObject, ushort playerId, bool isPiloting)
+    public void SetOnPilotMode(GameObject gameObject, SessionId sessionId, bool isPiloting)
     {
-        if (playerManager.TryFind(playerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(sessionId, out RemotePlayer remotePlayer))
         {
             if (gameObject.TryGetComponent(out Vehicle vehicle))
             {
@@ -137,11 +136,11 @@ public class Vehicles
         }
     }
 
-    public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)
+    public void SetOnPilotMode(NitroxId vehicleId, SessionId sessionId, bool isPiloting)
     {
         if (NitroxEntity.TryGetObjectFrom(vehicleId, out GameObject vehicleObject))
         {
-            SetOnPilotMode(vehicleObject, playerId, isPiloting);
+            SetOnPilotMode(vehicleObject, sessionId, isPiloting);
         }
     }
 

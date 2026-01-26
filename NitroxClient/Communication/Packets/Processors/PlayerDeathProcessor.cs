@@ -11,7 +11,7 @@ internal sealed class PlayerDeathProcessor(PlayerManager playerManager) : IClien
 
     public Task Process(ClientProcessorContext context, PlayerDeathEvent playerDeath)
     {
-        RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.PlayerId));
+        RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.SessionId));
         Log.Debug($"{player.PlayerName} died");
         Log.InGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
         player.PlayerDeathEvent.Trigger(player);

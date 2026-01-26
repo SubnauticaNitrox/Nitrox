@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -11,9 +12,6 @@ using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.MonoBehaviours.Vehicles;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.GameLogic.PlayerAnimation;
-using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
@@ -46,7 +44,7 @@ public class RemotePlayer : INitroxPlayer
     public Transform ItemAttachPoint { get; private set; }
     public RemotePlayerVitals vitals { get; private set; }
 
-    public ushort PlayerId => PlayerContext.SessionId;
+    public SessionId SessionId => PlayerContext.SessionId;
     public string PlayerName => PlayerContext.PlayerName;
     public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
