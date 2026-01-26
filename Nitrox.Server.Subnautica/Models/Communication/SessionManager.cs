@@ -116,4 +116,12 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
     public record Session(SessionId Id, IPEndPoint EndPoint);
 
     private record EndpointKey(IPAddress Address, ushort Port);
+
+    public int GetSessionCount()
+    {
+        lock (sessionLock)
+        {
+            return sessions.Count;
+        }
+    }
 }
