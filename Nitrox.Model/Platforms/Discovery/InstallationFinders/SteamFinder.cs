@@ -50,7 +50,7 @@ public sealed class SteamFinder : IGameFinder
         return Ok(path);
     }
 
-    private static string GetSteamPath()
+    private static string? GetSteamPath()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -129,7 +129,7 @@ public sealed class SteamFinder : IGameFinder
     /// <summary>
     /// Finds game install directory by iterating through all the steam game libraries configured, matching the given appid.
     /// </summary>
-    private static string SearchAllInstallations(string libraryFolders, int appid, string gameName)
+    private static string? SearchAllInstallations(string libraryFolders, int appid, string gameName)
     {
         if (!File.Exists(libraryFolders))
         {
