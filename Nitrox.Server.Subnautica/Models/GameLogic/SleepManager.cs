@@ -77,28 +77,27 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         sessionIdsInBed.Clear();
     }
 
-    public Task OnEventAsync(ISessionCleaner.Args args)
+    public async Task OnEventAsync(ISessionCleaner.Args args)
     {
         sessionIdsInBed.Remove(args.Session.Id);
         // If sleep is already in progress, let it complete - don't cancel just because someone disconnected
         if (isSleepInProgress)
         {
-            return Task.CompletedTask;
+            return;
         }
         if (sessionIdsInBed.Count <= 0)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         // Send to all players except the disconnecting one
         SleepStatusUpdate packet = new(sessionIdsInBed.Count, args.NewPlayerTotal);
-        packetSender.SendPacketToOthersAsync(packet, args.Session.Id);
+        await packetSender.SendPacketToOthersAsync(packet, args.Session.Id);
 
         // Check if remaining players are now all sleeping (disconnected player was the only one awake)
         if (args.NewPlayerTotal > 0 && sessionIdsInBed.Count >= args.NewPlayerTotal)
         {
             StartSleep();
         }
-        return Task.CompletedTask;
     }
 }
