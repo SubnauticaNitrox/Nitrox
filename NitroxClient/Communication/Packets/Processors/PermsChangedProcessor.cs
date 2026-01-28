@@ -1,26 +1,21 @@
 ﻿using Nitrox.Model.DataStructures.GameLogic;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PermsChangedProcessor : ClientPacketProcessor<PermsChanged>
+internal sealed class PermsChangedProcessor(LocalPlayer localPlayer) : IClientPacketProcessor<PermsChanged>
 {
-    private LocalPlayer localPlayer;
-
     public delegate void PermissionsChanged(Perms perms);
+
+    private readonly LocalPlayer localPlayer = localPlayer;
     public PermissionsChanged OnPermissionsChanged;
 
-    public PermsChangedProcessor(LocalPlayer localPlayer)
-    {
-        this.localPlayer = localPlayer;
-    }
-
-    public override void Process(PermsChanged packet)
+    public Task Process(ClientProcessorContext context, PermsChanged packet)
     {
         localPlayer.Permissions = packet.NewPerms;
         OnPermissionsChanged(packet.NewPerms);
+        return Task.CompletedTask;
     }
 }

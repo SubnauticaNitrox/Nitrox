@@ -3,7 +3,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -44,7 +43,7 @@ namespace NitroxClient.GameLogic
 
         public void RequestSimulationLock(NitroxId id, SimulationLockType lockType)
         {
-            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(multiplayerSession.Reservation.PlayerId, id, lockType);
+            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(multiplayerSession.Reservation.SessionId, id, lockType);
             packetSender.Send(ownershipRequest);
         }
 
@@ -83,7 +82,7 @@ namespace NitroxClient.GameLogic
 
         public void TreatSimulatedEntity(SimulatedEntity simulatedEntity)
         {
-            bool isLocalPlayerNewOwner = multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId;
+            bool isLocalPlayerNewOwner = multiplayerSession.Reservation.SessionId == simulatedEntity.SessionId;
 
             if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
                 newerSimulationById.ContainsKey(simulatedEntity.Id))

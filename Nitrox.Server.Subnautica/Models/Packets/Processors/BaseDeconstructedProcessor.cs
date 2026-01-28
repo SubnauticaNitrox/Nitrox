@@ -1,17 +1,15 @@
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class BaseDeconstructedProcessor : BuildingProcessor<BaseDeconstructed>
+internal sealed class BaseDeconstructedProcessor(BuildingManager buildingManager) : BuildingProcessor<BaseDeconstructed>(buildingManager)
 {
-    public BaseDeconstructedProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
-
-    public override void Process(BaseDeconstructed packet, Player player)
+    public override async Task Process(AuthProcessorContext context, BaseDeconstructed packet)
     {
-        if (buildingManager.ReplaceBaseByGhost(packet))
+        if (BuildingManager.ReplaceBaseByGhost(packet))
         {
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            await context.SendToOthersAsync(packet);
         }
     }
 }

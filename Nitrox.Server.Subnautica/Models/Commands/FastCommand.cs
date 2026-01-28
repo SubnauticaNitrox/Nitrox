@@ -1,63 +1,50 @@
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-internal sealed class FastCommand : Command
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class FastCommand(SessionSettings sessionSettings) : ICommandHandler<FastCheatChanged.FastCheat>, ICommandHandler<FastCheatChanged.FastCheat, bool>
 {
-    private readonly PlayerManager playerManager;
-    private readonly SessionSettings sessionSettings;
+    private readonly SessionSettings sessionSettings = sessionSettings;
 
-    public FastCommand(PlayerManager playerManager, SessionSettings sessionSettings) : base("fast", Perms.MODERATOR, "Enables/disables a fast cheat command, whether it be \"hatch\" or \"grow\"")
+    [Description("Enables/disables a fast cheat command, whether it be \"hatch\" or \"grow\"")]
+    public async Task Execute(ICommandContext context,
+                              [Description("The name of the fast cheat")]
+                              FastCheatChanged.FastCheat cheat,
+                              [Description("Whether the cheat will be enabled or disabled. Default count as a toggle")]
+                              bool toggle)
     {
-        AddParameter(new TypeEnum<FastCheatChanged.FastCheat>("cheat", true, "The name of the fast cheat to change: \"hatch\" or \"grow\""));
-        AddParameter(new TypeBoolean("value", false, "Whether the cheat will be enabled or disabled. Default count as a toggle"));
-        this.playerManager = playerManager;
-        this.sessionSettings = sessionSettings;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        FastCheatChanged.FastCheat cheat = args.Get<FastCheatChanged.FastCheat>(0);
-
-        bool value = cheat switch
+        bool currentCheatValue = IsCheatEnabled(cheat);
+        if (currentCheatValue == toggle)
         {
-            FastCheatChanged.FastCheat.HATCH => sessionSettings.FastHatch,
-            FastCheatChanged.FastCheat.GROW => sessionSettings.FastGrow,
-            _ => throw new ArgumentException("Must provide a valid cheat name: \"hatch\" or \"grow\""),
-        };
-
-
-        if (args.IsValid(1))
-        {
-            bool newValue = args.Get<bool>(1);
-            if (newValue == value)
-            {
-                SendMessage(args.Sender, $"Fast {cheat} already set to {newValue}");
-                return;
-            }
-            value = newValue;
-        }
-        else
-        {
-            // If the value wasn't provided then we toggle it
-            value = !value;
+            await context.ReplyAsync($"Fast {cheat} already set to {currentCheatValue}");
+            return;
         }
 
         switch (cheat)
         {
             case FastCheatChanged.FastCheat.HATCH:
-                sessionSettings.FastHatch = value;
+                sessionSettings.FastHatch = toggle;
                 break;
             case FastCheatChanged.FastCheat.GROW:
-                sessionSettings.FastGrow = value;
+                sessionSettings.FastGrow = toggle;
                 break;
         }
 
-        playerManager.SendPacketToAllPlayers(new FastCheatChanged(cheat, value));
-        SendMessageToAllPlayers($"Fast {cheat} changed to {value} by {args.SenderName}");
+        await context.SendToAllAsync(new FastCheatChanged(cheat, currentCheatValue));
+        await context.SendToAllAsync($"Fast {cheat} changed to {currentCheatValue} by {context.OriginName}");
     }
+
+    public async Task Execute(ICommandContext context, FastCheatChanged.FastCheat cheat) => await Execute(context, cheat, !IsCheatEnabled(cheat));
+
+    private bool IsCheatEnabled(FastCheatChanged.FastCheat cheat) =>
+        cheat switch
+        {
+            FastCheatChanged.FastCheat.HATCH => sessionSettings.FastHatch,
+            FastCheatChanged.FastCheat.GROW => sessionSettings.FastGrow,
+            _ => false
+        };
 }

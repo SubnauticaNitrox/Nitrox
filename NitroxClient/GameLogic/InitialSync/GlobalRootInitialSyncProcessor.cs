@@ -3,8 +3,6 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours.Cyclops;
 using Nitrox.Model.GameLogic.PlayerAnimation;
-using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
@@ -72,8 +70,8 @@ public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
             if (playerContext.DrivingVehicle != null)
             {
                 Log.Info($"Restoring driver state of {playerContext.PlayerName} in {playerContext.DrivingVehicle}");
-                vehicles.SetOnPilotMode(playerContext.DrivingVehicle, playerContext.PlayerId, true);
-                if (playerManager.TryFind(playerContext.PlayerId, out RemotePlayer remotePlayer))
+                vehicles.SetOnPilotMode(playerContext.DrivingVehicle, playerContext.SessionId, true);
+                if (playerManager.TryFind(playerContext.SessionId, out RemotePlayer remotePlayer))
                 {
                     // As remote players are still driving, they aren't updating their IsUnderwater state so UnderwaterStateTracker.Update
                     // isn't going to send a packet. Therefore we need to set this by hand

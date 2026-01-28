@@ -1,33 +1,33 @@
 using System;
+using Nitrox.Model.Core;
 
-namespace Nitrox.Model.DataStructures
+namespace Nitrox.Model.DataStructures;
+
+/// <summary>
+///     A simulated entity that is tracked by the Nitrox server so that it knows which connected game client owns (and simulates) the entity.
+///     See <see cref="SimulationLockType"/> for more information.
+/// </summary>
+[Serializable]
+public class SimulatedEntity
 {
     /// <summary>
-    ///     A simulated entity that is tracked by the Nitrox server so that it knows which connected game client owns (and simulates) the entity.
-    ///     See <see cref="SimulationLockType"/> for more information. 
+    ///     True if entity isn't static (e.g. welded to world).
     /// </summary>
-    [Serializable]
-    public class SimulatedEntity
+    public bool ChangesPosition { get; }
+    public NitroxId Id { get; }
+    public SessionId SessionId { get; }
+    public SimulationLockType LockType { get; }
+
+    public SimulatedEntity(NitroxId id, SessionId sessionId, bool changesPosition, SimulationLockType lockType)
     {
-        /// <summary>
-        ///     True if entity isn't static (e.g. welded to world).
-        /// </summary>
-        public bool ChangesPosition { get; }
-        public NitroxId Id { get; }
-        public ushort PlayerId { get; }
-        public SimulationLockType LockType { get; }
+        Id = id;
+        SessionId = sessionId;
+        ChangesPosition = changesPosition;
+        LockType = lockType;
+    }
 
-        public SimulatedEntity(NitroxId id, ushort playerId, bool changesPosition, SimulationLockType lockType)
-        {
-            Id = id;
-            PlayerId = playerId;
-            ChangesPosition = changesPosition;
-            LockType = lockType;
-        }
-
-        public override string ToString()
-        {
-            return $"[SimulatedEntity Id: {Id}, PlayerId: {PlayerId}, ChangesPosition: {ChangesPosition}, LockType: {LockType}]";
-        }
+    public override string ToString()
+    {
+        return $"[SimulatedEntity Id: {Id}, {nameof(SessionId)}: {SessionId}, ChangesPosition: {ChangesPosition}, LockType: {LockType}]";
     }
 }

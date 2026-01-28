@@ -1,24 +1,17 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using static Nitrox.Model.Subnautica.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTransformUpdates>
+internal sealed class EntityTransformUpdatesProcessor(SimulationOwnership simulationOwnership) : IClientPacketProcessor<EntityTransformUpdates>
 {
-    private readonly SimulationOwnership simulationOwnership;
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
 
-    public EntityTransformUpdatesProcessor(SimulationOwnership simulationOwnership)
-    {
-        this.simulationOwnership = simulationOwnership;
-    }
-
-    public override void Process(EntityTransformUpdates packet)
+    public Task Process(ClientProcessorContext context, EntityTransformUpdates packet)
     {
         foreach (EntityTransformUpdate update in packet.Updates)
         {
@@ -29,7 +22,8 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
                 continue;
             }
 
-            RemotelyControlled remotelyControlled = RemotelyControlled.Ensure(gameObject);;
+            RemotelyControlled remotelyControlled = RemotelyControlled.Ensure(gameObject);
+            ;
 
             Vector3 position = update.Position.ToUnity();
             Quaternion rotation = update.Rotation.ToUnity();
@@ -43,5 +37,6 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
                 remotelyControlled.UpdateOrientation(position, rotation);
             }
         }
+        return Task.CompletedTask;
     }
 }

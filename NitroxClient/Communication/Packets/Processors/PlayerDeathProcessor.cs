@@ -1,26 +1,21 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Helper;
-using Nitrox.Model.Packets;
+﻿using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
+internal sealed class PlayerDeathProcessor(PlayerManager playerManager) : IClientPacketProcessor<PlayerDeathEvent>
 {
-    private readonly PlayerManager playerManager;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public PlayerDeathProcessor(PlayerManager playerManager)
+    public Task Process(ClientProcessorContext context, PlayerDeathEvent playerDeath)
     {
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(PlayerDeathEvent playerDeath)
-    {
-        RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.PlayerId));
+        RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.SessionId));
         Log.Debug($"{player.PlayerName} died");
         Log.InGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
         player.PlayerDeathEvent.Trigger(player);
+        return Task.CompletedTask;
 
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
     }

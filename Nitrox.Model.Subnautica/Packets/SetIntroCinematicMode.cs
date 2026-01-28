@@ -1,4 +1,5 @@
 ﻿using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
@@ -7,20 +8,20 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class SetIntroCinematicMode : Packet
 {
-    public ushort PlayerId { get; }
+    public SessionId SessionId { get; }
     public IntroCinematicMode Mode { get; }
-    public ushort? PartnerId { get; set; }
+    public SessionId? PartnerId { get; set; }
 
-    public SetIntroCinematicMode(ushort playerId, IntroCinematicMode mode)
+    public SetIntroCinematicMode(SessionId sessionId, IntroCinematicMode mode)
     {
-        PlayerId = playerId;
+        SessionId = sessionId;
         Mode = mode;
         PartnerId = null;
     }
 
-    public SetIntroCinematicMode(ushort playerId, IntroCinematicMode mode, ushort? partnerId)
+    public SetIntroCinematicMode(SessionId sessionId, IntroCinematicMode mode, SessionId? partnerId)
     {
-        PlayerId = playerId;
+        SessionId = sessionId;
         Mode = mode;
         PartnerId = partnerId;
     }

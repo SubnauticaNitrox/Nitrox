@@ -1,34 +1,26 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class SimulationOwnershipRequestProcessor : AuthenticatedPacketProcessor<SimulationOwnershipRequest>
+internal sealed class SimulationOwnershipRequestProcessor(SimulationOwnershipData simulationOwnershipData, EntitySimulation entitySimulation) : IAuthPacketProcessor<SimulationOwnershipRequest>
 {
-    private readonly PlayerManager playerManager;
-    private readonly SimulationOwnershipData simulationOwnershipData;
-    private readonly EntitySimulation entitySimulation;
+    private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
 
-    public SimulationOwnershipRequestProcessor(PlayerManager playerManager, SimulationOwnershipData simulationOwnershipData, EntitySimulation entitySimulation)
+    public async Task Process(AuthProcessorContext context, SimulationOwnershipRequest ownershipRequest)
     {
-        this.playerManager = playerManager;
-        this.simulationOwnershipData = simulationOwnershipData;
-        this.entitySimulation = entitySimulation;
-    }
-
-    public override void Process(SimulationOwnershipRequest ownershipRequest, Player player)
-    {
-        bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Id, player, ownershipRequest.LockType);
+        bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Id, context.Sender, ownershipRequest.LockType);
 
         if (aquiredLock)
         {
             bool shouldEntityMove = entitySimulation.ShouldSimulateEntityMovement(ownershipRequest.Id);
-            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, player.Id, ownershipRequest.LockType, shouldEntityMove);
-            playerManager.SendPacketToOtherPlayers(simulationOwnershipChange, player);
+            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, context.Sender.SessionId, ownershipRequest.LockType, shouldEntityMove);
+            await context.SendToOthersAsync(simulationOwnershipChange);
         }
 
         SimulationOwnershipResponse responseToPlayer = new(ownershipRequest.Id, aquiredLock, ownershipRequest.LockType);
-        player.SendPacket(responseToPlayer);
+        await context.ReplyAsync(responseToPlayer);
     }
 }

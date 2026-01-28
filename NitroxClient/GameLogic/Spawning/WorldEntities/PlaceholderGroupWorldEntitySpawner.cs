@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;

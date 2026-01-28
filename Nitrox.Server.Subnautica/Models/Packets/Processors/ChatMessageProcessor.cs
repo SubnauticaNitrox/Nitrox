@@ -1,28 +1,20 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+﻿using Nitrox.Model.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class ChatMessageProcessor(ILogger<ChatMessageProcessor> logger) : IAuthPacketProcessor<ChatMessage>
 {
-    sealed class ChatMessageProcessor : AuthenticatedPacketProcessor<ChatMessage>
+    private readonly ILogger<ChatMessageProcessor> logger = logger;
+
+    public async Task Process(AuthProcessorContext context, ChatMessage packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly ILogger<ChatMessageProcessor> logger;
-
-        public ChatMessageProcessor(PlayerManager playerManager, ILogger<ChatMessageProcessor> logger)
+        if (context.Sender.PlayerContext.IsMuted)
         {
-            this.playerManager = playerManager;
-            this.logger = logger;
+            await context.ReplyAsync(new ChatMessage(SessionId.SERVER_ID, "You're currently muted"));
+            return;
         }
-
-        public override void Process(ChatMessage packet, Player player)
-        {
-            if (player.PlayerContext.IsMuted)
-            {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You're currently muted"));
-                return;
-            }
-            logger.ZLogInformation($"<{player.Name}>: {packet.Text}");
-            playerManager.SendPacketToAllPlayers(packet);
-        }
+        logger.ZLogInformation($"<{context.Sender.Name}>: {packet.Text}");
+        await context.SendToAllAsync(packet);
     }
 }

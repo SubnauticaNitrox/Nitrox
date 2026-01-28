@@ -1,4 +1,5 @@
 ﻿using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.Packets;
 
 namespace Nitrox.Model.Subnautica.Packets;
@@ -6,12 +7,12 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class MutePlayer : Packet
 {
-    public ushort PlayerId;
+    public SessionId SessionId;
     public bool Muted;
 
-    public MutePlayer(ushort playerId, bool muted)
+    public MutePlayer(SessionId sessionId, bool muted)
     {
-        PlayerId = playerId;
+        SessionId = sessionId;
         Muted = muted;
     }
 }

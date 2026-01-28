@@ -1,50 +1,42 @@
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-internal class GameModeCommand : Command
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class GameModeCommand : ICommandHandler<SubnauticaGameMode, Player>
 {
-    private readonly PlayerManager playerManager;
-    private readonly ILogger<GameModeCommand> logger;
-
-    public GameModeCommand(PlayerManager playerManager, ILogger<GameModeCommand> logger) : base("gamemode", Perms.ADMIN, "Changes a player's gamemode")
+    [Description("Changes a player's gamemode")]
+    public async Task Execute(ICommandContext context, SubnauticaGameMode gameMode, Player? targetPlayer = null)
     {
-        AddParameter(new TypeEnum<SubnauticaGameMode>("gamemode", true, "Gamemode to change to"));
-        AddParameter(new TypePlayer("name", false, "Username to whom change the game mode (defaults to self)"));
-
-        this.playerManager = playerManager;
-        this.logger = logger;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        SubnauticaGameMode gameMode = args.Get<SubnauticaGameMode>(0);
-        Player targetPlayer = args.Get<Player>(1);
-
-        if (args.IsConsole && targetPlayer == null)
+        switch (context.Origin)
         {
-            logger.ZLogError($"Console can't use the gamemode command without providing a player name to it.");
-            return;
-        }
-        // The target player if not set, is the player who sent the command
-        targetPlayer ??= args.Sender.Value;
+            case CommandOrigin.SERVER when targetPlayer == null:
+                await context.ReplyAsync("Console can't use the gamemode command without providing a player name.");
+                return;
+            case CommandOrigin.PLAYER when context is PlayerToServerCommandContext playerContext:
+                // The target player (if not set), is the player who sent the command.
+                targetPlayer ??= playerContext.Player;
+                goto default;
+            default:
+                if (targetPlayer == null)
+                {
+                    throw new ArgumentException("Target player must not be null");
+                }
 
-        targetPlayer.GameMode = gameMode;
-        playerManager.SendPacketToAllPlayers(GameModeChanged.ForPlayer(targetPlayer.Id, gameMode));
-        SendMessage(targetPlayer, $"GameMode changed to {gameMode}");
-        if (args.IsConsole)
-        {
-            logger.ZLogInformation($"Changed {targetPlayer.Name} [{targetPlayer.Id}]'s gamemode to {gameMode}");
-        }
-        else
-        {
-            if (targetPlayer != args.Sender.Value)
-            {
-                SendMessage(args.Sender.Value, $"GameMode of {targetPlayer.Name} changed to {gameMode}");
-            }
+                targetPlayer.GameMode = gameMode;
+                await context.SendToAllAsync(GameModeChanged.ForPlayer(targetPlayer.SessionId, gameMode));
+                await context.SendAsync(targetPlayer.SessionId, $"GameMode changed to {gameMode}");
+                if (context.Origin == CommandOrigin.SERVER)
+                {
+                    await context.ReplyAsync($"Changed {targetPlayer.Name} [{targetPlayer.Id}]'s gamemode to {gameMode}");
+                }
+                else if (targetPlayer.Id != context.OriginId)
+                {
+                    await context.ReplyAsync($"GameMode of {targetPlayer.Name} changed to {gameMode}");
+                }
+                break;
         }
     }
 }

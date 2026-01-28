@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
@@ -15,9 +14,10 @@ using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using Nitrox.Model.Core;
-using Nitrox.Model.Packets;
+using Nitrox.Model.Packets.Core;
 using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -27,10 +27,13 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-        private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = new();
+        private ClientProcessorContext packetProcessorContext;
+        private PacketProcessorsInvoker processorInvoker = null!;
+        private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = [];
         private IClient client;
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
+        private IPacketSender packetSender;
         private ThrottledPacketSender throttledPacketSender;
         private GameLogic.Terrain terrain;
 
@@ -52,8 +55,11 @@ namespace NitroxClient.MonoBehaviours
             client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
+            packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
             terrain = NitroxServiceLocator.LocateService<GameLogic.Terrain>();
+            packetProcessorContext = new ClientProcessorContext(packetSender);
+            processorInvoker = new PacketProcessorsInvoker(NitroxServiceLocator.LocateService<IEnumerable<IPacketProcessor>>());
 
             Main = this;
             DontDestroyOnLoad(gameObject);
@@ -129,38 +135,22 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            static PacketProcessor ResolveProcessor(Packet packet, Dictionary<Type, PacketProcessor> processorCache)
-            {
-                Type packetType = packet.GetType();
-                if (processorCache.TryGetValue(packetType, out PacketProcessor processor))
-                {
-                    return processor;
-                }
-
-                try
-                {
-                    Type packetProcessorType = typeof(ClientPacketProcessor<>).MakeGenericType(packetType);
-                    return processorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, $"Failed to find packet processor for packet {packet}");
-                }
-
-                return null;
-            }
-
-            packetReceiver.ConsumePackets(static (packet, processorCache) =>
+            packetReceiver.ConsumePackets(static (packet, context) =>
             {
                 try
                 {
-                    ResolveProcessor(packet, processorCache)?.ProcessPacket(packet, null);
+                    PacketProcessorsInvoker.Entry processor = context.processorInvoker.GetProcessor(packet.GetType());
+                    if (processor == null)
+                    {
+                        throw new Exception($"Failed to find packet processor for packet {packet.GetType()}");
+                    }
+                    processor.Execute(context.packetProcessorContext, packet).ContinueWithHandleError();
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error while processing packet {packet}");
+                    Log.Error(ex, $"Error trying to process packet {packet}");
                 }
-            }, packetProcessorCache);
+            }, (processorInvoker, packetSender, packetProcessorContext));
         }
 
         public IEnumerator StartSession()
@@ -240,7 +230,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void OnPlayerChat(string message)
         {
-            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, message));
+            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.SessionId, message));
         }
 
         private void OnPlayerCommand(string command)

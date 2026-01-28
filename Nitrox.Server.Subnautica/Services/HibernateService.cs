@@ -23,13 +23,13 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
         {
             return;
         }
-        logger.ZLogTrace($"No players connected, entering power saving mode...");
+        logger.ZLogTrace($"Server has paused, waiting for players to connect");
         IsSleeping = true;
         await sleepTrigger.InvokeAsync();
     }
 
     /// <summary>
-    ///     Wakes up the server which will enable and simulate all features.
+    ///     Wakes up the server which will enable and simulate all features. If not sleeping, this call won't do anything.
     /// </summary>
     public async Task WakeAsync()
     {
@@ -37,7 +37,7 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
         {
             return;
         }
-        logger.ZLogInformation($"Server has paused, waiting for players to connect");
+        logger.ZLogTrace($"Server is entering normal operation due to at least one player playing");
         IsSleeping = false;
         await wakeTrigger.InvokeAsync();
     }

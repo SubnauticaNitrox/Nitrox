@@ -1,20 +1,15 @@
-using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
+internal sealed class PlayerJoiningMultiplayerSessionProcessor(JoiningManager joiningManager) : IAnonPacketProcessor<PlayerJoiningMultiplayerSession>
 {
-    private readonly JoiningManager joiningManager;
+    private readonly JoiningManager joiningManager = joiningManager;
 
-    public PlayerJoiningMultiplayerSessionProcessor(JoiningManager joiningManager)
+    public Task Process(AnonProcessorContext context, PlayerJoiningMultiplayerSession packet)
     {
-        this.joiningManager = joiningManager;
-    }
-
-    public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
-    {
-        joiningManager.AddToJoinQueue(connection, packet.ReservationKey);
+        joiningManager.AddToJoinQueue(context.Sender.SessionId, packet.ReservationKey);
+        return Task.CompletedTask;
     }
 }

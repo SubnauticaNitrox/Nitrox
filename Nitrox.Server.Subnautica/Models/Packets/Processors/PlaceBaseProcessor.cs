@@ -1,22 +1,20 @@
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
+internal sealed class PlaceBaseProcessor(BuildingManager buildingManager, EntitySimulation entitySimulation) : BuildingProcessor<PlaceBase>(buildingManager, entitySimulation)
 {
-    public PlaceBaseProcessor(BuildingManager buildingManager, PlayerManager playerManager, EntitySimulation entitySimulation) : base(buildingManager, playerManager, entitySimulation){ }
-
-    public override void Process(PlaceBase packet, Player player)
+    public override async Task Process(AuthProcessorContext context, PlaceBase packet)
     {
-        if (buildingManager.CreateBase(packet))
+        if (BuildingManager.CreateBase(packet))
         {
-            TryClaimBuildPiece(packet.BuildEntity, player);
+            await TryClaimBuildPieceAsync(context, packet.BuildEntity);
             
             // End-players can process elementary operations without this data (packet would be heavier for no reason)
             packet.Deflate();
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            await context.SendToOthersAsync(packet);
         }
     }
 }

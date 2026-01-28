@@ -1,27 +1,19 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCinematicMode>
+internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager, PlayerCinematics playerCinematics, LocalPlayer localPlayer) : IClientPacketProcessor<SetIntroCinematicMode>
 {
-    private readonly PlayerManager playerManager;
-    private readonly PlayerCinematics playerCinematics;
-    private readonly LocalPlayer localPlayer;
+    private readonly LocalPlayer localPlayer = localPlayer;
+    private readonly PlayerCinematics playerCinematics = playerCinematics;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public SetIntroCinematicModeProcessor(PlayerManager playerManager, PlayerCinematics playerCinematics, LocalPlayer localPlayer)
+    public Task Process(ClientProcessorContext context, SetIntroCinematicMode packet)
     {
-        this.playerManager = playerManager;
-        this.playerCinematics = playerCinematics;
-        this.localPlayer = localPlayer;
-    }
-
-    public override void Process(SetIntroCinematicMode packet)
-    {
-        if (localPlayer.PlayerId == packet.PlayerId)
+        if (localPlayer.SessionId == packet.SessionId)
         {
             if (packet.PartnerId.HasValue)
             {
@@ -29,15 +21,16 @@ public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCine
             }
 
             localPlayer.IntroCinematicMode = packet.Mode;
-            return;
+            return Task.CompletedTask;
         }
 
-        if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(packet.SessionId, out RemotePlayer remotePlayer))
         {
             remotePlayer.PlayerContext.IntroCinematicMode = packet.Mode;
-            return;
+            return Task.CompletedTask;
         }
 
-        Log.Debug($"SetIntroCinematicMode couldn't find Player with id {packet.PlayerId}. This is normal if player has not yet officially joined.");
+        Log.Debug($"SetIntroCinematicMode couldn't find Player with id {packet.SessionId}. This is normal if player has not yet officially joined.");
+        return Task.CompletedTask;
     }
 }

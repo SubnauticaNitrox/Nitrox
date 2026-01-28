@@ -1,14 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class AggressiveWhenSeeTargetChangedProcessor : ClientPacketProcessor<AggressiveWhenSeeTargetChanged>
+internal sealed class AggressiveWhenSeeTargetChangedProcessor : IClientPacketProcessor<AggressiveWhenSeeTargetChanged>
 {
-    public override void Process(AggressiveWhenSeeTargetChanged packet)
+    public Task Process(ClientProcessorContext context, AggressiveWhenSeeTargetChanged packet)
     {
         AI.AggressiveWhenSeeTargetChanged(packet.CreatureId, packet.TargetId, packet.Locked, packet.AggressionAmount);
+        return Task.CompletedTask;
     }
 }

@@ -123,9 +123,9 @@ namespace Nitrox.Model.DataStructures
             return new Optional<T>(value);
         }
 
-        internal static Optional<T> OfNullable(T value)
+        internal static Optional<T> OfNullable(T? value)
         {
-            return !valueChecksForT(value) ? Optional.Empty : new Optional<T>(value);
+            return !valueChecksForT(value) ? Optional.Empty : new Optional<T>(value!);
         }
 
         public override string ToString()
@@ -206,7 +206,7 @@ namespace Nitrox.Model.DataStructures
 #pragma warning restore CS0618
 
         public static Optional<T> Of<T>(T value) where T : class => Optional<T>.Of(value);
-        public static Optional<T> OfNullable<T>(T value) where T : class => Optional<T>.OfNullable(value);
+        public static Optional<T> OfNullable<T>(T? value) where T : class => Optional<T>.OfNullable(value);
 
         /// <summary>
         ///     Adds a condition to the optional of the given type that is checked whenever <see cref="Optional{T}.HasValue" /> is

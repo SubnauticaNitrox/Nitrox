@@ -1,20 +1,16 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class RocketLaunchProcessor : ClientPacketProcessor<RocketLaunch>
+internal sealed class RocketLaunchProcessor(Rockets rockets) : IClientPacketProcessor<RocketLaunch>
 {
-    private readonly Rockets rockets;
+    private readonly Rockets rockets = rockets;
 
-    public RocketLaunchProcessor(Rockets rockets)
+    public Task Process(ClientProcessorContext context, RocketLaunch rocketLaunch)
     {
-        this.rockets = rockets;
-    }
-
-    public override void Process(RocketLaunch rocketLaunch)
-    {
-        rockets.RocketLaunch(rocketLaunch.RocketId);        
+        rockets.RocketLaunch(rocketLaunch.RocketId);
+        return Task.CompletedTask;
     }
 }

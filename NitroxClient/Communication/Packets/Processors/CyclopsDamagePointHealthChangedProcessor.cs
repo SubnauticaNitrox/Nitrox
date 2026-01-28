@@ -1,30 +1,22 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class CyclopsDamagePointHealthChangedProcessor : IClientPacketProcessor<CyclopsDamagePointRepaired>
 {
-    public class CyclopsDamagePointHealthChangedProcessor : ClientPacketProcessor<CyclopsDamagePointRepaired>
+    public Task Process(ClientProcessorContext context, CyclopsDamagePointRepaired packet)
     {
-        private readonly IPacketSender packetSender;
+        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+        SubRoot cyclops = gameObject.RequireComponent<SubRoot>();
 
-        public CyclopsDamagePointHealthChangedProcessor(IPacketSender packetSender)
+        using (PacketSuppressor<CyclopsDamage>.Suppress())
+        using (PacketSuppressor<CyclopsDamagePointRepaired>.Suppress())
         {
-            this.packetSender = packetSender;
+            cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
         }
-
-        public override void Process(CyclopsDamagePointRepaired packet)
-        {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            SubRoot cyclops = gameObject.RequireComponent<SubRoot>();
-
-            using (PacketSuppressor<CyclopsDamage>.Suppress())
-            using (PacketSuppressor<CyclopsDamagePointRepaired>.Suppress())
-            {
-                cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
-            }
-        }
+        return Task.CompletedTask;
     }
 }
