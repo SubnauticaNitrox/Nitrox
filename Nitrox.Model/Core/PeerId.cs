@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics;
 
 namespace Nitrox.Model.Core;
 
 /// <summary>
 ///     Globally unique ID of the networked entity. Is 0 for server. Starts from 1 if player.
 /// </summary>
+[DebuggerDisplay($"{{{nameof(id)}}}")]
 public readonly record struct PeerId : IComparable<PeerId>
 {
     public const uint SERVER_ID = 0;
