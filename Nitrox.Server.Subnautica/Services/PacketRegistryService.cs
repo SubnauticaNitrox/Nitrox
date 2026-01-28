@@ -21,5 +21,5 @@ internal sealed class PacketRegistryService(Func<IPacketProcessor[]> packetProce
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    public PacketProcessorsInvoker.Entry? GetProcessor(Type packetType) => packetProcessorsInvoker.GetProcessor(packetType) ?? defaultProcessor;
+    public PacketProcessorsInvoker.Entry GetProcessor(Type packetType) => packetProcessorsInvoker.GetProcessor(packetType) ?? defaultProcessor;
 }

@@ -263,12 +263,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
     private async Task ProcessPacket(PeerContext peerContext, Packet packet)
     {
         Type packetType = packet.GetType();
-        PacketProcessorsInvoker.Entry? processor = packetRegistryService.GetProcessor(packetType);
-        if (processor == null)
-        {
-            logger.ZLogWarning($"No packet processor for packet type {packetType}");
-            return;
-        }
+        PacketProcessorsInvoker.Entry processor = packetRegistryService.GetProcessor(packetType);
 
         try
         {

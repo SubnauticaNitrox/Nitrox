@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -76,6 +77,7 @@ public sealed class PacketProcessorsInvoker
         return null;
     }
 
+    [DebuggerDisplay($"{{{nameof(InterfaceType)}}}")]
     public sealed class Entry
     {
         private static readonly Type[] expectedProcessorParameterTypes = [typeof(IPacketProcessContext), typeof(Packet)];
