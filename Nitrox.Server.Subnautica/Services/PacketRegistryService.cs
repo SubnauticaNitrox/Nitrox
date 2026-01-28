@@ -10,14 +10,16 @@ internal sealed class PacketRegistryService(Func<IPacketProcessor[]> packetProce
 {
     private PacketProcessorsInvoker packetProcessorsInvoker;
     private readonly Func<IPacketProcessor[]> packetProcessorsProvider = packetProcessorsProvider;
+    private PacketProcessorsInvoker.Entry defaultProcessor;
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         packetProcessorsInvoker = new PacketProcessorsInvoker(packetProcessorsProvider());
+        defaultProcessor = packetProcessorsInvoker.GetProcessor(typeof(Packet)) ?? throw new InvalidOperationException("A default packet processor must be set");
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    public PacketProcessorsInvoker.Entry? GetProcessor(Type packetType) => packetProcessorsInvoker.GetProcessor(packetType);
+    public PacketProcessorsInvoker.Entry? GetProcessor(Type packetType) => packetProcessorsInvoker.GetProcessor(packetType) ?? defaultProcessor;
 }
