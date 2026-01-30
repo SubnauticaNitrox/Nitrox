@@ -9,6 +9,7 @@
     "Nitrox_AddServer_NamePlaceholder": "Введіть ім'я серверу",
     "Nitrox_AddServer_PortDescription": "Порт:",
     "Nitrox_AddServer_PortPlaceholder": "Введіть числовий порт сервера",
+    "Nitrox_BedGetUp": "Вставай",
     "Nitrox_BuildingDesyncDetected": "Сервер виявив десинхронізацію з локальними клієнтськими будівлями (перейдіть до налаштувань Nitrox, щоб надіслати запит на повторну синхронізацію)",
     "Nitrox_BuildingSettings": "Налаштування будівель",
     "Nitrox_Cancel": "Скасувати",
