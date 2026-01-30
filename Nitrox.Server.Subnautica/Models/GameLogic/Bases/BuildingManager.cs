@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -6,18 +7,21 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
 internal sealed class BuildingManager
 {
+    private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly ILogger<BuildingManager> logger;
 
-    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
+    public BuildingManager(IPacketSender packetSender, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
     {
+        this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
         this.options = options;
@@ -277,7 +281,7 @@ internal sealed class BuildingManager
         return true;
     }
 
-    public bool ReplacePieceByGhost(Player player, PieceDeconstructed pieceDeconstructed, out Entity? removedEntity, out int operationId)
+    public bool ReplacePieceByGhost(Player player, PieceDeconstructed pieceDeconstructed, [NotNullWhen(true)] out Entity? removedEntity, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
@@ -391,7 +395,7 @@ internal sealed class BuildingManager
     private void NotifyPlayerDesync(Player player)
     {
         Dictionary<NitroxId, int> operations = GetEntitiesOperations(worldEntityManager.GetGlobalRootEntities(true));
-        player.SendPacket(new BuildingDesyncWarning(operations));
+        packetSender.SendPacketAsync(new BuildingDesyncWarning(operations), player.SessionId);
     }
 
     public static Dictionary<NitroxId, int> GetEntitiesOperations(List<GlobalRootEntity> entities)

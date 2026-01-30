@@ -1,14 +1,14 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours.Discord;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class DiscordRequestIPProcessor : ClientPacketProcessor<DiscordRequestIP>
+internal sealed class DiscordRequestIPProcessor : IClientPacketProcessor<DiscordRequestIP>
 {
-    public override void Process(DiscordRequestIP packet)
+    public Task Process(ClientProcessorContext context, DiscordRequestIP packet)
     {
         DiscordClient.UpdateIpPort(packet.IpPort);
+        return Task.CompletedTask;
     }
 }

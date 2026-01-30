@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic
 {
-    internal class StoryScheduler(PdaManager pdaManager, StoryManager storyManager, TimeService timeService, PlayerManager playerManager)
+    internal class StoryScheduler(IPacketSender packetSender, PdaManager pdaManager, StoryManager storyManager, TimeService timeService, PlayerManager playerManager)
     {
+        private readonly IPacketSender packetSender = packetSender;
         private readonly PdaManager pdaManager = pdaManager;
         private readonly PlayerManager playerManager = playerManager;
         private readonly ThreadSafeDictionary<string, NitroxScheduledGoal> scheduledStories = [];
@@ -71,7 +73,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
             if (becauseOfTime && !IsTrackedStory(storyGoalKey))
             {
                 scheduledGoal.TimeExecute = ElapsedSecondsFloat + 15;
-                playerManager.SendPacketToAllPlayers(new Schedule(scheduledGoal.TimeExecute, storyGoalKey, scheduledGoal.GoalType));
+                packetSender.SendPacketToAllAsync(new Schedule(scheduledGoal.TimeExecute, storyGoalKey, scheduledGoal.GoalType));
                 return;
             }
             scheduledStories.Remove(storyGoalKey);

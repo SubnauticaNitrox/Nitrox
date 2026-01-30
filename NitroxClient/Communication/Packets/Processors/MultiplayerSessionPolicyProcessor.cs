@@ -1,23 +1,17 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class MultiplayerSessionPolicyProcessor(IMultiplayerSession multiplayerSession) : IClientPacketProcessor<MultiplayerSessionPolicy>
 {
-    public class MultiplayerSessionPolicyProcessor : ClientPacketProcessor<MultiplayerSessionPolicy>
+    private readonly IMultiplayerSession multiplayerSession = multiplayerSession;
+
+    public Task Process(ClientProcessorContext context, MultiplayerSessionPolicy packet)
     {
-        private readonly IMultiplayerSession multiplayerSession;
-
-        public MultiplayerSessionPolicyProcessor(IMultiplayerSession multiplayerSession)
-        {
-            this.multiplayerSession = multiplayerSession;
-        }
-
-        public override void Process(MultiplayerSessionPolicy packet)
-        {
-            Log.Info("Processing session policy information.");
-            multiplayerSession.ProcessSessionPolicy(packet);
-        }
+        Log.Info("Processing session policy information.");
+        multiplayerSession.ProcessSessionPolicy(packet);
+        return Task.CompletedTask;
     }
 }

@@ -52,7 +52,7 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
         info.AddValue("id", guid.ToByteArray());
     }
 
-    public static bool operator ==(NitroxId id1, NitroxId id2)
+    public static bool operator ==(NitroxId? id1, NitroxId? id2)
     {
         if (id1 is null)
         {
@@ -65,7 +65,7 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
         return id1.Equals(id2);
     }
 
-    public static bool operator !=(NitroxId id1, NitroxId id2)
+    public static bool operator !=(NitroxId? id1, NitroxId? id2)
     {
         return !(id1 == id2);
     }
@@ -86,7 +86,7 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
     }
 
         
-    public bool Equals(NitroxId other)
+    public bool Equals(NitroxId? other)
     {
         if (ReferenceEquals(null, other))
         {

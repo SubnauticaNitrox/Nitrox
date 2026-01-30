@@ -24,6 +24,7 @@ public sealed partial class SubnauticaServerOptions
     [Range(1, ushort.MaxValue)]
     public ushort ServerPort { get; set; } = SubnauticaServerConstants.DEFAULT_PORT;
 
+    [PropertyDescription("If not empty, users will be asked to enter a password to join the server")]
     [RegularExpression(@"\w+")]
     public string ServerPassword { get; set; } = "";
 

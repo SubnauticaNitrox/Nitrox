@@ -1,47 +1,24 @@
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-// TODO: When we make the new command system, move this stuff to it
-internal sealed class SunbeamCommand : Command
+/// <summary>
+///     We shouldn't let the server use this command because it needs some stuff to happen client-side like goals.
+/// </summary>
+[RequiresPermission(Perms.ADMIN)]
+[RequiresOrigin(CommandOrigin.PLAYER)]
+internal sealed class SunbeamCommand(StoryManager storyManager) : ICommandHandler<PlaySunbeamEvent.SunbeamEvent>
 {
-    private readonly StoryManager storyManager;
+    private readonly StoryManager storyManager = storyManager;
 
-    // We shouldn't let the server use this command because it needs some stuff to happen client-side like goals
-    public SunbeamCommand(StoryManager storyManager) : base("sunbeam", Perms.ADMIN, PermsFlag.NO_CONSOLE, "Start sunbeam events")
+    [Description("Start sunbeam events")]
+    public Task Execute(ICommandContext context, [Description("Which Sunbeam event to start")] PlaySunbeamEvent.SunbeamEvent sunbeamEvent)
     {
-        AddParameter(new TypeString("storystart/countdown/gunaim", true, "Which Sunbeam event to start"));
+        storyManager.StartSunbeamEvent(sunbeamEvent.ToStoryKey());
 
-        this.storyManager = storyManager;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        if (!args.Sender.HasValue)
-        {
-            SendMessage(args.Sender, "This command can't be used by CONSOLE");
-            return;
-        }
-        string action = args.Get<string>(0);
-
-        switch (action.ToLower())
-        {
-            case "storystart":
-                storyManager.StartSunbeamEvent(PlaySunbeamEvent.SunbeamEvent.STORYSTART);
-                break;
-            case "countdown":
-                storyManager.StartSunbeamEvent(PlaySunbeamEvent.SunbeamEvent.COUNTDOWN);
-                break;
-            case "gunaim":
-                storyManager.StartSunbeamEvent(PlaySunbeamEvent.SunbeamEvent.GUNAIM);
-                break;
-            default:
-                // Same message as in the abstract class, in method TryExecute
-                SendMessage(args.Sender, $"Error: Invalid Parameters\nUsage: {ToHelpText(false, true)}");
-                break;
-        }
+        return Task.CompletedTask;
     }
 }

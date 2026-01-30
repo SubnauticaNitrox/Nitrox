@@ -1,14 +1,13 @@
 using System.Linq;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using Story;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class ScheduleProcessor : ClientPacketProcessor<Schedule>
+internal sealed class ScheduleProcessor : IClientPacketProcessor<Schedule>
 {
-    public override void Process(Schedule schedulePacket)
+    public Task Process(ClientProcessorContext context, Schedule schedulePacket)
     {
         ScheduledGoal goal = new()
         {
@@ -21,6 +20,7 @@ public class ScheduleProcessor : ClientPacketProcessor<Schedule>
             StoryGoalScheduler.main.schedule.Add(goal);
         }
         Log.Debug($"Processed a Schedule packet [Key: {goal.goalKey}, Type: {goal.goalType}, TimeExecute: {goal.timeExecute}]");
+        return Task.CompletedTask;
     }
 
     private bool ShouldSchedule(ScheduledGoal goal)

@@ -1,26 +1,20 @@
 using System;
 using Nitrox.Model.DataStructures;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
+internal sealed class EntityReparentedProcessor(Entities entities) : IClientPacketProcessor<EntityReparented>
 {
-    private readonly Entities entities;
+    private readonly Entities entities = entities;
 
-    public EntityReparentedProcessor(Entities entities)
-    {
-        this.entities = entities;
-    }
-
-    public override void Process(EntityReparented packet)
+    public Task Process(ClientProcessorContext context, EntityReparented packet)
     {
         Optional<GameObject> entity = NitroxEntity.GetObjectFrom(packet.Id);
 
@@ -29,7 +23,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             // In some cases, the affected entity may be pending spawning or out of range.
             // we only require the parent (in this case, the visible entity is undergoing
             // some change that must be shown, and if not is an error).
-            return;
+            return Task.CompletedTask;
         }
 
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
@@ -44,16 +38,16 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
                 if (waterParkItem.currentWaterPark)
                 {
                     waterParkItem.SetWaterPark(waterPark);
-                    return;
+                    return Task.CompletedTask;
                 }
                 pickupable.SetVisible(false);
                 pickupable.Activate(false);
                 waterPark.AddItem(pickupable);
                 // The reparenting is automatic here so we don't need to continue
-                return;
+                return Task.CompletedTask;
             }
             // If the entity was parented to a WaterPark but is picked up by someone
-            else if (waterParkItem)
+            if (waterParkItem)
             {
                 pickupable.Deactivate();
                 waterParkItem.SetWaterPark(null);
@@ -74,6 +68,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
                 PerformDefaultReparenting(entity.Value, newParent);
             }
         }
+        return Task.CompletedTask;
     }
 
     private void InventoryItemReparented(GameObject entity, GameObject newParent)

@@ -1,15 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using static Nitrox.Model.Subnautica.Packets.CoffeeMachineUse;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMachineUse>
+internal sealed class CoffeeMachineUseProcessor : IClientPacketProcessor<CoffeeMachineUse>
 {
     private readonly LocalPlayer localPlayer;
     private readonly float machineSoundRange;
@@ -21,19 +20,19 @@ public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMach
         machineSoundRange = coffeeSoundData.Radius;
     }
 
-    public override void Process(CoffeeMachineUse packet)
+    public Task Process(ClientProcessorContext context, CoffeeMachineUse packet)
     {
-        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject machineGO))
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject machineGo))
         {
             Log.Warn("Failed to get CoffeeVendingMachine gameobject while processing CoffeeMachineUse packet");
-            return;
+            return Task.CompletedTask;
         }
-        if (!machineGO.TryGetComponent<CoffeeVendingMachine>(out CoffeeVendingMachine machine))
+        if (!machineGo.TryGetComponent(out CoffeeVendingMachine machine))
         {
             Log.Warn("Failed to get CoffeeVendingMachine component while processing CoffeeMachineUse packet");
-            return;
+            return Task.CompletedTask;
         }
-        bool bPlaySound = Vector3.Distance(machineGO.transform.position, localPlayer.Body.transform.position) < machineSoundRange;
+        bool bPlaySound = Vector3.Distance(machineGo.transform.position, localPlayer.Body.transform.position) < machineSoundRange;
 
         if (packet.Slot == CoffeeMachineSlot.ONE)
         {
@@ -53,5 +52,6 @@ public sealed class CoffeeMachineUseProcessor : ClientPacketProcessor<CoffeeMach
             machine.vfxController.Play(1);
             machine.timeLastUseSlot2 = Time.time;
         }
+        return Task.CompletedTask;
     }
 }

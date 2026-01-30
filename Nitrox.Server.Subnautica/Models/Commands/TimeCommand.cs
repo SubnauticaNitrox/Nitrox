@@ -1,40 +1,31 @@
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-internal sealed class TimeCommand : Command
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class TimeCommand(TimeService timeService) : ICommandHandler<StoryManager.TimeModification>
 {
-    private readonly TimeService timeService;
+    private readonly TimeService timeService = timeService;
 
-    public TimeCommand(TimeService timeService) : base("time", Perms.MODERATOR, "Changes the map time")
+    [Description("Changes the map time")]
+    public async Task Execute(ICommandContext context, [Description("Changes the map time")] StoryManager.TimeModification time)
     {
-        AddParameter(new TypeString("day/night", false, "Time to change to"));
-
-        this.timeService = timeService;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        string time = args.Get(0);
-
-        switch (time?.ToLower())
+        switch (time)
         {
-            case "day":
+            case StoryManager.TimeModification.DAY:
                 timeService.ChangeTime(StoryManager.TimeModification.DAY);
-                SendMessageToAllPlayers("Time set to day");
+                await context.SendToAllAsync("Time set to day");
                 break;
-
-            case "night":
+            case StoryManager.TimeModification.NIGHT:
                 timeService.ChangeTime(StoryManager.TimeModification.NIGHT);
-                SendMessageToAllPlayers("Time set to night");
+                await context.SendToAllAsync("Time set to night");
                 break;
-
             default:
                 timeService.ChangeTime(StoryManager.TimeModification.SKIP);
-                SendMessageToAllPlayers("Skipped time");
+                await context.SendToAllAsync("Skipped time");
                 break;
         }
     }

@@ -1,41 +1,33 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+internal sealed class PromoteCommand : ICommandHandler<Player, Perms>
 {
-    internal class PromoteCommand : Command
+    [Description("Sets specific permissions to a user")]
+    public async Task Execute(ICommandContext context, [Description("The username to change the permissions of")] Player targetPlayer, [Description("Permission level")] Perms newPerms)
     {
-        public PromoteCommand() : base("promote", Perms.MODERATOR, "Sets specific permissions to a user")
+        if (context.OriginId == targetPlayer.SessionId)
         {
-            AddParameter(new TypePlayer("name", true, "The username to change the permissions of"));
-            AddParameter(new TypeEnum<Perms>("perms", true, "Permission level"));
+            await context.ReplyAsync("You can't promote yourself");
+            return;
+        }
+        if (context.Permissions < newPerms)
+        {
+            await context.ReplyAsync($"Your permissions ({context.Permissions}) must be higher than the perms you want to assign ({newPerms})");
+            return;
+        }
+        if (context.Permissions < targetPlayer.Permissions)
+        {
+            await context.ReplyAsync($"You're not allowed to update {targetPlayer.Name}\'s permissions");
+            return;
         }
 
-        protected override void Execute(CallArgs args)
-        {
-            Player targetPlayer = args.Get<Player>(0);
-            Perms permissions = args.Get<Perms>(1);
-
-            if (args.SenderName == targetPlayer.Name)
-            {
-                SendMessage(args.Sender, "You can't promote yourself");
-                return;
-            }
-
-            //Allows a bounded permission hierarchy
-            if (args.IsConsole || permissions < args.Sender.Value.Permissions)
-            {
-                targetPlayer.Permissions = permissions;
-
-                targetPlayer.SendPacket(new PermsChanged(targetPlayer.Permissions));
-                SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to {permissions}");
-                SendMessageToPlayer(targetPlayer, $"You've been promoted to {permissions}");
-            }
-            else
-            {
-                SendMessage(args.Sender, $"You're not allowed to update {targetPlayer.Name}\'s permissions");
-            }
-        }
+        targetPlayer.Permissions = newPerms;
+        await context.SendAsync(targetPlayer.SessionId, new PermsChanged(newPerms));
+        await context.ReplyAsync($"Updated {targetPlayer.Name}\'s permissions to {newPerms}");
+        await context.SendAsync(targetPlayer.SessionId, $"You've been promoted to {newPerms}");
     }
 }

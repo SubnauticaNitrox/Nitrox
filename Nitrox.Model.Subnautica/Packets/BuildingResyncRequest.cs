@@ -5,14 +5,8 @@ using Nitrox.Model.Packets;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public sealed class BuildingResyncRequest : Packet
+public sealed class BuildingResyncRequest(NitroxId? entityId = null, bool resyncEverything = true) : Packet
 {
-    public NitroxId EntityId { get; }
-    public bool ResyncEverything { get; }
-
-    public BuildingResyncRequest(NitroxId entityId = null, bool resyncEverything = true)
-    {
-        EntityId = entityId;
-        ResyncEverything = resyncEverything;
-    }
+    public NitroxId? EntityId { get; } = entityId;
+    public bool ResyncEverything { get; } = resyncEverything;
 }

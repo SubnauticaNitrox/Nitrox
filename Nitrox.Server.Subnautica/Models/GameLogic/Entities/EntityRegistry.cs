@@ -146,8 +146,13 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
             }
         }
 
-        public void RemoveFromParent(Entity entity)
+        public void RemoveFromParent(Entity? entity)
         {
+            if (entity == null)
+            {
+                return;
+            }
+
             if (entity.ParentId != null && TryGetEntityById(entity.ParentId, out Entity parentEntity))
             {
                 parentEntity.ChildEntities.RemoveAll(childEntity => childEntity.Id.Equals(entity.Id));
@@ -171,7 +176,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
             }
         }
 
-        public void ReparentEntity(NitroxId entityId, NitroxId newParentId)
+        public void ReparentEntity(NitroxId? entityId, NitroxId? newParentId)
         {
             if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
@@ -191,13 +196,13 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities
             ReparentEntity(entity, newParent);
         }
 
-        public void ReparentEntity(Entity entity, NitroxId newParentId)
+        public void ReparentEntity(Entity? entity, NitroxId? newParentId)
         {
             Entity parentEntity = newParentId != null ? GetEntityById(newParentId).Value : null;
             ReparentEntity(entity, parentEntity);
         }
 
-        public void ReparentEntity(Entity entity, Entity newParent)
+        public void ReparentEntity(Entity? entity, Entity? newParent)
         {
             RemoveFromParent(entity);
             if (newParent == null)

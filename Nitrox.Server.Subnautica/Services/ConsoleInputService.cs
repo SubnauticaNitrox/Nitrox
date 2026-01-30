@@ -1,17 +1,21 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using Nitrox.Model.DataStructures;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
 ///     Reads console input and handles input history.
 /// </summary>
-internal sealed class ConsoleInputService(CommandService commandService, IHostApplicationLifetime appLifetime, ILogger<ConsoleInputService> logger) : BackgroundService
+internal sealed class ConsoleInputService(CommandService commandService, IPacketSender packetSender, IHostApplicationLifetime appLifetime, ILogger<ConsoleInputService> logger) : BackgroundService
 {
+    private readonly IHostApplicationLifetime appLifetime = appLifetime;
     private readonly CommandService commandService = commandService;
     private readonly CircularBuffer<string> inputHistory = new(1000);
     private readonly ILogger<ConsoleInputService> logger = logger;
+    private readonly IPacketSender packetSender = packetSender;
     private int currentHistoryIndex;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -36,7 +40,7 @@ internal sealed class ConsoleInputService(CommandService commandService, IHostAp
         }
     }
 
-    private void SubmitInput(string input) => commandService.ExecuteCommand(input);
+    private void SubmitInput(string input) => commandService.ExecuteCommand(input, new HostToServerCommandContext(packetSender), out _);
 
     private async Task HandleInputAsync(CancellationToken cancellationToken)
     {
@@ -174,7 +178,7 @@ internal sealed class ConsoleInputService(CommandService commandService, IHostAp
                     {
                         inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
                     }
-                    catch (IndexOutOfRangeException)
+                    catch (Exception ex) when (ex is IndexOutOfRangeException or ArgumentOutOfRangeException)
                     {
                         // ignored
                     }

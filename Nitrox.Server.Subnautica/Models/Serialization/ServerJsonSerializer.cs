@@ -6,7 +6,7 @@ using Nitrox.Server.Subnautica.Models.Serialization.Json;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization;
 
-public class ServerJsonSerializer : IServerSerializer
+public sealed class ServerJsonSerializer : IServerSerializer
 {
     public const string FILE_ENDING = ".json";
 
@@ -24,6 +24,7 @@ public class ServerJsonSerializer : IServerSerializer
         serializer.TypeNameHandling = TypeNameHandling.Auto;
         serializer.ContractResolver = new AttributeContractResolver();
         serializer.Converters.Add(new NitroxIdConverter());
+        serializer.Converters.Add(new PeerIdConverter());
         serializer.Converters.Add(new TechTypeConverter());
         serializer.Converters.Add(new VersionConverter());
         serializer.Converters.Add(new KeyValuePairConverter());

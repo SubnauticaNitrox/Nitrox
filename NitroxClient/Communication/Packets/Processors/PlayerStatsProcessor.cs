@@ -1,23 +1,17 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
+internal sealed class PlayerStatsProcessor(PlayerManager playerManager) : IClientPacketProcessor<PlayerStats>
 {
-    private readonly PlayerManager playerManager;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public PlayerStatsProcessor(PlayerManager playerManager)
+    public Task Process(ClientProcessorContext context, PlayerStats playerStats)
     {
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(PlayerStats playerStats)
-    {
-        if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(playerStats.SessionId, out RemotePlayer remotePlayer))
         {
             RemotePlayerVitals vitals = remotePlayer.vitals;
             if (vitals)
@@ -29,5 +23,6 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
             }
             remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
         }
+        return Task.CompletedTask;
     }
 }

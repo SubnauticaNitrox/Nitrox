@@ -10,7 +10,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class PlayerMetadataProcessor : EntityMetadataProcessor<PlayerMetadata>
 {
-    private NitroxId localPlayerId = null;
+    private NitroxId? localPlayerId;
     public override void ProcessMetadata(GameObject gameObject, PlayerMetadata metadata)
     {
         if (!gameObject.TryGetIdOrWarn(out NitroxId id))

@@ -126,8 +126,8 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         }
         _isDirty = false;
 
-        Dictionary<string, INitroxPlayer> players = playerManager.GetAll().ToDictionary<RemotePlayer, string, INitroxPlayer>(player => player.PlayerId.ToString(), player => player);
-        players.Add(localPlayer.PlayerId.ToString(), localPlayer);
+        Dictionary<string, INitroxPlayer> players = playerManager.GetAll().ToDictionary<RemotePlayer, string, INitroxPlayer>(player => player.SessionId.ToString(), player => player);
+        players.Add(localPlayer.SessionId.ToString(), localPlayer);
 
         foreach (KeyValuePair<string, INitroxPlayer> entry in players)
         {
@@ -151,7 +151,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         List<string> sorted = new(tempSort.Keys);
         sorted.Sort();
 
-        entries[localPlayer.PlayerId.ToString()].rectTransform.SetSiblingIndex(0);
+        entries[localPlayer.SessionId.ToString()].rectTransform.SetSiblingIndex(0);
         for (int j = 0; j < sorted.Count; j++)
         {
             string id = tempSort[sorted[j]].id;
@@ -224,19 +224,18 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Add(playerId, entry);
     }
 
-    private void OnAdd(ushort playerId, RemotePlayer remotePlayer)
+    private void OnAdd(SessionId sessionId, RemotePlayer remotePlayer)
     {
         _isDirty = true;
     }
 
-    private void OnRemove(ushort playerId, RemotePlayer remotePlayers)
+    private void OnRemove(SessionId sessionId, RemotePlayer remotePlayers)
     {
-        string playerIdString = playerId.ToString();
-        if (!entries.ContainsKey(playerIdString))
+        string playerIdString = sessionId.ToString();
+        if (!entries.TryGetValue(playerIdString, out uGUI_PlayerPingEntry? entry))
         {
             return;
         }
-        uGUI_PlayerPingEntry entry = entries[playerIdString];
         entries.Remove(playerIdString);
         pool.Release(entry);
         _isDirty = true;

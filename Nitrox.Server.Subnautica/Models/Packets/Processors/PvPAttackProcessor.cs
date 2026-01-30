@@ -1,13 +1,14 @@
 using System.Collections.Generic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttack>
+internal sealed class PvPAttackProcessor(IPacketSender packetSender, PlayerManager playerManager, IOptions<SubnauticaServerOptions> options) : IAuthPacketProcessor<PvPAttack>
 {
-    private readonly IOptions<SubnauticaServerOptions> options;
-    private readonly PlayerManager playerManager;
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly PlayerManager playerManager = playerManager;
 
     // TODO: In the future, do a whole config for damage sources
     private static readonly Dictionary<PvPAttack.AttackType, float> damageMultiplierByType = new()
@@ -16,19 +17,13 @@ internal sealed class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttac
         { PvPAttack.AttackType.HeatbladeHit, 1f }
     };
 
-    public PvPAttackProcessor(IOptions<SubnauticaServerOptions> options, PlayerManager playerManager)
-    {
-        this.options = options;
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(PvPAttack packet, Player player)
+    public async Task Process(AuthProcessorContext context, PvPAttack packet)
     {
         if (!options.Value.PvpEnabled)
         {
             return;
         }
-        if (!playerManager.TryGetPlayerById(packet.TargetPlayerId, out Player targetPlayer))
+        if (!playerManager.TryGetPlayerBySessionId(packet.TargetSessionId, out Player targetPlayer))
         {
             return;
         }
@@ -38,6 +33,6 @@ internal sealed class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttac
         }
 
         packet.Damage *= multiplier;
-        targetPlayer.SendPacket(packet);
+        await packetSender.SendPacketAsync(packet, targetPlayer.SessionId);
     }
 }

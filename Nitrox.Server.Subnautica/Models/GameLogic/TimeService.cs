@@ -2,12 +2,13 @@ using System.Diagnostics;
 using Nitrox.Model.Networking;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Services;
 using Timer = System.Timers.Timer;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSyncer, ILoggerFactory loggerFactory, ILogger<TimeService> logger)
+internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSyncer, ILoggerFactory loggerFactory, ILogger<TimeService> logger)
     : BackgroundService, ISummarize, IHibernate
 {
     public delegate void TimeSkippedEventHandler(TimeSpan skippedTime);
@@ -34,7 +35,7 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
     private readonly ILoggerFactory loggerFactory = loggerFactory;
 
     private readonly NtpSyncer ntpSyncer = ntpSyncer;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly IPacketSender packetSender = packetSender;
 
     private readonly PeriodicTimer resyncTimer = new(TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS));
     private readonly Stopwatch stopWatch = new();
@@ -112,7 +113,7 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
             GameTime += skippedTime;
             TimeSkipped?.Invoke(skippedTime);
 
-            playerManager.SendPacketToAllPlayers(MakeTimePacket());
+            packetSender.SendPacketToAllAsync(MakeTimePacket());
         }
     }
 
@@ -133,7 +134,7 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
 
         GameTime += skipAmount;
         TimeSkipped?.Invoke(skipAmount);
-        playerManager.SendPacketToAllPlayers(MakeTimePacket());
+        packetSender.SendPacketToAllAsync(MakeTimePacket());
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -152,7 +153,7 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
         while (!stoppingToken.IsCancellationRequested)
         {
             await resyncTimer.WaitForNextTickAsync(stoppingToken);
-            playerManager.SendPacketToAllPlayers(MakeTimePacket());
+            await packetSender.SendPacketToAllAsync(MakeTimePacket());
         }
     }
 
@@ -163,12 +164,11 @@ internal sealed class TimeService(PlayerManager playerManager, NtpSyncer ntpSync
         return Task.CompletedTask;
     }
 
-    Task IEvent<IHibernate.WakeArgs>.OnEventAsync(IHibernate.WakeArgs args)
+    async Task IEvent<IHibernate.WakeArgs>.OnEventAsync(IHibernate.WakeArgs args)
     {
         stopWatch.Start();
         resyncTimer.Period = TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS);
-        playerManager.SendPacketToAllPlayers(MakeTimePacket());
-        return Task.CompletedTask;
+        await packetSender.SendPacketToAllAsync(MakeTimePacket());
     }
 
     Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)

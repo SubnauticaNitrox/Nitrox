@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication;
 
@@ -18,7 +17,7 @@ public class PacketReceiver
         }
     }
 
-    public Packet GetNextPacket()
+    public Packet? GetNextPacket()
     {
         lock (receivedPacketsLock)
         {
@@ -31,7 +30,7 @@ public class PacketReceiver
     /// </summary>
     public void ConsumePackets<TExtra>(Action<Packet, TExtra> consumer, TExtra extraParameter)
     {
-        Packet packet = GetNextPacket();
+        Packet? packet = GetNextPacket();
         while (packet != null)
         {
             consumer(packet, extraParameter);

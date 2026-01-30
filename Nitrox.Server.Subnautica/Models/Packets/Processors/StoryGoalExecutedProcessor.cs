@@ -1,26 +1,18 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoalExecuted>
+internal sealed class StoryGoalExecutedProcessor(IPacketSender packetSender, StoryManager storyManager, StoryScheduler storyScheduler, PdaManager pdaManager, ILogger<StoryGoalExecutedProcessor> logger)
+    : IAuthPacketProcessor<StoryGoalExecuted>
 {
-    private readonly PlayerManager playerManager;
-    private readonly StoryManager storyManager;
-    private readonly StoryScheduler storyScheduler;
-    private readonly PdaManager pdaManager;
-    private readonly ILogger<StoryGoalExecutedProcessor> logger;
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly StoryManager storyManager = storyManager;
+    private readonly StoryScheduler storyScheduler = storyScheduler;
+    private readonly PdaManager pdaManager = pdaManager;
+    private readonly ILogger<StoryGoalExecutedProcessor> logger = logger;
 
-    public StoryGoalExecutedProcessor(PlayerManager playerManager,  StoryManager storyManager, StoryScheduler storyScheduler, PdaManager pdaManager, ILogger<StoryGoalExecutedProcessor> logger)
-    {
-        this.playerManager = playerManager;
-        this.storyManager = storyManager;
-        this.storyScheduler = storyScheduler;
-        this.pdaManager = pdaManager;
-        this.logger = logger;
-    }
-
-    public override void Process(StoryGoalExecuted packet, Player player)
+    public async Task Process(AuthProcessorContext context, StoryGoalExecuted packet)
     {
         logger.ZLogDebug($"Processing packet: {packet}");
         // The switch is structure is similar to StoryGoal.Execute()
@@ -40,9 +32,7 @@ internal sealed class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<
                 }
                 break;
         }
-
         storyScheduler.UnscheduleStory(packet.Key);
-
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        await context.SendToOthersAsync(packet);
     }
 }

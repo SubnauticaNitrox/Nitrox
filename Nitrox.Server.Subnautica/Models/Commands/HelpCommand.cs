@@ -1,67 +1,98 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using Nitrox.Model.Core;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using System.Text;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+/// <summary>
+///     Shows helpful information about available commands.
+/// </summary>
+[Alias("?")]
+internal sealed class HelpCommand(Func<CommandRegistry> registryProvider) : ICommandHandler, ICommandHandler<string>
 {
-    internal class HelpCommand : Command
-    {
-        private readonly ILogger<HelpCommand> logger;
-        public override IEnumerable<string> Aliases { get; } = new[] { "?" };
+    /// <summary>
+    ///     <see cref="Func{TResult}" /> is used to lazily retrieve the registry as otherwise it would cause cyclic-dependency
+    ///     error if immediately requested by the <see cref="HelpCommand" /> constructor.
+    /// </summary>
+    private readonly Func<CommandRegistry> registryProvider = registryProvider;
 
-        public HelpCommand(ILogger<HelpCommand> logger) : base("help", Perms.PLAYER, "Displays this")
+    [Description("Shows this help page")]
+    public async Task Execute(ICommandContext context)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine("~~~ COMMAND HELP PAGE ~~~");
+        CommandRegistry registry = registryProvider();
+        foreach (CommandHandlerEntry handler in registry
+                                                .Handlers
+                                                .OrderBy(h => h.Owner is HelpCommand ? 0 : 1)
+                                                .ThenBy(h => h.Name)
+                                                .ThenBy(h => h.ParameterTypes.Length))
         {
-            this.logger = logger;
-            AddParameter(new TypeString("command", false, "Command to see help information for"));
+            if (!registry.IsValidHandlerForContext(handler, context))
+            {
+                continue;
+            }
+            sb.AppendLine(handler.ToString());
+        }
+        await context.ReplyAsync(sb.Remove(sb.Length - Environment.NewLine.Length, Environment.NewLine.Length).ToString());
+    }
+
+    [Description("Shows the help page of the given command")]
+    public async Task Execute(ICommandContext context, string commandName)
+    {
+        if (!await TryShowHelpForCommandAsync(context, commandName))
+        {
+            await context.ReplyAsync($"No command exists with the name {commandName}");
+        }
+    }
+
+    private async ValueTask<bool> TryShowHelpForCommandAsync(ICommandContext context, string commandName)
+    {
+        if (!registryProvider().TryGetHandlersByCommandName(context, commandName, out List<CommandHandlerEntry> handlers))
+        {
+            return false;
+        }
+        CommandHandlerEntry baseHandler = handlers.FirstOrDefault();
+        if (baseHandler == null)
+        {
+            return false;
         }
 
-        protected override void Execute(CallArgs args)
+        StringBuilder sb = new();
+        sb.Append("~~~ ")
+          .Append(baseHandler.Name.ToUpperInvariant())
+          .Append(" COMMAND HAS ")
+          .Append(handlers.Count)
+          .Append(" HANDLER(S) ~~~");
+        if (baseHandler.Aliases.Length > 0)
         {
-            List<string> cmdsText;
-            if (args.IsConsole)
+            sb.AppendLine()
+              .Append("Aliases: ")
+              .AppendLine(string.Join(", ", baseHandler.Aliases));
+        }
+        sb.AppendLine();
+        bool first = true;
+        foreach (CommandHandlerEntry handler in handlers.OrderBy(h => h.Parameters.Length))
+        {
+            if (!first)
             {
-                cmdsText = GetHelpText(Perms.HOST, false, args.IsValid(0) ? args.Get<string>(0) : null);
-                using (logger.BeginPlainScope())
-                {
-                    foreach (string cmdText in cmdsText)
-                    {
-                        logger.ZLogInformation($"{cmdText}");
-                    }
-                }
+                sb.AppendLine();
+            }
+            first = false;
+
+            if (handler.Parameters.Length == 0)
+            {
+                sb.Append("no args - ")
+                  .Append(handler.Description);
             }
             else
             {
-                cmdsText = GetHelpText(args.Sender.Value.Permissions, true, args.IsValid(0) ? args.Get<string>(0) : null);
-
-                foreach (string cmdText in cmdsText)
-                {
-                    SendMessageToPlayer(args.Sender, cmdText);
-                }
+                sb.Append(handler.ToDisplayString(false));
             }
         }
-
-        private List<string> GetHelpText(Perms permThreshold, bool cropText, string singleCommand)
-        {
-            //Runtime query to avoid circular dependencies
-            IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
-            if (singleCommand != null && !commands.Any(cmd => cmd.Name.Equals(singleCommand)))
-            {
-                return ["Command does not exist"];
-            }
-            List<string> cmdsText = [];
-            cmdsText.Add(singleCommand != null ? $"=== Showing help for {singleCommand} ===" : "=== Showing command list ===");
-            cmdsText.AddRange(commands.Where(cmd => CanExecuteAndProcess(cmd, permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
-                                             .OrderByDescending(cmd => cmd.Name)
-                                             .Select(cmd => cmd.ToHelpText(singleCommand != null, cropText)));
-            return cmdsText;
-
-            static bool CanExecuteAndProcess(Command cmd, Perms perms)
-            {
-                return cmd.CanExecute(perms) && !(perms == Perms.HOST && cmd.Flags.HasFlag(PermsFlag.NO_CONSOLE));
-            }
-        }
+        await context.ReplyAsync(sb.ToString());
+        return true;
     }
 }
