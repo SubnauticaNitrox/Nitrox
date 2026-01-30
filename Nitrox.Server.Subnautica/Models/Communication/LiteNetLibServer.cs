@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Channels;
 using LiteNetLib;
+using LiteNetLib.Layers;
 using LiteNetLib.Utils;
 using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
@@ -44,7 +45,8 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         this.options = options;
         this.logger = logger;
         listener = new EventBasedNetListener();
-        server = new NetManager(listener) { IPv6Enabled = true };
+        server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null) {
+            UseNativeSockets = true, IPv6Enabled = true };
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

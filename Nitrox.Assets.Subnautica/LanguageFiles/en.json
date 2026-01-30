@@ -79,6 +79,8 @@
     "Nitrox_ServerEntry_DeleteWarning": "Are you sure you want to delete this server?",
     "Nitrox_ServerStopped": "The server has been stopped",
     "Nitrox_Settings_Bandwidth": "Bandwidth settings",
+    "Nitrox_Settings_ChatVisibilityDuration": "Chat visibility duration (s)",
+    "Nitrox_Settings_ChatVisibilityDuration_Tooltip": "How long the chat stays visible. Set to 0 to disable chat popups.",
     "Nitrox_Settings_HigherForUnstable_Tooltip": "Give a higher value for unstable connections",
     "Nitrox_Settings_Keybind_FocusDiscord": "Focus on the Discord invite window",
     "Nitrox_Settings_Keybind_OpenChat": "Open chat",
