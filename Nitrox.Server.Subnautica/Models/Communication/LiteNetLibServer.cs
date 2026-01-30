@@ -1,7 +1,9 @@
 using System.Buffers;
 using System.Collections.Generic;
 using LiteNetLib;
+using LiteNetLib.Layers;
 using LiteNetLib.Utils;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
@@ -37,8 +39,9 @@ internal sealed class LiteNetLibServer : IHostedService
         this.options = options;
         this.logger = logger;
         listener = new EventBasedNetListener();
-        server = new NetManager(listener)
+        server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
         {
+            UseNativeSockets = true,
             IPv6Enabled = true
         };
     }
