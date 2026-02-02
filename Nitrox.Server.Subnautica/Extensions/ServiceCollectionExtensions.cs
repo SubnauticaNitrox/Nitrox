@@ -177,7 +177,7 @@ internal static partial class ServiceCollectionExtensions
                     .AddSingleton<BatchEntitySpawner>()
                     .AddSingleton<EntityRegistry>()
                     .AddSingleton<SessionSettings>()
-                    .AddSingleton<IUweWorldEntityFactory, SubnauticaUweWorldEntityFactory>()
+                    .AddSingleton<SubnauticaUweWorldEntityFactory>()
                     .AddSingleton<IEntityBootstrapperManager, SubnauticaEntityBootstrapperManager>()
                     .AddSingleton<EntitySpawnPointFactory, SubnauticaEntitySpawnPointFactory>();
 

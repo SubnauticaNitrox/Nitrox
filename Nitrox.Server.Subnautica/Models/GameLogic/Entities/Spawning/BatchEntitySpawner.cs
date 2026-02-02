@@ -24,7 +24,7 @@ internal sealed class BatchEntitySpawner
     private readonly IEntityBootstrapperManager entityBootstrapperManager;
     private readonly PdaManager pdaManager;
 
-    private readonly IUweWorldEntityFactory worldEntityFactory;
+    private readonly SubnauticaUweWorldEntityFactory worldEntityFactory;
 
     private readonly Lock parsedBatchesLock = new();
     private readonly Lock emptyBatchesLock = new();
@@ -61,7 +61,7 @@ internal sealed class BatchEntitySpawner
     private static readonly NitroxQuaternion prefabZUpRotation = NitroxQuaternion.FromEuler(new(-90f, 0f, 0f));
 
     public BatchEntitySpawner(
-        IUweWorldEntityFactory worldEntityFactory,
+        SubnauticaUweWorldEntityFactory worldEntityFactory,
         IUwePrefabFactory prefabFactory,
         IEntityBootstrapperManager entityBootstrapperManager,
         PdaManager pdaManager,
@@ -132,7 +132,7 @@ internal sealed class BatchEntitySpawner
     private async Task<List<Entity>> SpawnEntitiesUsingRandomDistributionAsync(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicGenerator deterministicBatchGenerator, Entity? parentEntity = null)
     {
         // See CSVEntitySpawner.GetPrefabForSlot for reference
-        List<UwePrefab> allowedPrefabs = FilterAllowedPrefabs(prefabs, entitySpawnPoint, out float fragmentProbability, out float completeFragmentProbability);
+        (List<UwePrefab>? allowedPrefabs, float fragmentProbability, float completeFragmentProbability) = await FilterAllowedPrefabsAsync(prefabs, entitySpawnPoint);
 
         bool areFragmentProbabilitiesNonNull = fragmentProbability > 0f && completeFragmentProbability > 0f;
         float probabilityMultiplier = areFragmentProbabilitiesNonNull ? (completeFragmentProbability + fragmentProbability) / fragmentProbability : 1f;
@@ -174,7 +174,7 @@ internal sealed class BatchEntitySpawner
         }
 
         List<Entity> spawnedEntities = [];
-        if (worldEntityFactory.TryFind(chosenPrefab.ClassId, out UweWorldEntity uweWorldEntity))
+        if (await worldEntityFactory.FindAsync(chosenPrefab.ClassId) is { } uweWorldEntity)
         {
             for (int i = 0; i < chosenPrefab.Count; i++)
             {
@@ -203,17 +203,17 @@ internal sealed class BatchEntitySpawner
         return spawnedEntities;
     }
 
-    private List<UwePrefab> FilterAllowedPrefabs(List<UwePrefab> prefabs, EntitySpawnPoint entitySpawnPoint, out float fragmentProbability, out float completeFragmentProbability)
+    private async Task<(List<UwePrefab> allowedPrefabs, float fragmentProbability, float completeFragmentProbability)> FilterAllowedPrefabsAsync(List<UwePrefab> prefabs, EntitySpawnPoint entitySpawnPoint)
     {
         List<UwePrefab> allowedPrefabs = [];
 
-        fragmentProbability = 0;
-        completeFragmentProbability = 0;
+        float fragmentProbability = 0;
+        float completeFragmentProbability = 0;
         for (int i = 0; i < prefabs.Count; i++)
         {
             UwePrefab prefab = prefabs[i];
             // Adapted code from the while loop in CSVEntitySpawner.GetPrefabForSlot 
-            if (prefab.ClassId != "None" && worldEntityFactory.TryFind(prefab.ClassId, out UweWorldEntity uweWorldEntity) &&
+            if (prefab.ClassId != "None" && await worldEntityFactory.FindAsync(prefab.ClassId) is {} uweWorldEntity &&
                 entitySpawnPoint.AllowedTypes.Contains(uweWorldEntity.SlotType))
             {
                 float weightedProbability = prefab.Probability / entitySpawnPoint.Density;
@@ -237,7 +237,7 @@ internal sealed class BatchEntitySpawner
             }
         }
 
-        return allowedPrefabs;
+        return (allowedPrefabs, fragmentProbability, completeFragmentProbability);
     }
 
     /// <summary>
@@ -246,7 +246,7 @@ internal sealed class BatchEntitySpawner
     /// <inheritdoc cref="CreateEntityWithChildrenAsync" />
     private async Task<List<Entity>> SpawnEntitiesStaticallyAsync(EntitySpawnPoint entitySpawnPoint, DeterministicGenerator deterministicBatchGenerator, WorldEntity? parentEntity = null)
     {
-        if (worldEntityFactory.TryFind(entitySpawnPoint.ClassId, out UweWorldEntity uweWorldEntity))
+        if (await worldEntityFactory.FindAsync(entitySpawnPoint.ClassId) is { } uweWorldEntity)
         {
             // prefabZUp should not be taken into account for statically spawned entities
             return await CreateEntityWithChildrenAsync(entitySpawnPoint,

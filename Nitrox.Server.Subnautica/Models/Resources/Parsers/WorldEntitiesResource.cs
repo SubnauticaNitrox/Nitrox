@@ -7,17 +7,15 @@ using WorldEntityInfo = UWE.WorldEntityInfo;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
-internal class WorldEntitiesResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options) : IGameResource
+internal sealed class WorldEntitiesResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options) : IGameResource
 {
     private readonly SubnauticaAssetsManager assetsManager = assetsManager;
     private readonly IOptions<ServerStartOptions> startOptions = options;
     private readonly TaskCompletionSource<Dictionary<string, WorldEntityInfo>> worldEntitiesByClassId = new();
-    public Dictionary<string, WorldEntityInfo> WorldEntitiesByClassId => worldEntitiesByClassId.Task.GetAwaiter().GetResult();
 
-    public Task LoadAsync(CancellationToken cancellationToken)
+    public async Task LoadAsync(CancellationToken cancellationToken)
     {
-        worldEntitiesByClassId.TrySetResult(GetWorldEntitiesByClassId(cancellationToken));
-        return Task.CompletedTask;
+        worldEntitiesByClassId.TrySetResult(await LoadWorldEntitiesByClassIdAsync(cancellationToken));
     }
 
     public Task CleanupAsync()
@@ -26,7 +24,9 @@ internal class WorldEntitiesResource(SubnauticaAssetsManager assetsManager, IOpt
         return Task.CompletedTask;
     }
 
-    private Dictionary<string, WorldEntityInfo> GetWorldEntitiesByClassId(CancellationToken cancellationToken = default)
+    public Task<Dictionary<string, WorldEntityInfo>> GetWorldEntitiesByClassIdAsync() => worldEntitiesByClassId.Task;
+
+    private Task<Dictionary<string, WorldEntityInfo>> LoadWorldEntitiesByClassIdAsync(CancellationToken cancellationToken = default)
     {
         Dictionary<string, WorldEntityInfo> result = [];
 
@@ -52,6 +52,6 @@ internal class WorldEntitiesResource(SubnauticaAssetsManager assetsManager, IOpt
         }
 
         Validate.IsTrue(result.Count > 0);
-        return result;
+        return Task.FromResult(result);
     }
 }
