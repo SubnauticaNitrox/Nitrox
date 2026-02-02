@@ -81,7 +81,7 @@ internal sealed class JoiningManager(
                 }
 
                 logger.ZLogInformation($"Starting sync for player {name}");
-                SendInitialSync(sessionId, reservationKey);
+                await SendInitialSyncAsync(sessionId, reservationKey);
 
                 using CancellationTokenSource source = new(options.Value.InitialSyncTimeout);
                 bool syncFinished = false;
@@ -146,20 +146,20 @@ internal sealed class JoiningManager(
         }
     }
 
-    private void SendInitialSync(SessionId sessionId, string reservationKey)
+    private async Task SendInitialSyncAsync(SessionId sessionId, string reservationKey)
     {
         Player player = playerManager.CreatePlayerData(sessionId, reservationKey, out bool wasBrandNewPlayer);
-        NitroxId assignedEscapePodId = escapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
+        (NitroxId assignedEscapePodId, EscapePodEntity? newlyCreatedEscapePod) = await escapePodManager.AssignPlayerToEscapePodAsync(player.Id);
 
         if (wasBrandNewPlayer)
         {
             player.SubRootId = assignedEscapePodId;
         }
 
-        if (newlyCreatedEscapePod.HasValue)
+        if (newlyCreatedEscapePod is { } validEscapePod)
         {
-            SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
-            packetSender.SendPacketToOthersAsync(spawnNewEscapePod, sessionId);
+            SpawnEntities spawnNewEscapePod = new(validEscapePod);
+            await packetSender.SendPacketToOthersAsync(spawnNewEscapePod, sessionId);
         }
 
         // TODO: Remove this code when security of player login is improved by https://github.com/SubnauticaNitrox/Nitrox/issues/1996

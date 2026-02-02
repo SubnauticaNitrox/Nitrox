@@ -98,9 +98,9 @@ internal class WorldService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (!LoadWorldFromSavePath(startOptions.Value.GetServerSavePath()))
+        if (!await LoadWorldFromSavePathAsync(startOptions.Value.GetServerSavePath()))
         {
-            CreateAndLoadWorld();
+            await CreateAndLoadWorldAsync();
         }
         await CreateFullEntityCacheIfRequested();
         return;
@@ -314,7 +314,7 @@ internal class WorldService : IHostedService
     }
 
     // TODO: This method should be removed. Each service should load its own data instead of centralizing it here.
-    private void LoadPersistedWorldIntoServices(PersistedWorldData pWorldData)
+    private async Task LoadPersistedWorldIntoServicesAsync(PersistedWorldData pWorldData)
     {
         string seed = pWorldData.WorldData.Seed ?? options.Value.Seed ?? throw new InvalidOperationException("World seed must not be null");
         // Initialized only once, just like UnityEngine.Random
@@ -327,7 +327,7 @@ internal class WorldService : IHostedService
         // Entities
         entityRegistry.AddEntities(pWorldData.EntityData.Entities);
         entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
-        escapePodManager.AddKnownPods(entityRegistry.GetEntities<EscapePodEntity>());
+        await escapePodManager.AddKnownPodsAsync(entityRegistry.GetEntities<EscapePodEntity>());
 
         // TODO: hacky code - see WorldEntityManager for more information.
         List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
@@ -355,7 +355,7 @@ internal class WorldService : IHostedService
         logger.ZLogInformation($"World finished loading");
     }
 
-    private bool LoadWorldFromSavePath(string saveDir)
+    private async Task<bool> LoadWorldFromSavePathAsync(string saveDir)
     {
         if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
         {
@@ -370,11 +370,11 @@ internal class WorldService : IHostedService
         {
             return false;
         }
-        LoadPersistedWorldIntoServices(persistedData);
+        await LoadPersistedWorldIntoServicesAsync(persistedData);
         return true;
     }
 
-    private void CreateAndLoadWorld()
+    private async Task CreateAndLoadWorldAsync()
     {
         PersistedWorldData pWorldData = new()
         {
@@ -393,7 +393,7 @@ internal class WorldService : IHostedService
             },
             GlobalRootData = new GlobalRootData()
         };
-        LoadPersistedWorldIntoServices(pWorldData);
+        await LoadPersistedWorldIntoServicesAsync(pWorldData);
         InitNewWorld();
 
         void InitNewWorld()

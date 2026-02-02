@@ -14,7 +14,6 @@ internal sealed class RandomStartResource(SubnauticaAssetsManager assetsManager,
     private readonly SubnauticaAssetsManager assetsManager = assetsManager;
     private readonly IOptions<ServerStartOptions> options = options;
     private readonly TaskCompletionSource<RandomStartGenerator> randomStartGeneratorTcs = new();
-    public RandomStartGenerator RandomStartGenerator => randomStartGeneratorTcs.Task.GetAwaiter().GetResult();
 
     public Task LoadAsync(CancellationToken cancellationToken)
     {
@@ -27,6 +26,8 @@ internal sealed class RandomStartResource(SubnauticaAssetsManager assetsManager,
         assetsManager.Dispose();
         return Task.CompletedTask;
     }
+
+    public Task<RandomStartGenerator> GetRandomStartGeneratorAsync() => randomStartGeneratorTcs.Task;
 
     private RandomStartGenerator? LoadAndGetRandomStartGenerator(CancellationToken cancellationToken = default)
     {

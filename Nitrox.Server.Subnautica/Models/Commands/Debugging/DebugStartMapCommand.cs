@@ -17,7 +17,7 @@ internal sealed class DebugStartMapCommand(IOptions<SubnauticaServerOptions> opt
     [Description("Spawns blocks at spawn positions")]
     public async Task Execute(ICommandContext context)
     {
-        List<NitroxVector3> randomStartPositions = randomStart.RandomStartGenerator.GenerateRandomStartPositions(optionsProvider.Value.Seed);
+        List<NitroxVector3> randomStartPositions = (await randomStart.GetRandomStartGeneratorAsync()).GenerateRandomStartPositions(optionsProvider.Value.Seed);
 
         await context.SendToAllAsync(new DebugStartMapPacket(randomStartPositions));
         await context.ReplyAsync($"Rendered {randomStartPositions.Count} spawn positions");
