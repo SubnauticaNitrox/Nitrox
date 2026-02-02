@@ -7,18 +7,33 @@ using LootDictionary = System.Collections.Generic.Dictionary<string, LootDistrib
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
-internal class EntityDistributionsResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options) : IGameResource
+internal sealed class EntityDistributionsResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options) : IGameResource
 {
     private readonly SubnauticaAssetsManager assetsManager = assetsManager;
     private readonly IOptions<ServerStartOptions> options = options;
+    private readonly TaskCompletionSource<LootDistributionData> lootDistributionData = new();
 
-    private ValueTask<LootDistributionData> lootDistribution;
-    public LootDistributionData LootDistribution => GetLootDistributionDataAsync().GetAwaiter().GetResult();
-
-    public Task LoadAsync(CancellationToken cancellationToken)
+    public async Task LoadAsync(CancellationToken cancellationToken)
     {
-        lootDistribution = GetLootDistributionDataAsync(cancellationToken);
-        return Task.CompletedTask;
+        try
+        {
+            // TODO: Do not depend on game code; use custom types to map to game JSON files.
+            LootDictionary result = JsonSerializer.Deserialize<LootDictionary>(await GetJsonAsync(cancellationToken),
+                                                                               new JsonSerializerOptions
+                                                                               {
+                                                                                   ReadCommentHandling = JsonCommentHandling.Skip,
+                                                                                   IncludeFields = true
+                                                                               });
+            LootDistributionData data = new();
+            data.Initialize(result);
+            Validate.IsTrue(data.dstDistribution.Count > 0);
+            Validate.IsTrue(data.srcDistribution.Count > 0);
+            lootDistributionData.TrySetResult(data);
+        }
+        catch (Exception ex)
+        {
+            lootDistributionData.TrySetException(ex);
+        }
     }
 
     public Task CleanupAsync()
@@ -27,25 +42,9 @@ internal class EntityDistributionsResource(SubnauticaAssetsManager assetsManager
         return Task.CompletedTask;
     }
 
-    private async ValueTask<LootDistributionData> GetLootDistributionDataAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<LootDistributionData> GetLootDistributionDataAsync(CancellationToken cancellationToken = default)
     {
-        if (lootDistribution is { IsCompletedSuccessfully : true, Result: not null })
-        {
-            return await lootDistribution;
-        }
-
-        // TODO: Do not depend on game code; use custom types to map to game JSON files.
-        LootDictionary result = JsonSerializer.Deserialize<LootDictionary>(await GetJsonAsync(cancellationToken),
-                                                                           new JsonSerializerOptions
-                                                                           {
-                                                                               ReadCommentHandling = JsonCommentHandling.Skip,
-                                                                               IncludeFields = true
-                                                                           });
-        LootDistributionData data = new();
-        data.Initialize(result);
-        Validate.IsTrue(data.dstDistribution.Count > 0);
-        Validate.IsTrue(data.srcDistribution.Count > 0);
-        return data;
+        return await lootDistributionData.Task;
     }
 
     private Task<string> GetJsonAsync(CancellationToken cancellationToken = default)

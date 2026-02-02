@@ -218,7 +218,7 @@ internal sealed class WorldEntityManager
         }
     }
 
-    public void LoadAllUnspawnedEntities(CancellationToken token)
+    public async Task LoadAllUnspawnedEntitiesAsync(CancellationToken token)
     {
         int totalBatches = SubnauticaMap.DimensionsInBatches.X * SubnauticaMap.DimensionsInBatches.Y * SubnauticaMap.DimensionsInBatches.Z;
         int batchesLoaded = 0;
@@ -230,7 +230,7 @@ internal sealed class WorldEntityManager
             {
                 for (int z = 0; z < SubnauticaMap.DimensionsInBatches.Z; z++)
                 {
-                    int spawned = LoadUnspawnedEntities(new(x, y, z), true);
+                    int spawned = await LoadUnspawnedEntitiesAsync(new(x, y, z), true);
 
                     logger.ZLogDebug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
@@ -245,9 +245,9 @@ internal sealed class WorldEntityManager
         }
     }
 
-    public int LoadUnspawnedEntities(NitroxInt3 batchId, bool suppressLogs)
+    public async Task<int> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool suppressLogs)
     {
-        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
+        List<Entity> spawnedEntities = await batchEntitySpawner.LoadUnspawnedEntitiesAsync(batchId, suppressLogs);
 
         List<WorldEntity> entitiesInCells = spawnedEntities.Where(entity => typeof(WorldEntity).IsAssignableFrom(entity.GetType()) &&
                                                                             entity.GetType() != typeof(CellRootEntity) &&

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using static LootDistributionData;
@@ -11,25 +10,25 @@ internal class SubnauticaUwePrefabFactory(EntityDistributionsResource distributi
     private readonly EntityDistributionsResource resource = distributionData;
     private readonly Dictionary<string, List<UwePrefab>> cache = new();
 
-    public bool TryGetPossiblePrefabs(string? biome, [NotNullWhen(true)] out List<UwePrefab>? prefabs)
+    public async Task<List<UwePrefab>> TryGetPossiblePrefabsAsync(string? biome)
     {
         if (biome == null)
         {
-            prefabs = null;
-            return false;
+            return [];
         }
-        if (cache.TryGetValue(biome, out prefabs))
+        if (cache.TryGetValue(biome, out List<UwePrefab> prefabs))
         {
-            return true;
+            return prefabs;
         }
 
         prefabs = new();
         BiomeType biomeType = (BiomeType)Enum.Parse(typeof(BiomeType), biome);
-        if (resource.LootDistribution.GetBiomeLoot(biomeType, out DstData dstData))
+        LootDistributionData distributionData = await resource.GetLootDistributionDataAsync();
+        if (distributionData.GetBiomeLoot(biomeType, out DstData dstData))
         {
             foreach (PrefabData prefabData in dstData.prefabs)
             {
-                if (resource.LootDistribution.srcDistribution.TryGetValue(prefabData.classId, out SrcData srcData))
+                if (distributionData.srcDistribution.TryGetValue(prefabData.classId, out SrcData srcData))
                 {
                     // Manually went through the list of those to make this "filter"
                     // You can verify this by looping through all of SrcData (e.g in LootDistributionData.Initialize)
@@ -40,6 +39,6 @@ internal class SubnauticaUwePrefabFactory(EntityDistributionsResource distributi
             }
         }
         cache[biome] = prefabs;
-        return true;
+        return prefabs;
     }
 }

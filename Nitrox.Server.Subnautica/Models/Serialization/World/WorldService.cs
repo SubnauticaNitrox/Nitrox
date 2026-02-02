@@ -102,10 +102,10 @@ internal class WorldService : IHostedService
         {
             CreateAndLoadWorld();
         }
-        CreateFullEntityCacheIfRequested();
+        await CreateFullEntityCacheIfRequested();
         return;
 
-        void CreateFullEntityCacheIfRequested()
+        async Task CreateFullEntityCacheIfRequested()
         {
             if (!options.Value.CreateFullEntityCache)
             {
@@ -119,7 +119,7 @@ internal class WorldService : IHostedService
                 logger.ZLogInformation($"{entityRegistry.GetAllEntities().Count} entities already cached");
                 if (entityRegistry.GetAllEntities().Count < 504732)
                 {
-                    worldEntityManager.LoadAllUnspawnedEntities(cancellationToken);
+                    await worldEntityManager.LoadAllUnspawnedEntitiesAsync(cancellationToken);
 
                     logger.ZLogInformation($"Saving newly cached entities.");
                     saveService.QueueSave();

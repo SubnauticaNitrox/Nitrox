@@ -22,7 +22,7 @@ sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, W
 
         foreach (AbsoluteEntityCell addedCell in packet.Added)
         {
-            worldEntityManager.LoadUnspawnedEntities(addedCell.BatchId, false);
+            await worldEntityManager.LoadUnspawnedEntitiesAsync(addedCell.BatchId, false);
 
             totalSimulationChanges.AddRange(entitySimulation.GetSimulationChangesForCell(context.Sender, addedCell));
             List<WorldEntity> newEntities = worldEntityManager.GetEntities(addedCell);
