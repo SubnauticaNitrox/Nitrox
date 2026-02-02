@@ -109,7 +109,8 @@ internal sealed class Program
                .AddHostedSingletonService<MemoryService>()
                .AddSingleton<NtpSyncer>()
                .AddSingleton<SubnauticaServerProtoBufSerializer>()
-               .AddSingleton<ServerJsonSerializer>();
+               .AddSingleton<ServerJsonSerializer>()
+            ;
 
         await builder.Build().RunAsync();
     }
