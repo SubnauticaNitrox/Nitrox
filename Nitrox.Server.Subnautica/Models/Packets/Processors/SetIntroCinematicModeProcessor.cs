@@ -14,7 +14,7 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager
     {
         if (packet.SessionId != context.Sender.SessionId)
         {
-            logger.ZLogWarning($"Received packet where {nameof(SetIntroCinematicMode.SessionId)} #{packet.SessionId} was not equal to sending {nameof(SetIntroCinematicMode.SessionId)} {context.Sender.SessionId}");
+            logger.ZLogWarning($"Received packet where {nameof(SetIntroCinematicMode.SessionId)} #{packet.SessionId} was not equal to sending {nameof(SetIntroCinematicMode.SessionId)} #{context.Sender.SessionId}");
             return;
         }
 
