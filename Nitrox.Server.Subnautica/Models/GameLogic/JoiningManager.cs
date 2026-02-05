@@ -208,7 +208,7 @@ internal sealed class JoiningManager(
             player.DisplaySurfaceWater
         );
 
-        packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);
+        await packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);
 
         IEnumerable<PlayerContext> GetOtherPlayers(Player player)
         {
