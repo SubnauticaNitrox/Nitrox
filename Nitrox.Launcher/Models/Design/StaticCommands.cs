@@ -23,7 +23,11 @@ internal static class StaticCommands
         {
             if (GetWindowOfObject(controlOrText) is not { } window)
             {
-                return;
+                window = App.Instance.AppWindow;
+            }
+            if (window == null)
+            {
+                throw new InvalidOperationException("A window instance must be provided");
             }
             string text = controlOrText switch
             {
@@ -57,7 +61,7 @@ internal static class StaticCommands
         }
         catch (Exception e)
         {
-            Log.Error(e, "Error trying to set clipboard");
+            Log.Error(e, "Error trying to copy to clipboard");
         }
 
         static Window? GetWindowOfObject(object? obj) =>

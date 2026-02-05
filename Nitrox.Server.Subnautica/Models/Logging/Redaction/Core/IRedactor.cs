@@ -3,7 +3,7 @@ namespace Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
 internal interface IRedactor
 {
     /// <summary>
-    ///     The structured log names that this redactor will try to redact.
+    ///     The structured log names that this redactor will try to redact. This is case-insensitive.
     /// </summary>
     string[] RedactableKeys { get; }
 
