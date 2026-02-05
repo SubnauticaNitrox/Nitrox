@@ -12,9 +12,9 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager
 
     public async Task Process(AuthProcessorContext context, SetIntroCinematicMode packet)
     {
-        if (packet.SessionId != context.Sender.Id)
+        if (packet.SessionId != context.Sender.SessionId)
         {
-            logger.ZLogWarning($"Received packet where {nameof(SetIntroCinematicMode.SessionId)} was not equal to sending {nameof(SetIntroCinematicMode.SessionId)}");
+            logger.ZLogWarning($"Received packet where {nameof(SetIntroCinematicMode.SessionId)} #{packet.SessionId} was not equal to sending {nameof(SetIntroCinematicMode.SessionId)} {context.Sender.SessionId}");
             return;
         }
 
