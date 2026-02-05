@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -9,17 +11,38 @@ using UnityEngine.InputSystem;
 namespace NitroxPatcher.Patches.Persistent;
 
 /// <summary>
-/// Inserts Nitrox's keybinds in the new Subnautica input system
+/// Inserts Nitrox's keybinds in the new Subnautica input system.
+/// Extends GameInput.AllActions so the game creates InputAction entries for Nitrox buttons,
+/// which is required for compatibility with Nautilus when both mods run together.
 /// </summary>
 public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistentPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GameInputSystem t) => t.Initialize());
+    private static readonly MethodInfo DEINITIALIZE_METHOD = Reflect.Method((GameInputSystem t) => t.Deinitialize());
+    private static GameInput.Button[] oldAllActions;
+
+    public override void Patch(Harmony harmony)
+    {
+        PatchPrefix(harmony, TARGET_METHOD, ((Action<GameInputSystem>)Prefix).Method);
+        PatchTranspiler(harmony, TARGET_METHOD, ((Func<IEnumerable<CodeInstruction>, IEnumerable<CodeInstruction>>)Transpiler).Method);
+        PatchPrefix(harmony, DEINITIALIZE_METHOD, ((Action)DeinitializePrefix).Method);
+    }
 
     public static void Prefix(GameInputSystem __instance)
     {
-        CachedEnumString<GameInput.Button> actionNames = GameInput.ActionNames;
-
+        // Extend AllActions so the game creates InputAction entries for Nitrox buttons when building the action map.
+        // Without this, gameInputSystem.actions[NitroxButton] would not exist and RegisterKeybindsActions would throw.
         int buttonId = KeyBindingManager.NITROX_BASE_ID;
+        oldAllActions = GameInput.AllActions;
+        FieldInfo allActionsField = typeof(GameInput).GetField(nameof(GameInput.AllActions), BindingFlags.Public | BindingFlags.Static);
+        GameInput.Button[] allActions =
+        [
+            .. GameInput.AllActions,
+            .. Enumerable.Range(buttonId, KeyBindingManager.KeyBindings.Count).Cast<GameInput.Button>()
+        ];
+        allActionsField?.SetValue(null, allActions);
+
+        CachedEnumString<GameInput.Button> actionNames = GameInput.ActionNames;
         foreach (KeyBinding keyBinding in KeyBindingManager.KeyBindings)
         {
             GameInput.Button button = (GameInput.Button)buttonId++;
@@ -36,6 +59,12 @@ public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistent
                 GameInputSystem.bindingsController.Add(button, $"<Gamepad>/{keyBinding.DefaultControllerKey}");
             }
         }
+    }
+
+    public static void DeinitializePrefix()
+    {
+        FieldInfo allActionsField = typeof(GameInput).GetField(nameof(GameInput.AllActions), BindingFlags.Public | BindingFlags.Static);
+        allActionsField?.SetValue(null, oldAllActions);
     }
 
     /*
@@ -60,7 +89,9 @@ public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistent
     }
     
     /// <summary>
-    /// Set the actions callbacks for our own keybindings once they're actually created only
+    /// Set the actions callbacks for our own keybindings once they're actually created.
+    /// If the game didn't create entries (e.g. when AllActions extension doesn't apply to this game version),
+    /// we create and add the InputActions ourselves, matching Nautilus's approach.
     /// </summary>
     public static void RegisterKeybindsActions(GameInputSystem gameInputSystem)
     {
@@ -68,7 +99,25 @@ public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistent
         foreach (KeyBinding keyBinding in KeyBindingManager.KeyBindings)
         {
             GameInput.Button button = (GameInput.Button)buttonId++;
-            gameInputSystem.actions[button].started += keyBinding.Execute;
+            if (!gameInputSystem.actions.TryGetValue(button, out InputAction action))
+            {
+                // Game didn't create this action (AllActions may not be used for action creation in this build).
+                // Create and add it ourselves, matching Nautilus's InitializePostfix pattern.
+                string buttonName = GameInput.ActionNames.valueToString.TryGetValue(button, out string name) ? name : button.ToString();
+                action = new InputAction(buttonName, InputActionType.Button);
+                if (!string.IsNullOrEmpty(keyBinding.DefaultKeyboardKey))
+                {
+                    action.AddBinding($"<Keyboard>/{keyBinding.DefaultKeyboardKey}");
+                }
+                if (!string.IsNullOrEmpty(keyBinding.DefaultControllerKey))
+                {
+                    action.AddBinding($"<Gamepad>/{keyBinding.DefaultControllerKey}");
+                }
+                gameInputSystem.actions[button] = action;
+                action.started += gameInputSystem.OnActionStarted;
+                action.Enable();
+            }
+            action.started += keyBinding.Execute;
         }
     }
 }
