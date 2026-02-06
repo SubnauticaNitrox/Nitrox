@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
-using Nitrox.Model.Platforms.OS.Windows;
+using Nitrox.Model.Platforms.Store;
 using static Nitrox.Model.Platforms.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace Nitrox.Model.Platforms.Discovery.InstallationFinders;
@@ -50,69 +50,18 @@ public sealed class SteamFinder : IGameFinder
         return Ok(path);
     }
 
-    private static string? GetSteamPath()
+    private static string GetSteamPath()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
-
-            if (string.IsNullOrWhiteSpace(steamPath))
-            {
-                steamPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "Steam"
-                );
-            }
-
-            return Directory.Exists(steamPath) ? steamPath : null;
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (string.IsNullOrWhiteSpace(homePath))
             {
                 homePath = Environment.GetEnvironmentVariable("HOME");
             }
-
             if (!Directory.Exists(homePath))
             {
-                return null;
-            }
-
-            string[] commonSteamPath =
-            [
-                // Default install location
-                // https://github.com/ValveSoftware/steam-for-linux
-                Path.Combine(homePath, ".local", "share", "Steam"),
-                // Those symlinks are often use as a backward-compatibility (Debian, Ubuntu, Fedora, ArchLinux)
-                // https://wiki.archlinux.org/title/steam, https://askubuntu.com/questions/227502/where-are-steam-games-installed
-                Path.Combine(homePath, ".steam", "steam"),
-                Path.Combine(homePath, ".steam", "root"),
-                // Flatpack install
-                // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
-                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
-                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
-            ];
-
-            foreach (string path in commonSteamPath)
-            {
-                if (Directory.Exists(path))
-                {
-                    return path;
-                }
-            }
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (string.IsNullOrWhiteSpace(homePath))
-            {
-                homePath = Environment.GetEnvironmentVariable("HOME");
-            }
-
-            if (!Directory.Exists(homePath))
-            {
-                return null;
+                return "";
             }
 
             // Steam should always be here
@@ -123,7 +72,7 @@ public sealed class SteamFinder : IGameFinder
             }
         }
 
-        return null;
+        return Path.GetDirectoryName(Steam.GetExeFile()) ?? "";
     }
 
     /// <summary>
