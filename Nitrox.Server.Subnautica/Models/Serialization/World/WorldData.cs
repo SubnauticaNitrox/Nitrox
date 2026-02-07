@@ -14,14 +14,14 @@ namespace Nitrox.Server.Subnautica.Models.Serialization.World
         [DataMember(Order = 2)]
         public GameData? GameData { get; set; }
 
+        [Obsolete("Use server.cfg seed instead - TODO: delete this but keep backward compat via save upgrade")]
         [DataMember(Order = 3)]
         public string? Seed { get; set; }
 
         public bool IsValid()
         {
             return ParsedBatchCells != null &&
-                   GameData != null &&
-                   Seed != null;
+                   GameData != null;
         }
     }
 }

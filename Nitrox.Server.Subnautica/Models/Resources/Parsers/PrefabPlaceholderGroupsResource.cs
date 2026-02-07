@@ -6,6 +6,7 @@ using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Newtonsoft.Json;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Resources.AddressablesTools.Catalog;
@@ -13,7 +14,7 @@ using Nitrox.Server.Subnautica.Models.Resources.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
-internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options, ILogger<PrefabPlaceholderGroupsResource> logger) : IGameResource
+internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager assetsManager, RandomFactory randomFactory, IOptions<ServerStartOptions> options, ILogger<PrefabPlaceholderGroupsResource> logger) : IGameResource
 {
     /// <summary>
     ///     The version of the cache supported by this parser
@@ -28,6 +29,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
 
     private readonly ConcurrentDictionary<string, string[]> addressableCatalog = new();
     private readonly SubnauticaAssetsManager assetsManager = assetsManager;
+    private readonly XorRandom random = randomFactory.GetUnityLikeRandom();
     private readonly ConcurrentDictionary<string, string> classIdByRuntimeKey = new();
     private readonly ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> groupsByClassId = new();
     private readonly ILogger<PrefabPlaceholderGroupsResource> logger = logger;
@@ -84,7 +86,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
     {
         if (RandomPossibilitiesByClassId.TryGetValue(classId, out string[] choices))
         {
-            int randomIndex = XorRandom.NextIntRange(0, choices.Length);
+            int randomIndex = random.NextIntRange(0, choices.Length);
             classId = choices[randomIndex];
         }
     }

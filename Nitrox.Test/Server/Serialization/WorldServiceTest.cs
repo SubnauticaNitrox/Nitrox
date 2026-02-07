@@ -57,7 +57,6 @@ internal sealed class WorldServiceTest
     public void WorldDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         Assert.IsTrue(worldData.WorldData.ParsedBatchCells.SequenceEqual(worldDataAfter.WorldData.ParsedBatchCells));
-        Assert.AreEqual(worldData.WorldData.Seed, worldDataAfter.WorldData.Seed);
 
         PDAStateTest(worldData.WorldData.GameData.PDAState, worldDataAfter.WorldData.GameData.PDAState);
         StoryGoalTest(worldData.WorldData.GameData.StoryGoals, worldDataAfter.WorldData.GameData.StoryGoals);

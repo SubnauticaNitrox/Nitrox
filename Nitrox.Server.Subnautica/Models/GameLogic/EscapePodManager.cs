@@ -6,12 +6,13 @@ using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
+internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
 {
     private const int PLAYERS_PER_ESCAPEPOD = 50;
 
@@ -20,6 +21,7 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ThreadSafeDictionary<PeerId, EscapePodEntity> escapePodsByPlayerId = [];
     private EscapePodEntity? podForNextPlayer;
+    private readonly Random random = randomFactory.GetDotnetRandom();
 
     public async Task<(NitroxId escapePodId, EscapePodEntity? newlyCreatedPod)> AssignPlayerToEscapePodAsync(PeerId playerId)
     {
@@ -62,9 +64,8 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
         {
             throw new InvalidOperationException();
         }
-        Random rnd = new(seed.GetHashCode());
         RandomStartGenerator randomStartGenerator = await randomStartResource.GetRandomStartGeneratorAsync();
-        NitroxVector3 position = randomStartGenerator.GenerateRandomStartPosition(rnd);
+        NitroxVector3 position = randomStartGenerator.GenerateRandomStartPosition(random);
 
         if (escapePods.Count == 0)
         {
@@ -84,8 +85,8 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
             }
         }
 
-        float xNormed = (float)rnd.NextDouble();
-        float zNormed = (float)rnd.NextDouble();
+        float xNormed = (float)random.NextDouble();
+        float zNormed = (float)random.NextDouble();
 
         if (xNormed < 0.3f)
         {

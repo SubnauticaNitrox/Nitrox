@@ -4,6 +4,7 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Resources;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
@@ -12,19 +13,29 @@ using Nitrox.Server.Subnautica.Models.Serialization;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-internal sealed class BatchEntitySpawner
+internal sealed class BatchEntitySpawner(
+    RandomFactory randomFactory,
+    SubnauticaUweWorldEntityFactory worldEntityFactory,
+    IUwePrefabFactory prefabFactory,
+    IEntityBootstrapperManager entityBootstrapperManager,
+    PdaManager pdaManager,
+    PrefabPlaceholderGroupsResource prefabPlaceholderGroupsResource,
+    BatchCellsParser batchCellsParser,
+    IOptions<SubnauticaServerOptions> options,
+    ILogger<BatchEntitySpawner> logger)
 {
-    private readonly BatchCellsParser batchCellsParser;
+    private readonly BatchCellsParser batchCellsParser = batchCellsParser;
 
     private readonly HashSet<NitroxInt3> emptyBatches = [];
-    private readonly PrefabPlaceholderGroupsResource prefabPlaceholderGroupsResource;
-    private readonly IOptions<SubnauticaServerOptions> options;
-    private readonly ILogger<BatchEntitySpawner> logger;
-    private readonly IUwePrefabFactory prefabFactory;
-    private readonly IEntityBootstrapperManager entityBootstrapperManager;
-    private readonly PdaManager pdaManager;
+    private readonly PrefabPlaceholderGroupsResource prefabPlaceholderGroupsResource = prefabPlaceholderGroupsResource;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly ILogger<BatchEntitySpawner> logger = logger;
+    private readonly IUwePrefabFactory prefabFactory = prefabFactory;
+    private readonly IEntityBootstrapperManager entityBootstrapperManager = entityBootstrapperManager;
+    private readonly PdaManager pdaManager = pdaManager;
 
-    private readonly SubnauticaUweWorldEntityFactory worldEntityFactory;
+    private readonly XorRandom random = randomFactory.GetUnityLikeRandom();
+    private readonly SubnauticaUweWorldEntityFactory worldEntityFactory = worldEntityFactory;
 
     private readonly Lock parsedBatchesLock = new();
     private readonly Lock emptyBatchesLock = new();
@@ -60,26 +71,6 @@ internal sealed class BatchEntitySpawner
 
     private static readonly NitroxQuaternion prefabZUpRotation = NitroxQuaternion.FromEuler(new(-90f, 0f, 0f));
 
-    public BatchEntitySpawner(
-        SubnauticaUweWorldEntityFactory worldEntityFactory,
-        IUwePrefabFactory prefabFactory,
-        IEntityBootstrapperManager entityBootstrapperManager,
-        PdaManager pdaManager,
-        PrefabPlaceholderGroupsResource prefabPlaceholderGroupsResource,
-        BatchCellsParser batchCellsParser,
-        IOptions<SubnauticaServerOptions> options,
-        ILogger<BatchEntitySpawner> logger)
-    {
-        this.worldEntityFactory = worldEntityFactory;
-        this.prefabFactory = prefabFactory;
-        this.entityBootstrapperManager = entityBootstrapperManager;
-        this.pdaManager = pdaManager;
-        this.prefabPlaceholderGroupsResource = prefabPlaceholderGroupsResource;
-        this.batchCellsParser = batchCellsParser;
-        this.options = options;
-        this.logger = logger;
-    }
-
     public bool IsBatchSpawned(NitroxInt3 batchId)
     {
         lock (parsedBatches)
@@ -98,7 +89,7 @@ internal sealed class BatchEntitySpawner
             }
         }
 
-        DeterministicGenerator deterministicBatchGenerator = new(options.Value.Seed, batchId);
+        DeterministicGenerator deterministicBatchGenerator = new(options.Value.Seed, batchId.ToString());
         List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
         List<Entity> entities = await SpawnEntitiesAsync(spawnPoints, deterministicBatchGenerator);
 
@@ -151,7 +142,7 @@ internal sealed class BatchEntitySpawner
         UwePrefab chosenPrefab = default;
         if (weightedFragmentProbability > 0f)
         {
-            float probabilityThreshold = XorRandom.NextFloat();
+            float probabilityThreshold = random.NextFloat();
             if (weightedFragmentProbability > 1f)
             {
                 probabilityThreshold *= weightedFragmentProbability;
@@ -275,7 +266,7 @@ internal sealed class BatchEntitySpawner
         }
         if (randomPosition)
         {
-            position += XorRandom.NextInsideSphere(4f);
+            position += random.NextInsideSphere(4f);
         }
 
         if (classId == CellRootEntity.CLASS_ID)
@@ -421,7 +412,7 @@ internal sealed class BatchEntitySpawner
                 string prefabClassId = prefabAsset.ClassId;
                 if (prefabAsset is PrefabPlaceholderRandomAsset randomAsset && randomAsset.ClassIds.Count > 0)
                 {
-                    int randomIndex = XorRandom.NextIntRange(0, randomAsset.ClassIds.Count);
+                    int randomIndex = random.NextIntRange(0, randomAsset.ClassIds.Count);
                     prefabClassId = randomAsset.ClassIds[randomIndex];
                 }
 

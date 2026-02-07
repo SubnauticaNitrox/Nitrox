@@ -7,6 +7,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Server.Subnautica.Models;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Services;
 
@@ -61,6 +62,8 @@ internal sealed class Program
 
     private static async Task StartServerAsync(string[] args)
     {
+        // TODO: FIX CRASH FISH NOT SPAWNING DUE TO RNG CHANGES!!!!!
+
         HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings
         {
             DisableDefaults = true,
@@ -107,6 +110,7 @@ internal sealed class Program
                .AddHostedSingletonService<PortForwardService>()
                .AddHostedSingletonService<LanBroadcastService>()
                .AddHostedSingletonService<MemoryService>()
+               .AddSingleton<RandomFactory>()
                .AddSingleton<NtpSyncer>()
                .AddSingleton<SubnauticaServerProtoBufSerializer>()
                .AddSingleton<ServerJsonSerializer>()

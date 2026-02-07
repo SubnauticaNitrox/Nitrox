@@ -4,14 +4,9 @@ using Nitrox.Model.DataStructures.Unity;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
-public class RandomStartGenerator
+public sealed class RandomStartGenerator(RandomStartGenerator.IPixelProvider pixelProvider)
 {
-    private readonly IPixelProvider pixelProvider;
-
-    public RandomStartGenerator(IPixelProvider pixelProvider)
-    {
-        this.pixelProvider = pixelProvider;
-    }
+    private readonly IPixelProvider pixelProvider = pixelProvider;
 
     public NitroxVector3 GenerateRandomStartPosition(Random rnd)
     {
@@ -33,7 +28,7 @@ public class RandomStartGenerator
 
     public List<NitroxVector3> GenerateRandomStartPositions(string seed)
     {
-        Random rnd = new(seed.GetHashCode());
+        Random rnd = new(seed.ToMd5HashedInt32());
         List<NitroxVector3> list = new();
 
         for (int i = 0; i < 1000; i++)

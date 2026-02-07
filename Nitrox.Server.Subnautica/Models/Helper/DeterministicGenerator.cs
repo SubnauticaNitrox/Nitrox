@@ -1,36 +1,30 @@
 ﻿using Nitrox.Model.DataStructures;
 
-namespace Nitrox.Server.Subnautica.Models.Helper
+namespace Nitrox.Server.Subnautica.Models.Helper;
+
+internal sealed class DeterministicGenerator(string worldSeed, string secondSeedValue)
 {
-    public class DeterministicGenerator
+    private readonly Random random = new($"{worldSeed}{secondSeedValue}".ToMd5HashedInt32());
+
+    public double NextDouble()
     {
-        private readonly Random random;
+        return random.NextDouble();
+    }
 
-        public DeterministicGenerator(string worldSeed, object reference)
-        {
-            random = new Random(worldSeed.GetHashCode() + reference.GetHashCode());
-        }
+    public double NextDouble(double min, double max)
+    {
+        return random.NextDouble() * (max - min) + min;
+    }
 
-        public double NextDouble()
-        {
-            return random.NextDouble();
-        }
+    public int NextInt(int min, int max)
+    {
+        return random.Next(min, max);
+    }
 
-        public double NextDouble(double min, double max)
-        {
-            return random.NextDouble() * (max - min) + min;
-        }
-
-        public int NextInt(int min, int max)
-        {
-            return random.Next(min, max);
-        }
-
-        public NitroxId NextId()
-        {
-            byte[] bytes = new byte[16];
-            random.NextBytes(bytes);
-            return new NitroxId(bytes);
-        }
+    public NitroxId NextId()
+    {
+        byte[] bytes = new byte[16];
+        random.NextBytes(bytes);
+        return new NitroxId(bytes);
     }
 }

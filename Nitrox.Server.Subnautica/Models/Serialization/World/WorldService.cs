@@ -86,8 +86,7 @@ internal class WorldService : IHostedService
             WorldData = new()
             {
                 ParsedBatchCells = batchEntitySpawner.SerializableParsedBatches,
-                GameData = GameData.From(pdaManager, storyManager.StoryGoalData, storyScheduler, storyManager, timeService),
-                Seed = options.Value.Seed,
+                GameData = GameData.From(pdaManager, storyManager.StoryGoalData, storyScheduler, storyManager, timeService)
             },
             PlayerData = PlayerData.From(playerManager.GetAllPlayers()),
             GlobalRootData = GlobalRootData.From(worldEntityManager.GetPersistentGlobalRootEntities()),
@@ -160,8 +159,6 @@ internal class WorldService : IHostedService
             Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
             Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
             Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
-
-            options.Value.Seed = persistedData.WorldData.Seed;
 
             logger.ZLogInformation($"World state saved");
             return true;
@@ -316,10 +313,7 @@ internal class WorldService : IHostedService
     // TODO: This method should be removed. Each service should load its own data instead of centralizing it here.
     private async Task LoadPersistedWorldIntoServicesAsync(PersistedWorldData pWorldData)
     {
-        string seed = pWorldData.WorldData.Seed ?? options.Value.Seed ?? throw new InvalidOperationException("World seed must not be null");
-        // Initialized only once, just like UnityEngine.Random
-        XorRandom.InitSeed(seed.GetHashCode());
-
+        string seed = options.Value.Seed ?? throw new InvalidOperationException("World seed must not be null");
         logger.ZLogInformation($"Loading world with seed {seed}");
 
         // Time
@@ -388,8 +382,7 @@ internal class WorldService : IHostedService
                     StoryGoals = new StoryGoalData(),
                     StoryTiming = new StoryTimingData()
                 },
-                ParsedBatchCells = [],
-                Seed = options.Value.Seed
+                ParsedBatchCells = []
             },
             GlobalRootData = new GlobalRootData()
         };
