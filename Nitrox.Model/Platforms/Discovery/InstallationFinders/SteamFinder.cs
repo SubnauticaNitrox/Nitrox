@@ -52,6 +52,7 @@ public sealed class SteamFinder : IGameFinder
 
     private static string GetSteamPath()
     {
+        // OSX: Steam dynamic data isn't near the steam exe. Because it can't (or isn't supposed to) write anything inside application bundle.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
