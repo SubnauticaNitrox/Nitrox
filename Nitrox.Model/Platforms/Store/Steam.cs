@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -107,13 +108,23 @@ public sealed class Steam : IGamePlatform
         return steam;
     }
 
-    private static string? GetExeFile()
+    public static string? GetExeFile()
     {
         string steamExecutable = "";
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            steamExecutable = Path.Combine(RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", steamExecutable), "steam.exe");
+            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
+
+            if (string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Steam"
+                );
+            }
+
+            steamExecutable = Directory.Exists(steamPath) ? Path.Combine(steamPath, "steam.exe") : "";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -121,20 +132,50 @@ public sealed class Steam : IGamePlatform
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            string userHomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (!Directory.Exists(userHomePath))
+            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            }
+            if (!Directory.Exists(homePath))
             {
                 return null;
             }
 
-            string steamPath = Path.Combine(userHomePath, ".steam", "steam");
-            // support flatpak
-            if (!Directory.Exists(steamPath))
-            {
-                steamPath = Path.Combine(userHomePath, ".var", "app", "com.valvesoftware.Steam", "data", "Steam");
-            }
+            string[] commonPaths = [
+                // Default install location
+                // https://github.com/ValveSoftware/steam-for-linux
+                Path.Combine(homePath, ".local", "share", "Steam"),
+                // Those symlinks are often use as a backward-compatibility (Debian, Ubuntu, Fedora, ArchLinux)
+                // https://wiki.archlinux.org/title/steam, https://askubuntu.com/questions/227502/where-are-steam-games-installed
+                Path.Combine(homePath, ".steam", "steam"),
+                Path.Combine(homePath, ".steam", "root"),
+                // Flatpack install
+                // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
+            ];
 
-            steamExecutable = Path.Combine(steamPath, "steam.sh");
+            string steamPath = "";
+            foreach (string path in commonPaths)
+            {
+                try
+                {
+                    if (Directory.GetFileSystemEntries(path).Any())
+                    {
+                        steamPath = path;
+                        break;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamExecutable = Path.Combine(steamPath, "steam.sh");
+            }
         }
 
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
