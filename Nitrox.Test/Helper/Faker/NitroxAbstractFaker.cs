@@ -39,7 +39,7 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
 
         if (!subtypesByBaseType.TryGetValue(type, out Type[] subTypes))
         {
-            throw new ArgumentException($"Argument is not contained in {nameof(subtypesByBaseType)}", nameof(type));
+            throw new ArgumentException($"Argument '{type}' is not contained in {nameof(subtypesByBaseType)}", nameof(type));
         }
 
         OutputType = type;

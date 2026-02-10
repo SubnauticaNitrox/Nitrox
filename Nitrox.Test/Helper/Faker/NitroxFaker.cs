@@ -54,49 +54,42 @@ public abstract class NitroxFaker
 
     protected static INitroxFaker CreateFaker(Type type)
     {
-        if (type.IsAbstract)
+        switch (type)
         {
-            return new NitroxAbstractFaker(type);
-        }
-
-        if (type.IsEnum)
-        {
-            return new NitroxActionFaker(type, f =>
-            {
-                string[] selection = Enum.GetNames(type);
-                if (selection.Length == 0)
+            case { IsEnum: true }:
+                return new NitroxActionFaker(type, f =>
                 {
-                    throw new ArgumentException("There are no enum values after exclusion to choose from.");
+                    string[] selection = Enum.GetNames(type);
+                    if (selection.Length == 0)
+                    {
+                        throw new ArgumentException("There are no enum values after exclusion to choose from.");
+                    }
+
+                    string val = f.Random.ArrayElement(selection);
+                    return Enum.Parse(type, val);
+                });
+            case not null when NitroxCollectionFaker.IsCollection(type, out NitroxCollectionFaker.CollectionType collectionType):
+                return new NitroxCollectionFaker(type, collectionType);
+            case { IsAbstract: true }:
+                return new NitroxAbstractFaker(type);
+            case { IsGenericType: true } when type.GetGenericTypeDefinition() is { } genericTypeDefinition:
+                if (genericTypeDefinition == typeof(Optional<>))
+                {
+                    return new NitroxOptionalFaker(type);
                 }
-
-                string val = f.Random.ArrayElement(selection);
-                return Enum.Parse(type, val);
-            });
+                if (genericTypeDefinition == typeof(Nullable<>))
+                {
+                    return new NitroxNullableFaker(type);
+                }
+                break;
         }
 
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Optional<>))
-        {
-            return new NitroxOptionalFaker(type);
-        }
-
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-        {
-            return new NitroxNullableFaker(type);
-        }
-
-        if (NitroxCollectionFaker.IsCollection(type, out NitroxCollectionFaker.CollectionType collectionType))
-        {
-            return new NitroxCollectionFaker(type, collectionType);
-        }
-
-        ConstructorInfo constructor = typeof(NitroxAutoFaker<>).MakeGenericType(type).GetConstructor(Array.Empty<Type>());
-
+        ConstructorInfo constructor = typeof(NitroxAutoFaker<>).MakeGenericType(type).GetConstructor([]);
         if (constructor == null)
         {
-            throw new NullReferenceException($"Could not get generic constructor for {type}");
+            throw new NotSupportedException($"Type {type} does not have a compatible {nameof(INitroxFaker)} yet");
         }
-
-        return (INitroxFaker)constructor.Invoke(Array.Empty<object>());
+        return (INitroxFaker)constructor.Invoke([]);
     }
 
     protected static bool IsValidType(Type type)
@@ -108,7 +101,7 @@ public abstract class NitroxFaker
                type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
-    protected static readonly MethodInfo CastMethodBase = typeof(NitroxFaker).GetMethod(nameof(Cast), BindingFlags.NonPublic | BindingFlags.Static);
+    protected static readonly MethodInfo CastMethodBase = typeof(NitroxFaker).GetMethod(nameof(Cast), BindingFlags.NonPublic | BindingFlags.Static) ?? throw new Exception($"{nameof(NitroxFaker)} has no {nameof(Cast)} method!");
 
     protected static T Cast<T>(object o)
     {
