@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
@@ -65,7 +66,7 @@ internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry enti
             throw new InvalidOperationException();
         }
         RandomStartGenerator randomStartGenerator = await randomStartResource.GetRandomStartGeneratorAsync();
-        NitroxVector3 position = randomStartGenerator.GenerateRandomStartPosition(random);
+        NitroxVector3 position = randomStartGenerator.GenerateAllStartPositions(random).FirstOrDefault();
 
         if (escapePods.Count == 0)
         {
