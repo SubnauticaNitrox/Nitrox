@@ -62,8 +62,6 @@ internal sealed class Program
 
     private static async Task StartServerAsync(string[] args)
     {
-        // TODO: FIX CRASH FISH NOT SPAWNING DUE TO RNG CHANGES!!!!!
-
         HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings
         {
             DisableDefaults = true,
