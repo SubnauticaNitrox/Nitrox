@@ -5,10 +5,11 @@ using static LootDistributionData;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-internal class SubnauticaUwePrefabFactory(EntityDistributionsResource distributionData) : IUwePrefabFactory
+internal sealed class SubnauticaUwePrefabFactory(EntityDistributionsResource distributionData) : IUwePrefabFactory
 {
     private readonly EntityDistributionsResource resource = distributionData;
     private readonly Dictionary<string, List<UwePrefab>> cache = new();
+    private readonly Lock cacheLock = new();
 
     public async Task<List<UwePrefab>> TryGetPossiblePrefabsAsync(string? biome)
     {
@@ -16,9 +17,13 @@ internal class SubnauticaUwePrefabFactory(EntityDistributionsResource distributi
         {
             return [];
         }
-        if (cache.TryGetValue(biome, out List<UwePrefab> prefabs))
+        List<UwePrefab> prefabs;
+        lock (cacheLock)
         {
-            return prefabs;
+            if (cache.TryGetValue(biome, out prefabs))
+            {
+                return prefabs;
+            }
         }
 
         prefabs = new();
@@ -34,11 +39,17 @@ internal class SubnauticaUwePrefabFactory(EntityDistributionsResource distributi
                     // You can verify this by looping through all of SrcData (e.g in LootDistributionData.Initialize)
                     // print the prefabPath and check the TechType related to the provided classId (WorldEntityDatabase.TryGetInfo) with PDAScanner.IsFragment
                     bool isFragment = srcData.prefabPath.Contains("Fragment") || srcData.prefabPath.Contains("BaseGlassDome");
-                    prefabs.Add(new(prefabData.classId, prefabData.count, prefabData.probability, isFragment));
+                    lock (cacheLock)
+                    {
+                        prefabs.Add(new(prefabData.classId, prefabData.count, prefabData.probability, isFragment));
+                    }
                 }
             }
         }
-        cache[biome] = prefabs;
+        lock (cacheLock)
+        {
+            cache[biome] = prefabs;
+        }
         return prefabs;
     }
 }
