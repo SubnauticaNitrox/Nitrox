@@ -88,13 +88,13 @@ internal sealed class ReefbackBootstrapper : IEntityBootstrapper
             NitroxTransform slotTransform = DuplicateTransform(CreatureSlotsCoordinates[i]);
             slotTransform.SetParent(creatureSlotsRootTransform, false);
 
-            float r = random.NextFloat() * creatureProbabilitySum;
+            float creatureProbability = random.NextFloat() * creatureProbabilitySum;
             float totalProbability = 0f;
             int chosenCreatureIndex = 0;
             for (int k = 0; k < SpawnableCreatures.Count; k++)
             {
                 totalProbability += SpawnableCreatures[k].Probability;
-                if (r <= totalProbability)
+                if (creatureProbability <= totalProbability)
                 {
                     chosenCreatureIndex = k;
                     break;
