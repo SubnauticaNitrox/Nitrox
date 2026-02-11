@@ -3,7 +3,6 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
@@ -11,7 +10,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models
 {
-    internal sealed class Player : IProcessorContext
+    internal sealed class Player
     {
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 

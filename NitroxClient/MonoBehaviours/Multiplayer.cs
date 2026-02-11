@@ -15,7 +15,6 @@ using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using Nitrox.Model.Core;
 using Nitrox.Model.Packets.Core;
-using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using UnityEngine;
@@ -29,7 +28,6 @@ namespace NitroxClient.MonoBehaviours
         public static Multiplayer Main;
         private ClientProcessorContext packetProcessorContext;
         private PacketProcessorsInvoker processorInvoker = null!;
-        private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = [];
         private IClient client;
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
@@ -51,7 +49,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            NitroxServiceLocator.LifetimeScopeEnded += (_, _) => packetProcessorCache.Clear();
+            NitroxServiceLocator.LifetimeScopeEnded += (_, _) => processorInvoker = new PacketProcessorsInvoker([]);
             client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();

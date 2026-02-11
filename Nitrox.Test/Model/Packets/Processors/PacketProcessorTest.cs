@@ -1,7 +1,7 @@
 using Nitrox.Model.Core;
 using Nitrox.Model.Packets.Core;
-using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Platforms.Discovery;
+using Nitrox.Server.Subnautica;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Processors;
 using Nitrox.Test;
@@ -16,16 +16,12 @@ namespace Nitrox.Model.Packets.Processors
         [TestMethod]
         public void ClientPacketProcessorSanity()
         {
-            typeof(IClientPacketProcessor<>).Assembly.GetTypes()
-                                            .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+            typeof(ClientAutoFacRegistrar).Assembly.GetTypes()
+                                            .Where(p => typeof(IPacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                                             .ToList()
                                             .ForEach(processor =>
                                             {
-                                                // Make sure that each packet-processor is derived from the ClientPacketProcessor class,
-                                                //  so that it's packet-type can be determined.
-                                                Assert.IsNotNull(processor.BaseType, $"{processor} does not derive from any type!");
-                                                Assert.IsTrue(processor.BaseType.IsGenericType, $"{processor} does not derive from a generic type!");
-                                                Assert.IsTrue(processor.BaseType.IsAssignableToGenericType(typeof(IClientPacketProcessor<>)), $"{processor} does not derive from ClientPacketProcessor!");
+                                                Assert.IsTrue(processor.IsAssignableTo(typeof(IClientPacketProcessor)), $"{processor} does not implement {nameof(IClientPacketProcessor<>)}!");
 
                                                 // Check constructor availability:
                                                 int numCtors = processor.GetConstructors().Length;
@@ -36,16 +32,13 @@ namespace Nitrox.Model.Packets.Processors
         [TestMethod]
         public void ServerPacketProcessorSanity()
         {
-            typeof(PacketProcessorsInvoker).Assembly.GetTypes()
-                                           .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+            typeof(Program).Assembly.GetTypes()
+                                           .Where(p => typeof(IPacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                                            .ToList()
                                            .ForEach(processor =>
                                            {
-                                               // Make sure that each packet-processor is derived from the ClientPacketProcessor class,
-                                               //  so that it's packet-type can be determined.
-                                               Assert.IsNotNull(processor.BaseType, $"{processor} does not derive from any type!");
-                                               Assert.IsTrue(processor.BaseType.IsGenericType, $"{processor} does not derive from a generic type!");
-                                               Assert.IsTrue(processor.BaseType.IsAssignableToGenericType(typeof(IPacketProcessor)), $"{processor} does not derive from (Un)AuthenticatedPacketProcessor!");
+                                               Assert.IsTrue(processor.IsAssignableTo(typeof(IAnonPacketProcessor)) || processor.IsAssignableTo(typeof(IAuthPacketProcessor)),
+                                                                                           $"{processor} does not implement from any server-sided packet processor interface!");
 
                                                // Check constructor availability:
                                                int numCtors = processor.GetConstructors().Length;
@@ -58,9 +51,10 @@ namespace Nitrox.Model.Packets.Processors
         [TestMethod]
         public void AllPacketsAreHandled()
         {
-            List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
-                                                                         .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                                                                         .ToList();
+            List<Type> packetTypes = typeof(GameInfo).Assembly.GetTypes().ToList();
+            packetTypes.AddRange(typeof(DefaultServerPacketProcessor).Assembly.GetTypes());
+            packetTypes = packetTypes.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                                     .ToList();
 
             List<Type> abstractProcessorTypes = new();
 
