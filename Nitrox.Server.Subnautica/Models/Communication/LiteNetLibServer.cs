@@ -198,10 +198,10 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         }
 
         SessionManager.Session session = sessionManager.GetOrCreateSession(request.RemoteEndPoint);
+        NetPeer peer = request.Accept();
+        PeerContext context = new(session.Id, peer);
         lock (contextLock)
         {
-            NetPeer peer = request.Accept();
-            PeerContext context = new(session.Id, peer);
             contextBySessionId.TryAdd(session.Id, context);
             contextByPeerId.TryAdd(peer.Id, context);
         }

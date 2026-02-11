@@ -28,21 +28,20 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
     {
         get
         {
+            SessionId id = 0;
             lock (sessionLock)
             {
-                SessionId id = 0;
                 if (returnedSessionIds.Count > 0 && returnedSessionIds.TryPeek(out (TimeSpan ReturnedTimeStamp, SessionId Id) entry) && (time.Elapsed - entry.ReturnedTimeStamp).TotalMinutes >= SessionId.DELAY_REUSE_MINUTES)
                 {
                     id = returnedSessionIds.Dequeue().Id;
                 }
-
                 if (id == 0)
                 {
                     id = ++field;
                 }
-                Debug.Assert(id > 0);
-                return id;
             }
+            Debug.Assert(id > 0);
+            return id;
         }
     }
 
