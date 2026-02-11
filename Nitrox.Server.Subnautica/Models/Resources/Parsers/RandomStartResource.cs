@@ -52,7 +52,7 @@ internal sealed class RandomStartResource(SubnauticaAssetsManager assetsManager,
         return new RandomStartGenerator(new PixelProvider(texture));
     }
 
-    private class PixelProvider : RandomStartGenerator.IPixelProvider
+    private sealed class PixelProvider : RandomStartGenerator.IPixelProvider
     {
         private readonly Image<Bgra32> texture;
 
@@ -62,10 +62,12 @@ internal sealed class RandomStartResource(SubnauticaAssetsManager assetsManager,
             this.texture = texture;
         }
 
-        public byte GetRed(int x, int y) => texture[x, y].R;
+        private Bgra32 GetPixel(int x, int y) => texture[Math.Clamp(x, 0, texture.Width - 1), Math.Clamp(y, 0, texture.Height - 1)];
 
-        public byte GetGreen(int x, int y) => texture[x, y].G;
+        public byte GetRed(int x, int y) => GetPixel(x, y).R;
 
-        public byte GetBlue(int x, int y) => texture[x, y].B;
+        public byte GetGreen(int x, int y) => GetPixel(x, y).G;
+
+        public byte GetBlue(int x, int y) => GetPixel(x, y).B;
     }
 }

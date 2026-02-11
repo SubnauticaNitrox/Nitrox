@@ -313,7 +313,7 @@ internal class WorldService : IHostedService
     // TODO: This method should be removed. Each service should load its own data instead of centralizing it here.
     private async Task LoadPersistedWorldIntoServicesAsync(PersistedWorldData pWorldData)
     {
-        string seed = options.Value.Seed ?? throw new InvalidOperationException("World seed must not be null");
+        string seed = options.Value.Seed;
         logger.ZLogInformation($"Loading world with seed {seed}");
 
         // Time

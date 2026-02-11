@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Channels;
+using Microsoft.Extensions.Logging.Abstractions;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 
@@ -275,14 +276,15 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
 
     private void RunHandler(CommandHandlerEntry handler, Span<object> args, string inputText)
     {
+        ILogger? commandLogger = NullLogger.Instance;
         if (args.Length > 0 && args[0] is ICommandContext context)
         {
-            context.Logger = loggerFactory.CreateLogger(handler.Owner.GetType());
+            commandLogger = context.Logger = loggerFactory.CreateLogger(handler.Owner.GetType());
         }
 
         try
         {
-            if (!runningCommands.Writer.TryWrite(handler.InvokeAsync(args)))
+            if (!runningCommands.Writer.TryWrite(RunHandlerWithExceptionLoggingAsync(commandLogger, handler, args.ToArray(), inputText)))
             {
                 logger.ZLogError($"Failed to track command task");
             }
@@ -290,6 +292,18 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         catch (Exception ex)
         {
             logger.ZLogError(ex, $"Error occurred while executing command {inputText:@Command}");
+        }
+
+        static async Task RunHandlerWithExceptionLoggingAsync(ILogger logger, CommandHandlerEntry handler, object[] args, string inputText)
+        {
+            try
+            {
+                await handler.InvokeAsync(args);
+            }
+            catch (Exception ex)
+            {
+                logger.ZLogError(ex, $"Error occurred while executing command '{inputText:@Command}'");
+            }
         }
     }
 }
