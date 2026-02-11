@@ -2,7 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Nitrox.Model.Packets;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,23 +17,50 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const int LINE_CHAR_LIMIT = 255;
         private const int MESSAGES_LIMIT = 64;
         private const float TOGGLED_TRANSPARENCY = 0.4f;
-        public const float CHAT_VISIBILITY_TIME_LENGTH = 6f;
 
         private static readonly Queue<ChatLogEntry> entries = [];
         private Image[] backgroundImages;
         private CanvasGroup canvasGroup;
+        private Coroutine? fadeCoroutine;
         private InputField inputField;
         private GameObject logEntryPrefab;
 
         private bool transparent;
-        private Coroutine fadeCoroutine;
 
         public static bool IsReady { get; private set; }
 
         public string InputText
         {
             get => inputField.text;
-            set => inputField.text = value;
+            set
+            {
+                inputField.text = value;
+                inputField.caretPosition = value.Length;
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (!focused)
+            {
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(InputText))
+            {
+                return;
+            }
+
+            // Handle command auto complete.
+            if (InputText[0] == '/' && UnityEngine.Input.GetKeyDown(KeyCode.Tab))
+            {
+                // Auto complete command names.
+                if (Regex.IsMatch(InputText, @"^/\w+$"))
+                {
+                    string commandName = InputText.Substring(1);
+                    this.Resolve<IPacketSender>().Send(new TextAutoComplete(commandName, TextAutoComplete.AutoCompleteContext.COMMAND_NAME));
+                }
+            }
         }
 
         public IEnumerator SetupChatComponents()
@@ -50,7 +81,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             // We pick any image that's inside the chat component to have all of their opacity lowered
             backgroundImages = transform.GetComponentsInChildren<Image>();
 
-            yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
+            yield return Yielders.WaitForEndOfFrame; //Needed so Select() works on initialization
             IsReady = true;
         }
 
@@ -60,7 +91,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             if (entries.Count == MESSAGES_LIMIT)
             {
                 Destroy(entries.Dequeue().EntryObject);
-                yield return null; // Skips one frame ot ensure the object is destroyed
+                yield return null; // Skips one frame to ensure the object is destroyed
             }
 
             ChatLogEntry chatLogEntry;

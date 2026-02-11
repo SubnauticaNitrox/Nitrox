@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands.Core;
@@ -185,6 +187,37 @@ internal sealed class CommandRegistry
         {
             return null;
         }
+    }
+
+    public string? FindCommandName(Regex regex, Perms viewerPerms)
+    {
+        foreach ((string commandName, List<CommandHandlerEntry>? handlers) in HandlerLookup)
+        {
+            if (handlers == null)
+            {
+                continue;
+            }
+            bool canViewCommand = false;
+            foreach (CommandHandlerEntry h in handlers)
+            {
+                if (h.MinimumPermissions <= viewerPerms)
+                {
+                    canViewCommand = true;
+                    break;
+                }
+            }
+            if (!canViewCommand)
+            {
+                continue;
+            }
+            if (!regex.IsMatch(commandName))
+            {
+                continue;
+            }
+
+            return commandName;
+        }
+        return null;
     }
 
     private void RegisterHandler(CommandHandlerEntry handler)

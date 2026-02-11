@@ -9,7 +9,7 @@ using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.ChatUI;
 
-public class PlayerChatManager
+public sealed class PlayerChatManager
 {
     public delegate void PlayerChatDelegate(string message);
 
@@ -140,6 +140,11 @@ public class PlayerChatManager
         playerChat.InputText = "";
         playerChat.Select();
         OnPlayerChat?.Invoke(trimmedInput);
+    }
+
+    public void SetChatInput(string text)
+    {
+        playerChat.InputText = text;
     }
 
     public IEnumerator LoadChatKeyHint()

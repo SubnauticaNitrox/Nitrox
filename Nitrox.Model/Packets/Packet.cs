@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,12 +15,12 @@ namespace Nitrox.Model.Packets
     public abstract class Packet
     {
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
-        private static readonly object cachedPropertiesByTypeLocker = new();
+        private static readonly LockObject cachedPropertiesByTypeLocker = new();
 
         [ThreadStatic]
         private static StringBuilder? toStringBuilder;
 
-        private static readonly object lockObject = new();
+        private static readonly LockObject lockObject = new();
 
         [IgnoredMember]
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
