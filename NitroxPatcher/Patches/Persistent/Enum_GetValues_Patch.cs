@@ -1,12 +1,14 @@
 using System;
+using System.Linq;
 using System.Reflection;
+using NitroxClient.MonoBehaviours.Gui.Input;
 
 namespace NitroxPatcher.Patches.Persistent;
 
 /// <summary>
-/// Patch for GameInput.Button enum. Nitrox buttons are not added here to avoid duplicate keybinds in the input settings:
-/// the game builds the binding list from both Enum.GetValues(GameInput.Button) and GameInput.AllActions when they differ.
-/// We extend AllActions in GameInputSystem_Initialize_Patch instead, so the binding UI gets Nitrox keys from that single source.
+/// Extends Enum.GetValues() to include Nitrox buttons, which is required for the rebinding UI to recognize them as valid.
+/// Duplicate checking ensures compatibility when Nautilus or other mods also extend the enum.
+/// GameInputSystem_Initialize_Patch also extends GameInput.AllActions (with its own duplicate check) for action creation.
 /// </summary>
 public partial class Enum_GetValues_Patch : NitroxPatch, IPersistentPatch
 {
@@ -14,12 +16,22 @@ public partial class Enum_GetValues_Patch : NitroxPatch, IPersistentPatch
 
     public static void Postfix(Type enumType, ref Array __result)
     {
-        // Intentionally do not extend __result with Nitrox buttons. They are added via GameInput.AllActions
-        // in GameInputSystem_Initialize_Patch so the settings UI shows each keybind once.
         if (enumType != typeof(GameInput.Button))
         {
             return;
         }
-        // Leave __result unchanged (original enum values only).
+
+        // Check if Nitrox buttons are already in the result (e.g. added by Nautilus or a previous call)
+        int firstNitroxButton = KeyBindingManager.NITROX_BASE_ID;
+        if (__result.Cast<GameInput.Button>().Any(b => (int)b >= firstNitroxButton && (int)b < firstNitroxButton + KeyBindingManager.KeyBindings.Count))
+        {
+            return;
+        }
+
+        __result = (GameInput.Button[])
+        [
+            .. __result.Cast<GameInput.Button>(),
+            .. Enumerable.Range(firstNitroxButton, KeyBindingManager.KeyBindings.Count).Cast<GameInput.Button>()
+        ];
     }
 }
