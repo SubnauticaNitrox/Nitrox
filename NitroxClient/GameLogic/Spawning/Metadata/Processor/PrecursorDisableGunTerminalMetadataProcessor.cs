@@ -13,15 +13,14 @@ public class PrecursorDisableGunTerminalMetadataProcessor : EntityMetadataProces
         {
             terminal = gameObject.GetComponentInChildren<PrecursorDisableGunTerminal>();
         }
-        
-        if (terminal)
-        {
-            Log.Debug($"[PrecursorDisableGunTerminalMetadataProcessor] Applying metadata: firstUse={metadata.FirstUse} to {terminal.gameObject.name}");
-            terminal.firstUse = metadata.FirstUse;
-        }
-        else
+
+        if (!terminal)
         {
             Log.Warn($"[PrecursorDisableGunTerminalMetadataProcessor] No PrecursorDisableGunTerminal component found on {gameObject.name} or its children");
+            return;
         }
+
+        Log.Debug($"[PrecursorDisableGunTerminalMetadataProcessor] Applying metadata: firstUse={metadata.FirstUse} to {terminal.gameObject.name}");
+        terminal.firstUse = metadata.FirstUse;
     }
 }

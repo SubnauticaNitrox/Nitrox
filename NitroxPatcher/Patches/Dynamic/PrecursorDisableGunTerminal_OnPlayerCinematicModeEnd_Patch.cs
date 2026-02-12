@@ -18,14 +18,13 @@ public sealed partial class PrecursorDisableGunTerminal_OnPlayerCinematicModeEnd
     {
         // After the cinematic ends, firstUse is set to false - sync this to other players
         // The terminal component is on a child object, so we need to look up the hierarchy for NitroxEntity
-        if (__instance.TryGetComponentInParent(out NitroxEntity entity, true))
-        {
-            Log.Debug($"[PrecursorDisableGunTerminal] Broadcasting metadata update: firstUse={__instance.firstUse}, id={entity.Id}");
-            Resolve<Entities>().BroadcastMetadataUpdate(entity.Id, new PrecursorDisableGunTerminalMetadata(__instance.firstUse));
-        }
-        else
+        if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
             Log.Warn($"[PrecursorDisableGunTerminal] No NitroxEntity found in hierarchy for {__instance.gameObject.GetFullHierarchyPath()}");
+            return;
         }
+
+        Log.Debug($"[PrecursorDisableGunTerminal] Broadcasting metadata update: firstUse={__instance.firstUse}, id={entity.Id}");
+        Resolve<Entities>().BroadcastMetadataUpdate(entity.Id, new PrecursorDisableGunTerminalMetadata(__instance.firstUse));
     }
 }
