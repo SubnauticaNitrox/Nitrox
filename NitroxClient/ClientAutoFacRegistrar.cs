@@ -139,6 +139,8 @@ namespace NitroxClient
                 .AsClosedTypesOf(typeof(IClientPacketProcessor<>))
                 .As<IPacketProcessor>()
                 .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<PacketProcessorsInvoker>().InstancePerLifetimeScope();
         }
 
         private void RegisterColorSwapManagers(ContainerBuilder containerBuilder)
