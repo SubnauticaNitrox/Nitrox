@@ -9,7 +9,7 @@ namespace Nitrox.Server.Subnautica.Services;
 ///     Broadcasts the server port over LAN. Clients listening for this broadcast automatically add this server to the
 ///     server list.
 /// </summary>
-internal class LanBroadcastService(IOptionsMonitor<SubnauticaServerOptions> optionsProvider, ILogger<LanBroadcastService> logger) : BackgroundService
+internal sealed class LanBroadcastService(IOptionsMonitor<SubnauticaServerOptions> optionsProvider, ILogger<LanBroadcastService> logger) : BackgroundService
 {
     private const int ACTIVE_POLL_INTERVAL_MS = 100;
     private const int INACTIVE_POLL_INTERVAL_MS = (int)(5 * TimeSpan.MillisecondsPerSecond);
