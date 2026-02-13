@@ -76,16 +76,19 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         }
 
         await SendPacketToAllAsync(new ServerStopped());
-        await Task.Delay(200, CancellationToken.None); // Gives some time for the last few tasks to be queued up.
-        taskChannel.Writer.TryComplete();
-        using (CancellationTokenSource cts = new(TimeSpan.FromSeconds(5)))
+        try
         {
-            await foreach (Task task in taskChannel.Reader.ReadAllAsync(cts.Token))
+            await Task.Delay(100, CancellationToken.None); // Gives some time for the last few tasks to be queued up.
+            taskChannel.Writer.TryComplete();
+            await foreach (Task task in taskChannel.Reader.ReadAllAsync(cancellationToken))
             {
                 await task;
             }
         }
-        server.Stop();
+        finally
+        {
+            server.Stop();
+        }
     }
 
     public ValueTask SendPacketAsync<T>(T packet, SessionId sessionId) where T : Packet
