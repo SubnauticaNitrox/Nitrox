@@ -12,10 +12,9 @@ internal sealed class SaveCommand(SaveService saveService, ILogger<SaveCommand> 
     private readonly ILogger<SaveCommand> logger = logger;
 
     [Description("Saves the map")]
-    public Task Execute(ICommandContext context)
+    public async Task Execute(ICommandContext context)
     {
         logger.LogSaveRequest(context.OriginName, context.OriginId);
-        saveService.QueueSave();
-        return Task.CompletedTask;
+        await saveService.QueueActionAsync(SaveService.ServiceAction.SAVE);
     }
 }

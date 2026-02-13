@@ -1,3 +1,5 @@
+using Nitrox.Server.Subnautica.Services.Core;
+
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
@@ -6,28 +8,17 @@ namespace Nitrox.Server.Subnautica.Services;
 ///     That's where this <see cref="MemoryService" /> comes in, to force the GC to check if any file handler (pointers)
 ///     are reachable and if not, deallocate them.
 /// </summary>
-internal sealed class MemoryService(ILogger<MemoryService> logger) : BackgroundService
+internal sealed class MemoryService(ILogger<MemoryService> logger) : QueuingBackgroundService<MemoryService.ServiceAction>
 {
     private readonly ILogger<MemoryService> logger = logger;
-    private readonly AsyncBarrier memCompactBarrier = new();
 
-    /// <summary>
-    ///     Queues a memory compaction loop to be executed as soon as possible.
-    /// </summary>
-    /// <remarks>
-    ///     This forces the GC to check on dangling memory in case of bad memory management. Ideally, this method should not exist.
-    /// </remarks>
-    public void QueueCompact()
+    protected override async Task ExecuteQueuedActionAsync(ServiceAction action, CancellationToken stoppingToken)
     {
-        memCompactBarrier.Signal();
-    }
-
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
+        switch (action)
         {
-            await memCompactBarrier.WaitForSignalAsync(stoppingToken);
-            await CompactMemoryAsync(stoppingToken);
+            case ServiceAction.COMPACT_MEMORY:
+                await CompactMemoryAsync(stoppingToken);
+                break;
         }
     }
 
@@ -62,5 +53,10 @@ internal sealed class MemoryService(ILogger<MemoryService> logger) : BackgroundS
             }
         }
         logger.ZLogTrace($"Stopped compacting memory");
+    }
+
+    internal enum ServiceAction
+    {
+        COMPACT_MEMORY
     }
 }

@@ -121,7 +121,7 @@ internal class WorldService : IHostedService
                     await worldEntityManager.LoadAllUnspawnedEntitiesAsync(cancellationToken);
 
                     logger.ZLogInformation($"Saving newly cached entities.");
-                    saveService.QueueSave();
+                    await saveService.QueueActionAsync(SaveService.ServiceAction.SAVE, cancellationToken);
                 }
                 logger.ZLogInformation($"All batches have now been loaded.");
             }
