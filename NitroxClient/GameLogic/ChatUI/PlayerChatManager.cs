@@ -15,7 +15,7 @@ public sealed class PlayerChatManager
 
     public delegate void PlayerCommandDelegate(string message);
 
-    private const char SERVER_COMMAND_PREFIX = '/';
+    public const char SERVER_COMMAND_PREFIX = '/';
     public static readonly PlayerChatManager Instance = new();
     private GameObject chatKeyHint;
 
@@ -24,10 +24,7 @@ public sealed class PlayerChatManager
 
     private PlayerChat playerChat;
 
-    public bool IsChatSelected
-    {
-        get => PlayerChat.IsReady && playerChat.selected;
-    }
+    public bool IsChatSelected => PlayerChat.IsReady && playerChat.selected;
 
     public Transform PlayerChatTransform => playerChat.transform;
 
@@ -142,9 +139,9 @@ public sealed class PlayerChatManager
         OnPlayerChat?.Invoke(trimmedInput);
     }
 
-    public void SetChatInput(string text)
+    public void SetAutoCompleteText(string text)
     {
-        playerChat.InputText = text;
+        playerChat.AutoCompleteText = text;
     }
 
     public IEnumerator LoadChatKeyHint()

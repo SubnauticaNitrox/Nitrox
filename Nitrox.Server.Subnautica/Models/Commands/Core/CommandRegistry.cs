@@ -189,7 +189,7 @@ internal sealed class CommandRegistry
         }
     }
 
-    public string? FindCommandName(Regex regex, Perms viewerPerms)
+    public string? FindCommandName(Regex regex, Perms viewerPerms, bool ignoreAliases = false)
     {
         foreach ((string commandName, List<CommandHandlerEntry>? handlers) in HandlerLookup)
         {
@@ -207,6 +207,10 @@ internal sealed class CommandRegistry
                 }
             }
             if (!canViewCommand)
+            {
+                continue;
+            }
+            if (ignoreAliases && handlers[0].Aliases.Contains(commandName, StringComparer.OrdinalIgnoreCase))
             {
                 continue;
             }

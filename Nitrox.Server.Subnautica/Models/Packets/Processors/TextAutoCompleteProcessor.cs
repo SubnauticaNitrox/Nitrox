@@ -17,7 +17,7 @@ internal sealed class TextAutoCompleteProcessor(CommandRegistry commandRegistry)
         {
             case TextAutoComplete.AutoCompleteContext.COMMAND_NAME:
                 Regex matchCommandNameRegex = new($@"^{packet.Text}\w+$", RegexOptions.NonBacktracking | RegexOptions.ExplicitCapture | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
-                string? commandName = commandRegistry.FindCommandName(matchCommandNameRegex, context.Sender.Permissions);
+                string? commandName = commandRegistry.FindCommandName(matchCommandNameRegex, context.Sender.Permissions, true);
                 if (string.IsNullOrWhiteSpace(commandName))
                 {
                     break;

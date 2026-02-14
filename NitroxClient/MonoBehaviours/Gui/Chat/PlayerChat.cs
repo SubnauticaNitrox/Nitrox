@@ -22,8 +22,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private Image[] backgroundImages;
         private CanvasGroup canvasGroup;
         private Coroutine? fadeCoroutine;
-        private InputField inputField;
+        private InputField inputField = null!;
+        private Text backgroundText = null!;
         private GameObject logEntryPrefab;
+        private string lastInputText = "";
 
         private bool transparent;
 
@@ -39,6 +41,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
         }
 
+        public string AutoCompleteText
+        {
+            get => backgroundText.text;
+            set
+            {
+                if (value.Length <= inputField.text.Length)
+                {
+                    value = "";
+                }
+                backgroundText.text = value;
+            }
+        }
+
         public override void Update()
         {
             base.Update();
@@ -48,17 +63,25 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
             if (string.IsNullOrWhiteSpace(InputText))
             {
+                AutoCompleteText = "";
                 return;
             }
+            bool hasInputChanged = InputText != lastInputText;
+            lastInputText = InputText;
 
             // Handle command auto complete.
-            if (InputText[0] == '/' && UnityEngine.Input.GetKeyDown(KeyCode.Tab))
+            if (InputText[0] == PlayerChatManager.SERVER_COMMAND_PREFIX)
             {
                 // Auto complete command names.
-                if (Regex.IsMatch(InputText, @"^/\w+$"))
+                if (hasInputChanged && Regex.IsMatch(InputText, @"^/\w+$"))
                 {
                     string commandName = InputText.Substring(1);
                     this.Resolve<IPacketSender>().Send(new TextAutoComplete(commandName, TextAutoComplete.AutoCompleteContext.COMMAND_NAME));
+                }
+                if (UnityEngine.Input.GetKeyDown(KeyCode.Tab) && !string.IsNullOrWhiteSpace(AutoCompleteText))
+                {
+                    InputText = AutoCompleteText;
+                    AutoCompleteText = "";
                 }
             }
         }
@@ -75,6 +98,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             GetComponentsInChildren<Button>()[1].gameObject.AddComponent<PlayerChatPinButton>();
 
             inputField = GetComponentInChildren<InputField>();
+            backgroundText = Instantiate(inputField.textComponent, inputField.textComponent.transform.parent);
+            backgroundText.color = Color.gray;
+            inputField.onValidateInput = OnValidateInput;
             inputField.gameObject.AddComponent<PlayerChatInputField>().InputField = inputField;
             inputField.GetComponentInChildren<Button>().onClick.AddListener(PlayerChatManager.Instance.SendMessage);
 
@@ -84,6 +110,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             yield return Yielders.WaitForEndOfFrame; //Needed so Select() works on initialization
             IsReady = true;
         }
+
+        private char OnValidateInput(string text, int charIndex, char addedChar) =>
+            addedChar switch
+            {
+                '\t' => '\0', // Ignore tab key. It's used for auto complete.
+                _ => addedChar
+            };
 
         public IEnumerator WriteLogEntry(string playerName, string message, Color color)
         {

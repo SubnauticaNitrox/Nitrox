@@ -17,7 +17,7 @@ internal sealed class TextAutoCompleteProcessor : IClientPacketProcessor<TextAut
         switch (packet.Context)
         {
             case TextAutoComplete.AutoCompleteContext.COMMAND_NAME:
-                playerChatManager.SetChatInput($"/{packet.Text} ");
+                playerChatManager.SetAutoCompleteText($"/{packet.Text} ");
                 break;
         }
         return Task.CompletedTask;
