@@ -78,10 +78,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                     string commandName = InputText.Substring(1);
                     this.Resolve<IPacketSender>().Send(new TextAutoComplete(commandName, TextAutoComplete.AutoCompleteContext.COMMAND_NAME));
                 }
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Tab) && !string.IsNullOrWhiteSpace(AutoCompleteText))
+                if (!string.IsNullOrWhiteSpace(AutoCompleteText))
                 {
-                    InputText = AutoCompleteText;
-                    AutoCompleteText = "";
+                    if (UnityEngine.Input.GetKeyDown(KeyCode.Tab) || (UnityEngine.Input.GetKeyDown(KeyCode.RightArrow) && inputField.caretPosition == InputText.Length))
+                    {
+                        InputText = AutoCompleteText;
+                        AutoCompleteText = "";
+                    }
                 }
             }
         }
