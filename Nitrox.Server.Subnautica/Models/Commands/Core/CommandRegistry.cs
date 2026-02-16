@@ -197,6 +197,10 @@ internal sealed class CommandRegistry
             {
                 continue;
             }
+            if (!handlers[0].AcceptedOrigin.HasFlag(CommandOrigin.PLAYER))
+            {
+                continue;
+            }
             bool canViewCommand = false;
             foreach (CommandHandlerEntry h in handlers)
             {
