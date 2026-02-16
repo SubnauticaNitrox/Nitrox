@@ -66,7 +66,12 @@ public class PlayerManager
     public RemotePlayer Create(PlayerContext playerContext)
     {
         Validate.NotNull(playerContext);
-        Validate.IsFalse(sessionsById.ContainsKey(playerContext.SessionId));
+
+        // Can happen that player is already known if both join queue & initial sync happen.
+        if (sessionsById.TryGetValue(playerContext.SessionId, out RemotePlayer alreadyAddedPlayer))
+        {
+            return alreadyAddedPlayer;
+        }
 
         RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
 

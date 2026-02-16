@@ -34,7 +34,7 @@ public class RemotePlayer : INitroxPlayer
     private readonly FMODWhitelist fmodWhitelist;
 
     public PlayerContext PlayerContext { get; }
-    public GameObject Body { get; private set; }
+    public GameObject? Body { get; private set; }
     public GameObject PlayerModel { get; private set; }
     public Rigidbody RigidBody { get; private set; }
     public CapsuleCollider Collider { get; private set; }
