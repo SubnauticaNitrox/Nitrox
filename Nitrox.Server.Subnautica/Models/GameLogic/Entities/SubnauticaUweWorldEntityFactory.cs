@@ -1,28 +1,26 @@
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using UWE;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-internal class SubnauticaUweWorldEntityFactory(WorldEntitiesResource resource) : IUweWorldEntityFactory
+internal class SubnauticaUweWorldEntityFactory(WorldEntitiesResource resource)
 {
     private readonly WorldEntitiesResource resource = resource;
 
-    public bool TryFind(string classId, [NotNullWhen(true)] out UweWorldEntity? uweWorldEntity)
+    public async Task<UweWorldEntity?> FindAsync(string classId)
     {
-        if (resource.WorldEntitiesByClassId.TryGetValue(classId, out WorldEntityInfo worldEntityInfo))
+        Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = await resource.GetWorldEntitiesByClassIdAsync();
+        if (worldEntitiesByClassId.TryGetValue(classId, out WorldEntityInfo worldEntityInfo))
         {
-            uweWorldEntity = new(worldEntityInfo.classId,
+            return new(worldEntityInfo.classId,
                                  worldEntityInfo.techType.ToDto(),
                                  worldEntityInfo.slotType.ToString(),
                                  worldEntityInfo.prefabZUp,
                                  (int)worldEntityInfo.cellLevel,
                                  worldEntityInfo.localScale.ToDto());
-
-            return true;
         }
-        uweWorldEntity = null;
-        return false;
+        return null;
     }
 }

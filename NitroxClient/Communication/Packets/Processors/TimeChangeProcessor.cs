@@ -1,21 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class TimeChangeProcessor : ClientPacketProcessor<TimeChange>
+internal sealed class TimeChangeProcessor(TimeManager timeManager) : IClientPacketProcessor<TimeChange>
 {
-    private readonly TimeManager timeManager;
+    private readonly TimeManager timeManager = timeManager;
 
-    public TimeChangeProcessor(TimeManager timeManager)
-    {
-        this.timeManager = timeManager;
-    }
-
-    public override void Process(TimeChange timeChangePacket)
+    public Task Process(ClientProcessorContext context, TimeChange timeChangePacket)
     {
         timeManager.ProcessUpdate(timeChangePacket);
+        return Task.CompletedTask;
     }
 }

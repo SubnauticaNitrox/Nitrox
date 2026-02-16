@@ -1,9 +1,8 @@
 using System.Reflection;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -23,9 +22,9 @@ public sealed partial class StasisSphere_OnHit_Patch : NitroxPatch, IDynamicPatc
             return false;
         }
 
-        ushort? localPlayerId = Resolve<LocalPlayer>().PlayerId;
+        SessionId? localSessionId = Resolve<LocalPlayer>().SessionId;
         // If the local player id isn't set then there's already a bigger problem/no problem and we can ignore that
-        if (!localPlayerId.HasValue)
+        if (!localSessionId.HasValue)
         {
             return true;
         }
@@ -34,7 +33,7 @@ public sealed partial class StasisSphere_OnHit_Patch : NitroxPatch, IDynamicPatc
         // Calculate the chargeNormalized value which was passed to StasisSphere.Shoot
         float chargeNormalized = Mathf.Unlerp(__instance.minRadius, __instance.maxRadius, __instance.radius);
 
-        Resolve<IPacketSender>().Send(new StasisSphereHit(localPlayerId.Value, position, rotation, chargeNormalized, __instance._consumption));
+        Resolve<IPacketSender>().Send(new StasisSphereHit(localSessionId.Value, position, rotation, chargeNormalized, __instance._consumption));
         return true;
     }
 }

@@ -1,20 +1,19 @@
 using System.Collections.Generic;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Settings;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class BuildingDesyncWarningProcessor : ClientPacketProcessor<BuildingDesyncWarning>
+internal sealed class BuildingDesyncWarningProcessor : IClientPacketProcessor<BuildingDesyncWarning>
 {
-    public override void Process(BuildingDesyncWarning packet)
-    {        
+    public Task Process(ClientProcessorContext context, BuildingDesyncWarning packet)
+    {
         if (!BuildingHandler.Main)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         foreach (KeyValuePair<NitroxId, int> operation in packet.Operations)
@@ -28,5 +27,6 @@ public class BuildingDesyncWarningProcessor : ClientPacketProcessor<BuildingDesy
         {
             Log.InGame(Language.main.Get("Nitrox_BuildingDesyncDetected"));
         }
+        return Task.CompletedTask;
     }
 }

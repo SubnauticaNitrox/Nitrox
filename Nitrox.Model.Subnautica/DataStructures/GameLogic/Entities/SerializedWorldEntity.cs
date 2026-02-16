@@ -46,7 +46,7 @@ public class SerializedWorldEntity : WorldEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public SerializedWorldEntity(List<SerializedComponent> components, int layer, NitroxTransform transform, NitroxId id, NitroxId parentId, AbsoluteEntityCell cell)
+    public SerializedWorldEntity(List<SerializedComponent> components, int layer, NitroxTransform transform, NitroxId id, NitroxId? parentId, AbsoluteEntityCell cell)
     {
         Components = components;
         Layer = layer;

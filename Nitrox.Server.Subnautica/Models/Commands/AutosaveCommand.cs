@@ -1,23 +1,32 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class AutoSaveCommand(IOptions<SubnauticaServerOptions> serverOptionsProvider) : ICommandHandler<bool>
 {
-    internal class AutoSaveCommand : Command
+    private readonly IOptions<SubnauticaServerOptions> serverOptionsProvider = serverOptionsProvider;
+
+    [Description("Whether autosave should be on or off")]
+    public async Task Execute(ICommandContext context, bool toggle)
     {
-        private readonly IOptions<SubnauticaServerOptions> options;
-
-        public AutoSaveCommand(IOptions<SubnauticaServerOptions> options) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
+        SubnauticaServerOptions options = serverOptionsProvider.Value;
+        if (toggle)
         {
-            AddParameter(new TypeBoolean("on/off", true, "Whether autosave should be on or off"));
-
-            this.options = options;
+            // Ensure save interval is a sensible value before turning on auto saving.
+            if (options.SaveInterval <= 1000)
+            {
+                options.SaveInterval = new SubnauticaServerOptions().SaveInterval;
+            }
+            options.AutoSave = true;
+            await context.ReplyAsync("Enabled periodical saving");
         }
-
-        protected override void Execute(CallArgs args)
+        else
         {
-            options.Value.AutoSave = args.Get<bool>(0);
+            options.AutoSave = false;
+            await context.ReplyAsync("Disabled periodical saving");
         }
     }
 }

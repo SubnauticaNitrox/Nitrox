@@ -1,20 +1,18 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDeconstructed>
+internal sealed class WaterParkDeconstructedProcessor(BuildingManager buildingManager) : BuildingProcessor<WaterParkDeconstructed>(buildingManager)
 {
-    public WaterParkDeconstructedProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
-
-    public override void Process(WaterParkDeconstructed packet, Player player)
+    public override async Task Process(AuthProcessorContext context, WaterParkDeconstructed packet)
     {
-        if (buildingManager.ReplacePieceByGhost(player, packet, out Entity removedEntity, out int operationId) &&
-            buildingManager.CreateWaterParkPiece(packet, removedEntity))
+        if (BuildingManager.ReplacePieceByGhost(context.Sender, packet, out Entity removedEntity, out int operationId) &&
+            BuildingManager.CreateWaterParkPiece(packet, removedEntity))
         {
             packet.BaseData = null;
-            SendToOtherPlayersWithOperationId(packet, player, operationId);
+            await SendToOtherPlayersWithOperationIdAsync(context, packet, operationId);
         }
     }
 }

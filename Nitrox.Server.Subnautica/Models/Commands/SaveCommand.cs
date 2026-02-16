@@ -1,22 +1,20 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Services;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class SaveCommand(SaveService saveService, ILogger<SaveCommand> logger) : ICommandHandler
 {
-    internal class SaveCommand : Command
+    private readonly SaveService saveService = saveService;
+    private readonly ILogger<SaveCommand> logger = logger;
+
+    [Description("Saves the map")]
+    public async Task Execute(ICommandContext context)
     {
-        private readonly SaveService saveService;
-
-        public SaveCommand(SaveService saveService) : base("save", Perms.MODERATOR, "Saves the map")
-        {
-            this.saveService = saveService;
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            saveService.QueueSave();
-            SendMessageToPlayer(args.Sender, "Saving world...");
-        }
+        logger.LogSaveRequest(context.OriginName, context.OriginId);
+        await saveService.QueueActionAsync(SaveService.ServiceAction.SAVE);
     }
 }

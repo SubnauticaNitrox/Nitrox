@@ -1,25 +1,17 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class PDALogEntryAddProcessor : IClientPacketProcessor<PDALogEntryAdd>
 {
-    public class PDALogEntryAddProcessor : ClientPacketProcessor<PDALogEntryAdd>
+    public Task Process(ClientProcessorContext context, PDALogEntryAdd packet)
     {
-        private readonly IPacketSender packetSender;
-
-        public PDALogEntryAddProcessor(IPacketSender packetSender)
+        using (PacketSuppressor<PDALogEntryAdd>.Suppress())
         {
-            this.packetSender = packetSender;
+            PDALog.Add(packet.Key);
         }
-
-        public override void Process(PDALogEntryAdd packet)
-        {
-            using (PacketSuppressor<PDALogEntryAdd>.Suppress())
-            {
-                PDALog.Add(packet.Key);
-            }
-        }
+        return Task.CompletedTask;
     }
 }

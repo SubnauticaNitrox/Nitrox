@@ -4,52 +4,27 @@ using Nitrox.Model.DataStructures.Unity;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
-public class RandomStartGenerator
+public sealed class RandomStartGenerator(RandomStartGenerator.IPixelProvider pixelProvider)
 {
-    private readonly IPixelProvider pixelProvider;
+    private readonly IPixelProvider pixelProvider = pixelProvider;
 
-    public RandomStartGenerator(IPixelProvider pixelProvider)
+    /// <summary>
+    ///     Generates all starts positions available for a given randomization. Only take as many positions as needed to avoid unnecessary compute.
+    /// </summary>
+    public IEnumerable<NitroxVector3> GenerateAllStartPositions(Random random)
     {
-        this.pixelProvider = pixelProvider;
-    }
-
-    public NitroxVector3 GenerateRandomStartPosition(Random rnd)
-    {
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < int.MaxValue; i++)
         {
-            float normalizedX = (float)rnd.NextDouble();
-            float normalizedZ = (float)rnd.NextDouble();
+            float normalizedX = (float)random.NextDouble();
+            float normalizedZ = (float)random.NextDouble();
 
             if (IsStartPointValid(normalizedX, normalizedZ))
             {
                 float x = 4096f * normalizedX - 2048f; // normalizedX = (x + 2048) / 4096
                 float z = 4096f * normalizedZ - 2048f;
-                return new NitroxVector3(x, 0, z);
+                yield return new NitroxVector3(x, 0, z);
             }
         }
-
-        return NitroxVector3.Zero;
-    }
-
-    public List<NitroxVector3> GenerateRandomStartPositions(string seed)
-    {
-        Random rnd = new(seed.GetHashCode());
-        List<NitroxVector3> list = new();
-
-        for (int i = 0; i < 1000; i++)
-        {
-            float normalizedX = (float)rnd.NextDouble();
-            float normalizedZ = (float)rnd.NextDouble();
-
-            if (IsStartPointValid(normalizedX, normalizedZ))
-            {
-                float x = 4096f * normalizedX - 2048f; // normalizedX = (x + 2048) / 4096
-                float z = 4096f * normalizedZ - 2048f;
-                list.Add(new NitroxVector3(x, 0, z));
-            }
-        }
-
-        return list;
     }
 
     private bool IsStartPointValid(float normalizedX, float normalizedZ)

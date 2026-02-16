@@ -1,4 +1,5 @@
 ﻿using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
 
@@ -9,14 +10,14 @@ public class VehicleUndocking : Packet
 {
     public NitroxId VehicleId { get; }
     public NitroxId DockId { get; }
-    public ushort PlayerId { get; }
+    public SessionId SessionId { get; }
     public bool UndockingStart { get; }
 
-    public VehicleUndocking(NitroxId vehicleId, NitroxId dockId, ushort playerId, bool undockingStart)
+    public VehicleUndocking(NitroxId vehicleId, NitroxId dockId, SessionId sessionId, bool undockingStart)
     {
         VehicleId = vehicleId;
         DockId = dockId;
-        PlayerId = playerId;
+        SessionId = sessionId;
         UndockingStart = undockingStart;
     }
 }

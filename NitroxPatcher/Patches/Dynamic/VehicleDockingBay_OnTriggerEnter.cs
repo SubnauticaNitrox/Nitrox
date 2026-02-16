@@ -2,7 +2,6 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -34,7 +33,7 @@ public sealed partial class VehicleDockingBay_OnTriggerEnter : NitroxPatch, IDyn
             Resolve<SimulationOwnership>().HasAnyLockType(vehicleId))
         {
             Vehicles.EngagePlayerMovementSuppressor(interpolatingVehicle);
-            Resolve<IPacketSender>().Send(new VehicleDocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId));
+            Resolve<IPacketSender>().Send(new VehicleDocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.SessionId));
         }
     }
 }

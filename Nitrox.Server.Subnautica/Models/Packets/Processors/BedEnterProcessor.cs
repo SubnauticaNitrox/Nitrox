@@ -1,19 +1,15 @@
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class BedEnterProcessor : AuthenticatedPacketProcessor<BedEnter>
+internal sealed class BedEnterProcessor(SleepManager sleepManager) : IAuthPacketProcessor<BedEnter>
 {
-    private readonly SleepManager sleepManager;
+    private readonly SleepManager sleepManager = sleepManager;
 
-    public BedEnterProcessor(SleepManager sleepManager)
+    public Task Process(AuthProcessorContext context, BedEnter packet)
     {
-        this.sleepManager = sleepManager;
-    }
-
-    public override void Process(BedEnter packet, Player player)
-    {
-        sleepManager.PlayerEnteredBed(player);
+        sleepManager.PlayerEnteredBed(context.Sender);
+        return Task.CompletedTask;
     }
 }

@@ -1,35 +1,26 @@
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class PlayerMovementProcessor(EntityRegistry entityRegistry) : IAuthPacketProcessor<PlayerMovement>
 {
-    class PlayerMovementProcessor : AuthenticatedPacketProcessor<PlayerMovement>
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+
+    public async Task Process(AuthProcessorContext context, PlayerMovement packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly EntityRegistry entityRegistry;
+        Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(context.Sender.PlayerContext.PlayerNitroxId);
 
-        public PlayerMovementProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+        if (playerEntity.HasValue)
         {
-            this.playerManager = playerManager;
-            this.entityRegistry = entityRegistry;
+            playerEntity.Value.Transform.Position = packet.Position;
+            playerEntity.Value.Transform.Rotation = packet.BodyRotation;
         }
 
-        public override void Process(PlayerMovement packet, Player player)
-        {
-            Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(player.PlayerContext.PlayerNitroxId);
-
-            if (playerEntity.HasValue)
-            {
-                playerEntity.Value.Transform.Position = packet.Position;
-                playerEntity.Value.Transform.Rotation = packet.BodyRotation;
-            }
-
-            player.Position = packet.Position;
-            player.Rotation = packet.BodyRotation;
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        context.Sender.Position = packet.Position;
+        context.Sender.Rotation = packet.BodyRotation;
+        await context.SendToOthersAsync(packet);
     }
 }

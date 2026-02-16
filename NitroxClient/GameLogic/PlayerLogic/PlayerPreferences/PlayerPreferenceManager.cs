@@ -1,6 +1,5 @@
 ﻿using Nitrox.Model.Helper;
 using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences

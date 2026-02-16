@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
@@ -17,7 +18,7 @@ public class BulletManager
 
     // This only allows for one stasis sphere per player
     // (which is the normal capacity, but could be adapted for a mod letting multiple stasis spheres)
-    private readonly Dictionary<ushort, StasisSphere> stasisSpherePerPlayerId = [];
+    private readonly Dictionary<SessionId, StasisSphere> stasisSpherePerSessionId = [];
 
     /// <summary>
     /// TechTypes of objects which should have a Vehicle MB
@@ -80,16 +81,16 @@ public class BulletManager
         }
     }
 
-    public void ShootStasisSphere(ushort playerId, Vector3 position, Quaternion rotation, float speed, float lifeTime, float chargeNormalized)
+    public void ShootStasisSphere(SessionId sessionId, Vector3 position, Quaternion rotation, float speed, float lifeTime, float chargeNormalized)
     {
-        StasisSphere cloneSphere = EnsurePlayerHasSphere(playerId);
+        StasisSphere cloneSphere = EnsurePlayerHasSphere(sessionId);
 
         cloneSphere.Shoot(position, rotation, speed, lifeTime, chargeNormalized);
     }
 
-    public void StasisSphereHit(ushort playerId, Vector3 position, Quaternion rotation, float chargeNormalized, float consumption)
+    public void StasisSphereHit(SessionId sessionId, Vector3 position, Quaternion rotation, float chargeNormalized, float consumption)
     {
-        StasisSphere cloneSphere = EnsurePlayerHasSphere(playerId);
+        StasisSphere cloneSphere = EnsurePlayerHasSphere(sessionId);
 
         // Setup the sphere in case the shot was sent earlier
         cloneSphere.Shoot(position, rotation, 0, 0, chargeNormalized);
@@ -103,31 +104,31 @@ public class BulletManager
         cloneSphere.Deactivate();
     }
 
-    private StasisSphere EnsurePlayerHasSphere(ushort playerId)
+    private StasisSphere EnsurePlayerHasSphere(SessionId sessionId)
     {
-        if (stasisSpherePerPlayerId.TryGetValue(playerId, out StasisSphere remoteSphere) && remoteSphere)
+        if (stasisSpherePerSessionId.TryGetValue(sessionId, out StasisSphere remoteSphere) && remoteSphere)
         {
             return remoteSphere;
         }
         
         // It should be set to inactive automatically in Bullet.Awake
-        GameObject playerSphereClone = GameObject.Instantiate(stasisSpherePrefab);
-        playerSphereClone.name = $"remote-{playerId}-{playerSphereClone.name}";
+        GameObject playerSphereClone = Object.Instantiate(stasisSpherePrefab);
+        playerSphereClone.name = $"remote-{sessionId}-{playerSphereClone.name}";
         // We mark it to be able to ignore events from remote bullets
         playerSphereClone.AddComponent<RemotePlayerBullet>();
         StasisSphere stasisSphere = playerSphereClone.GetComponent<StasisSphere>();
 
-        stasisSpherePerPlayerId[playerId] = stasisSphere;
+        stasisSpherePerSessionId[sessionId] = stasisSphere;
         return stasisSphere;
     }
 
-    private void DestroyPlayerSphere(ushort playerId)
+    private void DestroyPlayerSphere(SessionId sessionId)
     {
-        if (stasisSpherePerPlayerId.TryGetValue(playerId, out StasisSphere stasisSphere) && stasisSphere)
+        if (stasisSpherePerSessionId.TryGetValue(sessionId, out StasisSphere stasisSphere) && stasisSphere)
         {
-            GameObject.Destroy(stasisSphere.gameObject);
+            Object.Destroy(stasisSphere.gameObject);
         }
-        stasisSpherePerPlayerId.Remove(playerId);
+        stasisSpherePerSessionId.Remove(sessionId);
     }
 
     public IEnumerator Initialize()
@@ -158,11 +159,11 @@ public class BulletManager
         // Setup remote players' stasis spheres
         foreach (RemotePlayer remotePlayer in playerManager.GetAll())
         {
-            EnsurePlayerHasSphere(remotePlayer.PlayerId);
+            EnsurePlayerHasSphere(remotePlayer.SessionId);
         }
 
-        playerManager.OnCreate += (playerId, _) => { EnsurePlayerHasSphere(playerId); };
-        playerManager.OnRemove += (playerId, _) => { DestroyPlayerSphere(playerId); };
+        playerManager.OnCreate += (sessionId, _) => { EnsurePlayerHasSphere(sessionId); };
+        playerManager.OnRemove += (sessionId, _) => { DestroyPlayerSphere(sessionId); };
     }
 
     public class RemotePlayerBullet : MonoBehaviour;

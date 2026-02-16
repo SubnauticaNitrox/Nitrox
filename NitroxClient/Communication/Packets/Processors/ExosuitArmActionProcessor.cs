@@ -1,19 +1,19 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionPacket>
+internal sealed class ExosuitArmActionProcessor : IClientPacketProcessor<ExosuitArmActionPacket>
 {
-    public override void Process(ExosuitArmActionPacket packet)
+    public Task Process(ClientProcessorContext context, ExosuitArmActionPacket packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.ExosuitId, out GameObject gameObject))
         {
             Log.Error("Could not find exosuit for arm action");
-            return;
+            return Task.CompletedTask;
         }
 
         Exosuit exosuit = gameObject.RequireComponent<Exosuit>();
@@ -40,5 +40,6 @@ public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionP
                 Log.Error($"Unhandled arm tech or invalid arm type: {packet.TechType} with action {packet.ArmAction} on {arm.GetGameObject().name} for exosuit {packet.ExosuitId}");
                 break;
         }
+        return Task.CompletedTask;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
@@ -9,7 +10,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Players;
 
 [DataContract]
-public class PersistedPlayerData
+internal sealed class PersistedPlayerData
 {
     [DataMember(Order = 1)]
     public string Name { get; set; }
@@ -24,7 +25,7 @@ public class PersistedPlayerData
     public Dictionary<string, NitroxId> EquippedItems { get; set; } = [];
 
     [DataMember(Order = 5)]
-    public ushort Id { get; set; }
+    public PeerId Id { get; set; }
 
     [DataMember(Order = 6)]
     public NitroxVector3 SpawnPosition { get; set; }
@@ -68,10 +69,10 @@ public class PersistedPlayerData
     public Player ToPlayer()
     {
         return new Player(Id,
+                          0,
                           Name,
                           IsPermaDeath,
                           null, //no connection/context as this player is not connected.
-                          null,
                           SpawnPosition,
                           SpawnRotation,
                           NitroxId,

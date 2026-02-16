@@ -1,23 +1,20 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class ToggleLightsProcessor : ClientPacketProcessor<Nitrox.Model.Subnautica.Packets.ToggleLights>
+internal sealed class ToggleLightsProcessor : IClientPacketProcessor<Nitrox.Model.Subnautica.Packets.ToggleLights>
 {
-    public ToggleLightsProcessor()
-    { }
-
-    public override void Process(Nitrox.Model.Subnautica.Packets.ToggleLights packet)
+    public Task Process(ClientProcessorContext context, Nitrox.Model.Subnautica.Packets.ToggleLights packet)
     {
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
         ToggleLights toggleLights = gameObject.RequireComponent<ToggleLights>();
 
         if (packet.IsOn == toggleLights.GetLightsActive())
         {
-            return;
+            return Task.CompletedTask;
         }
 
         using (PacketSuppressor<Nitrox.Model.Subnautica.Packets.ToggleLights>.Suppress())
@@ -25,5 +22,6 @@ public class ToggleLightsProcessor : ClientPacketProcessor<Nitrox.Model.Subnauti
         {
             toggleLights.SetLightsActive(packet.IsOn);
         }
+        return Task.CompletedTask;
     }
 }

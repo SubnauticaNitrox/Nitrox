@@ -67,7 +67,7 @@ public class IntroCinematicUpdater : MonoBehaviour
         meshRenderer.materials = remotePlayerHeadRenderer.materials;
         remotePlayerCustomHead.SetActive(false);
 
-        bool isLeftPlayer = NitroxServiceLocator.Cache<LocalPlayer>.Value.PlayerId < Partner.PlayerId;
+        bool isLeftPlayer = NitroxServiceLocator.Cache<LocalPlayer>.Value.SessionId < Partner.SessionId;
         introEndTarget = EscapePod.main.transform.Find("EscapePodCinematics/intro_end");
         Vector3 introEndDiff = isLeftPlayer ? new Vector3(0, 0, 0.3f) : new Vector3(0, 0, -0.3f);
         introRemoteEndPosition = introEndTarget.position - introEndDiff;

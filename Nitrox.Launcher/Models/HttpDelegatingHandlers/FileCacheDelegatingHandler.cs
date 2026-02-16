@@ -61,7 +61,7 @@ internal sealed class FileCacheDelegatingHandler : DelegatingHandler
         try
         {
             Directory.CreateDirectory(NitroxUser.CachePath);
-            return Path.Combine(NitroxUser.CachePath, $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().AsMd5Hash())}.cache");
+            return Path.Combine(NitroxUser.CachePath, $"nitrox_{string.Join('_', $"{uri.Host}{uri.LocalPath}".ReplaceInvalidFileNameCharacters('_').Split('_').Select(s => s[0]))}_{Convert.ToHexStringLower(uri.ToString().ToMd5Hash())}.cache");
         }
         catch (Exception ex)
         {

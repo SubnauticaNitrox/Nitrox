@@ -20,7 +20,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
         {
             return new GameData
             {
-                PDAState = pdaManager.PdaState,
+                PDAState = pdaManager.GetPdaStateCopy(),
                 StoryGoals = StoryGoalData.From(storyGoals, storyScheduler),
                 StoryTiming = StoryTimingData.From(storyManager, timeService)
             };

@@ -1,25 +1,16 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class SubRootChangedPacketProcessor(EntityRegistry entityRegistry) : IAuthPacketProcessor<SubRootChanged>
 {
-    class SubRootChangedPacketProcessor : AuthenticatedPacketProcessor<SubRootChanged>
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+
+    public async Task Process(AuthProcessorContext context, SubRootChanged packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly EntityRegistry entityRegistry;
-
-        public SubRootChangedPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
-        {
-            this.playerManager = playerManager;
-            this.entityRegistry = entityRegistry;
-        }
-
-        public override void Process(SubRootChanged packet, Player player)
-        {
-            entityRegistry.ReparentEntity(player.GameObjectId, packet.SubRootId.OrNull());
-            player.SubRootId = packet.SubRootId;
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        entityRegistry.ReparentEntity(context.Sender.GameObjectId, packet.SubRootId.OrNull());
+        context.Sender.SubRootId = packet.SubRootId;
+        await context.SendToOthersAsync(packet);
     }
 }

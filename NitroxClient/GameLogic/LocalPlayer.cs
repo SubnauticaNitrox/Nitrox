@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -6,9 +7,6 @@ using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.GameLogic.PlayerAnimation;
-using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
@@ -37,7 +35,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     /// <summary>
     ///     Gets the player id. The session is lost on disconnect so this can return null.
     /// </summary>
-    public ushort? PlayerId => multiplayerSession?.Reservation?.PlayerId;
+    public SessionId? SessionId => multiplayerSession.Reservation?.SessionId;
     public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
     public Perms Permissions { get; set; }
@@ -59,27 +57,27 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
     {
-        if (!PlayerId.HasValue)
+        if (!SessionId.HasValue)
         {
             return;
         }
 
-        PlayerMovement playerMovement = new(PlayerId.Value, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
+        PlayerMovement playerMovement = new(SessionId.Value, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
 
         packetSender.Send(playerMovement);
     }
 
     public void AnimationChange(AnimChangeType type, AnimChangeState state)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new AnimationChangeEvent(PlayerId.Value, new(type, state)));
+            packetSender.Send(new AnimationChangeEvent(SessionId.Value, new(type, state)));
         }
     }
 
     public void InPrecursorChange(bool inPrecursor)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
             packetSender.Send(new UpdateInPrecursor(inPrecursor));
         }
@@ -87,7 +85,7 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public void DisplaySurfaceWaterChange(bool displaySurfaceWater)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
             packetSender.Send(new UpdateDisplaySurfaceWater(displaySurfaceWater));
         }
@@ -95,43 +93,43 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new PlayerStats(PlayerId.Value, oxygen, maxOxygen, health, food, water, infectionAmount));
+            packetSender.Send(new PlayerStats(SessionId.Value, oxygen, maxOxygen, health, food, water, infectionAmount));
         }
     }
 
     public void BroadcastDeath(Vector3 deathPosition)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new PlayerDeathEvent(PlayerId.Value, deathPosition.ToDto()));
+            packetSender.Send(new PlayerDeathEvent(SessionId.Value, deathPosition.ToDto()));
         }
     }
 
     public void BroadcastSubrootChange(Optional<NitroxId> subrootId)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new SubRootChanged(PlayerId.Value, subrootId));
+            packetSender.Send(new SubRootChanged(SessionId.Value, subrootId));
         }
     }
 
     public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new EscapePodChanged(PlayerId.Value, escapePodId));
+            packetSender.Send(new EscapePodChanged(SessionId.Value, escapePodId));
         }
     }
 
     public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.Send(new WeldAction(id, healthAdded));
 
-    public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime)
+    public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType? isFirstTime)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new PlayerHeldItemChanged(PlayerId.Value, itemId, techType, isFirstTime));
+            packetSender.Send(new PlayerHeldItemChanged(SessionId.Value, itemId, techType, isFirstTime));
         }
     }
 
@@ -139,9 +137,9 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public void BroadcastBenchChanged(NitroxId bench, BenchChanged.BenchChangeState changeState)
     {
-        if (PlayerId.HasValue)
+        if (SessionId.HasValue)
         {
-            packetSender.Send(new BenchChanged(PlayerId.Value, bench, changeState));
+            packetSender.Send(new BenchChanged(SessionId.Value, bench, changeState));
         }
     }
 

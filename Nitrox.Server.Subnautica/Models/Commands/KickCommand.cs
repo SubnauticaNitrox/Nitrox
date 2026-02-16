@@ -1,57 +1,35 @@
-﻿using System.Collections.Generic;
-using Nitrox.Model.DataStructures;
+﻿using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
-using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Administration;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class KickCommand(IKickPlayer playerKicker) : ICommandHandler<Player, string>
 {
-    internal class KickCommand : Command
+    private readonly IKickPlayer playerKicker = playerKicker;
+
+    [Description("Kicks a player from the server")]
+    public async Task Execute(ICommandContext context, Player playerToKick, string reason = "")
     {
-        private readonly EntitySimulation entitySimulation;
-        private readonly PlayerManager playerManager;
-
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.MODERATOR, "Kicks a player from the server")
+        if (context.OriginId == playerToKick.SessionId)
         {
-            AddParameter(new TypePlayer("name", true, "Name of the player to kick"));
-            AddParameter(new TypeString("reason", false, "Reason for kicking the player"));
-
-            AllowedArgOverflow = true;
-
-            this.playerManager = playerManager;
-            this.entitySimulation = entitySimulation;
+            await context.ReplyAsync("You can't kick yourself");
+            return;
         }
 
-        protected override void Execute(CallArgs args)
+        switch (context.Origin)
         {
-            Player playerToKick = args.Get<Player>(0);
-
-            if (args.SenderName == playerToKick.Name)
-            {
-                SendMessage(args.Sender, "You can't kick yourself");
-                return;
-            }
-
-            if (!args.IsConsole && playerToKick.Permissions >= args.Sender.Value.Permissions)
-            {
-                SendMessage(args.Sender, $"You're not allowed to kick {playerToKick.Name}");
-                return;
-            }
-
-            playerToKick.SendPacket(new PlayerKicked(args.GetTillEnd(1)));
-            playerManager.PlayerDisconnected(playerToKick.Connection);
-
-            List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
-            if (revokedEntities.Count > 0)
-            {
-                SimulationOwnershipChange ownershipChange = new(revokedEntities);
-                playerManager.SendPacketToAllPlayers(ownershipChange);
-            }
-
-            playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-            SendMessage(args.Sender, $"The player {playerToKick.Name} has been disconnected");
+            case CommandOrigin.PLAYER when playerToKick.Permissions >= context.Permissions:
+                await context.ReplyAsync($"You're not allowed to kick {playerToKick.Name}");
+                break;
+            default:
+                if (!await playerKicker.KickPlayer(playerToKick.SessionId, reason))
+                {
+                    await context.ReplyAsync($"Failed to kick '{playerToKick.Name}'");
+                }
+                break;
         }
     }
 }

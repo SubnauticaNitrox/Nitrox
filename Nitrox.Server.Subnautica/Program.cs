@@ -7,7 +7,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Server.Subnautica.Models;
-using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Services;
 
@@ -45,11 +45,15 @@ internal sealed class Program
                                            .Build();
         startOptions = new ServerStartOptions();
         configuration.Bind(startOptions);
-        if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+
+        if (startOptions.GamePath == null)
         {
-            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+            if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+            {
+                throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+            }
+            startOptions.GamePath = NitroxUser.GamePath;
         }
-        startOptions.GamePath ??= NitroxUser.GamePath;
         startOptions.NitroxAppDataPath ??= NitroxUser.AppDataPath;
         startOptions.NitroxAssetsPath ??= NitroxUser.AssetsPath;
 
@@ -101,27 +105,19 @@ internal sealed class Program
                .AddWorld()
                .AddSaving()
                .AddAppEvents()
+               .AddAdminFeatures()
                .AddKeyedSingleton("startup", serverStartStopWatch)
                .AddHostedSingletonService<HibernateService>()
                .AddHostedSingletonService<StatusService>()
                .AddHostedSingletonService<PortForwardService>()
                .AddHostedSingletonService<LanBroadcastService>()
-               .AddHostedSingletonService<FmodService>()
                .AddHostedSingletonService<MemoryService>()
+               .AddSingleton<RandomFactory>()
                .AddSingleton<NtpSyncer>()
                .AddSingleton<SubnauticaServerProtoBufSerializer>()
                .AddSingleton<ServerJsonSerializer>()
-               .AddSingleton<EntitySpawnPointFactory, SubnauticaEntitySpawnPointFactory>()
             ;
 
-        IHost host = builder.Build();
-
-        // TODO: Remove the need for NitroxServiceLocator in server.
-#pragma warning disable DIMA001
-        NitroxServiceLocator.Locator = host.Services.GetRequiredService;
-        NitroxServiceLocator.OptionalLocator = host.Services.GetService;
-#pragma warning restore DIMA001
-
-        await host.RunAsync();
+        await builder.Build().RunAsync();
     }
 }

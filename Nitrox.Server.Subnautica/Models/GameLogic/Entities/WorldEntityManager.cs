@@ -8,6 +8,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
@@ -21,6 +22,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 internal sealed class WorldEntityManager
 {
     private readonly BatchEntitySpawner batchEntitySpawner;
+    private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
 
     /// <summary>
@@ -39,8 +41,9 @@ internal sealed class WorldEntityManager
     /// </summary>
     internal Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell = [];
 
-    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager, ILogger<WorldEntityManager> logger)
+    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager, ILogger<WorldEntityManager> logger)
     {
+        this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
         this.playerManager = playerManager;
@@ -215,7 +218,7 @@ internal sealed class WorldEntityManager
         }
     }
 
-    public void LoadAllUnspawnedEntities(CancellationToken token)
+    public async Task LoadAllUnspawnedEntitiesAsync(CancellationToken token)
     {
         int totalBatches = SubnauticaMap.DimensionsInBatches.X * SubnauticaMap.DimensionsInBatches.Y * SubnauticaMap.DimensionsInBatches.Z;
         int batchesLoaded = 0;
@@ -227,7 +230,7 @@ internal sealed class WorldEntityManager
             {
                 for (int z = 0; z < SubnauticaMap.DimensionsInBatches.Z; z++)
                 {
-                    int spawned = LoadUnspawnedEntities(new(x, y, z), true);
+                    int spawned = await LoadUnspawnedEntitiesAsync(new(x, y, z), true);
 
                     logger.ZLogDebug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
@@ -242,9 +245,9 @@ internal sealed class WorldEntityManager
         }
     }
 
-    public int LoadUnspawnedEntities(NitroxInt3 batchId, bool suppressLogs)
+    public async Task<int> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool suppressLogs)
     {
-        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
+        List<Entity> spawnedEntities = await batchEntitySpawner.LoadUnspawnedEntitiesAsync(batchId, suppressLogs);
 
         List<WorldEntity> entitiesInCells = spawnedEntities.Where(entity => typeof(WorldEntity).IsAssignableFrom(entity.GetType()) &&
                                                                             entity.GetType() != typeof(CellRootEntity) &&
@@ -348,7 +351,7 @@ internal sealed class WorldEntityManager
                 {
                     if (player.HasCellLoaded(newCell) && !player.HasCellLoaded(oldCell))
                     {
-                        player.SendPacket(new SpawnEntities(entity));
+                        packetSender.SendPacketAsync(new SpawnEntities(entity), player.SessionId);
                     }
                 }
             }

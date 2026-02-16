@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
+using Nitrox.Model.Constants;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using TMPro;
 using UnityEngine;
@@ -111,8 +112,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     {
         string playerName = playerNameInputField.text;
 
-        //https://regex101.com/r/eTWiEs/2/
-        if (!Regex.IsMatch(playerName, "^[a-zA-Z0-9._-]{3,25}$"))
+        if (!Regex.IsMatch(playerName, NitroxConstants.PLAYER_NAME_VALID_REGEX))
         {
             MainMenuNotificationPanel.ShowMessage(Language.main.Get("Nitrox_InvalidUserName"), NAME);
             return;

@@ -27,7 +27,7 @@ internal class SubnauticaResourceLoaderService(IEnumerable<IGameResource> resour
         });
         logger.ZLogDebug($"All resources loaded in {Math.Round(totalStopWatch.Elapsed.TotalSeconds, 3):@Seconds} seconds");
 
-        memoryService.QueueCompact(); // AssetsTools.NET holds open file handlers without a way to close them. We ask the GC to check and dealloc this memory for us.
+        await memoryService.QueueActionAsync(MemoryService.ServiceAction.COMPACT_MEMORY, cancellationToken); // AssetsTools.NET holds open file handlers without a way to close them. We ask the GC to check and dealloc this memory for us.
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

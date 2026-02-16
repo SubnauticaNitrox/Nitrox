@@ -1,15 +1,10 @@
-﻿using Nitrox.Model.Packets;
+﻿using Nitrox.Model.Core;
+using Nitrox.Model.Packets;
 
-namespace Nitrox.Test.Client.Communication
+namespace Nitrox.Test.Client.Communication;
+
+[Serializable]
+public class TestNonActionPacket(SessionId sessionId) : Packet
 {
-    [Serializable]
-    public class TestNonActionPacket : Packet
-    {
-        public ushort PlayerId { get; }
-
-        public TestNonActionPacket(ushort playerId)
-        {
-            PlayerId = playerId;
-        }
-    }
+    public SessionId SessionId { get; } = sessionId;
 }

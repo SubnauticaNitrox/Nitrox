@@ -2,35 +2,29 @@ using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
+sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<CellVisibilityChanged>
 {
-    private readonly EntitySimulation entitySimulation;
-    private readonly WorldEntityManager worldEntityManager;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
-    public CellVisibilityChangedProcessor(EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
+    public async Task Process(AuthProcessorContext context, CellVisibilityChanged packet)
     {
-        this.entitySimulation = entitySimulation;
-        this.worldEntityManager = worldEntityManager;
-    }
-
-    public override void Process(CellVisibilityChanged packet, Player player)
-    {
-        player.AddCells(packet.Added);
-        player.RemoveCells(packet.Removed);
+        context.Sender.AddCells(packet.Added);
+        context.Sender.RemoveCells(packet.Removed);
 
         List<Entity> totalEntities = [];
         List<SimulatedEntity> totalSimulationChanges = [];
 
         foreach (AbsoluteEntityCell addedCell in packet.Added)
         {
-            worldEntityManager.LoadUnspawnedEntities(addedCell.BatchId, false);
+            await worldEntityManager.LoadUnspawnedEntitiesAsync(addedCell.BatchId, false);
 
-            totalSimulationChanges.AddRange(entitySimulation.GetSimulationChangesForCell(player, addedCell));
+            totalSimulationChanges.AddRange(entitySimulation.GetSimulationChangesForCell(context.Sender, addedCell));
             List<WorldEntity> newEntities = worldEntityManager.GetEntities(addedCell);
 
             totalEntities.AddRange(newEntities);
@@ -38,7 +32,7 @@ sealed class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
 
         foreach (AbsoluteEntityCell removedCell in packet.Removed)
         {
-            entitySimulation.FillWithRemovedCells(player, removedCell, totalSimulationChanges);
+            entitySimulation.FillWithRemovedCells(context.Sender, removedCell, totalSimulationChanges);
         }
 
         // Simulation update must be broadcasted before the entities are spawned
@@ -47,7 +41,7 @@ sealed class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
             entitySimulation.BroadcastSimulationChanges(new(totalSimulationChanges));
         }
 
-        // We send this data whether or not it's empty because the client needs to know about it (see Terrain)
-        player.SendPacket(new SpawnEntities(totalEntities, packet.Added, true));
+        // We send this data whether it's empty because the client needs to know about it (see Terrain)
+        await context.ReplyAsync(new SpawnEntities(totalEntities, packet.Added, true));
     }
 }

@@ -1,31 +1,40 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresOrigin(CommandOrigin.PLAYER)]
+internal sealed class LoginCommand(IOptions<SubnauticaServerOptions> optionsProvider) : ICommandHandler<string>
 {
-    internal class LoginCommand : Command
+    private readonly IOptions<SubnauticaServerOptions> optionsProvider = optionsProvider;
+
+    [Description("Log in to server as admin (requires password)")]
+    public async Task Execute(ICommandContext context, [Description("The admin password for the server")] string adminPassword)
     {
-        private readonly IOptions<SubnauticaServerOptions> options;
-
-        public LoginCommand(IOptions<SubnauticaServerOptions> options) : base("login", Perms.PLAYER, PermsFlag.NO_CONSOLE, "Log in to server as admin (requires password)")
+        string activePassword = optionsProvider.Value.AdminPassword;
+        if (string.IsNullOrWhiteSpace(activePassword))
         {
-            AddParameter(new TypeString("password", true, "The admin password for the server"));
-
-            this.options = options;
+            await context.ReplyAsync("Logging in with admin password is disabled");
+            return;
         }
 
-        protected override void Execute(CallArgs args)
+        switch (context)
         {
-            if (args.Get<string>(0) == options.Value.AdminPassword)
-            {
-                args.Sender.Value.Permissions = Perms.ADMIN;
-                SendMessage(args.Sender, $"Updated permissions to ADMIN for {args.SenderName}");
-            }
-            else
-            {
-                SendMessage(args.Sender, "Incorrect Password");
-            }
+            case PlayerToServerCommandContext { Player: { Permissions: < Perms.ADMIN } player }:
+                if (activePassword == adminPassword)
+                {
+                    player.Permissions = Perms.ADMIN;
+                    await context.ReplyAsync($"You've been made {nameof(Perms.ADMIN)} on this server!");
+                }
+                else
+                {
+                    await context.ReplyAsync("Incorrect Password");
+                }
+                break;
+            default:
+                await context.ReplyAsync("You already have admin permissions");
+                break;
         }
     }
 }

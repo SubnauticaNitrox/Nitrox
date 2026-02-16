@@ -1,26 +1,26 @@
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Packets.Processors.Abstract;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
-using Nitrox.Server.Subnautica.Models.Communication;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models
 {
-    public class Player : IProcessorContext
+    internal sealed class Player
     {
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; }
 
-        public INitroxConnection Connection { get; set; }
-        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
-        public PlayerContext PlayerContext { get; set; }
-        public ushort Id { get; }
+        public PlayerSettings? PlayerSettings => PlayerContext?.PlayerSettings;
+        public PlayerContext? PlayerContext { get; set; }
+        public PeerId Id { get; init; }
+        public SessionId SessionId { get; set; }
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
@@ -35,23 +35,24 @@ namespace Nitrox.Server.Subnautica.Models
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
-        public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set ;}
+        public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set; }
         public ThreadSafeSet<NitroxId> OutOfCellVisibleEntities { get; set; } = [];
         public bool InPrecursor { get; set; }
         public bool DisplaySurfaceWater { get; set; }
 
         public PlayerEntity Entity { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
+        public Player(PeerId id, SessionId sessionId, string name, bool isPermaDeath, PlayerContext? playerContext,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
-                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor, bool displaySurfaceWater)
+                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor,
+                      bool displaySurfaceWater)
         {
             Id = id;
+            SessionId = sessionId;
             Name = name;
             IsPermaDeath = isPermaDeath;
             PlayerContext = playerContext;
-            Connection = connection;
             Position = position;
             Rotation = rotation;
             SubRootId = subRootId;
@@ -72,12 +73,12 @@ namespace Nitrox.Server.Subnautica.Models
             DisplaySurfaceWater = displaySurfaceWater;
         }
 
-        public static bool operator ==(Player left, Player right)
+        public static bool operator ==(Player? left, Player? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Player left, Player right)
+        public static bool operator !=(Player? left, Player? right)
         {
             return !Equals(left, right);
         }
@@ -102,14 +103,6 @@ namespace Nitrox.Server.Subnautica.Models
         public override int GetHashCode()
         {
             return Id.GetHashCode();
-        }
-
-        /// <summary>
-        /// Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells"/>, <see cref="RemoveCells"/> and <see cref="HasCellLoaded"/>.
-        /// </summary>
-        internal List<AbsoluteEntityCell> GetVisibleCells()
-        {
-            return [.. visibleCells];
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
@@ -149,29 +142,33 @@ namespace Nitrox.Server.Subnautica.Models
             return true;
         }
 
-        public void SendPacket(Packet packet)
+        public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID, IPacketSender packetSender)
         {
-            Connection.SendPacket(packet);
-        }
-
-        public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID)
-        {
-            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination, subRootID);
+            PlayerTeleported playerTeleported = new(Name, Position, destination, subRootID);
 
             Position = playerTeleported.DestinationTo;
             LastStoredPosition = playerTeleported.DestinationFrom;
             LastStoredSubRootID = subRootID;
-            SendPacket(playerTeleported);
+            packetSender.SendPacketAsync(playerTeleported, SessionId);
         }
 
         public override string ToString()
         {
-            return $"[Player - Id: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
+            return $"[Player - SessionId: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
         }
 
-        protected bool Equals(Player other)
+        private bool Equals(Player other)
         {
             return Id == other.Id;
+        }
+
+        /// <summary>
+        ///     Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells" />,
+        ///     <see cref="RemoveCells" /> and <see cref="HasCellLoaded" />.
+        /// </summary>
+        internal List<AbsoluteEntityCell> GetVisibleCells()
+        {
+            return [.. visibleCells];
         }
     }
 }

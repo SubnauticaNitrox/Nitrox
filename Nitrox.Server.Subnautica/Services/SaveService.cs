@@ -3,37 +3,35 @@ using System.IO;
 using System.Linq;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
+using Nitrox.Server.Subnautica.Services.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class SaveService(Func<WorldService> worldServiceProvider, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> startOptions, ILogger<SaveService> logger) : BackgroundService, IHostedLifecycleService
+internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISaveState.Trigger saveStateTrigger, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> startOptions, ILogger<SaveService> logger) : QueuingBackgroundService<SaveService.ServiceAction>, IHostedLifecycleService
 {
     private readonly Func<WorldService> worldServiceProvider = worldServiceProvider;
+    private readonly ISaveState.Trigger saveStateTrigger = saveStateTrigger;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<SaveService> logger = logger;
-    private readonly AsyncBarrier saveBarrier = new();
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteQueuedActionAsync(ServiceAction action, CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        switch (action)
         {
-            await saveBarrier.WaitForSignalAsync(stoppingToken);
-
-            string savePath = startOptions.Value.GetServerSavePath();
-            if (!worldServiceProvider().Save(savePath))
-            {
-                continue;
-            }
-            ExecutePostSaveCommand();
-            BackUp(savePath);
+            case ServiceAction.SAVE:
+                string savePath = startOptions.Value.GetServerSavePath();
+                if (!worldServiceProvider().Save(savePath))
+                {
+                    return;
+                }
+                await saveStateTrigger.InvokeAsync(new ISaveState.Args(savePath));
+                ExecutePostSaveCommand();
+                BackUp(savePath);
+                break;
         }
-    }
-
-    public void QueueSave()
-    {
-        saveBarrier.Signal();
     }
 
     private void ExecutePostSaveCommand()
@@ -121,17 +119,14 @@ internal sealed class SaveService(Func<WorldService> worldServiceProvider, IOpti
 
     public Task StartingAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    public Task StartedAsync(CancellationToken cancellationToken)
-    {
-        QueueSave();
-        return Task.CompletedTask;
-    }
+    public async Task StartedAsync(CancellationToken cancellationToken) => await QueueActionAsync(ServiceAction.SAVE, cancellationToken);
 
-    public Task StoppingAsync(CancellationToken cancellationToken)
-    {
-        QueueSave();
-        return Task.CompletedTask;
-    }
+    public async Task StoppingAsync(CancellationToken cancellationToken) => await QueueActionAsync(ServiceAction.SAVE, cancellationToken);
 
     public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    internal enum ServiceAction
+    {
+        SAVE
+    }
 }

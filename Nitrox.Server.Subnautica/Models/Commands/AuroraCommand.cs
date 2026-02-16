@@ -1,42 +1,41 @@
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-// TODO: When we make the new command system, move this stuff to it
-internal sealed class AuroraCommand : Command
+// We shouldn't let the server-side use this command because it needs some stuff to happen client-side (e.g. story goals)
+[RequiresPermission(Perms.ADMIN)]
+[RequiresOrigin(CommandOrigin.PLAYER)]
+internal sealed class AuroraCommand(StoryManager storyManager) : ICommandHandler<AuroraCommand.AuroraAction>
 {
-    private readonly StoryManager storyManager;
+    private readonly StoryManager storyManager = storyManager;
 
-    // We shouldn't let the server use this command because it needs some stuff to happen client-side like goals
-    public AuroraCommand(StoryManager storyManager) : base("aurora", Perms.ADMIN, PermsFlag.NO_CONSOLE, "Manage Aurora's state")
+    [Description("Which action to apply to Aurora")]
+    public Task Execute(ICommandContext context, AuroraAction action)
     {
-        AddParameter(new TypeString("countdown/restore/explode", true, "Which action to apply to Aurora"));
-
-        this.storyManager = storyManager;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        string action = args.Get<string>(0);
-
-        switch (action.ToLower())
+        switch (action)
         {
-            case "countdown":
-                storyManager.BroadcastExplodeAurora(true);
-                break;
-            case "restore":
-                storyManager.BroadcastRestoreAurora();
-                break;
-            case "explode":
+            case AuroraAction.COUNTDOWN:
                 storyManager.BroadcastExplodeAurora(false);
                 break;
-            default:
-                // Same message as in the abstract class, in method TryExecute
-                SendMessage(args.Sender, $"Error: Invalid Parameters\nUsage: {ToHelpText(false, true)}");
+            case AuroraAction.RESTORE:
+                storyManager.BroadcastRestoreAurora();
                 break;
+            case AuroraAction.EXPLODE:
+                storyManager.BroadcastExplodeAurora(true);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(action), action, null);
         }
+        return Task.CompletedTask;
+    }
+
+    public enum AuroraAction
+    {
+        COUNTDOWN,
+        RESTORE,
+        EXPLODE
     }
 }

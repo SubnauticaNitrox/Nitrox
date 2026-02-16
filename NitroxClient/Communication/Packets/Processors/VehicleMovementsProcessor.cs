@@ -1,17 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleMovementsProcessor : ClientPacketProcessor<VehicleMovements>
+internal sealed class VehicleMovementsProcessor : IClientPacketProcessor<VehicleMovements>
 {
-    public override void Process(VehicleMovements packet)
+    public Task Process(ClientProcessorContext context, VehicleMovements packet)
     {
         if (!MovementBroadcaster.Instance)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         foreach (MovementData movementData in packet.Data)
@@ -21,5 +20,6 @@ public class VehicleMovementsProcessor : ClientPacketProcessor<VehicleMovements>
                 movementReplicator.AddSnapshot(movementData, (float)packet.RealTime);
             }
         }
+        return Task.CompletedTask;
     }
 }

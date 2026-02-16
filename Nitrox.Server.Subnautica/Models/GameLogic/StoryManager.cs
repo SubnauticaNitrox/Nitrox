@@ -3,6 +3,7 @@ using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Helper;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
@@ -14,7 +15,7 @@ internal sealed class StoryManager : ISummarize
     private readonly ILogger<StoryManager> logger;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly PdaManager pdaManager;
-    private readonly PlayerManager playerManager;
+    private readonly IPacketSender packetSender;
     private readonly TimeService timeService;
 
     /// <summary>
@@ -35,9 +36,9 @@ internal sealed class StoryManager : ISummarize
 
     public StoryGoalData StoryGoalData { get; set; } = new();
 
-    public StoryManager(PlayerManager playerManager, PdaManager pdaManager, TimeService timeService, IOptions<SubnauticaServerOptions> options, ILogger<StoryManager> logger)
+    public StoryManager(IPacketSender packetSender, PdaManager pdaManager, TimeService timeService, IOptions<SubnauticaServerOptions> options, ILogger<StoryManager> logger)
     {
-        this.playerManager = playerManager;
+        this.packetSender = packetSender;
         this.pdaManager = pdaManager;
         this.timeService = timeService;
         this.options = options;
@@ -87,7 +88,7 @@ internal sealed class StoryManager : ISummarize
             logger.ZLogInformation($"Aurora's explosion countdown will start in 3 seconds");
         }
 
-        playerManager.SendPacketToAllPlayers(new AuroraAndTimeUpdate(GetTimeData(), false));
+        packetSender.SendPacketToAllAsync(new AuroraAndTimeUpdate(GetTimeData(), false));
     }
 
     public void BroadcastRestoreAurora()
@@ -104,7 +105,7 @@ internal sealed class StoryManager : ISummarize
             StoryGoalData.CompletedGoals.Remove(eventKey);
         }
 
-        playerManager.SendPacketToAllPlayers(new AuroraAndTimeUpdate(GetTimeData(), true));
+        packetSender.SendPacketToAllAsync(new AuroraAndTimeUpdate(GetTimeData(), true));
         logger.ZLogInformation($"Restored Aurora, will explode again in {GetMinutesBeforeAuroraExplosion():@minutes} minutes");
     }
 
@@ -137,7 +138,7 @@ internal sealed class StoryManager : ISummarize
         {
             StoryGoalData.CompletedGoals.Remove(PlaySunbeamEvent.SunbeamGoals[i]);
         }
-        playerManager.SendPacketToAllPlayers(new PlaySunbeamEvent(sunbeamEventKey));
+        packetSender.SendPacketToAllAsync(new PlaySunbeamEvent(sunbeamEventKey));
     }
 
     public AuroraEventData MakeAuroraData()

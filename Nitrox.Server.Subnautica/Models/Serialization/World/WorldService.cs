@@ -86,8 +86,7 @@ internal class WorldService : IHostedService
             WorldData = new()
             {
                 ParsedBatchCells = batchEntitySpawner.SerializableParsedBatches,
-                GameData = GameData.From(pdaManager, storyManager.StoryGoalData, storyScheduler, storyManager, timeService),
-                Seed = options.Value.Seed,
+                GameData = GameData.From(pdaManager, storyManager.StoryGoalData, storyScheduler, storyManager, timeService)
             },
             PlayerData = PlayerData.From(playerManager.GetAllPlayers()),
             GlobalRootData = GlobalRootData.From(worldEntityManager.GetPersistentGlobalRootEntities()),
@@ -98,14 +97,14 @@ internal class WorldService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (!LoadWorldFromSavePath(startOptions.Value.GetServerSavePath()))
+        if (!await LoadWorldFromSavePathAsync(startOptions.Value.GetServerSavePath()))
         {
-            CreateAndLoadWorld();
+            await CreateAndLoadWorldAsync();
         }
-        CreateFullEntityCacheIfRequested();
+        await CreateFullEntityCacheIfRequested();
         return;
 
-        void CreateFullEntityCacheIfRequested()
+        async Task CreateFullEntityCacheIfRequested()
         {
             if (!options.Value.CreateFullEntityCache)
             {
@@ -119,10 +118,10 @@ internal class WorldService : IHostedService
                 logger.ZLogInformation($"{entityRegistry.GetAllEntities().Count} entities already cached");
                 if (entityRegistry.GetAllEntities().Count < 504732)
                 {
-                    worldEntityManager.LoadAllUnspawnedEntities(cancellationToken);
+                    await worldEntityManager.LoadAllUnspawnedEntitiesAsync(cancellationToken);
 
                     logger.ZLogInformation($"Saving newly cached entities.");
-                    saveService.QueueSave();
+                    await saveService.QueueActionAsync(SaveService.ServiceAction.SAVE, cancellationToken);
                 }
                 logger.ZLogInformation($"All batches have now been loaded.");
             }
@@ -160,8 +159,6 @@ internal class WorldService : IHostedService
             Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
             Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
             Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
-
-            options.Value.Seed = persistedData.WorldData.Seed;
 
             logger.ZLogInformation($"World state saved");
             return true;
@@ -314,12 +311,9 @@ internal class WorldService : IHostedService
     }
 
     // TODO: This method should be removed. Each service should load its own data instead of centralizing it here.
-    private void LoadPersistedWorldIntoServices(PersistedWorldData pWorldData)
+    private async Task LoadPersistedWorldIntoServicesAsync(PersistedWorldData pWorldData)
     {
-        string seed = pWorldData.WorldData.Seed ?? options.Value.Seed ?? throw new InvalidOperationException("World seed must not be null");
-        // Initialized only once, just like UnityEngine.Random
-        XorRandom.InitSeed(seed.GetHashCode());
-
+        string seed = options.Value.Seed;
         logger.ZLogInformation($"Loading world with seed {seed}");
 
         // Time
@@ -327,7 +321,7 @@ internal class WorldService : IHostedService
         // Entities
         entityRegistry.AddEntities(pWorldData.EntityData.Entities);
         entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
-        escapePodManager.AddKnownPods(entityRegistry.GetEntities<EscapePodEntity>());
+        await escapePodManager.AddKnownPodsAsync(entityRegistry.GetEntities<EscapePodEntity>());
 
         // TODO: hacky code - see WorldEntityManager for more information.
         List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
@@ -338,7 +332,7 @@ internal class WorldService : IHostedService
 
         foreach (Player player in pWorldData.PlayerData.GetPlayers())
         {
-            playerManager.AddPlayer(player);
+            playerManager.AddSavedPlayer(player);
         }
         batchEntitySpawner.SerializableParsedBatches = pWorldData.WorldData.ParsedBatchCells;
         // Pda
@@ -355,7 +349,7 @@ internal class WorldService : IHostedService
         logger.ZLogInformation($"World finished loading");
     }
 
-    private bool LoadWorldFromSavePath(string saveDir)
+    private async Task<bool> LoadWorldFromSavePathAsync(string saveDir)
     {
         if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
         {
@@ -370,11 +364,11 @@ internal class WorldService : IHostedService
         {
             return false;
         }
-        LoadPersistedWorldIntoServices(persistedData);
+        await LoadPersistedWorldIntoServicesAsync(persistedData);
         return true;
     }
 
-    private void CreateAndLoadWorld()
+    private async Task CreateAndLoadWorldAsync()
     {
         PersistedWorldData pWorldData = new()
         {
@@ -388,12 +382,11 @@ internal class WorldService : IHostedService
                     StoryGoals = new StoryGoalData(),
                     StoryTiming = new StoryTimingData()
                 },
-                ParsedBatchCells = [],
-                Seed = options.Value.Seed
+                ParsedBatchCells = []
             },
             GlobalRootData = new GlobalRootData()
         };
-        LoadPersistedWorldIntoServices(pWorldData);
+        await LoadPersistedWorldIntoServicesAsync(pWorldData);
         InitNewWorld();
 
         void InitNewWorld()

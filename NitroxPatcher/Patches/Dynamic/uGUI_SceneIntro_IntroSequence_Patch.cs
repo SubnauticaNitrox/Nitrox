@@ -139,7 +139,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             return false;
         }
 
-        ushort? opPartnerId = Resolve<PlayerCinematics>().IntroCinematicPartnerId;
+        SessionId? opPartnerId = Resolve<PlayerCinematics>().IntroCinematicPartnerId;
 
         if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.START &&
             opPartnerId.HasValue && Resolve<PlayerManager>().TryFind(opPartnerId.Value, out RemotePlayer newPartner))
@@ -198,7 +198,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 
-    private static bool IsPartnerValid() => partner != null && Resolve<PlayerManager>().Find(partner.PlayerId).HasValue;
+    private static bool IsPartnerValid() => partner != null && Resolve<PlayerManager>().Find(partner.SessionId).HasValue;
 
     public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro, bool wasNewPlayer)
     {

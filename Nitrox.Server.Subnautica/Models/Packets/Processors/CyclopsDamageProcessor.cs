@@ -1,27 +1,18 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+﻿using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+/// <summary>
+///     This is the absolute damage state. The current simulation owner is the only one who sends this packet to the server
+/// </summary>
+internal sealed class CyclopsDamageProcessor(ILogger<CyclopsDamageProcessor> logger) : IAuthPacketProcessor<CyclopsDamage>
 {
-    /// <summary>
-    /// This is the absolute damage state. The current simulation owner is the only one who sends this packet to the server
-    /// </summary>
-    sealed class CyclopsDamageProcessor : AuthenticatedPacketProcessor<CyclopsDamage>
+    private readonly ILogger<CyclopsDamageProcessor> logger = logger;
+
+    public async Task Process(AuthProcessorContext context, CyclopsDamage packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly ILogger<CyclopsDamageProcessor> logger;
+        logger.ZLogDebug($"New cyclops damage from player #{context.Sender.SessionId}: {packet}");
 
-        public CyclopsDamageProcessor(PlayerManager playerManager, ILogger<CyclopsDamageProcessor> logger)
-        {
-            this.playerManager = playerManager;
-            this.logger = logger;
-        }
-
-        public override void Process(CyclopsDamage packet, Player simulatingPlayer)
-        {
-            logger.ZLogDebug($"New cyclops damage from player #{simulatingPlayer.Id}: {packet}");
-
-            playerManager.SendPacketToOtherPlayers(packet, simulatingPlayer);
-        }
+        await context.SendToOthersAsync(packet);
     }
 }

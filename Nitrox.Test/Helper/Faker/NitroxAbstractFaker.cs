@@ -1,9 +1,8 @@
 using Nitrox.Model.Subnautica.Logger;
 using Nitrox.Model.Packets;
-using Nitrox.Model.Packets.Processors.Abstract;
-using Nitrox.Server.Subnautica;
+using Nitrox.Model.Packets.Core;
 using Nitrox.Server.Subnautica.Models;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -14,7 +13,7 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
     static NitroxAbstractFaker()
     {
         Assembly[] assemblies = [typeof(Packet).Assembly, typeof(SubnauticaInGameLogger).Assembly, typeof(ConsoleUnhandledErrorHandler).Assembly];
-        HashSet<Type> blacklistedTypes = [typeof(Packet), typeof(CorrelatedPacket), typeof(Command), typeof(PacketProcessor)];
+        HashSet<Type> blacklistedTypes = [typeof(Packet), typeof(CorrelatedPacket), typeof(ICommandHandler), typeof(IPacketProcessor)];
 
         List<Type> types = new();
         foreach (Assembly assembly in assemblies)
@@ -40,7 +39,7 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
 
         if (!subtypesByBaseType.TryGetValue(type, out Type[] subTypes))
         {
-            throw new ArgumentException($"Argument is not contained in {nameof(subtypesByBaseType)}", nameof(type));
+            throw new ArgumentException($"Argument '{type}' is not contained in {nameof(subtypesByBaseType)}", nameof(type));
         }
 
         OutputType = type;

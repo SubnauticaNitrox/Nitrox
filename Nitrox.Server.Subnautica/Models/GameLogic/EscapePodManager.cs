@@ -1,47 +1,50 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
+internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
 {
     private const int PLAYERS_PER_ESCAPEPOD = 50;
 
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly RandomStartResource randomStartResource = randomStartResource;
     private readonly IOptions<SubnauticaServerOptions> options = options;
-    private readonly ThreadSafeDictionary<ushort, EscapePodEntity> escapePodsByPlayerId = [];
+    private readonly ThreadSafeDictionary<PeerId, EscapePodEntity> escapePodsByPlayerId = [];
     private EscapePodEntity? podForNextPlayer;
+    private readonly Random random = randomFactory.GetDotnetRandom();
 
-    public NitroxId AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodEntity> newlyCreatedPod)
+    public async Task<(NitroxId escapePodId, EscapePodEntity? newlyCreatedPod)> AssignPlayerToEscapePodAsync(PeerId playerId)
     {
-        newlyCreatedPod = Optional.Empty;
         if (escapePodsByPlayerId.TryGetValue(playerId, out EscapePodEntity podEntity))
         {
-            return podEntity.Id;
+            return (podEntity.Id, null);
         }
 
-        if (podForNextPlayer == null || IsPodFull(podForNextPlayer))
+        if (!HasEmptySlot(podForNextPlayer))
         {
-            newlyCreatedPod = Optional.Of(CreateNewEscapePod());
-            podForNextPlayer = newlyCreatedPod.Value;
+            podForNextPlayer = await CreateNewEscapePodAsync();
         }
 
         podForNextPlayer.Players.Add(playerId);
         escapePodsByPlayerId[playerId] = podForNextPlayer;
 
-        return podForNextPlayer.Id;
+        return (podForNextPlayer.Id, podForNextPlayer);
     }
 
-    private EscapePodEntity CreateNewEscapePod()
+    private async Task<EscapePodEntity> CreateNewEscapePodAsync()
     {
-        EscapePodEntity escapePod = new(GetStartPosition(), new NitroxId(), new EscapePodMetadata(false, false));
+        EscapePodEntity escapePod = new(await GetStartPositionAsync(), new NitroxId(), new EscapePodMetadata(false, false));
 
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "5c06baec-0539-4f26-817d-78443548cc52", new NitroxTechType("Radio"), 0, null, escapePod.Id));
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "c0175cf7-0b6a-4a1d-938f-dad0dbb6fa06", new NitroxTechType("MedicalCabinet"), 0, null, escapePod.Id));
@@ -53,7 +56,7 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
         return escapePod;
     }
 
-    private NitroxVector3 GetStartPosition()
+    private async Task<NitroxVector3> GetStartPositionAsync()
     {
         List<EscapePodEntity> escapePods = entityRegistry.GetEntities<EscapePodEntity>();
 
@@ -62,8 +65,8 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
         {
             throw new InvalidOperationException();
         }
-        Random rnd = new(seed.GetHashCode());
-        NitroxVector3 position = randomStartResource.RandomStartGenerator.GenerateRandomStartPosition(rnd);
+        RandomStartGenerator randomStartGenerator = await randomStartResource.GetRandomStartGeneratorAsync();
+        NitroxVector3 position = randomStartGenerator.GenerateAllStartPositions(random).FirstOrDefault();
 
         if (escapePods.Count == 0)
         {
@@ -83,8 +86,8 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
             }
         }
 
-        float xNormed = (float)rnd.NextDouble();
-        float zNormed = (float)rnd.NextDouble();
+        float xNormed = (float)random.NextDouble();
+        float zNormed = (float)random.NextDouble();
 
         if (xNormed < 0.3f)
         {
@@ -104,7 +107,7 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
             zNormed = 0.7f;
         }
 
-        NitroxVector3 lastEscapePodPosition = escapePods[escapePods.Count - 1].Transform.Position;
+        NitroxVector3 lastEscapePodPosition = escapePods[^1].Transform.Position;
 
         float x = xNormed * 100 - 50;
         float z = zNormed * 100 - 50;
@@ -112,30 +115,30 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
         return new NitroxVector3(lastEscapePodPosition.X + x, 0, lastEscapePodPosition.Z + z);
     }
 
-    public void AddKnownPods(IReadOnlyCollection<EscapePodEntity> escapePods)
+    public async Task AddKnownPodsAsync(IReadOnlyCollection<EscapePodEntity> escapePods)
     {
-        InitializePodForNextPlayer();
+        await InitializePodForNextPlayerAsync();
         InitializeEscapePodsByPlayerId();
 
-        void InitializePodForNextPlayer()
+        async Task InitializePodForNextPlayerAsync()
         {
             foreach (EscapePodEntity pod in escapePods)
             {
-                if (!IsPodFull(pod))
+                if (HasEmptySlot(pod))
                 {
                     podForNextPlayer = pod;
                     return;
                 }
             }
 
-            podForNextPlayer = CreateNewEscapePod();
+            podForNextPlayer = await CreateNewEscapePodAsync();
         }
 
         void InitializeEscapePodsByPlayerId()
         {
             foreach (EscapePodEntity pod in escapePods)
             {
-                foreach (ushort playerId in pod.Players)
+                foreach (PeerId playerId in pod.Players)
                 {
                     escapePodsByPlayerId[playerId] = pod;
                 }
@@ -143,8 +146,12 @@ internal class EscapePodManager(EntityRegistry entityRegistry, RandomStartResour
         }
     }
 
-    private static bool IsPodFull(EscapePodEntity pod)
+    private static bool HasEmptySlot([NotNullWhen(true)] EscapePodEntity? pod)
     {
-        return pod.Players.Count >= PLAYERS_PER_ESCAPEPOD;
+        if (pod == null)
+        {
+            return false;
+        }
+        return pod.Players.Count < PLAYERS_PER_ESCAPEPOD;
     }
 }

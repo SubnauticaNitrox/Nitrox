@@ -1,14 +1,15 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 /// <summary>
 /// Stores the state of a player being in precursor
 /// </summary>
-public class UpdateInPrecursorProcessor : AuthenticatedPacketProcessor<UpdateInPrecursor>
+internal sealed class UpdateInPrecursorProcessor : IAuthPacketProcessor<UpdateInPrecursor>
 {
-    public override void Process(UpdateInPrecursor packet, Player player)
+    public Task Process(AuthProcessorContext context, UpdateInPrecursor packet)
     {
-        player.InPrecursor = packet.InPrecursor;
+        context.Sender.InPrecursor = packet.InPrecursor;
+        return Task.CompletedTask;
     }
 }

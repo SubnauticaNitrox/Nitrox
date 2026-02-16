@@ -82,7 +82,7 @@ public class ServerProtoBufSerializer : IServerSerializer
             }
             catch (Exception ex)
             {
-                logger?.ZLogError(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type:@Type} from {assemblyName:@AssemblyName}");
+                logger?.ZLogError(ex, $"error registering the type: {type:@Type} from {assemblyName:@AssemblyName}");
             }
         }
     }

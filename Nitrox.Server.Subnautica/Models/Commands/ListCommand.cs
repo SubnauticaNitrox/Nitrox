@@ -1,31 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+internal sealed class ListCommand(IOptions<SubnauticaServerOptions> options, PlayerManager playerManager) : ICommandHandler
 {
-    internal class ListCommand : Command
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+
+    [Description("Shows who's online")]
+    public async Task Execute(ICommandContext context)
     {
-        private readonly PlayerManager playerManager;
-        private readonly IOptions<SubnauticaServerOptions> options;
+        IList<string> players = playerManager.GetConnectedPlayers().Select(player => $"{player.Name} #{player.SessionId}").ToList();
 
-        public ListCommand(IOptions<SubnauticaServerOptions> options, PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
-        {
-            this.playerManager = playerManager;
-            this.options = options;
-        }
+        StringBuilder builder = new($"List of players ({players.Count}/{options.Value.MaxConnections}):\n");
+        builder.Append(string.Join(", ", players));
 
-        protected override void Execute(CallArgs args)
-        {
-            IList<string> players = playerManager.GetConnectedPlayers().Select(player => player.Name).ToList();
-
-            StringBuilder builder = new($"List of players ({players.Count}/{options.Value.MaxConnections}):\n");
-            builder.Append(string.Join(", ", players));
-
-            SendMessage(args.Sender, builder.ToString());
-        }
+        await context.ReplyAsync(builder.ToString());
     }
 }

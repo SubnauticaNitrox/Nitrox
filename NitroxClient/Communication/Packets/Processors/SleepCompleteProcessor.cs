@@ -1,20 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SleepCompleteProcessor : ClientPacketProcessor<SleepComplete>
+internal sealed class SleepCompleteProcessor(SleepManager sleepManager) : IClientPacketProcessor<SleepComplete>
 {
-    private readonly SleepManager sleepManager;
+    private readonly SleepManager sleepManager = sleepManager;
 
-    public SleepCompleteProcessor(SleepManager sleepManager)
-    {
-        this.sleepManager = sleepManager;
-    }
-
-    public override void Process(SleepComplete packet)
+    public Task Process(ClientProcessorContext context, SleepComplete packet)
     {
         sleepManager.OnSleepComplete();
+        return Task.CompletedTask;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,12 +15,12 @@ namespace Nitrox.Model.Packets
     public abstract class Packet
     {
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
-        private static readonly object cachedPropertiesByTypeLocker = new();
+        private static readonly LockObject cachedPropertiesByTypeLocker = new();
 
         [ThreadStatic]
         private static StringBuilder? toStringBuilder;
 
-        private static readonly object lockObject = new();
+        private static readonly LockObject lockObject = new();
 
         [IgnoredMember]
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
@@ -83,10 +84,12 @@ namespace Nitrox.Model.Packets
             return BinaryConverter.Serialize(new Wrapper(this));
         }
 
-        public static Packet Deserialize(byte[] data)
+        public void SerializeInto(Stream stream)
         {
-            return BinaryConverter.Deserialize<Wrapper>(data).Packet;
+            BinaryConverter.Serialize(new Wrapper(this), stream);
         }
+
+        public static Packet? Deserialize(byte[] data) => BinaryConverter.Deserialize<Wrapper>(data).Packet;
 
         public override string ToString()
         {
@@ -134,14 +137,9 @@ namespace Nitrox.Model.Packets
         ///     </p>
         ///     This type solves both problems and only adds a single byte to the data.
         /// </summary>
-        public readonly struct Wrapper
+        public readonly struct Wrapper(Packet packet)
         {
-            public Packet Packet { get; init; } = null;
-
-            public Wrapper(Packet packet)
-            {
-                Packet = packet;
-            }
+            public Packet? Packet { get; init; } = packet;
         }
 
         public enum UdpChannelId : byte

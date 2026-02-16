@@ -5,17 +5,18 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Logging.Scopes;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
-///     Service which prints out information at appropriate time in the app life cycle.
+///     Service which prints out information at an appropriate time in the app life cycle.
 /// </summary>
 internal sealed class StatusService(
     [FromKeyedServices("startup")] Stopwatch appStartStopWatch,
     GameInfo gameInfo,
-    PlayerManager playerManager,
+    IPacketSender packetSender,
     ISummarize.Trigger summarizeTrigger,
     IOptions<SubnauticaServerOptions> options,
     IOptions<ServerStartOptions> startOptions,
@@ -24,7 +25,7 @@ internal sealed class StatusService(
     private readonly GameInfo gameInfo = gameInfo;
     private readonly ILogger<StatusService> logger = logger;
     private readonly IOptions<SubnauticaServerOptions> options = options;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly IPacketSender packetSender = packetSender;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
     private readonly ISummarize.Trigger summarizeTrigger = summarizeTrigger;
 
@@ -55,30 +56,36 @@ internal sealed class StatusService(
 
         async Task LogIps()
         {
-            logger.ZLogInformation($"Use IP to connect:");
-            using (logger.BeginPlainScope())
+            // Capture and log so that logs are written in one go. This prevents different log lines being inserted in-between.
+            string logMessage;
+            using (CaptureScope captureScope = logger.BeginCaptureScope())
             {
-                using (logger.BeginPrefixScope("\t"))
+                using (logger.BeginPlainScope())
                 {
-                    logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
-                    foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
+                    logger.ZLogInformation($"Use IP to connect:");
+                    using (logger.BeginPrefixScope("\t"))
                     {
-                        switch (origin)
+                        logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
+                        foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
                         {
-                            case NetHelper.MachineIpOrigin.LAN:
-                                logger.LogLanIp(address);
-                                break;
-                            case NetHelper.MachineIpOrigin.VPN:
-                                logger.LogVpnIp(networkName!, address);
-                                break;
-                            case NetHelper.MachineIpOrigin.WAN:
-                                logger.LogWanIp(address);
-                                break;
+                            switch (origin)
+                            {
+                                case NetHelper.MachineIpOrigin.LAN:
+                                    logger.LogLanIp(address);
+                                    break;
+                                case NetHelper.MachineIpOrigin.VPN:
+                                    logger.LogVpnIp(networkName!, address);
+                                    break;
+                                case NetHelper.MachineIpOrigin.WAN:
+                                    logger.LogWanIp(address);
+                                    break;
+                            }
                         }
                     }
                 }
-                logger.ZLogInformation($"");
+                logMessage = $"{string.Join("", captureScope.Logs).Trim(Environment.NewLine)}{Environment.NewLine}";
             }
+            logger.ZLogInformation($"{logMessage}");
         }
     }
 
@@ -86,7 +93,7 @@ internal sealed class StatusService(
     {
         cancellationToken.ThrowIfCancellationRequested();
         logger.ZLogInformation($"Server is stopping...");
-        playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, "[BROADCAST] Server is shutting down..."));
+        packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, "[BROADCAST] Server is shutting down..."));
         return Task.CompletedTask;
     }
 

@@ -1,28 +1,20 @@
-﻿using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+﻿using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class WeldActionProcessor(SimulationOwnershipData simulationOwnershipData, ILogger<WeldActionProcessor> logger) : IAuthPacketProcessor<WeldAction>
 {
-    class WeldActionProcessor : AuthenticatedPacketProcessor<WeldAction>
+    private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
+    private readonly ILogger<WeldActionProcessor> logger = logger;
+
+    public async Task Process(AuthProcessorContext context, WeldAction packet)
     {
-        private readonly SimulationOwnershipData simulationOwnershipData;
-        private readonly ILogger<WeldActionProcessor> logger;
-
-        public WeldActionProcessor(SimulationOwnershipData simulationOwnershipData, ILogger<WeldActionProcessor> logger)
+        Player? simulatingPlayer = simulationOwnershipData.GetPlayerForLock(packet.Id);
+        if (simulatingPlayer != null)
         {
-            this.simulationOwnershipData = simulationOwnershipData;
-            this.logger = logger;
-        }
-
-        public override void Process(WeldAction packet, Player player)
-        {
-            Player simulatingPlayer = simulationOwnershipData.GetPlayerForLock(packet.Id);
-
-            if (simulatingPlayer != null)
-            {
-                logger.ZLogDebug($"Send WeldAction to simulating player {simulatingPlayer.Name} for entity {packet.Id}");
-                simulatingPlayer.SendPacket(packet);
-            }
+            logger.ZLogDebug($"Send WeldAction to simulating player {simulatingPlayer.Name} for entity {packet.Id}");
+            await context.SendAsync(packet, simulatingPlayer.SessionId);
         }
     }
 }

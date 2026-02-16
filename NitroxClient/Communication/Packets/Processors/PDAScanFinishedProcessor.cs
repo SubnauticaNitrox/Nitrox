@@ -1,14 +1,12 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PDAScanFinishedProcessor : ClientPacketProcessor<PDAScanFinished>
+internal sealed class PDAScanFinishedProcessor : IClientPacketProcessor<PDAScanFinished>
 {
-    public override void Process(PDAScanFinished packet)
+    public Task Process(ClientProcessorContext context, PDAScanFinished packet)
     {
         if (packet.Id != null)
         {
@@ -16,14 +14,14 @@ public class PDAScanFinishedProcessor : ClientPacketProcessor<PDAScanFinished>
         }
         if (packet.WasAlreadyResearched)
         {
-            return;
+            return Task.CompletedTask;
         }
         TechType packetTechType = packet.TechType.ToUnity();
         if (packet.FullyResearched)
         {
             PDAScanner.partial.RemoveAllFast(packetTechType, static (item, techType) => item.techType == techType);
             PDAScanner.complete.Add(packetTechType);
-            return;
+            return Task.CompletedTask;
         }
         if (PDAScanner.GetPartialEntryByKey(packetTechType, out PDAScanner.Entry entry))
         {
@@ -33,5 +31,6 @@ public class PDAScanFinishedProcessor : ClientPacketProcessor<PDAScanFinished>
         {
             PDAScanner.Add(packetTechType, packet.UnlockedAmount);
         }
+        return Task.CompletedTask;
     }
 }

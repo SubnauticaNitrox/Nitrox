@@ -474,7 +474,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool CanDeleteServer() => !ServerIsOnline;
 
-    private Config LoadConfig() => NitroxConfig.Load<Config>(Path.Combine(SaveFolderDirectory, typeof(Config).GetCustomAttribute<SerializableFileNameAttribute>()?.FileName ?? throw new InvalidOperationException()));
+    private Config LoadConfig() => NitroxConfig.Load<Config>(SaveFolderDirectory);
 
     private void StoreConfig(Config config)
     {

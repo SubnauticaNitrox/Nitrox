@@ -1,38 +1,26 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Services;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class SummaryCommand(StatusService statusService, ILogger<SummaryCommand> logger) : ICommandHandler
 {
-    internal class SummaryCommand : Command
+    private readonly StatusService statusService = statusService;
+    private readonly ILogger<SummaryCommand> logger = logger;
+
+    [Description("Shows persisted data")]
+    public async Task Execute(ICommandContext context)
     {
-        private readonly StatusService statusService;
-        private readonly ILogger<SummaryCommand> logger;
-
-        public SummaryCommand(StatusService statusService, ILogger<SummaryCommand> logger) : base("summary", Perms.MODERATOR, "Shows persisted data")
+        string summary;
+        using (CaptureScope scope = logger.BeginCaptureScope())
         {
-            this.statusService = statusService;
-            this.logger = logger;
-
-            AllowedArgOverflow = true;
+            await statusService.LogServerSummary(context.Permissions);
+            summary = string.Join("", scope.Logs);
         }
-
-        protected override void Execute(CallArgs args)
-        {
-            Perms viewerPerms = args.Sender.OrNull()?.Permissions ?? Perms.HOST;
-            Player? sender = args.Sender.OrNull();
-            // TODO: Make command execute async
-            Task.Run(async () =>
-            {
-                string summary;
-                using (CaptureScope scope = logger.BeginCaptureScope())
-                {
-                    await statusService.LogServerSummary(viewerPerms);
-                    summary = string.Join("", scope.Logs);
-                }
-                SendMessage(sender, summary.TrimEnd('\n'));
-            }).ContinueWithHandleError(ex => logger.ZLogError(ex, $"Error while trying to capture server summary"));
-        }
+        await context.ReplyAsync(summary.TrimEnd('\n'));
     }
 }

@@ -36,7 +36,7 @@ public sealed partial class CrashHome_Update_Patch : NitroxPatch, IDynamicPatch
 
     public static void UpdateSpawnTimeAndBroadcast(CrashHome crashHome)
     {
-        // We udpate and broadcast the spawn time only if we're simulating the home
+        // We update and broadcast the spawn time only if we're simulating the home
         if (!crashHome.TryGetNitroxId(out NitroxId crashHomeId) ||
             !Resolve<SimulationOwnership>().HasAnyLockType(crashHomeId))
         {

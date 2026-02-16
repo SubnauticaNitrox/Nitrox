@@ -9,78 +9,153 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 /// <summary>
-///     Manager for <see cref="PdaStateData" />.
+///     Manager for thread-safe access to <see cref="PdaStateData" />.
 /// </summary>
-/// <param name="logger"></param>
 internal sealed class PdaManager(ILogger<PdaManager> logger) : ISummarize
 {
     private readonly ILogger<PdaManager> logger = logger;
-    public PdaStateData PdaState { get; set; } = new();
+
+    private readonly Lock pdaStateLock = new();
+
+    /// <summary>
+    ///     Any access to this state must use the same thread-safe lock to avoid one list being updated based on the invalid
+    ///     state of another.
+    /// </summary>
+    public PdaStateData PdaState
+    {
+        private get;
+        set
+        {
+            lock (pdaStateLock)
+            {
+                field = value;
+            }
+        }
+    } = new();
+
+    public PdaStateData GetPdaStateCopy()
+    {
+        lock (pdaStateLock)
+        {
+            return PdaState.GetFullCopy();
+        }
+    }
 
     public void AddKnownTechType(NitroxTechType techType, List<NitroxTechType> partialTechTypesToRemove)
     {
-        PdaState.ScannerPartial.RemoveAll(entry => partialTechTypesToRemove.Contains(entry.TechType));
-        if (!PdaState.KnownTechTypes.Contains(techType))
+        bool duplicateAttempt = false;
+        try
         {
-            PdaState.KnownTechTypes.Add(techType);
+            lock (pdaStateLock)
+            {
+                PdaState.ScannerPartial.RemoveAllFast(partialTechTypesToRemove, static (entry, list) => list.Contains(entry.TechType));
+                if (PdaState.KnownTechTypes.Contains(techType))
+                {
+                    duplicateAttempt = true;
+                    return;
+                }
+                PdaState.KnownTechTypes.Add(techType);
+            }
         }
-        else
+        finally
         {
-            logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the KnownTechTypes: [{techType.Name}]");
+            if (duplicateAttempt)
+            {
+                logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the {nameof(PdaState.KnownTechTypes)}: [{techType.Name}]");
+            }
         }
     }
 
     public void AddAnalyzedTechType(NitroxTechType techType)
     {
-        if (!PdaState.AnalyzedTechTypes.Contains(techType))
+        bool duplicateAttempt = false;
+        try
         {
-            PdaState.AnalyzedTechTypes.Add(techType);
+            lock (pdaStateLock)
+            {
+                if (PdaState.AnalyzedTechTypes.Contains(techType))
+                {
+                    duplicateAttempt = true;
+                    return;
+                }
+                PdaState.AnalyzedTechTypes.Add(techType);
+            }
         }
-        else
+        finally
         {
-            logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the AnalyzedTechTypes: [{techType.Name}]");
+            if (duplicateAttempt)
+            {
+                logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the {nameof(PdaState.AnalyzedTechTypes)}: [{techType.Name}]");
+            }
         }
     }
 
     public void AddEncyclopediaEntry(string entry)
     {
-        if (!PdaState.EncyclopediaEntries.Contains(entry))
+        bool duplicateAttempt = false;
+        try
         {
-            PdaState.EncyclopediaEntries.Add(entry);
+            lock (pdaStateLock)
+            {
+                if (PdaState.EncyclopediaEntries.Contains(entry))
+                {
+                    duplicateAttempt = true;
+                    return;
+                }
+                PdaState.EncyclopediaEntries.Add(entry);
+            }
         }
-        else
+        finally
         {
-            logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the EncyclopediaEntries: [{entry}]");
+            if (duplicateAttempt)
+            {
+                logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the {nameof(PdaState.EncyclopediaEntries)}: [{entry}]");
+            }
         }
     }
 
     public void AddPDALogEntry(PDALogEntry entry)
     {
-        if (PdaState.PdaLog.All(logEntry => logEntry.Key != entry.Key))
+        bool duplicateAttempt = false;
+        try
         {
-            PdaState.PdaLog.Add(entry);
+            lock (pdaStateLock)
+            {
+                if (PdaState.PdaLog.Any(logEntry => logEntry.Key == entry.Key))
+                {
+                    duplicateAttempt = true;
+                    return;
+                }
+                PdaState.PdaLog.Add(entry);
+            }
         }
-        else
+        finally
         {
-            logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the PDALog: [{entry.Key}]");
+            if (duplicateAttempt)
+            {
+                logger.ZLogDebug($"There was an attempt of adding a duplicated entry in the {nameof(PdaState.PdaLog)}: [{entry.Key}]");
+            }
         }
     }
 
     public void AddScannerFragment(NitroxId id)
     {
-        PdaState.ScannerFragments.Add(id);
+        lock (pdaStateLock)
+        {
+            PdaState.ScannerFragments.Add(id);
+        }
     }
 
     public void UpdateEntryUnlockedProgress(NitroxTechType techType, int unlockedAmount, bool fullyResearched)
     {
-        if (fullyResearched)
+        lock (pdaStateLock)
         {
-            PdaState.ScannerPartial.RemoveAll(entry => entry.TechType.Equals(techType));
-            PdaState.ScannerComplete.Add(techType);
-        }
-        else
-        {
-            lock (PdaState.ScannerPartial)
+            if (fullyResearched)
+            {
+                PdaState.ScannerPartial.RemoveAllFast(techType, static (entry, toRemove) => entry.TechType.Equals(toRemove));
+                PdaState.ScannerComplete.Add(techType);
+            }
+            else
             {
                 if (PdaState.ScannerPartial.FirstOrDefault(e => e.TechType.Equals(techType)) is { } entry)
                 {
@@ -96,25 +171,54 @@ internal sealed class PdaManager(ILogger<PdaManager> logger) : ISummarize
 
     public InitialPDAData GetInitialPDAData()
     {
-        return new(PdaState.KnownTechTypes.ToList(),
-                   PdaState.AnalyzedTechTypes.ToList(),
-                   PdaState.PdaLog.ToList(),
-                   PdaState.EncyclopediaEntries.ToList(),
-                   PdaState.ScannerFragments.ToList(),
-                   PdaState.ScannerPartial.ToList(),
-                   PdaState.ScannerComplete.ToList());
+        lock (pdaStateLock)
+        {
+            return new(PdaState.KnownTechTypes.ToList(),
+                       PdaState.AnalyzedTechTypes.ToList(),
+                       PdaState.PdaLog.ToList(),
+                       PdaState.EncyclopediaEntries.ToList(),
+                       PdaState.ScannerFragments.ToList(),
+                       PdaState.ScannerPartial.ToList(),
+                       PdaState.ScannerComplete.ToList());
+        }
     }
 
-    public void RemovePdaLogsByKey(string eventKey) => PdaState.PdaLog.RemoveAll(entry => entry.Key == eventKey);
+    public void RemovePdaLogsByKey(string eventKey)
+    {
+        lock (pdaStateLock)
+        {
+            PdaState.PdaLog.RemoveAllFast(eventKey, static (entry, keyToRemove) => entry.Key == keyToRemove);
+        }
+    }
 
-    public bool ContainsCompletelyScannedTech(NitroxTechType techType) => PdaState.ScannerComplete.Contains(techType);
+    public bool ContainsCompletelyScannedTech(NitroxTechType techType)
+    {
+        lock (pdaStateLock)
+        {
+            return PdaState.ScannerComplete.Contains(techType);
+        }
+    }
 
-    public bool ContainsLog(string pdaEntryId) => PdaState.PdaLog.Any(entry => entry.Key == pdaEntryId);
+    public bool ContainsLog(string pdaEntryId)
+    {
+        lock (pdaStateLock)
+        {
+            return PdaState.PdaLog.Any(entry => entry.Key == pdaEntryId);
+        }
+    }
 
     Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
     {
-        logger.ZLogInformation($"Known tech: {PdaState.KnownTechTypes.Count}");
-        logger.ZLogInformation($"Encyclopedia entries: {PdaState.EncyclopediaEntries.Count}");
+        int knownTechCount;
+        int encyclopediaEntriesCount;
+        lock (pdaStateLock)
+        {
+            knownTechCount = PdaState.KnownTechTypes.Count;
+            encyclopediaEntriesCount = PdaState.EncyclopediaEntries.Count;
+        }
+        logger.ZLogInformation($"Known tech: {knownTechCount}");
+        logger.ZLogInformation($"Encyclopedia entries: {encyclopediaEntriesCount}");
+
         return Task.CompletedTask;
     }
 }

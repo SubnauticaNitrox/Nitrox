@@ -7,18 +7,20 @@ using static Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning.Reefbac
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-public class ReefbackBootstrapper : IEntityBootstrapper
+internal sealed class ReefbackBootstrapper : IEntityBootstrapper
 {
+    private readonly XorRandom random;
     private readonly float creatureProbabilitySum = 0;
     private readonly float plantsProbabilitySum = 0;
 
-    public ReefbackBootstrapper()
+    public ReefbackBootstrapper(XorRandom random)
     {
-        foreach (ReefbackSpawnData.ReefbackSlotCreature creature in SpawnableCreatures)
+        this.random = random;
+        foreach (ReefbackSlotCreature creature in SpawnableCreatures)
         {
             creatureProbabilitySum += creature.Probability;
         }
-        foreach (ReefbackSpawnData.ReefbackSlotPlant plant in SpawnablePlants)
+        foreach (ReefbackSlotPlant plant in SpawnablePlants)
         {
             plantsProbabilitySum += plant.Probability;
         }
@@ -33,7 +35,7 @@ public class ReefbackBootstrapper : IEntityBootstrapper
         }
 
         // In case the grassIndex is chosen randomly
-        int grassIndex = XorRandom.NextIntRange(1, GRASS_VARIANTS_COUNT);
+        int grassIndex = random.NextIntRange(1, GRASS_VARIANTS_COUNT);
 
         entity = new ReefbackEntity(entity.Transform, entity.Level, entity.ClassId,
                                     entity.SpawnedByServer, entity.Id, entity.TechType,
@@ -49,21 +51,21 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             NitroxTransform slotTransform = DuplicateTransform(PlantSlotsCoordinates[i]);
             slotTransform.SetParent(plantSlotsRootTransform, false);
 
-            float random = XorRandom.NextFloat() * plantsProbabilitySum;
+            float r = random.NextFloat() * plantsProbabilitySum;
             float totalProbability = 0f;
             int chosenPlantIndex = 0;
             for (int k = 0; k < SpawnablePlants.Count; k++)
             {
                 totalProbability += SpawnablePlants[k].Probability;
-                if (random <= totalProbability)
+                if (r <= totalProbability)
                 {
                     chosenPlantIndex = k;
                     break;
                 }
             }
 
-            ReefbackSpawnData.ReefbackSlotPlant slotPlant = SpawnablePlants[chosenPlantIndex];
-            string randomId = slotPlant.ClassIds[XorRandom.NextIntRange(0, slotPlant.ClassIds.Count)];
+            ReefbackSlotPlant slotPlant = SpawnablePlants[chosenPlantIndex];
+            string randomId = slotPlant.ClassIds[random.NextIntRange(0, slotPlant.ClassIds.Count)];
 
             NitroxId id = generator.NextId();
             NitroxTransform plantTransform = new(slotTransform.Position, slotPlant.StartRotationQuaternion, NitroxVector3.One);
@@ -86,25 +88,25 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             NitroxTransform slotTransform = DuplicateTransform(CreatureSlotsCoordinates[i]);
             slotTransform.SetParent(creatureSlotsRootTransform, false);
 
-            float random = XorRandom.NextFloat() * creatureProbabilitySum;
+            float creatureProbability = random.NextFloat() * creatureProbabilitySum;
             float totalProbability = 0f;
             int chosenCreatureIndex = 0;
             for (int k = 0; k < SpawnableCreatures.Count; k++)
             {
                 totalProbability += SpawnableCreatures[k].Probability;
-                if (random <= totalProbability)
+                if (creatureProbability <= totalProbability)
                 {
                     chosenCreatureIndex = k;
                     break;
                 }
             }
 
-            ReefbackSpawnData.ReefbackSlotCreature slotCreature = SpawnableCreatures[chosenCreatureIndex];
-            int spawnCount = XorRandom.NextIntRange(slotCreature.MinNumber, slotCreature.MaxNumber + 1);
+            ReefbackSlotCreature slotCreature = SpawnableCreatures[chosenCreatureIndex];
+            int spawnCount = random.NextIntRange(slotCreature.MinNumber, slotCreature.MaxNumber + 1);
             for (int j = 0; j < spawnCount; j++)
             {
                 NitroxId id = generator.NextId();
-                NitroxTransform creatureTransform = new(slotTransform.LocalPosition + XorRandom.NextInsideSphere(5f), slotTransform.LocalRotation, NitroxVector3.One);
+                NitroxTransform creatureTransform = new(slotTransform.LocalPosition + random.NextInsideSphere(5f), slotTransform.LocalRotation, NitroxVector3.One);
                 creatureTransform.SetParent(CreatureSlotsRootTransform, false);
                 creatureTransform.SetParent(null, false);
 

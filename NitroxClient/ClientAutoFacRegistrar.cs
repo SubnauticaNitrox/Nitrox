@@ -5,7 +5,6 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
@@ -22,9 +21,9 @@ using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using Nitrox.Model;
 using Nitrox.Model.Core;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Helper;
 using Nitrox.Model.Networking;
-using Nitrox.Model.Subnautica.Helper;
+using Nitrox.Model.Packets.Core;
+using NitroxClient.Communication.Packets.Processors.Core;
 
 namespace NitroxClient
 {
@@ -137,8 +136,11 @@ namespace NitroxClient
         {
             containerBuilder
                 .RegisterAssemblyTypes(currentAssembly)
-                .AsClosedTypesOf(typeof(ClientPacketProcessor<>))
+                .AsClosedTypesOf(typeof(IClientPacketProcessor<>))
+                .As<IPacketProcessor>()
                 .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<PacketProcessorsInvoker>().InstancePerLifetimeScope();
         }
 
         private void RegisterColorSwapManagers(ContainerBuilder containerBuilder)

@@ -1,36 +1,28 @@
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<VehicleMovements>
+internal sealed class VehicleMovementsPacketProcessor(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<VehicleMovementsPacketProcessor> logger)
+    : IAuthPacketProcessor<VehicleMovements>
 {
     private static readonly NitroxVector3 CyclopsSteeringWheelRelativePosition = new(-0.05f, 0.97f, -23.54f);
 
-    private readonly PlayerManager playerManager;
-    private readonly EntityRegistry entityRegistry;
-    private readonly SimulationOwnershipData simulationOwnershipData;
-    private readonly ILogger<VehicleMovementsPacketProcessor> logger;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
+    private readonly ILogger<VehicleMovementsPacketProcessor> logger = logger;
 
-    public VehicleMovementsPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<VehicleMovementsPacketProcessor> logger)
-    {
-        this.playerManager = playerManager;
-        this.entityRegistry = entityRegistry;
-        this.simulationOwnershipData = simulationOwnershipData;
-        this.logger = logger;
-    }
-
-    public override void Process(VehicleMovements packet, Player player)
+    public async Task Process(AuthProcessorContext context, VehicleMovements packet)
     {
         for (int i = packet.Data.Count - 1; i >= 0; i--)
         {
             MovementData movementData = packet.Data[i];
-            if (simulationOwnershipData.GetPlayerForLock(movementData.Id) != player)
+            if (simulationOwnershipData.GetPlayerForLock(movementData.Id) != context.Sender)
             {
-                logger.ZLogErrorOnce($"Player {player.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
+                logger.ZLogErrorOnce($"Player {context.Sender.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
                 // TODO: In the future, add "packet.Data.RemoveAt(i);" and "continue;" to prevent those abnormal situations
             }
 
@@ -44,13 +36,13 @@ internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProce
                     // Cyclops' driving wheel is at a known position so we need to adapt the position of the player accordingly
                     if (worldEntity.TechType.Name.Equals("Cyclops"))
                     {
-                        player.Entity.Transform.LocalPosition = CyclopsSteeringWheelRelativePosition;
-                        player.Position = player.Entity.Transform.Position;
+                        context.Sender.Entity.Transform.LocalPosition = CyclopsSteeringWheelRelativePosition;
+                        context.Sender.Position = context.Sender.Entity.Transform.Position;
                     }
                     else
                     {
-                        player.Position = movementData.Position;
-                        player.Rotation = movementData.Rotation;
+                        context.Sender.Position = movementData.Position;
+                        context.Sender.Rotation = movementData.Rotation;
                     }
                 }
             }
@@ -58,7 +50,7 @@ internal sealed class VehicleMovementsPacketProcessor : AuthenticatedPacketProce
 
         if (packet.Data.Count > 0)
         {
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            await context.SendToOthersAsync(packet);
         }
     }
 }

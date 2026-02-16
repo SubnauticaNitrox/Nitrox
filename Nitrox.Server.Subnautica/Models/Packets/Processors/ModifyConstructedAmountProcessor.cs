@@ -1,17 +1,15 @@
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class ModifyConstructedAmountProcessor : BuildingProcessor<ModifyConstructedAmount>
+internal sealed class ModifyConstructedAmountProcessor(BuildingManager buildingManager) : BuildingProcessor<ModifyConstructedAmount>(buildingManager)
 {
-    public ModifyConstructedAmountProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
-
-    public override void Process(ModifyConstructedAmount packet, Player player)
+    public override async Task Process(AuthProcessorContext context, ModifyConstructedAmount packet)
     {
-        if (buildingManager.ModifyConstructedAmount(packet))
+        if (BuildingManager.ModifyConstructedAmount(packet))
         {
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            await context.SendToOthersAsync(packet);
         }
     }
 }

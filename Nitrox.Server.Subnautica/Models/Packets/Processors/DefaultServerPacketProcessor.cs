@@ -1,16 +1,23 @@
 using System.Collections.Generic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
+internal sealed class DefaultServerPacketProcessor(ILogger<DefaultServerPacketProcessor> logger) : IAuthPacketProcessor<Packet>
 {
-    private readonly PlayerManager playerManager;
-    private readonly ILogger<DefaultServerPacketProcessor> logger;
+    /// <summary>
+    ///     Packet types which don't have a server packet processor but should not be transmitted
+    /// </summary>
+    private readonly HashSet<Type> defaultPacketProcessorBlacklist =
+    [
+        typeof(GameModeChanged),
+        typeof(DropSimulationOwnership)
+    ];
 
-    private readonly HashSet<Type> loggingPacketBlackList = new()
-    {
+    private readonly ILogger<DefaultServerPacketProcessor> logger = logger;
+
+    private readonly HashSet<Type> loggingPacketBlackList =
+    [
         typeof(AnimationChangeEvent),
         typeof(PlayerMovement),
         typeof(ItemPosition),
@@ -28,34 +35,21 @@ sealed class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(StasisSphereHit),
         typeof(SeaTreaderChunkPickedUp),
         typeof(ToggleLights)
-    };
+    ];
 
-    /// <summary>
-    /// Packet types which don't have a server packet processor but should not be transmitted
-    /// </summary>
-    private readonly HashSet<Type> defaultPacketProcessorBlacklist = new()
+    public async Task Process(AuthProcessorContext context, Packet packet)
     {
-        typeof(GameModeChanged), typeof(DropSimulationOwnership),
-    };
-
-    public DefaultServerPacketProcessor(PlayerManager playerManager, ILogger<DefaultServerPacketProcessor> logger)
-    {
-        this.playerManager = playerManager;
-        this.logger = logger;
-    }
-
-    public override void Process(Packet packet, Player player)
-    {
-        if (!loggingPacketBlackList.Contains(packet.GetType()))
+        Type packetType = packet.GetType();
+        if (!loggingPacketBlackList.Contains(packetType))
         {
-            logger.ZLogDebug($"Using default packet processor for: {packet} and player {player.Id}");
+            logger.ZLogDebug($"Using default packet processor for: {packet} and player #{context.Sender.SessionId}");
         }
-
-        if (defaultPacketProcessorBlacklist.Contains(packet.GetType()))
+        if (defaultPacketProcessorBlacklist.Contains(packetType))
         {
-            logger.ZLogErrorOnce($"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
+            logger.ZLogErrorOnce($"Player {context.Sender.Name} #{context.Sender.SessionId} sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
             return;
         }
-        playerManager.SendPacketToOtherPlayers(packet, player);
+
+        await context.SendToOthersAsync(packet);
     }
 }

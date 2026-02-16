@@ -1,21 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class DropSimulationOwnershipProcessor : ClientPacketProcessor<DropSimulationOwnership>
+internal sealed class DropSimulationOwnershipProcessor(SimulationOwnership simulationOwnershipManager) : IClientPacketProcessor<DropSimulationOwnership>
 {
-    private readonly SimulationOwnership simulationOwnershipManager;
+    private readonly SimulationOwnership simulationOwnershipManager = simulationOwnershipManager;
 
-    public DropSimulationOwnershipProcessor(SimulationOwnership simulationOwnershipManager)
-    {
-        this.simulationOwnershipManager = simulationOwnershipManager;
-    }
-
-    public override void Process(DropSimulationOwnership packet)
+    public Task Process(ClientProcessorContext context, DropSimulationOwnership packet)
     {
         simulationOwnershipManager.DropSimulationFrom(packet.EntityId);
+        return Task.CompletedTask;
     }
 }

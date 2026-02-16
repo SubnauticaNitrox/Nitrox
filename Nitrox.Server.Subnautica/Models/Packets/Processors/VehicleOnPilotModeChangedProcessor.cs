@@ -1,21 +1,12 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class VehicleOnPilotModeChangedProcessor : AuthenticatedPacketProcessor<VehicleOnPilotModeChanged>
+internal sealed class VehicleOnPilotModeChangedProcessor : IAuthPacketProcessor<VehicleOnPilotModeChanged>
 {
-    private readonly PlayerManager playerManager;
-
-    public VehicleOnPilotModeChangedProcessor(PlayerManager playerManager)
+    public async Task Process(AuthProcessorContext context, VehicleOnPilotModeChanged packet)
     {
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(VehicleOnPilotModeChanged packet, Player player)
-    {
-        player.PlayerContext.DrivingVehicle = packet.IsPiloting ? packet.VehicleId : null;
-
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        context.Sender.PlayerContext.DrivingVehicle = packet.IsPiloting ? packet.VehicleId : null;
+        await context.SendToOthersAsync(packet);
     }
 }
