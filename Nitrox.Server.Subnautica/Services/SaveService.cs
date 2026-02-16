@@ -4,18 +4,20 @@ using System.Linq;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 using Nitrox.Server.Subnautica.Services.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISaveState.Trigger saveStateTrigger, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> startOptions, ILogger<SaveService> logger) : QueuingBackgroundService<SaveService.ServiceAction>, IHostedLifecycleService
+internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISaveState.Trigger saveStateTrigger, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> startOptions, ILogger<SaveService> logger)
+    : QueuingBackgroundService<SaveService.ServiceAction>, IHibernate
 {
-    private readonly Func<WorldService> worldServiceProvider = worldServiceProvider;
+    private readonly ILogger<SaveService> logger = logger;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ISaveState.Trigger saveStateTrigger = saveStateTrigger;
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
-    private readonly IOptions<SubnauticaServerOptions> options = options;
-    private readonly ILogger<SaveService> logger = logger;
+    private readonly Func<WorldService> worldServiceProvider = worldServiceProvider;
 
     protected override async Task ExecuteQueuedActionAsync(ServiceAction action, CancellationToken stoppingToken)
     {
@@ -117,13 +119,9 @@ internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISave
         }
     }
 
-    public Task StartingAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    async Task IEvent<IHibernate.SleepArgs>.OnEventAsync(IHibernate.SleepArgs args) => await QueueActionAsync(ServiceAction.SAVE);
 
-    public async Task StartedAsync(CancellationToken cancellationToken) => await QueueActionAsync(ServiceAction.SAVE, cancellationToken);
-
-    public async Task StoppingAsync(CancellationToken cancellationToken) => await QueueActionAsync(ServiceAction.SAVE, cancellationToken);
-
-    public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    Task IEvent<IHibernate.WakeArgs>.OnEventAsync(IHibernate.WakeArgs args) => Task.CompletedTask;
 
     internal enum ServiceAction
     {

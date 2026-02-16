@@ -91,11 +91,11 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         }
 
         // Send to all players except the disconnecting one
-        SleepStatusUpdate packet = new(sessionIdsInBed.Count, args.NewPlayerTotal);
+        SleepStatusUpdate packet = new(sessionIdsInBed.Count, args.NewSessionTotal);
         await packetSender.SendPacketToOthersAsync(packet, args.Session.Id);
 
         // Check if remaining players are now all sleeping (disconnected player was the only one awake)
-        if (args.NewPlayerTotal > 0 && sessionIdsInBed.Count >= args.NewPlayerTotal)
+        if (args.NewSessionTotal > 0 && sessionIdsInBed.Count >= args.NewSessionTotal)
         {
             StartSleep();
         }
