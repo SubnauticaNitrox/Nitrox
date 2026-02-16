@@ -215,7 +215,7 @@ public class Items
                 if (metadata.HasValue)
                 {
                     TechTag techTag = prefab.gameObject.GetComponent<TechTag>();
-                    TechType techType = (techTag) ? techTag.type : TechType.None;
+                    TechType techType = techTag ? techTag.type : TechType.None;
 
                     yield return new PrefabChildEntity(id, prefab.classId, techType.ToDto(), indexInGroup, metadata.Value, parentId);
 

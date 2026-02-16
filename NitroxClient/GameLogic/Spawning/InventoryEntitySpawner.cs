@@ -19,10 +19,10 @@ public class InventoryEntitySpawner : SyncEntitySpawner<InventoryEntity>
     protected override bool SpawnSync(InventoryEntity entity, TaskResult<Optional<GameObject>> result)
     {
         GameObject parent = NitroxEntity.RequireObjectFrom(entity.ParentId);
-        StorageContainer container = parent.GetAllComponentsInChildren<StorageContainer>()
-                                            .ElementAt(entity.ComponentIndex);
+        StorageContainer? container = parent.GetAllComponentsInChildren<StorageContainer>()
+                                            .ElementAtOrDefault(entity.ComponentIndex);
 
-        if (container)
+        if (container != null)
         {
             NitroxEntity.SetNewId(container.gameObject, entity.Id);
             result.Set(Optional.OfNullable(container.gameObject));

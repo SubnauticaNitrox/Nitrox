@@ -29,7 +29,7 @@ namespace NitroxClient.MonoBehaviours
             return gameObjectsById;
         }
 
-        public static GameObject RequireObjectFrom(NitroxId id)
+        public static GameObject RequireObjectFrom(NitroxId? id)
         {
             Optional<GameObject> gameObject = GetObjectFrom(id);
             Validate.IsPresent(gameObject, $"Game object required from id: {id}");
