@@ -1,12 +1,13 @@
 using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHibernate.WakeTrigger wakeTrigger, ILogger<HibernateService> logger) : IHostedLifecycleService
+internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHibernate.WakeTrigger wakeTrigger, ILogger<HibernateService> logger) : IHostedLifecycleService, ISessionCleaner
 {
+    private readonly ILogger<HibernateService> logger = logger;
     private readonly IHibernate.SleepTrigger sleepTrigger = sleepTrigger;
     private readonly IHibernate.WakeTrigger wakeTrigger = wakeTrigger;
-    private readonly ILogger<HibernateService> logger = logger;
 
     public bool IsSleeping
     {
@@ -53,4 +54,12 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
     public async Task StoppingAsync(CancellationToken cancellationToken) => await SleepAsync();
 
     public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    async Task IEvent<ISessionCleaner.Args>.OnEventAsync(ISessionCleaner.Args args)
+    {
+        if (args.NewSessionTotal < 1)
+        {
+            await SleepAsync();
+        }
+    }
 }
