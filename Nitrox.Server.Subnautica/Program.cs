@@ -45,11 +45,15 @@ internal sealed class Program
                                            .Build();
         startOptions = new ServerStartOptions();
         configuration.Bind(startOptions);
-        if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+
+        if (startOptions.GamePath == null)
         {
-            throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+            if (!GameInstallationFinder.FindGameCached(GameInfo.Subnautica))
+            {
+                throw new DirectoryNotFoundException("Could not find Subnautica installation.");
+            }
+            startOptions.GamePath = NitroxUser.GamePath;
         }
-        startOptions.GamePath ??= NitroxUser.GamePath;
         startOptions.NitroxAppDataPath ??= NitroxUser.AppDataPath;
         startOptions.NitroxAssetsPath ??= NitroxUser.AssetsPath;
 
