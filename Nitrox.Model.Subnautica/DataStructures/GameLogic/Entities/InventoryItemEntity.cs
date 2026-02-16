@@ -21,7 +21,7 @@ public class InventoryItemEntity : Entity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InventoryItemEntity(NitroxId id, string classId, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InventoryItemEntity(NitroxId id, string classId, NitroxTechType techType, EntityMetadata? metadata, NitroxId parentId, List<Entity> childEntities)
     {
         ClassId = classId;
         Id = id;

@@ -161,7 +161,9 @@ namespace NitroxClient.GameLogic
         /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS).
         /// Also saves resources by using the IOut instances
         /// </remarks>
+        /// <param name="batch"></param>
         /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
+        /// <param name="skipFrames"></param>
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
         {
             // we divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time)

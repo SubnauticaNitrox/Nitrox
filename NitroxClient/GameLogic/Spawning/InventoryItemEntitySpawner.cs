@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using Nitrox.Model.DataStructures;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
@@ -21,7 +22,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
 
     protected override IEnumerator SpawnAsync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
     {        
-        if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
+        if (!CanSpawn(entity, out GameObject? parentObject, out ItemsContainer? container, out string? errorLog))
         {
             Log.Error(errorLog);
             result.Set(Optional.Empty);
@@ -43,7 +44,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
         {
             return false;
         }
-        if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
+        if (!CanSpawn(entity, out GameObject? parentObject, out ItemsContainer? container, out string? errorLog))
         {
             Log.Error(errorLog);
             return true;
@@ -59,7 +60,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
 
     protected override bool SpawnsOwnChildren(InventoryItemEntity entity) => false;
 
-    private bool CanSpawn(InventoryItemEntity entity, out GameObject parentObject, out ItemsContainer container, out string errorLog)
+    private bool CanSpawn(InventoryItemEntity entity, [NotNullWhen(true)] out GameObject? parentObject, [NotNullWhen(true)] out ItemsContainer? container, [NotNullWhen(false)] out string? errorLog)
     {
         Optional<GameObject> owner = NitroxEntity.GetObjectFrom(entity.ParentId);
         if (!owner.HasValue)

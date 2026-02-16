@@ -21,12 +21,9 @@ internal sealed class SpawnEntitiesProcessor(Entities entities, SimulationOwners
 
         if (packet.Entities.Count > 0)
         {
-            if (packet.Simulations != null)
+            foreach (SimulatedEntity simulatedEntity in packet.Simulations)
             {
-                foreach (SimulatedEntity simulatedEntity in packet.Simulations)
-                {
-                    simulationOwnership.RegisterNewerSimulation(simulatedEntity.Id, simulatedEntity);
-                }
+                simulationOwnership.RegisterNewerSimulation(simulatedEntity.Id, simulatedEntity);
             }
 
             // Packet processing is done in the main thread so there's no issue calling this

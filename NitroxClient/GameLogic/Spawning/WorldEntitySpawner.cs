@@ -12,9 +12,9 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-internal sealed class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
+internal sealed class WorldEntitySpawner(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership) : SyncEntitySpawner<WorldEntity>
 {
-    private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
+    private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver = new(entityMetadataManager, entities, simulationOwnership);
     private readonly Lazy<Dictionary<Int3, BatchCells>> batchCellsById = new(() =>
     {
         if (NitroxEnvironment.IsNormal)
@@ -24,19 +24,14 @@ internal sealed class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
         return [];
     });
 
-    public WorldEntitySpawner(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership)
-    {
-        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(entityMetadataManager, entities, simulationOwnership);
-    }
-
-    protected override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator? SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
         bool foundParentCell = TryFindAwakeParentCell(entity, out EntityCell parentCell);
         if (foundParentCell)
         {
             parentCell.EnsureRoot();
         }
-        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
+        Optional<GameObject> parent = entity.ParentId != null ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
         // No place to spawn the entity
         if (!foundParentCell && !parent.HasValue)
