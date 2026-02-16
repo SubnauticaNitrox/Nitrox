@@ -412,7 +412,8 @@ internal sealed partial class ServerEntry : ObservableObject
                     {
                         "--save",
                         saveName,
-                        $"--game-path \"{NitroxUser.GamePath}\"",
+                        "--game-path",
+                        NitroxUser.GamePath
                     },
                     WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     CreateNoWindow = isEmbeddedMode
