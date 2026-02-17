@@ -39,7 +39,7 @@ internal sealed class BatchEntitySpawner(
 
     private readonly Lock parsedBatchesLock = new();
     private readonly Lock emptyBatchesLock = new();
-    private HashSet<NitroxInt3> parsedBatches;
+    private HashSet<NitroxInt3> parsedBatches = [];
 
     public List<NitroxInt3> SerializableParsedBatches
     {
