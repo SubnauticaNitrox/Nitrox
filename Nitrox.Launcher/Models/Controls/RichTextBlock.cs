@@ -126,7 +126,10 @@ public partial class RichTextBlock : TextBlock
 
     private static Run CreateRunWithTags(string text, Dictionary<string, Action<Run, string>> tags)
     {
-        Run run = new(text);
+        Run run = new(text)
+        {
+            BaselineAlignment = BaselineAlignment.Center // Fixes normal text not aligning with URL-tagged text
+        };
         KeyValuePair<string, Action<Run, string>>? lastColorTag = null;
         foreach (KeyValuePair<string, Action<Run, string>> pair in tags)
         {
