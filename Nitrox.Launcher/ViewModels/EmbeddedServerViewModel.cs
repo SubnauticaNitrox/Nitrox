@@ -31,6 +31,8 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     private bool shouldAutoScroll = true;
 
+    private int previousContentLength;
+
     public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Output;
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
@@ -132,21 +134,29 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private void OutputSizeChanged(SizeChangedEventArgs args)
     {
-        if (ShouldAutoScroll && args.HeightChanged && args.Source is Visual visual)
+        if (!ShouldAutoScroll || args.NewSize == args.PreviousSize || args.Source is not Visual visual)
         {
-            ScrollViewer scrollViewer = visual.FindAncestorOfType<ScrollViewer>();
-            if (scrollViewer is not null)
-            {
-                // TODO: ScrollToEnd for virtualized lists is not working well, see: https://github.com/AvaloniaUI/Avalonia/issues/14365 - wait for fix to clean up this code.
-                // Workaround: Run ScrollToEnd twice on the next two frames.
-                Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    scrollViewer.ScrollToEnd();
-                    // Run it again next frame
-                    Dispatcher.UIThread.InvokeAsync(() => scrollViewer.ScrollToEnd());
-                });
-            }
+            return;
         }
+        if (previousContentLength == ServerOutput.Count)
+        {
+            return;
+        }
+        previousContentLength = ServerOutput.Count;
+        ScrollViewer scrollViewer = visual.FindAncestorOfType<ScrollViewer>();
+        if (scrollViewer is null)
+        {
+            return;
+        }
+
+        // TODO: ScrollToEnd for virtualized lists is not working well, see: https://github.com/AvaloniaUI/Avalonia/issues/14365 - wait for fix to clean up this code.
+        // Workaround: Run ScrollToEnd twice on the next two frames.
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            scrollViewer.ScrollToEnd();
+            // Run it again next frame
+            Dispatcher.UIThread.InvokeAsync(() => scrollViewer.ScrollToEnd());
+        });
     }
 
     private void SetCaretToEnd(TextBox textBox)
