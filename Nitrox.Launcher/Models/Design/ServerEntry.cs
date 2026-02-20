@@ -322,7 +322,21 @@ internal sealed partial class ServerEntry : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            // ignored
+            // Graceful shutdown timed out, force kill the process
+            Log.Warn($"Server process {LastProcessId} did not stop gracefully within timeout, force killing...");
+            try
+            {
+                using ProcessEx? proc = ProcessEx.GetFirstProcess(GetServerExeName(), ex => ex.Id == LastProcessId);
+                if (proc != null)
+                {
+                    proc.Terminate();
+                    Log.Info($"Server process {LastProcessId} forcefully terminated");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Failed to force kill server process {LastProcessId}");
+            }
         }
     }
 
@@ -359,17 +373,33 @@ internal sealed partial class ServerEntry : ObservableObject
                 await Dispatcher.UIThread.InvokeAsync(() => IsServerClosing = true);
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+                    using CancellationTokenSource shutdownCts = new(TimeSpan.FromSeconds(10));
+                    try
                     {
-                        try
+                        while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
                         {
-                            await CommandQueue.Writer.WriteAsync("quit");
-                            CommandQueue.Writer.TryComplete();
+                            try
+                            {
+                                await CommandQueue.Writer.WriteAsync("quit", shutdownCts.Token);
+                                CommandQueue.Writer.TryComplete();
+                            }
+                            catch (ChannelClosedException)
+                            {
+                                await Task.Delay(500, shutdownCts.Token);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                // Timeout reached, force terminate
+                                Log.Warn($"Server {Name} did not respond to quit command, attempting force terminate");
+                                using ProcessEx? proc = ProcessEx.GetFirstProcess(GetServerExeName(), ex => ex.Id == LastProcessId);
+                                proc?.Terminate();
+                                break;
+                            }
                         }
-                        catch (ChannelClosedException)
-                        {
-                            await Task.Delay(500);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, $"Error during server shutdown for {Name}");
                     }
                     CommandQueue = Channel.CreateUnbounded<string>();
                     Players = 0;

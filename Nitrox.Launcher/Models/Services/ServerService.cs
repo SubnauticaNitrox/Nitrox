@@ -247,6 +247,41 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         serverRefreshCts.Dispose();
         WeakReferenceMessenger.Default.UnregisterAll(this);
         watcher?.Dispose();
+        
+        // Stop all embedded servers when launcher closes
+        // Non-embedded servers are left running as they have their own console window
+        lock (serversLock)
+        {
+            List<Task> stopTasks = [];
+            foreach (ServerEntry server in servers)
+            {
+                if (server.IsOnline && server.IsEmbedded && server.Process != null)
+                {
+                    try
+                    {
+                        Log.Info($"Stopping embedded server {server.Name} during launcher shutdown");
+                        stopTasks.Add(server.StopAsync());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, $"Error stopping server {server.Name} during shutdown");
+                    }
+                }
+            }
+            
+            // Wait for all servers to stop with a timeout
+            if (stopTasks.Count > 0)
+            {
+                try
+                {
+                    Task.WaitAll([.. stopTasks], TimeSpan.FromSeconds(30));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error waiting for servers to stop during shutdown");
+                }
+            }
+        }
     }
 
     public ServerEntry[] Servers

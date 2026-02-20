@@ -87,21 +87,13 @@
                  Condition="!Exists('$(OutputDirectory)')"
                  ContinueOnError="WarnAndContinue" />
 
-        <!-- Copy in debug because some systems break when they don't use our assembly resolve to look inside lib folder -->
+        <!-- Copy (don't Move) so dependencies stay in output root. Some code paths load assemblies before/when AssemblyResolve runs or from contexts that don't use it (e.g. Release vs Debug), causing empty UI or missing types when DLLs are only in lib/. -->
         <Copy SourceFiles="@(FilesToMove)"
               DestinationFolder="$(OutputDirectory)"
               OverwriteReadOnlyFiles="True"
               SkipUnchangedFiles="True"
               Retries="3"
               RetryDelayMilliseconds="100"
-              Condition="'$(Configuration)' == 'Debug'"
-              ContinueOnError="ErrorAndContinue" />
-
-        <!-- Move every matching files to OutputDirectory -->
-        <Move SourceFiles="@(FilesToMove)"
-              DestinationFolder="$(OutputDirectory)"
-              OverwriteReadOnlyFiles="True" 
-              Condition="'$(Configuration)' == 'Release'"
               ContinueOnError="ErrorAndContinue" />
     </Target>
 
