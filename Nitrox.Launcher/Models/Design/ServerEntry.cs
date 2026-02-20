@@ -372,6 +372,7 @@ internal sealed partial class ServerEntry : ObservableObject
                         }
                     }
                     CommandQueue = Channel.CreateUnbounded<string>();
+                    Players = 0;
                     IsOnline = false;
                     Output.Clear();
                 });

@@ -120,7 +120,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
             }
 
             // No catch-all handler, return help page...
-            if (handler == null)
+            if (handler == null || commandArgs.IsEmpty)
             {
                 logger.ZLogInformation($"Command {commandName.ToString():@CommandName} does not support the provided arguments. See below for more information.");
                 ExecuteCommand($"help {commandName}", context, out commandTask);
