@@ -191,6 +191,17 @@ namespace NitroxClient.GameLogic
                     UpdateEntity(entity);
                     continue;
                 }
+                // Some entities (like PlayerEntity) may already exist because they were set up by earlier
+                // sync processors before the entity spawning phase. In this case, just apply metadata and mark as spawned.
+                else if (entity is WorldEntity && NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject existingObject))
+                {
+                    Log.Debug($"[Entities] Entity already exists, applying metadata: {entity.Id} ({entity.GetType().Name})");
+                    entityMetadataManager.ApplyMetadata(existingObject, entity.Metadata);
+                    simulationOwnership.ApplyNewerSimulation(entity.Id);
+                    MarkAsSpawned(entity);
+                    batch.AddRange(entity.ChildEntities);
+                    continue;
+                }
                 else if (entity.ParentId != null && !IsParentReady(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
