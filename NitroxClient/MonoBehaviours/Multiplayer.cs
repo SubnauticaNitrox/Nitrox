@@ -178,9 +178,40 @@ namespace NitroxClient.MonoBehaviours
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+
+            // Destroy session-scoped Mono's before cleanup events
+            DestroySessionMonoBehaviours();
+
+            // Clear entity registry before invoking end event
+            NitroxEntity.ClearAll();
+
+            // clear remote players
+            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            remotePlayerManager.RemoveAllPlayers();
+
             OnAfterMultiplayerEnd?.Invoke();
 
             UnregisterConnectedDelegates();
+
+            // Reset state
+            InitialSyncCompleted = false;
+        }
+
+        /// <summary>
+        /// Destroys session-scoped MonoBehaviours to clean up resources before multiplayer end.
+        /// todo: consider replacing manual Destroy calls by having components inherit
+        /// <see cref="NitroxSessionBehaviour"/> so cleanup happens automatically on session end.
+        /// </summary>
+        private void DestroySessionMonoBehaviours()
+        {
+            Destroy(GetComponent<UnderwaterStateTracker>());
+            Destroy(GetComponent<PrecursorTracker>());
+            Destroy(GetComponent<PlayerMovementBroadcaster>());
+            Destroy(GetComponent<PlayerDeathBroadcaster>());
+            Destroy(GetComponent<PlayerStatsBroadcaster>());
+            Destroy(GetComponent<EntityPositionBroadcaster>());
+            Destroy(GetComponent<BuildingHandler>());
+            Destroy(GetComponent<MovementBroadcaster>());
         }
 
         private static void SetLoadingComplete()

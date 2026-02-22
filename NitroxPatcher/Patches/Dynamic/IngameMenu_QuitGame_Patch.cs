@@ -10,7 +10,6 @@ public sealed partial class IngameMenu_QuitGame_Patch : NitroxPatch, IDynamicPat
     public static bool Prefix()
     {
         // TODO: Remove this patch after fixing that no MP resources are left on disconnect. So that we can return to main menu.
-        Application.Quit();
-        return false;
+        return true;
     }
 }

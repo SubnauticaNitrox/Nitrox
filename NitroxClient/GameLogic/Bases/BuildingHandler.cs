@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;
 
-public partial class BuildingHandler : MonoBehaviour
+public partial class BuildingHandler : NitroxSessionBehaviour
 {
     public static BuildingHandler Main;
 
@@ -407,5 +407,16 @@ public partial class BuildingHandler
 
         this.Resolve<IPacketSender>().Send(new BuildingResyncRequest());
         Log.InGame(Language.main.Get("Nitrox_ResyncRequested"));
+    }
+
+    protected override void OnSessionEnd()
+    {
+        if (Main == this)
+        {
+            Main = null; // todo: this valid?
+        }
+        BuildQueue?.Clear();
+        BasesCooldown?.Clear();
+        Operations?.Clear();
     }
 }

@@ -136,6 +136,14 @@ namespace NitroxClient.MonoBehaviours
         }
 
         /// <summary>
+        /// Clears all tracked entity-to-GO mappings.
+        /// </summary>
+        public static void ClearAll()
+        {
+            gameObjectsById.Clear();
+        }
+
+        /// <summary>
         /// Removes the <see cref="NitroxEntity"/> from the global directory and set's its <see cref="Id"/> to null.
         /// </summary>
         public void Remove()
