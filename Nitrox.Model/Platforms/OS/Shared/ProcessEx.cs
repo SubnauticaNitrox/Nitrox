@@ -110,7 +110,7 @@ public class ProcessEx : IDisposable
         // On Linux, processes are started as child by default. So we wrap as shell command to start detached from current process.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            List<string> newArgs = ["-c", string.Join(" ", "nohup", $"'{startInfo.FileName}'", string.Join(" ", startInfo.ArgumentList), ">/dev/null 2>&1", "&")];
+            List<string> newArgs = ["-c", string.Join(" ", "nohup", $"'{startInfo.FileName}'", string.Join(" ", startInfo.ArgumentList.Select(a => $"'{a}'")), ">/dev/null 2>&1", "&")];
             startInfo.FileName = "/bin/sh";
             startInfo.ArgumentList.Clear();
             foreach (string arg in newArgs)

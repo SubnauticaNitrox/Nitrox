@@ -93,7 +93,7 @@ internal static class AssemblyResolver
             return null;
         }
         // Try find game managed libraries
-        return Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", dllName);
+        return Path.Combine(GamePath, GameInfo.Subnautica.DataFolder, "Managed", dllName);
     }
 
     private static string GetExecutableDirectory()

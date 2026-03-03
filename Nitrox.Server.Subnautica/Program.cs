@@ -112,6 +112,7 @@ internal sealed class Program
                .AddHostedSingletonService<PortForwardService>()
                .AddHostedSingletonService<LanBroadcastService>()
                .AddHostedSingletonService<MemoryService>()
+               .AddHostedSingletonService<RestartService>()
                .AddSingleton<RandomFactory>()
                .AddSingleton<NtpSyncer>()
                .AddSingleton<SubnauticaServerProtoBufSerializer>()
