@@ -149,12 +149,8 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         {
             logger.ZLogWarning($"An error occurred while deserializing the prefab cache. Re-creating it: {ex.Message:@Error}");
         }
-        if (cache.HasValue)
+        if (cache is { Version: CACHE_VERSION })
         {
-            if (cache.Value.Version != CACHE_VERSION)
-            {
-                logger.ZLogInformation($"Found outdated cache ({cache.Value.Version}, expected {CACHE_VERSION})");
-            }
             prefabPlaceholdersGroupPaths = cache.Value.PrefabPlaceholdersGroupPaths;
             randomPossibilitiesByClassId = cache.Value.RandomPossibilitiesByClassId;
             groupsByClassId = cache.Value.GroupsByClassId;
@@ -164,6 +160,10 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         // Fallback solution
         else
         {
+            if (cache.HasValue)
+            {
+                logger.ZLogInformation($"Found outdated cache (is v{cache.Value.Version}, expected v{CACHE_VERSION})");
+            }
             logger.ZLogInformation($"Building cache, this may take a while...");
             // Get all prefab-classIds linked to the (partial) bundle path
             string prefabDatabasePath = Path.Combine(options.Value.GetSubnauticaResourcesPath(), "StreamingAssets", "SNUnmanagedData", "prefabs.db");

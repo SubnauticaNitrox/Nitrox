@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 /// This spawner can't hold a SpawnSync function because it is also responsible for spawning its children
 /// so the <see cref="SpawnAsync"/> function will still use sync spawning when possible and fall back to async when required.
 /// </remarks>
-public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
+internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 {
     private readonly Entities entities;
     private readonly WorldEntitySpawnerResolver spawnerResolver;

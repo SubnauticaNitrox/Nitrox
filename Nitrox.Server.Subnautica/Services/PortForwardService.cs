@@ -6,7 +6,7 @@ using Mono.Nat;
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
-///     Opens ports on network attached routers via <a href="https://en.wikipedia.org/wiki/Universal_Plug_and_Play">UPnP</a>.
+///     Uses <see cref="SubnauticaServerOptions"/> to automatically open server listening port on network router via <a href="https://en.wikipedia.org/wiki/Universal_Plug_and_Play">UPnP</a>.
 /// </summary>
 /// <remarks>
 ///     By port forwarding, incoming connections will be forwarded to the host machine running the game server.<br /><br />
