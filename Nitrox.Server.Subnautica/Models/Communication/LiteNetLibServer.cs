@@ -12,6 +12,7 @@ using Nitrox.Model.Networking;
 using Nitrox.Model.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Administration;
 using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
@@ -45,8 +46,10 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         this.options = options;
         this.logger = logger;
         listener = new EventBasedNetListener();
-        server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null) {
-            UseNativeSockets = true, IPv6Enabled = true };
+        server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
+        {
+            UseNativeSockets = true, IPv6Enabled = true
+        };
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -181,7 +184,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         return true;
     }
 
-    public async Task OnEventAsync(ISessionCleaner.Args args)
+    async Task IEvent<ISessionCleaner.Args>.OnEventAsync(ISessionCleaner.Args args)
     {
         Disconnect disconnect = new(args.Session.Id);
         await SendPacketToAllAsync(disconnect);

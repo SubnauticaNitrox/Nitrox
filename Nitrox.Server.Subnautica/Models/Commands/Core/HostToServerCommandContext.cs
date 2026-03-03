@@ -12,7 +12,7 @@ internal sealed record HostToServerCommandContext : ICommandContext
     public ILogger Logger { get; set; } = NullLogger.Instance;
     public CommandOrigin Origin { get; init; } = CommandOrigin.SERVER;
     public string OriginName => "SERVER";
-    public SessionId OriginId { get; init; } = 0;
+    public SessionId OriginId { get; init; } = SessionId.SERVER_ID;
     public Perms Permissions { get; init; } = Perms.HOST;
 
     public HostToServerCommandContext(IPacketSender packetSender)
