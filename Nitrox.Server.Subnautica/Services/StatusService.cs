@@ -56,36 +56,33 @@ internal sealed class StatusService(
 
         async Task LogIps()
         {
-            // Capture and log so that logs are written in one go. This prevents different log lines being inserted in-between.
-            string logMessage;
-            using (CaptureScope captureScope = logger.BeginCaptureScope())
+            // Note: Do not use capture scope here because no redaction happens in captured logs.
+            /* TODO: Find a way to group logs and output in one go so that unrelated logs aren't in-between.
+             * Need to implement this by buffering ZLoggerEntry in a queue and writing once signaled (e.g. log scope gets disposed)
+             */
+            using (logger.BeginPlainScope())
             {
-                using (logger.BeginPlainScope())
+                logger.ZLogInformation($"Use IP to connect:");
+                using (logger.BeginPrefixScope("\t"))
                 {
-                    logger.ZLogInformation($"Use IP to connect:");
-                    using (logger.BeginPrefixScope("\t"))
+                    logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
+                    foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
                     {
-                        logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
-                        foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
+                        switch (origin)
                         {
-                            switch (origin)
-                            {
-                                case NetHelper.MachineIpOrigin.LAN:
-                                    logger.LogLanIp(address);
-                                    break;
-                                case NetHelper.MachineIpOrigin.VPN:
-                                    logger.LogVpnIp(networkName!, address);
-                                    break;
-                                case NetHelper.MachineIpOrigin.WAN:
-                                    logger.LogWanIp(address);
-                                    break;
-                            }
+                            case NetHelper.MachineIpOrigin.LAN:
+                                logger.LogLanIp(address);
+                                break;
+                            case NetHelper.MachineIpOrigin.VPN:
+                                logger.LogVpnIp(networkName!, address);
+                                break;
+                            case NetHelper.MachineIpOrigin.WAN:
+                                logger.LogWanIp(address);
+                                break;
                         }
                     }
                 }
-                logMessage = $"{string.Join("", captureScope.Logs).Trim(Environment.NewLine)}{Environment.NewLine}";
             }
-            logger.ZLogInformation($"{logMessage}");
         }
     }
 
