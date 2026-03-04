@@ -17,7 +17,7 @@ public class NitroxDebugManager : MonoBehaviour
     private readonly HashSet<BaseDebugger> prevActiveDebuggers = [];
     private List<BaseDebugger> debuggers;
 
-    private bool showDebuggerList;
+    private bool showDebuggerList = true;
     private bool isDebugging;
     private Rect windowRect;
 
