@@ -91,7 +91,7 @@ internal sealed class Program
                    options.ServicesStartConcurrently = true;
                    options.ServicesStopConcurrently = true;
                })
-               .AddNitroxOptions()
+               .AddNitroxOptions(startOptions)
                // Add initialization services - diagnoses the server environment on startup.
                .AddHostedSingletonService<PreventMultiServerInitService>()
                .AddHostedSingletonService<NetworkPortAvailabilityService>()

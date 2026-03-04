@@ -106,7 +106,7 @@ internal static partial class ServiceCollectionExtensions
 
         public IServiceCollection AddHostedSingletonService<T>() where T : class, IHostedService => services.AddSingleton<T>().AddHostedService(provider => provider.GetRequiredService<T>());
 
-        public IServiceCollection AddNitroxOptions()
+        public IServiceCollection AddNitroxOptions(ServerStartOptions startOptions)
         {
             services.AddOptionsWithValidateOnStart<ServerStartOptions, ServerStartOptions.Validator>()
                     .BindConfiguration("")
@@ -114,15 +114,15 @@ internal static partial class ServiceCollectionExtensions
                     {
                         if (string.IsNullOrWhiteSpace(options.GamePath))
                         {
-                            options.GamePath = NitroxUser.GamePath;
+                            options.GamePath = startOptions.GamePath;
                         }
                         if (string.IsNullOrWhiteSpace(options.NitroxAssetsPath))
                         {
-                            options.NitroxAssetsPath = NitroxUser.AssetsPath;
+                            options.NitroxAssetsPath = startOptions.NitroxAssetsPath;
                         }
                         if (string.IsNullOrWhiteSpace(options.NitroxAppDataPath))
                         {
-                            options.NitroxAppDataPath = NitroxUser.AppDataPath;
+                            options.NitroxAppDataPath = startOptions.NitroxAppDataPath;
                         }
                     });
             services.AddOptionsWithValidateOnStart<SubnauticaServerOptions, SubnauticaServerOptions.Validator>()
