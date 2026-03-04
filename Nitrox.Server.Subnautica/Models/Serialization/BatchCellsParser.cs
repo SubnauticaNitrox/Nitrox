@@ -40,7 +40,7 @@ namespace Nitrox.Server.Subnautica.Models.Serialization
 
         public List<EntitySpawnPoint> ParseBatchData(NitroxInt3 batchId)
         {
-            List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
+            List<EntitySpawnPoint> spawnPoints = [];
 
             ParseFile(batchId, "CellsCache", "baked-", "", spawnPoints);
 
@@ -49,12 +49,6 @@ namespace Nitrox.Server.Subnautica.Models.Serialization
 
         public void ParseFile(NitroxInt3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            string subnauticaPath = NitroxUser.GamePath;
-            if (string.IsNullOrEmpty(subnauticaPath))
-            {
-                return;
-            }
-
             string path = options.Value.GetSubnauticaBuild18Path();
             string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
