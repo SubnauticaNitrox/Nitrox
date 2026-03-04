@@ -4,19 +4,21 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using FMOD.Studio;
 using FMODUnity;
-using NitroxClient.Unity.Helper;
 using Nitrox.Model.GameLogic.FMOD;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 #pragma warning disable 618
 
 namespace NitroxClient.Debuggers;
 
 [ExcludeFromCodeCoverage]
-public class SoundDebugger : BaseDebugger
+public class SoundDebugger : AbstractDebugger
 {
+    private const int WINDOW_ID = 425;
+
     private readonly ReadOnlyDictionary<string, SoundData> assetList;
-    private readonly Dictionary<string, bool> assetIs3D = new();
-    private readonly Dictionary<string, EventInstance> eventInstancesByPath = new();
+    private readonly Dictionary<string, bool> assetIs3D = [];
+    private readonly Dictionary<string, EventInstance> eventInstancesByPath = [];
     private Vector2 scrollPosition;
     private string searchText;
     private string searchCategory;
@@ -26,11 +28,11 @@ public class SoundDebugger : BaseDebugger
     private bool displayIsGlobal;
     private bool displayWithRadius;
 
-    public SoundDebugger(FMODWhitelist fmodWhitelist) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SoundDebugger(FMODWhitelist fmodWhitelist) : base(WINDOW_ID, 700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
         assetList = fmodWhitelist.GetWhitelist();
 
-        foreach (KeyValuePair<string,SoundData> pair in assetList)
+        foreach (KeyValuePair<string, SoundData> pair in assetList)
         {
             EventInstance evt = FMODUWE.GetEvent(pair.Key);
             evt.getDescription(out EventDescription description);
