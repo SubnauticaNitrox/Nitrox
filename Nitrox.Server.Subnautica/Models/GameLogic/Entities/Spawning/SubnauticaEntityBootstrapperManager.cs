@@ -18,9 +18,10 @@ internal sealed class SubnauticaEntityBootstrapperManager(RandomFactory randomFa
     private readonly Dictionary<NitroxTechType, IEntityBootstrapper> entityBootstrappersByTechType = new()
     {
         [TechType.CrashHome.ToDto()] = new CrashHomeBootstrapper(),
+        [TechType.GhostLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
         [TechType.ReaperLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
         [TechType.SeaDragon.ToDto()] = new StayAtLeashPositionBootstrapper(),
-        [TechType.GhostLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
+        [TechType.Stalker.ToDto()] = new StayAtLeashPositionBootstrapper(),
     };
 
     public void PrepareEntityIfRequired(ref WorldEntity spawnedEntity, DeterministicGenerator generator)
