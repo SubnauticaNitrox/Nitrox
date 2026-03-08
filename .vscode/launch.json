@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Nitrox.Launcher",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "projectPath": "${workspaceFolder}/Nitrox.Launcher/Nitrox.Launcher.csproj"
+        },
+        {
+            "name": "Nitrox.Server.Subnautica",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "projectPath": "${workspaceFolder}/Nitrox.Server.Subnautica/Nitrox.Server.Subnautica.csproj"
+        }
+    ]
+}
