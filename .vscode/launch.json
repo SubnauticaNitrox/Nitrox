@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -13,10 +10,23 @@
         },
         {
             "name": "Nitrox.Server.Subnautica",
-            "type": "dotnet",
+            "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dotnet: build",
-            "projectPath": "${workspaceFolder}/Nitrox.Server.Subnautica/Nitrox.Server.Subnautica.csproj"
-        }
+            "program": "",
+            "args": [],
+            "cwd": "${workspaceFolder}/Nitrox.Server.Subnautica/",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "windows": {
+                "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica.exe"
+            },
+            "linux": {
+                "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica"
+            },
+            "osx": {
+                "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica"
+            }
+        },
     ]
 }
