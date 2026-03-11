@@ -41,7 +41,6 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dnlib" />
         <PackageReference Include="LitJson" />
         <PackageReference Include="MagicOnion.Server" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />

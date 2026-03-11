@@ -74,19 +74,20 @@ internal static class GameInspect
             return;
         }
 
-        int modDllCount = GetDllPaths(Path.Combine(bepRoot, "plugins")).Count();
-        modDllCount += GetDllPaths(Path.Combine(bepRoot, "patchers")).Count();
+        int modDllCount = GetNonNitroxDllPaths(Path.Combine(bepRoot, "plugins")).Count();
+        modDllCount += GetNonNitroxDllPaths(Path.Combine(bepRoot, "patchers")).Count();
         if (modDllCount > 0)
         {
             Log.Warn($"BepInEx plugins detected: {modDllCount}");
             LauncherNotifier.Warning($"BepInEx mod(s) were detected ({modDllCount}). Nitrox multiplayer does not support mods and they may cause instability.");
         }
 
-        static IEnumerable<string> GetDllPaths(string path)
+        static IEnumerable<string> GetNonNitroxDllPaths(string path)
         {
             try
             {
-                return Directory.EnumerateFiles(path, "*.dll", SearchOption.AllDirectories);
+                return Directory.EnumerateFiles(path, "*.dll", SearchOption.AllDirectories)
+                                .Where(p => !Path.GetFileName(p).Equals(BepInExSetup.NITROX_PLUGIN_NAME, StringComparison.OrdinalIgnoreCase));
             }
             catch (IOException)
             {
