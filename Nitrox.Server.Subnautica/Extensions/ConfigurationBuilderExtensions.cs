@@ -11,7 +11,6 @@ internal static class ConfigurationBuilderExtensions
     public static IConfigurationBuilder AddNitroxConfigFile<TOptions>(this IConfigurationBuilder configurationBuilder, string filePath, string configSectionPath = "", bool optional = false, bool reloadOnChange = false) where TOptions : class, new()
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
-        reloadOnChange = reloadOnChange && CanChangeDetect();
 
         string dirPath = Path.GetDirectoryName(filePath) ?? throw new ArgumentException(nameof(filePath));
         Directory.CreateDirectory(dirPath);
@@ -20,36 +19,12 @@ internal static class ConfigurationBuilderExtensions
             NitroxConfig.CreateFile<TOptions>(filePath);
         }
 
-        if (reloadOnChange)
-        {
-            // Link the config to a relative path within the working directory so that IOptionsMonitor<T> works. See https://github.com/dotnet/runtime/issues/114833
-            try
-            {
-                FileInfo configFile = new(Path.Combine(AppContext.BaseDirectory, Path.GetFileName(filePath)));
-                if (configFile.Exists && configFile.LinkTarget != null)
-                {
-                    configFile.Delete();
-                }
-                configFile.CreateAsSymbolicLink(filePath);
-                // Fix targets to point to symbolic link instead.
-                dirPath = AppContext.BaseDirectory;
-                filePath = configFile.Name; // Now a relative path.
-            }
-            catch (IOException)
-            {
-                if (!optional)
-                {
-                    throw;
-                }
-            }
-        }
-
         PhysicalFileProvider fileProvider = new(dirPath)
         {
             UsePollingFileWatcher = true,
             UseActivePolling = true
         };
-        return configurationBuilder.Add(new NitroxConfigurationSource(filePath, configSectionPath, optional, fileProvider)
+        return configurationBuilder.Add(new NitroxConfigurationSource(Path.GetFileName(filePath), configSectionPath, optional, fileProvider)
         {
             ReloadOnChange = reloadOnChange,
             Optional = optional
@@ -70,26 +45,18 @@ internal static class ConfigurationBuilderExtensions
         {
             return builder;
         }
-        reloadOnChange = reloadOnChange && CanChangeDetect();
 
         string? parentAppSettingsFile = null;
         if (reloadOnChange)
         {
             try
             {
-                // Symbolic link the first parent JSON file found. Required for change detection when file is in a parent directory.
                 string current = AppContext.BaseDirectory.TrimEnd('/', '\\');
                 while ((current = Path.GetDirectoryName(current)) is not null)
                 {
                     parentAppSettingsFile = Path.Combine(current, fileName);
                     if (File.Exists(parentAppSettingsFile))
                     {
-                        FileInfo appSettingsFile = new(Path.Combine(AppContext.BaseDirectory, fileName));
-                        if (appSettingsFile.Exists && appSettingsFile.LinkTarget != null)
-                        {
-                            appSettingsFile.Delete();
-                        }
-                        appSettingsFile.CreateAsSymbolicLink(parentAppSettingsFile);
                         break;
                     }
                 }
@@ -103,7 +70,7 @@ internal static class ConfigurationBuilderExtensions
             }
         }
 
-        string? baseDirectory = CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFile);
+        string? baseDirectory = Path.GetDirectoryName(parentAppSettingsFile);
         if (baseDirectory == null)
         {
             return optional ? builder : throw new Exception($"Failed to get parent directory from JSON file: {fileName}");
@@ -112,9 +79,9 @@ internal static class ConfigurationBuilderExtensions
         // On Linux, polling is needed to detect file changes.
         builder.AddJsonFile(new PhysicalFileProvider(baseDirectory)
         {
-            UseActivePolling = OperatingSystem.IsLinux(),
-            UsePollingFileWatcher = OperatingSystem.IsLinux()
-        }, fileName, optional, reloadOnChange);
+            UseActivePolling = true,
+            UsePollingFileWatcher = true
+        }, Path.GetFileName(fileName), optional, reloadOnChange);
 
         return builder;
     }
@@ -126,7 +93,6 @@ internal static class ConfigurationBuilderExtensions
             return builder;
         }
 
-        // Symbolic link the first parent JSON file found. Required for change detection when file is in a parent directory.
         string current = AppContext.BaseDirectory.TrimEnd('/', '\\');
         string? parentAppSettingsFilePath = null;
         while ((current = Path.GetDirectoryName(current)) is not null)
@@ -136,19 +102,10 @@ internal static class ConfigurationBuilderExtensions
                 continue;
             }
             parentAppSettingsFilePath = Path.Combine(current, projectName, fileName);
-            if (CanChangeDetect() && File.Exists(parentAppSettingsFilePath))
-            {
-                FileInfo appSettingsFile = new(Path.Combine(AppContext.BaseDirectory, fileName));
-                if (appSettingsFile.Exists && appSettingsFile.LinkTarget != null)
-                {
-                    appSettingsFile.Delete();
-                }
-                appSettingsFile.CreateAsSymbolicLink(parentAppSettingsFilePath);
-            }
             break;
         }
 
-        string? baseDirectory = CanChangeDetect() ? AppContext.BaseDirectory : Path.GetDirectoryName(parentAppSettingsFilePath);
+        string? baseDirectory = Path.GetDirectoryName(parentAppSettingsFilePath);
         if (baseDirectory == null)
         {
             return optional ? builder : throw new Exception($"Failed to get parent directory from JSON file: {fileName}");
@@ -158,7 +115,7 @@ internal static class ConfigurationBuilderExtensions
         {
             UseActivePolling = OperatingSystem.IsLinux(),
             UsePollingFileWatcher = OperatingSystem.IsLinux()
-        }, fileName, optional, reloadOnChange);
+        }, Path.GetFileName(fileName), optional, reloadOnChange);
 
         return builder;
 
@@ -180,7 +137,4 @@ internal static class ConfigurationBuilderExtensions
             return isSolutionRoot && projectExists;
         }
     }
-
-    // TODO: Handle Windows differently because symbolic link requires admin perms there. Copy file over?
-    private static bool CanChangeDetect() => !OperatingSystem.IsWindows(); // For now change detection does not work on Windows.
 }
