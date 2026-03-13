@@ -23,7 +23,7 @@ public class EntityDebugger : AbstractDebugger
         ActiveTab = AddTab("EntityDebugger", RenderEntityDebugger);
     }
 
-    private void RenderEntityDebugger()
+    private static void RenderEntityDebugger()
     {
 
     }

@@ -79,17 +79,14 @@ public class NitroxDebugManager : MonoBehaviour
         isDebugging = !isDebugging;
         if (isDebugging)
         {
-            UWE.Utils.PushLockCursor(true);
             ShowDebuggers();
+            UWE.Utils.alwaysLockCursor = false;
+            UWE.Utils.lockCursor = false;
         }
         else
         {
-            UWE.Utils.PopLockCursor();
+            UWE.Utils.lockCursor = true;
             HideDebuggers();
-            foreach (AbstractDebugger baseDebugger in debuggers)
-            {
-                baseDebugger.ResetWindowPosition();
-            }
         }
     }
 
