@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class MovementBroadcaster : MonoBehaviour
+public class MovementBroadcaster : NitroxSessionBehaviour
 {
     public const int BROADCAST_FREQUENCY = 30;
     public const float BROADCAST_PERIOD = 1f / BROADCAST_FREQUENCY;
@@ -29,11 +29,6 @@ public class MovementBroadcaster : MonoBehaviour
             return;
         }
         Instance = this;
-    }
-
-    public void OnDestroy()
-    {
-        Instance = null;
     }
 
     public void Update()
@@ -105,5 +100,15 @@ public class MovementBroadcaster : MonoBehaviour
         {
             Instance.Replicators.Remove(movementReplicator.objectId);
         }
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Instance = null;
+    }
+
+    protected override void OnSessionEnd()
+    {
+        Replicators?.Clear();
     }
 }
