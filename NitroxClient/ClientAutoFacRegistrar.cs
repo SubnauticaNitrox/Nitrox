@@ -55,8 +55,8 @@ namespace NitroxClient
         {
 #if DEBUG
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<BaseDebugger>()
-                            .As<BaseDebugger>()
+                            .AssignableTo<AbstractDebugger>()
+                            .As<AbstractDebugger>()
                             .AsImplementedInterfaces()
                             .AsSelf()
                             .SingleInstance();
