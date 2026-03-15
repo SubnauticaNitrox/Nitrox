@@ -4,40 +4,29 @@ namespace Nitrox.Server.Subnautica.Services;
 
 internal sealed class PacketSerializationService : BackgroundService
 {
-    private readonly TaskCompletionSource init;
+    private readonly TaskCompletionSource initTcs;
     private readonly ILogger<PacketSerializationService> logger;
     private IPacketSerializer inner;
-    private readonly Lock innerLock = new();
 
     public PacketSerializationService(ILogger<PacketSerializationService> logger)
     {
         this.logger = logger;
 
-        init = new TaskCompletionSource();
-        inner = new UnloadedSerializer(init, serializer =>
-        {
-            lock (innerLock)
-            {
-                inner = serializer;
-            }
-        });
+        initTcs = new TaskCompletionSource();
+        inner = new UnloadedSerializer(initTcs, serializer => Interlocked.Exchange(ref inner, serializer));
     }
 
     public void SerializeInto(Packet packet, Stream stream)
     {
-        IPacketSerializer actual;
-        lock (innerLock)
-        {
-            actual = inner;
-        }
-        actual.SerializeInto(packet, stream);
+        IPacketSerializer serializer = Interlocked.CompareExchange(ref inner, null, null);
+        serializer.SerializeInto(packet, stream);
     }
 
     public override void Dispose()
     {
-        if (init.Task.IsCompleted)
+        if (initTcs.Task.IsCompleted)
         {
-            init.Task.Dispose();
+            initTcs.Task.Dispose();
         }
         base.Dispose();
     }
@@ -52,9 +41,9 @@ internal sealed class PacketSerializationService : BackgroundService
             }
             catch (Exception ex)
             {
-                init.TrySetException(ex);
+                initTcs.TrySetException(ex);
             }
-            if (!init.TrySetResult())
+            if (!initTcs.TrySetResult())
             {
                 throw new Exception("Failed to set init result");
             }
