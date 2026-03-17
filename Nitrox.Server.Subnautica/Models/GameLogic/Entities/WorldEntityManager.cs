@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -35,6 +36,7 @@ internal sealed class WorldEntityManager
     private readonly PlayerManager playerManager;
 
     private readonly Lock worldEntitiesLock = new();
+    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
 
     /// <summary>
     ///     World entities can disappear if you go out of range.
@@ -245,7 +247,12 @@ internal sealed class WorldEntityManager
         }
     }
 
-    public async Task<int> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool suppressLogs)
+    public Task<int> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool suppressLogs)
+    {
+        return batchRegistrationTasks.GetOrAdd(batchId, id => new Lazy<Task<int>>(() => LoadAndRegisterBatchInternalAsync(id, suppressLogs))).Value;
+    }
+
+    private async Task<int> LoadAndRegisterBatchInternalAsync(NitroxInt3 batchId, bool suppressLogs)
     {
         List<Entity> spawnedEntities = await batchEntitySpawner.LoadUnspawnedEntitiesAsync(batchId, suppressLogs);
 
