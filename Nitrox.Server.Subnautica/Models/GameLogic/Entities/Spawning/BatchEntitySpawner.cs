@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
@@ -37,34 +38,28 @@ internal sealed class BatchEntitySpawner(
     private readonly XorRandom random = randomFactory.GetUnityLikeRandom();
     private readonly SubnauticaUweWorldEntityFactory worldEntityFactory = worldEntityFactory;
 
-    private readonly Lock parsedBatchesLock = new();
+    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<List<Entity>>>> batchLoadTasks = new();
     private readonly Lock emptyBatchesLock = new();
-    private HashSet<NitroxInt3> parsedBatches = [];
 
     public List<NitroxInt3> SerializableParsedBatches
     {
         get
         {
-            List<NitroxInt3> parsed;
             List<NitroxInt3> empty;
-
-            lock (parsedBatchesLock)
-            {
-                parsed = [.. parsedBatches];
-            }
 
             lock (emptyBatchesLock)
             {
                 empty = [.. emptyBatches];
             }
 
-            return [.. parsed.Except(empty)];
+            return [.. batchLoadTasks.Keys.Except(empty)];
         }
         set
         {
-            lock (parsedBatchesLock)
+            batchLoadTasks.Clear();
+            foreach (NitroxInt3 batchId in value)
             {
-                parsedBatches = [.. value];
+                batchLoadTasks.TryAdd(batchId, new Lazy<Task<List<Entity>>>(() => Task.FromResult(new List<Entity>())));
             }
         }
     }
@@ -73,22 +68,16 @@ internal sealed class BatchEntitySpawner(
 
     public bool IsBatchSpawned(NitroxInt3 batchId)
     {
-        lock (parsedBatches)
-        {
-            return parsedBatches.Contains(batchId);
-        }
+        return batchLoadTasks.ContainsKey(batchId);
     }
 
-    public async Task<List<Entity>> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool fullCacheCreation = false)
+    public Task<List<Entity>> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool fullCacheCreation = false)
     {
-        lock (parsedBatches)
-        {
-            if (!parsedBatches.Add(batchId))
-            {
-                return [];
-            }
-        }
+        return batchLoadTasks.GetOrAdd(batchId, id => new Lazy<Task<List<Entity>>>(() => LoadBatchInternalAsync(id, fullCacheCreation))).Value;
+    }
 
+    private async Task<List<Entity>> LoadBatchInternalAsync(NitroxInt3 batchId, bool fullCacheCreation)
+    {
         DeterministicGenerator deterministicBatchGenerator = new(options.Value.Seed, batchId.ToString());
         List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
         List<Entity> entities = await SpawnEntitiesAsync(spawnPoints, deterministicBatchGenerator);
@@ -105,7 +94,7 @@ internal sealed class BatchEntitySpawner(
             logger.ZLogInformation($"Spawning {entities.Count} entities from {spawnPoints.Count} spawn points in batch {batchId}");
         }
 
-        for (int x = 0; x < entities.Count; x++) // Throws on duplicate Entities already but nice to know which ones
+        for (int x = 0; x < entities.Count; x++)
         {
             for (int y = 0; y < entities.Count; y++)
             {

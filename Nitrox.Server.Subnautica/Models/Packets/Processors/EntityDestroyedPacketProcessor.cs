@@ -28,7 +28,7 @@ internal sealed class EntityDestroyedPacketProcessor(PlayerManager playerManager
                 bool isOtherPlayer = player != context.Sender;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    await context.ReplyAsync(packet);
+                    await context.SendAsync(packet, player.SessionId);
                 }
             }
         }
