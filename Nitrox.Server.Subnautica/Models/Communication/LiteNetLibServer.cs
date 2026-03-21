@@ -64,9 +64,10 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         server.UpdateTime = 15;
         server.UnsyncedEvents = true;
 #if DEBUG
-        server.DisconnectTimeout = 300000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+        server.DisconnectTimeout = 300_000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+#else
+        server.DisconnectTimeout = 30_000; // 30 seconds; prevents false disconnects when post-sync game-loading stalls LiteNetLib briefly
 #endif
-
         server.Start(options.Value.ServerPort);
         return Task.CompletedTask;
     }

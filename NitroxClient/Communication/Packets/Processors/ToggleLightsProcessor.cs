@@ -9,7 +9,11 @@ internal sealed class ToggleLightsProcessor : IClientPacketProcessor<Nitrox.Mode
 {
     public Task Process(ClientProcessorContext context, Nitrox.Model.Subnautica.Packets.ToggleLights packet)
     {
-        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+        {
+            Log.Warn($"[{nameof(ToggleLightsProcessor)}] Could not find entity with id: {packet.Id}.");
+            return Task.CompletedTask;
+        }
         ToggleLights toggleLights = gameObject.RequireComponent<ToggleLights>();
 
         if (packet.IsOn == toggleLights.GetLightsActive())
