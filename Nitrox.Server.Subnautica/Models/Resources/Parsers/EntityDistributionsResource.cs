@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
@@ -7,7 +7,7 @@ using LootDictionary = System.Collections.Generic.Dictionary<string, LootDistrib
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
-internal sealed class EntityDistributionsResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options) : IGameResource
+internal sealed class EntityDistributionsResource(SubnauticaAssetsManager assetsManager, IOptions<ServerStartOptions> options) : IGameResource, IEntityDistributionsAccessor
 {
     private readonly SubnauticaAssetsManager assetsManager = assetsManager;
 

@@ -1,15 +1,18 @@
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 using static LootDistributionData;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-internal sealed class SubnauticaUwePrefabFactory(EntityDistributionsResource distributionData) : IUwePrefabFactory
+internal sealed class SubnauticaUwePrefabFactory(IEntityDistributionsAccessor distributionData) : IUwePrefabFactory
 {
-    private readonly EntityDistributionsResource resource = distributionData;
-    private readonly Dictionary<string, List<UwePrefab>> cache = new();
-    private readonly Lock cacheLock = new();
+    private readonly IEntityDistributionsAccessor resource = distributionData;
+    private readonly ConcurrentDictionary<string, Lazy<Task<List<UwePrefab>>>> cache = new();
 
     public async Task<List<UwePrefab>> TryGetPossiblePrefabsAsync(string? biome)
     {
@@ -17,18 +20,16 @@ internal sealed class SubnauticaUwePrefabFactory(EntityDistributionsResource dis
         {
             return [];
         }
-        List<UwePrefab> prefabs;
-        lock (cacheLock)
-        {
-            if (cache.TryGetValue(biome, out prefabs))
-            {
-                return prefabs;
-            }
-        }
 
-        prefabs = new();
+        Lazy<Task<List<UwePrefab>>> lazy = cache.GetOrAdd(biome, key => new Lazy<Task<List<UwePrefab>>>(() => LoadPrefabsForBiomeAsync(key), LazyThreadSafetyMode.ExecutionAndPublication));
+        return await lazy.Value.ConfigureAwait(false);
+    }
+
+    private async Task<List<UwePrefab>> LoadPrefabsForBiomeAsync(string biome)
+    {
+        List<UwePrefab> prefabs = [];
         BiomeType biomeType = (BiomeType)Enum.Parse(typeof(BiomeType), biome);
-        LootDistributionData distributionData = await resource.GetLootDistributionDataAsync();
+        LootDistributionData distributionData = await resource.GetLootDistributionDataAsync().ConfigureAwait(false);
         if (distributionData.GetBiomeLoot(biomeType, out DstData dstData))
         {
             foreach (PrefabData prefabData in dstData.prefabs)
@@ -39,17 +40,11 @@ internal sealed class SubnauticaUwePrefabFactory(EntityDistributionsResource dis
                     // You can verify this by looping through all of SrcData (e.g in LootDistributionData.Initialize)
                     // print the prefabPath and check the TechType related to the provided classId (WorldEntityDatabase.TryGetInfo) with PDAScanner.IsFragment
                     bool isFragment = srcData.prefabPath.Contains("Fragment") || srcData.prefabPath.Contains("BaseGlassDome");
-                    lock (cacheLock)
-                    {
-                        prefabs.Add(new(prefabData.classId, prefabData.count, prefabData.probability, isFragment));
-                    }
+                    prefabs.Add(new(prefabData.classId, prefabData.count, prefabData.probability, isFragment));
                 }
             }
         }
-        lock (cacheLock)
-        {
-            cache[biome] = prefabs;
-        }
+
         return prefabs;
     }
 }

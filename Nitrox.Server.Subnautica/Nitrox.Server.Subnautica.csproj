@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -36,6 +36,13 @@
         <_ServerDevelopmentJsonFilePath>$(MSBuildThisFileDirectory)\server.Development.json</_ServerDevelopmentJsonFilePath>
     </PropertyGroup>
     
+    <!-- Allow NSubstitute to proxy internal types (e.g. IEntityDistributionsAccessor) from Nitrox.Test -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
     <Target Name="GenerateServerDevelopmentJson" BeforeTargets="BeforeBuild" Condition="'$(_ServerDevelopmentJsonFilePath)' != '' and !Exists('$(_ServerDevelopmentJsonFilePath)')">
         <PropertyGroup>
             <_ServerDevelopmentJsonContent>
