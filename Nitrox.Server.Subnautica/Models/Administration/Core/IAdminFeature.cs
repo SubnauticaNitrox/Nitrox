@@ -1,5 +1,6 @@
 namespace Nitrox.Server.Subnautica.Models.Administration.Core;
 
-internal interface IAdminFeature;
-
-internal interface IAdminFeature<T> : IAdminFeature where T : IAdminFeature<T>;
+/// <summary>
+///     Implementors handle an administrative action.
+/// </summary>
+internal interface IAdminFeature<T> where T : IAdminFeature<T>;

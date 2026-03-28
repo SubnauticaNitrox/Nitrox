@@ -15,6 +15,7 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
+// TODO: Refactor this to a QueuingBackgroundService to simplify state tracking.
 internal sealed class JoiningManager(
     IPacketSender packetSender,
     PlayerManager playerManager,

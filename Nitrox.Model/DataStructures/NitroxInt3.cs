@@ -5,7 +5,7 @@ using Nitrox.Model.DataStructures.Unity;
 namespace Nitrox.Model.DataStructures
 {
     /// <summary>
-    ///     Model to allow <see cref="Model"/> to be decoupled from Assembly-csharp-firstpass (i.e. game code).
+    ///     Model to allow <see cref="Nitrox.Model"/> to be decoupled from Assembly-csharp-firstpass (i.e. game code).
     /// </summary>
     [Serializable]
     [DataContract]
