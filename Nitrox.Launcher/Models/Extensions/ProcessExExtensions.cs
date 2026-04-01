@@ -37,7 +37,7 @@ public static class ProcessExExtensions
                 ArgumentList =
                 {
                     "-e",
-                    $"tell application \"System Events\" to set frontmost of the first process whose unix id is {process.Id} to true",
+                    $"tell application \"System Events\" to set frontmost of every process whose unix id is {process.Id} to true",
                 },
                 UseShellExecute = false,
                 RedirectStandardError = true,
