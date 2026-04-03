@@ -9,7 +9,7 @@ namespace Nitrox.Model.MagicOnion;
 /// </summary>
 public interface IServersManagement : IStreamingHub<IServersManagement, IServerManagementReceiver>
 {
-    ValueTask SetPlayerCount(int playerCount);
+    ValueTask SetPlayers(string[] players);
     ValueTask AddOutputLine(string category, DateTimeOffset? localTime, int level, string message);
 }
 

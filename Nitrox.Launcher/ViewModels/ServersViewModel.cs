@@ -41,7 +41,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
             {
                 return;
             }
-            entry.Players = message.PlayerCount;
+            entry.PlayerCount = message.PlayerCount;
             entry.IsOnline = message.IsOnline;
         });
 
