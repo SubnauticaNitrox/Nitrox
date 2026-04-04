@@ -8,7 +8,7 @@ using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
-namespace Nitrox.Server.Subnautica.Models.Commands.Debugging;
+namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.ADMIN)]
 internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<QueryCommand> logger) : ICommandHandler<NitroxId>
@@ -18,12 +18,12 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
     private readonly ILogger<QueryCommand> logger = logger;
 
     [Description("Query the entity associated with the given NitroxId")]
-    public Task Execute(ICommandContext context, [Description("NitroxId of an entity")] NitroxId entityId)
+    public async Task Execute(ICommandContext context, [Description("NitroxId of an entity")] NitroxId entityId)
     {
         if (!entityRegistry.TryGetEntityById(entityId, out Entity entity))
         {
-            logger.ZLogError($"Entity with id {entityId} not found");
-            return Task.CompletedTask;
+            await context.ReplyAsync($"Entity with id {entityId} not found");
+            return;
         }
 
         StringBuilder builder = new();
@@ -54,8 +54,6 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
         builder.AppendLine("Raw Data");
         builder.AppendLine(entity.ToString());
 
-        logger.ZLogInformation($"{builder.ToString()}");
-
-        return Task.CompletedTask;
+        await context.ReplyAsync(builder.ToString());
     }
 }
