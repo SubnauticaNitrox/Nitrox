@@ -111,7 +111,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private int serverPlayers;
+    private int serverPlayerCount;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -147,7 +147,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                 return;
             }
             vm.ServerIsOnline = status.IsOnline;
-            vm.ServerPlayers = status.PlayerCount;
+            vm.ServerPlayerCount = status.PlayerCount;
         });
     }
 
@@ -185,7 +185,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerDefaultPlayerPerm = Server.PlayerPermissions;
         ServerAutoSaveInterval = Server.AutoSaveInterval;
         ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
+        ServerPlayerCount = Server.PlayerCount;
         ServerPort = Server.Port;
         ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
@@ -203,7 +203,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                   ServerDefaultPlayerPerm != Server.PlayerPermissions ||
                                   ServerAutoSaveInterval != Server.AutoSaveInterval ||
                                   ServerMaxPlayers != Server.MaxPlayers ||
-                                  ServerPlayers != Server.Players ||
+                                  ServerPlayerCount != Server.PlayerCount ||
                                   ServerPort != Server.Port ||
                                   ServerAutoPortForward != Server.PortForward ||
                                   ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
@@ -261,7 +261,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         Server.PlayerPermissions = ServerDefaultPlayerPerm;
         Server.AutoSaveInterval = ServerAutoSaveInterval;
         Server.MaxPlayers = ServerMaxPlayers;
-        Server.Players = ServerPlayers;
+        Server.PlayerCount = ServerPlayerCount;
         Server.Port = ServerPort;
         Server.PortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
@@ -311,7 +311,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerDefaultPlayerPerm = Server.PlayerPermissions;
         ServerAutoSaveInterval = Server.AutoSaveInterval;
         ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
+        ServerPlayerCount = Server.PlayerCount;
         ServerPort = Server.Port;
         ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;

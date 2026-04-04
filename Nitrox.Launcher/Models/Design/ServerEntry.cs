@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -92,7 +93,11 @@ internal sealed partial class ServerEntry : ObservableObject
     private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
 
     [ObservableProperty]
-    private int players;
+    private int playerCount;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PlayerNamesTooltip))]
+    private List<string> playerNames = [];
 
     [ObservableProperty]
     private int port = serverDefaults.ServerPort;
@@ -111,6 +116,7 @@ internal sealed partial class ServerEntry : ObservableObject
 
     internal ServerProcess? Process { get; private set; }
     public AvaloniaList<OutputLine> Output { get; } = [];
+    public string? PlayerNamesTooltip => PlayerNames.Count == 0 ? null : string.Join(Environment.NewLine, PlayerNames);
 
     /// <summary>
     ///     Gets the last process id known by this server entry.
@@ -337,7 +343,7 @@ internal sealed partial class ServerEntry : ObservableObject
         switch (e.PropertyName)
         {
             case nameof(IsOnline) when LastProcessId > 0:
-                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, Players));
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, PlayerCount));
                 break;
         }
         base.OnPropertyChanged(e);
@@ -372,7 +378,8 @@ internal sealed partial class ServerEntry : ObservableObject
                         }
                     }
                     CommandQueue = Channel.CreateUnbounded<string>();
-                    Players = 0;
+                    PlayerCount = 0;
+                    PlayerNames = [];
                     IsOnline = false;
                     Output.Clear();
                 });

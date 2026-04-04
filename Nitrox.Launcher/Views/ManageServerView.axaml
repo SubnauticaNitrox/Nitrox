@@ -119,11 +119,18 @@
                             </StackPanel>
                         </Panel>
                         <TextBlock Text="{Binding Server.GameMode, Converter={converters:ToStringConverter}, FallbackValue=Survival}" />
-                        <TextBlock TextWrapping="NoWrap">
-                            <Run Text="{Binding Server.Players, FallbackValue=0}" />
-                            <Run Text="/" />
+                        <TextBlock TextWrapping="NoWrap" Background="Transparent"
+                                   Classes.online="{Binding Server.IsOnline, FallbackValue=False}"
+                                   ToolTip.Tip="{Binding Server.PlayerNamesTooltip, FallbackValue=''}">
+                            <Run Text="{Binding Server.PlayerCount, FallbackValue=0}" />
+                            <Run Text=" / " />
                             <Run Text="{Binding Server.MaxPlayers, FallbackValue=100}" />
-                            <Run Text="playing" />
+                            <Run Text=" playing" />
+                            <TextBlock.Styles>
+                                <Style Selector="TextBlock.online:pointerover">
+                                    <Setter Property="TextDecorations" Value="Underline" />
+                                </Style>
+                            </TextBlock.Styles>
                         </TextBlock>
                     </StackPanel>
 
