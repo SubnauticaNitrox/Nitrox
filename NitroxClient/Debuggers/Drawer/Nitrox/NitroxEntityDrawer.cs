@@ -11,12 +11,7 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
 {
     public void Draw(NitroxEntity nitroxEntity)
     {
-        using (new GUILayout.HorizontalScope())
-        {
-            GUILayout.Label("NitroxId", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
-            NitroxGUILayout.Separator();
-            GUILayout.TextField(nitroxEntity.Id == null ? "<null>" : nitroxEntity.Id.ToString());
-        }
+        DrawNitroxIdField(nitroxEntity.Id);
 
         GUILayout.Space(8);
 
@@ -29,22 +24,19 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
 
         GUILayout.Space(8);
 
-        using (new GUILayout.HorizontalScope())
-        {
-            GUILayout.Label("Simulating state", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
-            NitroxGUILayout.Separator();
-            if (NitroxServiceLocator.Cache<SimulationOwnership>.Value.TryGetLockType(nitroxEntity.Id, out SimulationLockType simulationLockType))
-            {
-                GUILayout.TextField(simulationLockType.ToString());
-            }
-            else
-            {
-                GUILayout.TextField("NONE");
-            }
-        }
+        DrawSimulatingStateField(nitroxEntity.Id);
     }
 
     public void Draw(NitroxId nitroxId)
+    {
+        DrawNitroxIdField(nitroxId);
+
+        GUILayout.Space(8);
+
+        DrawSimulatingStateField(nitroxId);
+    }
+
+    private static void DrawNitroxIdField(NitroxId? nitroxId)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -52,9 +44,10 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
             NitroxGUILayout.Separator();
             GUILayout.TextField(nitroxId == null ? "<null>" : nitroxId.ToString());
         }
+    }
 
-        GUILayout.Space(8);
-
+    private static void DrawSimulatingStateField(NitroxId? nitroxId)
+    {
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Simulating state", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
@@ -62,11 +55,10 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
             if (NitroxServiceLocator.Cache<SimulationOwnership>.Value.TryGetLockType(nitroxId, out SimulationLockType simulationLockType))
             {
                 GUILayout.TextField(simulationLockType.ToString());
+                return;
             }
-            else
-            {
-                GUILayout.TextField("NONE");
-            }
+
+            GUILayout.TextField("NONE");
         }
     }
 }
