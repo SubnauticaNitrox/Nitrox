@@ -31,8 +31,8 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
         builder.AppendLine($" └ Type: {entity.GetType().Name}");
         builder.AppendLine($" └ Id: {entity.Id}");
         builder.AppendLine($" └ TechType: {entity.TechType}");
-        builder.AppendLine($" └ ParentId: {entity.ParentId?.ToString() ?? "none"}");
-        builder.AppendLine($" └ Metadata: {entity.Metadata?.ToString() ?? "none"}");
+        builder.AppendLine($" └ ParentId: {entity.ParentId?.ToString() ?? "<null>"}");
+        builder.AppendLine($" └ Metadata: {entity.Metadata?.ToString() ?? "<null>"}");
         builder.AppendLine($" └ Children: {entity.ChildEntities.Count}");
         if (entity.ChildEntities.Count > 0)
         {
@@ -60,7 +60,7 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
 
         builder.AppendLine("Lock status");
         builder.AppendLine($" └ Locked: {isLocked}");
-        builder.AppendLine($" └ Owner: {(isLocked ? playerLock.Player.Name : "none")}");
+        builder.AppendLine($" └ Owner: {(isLocked ? $"{playerLock.Player.Name} #{playerLock.Player.SessionId}" : "<null>")}");
 
         builder.AppendLine("Raw Data");
         builder.AppendLine(entity.ToString());
