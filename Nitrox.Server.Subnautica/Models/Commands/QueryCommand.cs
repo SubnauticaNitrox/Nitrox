@@ -32,8 +32,19 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
         builder.AppendLine($" └ Id: {entity.Id}");
         builder.AppendLine($" └ TechType: {entity.TechType}");
         builder.AppendLine($" └ ParentId: {entity.ParentId?.ToString() ?? "none"}");
-        builder.AppendLine($" └ Children: {entity.ChildEntities.Count}");
         builder.AppendLine($" └ Metadata: {entity.Metadata?.ToString() ?? "none"}");
+        builder.AppendLine($" └ Children: {entity.ChildEntities.Count}");
+        if (entity.ChildEntities.Count > 0)
+        {
+            foreach (Entity childEntity in entity.ChildEntities)
+            {
+                builder.AppendLine("   └ Child");
+                builder.AppendLine($"     └ Type: {childEntity.GetType().Name}");
+                builder.AppendLine($"     └ Id: {childEntity.Id}");
+                builder.AppendLine($"     └ Metadata: {childEntity.Metadata?.ToString() ?? "none"}");
+                builder.AppendLine($"     └ Children: {childEntity.ChildEntities.Count}");
+            }
+        }
 
         if (entity is WorldEntity worldEntity)
         {
