@@ -30,16 +30,16 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     public partial string LaunchArgs { get; set; }
 
     [ObservableProperty]
-    public partial string ProgramDataFolderDir { get; set; }
+    public partial string ProgramDataPath { get; set; }
 
     [ObservableProperty]
-    public partial string ScreenshotsFolderDir { get; set; }
+    public partial string ScreenshotsPath { get; set; }
 
     [ObservableProperty]
-    public partial string SavesFolderDir { get; set; }
+    public partial string SavesPath { get; set; }
 
     [ObservableProperty]
-    public partial string LogsFolderDir { get; set; }
+    public partial string LogsPath { get; set; }
 
     [ObservableProperty]
     public partial KnownGame SelectedGame { get; set; }
@@ -58,6 +58,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     [ObservableProperty]
     public partial bool IsInReleaseMode { get; set; }
+    
     private static string DefaultLaunchArg => "-vrmode none";
     private bool isResettingArgs;
 
@@ -65,10 +66,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
-        ProgramDataFolderDir = NitroxUser.AppDataPath;
-        ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
-        SavesFolderDir = keyValueStore.GetSavesFolderDir();
-        LogsFolderDir = Model.Logger.Log.LogDirectory;
+        ProgramDataPath = NitroxUser.AppDataPath;
+        ScreenshotsPath = NitroxUser.ScreenshotsPath;
+        SavesPath = keyValueStore.GetSavesFolderDir();
+        LogsPath = Model.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();

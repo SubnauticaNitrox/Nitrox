@@ -39,7 +39,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 
     [ObservableProperty]
     public partial bool UpdateAvailableOrUnofficial { get; set; }
-    
+
     public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
     public MainWindowViewModel(
@@ -145,7 +145,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
-        if (args.Cancel == false && mainWindowProvider().IsClosingByUser(args))
+        if (!args.Cancel && mainWindowProvider().IsClosingByUser(args))
         {
             mainWindowProvider().CloseByCode();
         }

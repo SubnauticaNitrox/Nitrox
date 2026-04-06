@@ -14,10 +14,10 @@ internal partial class CrashWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
     public partial string? Title { get; set; }
-    
+
     [ObservableProperty]
     public partial string? Message { get; set; }
-    
+
     [RelayCommand(CanExecute = nameof(CanRestart))]
     private void Restart()
     {

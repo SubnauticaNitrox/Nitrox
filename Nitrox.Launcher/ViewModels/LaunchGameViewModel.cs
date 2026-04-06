@@ -38,7 +38,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
     [ObservableProperty]
     public partial string? PlatformToolTip { get; set; }
-    
+
     public Bitmap[] GalleryImageSources { get; } =
     [
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-1.png", static stream => new Bitmap(stream)),
