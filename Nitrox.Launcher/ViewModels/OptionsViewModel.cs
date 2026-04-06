@@ -27,38 +27,38 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
-    private string launchArgs;
+    public partial string LaunchArgs { get; set; }
 
     [ObservableProperty]
-    private string programDataFolderDir;
+    public partial string ProgramDataPath { get; set; }
 
     [ObservableProperty]
-    private string screenshotsFolderDir;
+    public partial string ScreenshotsPath { get; set; }
 
     [ObservableProperty]
-    private string savesFolderDir;
+    public partial string SavesPath { get; set; }
 
     [ObservableProperty]
-    private string logsFolderDir;
+    public partial string LogsPath { get; set; }
 
     [ObservableProperty]
-    private KnownGame selectedGame;
+    public partial KnownGame SelectedGame { get; set; }
 
     [ObservableProperty]
-    private bool showResetArgsBtn;
+    public partial bool ShowResetArgsBtn { get; set; }
 
     [ObservableProperty]
-    private bool lightModeEnabled;
+    public partial bool LightModeEnabled { get; set; }
 
     [ObservableProperty]
-    private bool allowMultipleGameInstances;
+    public partial bool AllowMultipleGameInstances { get; set; }
 
     [ObservableProperty]
-    private bool useBigPictureMode;
+    public partial bool UseBigPictureMode { get; set; }    
+
+    [ObservableProperty]
+    public partial bool IsInReleaseMode { get; set; }
     
-    [ObservableProperty]
-    private bool isInReleaseMode;
-
     private static string DefaultLaunchArg => "-vrmode none";
     private bool isResettingArgs;
 
@@ -66,10 +66,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
-        ProgramDataFolderDir = NitroxUser.AppDataPath;
-        ScreenshotsFolderDir = NitroxUser.ScreenshotsPath;
-        SavesFolderDir = keyValueStore.GetSavesFolderDir();
-        LogsFolderDir = Model.Logger.Log.LogDirectory;
+        ProgramDataPath = NitroxUser.AppDataPath;
+        ScreenshotsPath = NitroxUser.ScreenshotsPath;
+        SavesPath = keyValueStore.GetSavesFolderDir();
+        LogsPath = Model.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();

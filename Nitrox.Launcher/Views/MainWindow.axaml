@@ -384,7 +384,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border
-                            Classes.dismiss="{Binding Dismissed}"
+                            Classes.dismiss="{Binding IsDismissed}"
                             Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
                             Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
                             Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"

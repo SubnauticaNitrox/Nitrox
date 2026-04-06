@@ -22,15 +22,16 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [FileName]
     [NotEndsWith(".")]
     [NitroxUniqueSaveName(nameof(SavesFolderDir))]
-    private string name = "";
+    public partial string Name { get; set; } = "";
 
     [ObservableProperty]
-    private SubnauticaGameMode selectedGameMode = SubnauticaGameMode.SURVIVAL;
+    public partial SubnauticaGameMode SelectedGameMode { get; set; } = SubnauticaGameMode.SURVIVAL;
 
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
 
     public CreateServerViewModel()
     {
+        
     }
 
     public CreateServerViewModel(IKeyValueStore keyValueStore)

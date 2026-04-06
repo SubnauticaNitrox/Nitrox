@@ -22,7 +22,7 @@
         <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
         <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" />
         <PackageVersion Include="Bogus" Version="35.6.3" />
-        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageVersion Include="CompareNETObjects" Version="4.83.0" />
         <PackageVersion Include="ConsoleAppFramework" Version="5.6.1" />
         <PackageVersion Include="coverlet.collector" Version="6.0.4" />

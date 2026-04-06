@@ -23,13 +23,14 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     private int? selectedHistoryIndex;
 
     [ObservableProperty]
-    private string? serverCommand;
+    public partial string? ServerCommand { get; set; }
 
     [ObservableProperty]
-    private ServerEntry serverEntry;
+    public partial ServerEntry ServerEntry { get; set; }
+    
 
     [ObservableProperty]
-    private bool shouldAutoScroll = true;
+    public partial bool ShouldAutoScroll { get; set; } = true;
 
     private int previousContentLength;
 
@@ -37,7 +38,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
-        this.serverEntry = serverEntry;
+        ServerEntry = serverEntry;
         this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
             if (status.ProcessId != model.ServerEntry.LastProcessId)
