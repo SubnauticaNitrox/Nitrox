@@ -483,7 +483,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         return prefabPlaceholderAsset;
     }
 
-    private record struct Cache(
+    private readonly record struct Cache(
         int Version,
         Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholdersGroupPaths,
         ConcurrentDictionary<string, string[]> RandomPossibilitiesByClassId,
@@ -491,7 +491,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         ConcurrentDictionary<string, PrefabPlaceholderAsset> PlaceholdersByClassId
     )
     {
-        public readonly bool IsValid(int expectedVersion) =>
+        public bool IsValid(int expectedVersion) =>
             Version == expectedVersion &&
             PrefabPlaceholdersGroupPaths.Count > 0 &&
             RandomPossibilitiesByClassId.Count > 0 &&
