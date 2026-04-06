@@ -11,7 +11,6 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.Constants;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -31,7 +30,12 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
 
     [ObservableProperty]
     public partial string? Title { get; set; }
-    
+
+    [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
+    public void RestoreBackup() => Close(ButtonOptions.Ok);
+
+    public bool CanRestoreBackup() => !HasErrors;
+
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
@@ -43,11 +47,6 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
                 break;
         }
     }
-
-    [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
-    public void RestoreBackup() => Close(ButtonOptions.Ok);
-
-    public bool CanRestoreBackup() => !HasErrors;
 
     private static IEnumerable<BackupItem> GetBackups(string? saveDirectory)
     {
