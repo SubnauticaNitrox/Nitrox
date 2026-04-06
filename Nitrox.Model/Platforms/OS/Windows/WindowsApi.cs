@@ -4,7 +4,7 @@ using static Nitrox.Model.Platforms.OS.Windows.Internal.Win32Native;
 
 namespace Nitrox.Model.Platforms.OS.Windows;
 
-public partial class WindowsApi
+public static partial class WindowsApi
 {
     /// <summary>
     ///     Applies default OS animations to the window handle.
