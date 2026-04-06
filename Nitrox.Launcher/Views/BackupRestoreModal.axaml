@@ -12,6 +12,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -19,7 +20,9 @@
         <vm:BackupRestoreViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto, *, Auto">
-        <controls:CustomTitlebar CanMinimize="False" Grid.Row="0" />
+        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}"
+                                 CanMinimize="False"
+                                 Grid.Row="0" />
 
         <TextBlock
             Classes="modalHeader"

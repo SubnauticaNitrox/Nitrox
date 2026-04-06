@@ -23,6 +23,7 @@
     </Design.DataContext>
     <Grid RowDefinitions="Auto,*,Auto">
         <controls:CustomTitlebar
+            IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}"
             CanMinimize="False"
             Grid.RowSpan="2"
             ShowTitle="False" />
