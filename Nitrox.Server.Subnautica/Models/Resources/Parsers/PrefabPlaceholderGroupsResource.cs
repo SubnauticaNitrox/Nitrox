@@ -149,31 +149,43 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         {
             logger.ZLogWarning($"An error occurred while deserializing the prefab cache. Re-creating it: {ex.Message:@Error}");
         }
-        if (cache is { Version: CACHE_VERSION })
+        
+        if (cache is { } c && c.IsValid(CACHE_VERSION))
         {
-            prefabPlaceholdersGroupPaths = cache.Value.PrefabPlaceholdersGroupPaths;
-            randomPossibilitiesByClassId = cache.Value.RandomPossibilitiesByClassId;
-            groupsByClassId = cache.Value.GroupsByClassId;
-            placeholdersByClassId = cache.Value.PlaceholdersByClassId;
+            prefabPlaceholdersGroupPaths = c.PrefabPlaceholdersGroupPaths;
+            randomPossibilitiesByClassId = c.RandomPossibilitiesByClassId;
+            groupsByClassId = c.GroupsByClassId;
+            placeholdersByClassId = c.PlaceholdersByClassId;
             logger.ZLogDebug($"Successfully loaded cache with {prefabPlaceholdersGroupPaths.Count:@PrefabPlaceholdersCount} prefab placeholder groups and {randomPossibilitiesByClassId.Count:@RandomPossibilitiesCount} random spawn behaviours.");
         }
         // Fallback solution
         else
         {
-            if (cache.HasValue)
+            if (cache is { } invalidCache)
             {
-                logger.ZLogInformation($"Found outdated cache (is v{cache.Value.Version}, expected v{CACHE_VERSION})");
+                if (invalidCache.Version != CACHE_VERSION)
+                {
+                    logger.ZLogInformation($"Found outdated cache (is v{invalidCache.Version}, expected v{CACHE_VERSION})");
+                }
+                else
+                {
+                    logger.ZLogWarning($"Found cache v{CACHE_VERSION} but it contains no data. Re-creating it.");
+                }
             }
+
             logger.ZLogInformation($"Building cache, this may take a while...");
+            
             // Get all prefab-classIds linked to the (partial) bundle path
             string prefabDatabasePath = Path.Combine(options.Value.GetSubnauticaResourcesPath(), "StreamingAssets", "SNUnmanagedData", "prefabs.db");
             Dictionary<string, string> prefabDatabase = LoadPrefabDatabase(prefabDatabasePath);
+            
             (AddressableCatalogDictionary addressableCatalog, ClassIdByRuntimeKeyDictionary classIdByRuntimeKey) = LoadAddressableCatalog(options.Value.GetSubnauticaAaResourcePath(), prefabDatabase);
-            prefabPlaceholdersGroupPaths = new(GetPrefabPlaceholderGroupAssetsByGroupClassId(assetsManager, GetAllPrefabPlaceholdersGroupsFast(assetsManager, addressableCatalog, classIdByRuntimeKey), addressableCatalog, classIdByRuntimeKey));
+            prefabPlaceholdersGroupPaths = new Dictionary<string, PrefabPlaceholdersGroupAsset>(GetPrefabPlaceholderGroupAssetsByGroupClassId(assetsManager, GetAllPrefabPlaceholdersGroupsFast(assetsManager, addressableCatalog, classIdByRuntimeKey), addressableCatalog, classIdByRuntimeKey));
+            
             await Cache.SerializeAsync(serializer, new Cache(CACHE_VERSION, prefabPlaceholdersGroupPaths, randomPossibilitiesByClassId, groupsByClassId, placeholdersByClassId), cacheFilePath);
-            logger.ZLogDebug(
-                $"Successfully built cache with {prefabPlaceholdersGroupPaths.Count:@PrefabPlaceholdersCount} prefab placeholder groups and {randomPossibilitiesByClassId.Count:@RandomPossibilitiesCount} random spawn behaviours. Future server starts will take less time.");
+            logger.ZLogDebug($"Successfully built cache with {prefabPlaceholdersGroupPaths.Count:@PrefabPlaceholdersCount} prefab placeholder groups and {randomPossibilitiesByClassId.Count:@RandomPossibilitiesCount} random spawn behaviours. Future server starts will take less time.");
         }
+        
         Validate.IsTrue(prefabPlaceholdersGroupPaths.Count > 0);
         Validate.IsTrue(randomPossibilitiesByClassId.Count > 0);
         Validate.IsTrue(groupsByClassId.Count > 0);
@@ -479,6 +491,13 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
         ConcurrentDictionary<string, PrefabPlaceholderAsset> PlaceholdersByClassId
     )
     {
+        public readonly bool IsValid(int expectedVersion) =>
+            Version == expectedVersion &&
+            PrefabPlaceholdersGroupPaths.Count > 0 &&
+            RandomPossibilitiesByClassId.Count > 0 &&
+            GroupsByClassId.Count > 0 &&
+            PlaceholdersByClassId.Count > 0;
+
         public static async Task SerializeAsync(JsonSerializer serializer, Cache cache, string filePath)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new Exception("Failed to get directory path from cache file path"));
