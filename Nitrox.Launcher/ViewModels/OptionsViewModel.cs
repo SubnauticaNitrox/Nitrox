@@ -27,38 +27,37 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
-    private string launchArgs;
+    public partial string LaunchArgs { get; set; }
 
     [ObservableProperty]
-    private string programDataFolderDir;
+    public partial string ProgramDataFolderDir { get; set; }
 
     [ObservableProperty]
-    private string screenshotsFolderDir;
+    public partial string ScreenshotsFolderDir { get; set; }
 
     [ObservableProperty]
-    private string savesFolderDir;
+    public partial string SavesFolderDir { get; set; }
 
     [ObservableProperty]
-    private string logsFolderDir;
+    public partial string LogsFolderDir { get; set; }
 
     [ObservableProperty]
-    private KnownGame selectedGame;
+    public partial KnownGame SelectedGame { get; set; }
 
     [ObservableProperty]
-    private bool showResetArgsBtn;
+    public partial bool ShowResetArgsBtn { get; set; }
 
     [ObservableProperty]
-    private bool lightModeEnabled;
+    public partial bool LightModeEnabled { get; set; }
 
     [ObservableProperty]
-    private bool allowMultipleGameInstances;
+    public partial bool AllowMultipleGameInstances { get; set; }
 
     [ObservableProperty]
-    private bool useBigPictureMode;
-    
-    [ObservableProperty]
-    private bool isInReleaseMode;
+    public partial bool UseBigPictureMode { get; set; }    
 
+    [ObservableProperty]
+    public partial bool IsInReleaseMode { get; set; }
     private static string DefaultLaunchArg => "-vrmode none";
     private bool isResettingArgs;
 

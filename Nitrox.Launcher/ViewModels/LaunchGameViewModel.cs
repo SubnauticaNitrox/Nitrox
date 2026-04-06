@@ -34,11 +34,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private readonly ServerService serverService = serverService;
 
     [ObservableProperty]
-    private Platform gamePlatform;
+    public partial Platform GamePlatform { get; set; }
 
     [ObservableProperty]
-    private string? platformToolTip;
-
+    public partial string? PlatformToolTip { get; set; }
+    
     public Bitmap[] GalleryImageSources { get; } =
     [
         AssetHelper.GetAssetFromStream("/Assets/Images/gallery/image-1.png", static stream => new Bitmap(stream)),

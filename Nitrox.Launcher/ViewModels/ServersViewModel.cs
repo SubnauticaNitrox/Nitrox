@@ -25,8 +25,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
     private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
     [ObservableProperty]
-    private AvaloniaList<ServerEntry>? servers;
-
+    public partial AvaloniaList<ServerEntry>? Servers { get; set; }
     public ServersViewModel(IKeyValueStore keyValueStore, DialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
     {
         this.keyValueStore = keyValueStore;

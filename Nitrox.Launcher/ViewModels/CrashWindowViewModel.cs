@@ -13,10 +13,11 @@ namespace Nitrox.Launcher.ViewModels;
 internal partial class CrashWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string? title;
+    public partial string? Title { get; set; }
+    
     [ObservableProperty]
-    private string? message;
-
+    public partial string? Message { get; set; }
+    
     [RelayCommand(CanExecute = nameof(CanRestart))]
     private void Restart()
     {

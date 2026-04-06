@@ -18,9 +18,9 @@ internal sealed partial class BlogViewModel : RoutableViewModelBase
 {
     private readonly NitroxBlogService? nitroxBlogService;
     public static Bitmap FallbackImage { get; } = AssetHelper.GetAssetFromStream("/Assets/Images/blog/vines.png", static stream => new Bitmap(stream));
-
+    
     [ObservableProperty]
-    private AvaloniaList<NitroxBlog> nitroxBlogs = [];
+    public partial AvaloniaList<NitroxBlog> NitroxBlogs { get; set; } = [];
 
     public BlogViewModel()
     {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -18,20 +18,20 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class BackupRestoreViewModel : ModalViewModelBase
 {
     [ObservableProperty]
-    private AvaloniaList<BackupItem> backups = [];
+    public partial AvaloniaList<BackupItem> Backups { get; set; } = [];
 
     [ObservableProperty]
-    private string? saveFolderDirectory;
+    public partial string? SaveFolderDirectory { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand))]
     [NotifyDataErrorInfo]
     [Backup]
-    private BackupItem? selectedBackup;
+    public partial BackupItem? SelectedBackup { get; set; }
 
     [ObservableProperty]
-    private string? title;
-
+    public partial string? Title { get; set; }
+    
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
