@@ -11,7 +11,6 @@
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,8 +20,7 @@
         <vm:CreateServerViewModel Name="My Server Name" SelectedGameMode="CREATIVE" />
     </Design.DataContext>
     <Grid>
-        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}"
-                                 CanMinimize="False" />
+        <controls:CustomTitlebar CanMinimize="False" />
         <StackPanel>
             <StackPanel Classes="form" Margin="24">
                 <TextBlock Classes="modalHeader" Text="Create a server" />

@@ -25,7 +25,6 @@
     <Grid RowDefinitions="Auto, *, Auto">
         <controls:CustomTitlebar
             CanMinimize="False"
-            IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}"
             Grid.Row="0"
             Grid.RowSpan="2" />
 
