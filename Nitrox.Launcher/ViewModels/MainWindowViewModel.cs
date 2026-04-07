@@ -28,6 +28,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
     private readonly CommunityViewModel communityViewModel;
     private readonly DialogService dialogService;
     private readonly LaunchGameViewModel launchGameViewModel;
+    private readonly LibraryViewModel libraryViewModel;
     private readonly Func<Window> mainWindowProvider;
     private readonly OptionsViewModel optionsViewModel;
     private readonly ServerService serverService;
@@ -47,6 +48,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         DialogService dialogService,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
+        LibraryViewModel libraryViewModel,
         CommunityViewModel communityViewModel,
         BlogViewModel blogViewModel,
         UpdatesViewModel updatesViewModel,
@@ -58,6 +60,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         this.mainWindowProvider = mainWindowProvider;
         this.dialogService = dialogService;
         this.launchGameViewModel = launchGameViewModel;
+        this.libraryViewModel = libraryViewModel;
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
         this.blogViewModel = blogViewModel;
@@ -115,6 +118,9 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenServersViewAsync() => await this.ShowAsync(serversViewModel);
+    
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    public async Task OpenLibraryViewAsync() => await this.ShowAsync(libraryViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenCommunityViewAsync() => await this.ShowAsync(communityViewModel);
