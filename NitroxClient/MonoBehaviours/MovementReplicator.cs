@@ -104,7 +104,8 @@ public abstract class MovementReplicator : MonoBehaviour
             {
                 worldForces.enabled = false;
             }
-            rigidbody.isKinematic = false;
+            // Force kinematic to prevent falling when terrain isn't loaded
+            rigidbody.isKinematic = true;
         }
 
         MovementBroadcaster.RegisterReplicator(this);
@@ -170,19 +171,43 @@ public abstract class MovementReplicator : MonoBehaviour
         }
 
         // Interpolation
+        MovementData prev = firstNode.Value.Data;
+        MovementData next = nextNode.Value.Data;
 
-        MovementData prevData = firstNode.Value.Data;
-        MovementData nextData = nextNode.Value.Data;
+        float duration = nextNode.Value.Time - firstNode.Value.Time;
+        float t = duration > 0.0001f ? (currentTime - firstNode.Value.Time) / duration : 1f;
 
-        float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
+        Vector3 startPos = prev.Position.ToUnity();
+        Vector3 endPos = next.Position.ToUnity();
+        Quaternion startRot = prev.Rotation.ToUnity();
+        Quaternion endRot = next.Rotation.ToUnity();
 
-        transform.position = Vector3.Lerp(prevData.Position.ToUnity(), nextData.Position.ToUnity(), t);
+        Vector3 currentPos = Vector3.Lerp(startPos, endPos, t);
+        Quaternion currentRot = Quaternion.Lerp(startRot, endRot, t);
 
-        transform.rotation = Quaternion.Lerp(prevData.Rotation.ToUnity(), nextData.Rotation.ToUnity(), t);
+        // Snap if far, glide if close (prevent clipping)
+        if (Vector3.Distance(startPos, endPos) > 20f)
+        {
+            transform.position = currentPos;
+            transform.rotation = currentRot;
+            if (rigidbody)
+            {
+                rigidbody.position = currentPos;
+                rigidbody.rotation = currentRot;
+            }
+        }
+        else
+        {
+            if (rigidbody)
+            {
+                rigidbody.MovePosition(currentPos);
+                rigidbody.MoveRotation(currentRot);
+            }
+            transform.position = currentPos;
+            transform.rotation = currentRot;
+        }
 
-        ApplyNewMovementData(nextData);
-
-        // TODO: fix remote players being able to go through the object (ex: cyclops)
+        ApplyNewMovementData(next);
     }
 
     public abstract void ApplyNewMovementData(MovementData newMovementData);
