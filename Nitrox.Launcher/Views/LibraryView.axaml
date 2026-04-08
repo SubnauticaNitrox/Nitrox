@@ -1,6 +1,6 @@
 ﻿<UserControl
-    d:DesignHeight="600"
-    d:DesignWidth="1000"
+    d:DesignHeight="770"
+    d:DesignWidth="927"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.LibraryView"
     x:DataType="vm:LibraryViewModel"
@@ -8,18 +8,158 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls">
 
     <Design.DataContext>
-        <vm:LibraryViewModel />
+        <designer:DesignLibraryViewModel />
     </Design.DataContext>
 
     <ScrollViewer Classes="main">
        <StackPanel Background="{DynamicResource BrandWhite}"
-           Classes="viewPadding"
-           Spacing="23">
+                   Classes="viewPadding" Spacing="23">
 
            <TextBlock Classes="header" Text="Library" />
+
+           <ScrollViewer HorizontalScrollBarVisibility="Auto">
+               <ItemsControl ItemsSource="{Binding LibraryEntries}">
+                   <ItemsControl.ItemsPanel>
+                       <ItemsPanelTemplate>
+                           <StackPanel Orientation="Horizontal" Spacing="20" />
+                       </ItemsPanelTemplate>
+                   </ItemsControl.ItemsPanel>
+                   <ItemsControl.ItemTemplate>
+                       <DataTemplate>
+                           <RadioButton GroupName="LibraryEntries" Padding="0">
+                               <RadioButton.Styles>
+                                   <Style Selector="RadioButton">
+                                       <Setter Property="Template">
+                                           <ControlTemplate>
+                                               <Button Background="Transparent"
+                                                       Padding="0" CornerRadius="10"
+                                                       Command="{Binding $parent[ItemsControl].((vm:LibraryViewModel)DataContext).SetSelectedGameCommand}" CommandParameter="{Binding}">
+                                                   <Grid RowDefinitions="Auto, *, *" ColumnDefinitions="*, *">
+                                                       <Image Grid.ColumnSpan="2" Source="/Assets/Images/subnautica-card.png" Width="210" Margin="0 0 0 12"/>
+                                                       <TextBlock Grid.Row="1" HorizontalAlignment="Left" FontSize="16"
+                                                                  FontWeight="Bold" Text="Subnautica" />
+                                                       <controls:RecolorImage
+                                                           Grid.Column="1" Grid.Row="1"
+                                                           Height="15" Width="15"
+                                                           HorizontalAlignment="Right"
+                                                           Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
+                                                           Stretch="Uniform" />
+                                                       <TextBlock Grid.Row="2" HorizontalAlignment="Left" FontSize="10"
+                                                                  Margin="0 0 0 2"
+                                                                  Foreground="{DynamicResource BrandSubText}" FontWeight="Bold"
+                                                                  Text="{Binding Platform, Converter={converters:ToStringConverter}}"/>
+                                                   </Grid>
+                                               </Button>
+                                           </ControlTemplate>
+                                       </Setter>
+                                       <Style Selector="^[IsChecked=false]">
+                                           <Setter Property="Opacity" Value="0.5" />
+                                       </Style>
+                                       <Style Selector="^[IsChecked=true] /template/ Button:pointerover">
+                                           <Setter Property="Opacity" Value="1" />
+                                       </Style>
+                                   </Style>
+                               </RadioButton.Styles>
+                               <RadioButton.IsChecked>
+                                   <MultiBinding Converter="{converters:EqualityConverter}">
+                                       <Binding Path="PathToGame" />
+                                       <Binding Path="$parent[ItemsControl].((vm:LibraryViewModel)DataContext).SelectedGame.PathToGame" />
+                                   </MultiBinding>
+                               </RadioButton.IsChecked>
+                           </RadioButton>
+                       </DataTemplate>
+                   </ItemsControl.ItemTemplate>
+               </ItemsControl>
+           </ScrollViewer>
+
+           <!--<TextBlock Text="{Binding SelectedGame.PathToGame}" />-->
+
+           <TextBlock Text="RECENT SERVERS" Margin="0 15 0 -10" FontSize="10"
+                      Foreground="{DynamicResource BrandSubText}" />
+
+           <ItemsControl ItemsSource="{Binding RecentServers, Mode=OneWay}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemSpacing="16" LineSpacing="16" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="421" Background="{DynamicResource BrandPanelBackground}"
+                                CornerRadius="12" Padding="20">
+                            <StackPanel Orientation="Horizontal" Spacing="16">
+                                <Border Height="56" Width="56"
+                                        ClipToBounds="True"
+                                        CornerRadius="12">
+                                    <Grid ToolTip.Tip="{Binding ServerAddressTooltip}">
+                                        <Image IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" Source="/Assets/Images/subnautica-icon.png" />
+                                        <Border>
+                                            <Border.Background>
+                                                <ImageBrush Source="{Binding ServerIcon}" Stretch="UniformToFill" />
+                                            </Border.Background>
+                                        </Border>
+                                        <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
+                                            <controls:GrayscaleControl.Transitions>
+                                                <Transitions>
+                                                    <DoubleTransition Duration="0:0:0.10" Property="Opacity" />
+                                                </Transitions>
+                                            </controls:GrayscaleControl.Transitions>
+                                        </controls:GrayscaleControl>
+                                    </Grid>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center" Spacing="2">
+                                    <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding ServerName}" TextWrapping="NoWrap" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="12">
+                                        <StackPanel.Styles>
+                                            <Style Selector="StackPanel">
+                                                <Style Selector="^ TextBlock">
+                                                    <Setter Property="Opacity" Value="0.5" />
+                                                </Style>
+                                                <Style Selector="^ Ellipse">
+                                                    <Setter Property="Height" Value="6" />
+                                                    <Setter Property="Width" Value="6" />
+                                                    <Setter Property="Margin" Value="0 0 6 0" />
+                                                </Style>
+                                            </Style>
+                                        </StackPanel.Styles>
+                                        <Panel>
+                                            <StackPanel IsVisible="{Binding IsOnline}" Orientation="Horizontal">
+                                                <Ellipse Fill="{DynamicResource BrandOnColor}" />
+                                                <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
+                                            </StackPanel>
+                                            <StackPanel IsVisible="{Binding !IsOnline}" Orientation="Horizontal">
+                                                <Ellipse Fill="{DynamicResource BrandOffColor}" />
+                                                <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
+                                            </StackPanel>
+                                        </Panel>
+                                        <TextBlock TextWrapping="NoWrap" Background="Transparent"
+                                                   Classes.online="{Binding IsOnline}"
+                                                   ToolTip.Tip="{Binding PlayerNamesTooltip}">
+                                            <Run Text="{Binding PlayerCount}" />
+                                            <Run Text=" / " />
+                                            <Run Text="{Binding MaxPlayers}" />
+                                            <Run Text=" playing" />
+                                            <TextBlock.Styles>
+                                                <Style Selector="TextBlock.online:pointerover">
+                                                    <Setter Property="TextDecorations" Value="Underline" />
+                                                </Style>
+                                            </TextBlock.Styles>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
        </StackPanel>
     </ScrollViewer>
