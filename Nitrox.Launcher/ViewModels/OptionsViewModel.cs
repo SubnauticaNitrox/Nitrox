@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Input;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -20,8 +21,9 @@ using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageService storageService) : RoutableViewModelBase
+internal partial class OptionsViewModel(GameInstallationService gameInstallationService, IKeyValueStore keyValueStore, StorageService storageService) : RoutableViewModelBase
 {
+    private readonly GameInstallationService gameInstallationService = gameInstallationService;
     private readonly IKeyValueStore keyValueStore = keyValueStore;
     private readonly StorageService storageService = storageService;
 
@@ -45,6 +47,9 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     public partial KnownGame SelectedGame { get; set; }
 
     [ObservableProperty]
+    public partial AvaloniaList<KnownGame> KnownGames { get; set; }
+
+    [ObservableProperty]
     public partial bool ShowResetArgsBtn { get; set; }
 
     [ObservableProperty]
@@ -64,7 +69,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        SelectedGame = gameInstallationService.SelectedGame;
+        KnownGames = gameInstallationService.InstalledGames;
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
         ProgramDataPath = NitroxUser.AppDataPath;
         ScreenshotsPath = NitroxUser.ScreenshotsPath;
@@ -74,14 +80,13 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-        await Task.Run(() => SetTargetedSubnauticaPath(SelectedGame.PathToGame), cancellationToken).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
-    private void SetTargetedSubnauticaPath(string path)
+    private bool SetTargetedSubnauticaPath(string path)
     {
         if (!Directory.Exists(path))
         {
-            return;
+            return false;
         }
 
         PirateDetection.TriggerOnDirectory(path);
@@ -91,17 +96,15 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
             {
                 LauncherNotifier.Error("Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.");
-                return;
+                return false;
             }
         }
 
-        // Save game path as preferred for future sessions.
-        NitroxUser.PreferredGamePath = path;
-        NitroxUser.SetGamePathAndPlatform(path, null);
+        return true;
     }
 
     [RelayCommand]
-    private async Task SetGamePath()
+    private async Task SetGamePath() // TODO: Move this code into "AddGameInstallation" function within GameInstallationService and change overall logic to only discover and save newly detected game, and load previously detected/manually added games.
     {
         string selectedDirectory = await storageService.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
         if (selectedDirectory == "")
@@ -117,10 +120,23 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
         if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
-            await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+            bool canUseSelectedDirectory = await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));
+            if (!canUseSelectedDirectory)
+            {
+                return;
+            }
+
+            gameInstallationService.SelectGameInstallation(selectedDirectory);
+            SelectedGame = gameInstallationService.SelectedGame;
             LauncherNotifier.Success("Applied changes");
         }
+    }
+
+    [RelayCommand]
+    private void SetSelectedGame(KnownGame game)
+    {
+        gameInstallationService.SelectGameInstallation(game);
+        SelectedGame = gameInstallationService.SelectedGame;
     }
 
     [RelayCommand]

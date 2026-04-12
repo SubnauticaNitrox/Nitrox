@@ -8,7 +8,11 @@ internal sealed class DesignLibraryViewModel : LibraryViewModel
 
     public DesignLibraryViewModel() : base(null!)
     {
-        SelectedGame = new() { PathToGame = @"C:\Games\Steam\Subnautica", Platform = Platform.STEAM };
+        SelectedGame = new KnownGame
+        {
+            PathToGame = @"C:\Games\Steam\Subnautica",
+            Platform = Platform.STEAM
+        };
 
         LibraryEntries =
         [

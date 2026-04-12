@@ -27,6 +27,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
     private readonly BlogViewModel blogViewModel;
     private readonly CommunityViewModel communityViewModel;
     private readonly DialogService dialogService;
+    private readonly GameInstallationService gameInstallationService;
     private readonly LaunchGameViewModel launchGameViewModel;
     private readonly LibraryViewModel libraryViewModel;
     private readonly Func<Window> mainWindowProvider;
@@ -53,6 +54,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         BlogViewModel blogViewModel,
         UpdatesViewModel updatesViewModel,
         OptionsViewModel optionsViewModel,
+        GameInstallationService gameInstallationService,
         ServerService serverService,
         IKeyValueStore keyValueStore
     )
@@ -66,6 +68,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         this.blogViewModel = blogViewModel;
         this.updatesViewModel = updatesViewModel;
         this.optionsViewModel = optionsViewModel;
+        this.gameInstallationService = gameInstallationService;
         this.serverService = serverService;
 
         this.RegisterMessageListener<ShowViewMessage, MainWindowViewModel>(static (message, vm) => vm.ShowAsync(message.ViewModel));
@@ -90,7 +93,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         {
             bool lightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = lightModeEnabled ? ThemeVariant.Light : ThemeVariant.Dark);
-            GameInstallationFinder.FindGameCached(GameInfo.Subnautica);
+            gameInstallationService.RefreshInstalledGames(GameInfo.Subnautica);
 
             if (!NitroxEnvironment.IsReleaseMode)
             {

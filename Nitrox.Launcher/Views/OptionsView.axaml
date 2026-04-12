@@ -50,41 +50,77 @@
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
                     CornerRadius="12"
-                    Padding="22,15">
-                    <Grid ColumnDefinitions=" Auto, *, Auto">
-                        <controls:RecolorImage
-                            Grid.Column="0"
-                            Height="36" Width="36"
-                            Margin="0,0,22,0"
-                            Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
-                            Stretch="Uniform"
-                            ToolTip.Tip="Welcome aboard, Captain!" />
-                        <StackPanel
-                            Grid.Column="1"
-                            HorizontalAlignment="Left"
-                            Spacing="2"
-                            VerticalAlignment="Center">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
-                            <SelectableTextBlock
-                                FontSize="14"
-                                Foreground="{DynamicResource BrandBlack}"
-                                Opacity="0.75"
-                                Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
-                        </StackPanel>
-                        <Button
-                            Classes="primary"
-                            Command="{Binding SetGamePathCommand}"
-                            Content="Change"
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Margin="22,0,0,0"
-                            ToolTip.Tip="Direct the launcher to your game's install location"
-                            Width="120" />
-                    </Grid>
+                    ClipToBounds="True">
+                    <ItemsControl ItemsSource="{Binding KnownGames}" >
+                        <ItemsControl.Styles>
+                            <Style Selector="ContentPresenter:nth-child(even) > Border">
+                                <Setter Property="Background" Value="{DynamicResource BrandBorder}" />
+                            </Style>
+                        </ItemsControl.Styles>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <RadioButton
+                                        GroupName="GameSelection"
+                                        Padding="22,15"
+                                        HorizontalAlignment="Stretch"
+                                        Command="{Binding $parent[ItemsControl].((vm:OptionsViewModel)DataContext).SetSelectedGameCommand}"
+                                        CommandParameter="{Binding}">
+                                        <Grid ColumnDefinitions=" Auto, *, Auto">
+                                            <controls:RecolorImage
+                                                Grid.Column="0"
+                                                Height="36" Width="36"
+                                                Margin="22,0"
+                                                Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
+                                                Stretch="Uniform">
+                                            </controls:RecolorImage>
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Left"
+                                                Spacing="2"
+                                                VerticalAlignment="Center">
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding Platform, Converter={converters:ToStringConverter}}" />
+                                                <SelectableTextBlock
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource BrandBlack}"
+                                                    Opacity="0.75"
+                                                    Text="{Binding PathToGame, FallbackValue='Unknown path'}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <RadioButton.Styles>
+                                            <Style Selector="RadioButton[IsChecked=True] controls|RecolorImage">
+                                                <Setter Property="ToolTip.Tip" Value="Welcome aboard, Captain!" />
+                                            </Style>
+                                        </RadioButton.Styles>
+                                        <RadioButton.IsChecked>
+                                            <MultiBinding Converter="{converters:EqualityConverter}">
+                                                <Binding Path="PathToGame" />
+                                                <Binding Path="$parent[ItemsControl].((vm:OptionsViewModel)DataContext).SelectedGame.PathToGame" />
+                                            </MultiBinding>
+                                        </RadioButton.IsChecked>
+                                    </RadioButton>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Border>
+                <Grid>
+                    <TextBlock Text="Manually add a game installation" VerticalAlignment="Center" />
+                    <Button
+                        Classes="primary"
+                        Command="{Binding SetGamePathCommand}"
+                        Content="Choose Destination"
+                        HorizontalAlignment="Right"
+                        ToolTip.Tip="Direct the launcher to your game's install location" />
+                </Grid>
             </StackPanel>
 
             <!--  Launch Arguments  -->

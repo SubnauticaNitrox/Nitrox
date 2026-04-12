@@ -34,6 +34,7 @@ public static partial class ServiceCollectionExtensions
             .AddHostedSingletonService<StopAvaloniaOnHostExitService>()
             .AddHostedSingletonService<PreventMultipleAppInstancesService>()
             .AddHostedSingletonService<WriteGrpcPortFileService>()
+            .AddSingleton<GameInstallationService>()
             .AddSingleton<ServerService>()
             .AddSingleton<DialogService>()
             .AddSingleton<StorageService>()
