@@ -107,11 +107,11 @@
                     <DataTemplate>
                         <Border Width="421" Background="{DynamicResource BrandPanelBackground}"
                                 CornerRadius="12" Padding="20">
-                            <StackPanel Orientation="Horizontal" Spacing="16">
+                            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="16">
                                 <Border Height="56" Width="56"
                                         ClipToBounds="True"
                                         CornerRadius="12">
-                                    <Grid ToolTip.Tip="{Binding ServerAddressTooltip}">
+                                    <Grid>
                                         <Image IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" Source="/Assets/Images/subnautica-icon.png" />
                                         <Border>
                                             <Border.Background>
@@ -127,7 +127,7 @@
                                         </controls:GrayscaleControl>
                                     </Grid>
                                 </Border>
-                                <StackPanel VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                     <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding ServerName}" TextWrapping="NoWrap" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="12">
                                         <StackPanel.Styles>
@@ -167,7 +167,23 @@
                                         </TextBlock>
                                     </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
+                                <Button
+                                    Classes="icon"
+                                    Grid.Column="2"
+                                    ToolTip.Tip="{Binding ServerAddressTooltip}">
+                                    <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="{DynamicResource BrandBlack}" />
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="Effect">
+                                                <DropShadowDirectionEffect
+                                                    BlurRadius="20"
+                                                    Color="{DynamicResource BrandBlack}"
+                                                    ShadowDepth="0" />
+                                            </Setter>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
