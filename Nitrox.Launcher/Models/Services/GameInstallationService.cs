@@ -100,7 +100,6 @@ internal sealed partial class GameInstallationService : ObservableObject
             return mergedGames;
         }
 
-        PromoteInstalledGame(selectedGame);
         ApplySelection(selectedGame);
         SaveKnownGames(gameInfo);
         return mergedGames;
@@ -134,12 +133,7 @@ internal sealed partial class GameInstallationService : ObservableObject
     public void SelectGameInstallation(GameInfo gameInfo, KnownGame game)
     {
         ArgumentNullException.ThrowIfNull(game);
-
-        KnownGame normalizedGame = Normalize(game);
-        RemoveIgnoredGamePath(normalizedGame.PathToGame);
-        PromoteInstalledGame(normalizedGame);
-        ApplySelection(normalizedGame);
-        SaveKnownGames(gameInfo);
+        SelectGameInstallation(gameInfo, game, promoteInstalledGame: false);
     }
 
     public bool RemoveGameInstallation(GameInfo gameInfo, KnownGame game)
@@ -171,7 +165,6 @@ internal sealed partial class GameInstallationService : ObservableObject
             }
             else
             {
-                PromoteInstalledGame(fallbackGame);
                 ApplySelection(fallbackGame);
             }
         }
@@ -187,7 +180,33 @@ internal sealed partial class GameInstallationService : ObservableObject
         {
             PathToGame = Path.GetFullPath(path),
             Platform = GetPlatformFromPath(path)
-        });
+        }, promoteInstalledGame: true);
+    }
+
+    private void SelectGameInstallation(GameInfo gameInfo, KnownGame game, bool promoteInstalledGame)
+    {
+        KnownGame normalizedGame = Normalize(game);
+        RemoveIgnoredGamePath(normalizedGame.PathToGame);
+        if (promoteInstalledGame)
+        {
+            AddOrUpdateInstalledGame(normalizedGame);
+        }
+        ApplySelection(normalizedGame);
+        SaveKnownGames(gameInfo);
+    }
+
+    private void AddOrUpdateInstalledGame(KnownGame game)
+    {
+        for (int i = 0; i < InstalledGames.Count; i++)
+        {
+            if (string.Equals(InstalledGames[i].PathToGame, game.PathToGame, StringComparison.OrdinalIgnoreCase))
+            {
+                InstalledGames[i] = game;
+                return;
+            }
+        }
+
+        InstalledGames.Add(game);
     }
 
     private GameInstallationCacheData LoadKnownGames(GameInfo gameInfo)
@@ -285,18 +304,6 @@ internal sealed partial class GameInstallationService : ObservableObject
         };
     }
 
-    private void PromoteInstalledGame(KnownGame game)
-    {
-        for (int i = InstalledGames.Count - 1; i >= 0; i--)
-        {
-            if (string.Equals(InstalledGames[i].PathToGame, game.PathToGame, StringComparison.OrdinalIgnoreCase))
-            {
-                InstalledGames.RemoveAt(i);
-            }
-        }
-
-        InstalledGames.Insert(0, game);
-    }
 
     private void ApplySelection(KnownGame game)
     {

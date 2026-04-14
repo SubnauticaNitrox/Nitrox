@@ -67,11 +67,9 @@
                             Text="No game installations detected. You must add a game installation to use Nitrox."
                             FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"
                             IsVisible="{Binding !KnownGames.Count}" />
-                        <!-- TODO: Stop list from reordering somehow when a different installation is selected -->
                         <ItemsControl ItemsSource="{Binding KnownGames}" >
                             <ItemsControl.Styles>
                                 <Style Selector="ContentPresenter:nth-child(even) > Border">
-                                    <!-- TODO: Stop the flickering of background color when selecting one of the game installations (even for the currently selected one) -->
                                     <Setter Property="Background" Value="{DynamicResource BrandBorder}" />
                                 </Style>
                             </ItemsControl.Styles>
