@@ -6,7 +6,7 @@ namespace Nitrox.Launcher.ViewModels.Designer;
 internal sealed class DesignLibraryViewModel : LibraryViewModel
 {
 
-    public DesignLibraryViewModel() : base(null!)
+    public DesignLibraryViewModel() : base(null!, null!, null!)
     {
         SelectedGame = new KnownGame
         {

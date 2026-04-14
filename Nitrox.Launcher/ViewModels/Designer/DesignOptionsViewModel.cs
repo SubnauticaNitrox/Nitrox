@@ -5,7 +5,7 @@ namespace Nitrox.Launcher.ViewModels.Designer;
 
 internal class DesignOptionsViewModel : OptionsViewModel
 {
-    public DesignOptionsViewModel() : base(null!, null!, null!)
+    public DesignOptionsViewModel() : base(null!, null!, null!, null!)
     {
         SelectedGame = new KnownGame
         {

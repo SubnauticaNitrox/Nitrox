@@ -23,68 +23,80 @@
        <StackPanel Background="{DynamicResource BrandWhite}"
                    Classes="viewPadding" Spacing="23">
 
-           <TextBlock Classes="header" Text="Library" />
+           <Grid>
+               <TextBlock Classes="header" Text="Library" />
+               <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5">
+                   <Button Classes="primary"
+                           Command="{Binding AddGameInstallationCommand}"
+                           Content="Add game" />
+                   <!-- TODO: Figure out how to use this button to delete saves (and do other stuff?? I'm not sure what else you can do) -->
+                   <Button Content="Options" />
+               </StackPanel>
+           </Grid>
 
            <ScrollViewer HorizontalScrollBarVisibility="Auto">
-               <ItemsControl ItemsSource="{Binding LibraryEntries}">
-                   <ItemsControl.ItemsPanel>
-                       <ItemsPanelTemplate>
-                           <StackPanel Orientation="Horizontal" Spacing="20" />
-                       </ItemsPanelTemplate>
-                   </ItemsControl.ItemsPanel>
-                   <ItemsControl.ItemTemplate>
-                       <DataTemplate>
-                           <RadioButton GroupName="LibraryEntries" Padding="0">
-                               <RadioButton.Styles>
-                                   <Style Selector="RadioButton">
-                                       <Setter Property="Template">
-                                           <ControlTemplate>
-                                               <Button Background="Transparent"
-                                                       Padding="0" CornerRadius="10"
-                                                       Command="{Binding $parent[ItemsControl].((vm:LibraryViewModel)DataContext).SetSelectedGameCommand}" CommandParameter="{Binding}">
-                                                   <Grid RowDefinitions="Auto, *, *" ColumnDefinitions="*, *">
-                                                       <Image Grid.ColumnSpan="2" Source="/Assets/Images/subnautica-card.png" Width="210" Margin="0 0 0 12"/>
-                                                       <TextBlock Grid.Row="1" HorizontalAlignment="Left" FontSize="16"
-                                                                  FontWeight="Bold" Text="Subnautica" />
-                                                       <controls:RecolorImage
-                                                           Grid.Column="1" Grid.Row="1"
-                                                           Height="15" Width="15"
-                                                           HorizontalAlignment="Right"
-                                                           Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
-                                                           Stretch="Uniform" />
-                                                       <TextBlock Grid.Row="2" HorizontalAlignment="Left" FontSize="10"
-                                                                  Margin="0 0 0 2"
-                                                                  Foreground="{DynamicResource BrandSubText}" FontWeight="Bold"
-                                                                  Text="{Binding Platform, Converter={converters:ToStringConverter}}"/>
-                                                   </Grid>
-                                               </Button>
-                                           </ControlTemplate>
-                                       </Setter>
-                                       <Style Selector="^[IsChecked=false]">
-                                           <Setter Property="Opacity" Value="0.5" />
+               <Grid>
+                   <!-- TODO: Add backup card for when no installations are detected/added -->
+                   <ItemsControl ItemsSource="{Binding LibraryEntries}">
+                       <ItemsControl.ItemsPanel>
+                           <ItemsPanelTemplate>
+                               <StackPanel Orientation="Horizontal" Spacing="20" />
+                           </ItemsPanelTemplate>
+                       </ItemsControl.ItemsPanel>
+                       <ItemsControl.ItemTemplate>
+                           <DataTemplate>
+                               <RadioButton GroupName="LibraryEntries" Padding="0">
+                                   <RadioButton.Styles>
+                                       <Style Selector="RadioButton">
+                                           <Setter Property="Template">
+                                               <ControlTemplate>
+                                                   <Button Background="Transparent"
+                                                           Padding="0" CornerRadius="10"
+                                                           Command="{Binding $parent[ItemsControl].((vm:LibraryViewModel)DataContext).SetSelectedGameCommand}" CommandParameter="{Binding}">
+                                                       <Grid RowDefinitions="Auto, *, *" ColumnDefinitions="*, *">
+                                                           <Image Grid.ColumnSpan="2" Source="/Assets/Images/subnautica-card.png" Width="210" Margin="0 0 0 12"/>
+                                                           <TextBlock Grid.Row="1" HorizontalAlignment="Left" FontSize="16"
+                                                                      FontWeight="Bold" Text="Subnautica" />
+                                                           <controls:RecolorImage
+                                                               Grid.Column="1" Grid.Row="1"
+                                                               Height="15" Width="15"
+                                                               HorizontalAlignment="Right"
+                                                               Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
+                                                               Stretch="Uniform" />
+                                                           <TextBlock Grid.Row="2" HorizontalAlignment="Left" FontSize="10"
+                                                                      Margin="0 0 0 2"
+                                                                      Foreground="{DynamicResource BrandSubText}" FontWeight="Bold"
+                                                                      Text="{Binding Platform, Converter={converters:ToStringConverter}}"/>
+                                                       </Grid>
+                                                   </Button>
+                                               </ControlTemplate>
+                                           </Setter>
+                                           <Style Selector="^[IsChecked=false]">
+                                               <Setter Property="Opacity" Value="0.5" />
+                                           </Style>
+                                           <Style Selector="^[IsChecked=true] /template/ Button:pointerover">
+                                               <Setter Property="Opacity" Value="1" />
+                                           </Style>
                                        </Style>
-                                       <Style Selector="^[IsChecked=true] /template/ Button:pointerover">
-                                           <Setter Property="Opacity" Value="1" />
-                                       </Style>
-                                   </Style>
-                               </RadioButton.Styles>
-                               <RadioButton.IsChecked>
-                                   <MultiBinding Converter="{converters:EqualityConverter}">
-                                       <Binding Path="PathToGame" />
-                                       <Binding Path="$parent[ItemsControl].((vm:LibraryViewModel)DataContext).SelectedGame.PathToGame" />
-                                   </MultiBinding>
-                               </RadioButton.IsChecked>
-                           </RadioButton>
-                       </DataTemplate>
-                   </ItemsControl.ItemTemplate>
-               </ItemsControl>
+                                   </RadioButton.Styles>
+                                   <RadioButton.IsChecked>
+                                       <MultiBinding Converter="{converters:EqualityConverter}">
+                                           <Binding Path="PathToGame" />
+                                           <Binding Path="$parent[ItemsControl].((vm:LibraryViewModel)DataContext).SelectedGame.PathToGame" />
+                                       </MultiBinding>
+                                   </RadioButton.IsChecked>
+                               </RadioButton>
+                           </DataTemplate>
+                       </ItemsControl.ItemTemplate>
+                   </ItemsControl>
+               </Grid>
            </ScrollViewer>
-
-           <!--<TextBlock Text="{Binding SelectedGame.PathToGame}" />-->
 
            <TextBlock Text="RECENT SERVERS" Margin="0 15 0 -10" FontSize="10"
                       Foreground="{DynamicResource BrandSubText}" />
 
+           <!-- TODO: Add "No servers here, add a server in-game to see it here" backup text for when no servers are detected -->
+           <!-- TODO: Stop list from reordering somehow when a different installation is selected -->
            <ItemsControl ItemsSource="{Binding RecentServers, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

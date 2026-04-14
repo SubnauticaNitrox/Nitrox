@@ -146,6 +146,12 @@ public static class NitroxUser
         GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 
+    public static void ClearGamePathAndPlatform()
+    {
+        gamePath = string.Empty;
+        GamePlatform = null;
+    }
+
     public static string ExecutableRootPath
     {
         get
