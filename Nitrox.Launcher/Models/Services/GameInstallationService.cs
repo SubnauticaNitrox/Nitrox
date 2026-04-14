@@ -49,10 +49,20 @@ internal sealed partial class GameInstallationService : ObservableObject
         }
         ReplaceIgnoredGamePaths(cacheData.IgnoredGamePaths);
 
-        List<KnownGame> savedGames = cacheData.KnownGames
+        List<KnownGame> savedGames = [];
+        foreach (KnownGame normalizedGame in cacheData.KnownGames.Select(Normalize).Where(normalizedGame => !string.IsNullOrWhiteSpace(normalizedGame.PathToGame)))
+        {
+            if (!Directory.Exists(normalizedGame.PathToGame))
+            {
+                Log.Info($"Removing missing {gameInfo.Name} installation from cache: {normalizedGame.PathToGame}");
+                continue;
+            }
+
+            savedGames.Add(normalizedGame);
+        }
+
+        savedGames = savedGames
             .Where(game => !IsIgnoredGamePath(game.PathToGame))
-            .Select(Normalize)
-            .Where(game => !string.IsNullOrWhiteSpace(game.PathToGame))
             .ToList();
         List<KnownGame> discoveredGames = GameInstallationFinder.FindGamesCached(gameInfo)
             .Select(ToKnownGame)

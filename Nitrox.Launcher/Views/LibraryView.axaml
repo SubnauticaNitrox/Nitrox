@@ -58,7 +58,7 @@
                                            <TextBlock Text="Remove selected installation" />
                                        </StackPanel>
                                    </Button>
-                                   <Button Command="{Binding RemoveGameInstallationCommand}"
+                                   <Button Command="{Binding RefreshGameInstallationsCommand}"
                                            CommandParameter="{Binding SelectedGame}"
                                            ToolTip.Tip="Recheck the system for any new, non-ignored game installations and add them to the list.">
                                        <StackPanel>
