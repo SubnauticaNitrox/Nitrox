@@ -132,7 +132,7 @@ internal sealed partial class GameInstallationService : ObservableObject
         SaveKnownGames(gameInfo);
     }
 
-    public bool DeleteGameInstallation(GameInfo gameInfo, KnownGame game)
+    public bool RemoveGameInstallation(GameInfo gameInfo, KnownGame game)
     {
         ArgumentNullException.ThrowIfNull(game);
 

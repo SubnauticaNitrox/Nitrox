@@ -112,7 +112,7 @@ internal partial class OptionsViewModel(GameInstallationService gameInstallation
     }
 
     [RelayCommand]
-    private async Task DeleteGameInstallation(KnownGame game)
+    private async Task RemoveGameInstallation(KnownGame game)
     {
         if (game == null || string.IsNullOrWhiteSpace(game.PathToGame))
         {
@@ -131,7 +131,7 @@ internal partial class OptionsViewModel(GameInstallationService gameInstallation
             return;
         }
 
-        if (!gameInstallationService.DeleteGameInstallation(GameInfo.Subnautica, game))
+        if (!gameInstallationService.RemoveGameInstallation(GameInfo.Subnautica, game))
         {
             LauncherNotifier.Error("Failed to remove game installation");
             return;
@@ -139,6 +139,13 @@ internal partial class OptionsViewModel(GameInstallationService gameInstallation
 
         SelectedGame = gameInstallationService.SelectedGame;
         LauncherNotifier.Success("Game installation removed");
+    }
+
+    [RelayCommand]
+    private void RefreshGameInstallations()
+    {
+        gameInstallationService.RefreshInstalledGames(GameInfo.Subnautica);
+        LauncherNotifier.Success("Refreshed game installations");
     }
 
     [RelayCommand]

@@ -29,14 +29,57 @@
                    <Button Classes="primary"
                            Command="{Binding AddGameInstallationCommand}"
                            Content="Add game" />
-                   <!-- TODO: Figure out how to use this button to delete saves (and do other stuff?? I'm not sure what else you can do) -->
-                   <Button Content="Options" />
+                   <Button Content="Options">
+                       <Button.Flyout>
+                           <Flyout>
+                               <StackPanel Orientation="Vertical" Spacing="2">
+                                   <StackPanel.Styles>
+                                       <Style Selector="Button">
+                                           <Setter Property="Background" Value="Transparent" />
+                                           <Setter Property="Padding" Value="8" />
+                                           <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                           <Setter Property="HorizontalContentAlignment" Value="Left" />
+
+                                           <Style Selector="^ StackPanel">
+                                               <Setter Property="Spacing" Value="10" />
+                                           </Style>
+
+                                           <Style Selector="^ Image, ^ controls|RecolorImage, ^ Svg">
+                                               <Setter Property="Width" Value="18" />
+                                               <Setter Property="Height" Value="18" />
+                                           </Style>
+                                       </Style>
+                                   </StackPanel.Styles>
+                                   <Button Command="{Binding RemoveGameInstallationCommand}"
+                                           CommandParameter="{Binding SelectedGame}"
+                                           ToolTip.Tip="Remove the currently selected game installation from the Nitrox Launcher">
+                                       <StackPanel>
+                                           <Image Source="/Assets/Images/world-manager/delete.png" />
+                                           <TextBlock Text="Remove selected installation" />
+                                       </StackPanel>
+                                   </Button>
+                                   <Button Command="{Binding RemoveGameInstallationCommand}"
+                                           CommandParameter="{Binding SelectedGame}"
+                                           ToolTip.Tip="Recheck the system for any new, non-ignored game installations and add them to the list.">
+                                       <StackPanel>
+                                           <Svg Classes="theme" Path="/Assets/Icons/refresh.svg" />
+                                           <TextBlock Text="Refresh game installations" />
+                                       </StackPanel>
+                                   </Button>
+                               </StackPanel>
+                           </Flyout>
+                       </Button.Flyout>
+                   </Button>
                </StackPanel>
            </Grid>
 
            <ScrollViewer HorizontalScrollBarVisibility="Auto">
-               <Grid>
-                   <!-- TODO: Add backup card for when no installations are detected/added -->
+               <Grid Height="335">
+                   <TextBlock
+                       Text="No game installations detected. You must add a game installation to use Nitrox."
+                       FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       IsVisible="{Binding !LibraryEntries.Count}" />
+                   <!-- TODO: Stop list from reordering somehow when a different installation is selected -->
                    <ItemsControl ItemsSource="{Binding LibraryEntries}">
                        <ItemsControl.ItemsPanel>
                            <ItemsPanelTemplate>
@@ -95,12 +138,10 @@
            <TextBlock Text="RECENT SERVERS" Margin="0 15 0 -10" FontSize="10"
                       Foreground="{DynamicResource BrandSubText}" />
 
-           <!-- TODO: Add "No servers here, add a server in-game to see it here" backup text for when no servers are detected -->
-           <!-- TODO: Stop list from reordering somehow when a different installation is selected -->
            <ItemsControl ItemsSource="{Binding RecentServers, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel ItemSpacing="16" LineSpacing="16" HorizontalAlignment="Center"/>
+                        <WrapPanel ItemSpacing="16" LineSpacing="16" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -170,8 +211,9 @@
                                 <Button
                                     Classes="icon"
                                     Grid.Column="2"
+                                    Width="24" Height="24"
                                     ToolTip.Tip="{Binding ServerAddressTooltip}">
-                                    <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="{DynamicResource BrandBlack}" />
+                                    <Svg Classes="theme" Path="/Assets/Icons/info.svg" />
                                     <Button.Styles>
                                         <Style Selector="Button:pointerover">
                                             <Setter Property="Effect">

@@ -15,6 +15,7 @@ namespace Nitrox.Launcher.ViewModels;
 internal partial class LibraryViewModel(GameInstallationService gameInstallationService, StorageService storageService, DialogService dialogService) : RoutableViewModelBase
 {
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RemoveGameInstallationCommand))]
     public partial KnownGame SelectedGame { get; set; }
 
     [ObservableProperty]
@@ -84,8 +85,8 @@ internal partial class LibraryViewModel(GameInstallationService gameInstallation
         LauncherNotifier.Success("Added game installation");
     }
 
-    [RelayCommand]
-    private async Task DeleteGameInstallation(KnownGame? game)
+    [RelayCommand(CanExecute = nameof(CanRemoveGameInstallation))]
+    private async Task RemoveGameInstallation(KnownGame? game)
     {
         if (game == null || string.IsNullOrWhiteSpace(game.PathToGame))
         {
@@ -104,7 +105,7 @@ internal partial class LibraryViewModel(GameInstallationService gameInstallation
             return;
         }
 
-        if (!gameInstallationService.DeleteGameInstallation(GameInfo.Subnautica, game))
+        if (!gameInstallationService.RemoveGameInstallation(GameInfo.Subnautica, game))
         {
             LauncherNotifier.Error("Failed to remove game installation");
             return;
@@ -112,6 +113,19 @@ internal partial class LibraryViewModel(GameInstallationService gameInstallation
 
         SelectedGame = gameInstallationService.SelectedGame;
         LauncherNotifier.Success("Game installation removed");
+    }
+
+    [RelayCommand]
+    private void RefreshGameInstallations()
+    {
+        gameInstallationService.RefreshInstalledGames(GameInfo.Subnautica);
+        SelectedGame = gameInstallationService.SelectedGame;
+        LauncherNotifier.Success("Refreshed game installations");
+    }
+
+    private bool CanRemoveGameInstallation(KnownGame? game)
+    {
+        return game != null && !string.IsNullOrWhiteSpace(game.PathToGame);
     }
 
 }
