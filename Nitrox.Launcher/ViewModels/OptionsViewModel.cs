@@ -121,7 +121,7 @@ internal partial class OptionsViewModel(GameInstallationService gameInstallation
 
         DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Title = $"Are you sure you want to delete the game installation '{game.PathToGame}'?";
+            model.Title = $"Are you sure you want to remove the game installation '{game.PathToGame}'?";
             model.Description = "This will remove the installation from the launcher cache and it will no longer appear in the installation list unless it is added again.";
             model.ButtonOptions = ButtonOptions.YesNo;
         });

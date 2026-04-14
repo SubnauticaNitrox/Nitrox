@@ -117,7 +117,7 @@
                                                     HorizontalAlignment="Right"
                                                     Command="{Binding $parent[ItemsControl].((vm:OptionsViewModel)DataContext).DeleteGameInstallationCommand}"
                                                     CommandParameter="{Binding}"
-                                                    ToolTip.Tip="Delete this game installation from the Nitrox Launcher"
+                                                    ToolTip.Tip="Remove this game installation from the Nitrox Launcher"
                                                     >
                                                 <Svg Classes="theme" Path="/Assets/Icons/close.svg" />
                                                 <Button.Styles>
