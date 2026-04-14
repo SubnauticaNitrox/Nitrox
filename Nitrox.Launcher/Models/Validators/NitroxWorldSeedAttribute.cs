@@ -5,7 +5,7 @@ namespace Nitrox.Launcher.Models.Validators;
 
 public sealed partial class NitroxWorldSeedAttribute : TypedValidationAttribute<string>
 {
-    [GeneratedRegex(@"^[a-zA-Z]{10}$")]
+    [GeneratedRegex(@"^[a-zA-Z0-9]{10}$")]
     private static partial Regex NitroxWorldSeedRegex { get; }
 
     protected override ValidationResult IsValid(string value, ValidationContext context)
@@ -15,6 +15,6 @@ public sealed partial class NitroxWorldSeedAttribute : TypedValidationAttribute<
             return ValidationResult.Success;
         }
 
-        return new ValidationResult($"The field {context.DisplayName} must contain 10 alphabetical characters.");
+        return new ValidationResult($"The field {context.DisplayName} must contain 10 alphanumeric characters.");
     }
 }
