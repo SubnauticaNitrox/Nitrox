@@ -2,6 +2,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
     <Design.PreviewWith>
         <StackPanel Width="200">
@@ -77,6 +78,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="ShowTitle" Value="False" />
+        <Setter Property="IsVisible" Value="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" />
 
         <Style Selector="^ /template/ StackPanel">
             <Setter Property="Orientation" Value="Horizontal" />
