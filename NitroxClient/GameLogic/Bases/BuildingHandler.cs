@@ -421,7 +421,7 @@ public partial class BuildingHandler
     {
         if (Main == this)
         {
-            Main = null; // todo: this valid?
+            Main = null;
         }
         BuildQueue?.Clear();
         BasesCooldown?.Clear();
