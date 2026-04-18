@@ -218,7 +218,7 @@ namespace NitroxClient.MonoBehaviours
             FreezeTime.End(FreezeTime.Id.WaitScreen);
             WaitScreen.main.items.Clear();
 
-            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            PlayerManager remotePlayerManager = NitroxServiceLocator.Cache<PlayerManager>.Value;
 
             TopRightWatermarkText.ApplyChangesForInGame();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
