@@ -54,7 +54,7 @@ public static class NitroxServiceLocator
         }
 
         // If there's an existing scope, invalidate caches before disposing
-        // Should allow us to handle instances of stale refs for issue 2545
+        // Should allow us to handle instances of stale references
         if (CurrentLifetimeScope != null)
         {
             OnLifetimeScopeEnded();

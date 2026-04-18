@@ -34,6 +34,7 @@ namespace NitroxClient.MonoBehaviours
         private IPacketSender packetSender;
         private ThrottledPacketSender throttledPacketSender;
         private GameLogic.Terrain terrain;
+        private readonly List<MonoBehaviour> sessionMonoBehaviours = new();
 
         public bool InitialSyncCompleted { get; set; }
 
@@ -164,14 +165,14 @@ namespace NitroxClient.MonoBehaviours
         public void InitMonoBehaviours()
         {
             // Gameplay.
-            gameObject.AddComponent<UnderwaterStateTracker>();
-            gameObject.AddComponent<PrecursorTracker>();
-            gameObject.AddComponent<PlayerMovementBroadcaster>();
-            gameObject.AddComponent<PlayerDeathBroadcaster>();
-            gameObject.AddComponent<PlayerStatsBroadcaster>();
-            gameObject.AddComponent<EntityPositionBroadcaster>();
-            gameObject.AddComponent<BuildingHandler>();
-            gameObject.AddComponent<MovementBroadcaster>();
+            sessionMonoBehaviours.Add(gameObject.AddComponent<UnderwaterStateTracker>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PrecursorTracker>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PlayerMovementBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PlayerDeathBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PlayerStatsBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<EntityPositionBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<BuildingHandler>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<MovementBroadcaster>());
             VirtualCyclops.Initialize();
         }
 
@@ -185,7 +186,7 @@ namespace NitroxClient.MonoBehaviours
             // Clear entity registry before invoking end event
             NitroxEntity.ClearAll();
 
-            // clear remote players
+            // Clear remote players
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             remotePlayerManager.RemoveAllPlayers();
 
@@ -199,19 +200,14 @@ namespace NitroxClient.MonoBehaviours
 
         /// <summary>
         /// Destroys session-scoped MonoBehaviours to clean up resources before multiplayer end.
-        /// todo: consider replacing manual Destroy calls by having components inherit
-        /// <see cref="NitroxSessionBehaviour"/> so cleanup happens automatically on session end.
         /// </summary>
         private void DestroySessionMonoBehaviours()
         {
-            Destroy(GetComponent<UnderwaterStateTracker>());
-            Destroy(GetComponent<PrecursorTracker>());
-            Destroy(GetComponent<PlayerMovementBroadcaster>());
-            Destroy(GetComponent<PlayerDeathBroadcaster>());
-            Destroy(GetComponent<PlayerStatsBroadcaster>());
-            Destroy(GetComponent<EntityPositionBroadcaster>());
-            Destroy(GetComponent<BuildingHandler>());
-            Destroy(GetComponent<MovementBroadcaster>());
+            foreach (MonoBehaviour behaviour in sessionMonoBehaviours)
+            {
+                Destroy(behaviour);
+            }
+            sessionMonoBehaviours.Clear();
         }
 
         private static void SetLoadingComplete()
