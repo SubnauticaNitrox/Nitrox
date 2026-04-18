@@ -99,9 +99,9 @@ public class PlayerManager
     /// </summary>
     public void RemoveAllPlayers()
     {
-        foreach (ushort playerId in playersById.Keys.ToList())
+        foreach (ushort sessionId in sessionsById.Keys.ToList())
         {
-            RemovePlayer(playerId);
+            RemovePlayer(sessionId);
         }
     }
 
