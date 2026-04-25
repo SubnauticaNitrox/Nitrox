@@ -127,7 +127,7 @@ internal class PortForwardService(IOptionsMonitor<SubnauticaServerOptions> optio
 
     private async Task ClosePortAsync(ushort port, CancellationToken cancellationToken = default)
     {
-        if (await NatHelper.DeletePortMappingAsync(port, Protocol.Udp, portMappingDescription, cancellationToken))
+        if (await NatHelper.DeletePortMappingAsync(port, Protocol.Udp, cancellationToken))
         {
             logger.ZLogInformation($"Removed port forward rule {port:@Port} UDP");
         }
