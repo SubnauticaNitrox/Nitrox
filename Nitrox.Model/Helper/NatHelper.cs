@@ -23,12 +23,12 @@ public static class NatHelper
         }
     }).ConfigureAwait(false);
 
-    public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
+    public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol, string description, CancellationToken ct = default)
     {
         int tries = 3;
         while (tries-- >= 0)
         {
-            if (await TryRemoveAsync(port, protocol, ct))
+            if (await TryRemoveAsync(port, protocol, description, ct))
             {
                 return true;
             }
@@ -36,7 +36,7 @@ public static class NatHelper
         }
         return false;
 
-        static async Task<bool> TryRemoveAsync(ushort port, Protocol protocol, CancellationToken ct)
+        static async Task<bool> TryRemoveAsync(ushort port, Protocol protocol, string description, CancellationToken ct)
         {
             return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
             {
@@ -48,7 +48,7 @@ public static class NatHelper
                 {
                     return false;
                 }
-            }, new Mapping(protocol, port, port), ct).ConfigureAwait(false);
+            }, CreateMapping(port, port, protocol, description), ct).ConfigureAwait(false);
         }
     }
 
@@ -67,9 +67,8 @@ public static class NatHelper
         }, (port, protocol), ct).ConfigureAwait(false);
     }
 
-    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
+    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol, string description, CancellationToken ct = default)
     {
-        Mapping mapping = new(protocol, port, port);
         return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
         {
             try
@@ -80,7 +79,7 @@ public static class NatHelper
             {
                 return ExceptionToCode(ex);
             }
-        }, mapping, ct).ConfigureAwait(false);
+        }, CreateMapping(port, port, protocol, description), ct).ConfigureAwait(false);
     }
 
     public enum ResultCodes
@@ -100,7 +99,7 @@ public static class NatHelper
     {
         private static readonly ConcurrentDictionary<EndPoint, INatDevice> discoveredDevices = new();
         private static readonly object discoverTaskLocker = new();
-        private static Task<IEnumerable<INatDevice>> discoverTaskCache;
+        private static Task<IEnumerable<INatDevice>>? discoverTaskCache;
 
         public static Task<IEnumerable<INatDevice>> DiscoverAsync()
         {
@@ -213,4 +212,6 @@ public static class NatHelper
             return default;
         }
     }
+
+    private static Mapping CreateMapping(int privatePort, int publicPort, Protocol protocol, string description) => new(protocol, privatePort, publicPort, int.MaxValue, description);
 }
