@@ -91,7 +91,7 @@ public sealed class SteamFinder : IGameFinder
 
         while (file.ReadLine() is { } line)
         {
-            line = Regex.Unescape(line.Trim(trimChars));
+            line = line.Trim(trimChars);
             Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
             string key = regMatch.Groups[1].Value;
 
