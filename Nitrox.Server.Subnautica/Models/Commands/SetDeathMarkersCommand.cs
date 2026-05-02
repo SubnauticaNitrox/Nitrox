@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
+using NitroxModel.Packets;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
@@ -17,7 +18,7 @@ internal sealed class SetDeathMarkersCommand(IOptions<SubnauticaServerOptions> o
             return;
         }
         options.Value.MarkDeathPointsWithBeacon = newState;
-        await context.SendToAllAsync(new KeepInventoryChanged(newState));
+        await context.SendToAllAsync(new DeathMarkersChanged(newState));
         await context.SendToAllAsync($"MarkDeathPointsWithBeacon changed to \"{newState}\" by {context.OriginName}");
     }
 }
