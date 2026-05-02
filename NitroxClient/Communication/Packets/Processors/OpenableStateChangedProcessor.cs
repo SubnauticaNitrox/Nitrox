@@ -1,30 +1,22 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class OpenableStateChangedProcessor : IClientPacketProcessor<OpenableStateChanged>
 {
-    public class OpenableStateChangedProcessor : ClientPacketProcessor<OpenableStateChanged>
+    public Task Process(ClientProcessorContext context, OpenableStateChanged packet)
     {
-        private readonly IPacketSender packetSender;
+        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+        Openable openable = gameObject.RequireComponent<Openable>();
 
-        public OpenableStateChangedProcessor(IPacketSender packetSender)
+        using (PacketSuppressor<OpenableStateChanged>.Suppress())
         {
-            this.packetSender = packetSender;
+            openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
         }
-
-        public override void Process(OpenableStateChanged packet)
-        {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            Openable openable = gameObject.RequireComponent<Openable>();
-
-            using (PacketSuppressor<OpenableStateChanged>.Suppress())
-            {
-                openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
-            }
-        }
+        return Task.CompletedTask;
     }
 }

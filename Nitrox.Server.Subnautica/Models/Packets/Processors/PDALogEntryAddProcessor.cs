@@ -1,31 +1,21 @@
 ﻿using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class PDALogEntryAddProcessor(PdaManager pdaManager, StoryScheduler storyScheduler) : IAuthPacketProcessor<PDALogEntryAdd>
 {
-    public class PDALogEntryAddProcessor : AuthenticatedPacketProcessor<PDALogEntryAdd>
+    private readonly PdaManager pdaManager = pdaManager;
+    private readonly StoryScheduler storyScheduler = storyScheduler;
+
+    public async Task Process(AuthProcessorContext context, PDALogEntryAdd packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly PDAStateData pdaState;
-        private readonly ScheduleKeeper scheduleKeeper;
-
-        public PDALogEntryAddProcessor(PlayerManager playerManager, PDAStateData pdaState, ScheduleKeeper scheduleKeeper)
+        pdaManager.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
+        if (storyScheduler.ContainsScheduledStory(packet.Key))
         {
-            this.playerManager = playerManager;
-            this.pdaState = pdaState;
-            this.scheduleKeeper = scheduleKeeper;
+            storyScheduler.UnscheduleStory(packet.Key);
         }
-
-        public override void Process(PDALogEntryAdd packet, Player player)
-        {
-            pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
-            if (scheduleKeeper.ContainsScheduledGoal(packet.Key))
-            {
-                scheduleKeeper.UnScheduleGoal(packet.Key);
-            }
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        await context.SendToOthersAsync(packet);
     }
 }

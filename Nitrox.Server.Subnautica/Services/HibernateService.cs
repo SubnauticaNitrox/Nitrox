@@ -1,0 +1,65 @@
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+
+namespace Nitrox.Server.Subnautica.Services;
+
+internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHibernate.WakeTrigger wakeTrigger, ILogger<HibernateService> logger) : IHostedLifecycleService, ISessionCleaner
+{
+    private readonly ILogger<HibernateService> logger = logger;
+    private readonly IHibernate.SleepTrigger sleepTrigger = sleepTrigger;
+    private readonly IHibernate.WakeTrigger wakeTrigger = wakeTrigger;
+
+    public bool IsSleeping
+    {
+        get => Interlocked.CompareExchange(ref field, true, true);
+        private set => Interlocked.Exchange(ref field, value);
+    }
+
+    /// <summary>
+    ///     Puts server in power saving mode. Should still allow server to wake up as if it never slept.
+    /// </summary>
+    public async Task SleepAsync()
+    {
+        if (IsSleeping)
+        {
+            return;
+        }
+        logger.ZLogTrace($"Server has paused, waiting for players to connect");
+        IsSleeping = true;
+        await sleepTrigger.InvokeAsync();
+    }
+
+    /// <summary>
+    ///     Wakes up the server which will enable and simulate all features. If not sleeping, this call won't do anything.
+    /// </summary>
+    public async Task WakeAsync()
+    {
+        if (!IsSleeping)
+        {
+            return;
+        }
+        logger.ZLogTrace($"Server is entering normal operation due to at least one player playing");
+        IsSleeping = false;
+        await wakeTrigger.InvokeAsync();
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public async Task StartingAsync(CancellationToken cancellationToken) => await SleepAsync(); // Start in sleep mode (ensures sleep tasks are executed at least once)
+
+    public Task StartedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public async Task StoppingAsync(CancellationToken cancellationToken) => await SleepAsync();
+
+    public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    async Task IEvent<ISessionCleaner.Args>.OnEventAsync(ISessionCleaner.Args args)
+    {
+        if (args.NewSessionTotal < 1)
+        {
+            await SleepAsync();
+        }
+    }
+}

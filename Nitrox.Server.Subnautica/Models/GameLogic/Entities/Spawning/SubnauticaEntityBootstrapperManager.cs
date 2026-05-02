@@ -1,24 +1,26 @@
 using System.Collections.Generic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-public class SubnauticaEntityBootstrapperManager : IEntityBootstrapperManager
+internal sealed class SubnauticaEntityBootstrapperManager(RandomFactory randomFactory) : IEntityBootstrapperManager
 {
-    private static readonly Dictionary<NitroxTechType, IEntityBootstrapper> entityBootstrappersByTechType = new()
+    private readonly Dictionary<string, IEntityBootstrapper> entityBootstrappersByClassId = new()
+    {
+        ["ce0b4131-86e2-444b-a507-45f7b824a286"] = new GeyserBootstrapper(randomFactory.GetUnityLikeRandom(1)), // Geyser.prefab
+        ["63462cb4-d177-4551-822f-1904f809ec1f"] = new GeyserBootstrapper(randomFactory.GetUnityLikeRandom(2)), // GeyserShort.prefab
+        ["8d3d3c8b-9290-444a-9fea-8e5493ecd6fe"] = new ReefbackBootstrapper(randomFactory.GetUnityLikeRandom(3))
+    };
+
+    private readonly Dictionary<NitroxTechType, IEntityBootstrapper> entityBootstrappersByTechType = new()
     {
         [TechType.CrashHome.ToDto()] = new CrashHomeBootstrapper(),
         [TechType.ReaperLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
         [TechType.SeaDragon.ToDto()] = new StayAtLeashPositionBootstrapper(),
         [TechType.GhostLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
-    };
-    private static readonly Dictionary<string, IEntityBootstrapper> entityBootstrappersByClassId = new()
-    {
-        ["ce0b4131-86e2-444b-a507-45f7b824a286"] = new GeyserBootstrapper(), // Geyser.prefab
-        ["63462cb4-d177-4551-822f-1904f809ec1f"] = new GeyserBootstrapper(), // GeyserShort.prefab
-        ["8d3d3c8b-9290-444a-9fea-8e5493ecd6fe"] = new ReefbackBootstrapper()
     };
 
     public void PrepareEntityIfRequired(ref WorldEntity spawnedEntity, DeterministicGenerator generator)

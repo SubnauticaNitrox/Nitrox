@@ -10,13 +10,81 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:services="clr-namespace:Nitrox.Launcher.Models.Services"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    Classes.official="{Binding UsingOfficialVersion}"
+    Classes.newUpdate="{Binding NewUpdateAvailable}">
+    <UserControl.Styles>
+        <Style Selector=":not(.official)">
+            <Style Selector="^ controls|RecolorImage.updateIcon">
+                <Setter Property="Source" Value="/Assets/Images/store-icons/pirated.png" />
+                <Setter Property="ToolTip.Tip" Value=":(" />
+            </Style>
+            <Style Selector="^ TextBlock.updateHeader">
+                <Setter Property="Text" Value="Unofficial Version Detected" />
+            </Style>
+            <Style Selector="^ TextBlock.updateDescription">
+                <Setter Property="Text">
+                    <MultiBinding StringFormat="{}{0}&#x0a;&#x0a;Your version: {1}&#x0a;Official version: {2}">
+                        <Binding>
+                            <Binding.Source>
+                                <x:String>It looks like you aren't using an official version of Nitrox. If you are not a developer, please download the official version to ensure that you have the best experience.</x:String>
+                            </Binding.Source>
+                        </Binding>
+                        <Binding Path="Version" FallbackValue="." />
+                        <Binding Path="OfficialVersion" FallbackValue="." />
+                    </MultiBinding>
+                </Setter>
+            </Style>
+        </Style>
+
+        <Style Selector=".official">
+            <Style Selector="^ controls|RecolorImage.updateIcon">
+                <Setter Property="Source" Value="/Assets/Images/nitrox-icon.ico" />
+                <Setter Property="ToolTip.Tip" Value="You are the best captain on the planet, I'm not even squiddin'" />
+            </Style>
+        </Style>
+
+        <Style Selector=".official:not(.newUpdate)">
+            <Style Selector="^ TextBlock.updateHeader">
+                <Setter Property="Text" Value="No Update Available" />
+            </Style>
+            <Style Selector="^ TextBlock.updateDescription">
+                <Setter Property="Text">
+                    <MultiBinding StringFormat="{}{0} {1}&#x0a;&#x0a;{2}">
+                        <Binding>
+                            <Binding.Source>
+                                <x:String>You are already using the latest version of Nitrox</x:String>
+                            </Binding.Source>
+                        </Binding>
+                        <Binding Path="Version" FallbackValue="." />
+                        <Binding>
+                            <Binding.Source>
+                                Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support.
+                            </Binding.Source>
+                        </Binding>
+                    </MultiBinding>
+                </Setter>
+            </Style>
+        </Style>
+
+        <Style Selector=".official.newUpdate">
+            <Style Selector="^ TextBlock.updateHeader">
+                <Setter Property="Text" Value="New Nitrox Update Available" />
+            </Style>
+            <Style Selector="^ TextBlock.updateDescription">
+                <Setter Property="Text"
+                        Value="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements." />
+            </Style>
+        </Style>
+    </UserControl.Styles>
     <Design.DataContext>
         <designer:DesignUpdatesViewModel />
     </Design.DataContext>
-    <ScrollViewer Classes="main">
+    <ScrollViewer
+        Classes="main">
         <StackPanel
             Background="{DynamicResource BrandWhite}"
             Classes="viewPadding"
@@ -29,110 +97,72 @@
                 CornerRadius="12"
                 Padding="22">
                 <Grid>
-                    <!--  Official Version only text  -->
-                    <StackPanel IsVisible="{Binding UsingOfficialVersion, Mode=OneWay}" Spacing="10">
-                        <Image
-                            Height="56"
-                            HorizontalAlignment="Center"
-                            Source="/Assets/Images/nitrox-icon.ico"
-                            ToolTip.Tip="You are the best captain on the planet, I'm not even squiddin'"
-                            Width="56" />
-
-                        <!--  "No Update Available" text  -->
-                        <StackPanel IsVisible="{Binding !NewUpdateAvailable, Mode=OneWay}" Spacing="5">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="No Update Available"
-                                TextAlignment="Center"
-                                TextWrapping="Wrap" />
-
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Normal"
-                                TextAlignment="Center"
-                                TextWrapping="Wrap">
-                                You are already using the latest version of Nitrox <Run Text="{Binding Version, FallbackValue='.'}" />
-                            </TextBlock>
-
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Normal"
-                                Margin="0,9,0,0"
-                                Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."
-                                TextAlignment="Center"
-                                TextWrapping="Wrap" />
-                        </StackPanel>
-
-                        <!--  "New Nitrox Update Available" text  -->
-                        <StackPanel IsVisible="{Binding NewUpdateAvailable, Mode=OneWay}" Spacing="6">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="New Nitrox Update Available"
-                                TextAlignment="Center"
-                                TextWrapping="Wrap" />
-
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Normal"
-                                Text="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements."
-                                TextAlignment="Center"
-                                TextWrapping="Wrap" />
-
-                            <Button
-                                Classes="primary"
-                                Command="{Binding DownloadUpdateCommand}"
-                                HorizontalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                Margin="0,4,0,0"
-                                Padding="20,8"
-                                ToolTip.Tip="Download the latest version">
-                                <TextBlock FontSize="12">
-                                    Download version <Run Text="{Binding OfficialVersion, FallbackValue='.'}" />
-                                </TextBlock>
-                            </Button>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <!--  Unofficial Version only text  -->
-                    <StackPanel IsVisible="{Binding !UsingOfficialVersion, Mode=OneWay}" Spacing="10">
-                        <!--  TODO: Better Icon here  -->
+                    <StackPanel Spacing="10">
                         <controls:RecolorImage
+                            Classes="updateIcon"
                             Height="56"
                             HorizontalAlignment="Center"
-                            Source="/Assets/Images/store-icons/pirated.png"
-                            ToolTip.Tip=":("
                             Width="56" />
 
                         <StackPanel Spacing="6">
                             <TextBlock
+                                Classes="updateHeader"
                                 FontSize="16"
                                 FontWeight="Bold"
-                                Text="Unofficial Version Detected"
                                 TextAlignment="Center"
                                 TextWrapping="Wrap" />
 
                             <TextBlock
+                                Classes="updateDescription"
                                 FontSize="14"
                                 FontWeight="Normal"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap">
-                                It looks like you aren't using an official version of Nitrox. If you are not a developer, please download the official version to ensure that you have the best experience.<LineBreak />
-                                <LineBreak />
-                                Your version: <Run Text="{Binding Version, FallbackValue='.'}" />
-                                <LineBreak />
-                                Official version: <Run Text="{Binding OfficialVersion, FallbackValue='.'}" />
-                            </TextBlock>
+                                TextWrapping="Wrap" />
 
+                            <!-- Download Progress Section -->
+                            <StackPanel IsVisible="{Binding DownloadProgress, Mode=OneWay}" Spacing="8" Margin="0,8,0,0">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="Normal"
+                                    Text="{Binding DownloadStatus}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                                <ProgressBar
+                                    Height="8"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Value="{Binding DownloadProgress, Mode=OneWay}"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="40,0" />
+                                <Button
+                                    Command="{Binding CancelDownloadCommand}"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Padding="20,8">
+                                    <TextBlock FontSize="12" Text="Cancel" />
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Download Button -->
                             <Button
                                 Classes="primary"
                                 Command="{Binding DownloadUpdateCommand}"
                                 HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
+                                IsVisible="{Binding !DownloadProgress, Mode=OneWay}"
                                 Margin="0,4,0,0"
                                 Padding="20,8"
-                                ToolTip.Tip="Download the latest version">
+                                ToolTip.ShowOnDisabled="True">
+                                <Button.Styles>
+                                    <Style Selector=":is(Button)">
+                                        <Style Selector="^:not(:disabled)">
+                                            <Setter Property="ToolTip.Tip">Download and install the latest version</Setter>
+                                        </Style>
+                                        <Style Selector="^:disabled">
+                                            <Setter Property="ToolTip.Tip">Please close any servers that are online before updating Nitrox!</Setter>
+                                        </Style>
+                                    </Style>
+                                </Button.Styles>
                                 <TextBlock FontSize="12">
                                     Download version <Run Text="{Binding OfficialVersion, FallbackValue='.'}" />
                                 </TextBlock>
@@ -141,6 +171,122 @@
                     </StackPanel>
                 </Grid>
             </Border>
+
+            <!-- Backups Section -->
+            <StackPanel Spacing="12">
+                <Grid>
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Left"
+                        Text="Backups"
+                        VerticalAlignment="Center" />
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="8">
+                        <Button
+                            Classes="icon"
+                            Command="{Binding RefreshBackupsCommand}"
+                            ToolTip.Tip="Refresh backups list">
+                            <Path Data="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"
+                                  Fill="{DynamicResource BrandBlack}" />
+                        </Button>
+                        <Button
+                            Classes="icon"
+                            Command="{Binding OpenBackupsFolderCommand}"
+                            ToolTip.Tip="Open backups folder">
+                            <Path Data="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"
+                                  Fill="{DynamicResource BrandBlack}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <TextBlock
+                    FontSize="12"
+                    Opacity="0.7"
+                    Text="Backups are automatically created before each update. You can restore a previous version by extracting a backup manually." />
+
+                <Border
+                    Background="{DynamicResource BrandPanelBackground}"
+                    CornerRadius="12"
+                    Padding="16"
+                    IsVisible="{Binding AvailableBackups.Count}">
+                    <ItemsControl ItemsSource="{Binding AvailableBackups}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="services:BackupInfo">
+                                <Border
+                                    Background="{DynamicResource BrandWhite}"
+                                    CornerRadius="8"
+                                    Padding="12">
+                                    <Grid ColumnDefinitions="*,Auto,Auto">
+                                        <StackPanel Grid.Column="0" Spacing="2">
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding FileName}" />
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Opacity="0.7">
+                                                    <Run Text="Version:" />
+                                                    <Run Text="{Binding Version}" />
+                                                </TextBlock>
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Opacity="0.7">
+                                                    <Run Text="Size:" />
+                                                    <Run Text="{Binding SizeDisplay}" />
+                                                </TextBlock>
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    Opacity="0.7"
+                                                    IsVisible="{Binding IncludesSaves}">
+                                                    <Run Text="(includes saves)" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <TextBlock
+                                                FontSize="11"
+                                                Opacity="0.5"
+                                                Text="{Binding CreatedAt, StringFormat='Created: {0:g}'}" />
+                                        </StackPanel>
+                                        <Button
+                                            Grid.Column="1"
+                                            Classes="primary"
+                                            Command="{Binding $parent[ItemsControl].((vm:UpdatesViewModel)DataContext).RestoreBackupCommand}"
+                                            CommandParameter="{Binding}"
+                                            Padding="12,6"
+                                            Margin="0,0,8,0"
+                                            ToolTip.Tip="Restore this backup"
+                                            VerticalAlignment="Center">
+                                            <TextBlock FontSize="12" Text="Restore" />
+                                        </Button>
+                                        <Button
+                                            Grid.Column="2"
+                                            Classes="abort"
+                                            Command="{Binding $parent[ItemsControl].((vm:UpdatesViewModel)DataContext).DeleteBackupCommand}"
+                                            CommandParameter="{Binding}"
+                                            Padding="12,6"
+                                            ToolTip.Tip="Delete this backup"
+                                            VerticalAlignment="Center">
+                                            <TextBlock FontSize="12" Text="Delete" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <TextBlock
+                    FontSize="14"
+                    FontStyle="Italic"
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding !AvailableBackups.Count}"
+                    Opacity="0.5"
+                    Text="No backups available" />
+            </StackPanel>
 
             <ItemsControl ItemsSource="{Binding NitroxChangelogs, Mode=OneWay}">
 

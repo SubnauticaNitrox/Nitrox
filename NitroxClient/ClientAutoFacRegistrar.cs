@@ -5,7 +5,6 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
@@ -22,9 +21,9 @@ using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using Nitrox.Model;
 using Nitrox.Model.Core;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Helper;
 using Nitrox.Model.Networking;
-using Nitrox.Model.Subnautica.Helper;
+using Nitrox.Model.Packets.Core;
+using NitroxClient.Communication.Packets.Processors.Core;
 
 namespace NitroxClient
 {
@@ -56,8 +55,8 @@ namespace NitroxClient
         {
 #if DEBUG
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<BaseDebugger>()
-                            .As<BaseDebugger>()
+                            .AssignableTo<AbstractDebugger>()
+                            .As<AbstractDebugger>()
                             .AsImplementedInterfaces()
                             .AsSelf()
                             .SingleInstance();
@@ -113,6 +112,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SleepManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BulletManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NtpSyncer>().InstancePerLifetimeScope();
         }
@@ -136,8 +136,11 @@ namespace NitroxClient
         {
             containerBuilder
                 .RegisterAssemblyTypes(currentAssembly)
-                .AsClosedTypesOf(typeof(ClientPacketProcessor<>))
+                .AsClosedTypesOf(typeof(IClientPacketProcessor<>))
+                .As<IPacketProcessor>()
                 .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<PacketProcessorsInvoker>().InstancePerLifetimeScope();
         }
 
         private void RegisterColorSwapManagers(ContainerBuilder containerBuilder)

@@ -1,8 +1,6 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;

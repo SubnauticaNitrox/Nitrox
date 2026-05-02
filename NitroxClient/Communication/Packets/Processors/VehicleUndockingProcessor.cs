@@ -1,26 +1,19 @@
 using System.Collections;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
+internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager remotePlayerManager) : IClientPacketProcessor<VehicleUndocking>
 {
-    private readonly Vehicles vehicles;
-    private readonly PlayerManager remotePlayerManager;
+    private readonly PlayerManager remotePlayerManager = remotePlayerManager;
+    private readonly Vehicles vehicles = vehicles;
 
-    public VehicleUndockingProcessor(Vehicles vehicles, PlayerManager remotePlayerManager)
-    {
-        this.vehicles = vehicles;
-        this.remotePlayerManager = remotePlayerManager;
-    }
-
-    public override void Process(VehicleUndocking packet)
+    public Task Process(ClientProcessorContext context, VehicleUndocking packet)
     {
         GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
         GameObject vehicleDockingBayGo = NitroxEntity.RequireObjectFrom(packet.DockId);
@@ -39,6 +32,13 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
                 FinishVehicleUndocking(packet, vehicle, vehicleDockingBay);
             }
         }
+        return Task.CompletedTask;
+    }
+
+    private static IEnumerator StartUndockingAnimation(VehicleDockingBay vehicleDockingBay)
+    {
+        yield return Yielders.WaitFor2Seconds;
+        vehicleDockingBay.vehicle_docked_param = false;
     }
 
     private void StartVehicleUndocking(VehicleUndocking packet, GameObject vehicleGo, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
@@ -46,11 +46,11 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
         vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
         SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
 
-        if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))
+        if (remotePlayerManager.TryFind(packet.SessionId, out RemotePlayer player))
         {
             // It can happen that the player turns in circles around himself in the vehicle. This stops it.
             player.RigidBody.angularVelocity = Vector3.zero;
-            vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+            vehicles.SetOnPilotMode(packet.VehicleId, packet.SessionId, true);
         }
         vehicleDockingBay.StartCoroutine(StartUndockingAnimation(vehicleDockingBay));
 
@@ -59,12 +59,6 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
             vehicleMovementReplicator.ClearBuffer();
             Log.Debug($"[{nameof(VehicleDockingProcessor)}] Clear MovementReplicator on {packet.VehicleId}");
         }
-    }
-
-    private static IEnumerator StartUndockingAnimation(VehicleDockingBay vehicleDockingBay)
-    {
-        yield return Yielders.WaitFor2Seconds;
-        vehicleDockingBay.vehicle_docked_param = false;
     }
 
     private void FinishVehicleUndocking(VehicleUndocking packet, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
@@ -76,7 +70,7 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
         vehicleDockingBay.dockedVehicle = null;
         vehicleDockingBay.CancelInvoke(nameof(VehicleDockingBay.RepairVehicle));
         vehicle.docked = false;
-        if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))
+        if (remotePlayerManager.TryFind(packet.SessionId, out RemotePlayer player))
         {
             // Sometimes the player is not set accordingly which stretches the player's model instead of putting them in place
             // after undocking. This fixes it (the player rigid body seems to not be set right sometimes)
@@ -84,7 +78,7 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
             player.SetVehicle(null);
             player.SetVehicle(vehicle);
         }
-        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+        vehicles.SetOnPilotMode(packet.VehicleId, packet.SessionId, true);
 
         if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
         {

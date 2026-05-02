@@ -1,81 +1,25 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Threading;
-using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Platforms.OS.Shared;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresOrigin(CommandOrigin.SERVER)]
+internal sealed class ConfigCommand(IOptions<ServerStartOptions> optionsProvider) : ICommandHandler
 {
-    internal class ConfigCommand : Command
+    private readonly IOptions<ServerStartOptions> optionsProvider = optionsProvider;
+
+    [Description("Opens the server configuration file")]
+    public async Task Execute(ICommandContext context)
     {
-        private readonly SemaphoreSlim configOpenLock = new(1);
-        private readonly Server server;
-        private readonly SubnauticaServerConfig serverConfig;
-
-        public ConfigCommand(Server server, SubnauticaServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
+        string filePath = optionsProvider.Value.GetServerConfigFilePath();
+        if (!File.Exists(filePath))
         {
-            this.server = server;
-            this.serverConfig = serverConfig;
+            // TODO: Handle this case to generate config?
+            await context.ReplyAsync("No configuration file exists");
         }
 
-        protected override void Execute(CallArgs args)
-        {
-            if (!configOpenLock.Wait(0))
-            {
-                Log.Warn("Waiting on previous config command to close the configuration file.");
-                return;
-            }
-
-            // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name);
-            string configFile = Path.Combine(saveDir, serverConfig.FileName);
-            if (!File.Exists(configFile))
-            {
-                serverConfig.Serialize(saveDir);
-            }
-
-            Task.Run(async () =>
-                {
-                    try
-                    {
-                        await StartWithDefaultProgramAsync(configFile);
-                    }
-                    finally
-                    {
-                        configOpenLock.Release();
-                    }
-                    serverConfig.Deserialize(saveDir); // Notifies user if deserialization failed.
-                    Log.Info("If you made changes, restart the server for them to take effect.");
-                })
-                .ContinueWith(t =>
-                {
-#if DEBUG
-                    if (t.Exception != null)
-                    {
-                        throw t.Exception;
-                    }
-#endif
-                });
-        }
-
-        private async Task StartWithDefaultProgramAsync(string fileToOpen)
-        {
-            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
-            await process.WaitForExitAsync();
-            try
-            {
-                while (!process.HasExited)
-                {
-                    await Task.Delay(100);
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
+        FileSystem.Instance.OpenOrExecuteFile(filePath);
     }
 }

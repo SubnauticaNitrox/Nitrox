@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Nitrox.Launcher",
+            "type": "dotnet",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "projectPath": "${workspaceFolder}/Nitrox.Launcher/Nitrox.Launcher.csproj"
+        },
+        {
+            "name": "Nitrox.Server.Subnautica",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "program": "",
+            "args": [],
+            "cwd": "${workspaceFolder}/Nitrox.Server.Subnautica/",
+            "stopAtEntry": false,
+            "console": "externalTerminal",
+            "windows": {
+                "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica.exe"
+            },
+            "linux": {
+                "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica"
+            },
+            "osx": {
+                "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica"
+            }
+        },
+    ]
+}

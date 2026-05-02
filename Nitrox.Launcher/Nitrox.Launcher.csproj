@@ -3,7 +3,7 @@
     <PropertyGroup>
         <!-- OutputType for Windows, MacOS & Linux -->
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -43,6 +43,7 @@
         </PackageReference>
         <PackageReference Include="dnlib" />
         <PackageReference Include="LitJson" />
+        <PackageReference Include="MagicOnion.Server" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="ServiceScan.SourceGenerator">
@@ -99,6 +100,24 @@
               RetryDelayMilliseconds="100"
               SkipUnchangedFiles="True" />
 
+    </Target>
+
+    <!-- These dependencies are forced as DLL files, instead of implicit dependency (as Microsoft.AspNetCore.App.Ref). -->
+    <!-- TODO: Fix why ONLY (and not on all build environments that) the MS DLL dependencies for "child project" aren't transitively copied over to launcher project. -->
+    <Target Name="_NitroxFixMissingMicrosoftExtensionsDlls" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+        <ItemGroup>
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\$(Configuration)\$(TargetFramework)\Microsoft.Extensions.*.dll" />
+        </ItemGroup>
+
+        <Warning Text="Unable to find Microsoft.Extensions.* dll files from Nitrox.Server.Subnautica"
+               Condition="@(_FilesToCopy->Count()) == 0" />
+
+        <Copy SourceFiles="@(_FilesToCopy)"
+              DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\lib\"
+              OverwriteReadOnlyFiles="True"
+              Retries="3"
+              RetryDelayMilliseconds="100"
+              SkipUnchangedFiles="True" />
     </Target>
 
     <ItemGroup>

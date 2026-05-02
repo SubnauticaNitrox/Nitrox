@@ -32,7 +32,7 @@ public class GlobalRootEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GlobalRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public GlobalRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata? metadata, NitroxId? parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     { }
 }

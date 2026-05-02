@@ -1,28 +1,24 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class ClearPlanterProcessor : AuthenticatedPacketProcessor<ClearPlanter>
+internal sealed class ClearPlanterProcessor(EntityRegistry entityRegistry, ILogger<ClearPlanterProcessor> logger) : IAuthPacketProcessor<ClearPlanter>
 {
-    private readonly EntityRegistry entityRegistry;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly ILogger<ClearPlanterProcessor> logger = logger;
 
-    public ClearPlanterProcessor(EntityRegistry entityRegistry)
+    public Task Process(AuthProcessorContext context, ClearPlanter packet)
     {
-        this.entityRegistry = entityRegistry;
-    }
+        if (!entityRegistry.TryGetEntityById(packet.PlanterId, out PlanterEntity planterEntity))
+        {
+            logger.ZLogErrorOnce($"could not find {nameof(PlanterEntity)} with id {packet.PlanterId}");
+            return Task.CompletedTask;
+        }
 
-    public override void Process(ClearPlanter packet, Player player)
-    {
-        if (entityRegistry.TryGetEntityById(packet.PlanterId, out PlanterEntity planterEntity))
-        {
-            // No need to transmit this packet since the operation is automatically done on remote clients
-            entityRegistry.CleanChildren(planterEntity);
-        }
-        else
-        {
-            Log.ErrorOnce($"[{nameof(ClearPlanterProcessor)}] Could not find PlanterEntity with id {packet.PlanterId}");
-        }
+        // No need to transmit this packet since the operation is automatically done on remote clients
+        entityRegistry.CleanChildren(planterEntity);
+        return Task.CompletedTask;
     }
 }

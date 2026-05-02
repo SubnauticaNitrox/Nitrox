@@ -1,42 +1,34 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal class WeldActionProcessor(SimulationOwnership simulationOwnership) : IClientPacketProcessor<WeldAction>
 {
-    class WeldActionProcessor : ClientPacketProcessor<WeldAction>
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
+
+    public Task Process(ClientProcessorContext context, WeldAction packet)
     {
-        private IMultiplayerSession multiplayerSession;
-        private SimulationOwnership simulationOwnership;
+        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
 
-        public WeldActionProcessor(IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
+        if (!simulationOwnership.HasAnyLockType(packet.Id))
         {
-            this.multiplayerSession = multiplayerSession;
-            this.simulationOwnership = simulationOwnership;
+            Log.Error($"Got WeldAction packet for {packet.Id} but did not find the lock corresponding to it");
+            return Task.CompletedTask;
         }
 
-        public override void Process(WeldAction packet)
+        LiveMixin liveMixin = gameObject.GetComponent<LiveMixin>();
+        if (!liveMixin)
         {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-
-            if (!simulationOwnership.HasAnyLockType(packet.Id))
-            {
-                Log.Error($"Got WeldAction packet for {packet.Id} but did not find the lock corresponding to it");
-                return;
-            }
-
-            LiveMixin liveMixin = gameObject.GetComponent<LiveMixin>();
-            if (!liveMixin)
-            {
-                Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
-                return;
-            }
-            // If we add other player sounds/animations, this is the place to do it for welding
-            liveMixin.AddHealth(packet.HealthAdded);
+            Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
+            return Task.CompletedTask;
         }
+        // If we add other player sounds/animations, this is the place to do it for welding
+        liveMixin.AddHealth(packet.HealthAdded);
+        return Task.CompletedTask;
     }
 }

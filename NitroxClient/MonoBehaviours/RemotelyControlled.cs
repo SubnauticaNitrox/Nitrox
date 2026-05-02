@@ -83,4 +83,17 @@ public class RemotelyControlled : MonoBehaviour
             selfTransform.rotation = rotation;
         }
     }
+
+    public static RemotelyControlled Ensure(GameObject gameObject)
+    {
+        if (gameObject.TryGetComponent(out RemotelyControlled remotelyControlled))
+        {
+            return remotelyControlled;
+        }
+        if (gameObject.GetComponent<PipeSurfaceFloater>())
+        {
+            return gameObject.AddComponent<RemotelyControlledPipeFloater>();
+        }
+        return gameObject.AddComponent<RemotelyControlled>();
+    }
 }

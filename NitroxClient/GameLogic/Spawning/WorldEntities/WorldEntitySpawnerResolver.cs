@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class WorldEntitySpawnerResolver
+internal sealed class WorldEntitySpawnerResolver
 {
     private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new();
 
@@ -19,7 +18,7 @@ public class WorldEntitySpawnerResolver
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
+    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
@@ -33,33 +32,16 @@ public class WorldEntitySpawnerResolver
         creatureRespawnEntitySpawner = new CreatureRespawnEntitySpawner(simulationOwnership);
     }
 
-    public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
-    {
-        switch (entity)
+    public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity) =>
+        entity switch
         {
-            case PrefabPlaceholderEntity:
-                return prefabPlaceholderEntitySpawner;
-            case PlaceholderGroupWorldEntity:
-                return placeholderGroupWorldEntitySpawner;
-            case SerializedWorldEntity:
-                return serializedWorldEntitySpawner;
-            case GeyserWorldEntity:
-                return geyserWorldEntitySpawner;
-            case ReefbackEntity:
-                return reefbackEntitySpawner;
-            case ReefbackChildEntity:
-                return reefbackChildEntitySpawner;
-            case CreatureRespawnEntity:
-                return creatureRespawnEntitySpawner;
-        }
-
-        TechType techType = entity.TechType.ToUnity();
-
-        if (customSpawnersByTechType.TryGetValue(techType, out IWorldEntitySpawner value))
-        {
-            return value;
-        }
-
-        return defaultEntitySpawner;
-    }
+            PrefabPlaceholderEntity => prefabPlaceholderEntitySpawner,
+            PlaceholderGroupWorldEntity => placeholderGroupWorldEntitySpawner,
+            SerializedWorldEntity => serializedWorldEntitySpawner,
+            GeyserWorldEntity => geyserWorldEntitySpawner,
+            ReefbackEntity => reefbackEntitySpawner,
+            ReefbackChildEntity => reefbackChildEntitySpawner,
+            CreatureRespawnEntity => creatureRespawnEntitySpawner,
+            _ => customSpawnersByTechType.GetValueOrDefault(entity.TechType.ToUnity(), defaultEntitySpawner)
+        };
 }

@@ -1,21 +1,15 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class BedEnterProcessor(SleepManager sleepManager) : IAuthPacketProcessor<BedEnter>
 {
-    public class BedEnterProcessor : AuthenticatedPacketProcessor<BedEnter>
+    private readonly SleepManager sleepManager = sleepManager;
+
+    public Task Process(AuthProcessorContext context, BedEnter packet)
     {
-        private readonly StoryManager storyManager;
-
-        public BedEnterProcessor(StoryManager storyManager)
-        {
-            this.storyManager = storyManager;
-        }
-
-        public override void Process(BedEnter packet, Player player)
-        {
-            // TODO: Needs repair since the new time implementation only relies on server-side time.
-            // storyManager.ChangeTime(StoryManager.TimeModification.SKIP);
-        }
+        sleepManager.PlayerEnteredBed(context.Sender);
+        return Task.CompletedTask;
     }
 }

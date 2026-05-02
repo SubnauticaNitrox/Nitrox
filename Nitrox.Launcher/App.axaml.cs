@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Net;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -12,11 +13,18 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -25,21 +33,28 @@ using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
 
-public class App : Application
+internal class App : Application
 {
     internal static Func<Window>? StartupWindowFactory;
     internal static InstantLaunchData? InstantLaunch;
     private static bool isCrashReport;
+    public static App Instance;
 
     /// <summary>
     ///     If true, allows duplicate instances of the app to be active.
     /// </summary>
-    private static bool allowInstances;
+    internal static bool allowInstances;
 
     private static X11RenderingMode? preferredRenderingMode;
 
-    public Window AppWindow
+    public Window? AppWindow
     {
+        get =>
+            ApplicationLifetime switch
+            {
+                IClassicDesktopStyleApplicationLifetime desktop => desktop.MainWindow,
+                _ => throw new NotSupportedException($"Current platform '{ApplicationLifetime?.GetType().Name}' is not supported by {nameof(Nitrox)}.{nameof(Launcher)}")
+            };
         set
         {
             switch (ApplicationLifetime)
@@ -85,38 +100,53 @@ public class App : Application
         cliParser.Run(NitroxEnvironment.CommandLineArgs);
 
         // Fallback to normal startup.
-        if (StartupWindowFactory == null)
+        StartupWindowFactory ??= () =>
         {
-            if (!allowInstances)
+            WebApplicationBuilder hostBuilder = WebApplication.CreateBuilder(new WebApplicationOptions
             {
-                CheckForRunningInstance();
-            }
-            ServiceProvider services = new ServiceCollection().AddAppServices().BuildServiceProvider();
-            StartupWindowFactory = services.GetRequiredService<Func<Window>>();
-        }
+                EnvironmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"),
+                ApplicationName = NitroxConstants.LAUNCHER_APP_NAME,
+                Args = NitroxEnvironment.CommandLineArgs
+            });
+            hostBuilder.Logging
+                       .ClearProviders()
+                       .Services
+                       .AddAppServices();
+            hostBuilder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Any, 0, o => o.Protocols = HttpProtocols.Http2));
+            WebApplication host = hostBuilder.Build();
+            host.MapMagicOnionService();
+            host.MapGrpcService<ServersManagement>();
+            host.RunAsync().ContinueWithHandleError();
+            return host.Services.GetRequiredService<Func<Window>>()();
+        };
 
-        AppBuilder builder = AppBuilder.Configure<App>()
-                                       .UsePlatformDetect()
-                                       .LogToTrace()
-                                       .With(new SkiaOptions { UseOpacitySaveLayer = true });
-        builder = WithRenderingMode(builder, preferredRenderingMode);
-        return builder;
+        return CreateAvaloniaBuilder();
 
-        static AppBuilder WithRenderingMode(AppBuilder builder, X11RenderingMode? rendering)
+        static AppBuilder CreateAvaloniaBuilder()
         {
-            if (rendering.HasValue)
-            {
-                return builder.With(new X11PlatformOptions { RenderingMode = [rendering.Value] });
-            }
-            // The Wayland+GPU is not supported by Avalonia, but Xwayland should work.
-            if (Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is not null)
-            {
-                if (!ProcessEx.ProcessExists("Xwayland"))
-                {
-                    return builder.With(new X11PlatformOptions { RenderingMode = [X11RenderingMode.Software] });
-                }
-            }
+            AppBuilder builder = AppBuilder.Configure<App>()
+                                           .UsePlatformDetect()
+                                           .LogToTrace()
+                                           .With(new SkiaOptions { UseOpacitySaveLayer = true });
+            builder = WithRenderingMode(builder, preferredRenderingMode);
             return builder;
+
+            static AppBuilder WithRenderingMode(AppBuilder builder, X11RenderingMode? rendering)
+            {
+                if (rendering.HasValue)
+                {
+                    return builder.With(new X11PlatformOptions { RenderingMode = [rendering.Value] });
+                }
+                // The Wayland+GPU is not supported by Avalonia, but Xwayland should work.
+                if (Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is not null)
+                {
+                    if (!ProcessEx.ProcessExists("Xwayland"))
+                    {
+                        return builder.With(new X11PlatformOptions { RenderingMode = [X11RenderingMode.Software] });
+                    }
+                }
+                return builder;
+            }
         }
     }
 
@@ -124,6 +154,7 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        Instance = this;
         Debug.Assert(StartupWindowFactory != null, $"{nameof(StartupWindowFactory)} != null");
 
         FixAvaloniaPlugins();
@@ -143,28 +174,6 @@ public class App : Application
         }
 
         CrashReporter.ReportAndExit(ex);
-    }
-
-    private static void CheckForRunningInstance()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return;
-        }
-
-        try
-        {
-            using ProcessEx process = ProcessEx.GetFirstProcess("Nitrox.Launcher", process => process.Id != Environment.ProcessId && process.IsRunning);
-            if (process is not null)
-            {
-                process.SetForegroundWindowAndRestore();
-                Environment.Exit(0);
-            }
-        }
-        catch (Exception)
-        {
-            // Ignore
-        }
     }
 
     /// <summary>

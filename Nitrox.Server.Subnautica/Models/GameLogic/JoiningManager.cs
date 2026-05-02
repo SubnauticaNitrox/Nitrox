@@ -1,39 +1,55 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
+using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-public sealed class JoiningManager
+// TODO: Refactor this to a QueuingBackgroundService to simplify state tracking.
+internal sealed class JoiningManager(
+    IPacketSender packetSender,
+    PlayerManager playerManager,
+    SessionManager sessionManager,
+    WorldEntityManager worldEntityManager,
+    PdaManager pdaManager,
+    StoryManager storyManager,
+    StoryScheduler storyScheduler,
+    EntitySimulation entitySimulation,
+    EscapePodManager escapePodManager,
+    EntityRegistry entityRegistry,
+    SessionSettings sessionSettings,
+    IOptions<SubnauticaServerOptions> options,
+    ILogger<JoiningManager> logger)
+    : ISessionCleaner
 {
-    private readonly PlayerManager playerManager;
-    private readonly SubnauticaServerConfig serverConfig;
-    private readonly World world;
-    private readonly SessionSettings sessionSettings;
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly SessionManager sessionManager = sessionManager;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly PdaManager pdaManager = pdaManager;
+    private readonly StoryManager storyManager = storyManager;
+    private readonly StoryScheduler storyScheduler = storyScheduler;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly ILogger<JoiningManager> logger = logger;
+    private readonly EscapePodManager escapePodManager = escapePodManager;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly SessionSettings sessionSettings = sessionSettings;
 
-    private readonly ThreadSafeQueue<(INitroxConnection, string)> joinQueue = new();
+    private readonly ThreadSafeQueue<(SessionId, string)> joinQueue = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
     public Action? SyncFinishedCallback { get; private set; }
-
-    public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world, SessionSettings sessionSettings)
-    {
-        this.playerManager = playerManager;
-        this.serverConfig = serverConfig;
-        this.world = world;
-        this.sessionSettings = sessionSettings;
-    }
 
     private async Task JoinQueueLoop()
     {
@@ -50,71 +66,76 @@ public sealed class JoiningManager
 
             try
             {
-                (INitroxConnection connection, string reservationKey) = joinQueue.Dequeue();
-                string name = playerManager.GetPlayerContext(reservationKey).PlayerName;
-
-                // Do this after dequeuing because everyone's position shifts forward
-                (INitroxConnection, string)[] array = [.. joinQueue];
-                for (int i = 0; i < array.Length; i++)
+                (SessionId sessionId, string reservationKey) = joinQueue.Dequeue();
+                string? name = playerManager.GetPlayerContext(reservationKey)?.PlayerName;
+                if (name == null)
                 {
-                    (INitroxConnection c, _) = array[i];
-                    c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout));
+                    continue;
                 }
 
-                Log.Info($"Starting sync for player {name}");
-                SendInitialSync(connection, reservationKey);
+                // Do this after dequeuing because everyone's position shifts forward
+                (SessionId, string)[] array = [.. joinQueue];
+                for (int i = 0; i < array.Length; i++)
+                {
+                    (SessionId s, _) = array[i];
+                    await packetSender.SendPacketAsync(new JoinQueueInfo(i + 1, options.Value.InitialSyncTimeout), s);
+                }
 
-                using CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
+                logger.ZLogInformation($"Starting sync for player {name}");
+                await SendInitialSyncAsync(sessionId, reservationKey);
+
+                using CancellationTokenSource source = new(options.Value.InitialSyncTimeout);
                 bool syncFinished = false;
 
                 SyncFinishedCallback = () => { syncFinished = true; };
 
-                while (!syncFinished &&
-                       connection.State != NitroxConnectionState.Disconnected &&
-                       !source.IsCancellationRequested)
+                while (!syncFinished && sessionManager.IsConnected(sessionId) && !source.IsCancellationRequested)
                 {
-                    await Task.Delay(10);
+                    await Task.Delay(10, source.Token);
                 }
 
-                if (connection.State == NitroxConnectionState.Disconnected)
+                if (!sessionManager.IsConnected(sessionId))
                 {
-                    Log.Info($"Player {name} disconnected while syncing");
+                    logger.ZLogInformation($"Player {name} disconnected while syncing");
                 }
                 else if (source.IsCancellationRequested)
                 {
-                    Log.Info($"Initial sync timed out for player {name}");
+                    logger.ZLogInformation($"Initial sync timed out for player {name}");
                     SyncFinishedCallback = null;
 
-                    if (connection.State == NitroxConnectionState.Connected)
+                    if (sessionManager.IsConnected(sessionId))
                     {
-                        connection.SendPacket(new PlayerKicked("Initial sync took too long and timed out"));
+                        await packetSender.SendPacketAsync(new PlayerKicked("Initial sync took too long and timed out"), sessionId);
                     }
-                    playerManager.PlayerDisconnected(connection);
                 }
                 else
                 {
-                    Log.Info($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
-                    BroadcastPlayerJoined(playerManager.GetPlayer(connection));
+                    logger.ZLogInformation($"Player {name} joined successfully. Remaining requests: {joinQueue.Count}");
+                    if (!playerManager.TryGetPlayerBySessionId(sessionId, out Player? player))
+                    {
+                        throw new Exception($"Failed to get player object for session #{sessionId}");
+                    }
+                    BroadcastPlayerJoined(player);
                 }
             }
             catch (Exception e)
             {
-                Log.Error($"Unexpected error during player connection inside the join queue: {e}");
+                logger.ZLogInformation($"Unexpected error during player connection inside the join queue: {e}");
             }
         }
     }
 
-    public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
+    public void AddToJoinQueue(SessionId sessionId, string reservationKey)
     {
         // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
         lock (queueLocker)
         {
-            Log.Info($"Added player {playerManager.GetPlayerContext(reservationKey)?.PlayerName} to queue");
-            joinQueue.Enqueue((connection, reservationKey));
+            logger.ZLogInformation($"Added player {playerManager.GetPlayerContext(reservationKey)?.PlayerName} to queue");
+            joinQueue.Enqueue((sessionId, reservationKey));
 
             if (queueActive)
             {
-                connection.SendPacket(new JoinQueueInfo(joinQueue.Count, serverConfig.InitialSyncTimeout));
+                packetSender.SendPacketAsync(new JoinQueueInfo(joinQueue.Count, options.Value.InitialSyncTimeout), sessionId);
             }
             else
             {
@@ -126,38 +147,38 @@ public sealed class JoiningManager
         }
     }
 
-    private void SendInitialSync(INitroxConnection connection, string reservationKey)
+    private async Task SendInitialSyncAsync(SessionId sessionId, string reservationKey)
     {
-        Player player = playerManager.PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
-        NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodEntity> newlyCreatedEscapePod);
+        Player player = playerManager.CreatePlayerData(sessionId, reservationKey, out bool wasBrandNewPlayer);
+        (NitroxId assignedEscapePodId, EscapePodEntity? newlyCreatedEscapePod) = await escapePodManager.AssignPlayerToEscapePodAsync(player.Id);
 
         if (wasBrandNewPlayer)
         {
             player.SubRootId = assignedEscapePodId;
         }
 
-        if (newlyCreatedEscapePod.HasValue)
+        if (newlyCreatedEscapePod is { } validEscapePod)
         {
-            SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
-            playerManager.SendPacketToOtherPlayers(spawnNewEscapePod, player);
+            SpawnEntities spawnNewEscapePod = new(validEscapePod);
+            await packetSender.SendPacketToOthersAsync(spawnNewEscapePod, sessionId);
         }
 
         // TODO: Remove this code when security of player login is improved by https://github.com/SubnauticaNitrox/Nitrox/issues/1996
         // We need to reset permissions on join, otherwise players can impersonate an admin easily.
-        player.Permissions = serverConfig.DefaultPlayerPerm;
+        player.Permissions = options.Value.DefaultPlayerPerm;
 
         // Make players on localhost admin by default.
-        if (serverConfig.LocalhostIsAdmin && connection.Endpoint.Address.IsLocalhost())
+        if (options.Value.LocalhostIsAdmin && sessionManager.GetEndPoint(sessionId)?.Address.IsLocalhost() == true)
         {
-            Log.Info($"Granted admin to '{player.Name}' because they're playing on the host machine");
+            logger.ZLogInformation($"Granted admin to '{player.Name}' because they're playing on the host machine");
             player.Permissions = Perms.ADMIN;
         }
 
-        List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
+        List<SimulatedEntity> simulations = entitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
         player.Entity = wasBrandNewPlayer ? SetupNewPlayerEntity(player) : RespawnExistingEntity(player);
 
-        List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
+        List<GlobalRootEntity> globalRootEntities = worldEntityManager.GetGlobalRootEntities(true);
         bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
         InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
@@ -166,8 +187,8 @@ public sealed class JoiningManager
             player.EquippedItems,
             player.UsedItems,
             player.QuickSlotsBindingIds,
-            world.GameData.PDAState.GetInitialPDAData(),
-            world.GameData.StoryGoals.GetInitialStoryGoalData(world.ScheduleKeeper, player),
+            pdaManager.GetInitialPDAData(),
+            storyManager.GetInitialStoryGoalData(storyScheduler, player),
             player.Position,
             player.Rotation,
             player.SubRootId,
@@ -179,17 +200,17 @@ public sealed class JoiningManager
             player.Permissions,
             wasBrandNewPlayer ? IntroCinematicMode.LOADING : IntroCinematicMode.COMPLETED,
             new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
-            world.StoryManager.GetTimeData(),
+            storyManager.GetTimeData(),
             isFirstPlayer,
             BuildingManager.GetEntitiesOperations(globalRootEntities),
-            serverConfig.KeepInventoryOnDeath,
+            options.Value.KeepInventoryOnDeath,
             sessionSettings,
             player.InPrecursor,
             player.DisplaySurfaceWater,
             serverConfig.MarkDeathPointsWithBeacon
         );
 
-        player.SendPacket(initialPlayerSync);
+        await packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);
 
         IEnumerable<PlayerContext> GetOtherPlayers(Player player)
         {
@@ -201,31 +222,32 @@ public sealed class JoiningManager
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
             PlayerEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
-            world.EntityRegistry.AddOrUpdate(playerEntity);
-            world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
+            entityRegistry.AddOrUpdate(playerEntity);
+            worldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
         }
 
         PlayerEntity RespawnExistingEntity(Player player)
         {
-            if (world.EntityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerEntity playerWorldEntity))
+            if (entityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerEntity playerWorldEntity))
             {
                 return playerWorldEntity;
             }
-            Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
+            logger.ZLogError($"Unable to find player entity for {player.Name}. Re-creating one");
             return SetupNewPlayerEntity(player);
         }
     }
 
-    public void JoiningPlayerDisconnected(INitroxConnection connection)
-    {
-        // They may have been queued, so just erase their entry
-        joinQueue.RemoveWhere(tuple => Equals(tuple.Item1, connection));
-    }
-
-    public void BroadcastPlayerJoined(Player player)
+    private void BroadcastPlayerJoined(Player player)
     {
         PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
-        playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
+        packetSender.SendPacketToOthersAsync(playerJoinedPacket, player.SessionId);
+    }
+
+    public Task OnEventAsync(ISessionCleaner.Args args)
+    {
+        // They may have been queued, so just erase their entry
+        joinQueue.RemoveWhere(tuple => Equals(tuple.Item1, args.Session.Id));
+        return Task.CompletedTask;
     }
 }

@@ -57,7 +57,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public WorldEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity parentEntity)
+        public WorldEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity? parentEntity)
         {
             Transform = new NitroxTransform(localPosition, localRotation, scale);
             TechType = techType;
@@ -78,7 +78,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata? metadata, NitroxId? parentId, List<Entity> childEntities)
         {
             Id = id;
             TechType = techType;

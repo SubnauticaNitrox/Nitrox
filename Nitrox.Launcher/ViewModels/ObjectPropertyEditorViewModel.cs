@@ -17,22 +17,20 @@ internal partial class ObjectPropertyEditorViewModel(DialogService dialogService
     private readonly DialogService dialogService = dialogService;
 
     [ObservableProperty]
-    private AvaloniaList<EditorField> editorFields = [];
+    public partial AvaloniaList<EditorField> EditorFields { get; set; } = [];
 
     [ObservableProperty]
-    private object? ownerObject;
+    public partial object? OwnerObject { get; set; }
 
     [ObservableProperty]
-    private string? title;
-
+    public partial string? Title { get; set; }
     /// <summary>
     ///     Gets or sets the field filter to use. If filter returns false, it will omit the field.
     /// </summary>
     public Func<PropertyInfo, bool> FieldAcceptFilter { get; set; } = _ => true;
 
     [ObservableProperty]
-    private bool disableButtons;
-
+    public partial bool DisableButtons { get; set; }
     [RelayCommand(CanExecute = nameof(CanSave))]
     public async Task Save()
     {

@@ -23,22 +23,25 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     private int? selectedHistoryIndex;
 
     [ObservableProperty]
-    private string? serverCommand;
+    public partial string? ServerCommand { get; set; }
 
     [ObservableProperty]
-    private ServerEntry serverEntry;
+    public partial ServerEntry ServerEntry { get; set; }
+    
 
     [ObservableProperty]
-    private bool shouldAutoScroll = true;
+    public partial bool ShouldAutoScroll { get; set; } = true;
 
-    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Process?.Output ?? [];
+    private int previousContentLength;
+
+    public AvaloniaList<OutputLine> ServerOutput => ServerEntry.Output;
 
     public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
-        this.serverEntry = serverEntry;
+        ServerEntry = serverEntry;
         this.RegisterMessageListener<ServerStatusMessage, EmbeddedServerViewModel>(static (status, model) =>
         {
-            if (status.ProcessId != model.ServerEntry.Process?.Id)
+            if (status.ProcessId != model.ServerEntry.LastProcessId)
             {
                 return;
             }
@@ -48,14 +51,14 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
             }
         });
     }
-    
+
     [RelayCommand]
     private void Back() => ChangeViewToPrevious<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
     {
-        if (ServerEntry.Process == null)
+        if (!ServerEntry.IsOnline)
         {
             return;
         }
@@ -69,14 +72,14 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
             ServerOutput.Add(new OutputLine
             {
                 Type = OutputLineType.COMMAND,
-                Timestamp = $@"[{TimeSpan.FromTicks(DateTime.Now.Ticks):hh\:mm\:ss\.fff}]",
+                LocalTime = DateTimeOffset.Now,
                 LogText = $"> {ServerCommand}"
             });
         }
         string command = ServerCommand.TrimStart('/');
         if (!string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase))
         {
-            await ServerEntry.Process.SendCommandAsync(command);
+            await ServerEntry.CommandQueue.Writer.WriteAsync(command);
         }
         else
         {
@@ -84,7 +87,7 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
         }
         ClearInput(textBox);
     }
-    
+
     [RelayCommand]
     private async Task StopServerAsync()
     {
@@ -132,21 +135,29 @@ internal partial class EmbeddedServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private void OutputSizeChanged(SizeChangedEventArgs args)
     {
-        if (ShouldAutoScroll && args.HeightChanged && args.Source is Visual visual)
+        if (!ShouldAutoScroll || args.NewSize == args.PreviousSize || args.Source is not Visual visual)
         {
-            ScrollViewer scrollViewer = visual.FindAncestorOfType<ScrollViewer>();
-            if (scrollViewer is not null)
-            {
-                // TODO: ScrollToEnd for virtualized lists is not working well, see: https://github.com/AvaloniaUI/Avalonia/issues/14365 - wait for fix to clean up this code.
-                // Workaround: Run ScrollToEnd twice on the next two frames.
-                Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    scrollViewer.ScrollToEnd();
-                    // Run it again next frame
-                    Dispatcher.UIThread.InvokeAsync(() => scrollViewer.ScrollToEnd());
-                });
-            }
+            return;
         }
+        if (previousContentLength == ServerOutput.Count)
+        {
+            return;
+        }
+        previousContentLength = ServerOutput.Count;
+        ScrollViewer scrollViewer = visual.FindAncestorOfType<ScrollViewer>();
+        if (scrollViewer is null)
+        {
+            return;
+        }
+
+        // TODO: ScrollToEnd for virtualized lists is not working well, see: https://github.com/AvaloniaUI/Avalonia/issues/14365 - wait for fix to clean up this code.
+        // Workaround: Run ScrollToEnd twice on the next two frames.
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            scrollViewer.ScrollToEnd();
+            // Run it again next frame
+            Dispatcher.UIThread.InvokeAsync(() => scrollViewer.ScrollToEnd());
+        });
     }
 
     private void SetCaretToEnd(TextBox textBox)

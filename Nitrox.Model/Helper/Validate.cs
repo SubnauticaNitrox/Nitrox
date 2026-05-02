@@ -1,6 +1,5 @@
 ﻿extern alias JB;
 using System;
-using System.Runtime.CompilerServices;
 using JB::JetBrains.Annotations;
 using Nitrox.Model.DataStructures;
 
@@ -11,17 +10,17 @@ public static class Validate
     // "where T : class" prevents non-nullable valuetypes from getting boxed to objects.
     // In other words: Error when trying to assert non-null on something that can't be null in the first place.
     [ContractAnnotation("o:null => halt")]
-    public static void NotNull<T>(T? o, [CallerArgumentExpression("o")] string argumentExpression = null) where T : class
+    public static void NotNull<T>(T? o, [CallerArgumentExpression("o")] string? argumentExpression = null) where T : class
     {
         if (o != null)
         {
             return;
         }
 
-        throw new ArgumentNullException(argumentExpression);
+        throw new ArgumentNullException(nameof(o), argumentExpression);
     }
 
-    public static void IsTrue(bool b, [CallerArgumentExpression("b")] string argumentExpression = null)
+    public static void IsTrue(bool b, [CallerArgumentExpression("b")] string? argumentExpression = null)
     {
         if (!b)
         {
@@ -29,7 +28,7 @@ public static class Validate
         }
     }
 
-    public static void IsFalse(bool b, [CallerArgumentExpression("b")] string argumentExpression = null)
+    public static void IsFalse(bool b, [CallerArgumentExpression("b")] string? argumentExpression = null)
     {
         if (b)
         {

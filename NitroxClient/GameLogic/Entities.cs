@@ -29,16 +29,16 @@ namespace NitroxClient.GameLogic
         private readonly SimulationOwnership simulationOwnership;
         private readonly Terrain terrain;
 
-        private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
-        private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
+        private readonly Dictionary<NitroxId, Type> spawnedAsType = [];
+        private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = [];
 
-        private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
+        private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = [];
 
         public List<Entity> EntitiesToSpawn { get; private init; }
         public List<AbsoluteEntityCell> CellsToSpawn { get; private init; }
         public bool SpawningEntities { get; private set; }
 
-        private readonly HashSet<NitroxId> deletedEntitiesIds = new();
+        private readonly HashSet<NitroxId> deletedEntitiesIds = [];
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership, Terrain terrain)
         {
@@ -57,7 +57,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(entityMetadataManager);
-            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this, simulationOwnership);
+            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, this, simulationOwnership);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodEntity)] = new EscapePodEntitySpawner(localPlayer);
@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(RadiationLeakEntity)] = new RadiationLeakEntitySpawner(timeManager);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
-            entitySpawnersByType[typeof(OxygenPipeEntity)] = new OxygenPipeEntitySpawner(this, (WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
+            entitySpawnersByType[typeof(OxygenPipeEntity)] = new OxygenPipeEntitySpawner((WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
             entitySpawnersByType[typeof(PlacedWorldEntity)] = new PlacedWorldEntitySpawner((WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
             entitySpawnersByType[typeof(InteriorPieceEntity)] = new InteriorPieceEntitySpawner(this, entityMetadataManager);
             entitySpawnersByType[typeof(GeyserWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
@@ -161,7 +161,9 @@ namespace NitroxClient.GameLogic
         /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS).
         /// Also saves resources by using the IOut instances
         /// </remarks>
+        /// <param name="batch"></param>
         /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
+        /// <param name="skipFrames"></param>
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
         {
             // we divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time)

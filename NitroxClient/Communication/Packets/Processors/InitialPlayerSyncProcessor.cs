@@ -1,122 +1,114 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class InitialPlayerSyncProcessor(IEnumerable<IInitialSyncProcessor> processors) : IClientPacketProcessor<InitialPlayerSync>
 {
-    public class InitialPlayerSyncProcessor : ClientPacketProcessor<InitialPlayerSync>
+    private readonly HashSet<Type> alreadyRan = [];
+    private readonly HashSet<IInitialSyncProcessor> processors = processors.ToSet();
+
+    private int cumulativeProcessorsRan;
+
+    private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
+    private InitialPlayerSync packet;
+    private int processorsRanLastCycle;
+    private WaitScreen.ManualWaitItem subWaitScreenItem;
+
+    public Task Process(ClientProcessorContext context, InitialPlayerSync packet)
     {
-        private readonly IPacketSender packetSender;
-        private readonly HashSet<IInitialSyncProcessor> processors;
-        private readonly HashSet<Type> alreadyRan = [];
-        private InitialPlayerSync packet;
+        this.packet = packet;
 
-        private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
-        private WaitScreen.ManualWaitItem subWaitScreenItem;
+        loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
+        Log.InGame(Language.main.Get("Nitrox_SyncingWorld"));
 
-        private int cumulativeProcessorsRan;
-        private int processorsRanLastCycle;
+        cumulativeProcessorsRan = 0;
+        Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(context));
+        return Task.CompletedTask;
+    }
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, IEnumerable<IInitialSyncProcessor> processors)
+    private IEnumerator ProcessInitialSyncPacket(ClientProcessorContext context)
+    {
+        bool moreProcessorsToRun;
+        do
         {
-            this.packetSender = packetSender;
-            this.processors = processors.ToSet();
-        }
+            yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
 
-        public override void Process(InitialPlayerSync packet)
-        {
-            this.packet = packet;
-
-            loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
-            Log.InGame(Language.main.Get("Nitrox_SyncingWorld"));
-
-            cumulativeProcessorsRan = 0;
-            Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
-        }
-
-        private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
-        {
-            bool moreProcessorsToRun;
-            do
+            moreProcessorsToRun = alreadyRan.Count < processors.Count;
+            if (moreProcessorsToRun && processorsRanLastCycle == 0)
             {
-                yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
+                throw new Exception($"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
+            }
+        } while (moreProcessorsToRun);
 
-                moreProcessorsToRun = alreadyRan.Count < processors.Count;
-                if (moreProcessorsToRun && processorsRanLastCycle == 0)
-                {
-                    throw new Exception($"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
-                }
-            } while (moreProcessorsToRun);
+        WaitScreen.Remove(loadingMultiplayerWaitItem);
+        Multiplayer.Main.InitialSyncCompleted = true;
 
-            WaitScreen.Remove(loadingMultiplayerWaitItem);
-            Multiplayer.Main.InitialSyncCompleted = true;
+        // When the player finishes loading, we can take back his invincibility
+        Player.main.liveMixin.invincible = false;
+        Player.main.UnfreezeStats();
 
-            // When the player finishes loading, we can take back his invincibility
-            Player.main.liveMixin.invincible = false;
-            Player.main.UnfreezeStats();
+        context.Send(new PlayerSyncFinished());
+    }
 
-            packetSender.Send(new PlayerSyncFinished());
-        }
+    private IEnumerator RunPendingProcessors()
+    {
+        processorsRanLastCycle = 0;
 
-        private IEnumerator RunPendingProcessors()
+        foreach (IInitialSyncProcessor processor in processors)
         {
-            processorsRanLastCycle = 0;
-
-            foreach (IInitialSyncProcessor processor in processors)
+            if (IsWaitingToRun(processor.GetType()) && HasDependenciesSatisfied(processor))
             {
-                if (IsWaitingToRun(processor.GetType()) && HasDependenciesSatisfied(processor))
-                {
-                    loadingMultiplayerWaitItem.SetProgress(cumulativeProcessorsRan, processors.Count);
+                loadingMultiplayerWaitItem.SetProgress(cumulativeProcessorsRan, processors.Count);
 
-                    alreadyRan.Add(processor.GetType());
-                    processorsRanLastCycle++;
-                    cumulativeProcessorsRan++;
+                alreadyRan.Add(processor.GetType());
+                processorsRanLastCycle++;
+                cumulativeProcessorsRan++;
 
-                    Log.Info($"Running {processor.GetType()}");
-                    subWaitScreenItem = WaitScreen.Add($"Running {processor.GetType().Name}");
-                    yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
-                    WaitScreen.Remove(subWaitScreenItem);
-                }
+                Log.Info($"Running {processor.GetType()}");
+                subWaitScreenItem = WaitScreen.Add($"Running {processor.GetType().Name}");
+                yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
+                WaitScreen.Remove(subWaitScreenItem);
+            }
+        }
+    }
+
+    private bool HasDependenciesSatisfied(IInitialSyncProcessor processor)
+    {
+        foreach (Type dependentType in processor.DependentProcessors)
+        {
+            if (IsWaitingToRun(dependentType))
+            {
+                return false;
             }
         }
 
-        private bool HasDependenciesSatisfied(IInitialSyncProcessor processor)
+        return true;
+    }
+
+    private bool IsWaitingToRun(Type processor)
+    {
+        return !alreadyRan.Contains(processor);
+    }
+
+    private string GetRemainingProcessorsText()
+    {
+        string remaining = "";
+
+        foreach (IInitialSyncProcessor processor in processors)
         {
-            foreach (Type dependentType in processor.DependentProcessors)
+            if (IsWaitingToRun(processor.GetType()))
             {
-                if (IsWaitingToRun(dependentType))
-                {
-                    return false;
-                }
+                remaining += $" {processor.GetType()}";
             }
-
-            return true;
         }
 
-        private bool IsWaitingToRun(Type processor)
-        {
-            return alreadyRan.Contains(processor) == false;
-        }
-
-        private string GetRemainingProcessorsText()
-        {
-            string remaining = "";
-
-            foreach (IInitialSyncProcessor processor in processors)
-            {
-                if (IsWaitingToRun(processor.GetType()))
-                {
-                    remaining += $" {processor.GetType()}";
-                }
-            }
-
-            return remaining;
-        }
+        return remaining;
     }
 }

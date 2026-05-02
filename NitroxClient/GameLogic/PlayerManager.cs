@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Nitrox.Model.Core;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.MonoBehaviours.Discord;
@@ -16,7 +17,7 @@ public class PlayerManager
     private readonly PlayerModelManager playerModelManager;
     private readonly PlayerVitalsManager playerVitalsManager;
     private readonly FMODWhitelist fmodWhitelist;
-    private readonly Dictionary<ushort, RemotePlayer> playersById = new();
+    private readonly Dictionary<SessionId, RemotePlayer> sessionsById = new();
 
     public OnCreateDelegate OnCreate;
     public OnRemoveDelegate OnRemove;
@@ -28,17 +29,17 @@ public class PlayerManager
         this.fmodWhitelist = fmodWhitelist;
     }
 
-    public Optional<RemotePlayer> Find(ushort playerId)
+    public Optional<RemotePlayer> Find(SessionId sessionId)
     {
-        playersById.TryGetValue(playerId, out RemotePlayer player);
+        sessionsById.TryGetValue(sessionId, out RemotePlayer player);
         return Optional.OfNullable(player);
     }
 
-    public bool TryFind(ushort playerId, out RemotePlayer remotePlayer) => playersById.TryGetValue(playerId, out remotePlayer);
+    public bool TryFind(SessionId sessionId, out RemotePlayer remotePlayer) => sessionsById.TryGetValue(sessionId, out remotePlayer);
 
     public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
     {
-        RemotePlayer remotePlayer = playersById.Select(idToPlayer => idToPlayer.Value)
+        RemotePlayer remotePlayer = sessionsById.Select(idToPlayer => idToPlayer.Value)
                                                .FirstOrDefault(player => player.PlayerContext.PlayerNitroxId == playerNitroxId);
 
         return Optional.OfNullable(remotePlayer);
@@ -46,7 +47,7 @@ public class PlayerManager
 
     public IEnumerable<RemotePlayer> GetAll()
     {
-        return playersById.Values;
+        return sessionsById.Values;
     }
 
     public HashSet<GameObject> GetAllPlayerObjects()
@@ -65,32 +66,37 @@ public class PlayerManager
     public RemotePlayer Create(PlayerContext playerContext)
     {
         Validate.NotNull(playerContext);
-        Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
+
+        // Can happen that player is already known if both join queue & initial sync happen.
+        if (sessionsById.TryGetValue(playerContext.SessionId, out RemotePlayer alreadyAddedPlayer))
+        {
+            return alreadyAddedPlayer;
+        }
 
         RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
 
-        playersById.Add(remotePlayer.PlayerId, remotePlayer);
-        OnCreate(remotePlayer.PlayerId, remotePlayer);
+        sessionsById.Add(remotePlayer.SessionId, remotePlayer);
+        OnCreate(remotePlayer.SessionId, remotePlayer);
 
         DiscordClient.UpdatePartySize(GetTotalPlayerCount());
 
         return remotePlayer;
     }
 
-    public void RemovePlayer(ushort playerId)
+    public void RemovePlayer(SessionId sessionId)
     {
-        if (playersById.TryGetValue(playerId, out RemotePlayer player))
+        if (sessionsById.TryGetValue(sessionId, out RemotePlayer player))
         {
             player.Destroy();
-            playersById.Remove(playerId);
-            OnRemove(playerId, player);
+            sessionsById.Remove(sessionId);
+            OnRemove(sessionId, player);
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
         }
     }
 
     /// <returns>Remote players + You => X + 1</returns>
-    public int GetTotalPlayerCount() => playersById.Count + 1;
+    public int GetTotalPlayerCount() => sessionsById.Count + 1;
 
-    public delegate void OnCreateDelegate(ushort playerId, RemotePlayer remotePlayer);
-    public delegate void OnRemoveDelegate(ushort playerId, RemotePlayer remotePlayer);
+    public delegate void OnCreateDelegate(SessionId sessionId, RemotePlayer remotePlayer);
+    public delegate void OnRemoveDelegate(SessionId sessionId, RemotePlayer remotePlayer);
 }

@@ -790,8 +790,8 @@ event:/sub/exo/claw_pickup;true;true;40
 event:/sub/exo/claw_punch;true;true;40
 event:/sub/exo/dock_exo_cyclops;false;false;0
 event:/sub/exo/dock_exo_moonpool;false;false;0
-event:/sub/exo/drill_hit_loop;true;true;50
-event:/sub/exo/drill_loop;true;true;50
+event:/sub/exo/drill_hit_loop;false;true;50
+event:/sub/exo/drill_loop;false;true;50
 event:/sub/exo/enter_exo;false;false;0
 event:/sub/exo/hook_hit;true;true;50
 event:/sub/exo/hook_loop;true;true;50

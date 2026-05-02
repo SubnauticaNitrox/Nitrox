@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -10,26 +10,31 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using Nitrox.Server.Subnautica.Models.Serialization.World;
+using Nitrox.Model.Constants;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class BackupRestoreViewModel : ModalViewModelBase
 {
     [ObservableProperty]
-    private AvaloniaList<BackupItem> backups = [];
+    public partial AvaloniaList<BackupItem> Backups { get; set; } = [];
 
     [ObservableProperty]
-    private string? saveFolderDirectory;
+    public partial string? SaveFolderDirectory { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand))]
     [NotifyDataErrorInfo]
     [Backup]
-    private BackupItem? selectedBackup;
+    public partial BackupItem? SelectedBackup { get; set; }
 
     [ObservableProperty]
-    private string? title;
+    public partial string? Title { get; set; }
+
+    [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
+    public void RestoreBackup() => Close(ButtonOptions.Ok);
+
+    public bool CanRestoreBackup() => !HasErrors;
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -42,11 +47,6 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
                 break;
         }
     }
-
-    [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
-    public void RestoreBackup() => Close(ButtonOptions.Ok);
-
-    public bool CanRestoreBackup() => !HasErrors;
 
     private static IEnumerable<BackupItem> GetBackups(string? saveDirectory)
     {
@@ -62,13 +62,13 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
                          }
 
                          string dateTimePart = fileName["Backup - ".Length..];
-                         return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+                         return DateTime.TryParseExact(dateTimePart, PersistanceConstants.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
                      })
                      .OrderByDescending(file =>
                      {
                          string fileName = Path.GetFileNameWithoutExtension(file);
                          string dateTimePart = fileName["Backup - ".Length..];
-                         return DateTime.TryParseExact(dateTimePart, WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate)
+                         return DateTime.TryParseExact(dateTimePart, PersistanceConstants.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate)
                              ? parsedDate
                              : File.GetCreationTime(file);
                      });
@@ -86,7 +86,7 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
         int i = 0;
         foreach (string backupPath in GetBackupFilePaths(backupDir))
         {
-            if (!DateTime.TryParseExact(Path.GetFileNameWithoutExtension(backupPath)["Backup - ".Length..], WorldPersistence.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime backupDate))
+            if (!DateTime.TryParseExact(Path.GetFileNameWithoutExtension(backupPath)["Backup - ".Length..], PersistanceConstants.BACKUP_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime backupDate))
             {
                 backupDate = File.GetCreationTime(backupPath);
             }

@@ -1,24 +1,17 @@
 ﻿using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal sealed class ScheduleProcessor(IPacketSender packetSender, StoryScheduler storyScheduler) : IAuthPacketProcessor<Schedule>
 {
-    public class ScheduleProcessor : AuthenticatedPacketProcessor<Schedule>
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly StoryScheduler storyScheduler = storyScheduler;
+
+    public async Task Process(AuthProcessorContext context, Schedule packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly ScheduleKeeper scheduleKeeper;
-
-        public ScheduleProcessor(PlayerManager playerManager, ScheduleKeeper scheduleKeeper)
-        {
-            this.playerManager = playerManager;
-            this.scheduleKeeper = scheduleKeeper;
-        }
-
-        public override void Process(Schedule packet, Player player)
-        {
-            scheduleKeeper.ScheduleGoal(NitroxScheduledGoal.From(packet.TimeExecute, packet.Key, packet.Type));
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        storyScheduler.ScheduleStory(NitroxScheduledGoal.From(packet.TimeExecute, packet.Key, packet.Type));
+        await context.SendToOthersAsync(packet);
     }
 }

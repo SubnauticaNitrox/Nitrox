@@ -1,32 +1,59 @@
 using System.Buffers;
-using System.Threading;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Net;
+using System.Threading.Channels;
 using LiteNetLib;
+using LiteNetLib.Layers;
 using LiteNetLib.Utils;
-using Mono.Nat;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Packets;
+using Nitrox.Model.Core;
+using Nitrox.Model.Networking;
+using Nitrox.Model.Packets.Core;
+using Nitrox.Server.Subnautica.Models.Administration;
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Helper;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
-public class LiteNetLibServer : NitroxServer
+internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
 {
+    private readonly Dictionary<int, PeerContext> contextByPeerId = [];
+    private readonly Dictionary<SessionId, PeerContext> contextBySessionId = [];
+    private readonly Lock contextLock = new();
+    private readonly NetDataWriter dataWriter = new();
     private readonly EventBasedNetListener listener;
+    private readonly ILogger<LiteNetLibServer> logger;
+    private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly PacketRegistryService packetRegistryService;
+    private readonly PacketSerializationService packetSerializationService;
+    private readonly PlayerManager playerManager;
     private readonly NetManager server;
+    private readonly SessionManager sessionManager;
+    private readonly Channel<Task> taskChannel = Channel.CreateUnbounded<Task>();
 
-    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, joiningManager, entitySimulation, serverConfig)
+    public LiteNetLibServer(PlayerManager playerManager, SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, IOptions<SubnauticaServerOptions> options,
+                            ILogger<LiteNetLibServer> logger)
     {
+        this.playerManager = playerManager;
+        this.sessionManager = sessionManager;
+        this.packetSerializationService = packetSerializationService;
+        this.packetRegistryService = packetRegistryService;
+        this.options = options;
+        this.logger = logger;
         listener = new EventBasedNetListener();
-        server = new NetManager(listener)
+        server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
         {
-            IPv6Enabled = true
+            UseNativeSockets = true, IPv6Enabled = true
         };
     }
 
-    public override bool Start(CancellationToken ct = default)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
-        listener.PeerConnectedEvent += PeerConnected;
         listener.PeerDisconnectedEvent += PeerDisconnected;
         listener.NetworkReceiveEvent += NetworkDataReceived;
         listener.ConnectionRequestEvent += OnConnectionRequest;
@@ -40,100 +67,172 @@ public class LiteNetLibServer : NitroxServer
         server.DisconnectTimeout = 300000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
 
-        if (!server.Start(portNumber))
-        {
-            return false;
-        }
-        if (useUpnpPortForwarding)
-        {
-            _ = PortForwardAsync((ushort)portNumber, ct);
-        }
-        if (useLANBroadcast)
-        {
-            LANBroadcastServer.Start(ct);
-        }
-
-        return true;
+        server.Start(options.Value.ServerPort);
+        return Task.CompletedTask;
     }
 
-    private async Task PortForwardAsync(ushort port, CancellationToken ct = default)
-    {
-        if (await NatHelper.GetPortMappingAsync(port, Protocol.Udp, ct) != null)
-        {
-            Log.Info($"Port {port} UDP is already port forwarded");
-            return;
-        }
-
-        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp, ct);
-        if (!ct.IsCancellationRequested)
-        {
-            switch (mappingResult)
-            {
-                case NatHelper.ResultCodes.SUCCESS:
-                    Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
-                    break;
-                case NatHelper.ResultCodes.CONFLICT_IN_MAPPING_ENTRY:
-                    Log.Warn($"Port forward for {port} UDP failed. It appears to already be port forwarded or it conflicts with another port forward rule.");
-                    break;
-                case NatHelper.ResultCodes.UNKNOWN_ERROR:
-                    Log.Warn($"Failed to port forward {port} UDP through UPnP. If using Hamachi or you've manually port-forwarded, please disregard this warning. To disable this feature you can go into the server settings.");
-                    break;
-            }
-        }
-    }
-
-    public override void Stop()
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
         if (!server.IsRunning)
         {
             return;
         }
 
-        playerManager.SendPacketToAllPlayers(new ServerStopped());
-        // We want every player to receive this packet
-        Thread.Sleep(500);
-        server.Stop();
-        if (useUpnpPortForwarding)
+        await SendPacketToAllAsync(new ServerStopped());
+        try
         {
-            if (NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp, CancellationToken.None).GetAwaiter().GetResult())
+            await Task.Delay(100, CancellationToken.None); // Gives some time for the last few tasks to be queued up.
+            taskChannel.Writer.TryComplete();
+            await foreach (Task task in taskChannel.Reader.ReadAllAsync(cancellationToken))
             {
-                Log.Debug($"Port forward rule removed for {portNumber} UDP");
-            }
-            else
-            {
-                Log.Warn($"Failed to remove port forward rule {portNumber} UDP");
+                await task;
             }
         }
-        if (useLANBroadcast)
+        finally
         {
-            LANBroadcastServer.Stop();
+            server.Stop();
         }
     }
 
-    public void OnConnectionRequest(ConnectionRequest request)
+    public ValueTask SendPacketAsync<T>(T packet, SessionId sessionId) where T : Packet
     {
-        if (server.ConnectedPeersCount < maxConnections)
+        PeerContext? context;
+        lock (contextLock)
         {
-            request.AcceptIfKey("nitrox");
+            contextBySessionId.TryGetValue(sessionId, out context);
         }
-        else
+        if (context == null)
+        {
+            logger.ZLogWarning($"Unable to send packet {typeof(T)} because no context is set for session #{sessionId}");
+            return ValueTask.CompletedTask;
+        }
+        SendPacket(packet, context.Peer);
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SendPacketToAllAsync<T>(T packet) where T : Packet
+    {
+        PeerContext[] contexts = [];
+        int i = 0;
+        try
+        {
+            lock (contextLock)
+            {
+                int count = contextBySessionId.Count;
+                contexts = ArrayPool<PeerContext>.Shared.Rent(count);
+                foreach (PeerContext? peerContext in contextBySessionId.Values)
+                {
+                    contexts[i++] = peerContext;
+                }
+            }
+            for (int j = 0; j < i; j++)
+            {
+                SendPacket(packet, contexts[j].Peer);
+            }
+        }
+        finally
+        {
+            ArrayPool<PeerContext>.Shared.Return(contexts);
+        }
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SendPacketToOthersAsync<T>(T packet, SessionId excludedSessionId) where T : Packet
+    {
+        PeerContext[] contexts = [];
+        int i = 0;
+        try
+        {
+            lock (contextLock)
+            {
+                int count = contextBySessionId.Count;
+                contexts = ArrayPool<PeerContext>.Shared.Rent(count);
+                foreach (PeerContext? peerContext in contextBySessionId.Values)
+                {
+                    contexts[i++] = peerContext;
+                }
+            }
+            for (int j = 0; j < i; j++)
+            {
+                if (contexts[j].SessionId == excludedSessionId)
+                {
+                    continue;
+                }
+                SendPacket(packet, contexts[j].Peer);
+            }
+        }
+        finally
+        {
+            ArrayPool<PeerContext>.Shared.Return(contexts);
+        }
+        return ValueTask.CompletedTask;
+    }
+
+    public async Task<bool> KickPlayer(SessionId sessionId, string reason = "")
+    {
+        PeerContext context;
+        lock (contextLock)
+        {
+            if (!contextBySessionId.TryGetValue(sessionId, out context))
+            {
+                return false;
+            }
+        }
+        await SendPacketAsync(new PlayerKicked(reason), sessionId);
+        await Task.Delay(100); // Give time for LiteNetLib to send the packet out before disconnecting. Otherwise, no kick modal will show on client.
+        server.DisconnectPeer(context.Peer); // This will trigger client disconnect, which will handle the session (data) migration.
+        return true;
+    }
+
+    async Task IEvent<ISessionCleaner.Args>.OnEventAsync(ISessionCleaner.Args args)
+    {
+        Disconnect disconnect = new(args.Session.Id);
+        await SendPacketToAllAsync(disconnect);
+    }
+
+    private void OnConnectionRequest(ConnectionRequest request)
+    {
+        if (request.Data.GetString() != "nitrox")
         {
             request.Reject();
+            return;
         }
-    }
-
-    private void PeerConnected(NetPeer peer)
-    {
-        LiteNetLibConnection connection = new(peer);
-        lock (connectionsByRemoteIdentifier)
+        if (server.ConnectedPeersCount >= options.Value.MaxConnections)
         {
-            connectionsByRemoteIdentifier[peer.Id] = connection;
+            request.Reject();
+            return;
+        }
+
+        SessionManager.Session session = sessionManager.GetOrCreateSession(request.RemoteEndPoint);
+        NetPeer peer = request.Accept();
+        PeerContext context = new(session.Id, peer);
+        lock (contextLock)
+        {
+            contextBySessionId.TryAdd(session.Id, context);
+            contextByPeerId.TryAdd(peer.Id, context);
         }
     }
 
     private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
-        ClientDisconnected(GetConnection(peer.Id));
+        PeerContext? context;
+        lock (contextLock)
+        {
+            if (contextByPeerId.Remove(peer.Id, out context) && context != null)
+            {
+                contextBySessionId.Remove(context.SessionId);
+            }
+        }
+        if (context == null)
+        {
+            logger.ZLogWarning($"Disconnected peer id {peer.Id} did not have an associated session id!");
+            return;
+        }
+
+        if (!taskChannel.Writer.TryWrite(sessionManager.RemoveSessionAsync(context.SessionId)))
+        {
+            logger.ZLogWarning($"Failed to queue client disconnect task for {peer as EndPoint:@EndPoint}");
+        }
     }
 
     private void NetworkDataReceived(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
@@ -143,9 +242,25 @@ public class LiteNetLibServer : NitroxServer
         try
         {
             reader.GetBytes(packetData, packetDataLength);
-            Packet packet = Packet.Deserialize(packetData);
-            INitroxConnection connection = GetConnection(peer.Id);
-            ProcessIncomingData(connection, packet);
+            Packet? packet = Packet.Deserialize(packetData);
+            if (packet == null)
+            {
+                return;
+            }
+            PeerContext context;
+            lock (contextLock)
+            {
+                contextByPeerId.TryGetValue(peer.Id, out context);
+            }
+            if (context == null)
+            {
+                return;
+            }
+
+            if (!taskChannel.Writer.TryWrite(ProcessPacket(context, packet)))
+            {
+                logger.ZLogError($"Failed to queue packet processor task for packet type {packet.GetType().Name:@TypeName} from {peer.Address:@Address}:{peer.Port:@Port}");
+            }
         }
         finally
         {
@@ -153,14 +268,105 @@ public class LiteNetLibServer : NitroxServer
         }
     }
 
-    private INitroxConnection GetConnection(int remoteIdentifier)
+    private async Task ProcessPacket(PeerContext peerContext, Packet packet)
     {
-        INitroxConnection connection;
-        lock (connectionsByRemoteIdentifier)
+        Type packetType = packet.GetType();
+        PacketProcessorsInvoker.Entry processor = packetRegistryService.GetProcessor(packetType);
+
+        try
         {
-            connectionsByRemoteIdentifier.TryGetValue(remoteIdentifier, out connection);
+            switch (GetProcessorTarget(processor, peerContext.SessionId, playerManager, out Player? player))
+            {
+                case ProcessorTarget.ANONYMOUS:
+                    using (EasyPool<AnonProcessorContext>.Lease lease = EasyPool<AnonProcessorContext>.Rent())
+                    {
+                        ref AnonProcessorContext context = ref lease.GetRef();
+                        if (context == null)
+                        {
+                            context = new AnonProcessorContext((peerContext.SessionId, peerContext.Peer), this);
+                        }
+                        else
+                        {
+                            context.Sender = (peerContext.SessionId, peerContext.Peer);
+                        }
+                        await processor.Execute(context, packet);
+                    }
+                    break;
+                case ProcessorTarget.AUTHENTICATED:
+                    using (EasyPool<AuthProcessorContext>.Lease lease = EasyPool<AuthProcessorContext>.Rent())
+                    {
+                        ref AuthProcessorContext context = ref lease.GetRef();
+                        if (context == null)
+                        {
+                            context = new AuthProcessorContext(player, this);
+                        }
+                        else
+                        {
+                            context.Sender = player;
+                        }
+                        await processor.Execute(context, packet);
+                    }
+                    break;
+                default:
+                    logger.ZLogWarning($"Received invalid, unauthenticated packet: {packetType.Name:@TypeName}");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.ZLogError(ex, $"Error in packet processor {processor.GetType().Name:@TypeName}");
         }
 
-        return connection;
+        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, [NotNullIfNotNull(nameof(player))] out Player? player)
+        {
+            player = null;
+            if (processor == null)
+            {
+                return ProcessorTarget.INVALID;
+            }
+            if (typeof(IAuthPacketProcessor).IsAssignableFrom(processor.InterfaceType) && sessionId is { IsPlayer: true } && playerManager.TryGetPlayerBySessionId(sessionId, out player))
+            {
+                return ProcessorTarget.AUTHENTICATED;
+            }
+            if (typeof(IAnonPacketProcessor).IsAssignableFrom(processor.InterfaceType))
+            {
+                return ProcessorTarget.ANONYMOUS;
+            }
+            return ProcessorTarget.INVALID;
+        }
     }
+
+    private void SendPacket(Packet packet, NetPeer peer)
+    {
+        using EasyPool<MemoryStream>.Lease lease = EasyPool<MemoryStream>.Rent();
+        ref MemoryStream stream = ref lease.GetRef();
+        stream ??= new MemoryStream(ushort.MaxValue);
+
+        int startPos = (int)stream.Position;
+        packetSerializationService.SerializeInto(packet, stream);
+        int bytesWritten = (int)(stream.Position - startPos);
+        Span<byte> packetData = stream.GetBuffer().AsSpan().Slice(startPos, bytesWritten);
+
+        lock (dataWriter)
+        {
+            dataWriter.Reset();
+            dataWriter.Put(packetData.Length);
+            dataWriter.ResizeIfNeed(packetData.Length + 4);
+            packetData.CopyTo(dataWriter.Data.AsSpan().Slice(4));
+            dataWriter.SetPosition(packetData.Length + 4);
+            peer.Send(dataWriter, (byte)packet.UdpChannel, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
+        }
+
+        // Cleanup pooled data.
+        stream.Position = 0;
+    }
+
+    private enum ProcessorTarget
+    {
+        INVALID,
+        ANONYMOUS,
+        AUTHENTICATED
+    }
+
+    private record PeerContext(SessionId SessionId, NetPeer Peer);
 }

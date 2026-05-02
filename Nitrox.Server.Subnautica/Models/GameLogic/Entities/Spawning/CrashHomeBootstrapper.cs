@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-public class CrashHomeBootstrapper : IEntityBootstrapper
+internal sealed class CrashHomeBootstrapper : IEntityBootstrapper
 {
     public void Prepare(ref WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {

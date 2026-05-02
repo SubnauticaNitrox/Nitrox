@@ -1,40 +1,31 @@
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-public class TimeCommand : Command
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class TimeCommand(TimeService timeService) : ICommandHandler<StoryManager.TimeModification>
 {
-    private readonly TimeKeeper timeKeeper;
+    private readonly TimeService timeService = timeService;
 
-    public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
+    [Description("Changes the map time")]
+    public async Task Execute(ICommandContext context, [Description("Changes the map time")] StoryManager.TimeModification time)
     {
-        AddParameter(new TypeString("day/night", false, "Time to change to"));
-
-        this.timeKeeper = timeKeeper;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        string time = args.Get(0);
-
-        switch (time?.ToLower())
+        switch (time)
         {
-            case "day":
-                timeKeeper.ChangeTime(StoryManager.TimeModification.DAY);
-                SendMessageToAllPlayers("Time set to day");
+            case StoryManager.TimeModification.DAY:
+                timeService.ChangeTime(StoryManager.TimeModification.DAY);
+                await context.SendToAllAsync("Time set to day");
                 break;
-
-            case "night":
-                timeKeeper.ChangeTime(StoryManager.TimeModification.NIGHT);
-                SendMessageToAllPlayers("Time set to night");
+            case StoryManager.TimeModification.NIGHT:
+                timeService.ChangeTime(StoryManager.TimeModification.NIGHT);
+                await context.SendToAllAsync("Time set to night");
                 break;
-
             default:
-                timeKeeper.ChangeTime(StoryManager.TimeModification.SKIP);
-                SendMessageToAllPlayers("Skipped time");
+                timeService.ChangeTime(StoryManager.TimeModification.SKIP);
+                await context.SendToAllAsync("Skipped time");
                 break;
         }
     }

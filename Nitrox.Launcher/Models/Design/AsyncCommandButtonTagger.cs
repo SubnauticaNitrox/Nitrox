@@ -11,7 +11,7 @@ namespace Nitrox.Launcher.Models.Design;
 /// <summary>
 ///     Listens for async command changes on buttons to add the chosen classname to, for use with styling.
 /// </summary>
-public class AsyncCommandButtonTagger : IDisposable
+public sealed class AsyncCommandButtonTagger : IDisposable
 {
     public string ClassName { get; init; }
     private readonly ConcurrentDictionary<ICommand, BusyState> states = [];

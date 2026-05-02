@@ -4,7 +4,7 @@ using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-public class StayAtLeashPositionBootstrapper : IEntityBootstrapper
+internal sealed class StayAtLeashPositionBootstrapper : IEntityBootstrapper
 {
     public void Prepare(ref WorldEntity spawnedEntity, DeterministicGenerator generator)
     {

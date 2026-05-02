@@ -5,8 +5,6 @@ using System.IO;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.Helper;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 using UWE;

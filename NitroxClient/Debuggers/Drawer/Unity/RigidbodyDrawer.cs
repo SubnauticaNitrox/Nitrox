@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class RigidbodyDrawer : IDrawer<Rigidbody>
+public sealed class RigidbodyDrawer : IDrawer<Rigidbody>
 {
     private readonly VectorDrawer vectorDrawer;
     private const float LABEL_WIDTH = 120;
@@ -16,8 +16,14 @@ public class RigidbodyDrawer : IDrawer<Rigidbody>
         this.vectorDrawer = vectorDrawer;
     }
 
-    public void Draw(Rigidbody rb)
+    public void Draw(Rigidbody? rb)
     {
+        if (!rb)
+        {
+            GUILayout.TextField("Rigidbody is null", NitroxGUILayout.DrawerLabel);
+            return;
+        }
+
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Mass", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));

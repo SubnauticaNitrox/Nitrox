@@ -99,7 +99,7 @@ public class ProcessEx : IDisposable
         return From(startInfo);
     }
 
-#if NET9_0_OR_GREATER
+#if NET
     public static Process? StartProcessDetached(ProcessStartInfo startInfo)
     {
         if (!string.IsNullOrWhiteSpace(startInfo.Arguments))
@@ -110,7 +110,7 @@ public class ProcessEx : IDisposable
         // On Linux, processes are started as child by default. So we wrap as shell command to start detached from current process.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            List<string> newArgs = ["-c", string.Join(" ", "nohup", $"'{startInfo.FileName}'", string.Join(" ", startInfo.ArgumentList), ">/dev/null 2>&1", "&")];
+            List<string> newArgs = ["-c", string.Join(" ", "nohup", $"'{startInfo.FileName}'", string.Join(" ", startInfo.ArgumentList.Select(a => $"'{a}'")), ">/dev/null 2>&1", "&")];
             startInfo.FileName = "/bin/sh";
             startInfo.ArgumentList.Clear();
             foreach (string arg in newArgs)
@@ -169,6 +169,26 @@ public class ProcessEx : IDisposable
             UseShellExecute = true,
             Verb = "open"
         });
+    }
+
+    /// <summary>
+    ///     Opens a directory in the default OS directory viewer.
+    /// </summary>
+    /// <param name="directory">Directory to open</param>
+    /// <returns>True if directory opened successfully, false if directory does not exist.</returns>
+    public static bool OpenDirectory(string? directory)
+    {
+        if (!Directory.Exists(directory))
+        {
+            return false;
+        }
+        using Process? proc = Process.Start(new ProcessStartInfo
+        {
+            FileName = directory,
+            Verb = "open",
+            UseShellExecute = true
+        });
+        return true;
     }
 
     public static ProcessEx? GetFirstProcess(string procName, Func<ProcessEx, bool>? predicate = null)
@@ -327,7 +347,7 @@ public class ProcessModuleEx
     public int ModuleMemorySize { get; set; }
 }
 
-#if NET9_0_OR_GREATER
+#if NET
 [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
 public sealed class WindowsProcessEx : ProcessExBase
@@ -355,14 +375,41 @@ public sealed class WindowsProcessEx : ProcessExBase
     public override IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
     public override string? MainWindowTitle => Process?.MainWindowTitle;
 
+    public override bool IsRunning
+    {
+        get
+        {
+            if (!base.IsRunning)
+            {
+                return false;
+            }
+            if (Id < 1)
+            {
+                return false;
+            }
+            Process? proc = null;
+            try
+            {
+                proc = Process.GetProcessById(Id);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                proc?.Dispose();
+            }
+        }
+    }
+
     public WindowsProcessEx(int id) : base(id)
     {
-
     }
 
     public WindowsProcessEx(Process process) : base(process.Id)
     {
-
     }
 
     public new static bool IsElevated()
@@ -498,7 +545,7 @@ public sealed class WindowsProcessEx : ProcessExBase
     private static extern int ResumeThread(IntPtr hThread);
 }
 
-#if NET9_0_OR_GREATER
+#if NET
 [System.Runtime.Versioning.SupportedOSPlatform("linux")]
 #endif
 public sealed class LinuxProcessEx : ProcessExBase
@@ -727,7 +774,7 @@ public sealed class LinuxProcessEx : ProcessExBase
     }
 }
 
-#if NET9_0_OR_GREATER
+#if NET
 [System.Runtime.Versioning.SupportedOSPlatform("maccatalyst")]
 [System.Runtime.Versioning.SupportedOSPlatform("macos")]
 #endif

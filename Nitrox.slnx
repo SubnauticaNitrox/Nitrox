@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/SolutionFolder/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="Nitrox.Shared.props" />
+    <File Path="Nitrox.Shared.targets" />
+    <File Path="Nitrox.slnx.DotSettings" />
+  </Folder>
+  <Project Path="Nitrox.Launcher/Nitrox.Launcher.csproj" />
+  <Project Path="Nitrox.Assets.Subnautica/Nitrox.Assets.Subnautica.shproj" />
+  <Project Path="Nitrox.Model.Subnautica/Nitrox.Model.Subnautica.csproj" />
+  <Project Path="Nitrox.Model/Nitrox.Model.csproj" />
+  <Project Path="Nitrox.Server.Subnautica/Nitrox.Server.Subnautica.csproj" />
+  <Project Path="Nitrox.Test/Nitrox.Test.csproj" />
+  <Project Path="NitroxClient/NitroxClient.csproj" />
+  <Project Path="NitroxPatcher/NitroxPatcher.csproj" />
+</Solution>

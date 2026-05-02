@@ -12,17 +12,29 @@ namespace Nitrox.Launcher.ViewModels;
 /// </summary>
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
-    [ObservableProperty] private string? windowTitle;
+    [ObservableProperty]
+    public partial string? WindowTitle { get; set; }
 
-    [ObservableProperty] private string title = "";
-    [ObservableProperty] private double titleFontSize = 24;
-    [ObservableProperty] private FontWeight titleFontWeight = FontWeight.Bold;
+    [ObservableProperty]
+    public partial string Title { get; set; } = "";
 
-    [ObservableProperty] private string description = "";
-    [ObservableProperty] private double descriptionFontSize = 14;
-    [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
+    [ObservableProperty]
+    public partial double TitleFontSize { get; set; } = 24;
 
-    [ObservableProperty] private ButtonOptions buttonOptions = ButtonOptions.Ok;
+    [ObservableProperty]
+    public partial FontWeight TitleFontWeight { get; set; } = FontWeight.Bold;
+
+    [ObservableProperty]
+    public partial string Description { get; set; } = "";
+
+    [ObservableProperty]
+    public partial double DescriptionFontSize { get; set; } = 14;
+
+    [ObservableProperty]
+    public partial FontWeight DescriptionFontWeight { get; set; } = FontWeight.Normal;
+
+    [ObservableProperty]
+    public partial ButtonOptions ButtonOptions { get; set; } = ButtonOptions.Ok;
 
     public KeyGesture OkHotkey { get; } = new(Key.Return);
     public KeyGesture NoHotkey { get; } = new(Key.Escape);

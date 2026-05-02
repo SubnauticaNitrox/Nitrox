@@ -27,7 +27,7 @@ public class OxygenPipeEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public OxygenPipeEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, NitroxId parentPipeId, NitroxId rootPipeId, NitroxVector3 parentPosition) :
+    public OxygenPipeEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata? metadata, NitroxId? parentId, List<Entity> childEntities, NitroxId parentPipeId, NitroxId rootPipeId, NitroxVector3 parentPosition) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         ParentPipeId = parentPipeId;

@@ -1,19 +1,18 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FMODEventInstanceProcessor : ClientPacketProcessor<FMODEventInstancePacket>
+internal sealed class FMODEventInstanceProcessor : IClientPacketProcessor<FMODEventInstancePacket>
 {
-    public override void Process(FMODEventInstancePacket packet)
+    public Task Process(ClientProcessorContext context, FMODEventInstancePacket packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject emitterControllerObject))
         {
             Log.ErrorOnce($"[{nameof(FMODEventInstanceProcessor)}] Couldn't find entity {packet.Id}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (!emitterControllerObject.TryGetComponent(out FMODEmitterController fmodEmitterController))
@@ -30,5 +29,6 @@ public class FMODEventInstanceProcessor : ClientPacketProcessor<FMODEventInstanc
         {
             fmodEmitterController.StopEventInstance(packet.AssetPath);
         }
+        return Task.CompletedTask;
     }
 }

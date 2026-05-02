@@ -178,7 +178,7 @@
     </Interaction.Behaviors>
 
     <Panel>
-        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
+        <controls:CustomTitlebar Opacity="0.6" />
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
             <!--  Navigation (left side)  -->
@@ -384,7 +384,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border
-                            Classes.dismiss="{Binding Dismissed}"
+                            Classes.dismiss="{Binding IsDismissed}"
                             Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
                             Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
                             Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"

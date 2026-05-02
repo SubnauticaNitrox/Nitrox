@@ -28,12 +28,12 @@ namespace Nitrox.Model.Subnautica.Packets
         public EntryCategory Category { get; }
         public List<NitroxTechType> PartialTechTypesToRemove { get; }
 
-        public KnownTechEntryAdd(EntryCategory category, NitroxTechType techType, bool verbose, List<NitroxTechType> partialTechTypesToRemove = null)
+        public KnownTechEntryAdd(EntryCategory category, NitroxTechType techType, bool verbose, List<NitroxTechType>? partialTechTypesToRemove = null)
         {
             Category = category;
             TechType = techType;
             Verbose = verbose;
-            PartialTechTypesToRemove = partialTechTypesToRemove;
+            PartialTechTypesToRemove = partialTechTypesToRemove ?? [];
         }
     }
 }

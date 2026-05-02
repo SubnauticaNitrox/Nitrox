@@ -34,10 +34,10 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private readonly ServerService serverService = serverService;
 
     [ObservableProperty]
-    private Platform gamePlatform;
+    public partial Platform GamePlatform { get; set; }
 
     [ObservableProperty]
-    private string? platformToolTip;
+    public partial string? PlatformToolTip { get; set; }
 
     public Bitmap[] GalleryImageSources { get; } =
     [
@@ -128,7 +128,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 {
                     const string PATCHER_DLL_NAME = "NitroxPatcher.dll";
 
-                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath ?? "", "lib", "net472", PATCHER_DLL_NAME);
+                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath, "lib", "net472", PATCHER_DLL_NAME);
                     if (!File.Exists(patcherDllPath))
                     {
                         LauncherNotifier.Error("Launcher files seems corrupted, please contact us");

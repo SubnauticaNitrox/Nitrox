@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,13 +7,6 @@ namespace Nitrox.Model.Extensions;
 
 public static class StringExtensions
 {
-    public static byte[] AsMd5Hash(this string input)
-    {
-        using MD5 md5 = MD5.Create();
-        byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-        return md5.ComputeHash(inputBytes);
-    }
-
     /// <summary>
     ///     Gets the arguments passed to a command, given its name.
     /// </summary>
@@ -43,5 +37,17 @@ public static class StringExtensions
                 yield return arg;
             }
         }
+    }
+
+    extension(string self)
+    {
+        public byte[] ToMd5Hash()
+        {
+            using MD5 md5 = MD5.Create();
+            byte[] inputBytes = Encoding.ASCII.GetBytes(self);
+            return md5.ComputeHash(inputBytes);
+        }
+
+        public int ToMd5HashedInt32() => BitConverter.ToInt32(self.ToMd5Hash(), 0);
     }
 }

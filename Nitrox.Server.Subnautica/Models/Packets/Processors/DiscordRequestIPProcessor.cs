@@ -1,44 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Net;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
+internal sealed class DiscordRequestIPProcessor(IOptions<SubnauticaServerOptions> options, ILogger<DiscordRequestIPProcessor> logger) : IAuthPacketProcessor<DiscordRequestIP>
 {
-    private readonly SubnauticaServerConfig serverConfig;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly ILogger<DiscordRequestIPProcessor> logger = logger;
 
     private string ipPort;
 
-    public DiscordRequestIPProcessor(SubnauticaServerConfig serverConfig)
-    {
-        this.serverConfig = serverConfig;
-    }
-
-    public override void Process(DiscordRequestIP packet, Player player)
+    public async Task Process(AuthProcessorContext context, DiscordRequestIP packet)
     {
         if (string.IsNullOrEmpty(ipPort))
         {
-            Task.Run(() => ProcessPacketAsync(packet, player));
+            await ProcessPacketAsync(context, packet);
             return;
         }
 
         packet.IpPort = ipPort;
-        player.SendPacket(packet);
+        await context.ReplyAsync(packet);
     }
 
-    private async Task ProcessPacketAsync(DiscordRequestIP packet, Player player)
+    private async Task ProcessPacketAsync(AuthProcessorContext context, DiscordRequestIP packet)
     {
         string result = await GetIpAsync();
         if (result == "")
         {
-            Log.Error("Couldn't get external Ip for discord request.");
+            logger.ZLogError($"Couldn't get external Ip for discord request.");
             return;
         }
 
-        packet.IpPort = ipPort = $"{result}:{serverConfig.ServerPort}";
-        player.SendPacket(packet);
+        packet.IpPort = ipPort = $"{result}:{options.Value.ServerPort}";
+        await context.ReplyAsync(packet);
     }
 
     /// <summary>

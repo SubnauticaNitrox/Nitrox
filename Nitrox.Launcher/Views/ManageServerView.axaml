@@ -10,11 +10,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:server="clr-namespace:Nitrox.Model.Server;assembly=Nitrox.Model"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors"
-    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer">
+    xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    xmlns:gameLogic="clr-namespace:Nitrox.Model.DataStructures.GameLogic;assembly=Nitrox.Model">
     <Design.DataContext>
         <designer:DesignManageServerViewModel />
     </Design.DataContext>
@@ -119,11 +119,18 @@
                             </StackPanel>
                         </Panel>
                         <TextBlock Text="{Binding Server.GameMode, Converter={converters:ToStringConverter}, FallbackValue=Survival}" />
-                        <TextBlock TextWrapping="NoWrap">
-                            <Run Text="{Binding Server.Players, FallbackValue=0}" />
-                            <Run Text="/" />
+                        <TextBlock TextWrapping="NoWrap" Background="Transparent"
+                                   Classes.online="{Binding Server.IsOnline, FallbackValue=False}"
+                                   ToolTip.Tip="{Binding Server.PlayerNamesTooltip, FallbackValue=''}">
+                            <Run Text="{Binding Server.PlayerCount, FallbackValue=0}" />
+                            <Run Text=" / " />
                             <Run Text="{Binding Server.MaxPlayers, FallbackValue=100}" />
-                            <Run Text="playing" />
+                            <Run Text=" playing" />
+                            <TextBlock.Styles>
+                                <Style Selector="TextBlock.online:pointerover">
+                                    <Setter Property="TextDecorations" Value="Underline" />
+                                </Style>
+                            </TextBlock.Styles>
                         </TextBlock>
                     </StackPanel>
 
@@ -213,7 +220,7 @@
                         Text="GAMEMODE" />
                     <controls:RadioButtonGroup
                         Classes="radioGroup"
-                        Enum="{x:Type server:NitroxGameMode}"
+                        Enum="{x:Type gameLogic:SubnauticaGameMode}"
                         IsEnabled="{Binding !ServerIsOnline}"
                         SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
                 </StackPanel>
@@ -448,6 +455,14 @@
                                          ToolTip.ShowOnDisabled="True"
                                          ToolTip.Tip="Run server in embedded mode within the launcher UI" />
                         </OnPlatform.macOS>
+
+                        <OnPlatform.Linux>
+                            <RadioButton Content="Embedded"
+                                         GroupName="Choose runtime option"
+                                         IsChecked="True"
+                                         ToolTip.ShowOnDisabled="True"
+                                         ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+                        </OnPlatform.Linux>
                     </OnPlatform>
                 </StackPanel>
 

@@ -34,7 +34,7 @@ public static class Main
         {
             string path = (args[i], args[i + 1]) switch
             {
-                ("--nitrox", { } value) when Directory.Exists(value) => Path.GetFullPath(value),
+                ("--nitrox", { } value) when !string.IsNullOrEmpty(value) => Path.GetFullPath(value),
                 _ => null
             };
             if (!string.IsNullOrEmpty(path))
@@ -69,9 +69,14 @@ public static class Main
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
         Console.WriteLine("Checking if Nitrox should run...");
+        if (string.IsNullOrEmpty(nitroxLauncherDir.Value))
+        {
+            Console.WriteLine($"Nitrox will not load because launcher path was not provided");
+            return;
+        }
         if (!Directory.Exists(nitroxLauncherDir.Value))
         {
-            Console.WriteLine($"Nitrox will not load because launcher path was not provided or does not exists: {nitroxLauncherDir.Value}");
+            Console.WriteLine($"Nitrox will not load because launcher path does not exist or is inaccessible: '{nitroxLauncherDir.Value}'");
             return;
         }
 

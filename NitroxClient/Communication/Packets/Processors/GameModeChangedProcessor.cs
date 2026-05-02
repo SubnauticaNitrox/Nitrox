@@ -1,24 +1,17 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
+internal sealed class GameModeChangedProcessor(LocalPlayer localPlayer, PlayerManager playerManager) : IClientPacketProcessor<GameModeChanged>
 {
-    private readonly LocalPlayer localPlayer;
-    private readonly PlayerManager playerManager;
+    private readonly LocalPlayer localPlayer = localPlayer;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public GameModeChangedProcessor(LocalPlayer localPlayer, PlayerManager playerManager)
+    public Task Process(ClientProcessorContext context, GameModeChanged packet)
     {
-        this.localPlayer = localPlayer;
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(GameModeChanged packet)
-    {
-        if (packet.AllPlayers || packet.PlayerId == localPlayer.PlayerId)
+        if (packet.AllPlayers || packet.SessionId == localPlayer.SessionId)
         {
             GameModeUtils.SetGameMode((GameModeOption)(int)packet.GameMode, GameModeOption.None);
         }
@@ -29,9 +22,10 @@ public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
                 remotePlayer.SetGameMode(packet.GameMode);
             }
         }
-        else if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        else if (playerManager.TryFind(packet.SessionId, out RemotePlayer remotePlayer))
         {
             remotePlayer.SetGameMode(packet.GameMode);
         }
+        return Task.CompletedTask;
     }
 }

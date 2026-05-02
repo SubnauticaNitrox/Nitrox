@@ -15,8 +15,10 @@ namespace NitroxPatcher.Helper;
 
 internal static class TranspilerHelper
 {
+#pragma warning disable DIMA001 // TODO: Consider changing patches to get its services by a constructor with dependency injection.
     private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
         .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, Array.Empty<Type>(), null);
+#pragma warning restore DIMA001
 
     private static readonly MethodInfo DELTA_TIME_INSERTED_METHOD = Reflect.Method(() => GetDeltaTime());
     private static readonly MethodInfo DELTA_TIME_MATCHING_FIELD = Reflect.Property(() => Time.deltaTime).GetGetMethod();
@@ -154,6 +156,8 @@ internal static class TranspilerHelper
     /// </summary>
     private static float GetDeltaTime()
     {
+#pragma warning disable DIMA001 // Disabled with pragma because no good alternative in foreseeable future.
         return NitroxServiceLocator.Cache<TimeManager>.Value.DeltaTime;
+#pragma warning restore DIMA001
     }
 }

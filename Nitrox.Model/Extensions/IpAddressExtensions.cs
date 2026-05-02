@@ -40,7 +40,7 @@ public static class IpAddressExtensions
     ///     Returns true if the given IP address is reserved for private networks.
     /// </summary>
     /// <remarks>
-    ///     See reversed <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv4">IPv4</a> and
+    ///     See reserved <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv4">IPv4</a> and
     ///     <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv6">IPv6</a> address ranges.
     /// </remarks>
     public static bool IsPrivate(this IPAddress address)
@@ -94,6 +94,7 @@ public static class IpAddressExtensions
         /// </remarks>
         public static readonly Cidr[] PrivateIPv4Networks =
         [
+            "0.0.0.0/8", // "This" network
             "10.0.0.0/8",
             "127.0.0.0/8", // Loopback
             "172.16.0.0/12",
@@ -103,10 +104,11 @@ public static class IpAddressExtensions
         ];
 
         /// <remarks>
-        ///     See <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv6">all reversed IPv6 address ranges</a>.
+        ///     See <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses#IPv6">all reserved IPv6 address ranges</a>.
         /// </remarks>
         public static readonly Cidr[] PrivateIPv6Networks =
         [
+            "::/128", // Unspecified address
             "::1/128", // Loopback
             "fc00::/7", // Unique local address
             "fe80::/10", // Link-local address
@@ -149,12 +151,12 @@ public static class IpAddressExtensions
                 }
                 default:
                 {
-                    byte[] networkBitMask = GetAllBitsSetArray(hostAddress.Length).BitwiseLeftShift(hostAddressBitSize - NetworkMaskBitSize).AsNetworkOrder();
-                    return hostAddress.CreateCopy().BitwiseAnd(networkBitMask).SequenceEqual(NotationBytes.CreateCopy().BitwiseAnd(networkBitMask));
+                    byte[] networkBitMask = new byte[hostAddress.Length];
+                    networkBitMask.Fill(byte.MaxValue);
+                    (networkBitMask << (hostAddressBitSize - NetworkMaskBitSize)).AsNetworkOrder();
+                    return (hostAddress & networkBitMask).SequenceEqual(NotationBytes & networkBitMask);
                 }
             }
         }
-
-        private static byte[] GetAllBitsSetArray(int byteSize) => Enumerable.Repeat(byte.MaxValue, byteSize).ToArray();
     }
 }

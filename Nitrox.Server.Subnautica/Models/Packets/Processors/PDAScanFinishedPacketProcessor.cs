@@ -1,32 +1,22 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDAScanFinished>
+internal sealed class PDAScanFinishedPacketProcessor(PdaManager pdaManager, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<PDAScanFinished>
 {
-    private readonly PlayerManager playerManager;
-    private readonly PDAStateData pdaStateData;
-    private readonly WorldEntityManager worldEntityManager;
+    private readonly PdaManager pdaManager = pdaManager;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
-    public PDAScanFinishedPacketProcessor(PlayerManager playerManager, PDAStateData pdaStateData, WorldEntityManager worldEntityManager)
-    {
-        this.playerManager = playerManager;
-        this.pdaStateData = pdaStateData;
-        this.worldEntityManager = worldEntityManager;
-    }
-
-    public override void Process(PDAScanFinished packet, Player player)
+    public async Task Process(AuthProcessorContext context, PDAScanFinished packet)
     {
         if (!packet.WasAlreadyResearched)
         {
-            pdaStateData.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
+            pdaManager.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
         }
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        await context.SendToOthersAsync(packet);
 
-        
         if (packet.Id != null)
         {
             if (packet.Destroy)
@@ -35,7 +25,7 @@ public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDASc
             }
             else
             {
-                pdaStateData.AddScannerFragment(packet.Id);
+                pdaManager.AddScannerFragment(packet.Id);
             }
         }
     }

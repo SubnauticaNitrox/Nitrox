@@ -14,8 +14,10 @@ using UnityEngine.SceneManagement;
 namespace NitroxClient.Debuggers;
 
 [ExcludeFromCodeCoverage]
-public class SceneDebugger : BaseDebugger
+public class SceneDebugger : AbstractDebugger
 {
+    private const int WINDOW_ID = 423;
+
     private readonly DrawerManager drawerManager;
     public GameObject SelectedObject { get; private set; }
     private int selectedComponentID;
@@ -27,12 +29,12 @@ public class SceneDebugger : BaseDebugger
     private Vector2 gameObjectScrollPos;
     private Vector2 hierarchyScrollPos;
 
-    private readonly Dictionary<int, bool> componentsVisibilityByID = new();
-    private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = new();
-    private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = new();
-    private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = new();
+    private readonly Dictionary<int, bool> componentsVisibilityByID = [];
+    private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = [];
+    private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = [];
+    private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = [];
 
-    public SceneDebugger() : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SceneDebugger() : base(WINDOW_ID, 650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
         drawerManager = new DrawerManager(this);
         ActiveTab = AddTab("Scenes", RenderTabScenes);
@@ -177,7 +179,7 @@ public class SceneDebugger : BaseDebugger
             {
                 using GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos);
                 hierarchyScrollPos = scroll.scrollPosition;
-                List<GameObject> showObjects = new();
+                List<GameObject> showObjects = [];
                 if (!SelectedObject)
                 {
                     showObjects = selectedScene.GetRootGameObjects().ToList();
@@ -222,6 +224,10 @@ public class SceneDebugger : BaseDebugger
             {
                 GUILayout.Label($"GameObject: {SelectedObject.name}", "bold", GUILayout.Height(25));
                 GUILayout.Space(5);
+                if (GUILayout.Button("State to clipboard"))
+                {
+                    GUIUtility.systemCopyBuffer = SelectedObject.GetStateAsTextForComparison();
+                }
             }
 
             foreach (Component component in SelectedObject.GetComponents<Component>())

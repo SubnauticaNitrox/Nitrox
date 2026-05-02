@@ -1,6 +1,5 @@
 using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.GameLogic.FMOD;
 using UnityEngine;
 

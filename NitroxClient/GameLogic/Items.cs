@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -18,7 +19,7 @@ public class Items
 {
     private readonly IPacketSender packetSender;
     private readonly Entities entities;
-    public static GameObject PickingUpObject { get; private set; }
+    public static GameObject? PickingUpObject { get; private set; }
     private readonly EntityMetadataManager entityMetadataManager;
 
     /// <summary>
@@ -54,7 +55,7 @@ public class Items
     {
         PickingUpObject = gameObject;
 
-        // Try catch to avoid blocking PickingUpObject with a non null value outside of the current context
+        // Try catch to avoid blocking PickingUpObject with a non-null value outside the current context
         try
         {
             InventoryItemEntity inventoryItemEntity = ConvertToInventoryEntityUntracked(gameObject, containerId);
@@ -214,7 +215,7 @@ public class Items
                 if (metadata.HasValue)
                 {
                     TechTag techTag = prefab.gameObject.GetComponent<TechTag>();
-                    TechType techType = (techTag) ? techTag.type : TechType.None;
+                    TechType techType = techTag ? techTag.type : TechType.None;
 
                     yield return new PrefabChildEntity(id, prefab.classId, techType.ToDto(), indexInGroup, metadata.Value, parentId);
 
@@ -268,7 +269,8 @@ public class Items
     }
 
     /// <param name="parent">Parent of the GameObject to check</param>
-    public static bool TryGetParentWaterPark(Transform parent, out WaterPark waterPark)
+    /// <param name="waterPark">The waterpark, if known for the parent</param>
+    public static bool TryGetParentWaterPark(Transform parent, [NotNullWhen(true)] out WaterPark? waterPark)
     {
         // NB: When dropped in a WaterPark, items are placed under WaterPark/items_root/
         // So we need to search two steps higher to find the WaterPark
@@ -281,11 +283,10 @@ public class Items
         return false;
     }
 
-
     /// <inheritdoc cref="TryGetParentWaterPark" />
-    private static bool TryGetParentWaterParkId(Transform parent, out NitroxId waterParkId)
+    private static bool TryGetParentWaterParkId(Transform parent, out NitroxId? waterParkId)
     {
-        if (TryGetParentWaterPark(parent, out WaterPark waterPark) && waterPark.TryGetNitroxId(out waterParkId))
+        if (TryGetParentWaterPark(parent, out WaterPark? waterPark) && waterPark.TryGetNitroxId(out waterParkId))
         {
             return true;
         }

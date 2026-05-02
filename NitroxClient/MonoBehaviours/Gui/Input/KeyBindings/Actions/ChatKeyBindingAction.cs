@@ -5,9 +5,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
 
 public class ChatKeyBindingAction : KeyBinding
 {
-    public ChatKeyBindingAction() : base("Nitrox_Keybind_OpenChat", "y")
-    {
-    }
+    public ChatKeyBindingAction() : base("Nitrox_Settings_Keybind_OpenChat", "y") { }
 
     public override void Execute(InputAction.CallbackContext _)
     {

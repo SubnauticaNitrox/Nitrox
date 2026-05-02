@@ -1,46 +1,40 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
+internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger) : IAuthPacketProcessor<EntityMetadataUpdate>
 {
-    private readonly PlayerManager playerManager;
-    private readonly EntityRegistry entityRegistry;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly ILogger<EntityMetadataUpdateProcessor> logger = logger;
 
-    public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
-    {
-        this.playerManager = playerManager;
-        this.entityRegistry = entityRegistry;
-    }
-
-    public override void Process(EntityMetadataUpdate packet, Player sendingPlayer)
+    public async Task Process(AuthProcessorContext context, EntityMetadataUpdate packet)
     {
         if (!entityRegistry.TryGetEntityById(packet.Id, out Entity entity))
         {
-            Log.Error($"Entity metadata {packet.NewValue.GetType()} updated on an entity unknown to the server {packet.Id}");
+            logger.ZLogError($"Entity metadata {packet.NewValue.GetType()} updated on an entity unknown to the server {packet.Id}");
             return;
         }
 
-        if (TryProcessMetadata(sendingPlayer, entity, packet.NewValue))
+        if (TryProcessMetadata(context.Sender, entity, packet.NewValue))
         {
             entity.Metadata = packet.NewValue;
-            SendUpdateToVisiblePlayers(packet, sendingPlayer, entity);
+            await SendUpdateToVisiblePlayersAsync(context, packet, entity);
         }
     }
 
-    private void SendUpdateToVisiblePlayers(EntityMetadataUpdate packet, Player sendingPlayer, Entity entity)
+    private async Task SendUpdateToVisiblePlayersAsync(AuthProcessorContext context, EntityMetadataUpdate packet, Entity entity)
     {
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             bool updateVisibleToPlayer = player.CanSee(entity);
-
-            if (player != sendingPlayer && updateVisibleToPlayer)
+            if (player != context.Sender && updateVisibleToPlayer)
             {
-                player.SendPacket(packet);
+                await context.SendAsync(packet, player.SessionId);
             }
         }
     }
@@ -69,7 +63,7 @@ public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<Entity
             return true;
         }
 
-        Log.WarnOnce($"Player {sendingPlayer.Name} tried updating metadata of another player's entity {entity.Id}");
+        logger.ZLogWarningOnce($"Player {sendingPlayer.Name} tried updating metadata of another player's entity {entity.Id}");
         return false;
     }
 }

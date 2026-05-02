@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
@@ -18,12 +18,12 @@ using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Configuration;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
-using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Config = Nitrox.Model.Serialization.SubnauticaServerConfig;
+using Nitrox.Model.Serialization;
+using Config = Nitrox.Model.Configuration.SubnauticaServerOptions;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -31,8 +31,8 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly string[] advancedSettingsDeniedFields =
     [
-        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
-        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm), nameof(Config.IsEmbedded), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvPEnabled), nameof(Config.SerializerMode)
+        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.PortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
+        nameof(Config.LanDiscovery), nameof(Config.DefaultPlayerPerm), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvpEnabled), nameof(Config.SerializerMode)
     ];
 
     private readonly DialogService dialogService;
@@ -41,60 +41,59 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private readonly StorageService storageService;
 
     [ObservableProperty]
-    private ServerEntry? server;
+    public partial ServerEntry? Server { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowCommands;
+    public partial bool ServerAllowCommands { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowKeepInventory;
+    public partial bool ServerAllowKeepInventory { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowLanDiscovery;
+    public partial bool ServerAllowLanDiscovery { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowPvP;
+    public partial bool ServerAllowPvP { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAutoPortForward;
+    public partial bool ServerAutoPortForward { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Range(10, 86400, ErrorMessage = "Value must be between 10s and 24 hours (86400s).")]
-    private int serverAutoSaveInterval;
+    public partial int ServerAutoSaveInterval { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private Perms serverDefaultPlayerPerm;
+    public partial Perms ServerDefaultPlayerPerm { get; set; }
 
     [ObservableProperty]
-    private bool serverEmbedded = true;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private NitroxGameMode serverGameMode;
+    public partial bool ServerEmbedded { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private Bitmap? serverIcon;
+    public partial SubnauticaGameMode ServerGameMode { get; set; }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
+    public partial Bitmap? ServerIcon { get; set; }
     private string? serverIconDir;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
-    private bool serverIsOnline;
+    public partial bool ServerIsOnline { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [Range(1, 1000)]
     [NotifyDataErrorInfo]
-    private int serverMaxPlayers;
+    public partial int ServerMaxPlayers { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -103,28 +102,27 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [FileName]
     [NotEndsWith(".")]
     [NitroxUniqueSaveName(nameof(SavesFolderDir), true, nameof(OriginalServerName))]
-    private string? serverName;
+    public partial string? ServerName { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private string? serverPassword;
+    public partial string? ServerPassword { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private int serverPlayers;
+    public partial int ServerPlayerCount { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Range(ushort.MinValue, ushort.MaxValue)]
-    private int serverPort;
+    public partial int ServerPort { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
-    private string? serverSeed;
-
+    public partial string? ServerSeed { get; set; }
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string? OriginalServerName => Server?.Name;
 
@@ -138,23 +136,40 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         this.keyValueStore = keyValueStore;
         this.serverService = serverService;
 
+        ServerEmbedded = keyValueStore.GetPreferEmbedded();
+
         this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {
-            if (vm.server?.Process?.Id != status.ProcessId)
+            if (vm.Server?.Process?.Id != status.ProcessId)
             {
                 return;
             }
             vm.ServerIsOnline = status.IsOnline;
-            vm.ServerPlayers = status.PlayerCount;
+            vm.ServerPlayerCount = status.PlayerCount;
         });
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public async Task StartServerAsync() => await serverService.StartServerAsync(Server!);
+    public async Task StartServerAsync()
+    {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} should not be null");
+        }
+        await serverService.StartServerAsync(Server);
+    }
 
     [RelayCommand]
-    public async Task StopServerAsync() => await Server!.StopAsync();
+    public async Task StopServerAsync()
+    {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} should not be null");
+        }
+        await Server.StopAsync();
+    }
 
+    [MemberNotNull(nameof(Server))]
     public void LoadFrom(ServerEntry serverEntry)
     {
         Server = serverEntry;
@@ -168,14 +183,13 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerDefaultPlayerPerm = Server.PlayerPermissions;
         ServerAutoSaveInterval = Server.AutoSaveInterval;
         ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
+        ServerPlayerCount = Server.PlayerCount;
         ServerPort = Server.Port;
-        ServerAutoPortForward = Server.AutoPortForward;
+        ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
         ServerAllowPvP = Server.AllowPvP;
         ServerAllowKeepInventory = Server.AllowKeepInventory;
-        ServerEmbedded = Server.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
     }
 
     private bool HasChanges() => Server != null &&
@@ -187,9 +201,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                   ServerDefaultPlayerPerm != Server.PlayerPermissions ||
                                   ServerAutoSaveInterval != Server.AutoSaveInterval ||
                                   ServerMaxPlayers != Server.MaxPlayers ||
-                                  ServerPlayers != Server.Players ||
+                                  ServerPlayerCount != Server.PlayerCount ||
                                   ServerPort != Server.Port ||
-                                  ServerAutoPortForward != Server.AutoPortForward ||
+                                  ServerAutoPortForward != Server.PortForward ||
                                   ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
                                   ServerAllowCommands != Server.AllowCommands ||
                                   ServerAllowPvP != Server.AllowPvP ||
@@ -203,6 +217,23 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+        if (ServerName == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerName)} must not be null");
+        }
+        if (ServerPassword == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerPassword)} must not be null");
+        }
+        if (ServerSeed == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerSeed)} must not be null");
+        }
+
         // If world name was changed, rename save folder to match it
         string newPath = Path.Combine(SavesFolderDir, ServerName);
         if (SaveFolderDirectory != newPath)
@@ -228,30 +259,28 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         Server.PlayerPermissions = ServerDefaultPlayerPerm;
         Server.AutoSaveInterval = ServerAutoSaveInterval;
         Server.MaxPlayers = ServerMaxPlayers;
-        Server.Players = ServerPlayers;
+        Server.PlayerCount = ServerPlayerCount;
         Server.Port = ServerPort;
-        Server.AutoPortForward = ServerAutoPortForward;
+        Server.PortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
         Server.AllowPvP = ServerAllowPvP;
         Server.AllowKeepInventory = ServerAllowKeepInventory;
 
-        Config config = Config.Load(SaveFolderDirectory);
-        using (config.Update(SaveFolderDirectory))
-        {
-            config.ServerPassword = Server.Password;
-            if (Server.IsNewServer) { config.Seed = Server.Seed; }
-            config.GameMode = Server.GameMode;
-            config.DefaultPlayerPerm = Server.PlayerPermissions;
-            config.SaveInterval = (int)TimeSpan.FromSeconds(Server.AutoSaveInterval).TotalMilliseconds;
-            config.MaxConnections = Server.MaxPlayers;
-            config.ServerPort = Server.Port;
-            config.AutoPortForward = Server.AutoPortForward;
-            config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
-            config.DisableConsole = !Server.AllowCommands;
-            config.PvPEnabled = Server.AllowPvP;
-            config.KeepInventoryOnDeath = Server.AllowKeepInventory;
-        }
+        Config config = NitroxConfig.Load<Config>(SaveFolderDirectory);
+        config.ServerPassword = Server.Password;
+        if (Server.IsNewServer) { config.Seed = Server.Seed; }
+        config.GameMode = Server.GameMode;
+        config.DefaultPlayerPerm = Server.PlayerPermissions;
+        config.SaveInterval = (int)TimeSpan.FromSeconds(Server.AutoSaveInterval).TotalMilliseconds;
+        config.MaxConnections = (byte)Server.MaxPlayers;
+        config.ServerPort = (ushort)Server.Port;
+        config.PortForward = Server.PortForward;
+        config.LanDiscovery = Server.AllowLanDiscovery;
+        config.DisableConsole = !Server.AllowCommands;
+        config.PvpEnabled = Server.AllowPvP;
+        config.KeepInventoryOnDeath = Server.AllowKeepInventory;
+        NitroxConfig.CreateFile(SaveFolderDirectory, config);
 
         Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
 
@@ -267,6 +296,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         ServerName = Server.Name;
         ServerIcon = Server.ServerIcon;
         ServerPassword = Server.Password;
@@ -275,9 +309,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerDefaultPlayerPerm = Server.PlayerPermissions;
         ServerAutoSaveInterval = Server.AutoSaveInterval;
         ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
+        ServerPlayerCount = Server.PlayerCount;
         ServerPort = Server.Port;
-        ServerAutoPortForward = Server.AutoPortForward;
+        ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
         ServerAllowPvP = Server.AllowPvP;
@@ -323,32 +357,36 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task ShowAdvancedSettings()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         ObjectPropertyEditorViewModel result = await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
         {
             model.Title = $"Server '{ServerName}' config editor";
             model.FieldAcceptFilter = p => !advancedSettingsDeniedFields.Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
-            model.OwnerObject = Config.Load(SaveFolderDirectory);
+            model.OwnerObject = LoadConfig();
             model.DisableButtons = Server.IsOnline;
         });
         if (result && result!.OwnerObject is Config config)
         {
-            config.Serialize(SaveFolderDirectory);
+            StoreConfig(config);
         }
         LoadFrom(Server);
     }
 
     [RelayCommand]
-    private void OpenWorldFolder() =>
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = SaveFolderDirectory,
-            Verb = "open",
-            UseShellExecute = true
-        })?.Dispose();
+    private void OpenWorldFolder() => OpenDirectory(SaveFolderDirectory);
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()
     {
+        if (Server == null)
+        {
+            throw new InvalidOperationException($"{nameof(Server)} must not be null");
+        }
+
         BackupRestoreViewModel result = await dialogService.ShowAsync<BackupRestoreViewModel>(model =>
         {
             model.Title = $"Restore a Backup for '{ServerName}'";
@@ -365,15 +403,13 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     throw new FileNotFoundException("Selected backup file not found.", backupFile);
                 }
 
-                bool isEmbedded = ServerEmbedded;
                 foreach (string file in Directory.GetFiles(SaveFolderDirectory, "*"))
                 {
-                    File.Delete(file);
+                    TryDeleteFile(file);
                 }
-                ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
-                Server!.RefreshFromDirectory(SaveFolderDirectory);
+                await ZipFile.ExtractToDirectoryAsync(backupFile, SaveFolderDirectory, true);
+                await Server.RefreshFromDirectoryAsync(SaveFolderDirectory);
                 LoadFrom(Server);
-                ServerEmbedded = isEmbedded; // Preserve the original IsEmbedded value
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)
@@ -399,6 +435,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
     private async Task CoreDeleteServerAsync(bool force = false)
     {
+        if (ServerName == null)
+        {
+            throw new InvalidOperationException($"{nameof(ServerName)} must not be null");
+        }
+
         if (!force)
         {
             DialogBoxViewModel modal = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
@@ -414,7 +455,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
         try
         {
-            Directory.Delete(SaveFolderDirectory, true);
+            TryDeleteDirectory(SaveFolderDirectory, true);
             WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
             ChangeViewToPrevious();
         }
@@ -424,16 +465,17 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         }
     }
 
-    private bool CanDeleteServer() => !ServerIsOnline;
-
     partial void OnServerEmbeddedChanged(bool value)
     {
-        Server.IsEmbedded = value || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on macOS
+        keyValueStore.SetPreferEmbedded(value);
+    }
 
-        Config config = Config.Load(SaveFolderDirectory);
-        using (config.Update(SaveFolderDirectory))
-        {
-            config.IsEmbedded = value;
-        }
+    private bool CanDeleteServer() => !ServerIsOnline;
+
+    private Config LoadConfig() => NitroxConfig.Load<Config>(SaveFolderDirectory);
+
+    private void StoreConfig(Config config)
+    {
+        NitroxConfig.CreateFile(Path.Combine(SaveFolderDirectory, typeof(Config).GetCustomAttribute<SerializableFileNameAttribute>()?.FileName ?? throw new InvalidOperationException()), config);
     }
 }

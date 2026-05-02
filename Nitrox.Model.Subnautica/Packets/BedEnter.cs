@@ -1,10 +1,9 @@
 ﻿using System;
 using Nitrox.Model.Packets;
 
-namespace Nitrox.Model.Subnautica.Packets
+namespace Nitrox.Model.Subnautica.Packets;
+
+[Serializable]
+public class BedEnter : Packet
 {
-    [Serializable]
-    public class BedEnter : Packet
-    {
-    }
 }

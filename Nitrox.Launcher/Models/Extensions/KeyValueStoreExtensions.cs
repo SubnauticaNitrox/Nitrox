@@ -4,19 +4,17 @@ namespace Nitrox.Launcher.Models.Extensions;
 
 public static class KeyValueStoreExtensions
 {
-    public static string GetLaunchArguments(this IKeyValueStore store, GameInfo gameInfo, string defaultValue = "-vrmode none") => store.GetValue($"{gameInfo.Name}LaunchArguments", defaultValue);
-
-    public static void SetLaunchArguments(this IKeyValueStore store, GameInfo gameInfo, string value) => store.SetValue($"{gameInfo.Name}LaunchArguments", value);
-
-    public static bool GetIsLightModeEnabled(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("IsLightModeEnabled", defaultValue);
-
-    public static void SetIsLightModeEnabled(this IKeyValueStore store, bool value) => store.SetValue("IsLightModeEnabled", value);
-
-    public static bool GetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("IsMultipleGameInstancesAllowed", defaultValue);
-
-    public static void SetIsMultipleGameInstancesAllowed(this IKeyValueStore store, bool value) => store.SetValue("IsMultipleGameInstancesAllowed", value);
-
-    public static bool GetUseBigPictureMode(this IKeyValueStore store, bool defaultValue = false) => store.GetValue("UseBigPictureMode", defaultValue);
-
-    public static void SetBigPictureMode(this IKeyValueStore store, bool value) => store.SetValue("UseBigPictureMode", value);
+    extension(IKeyValueStore self)
+    {
+        public string GetLaunchArguments(GameInfo gameInfo, string defaultValue = "-vrmode none") => self.GetValue($"{gameInfo.Name}LaunchArguments", defaultValue);
+        public void SetLaunchArguments(GameInfo gameInfo, string value) => self.SetValue($"{gameInfo.Name}LaunchArguments", value);
+        public bool GetIsLightModeEnabled(bool defaultValue = false) => self.GetValue("IsLightModeEnabled", defaultValue);
+        public void SetIsLightModeEnabled(bool value) => self.SetValue("IsLightModeEnabled", value);
+        public bool GetIsMultipleGameInstancesAllowed(bool defaultValue = false) => self.GetValue("IsMultipleGameInstancesAllowed", defaultValue);
+        public void SetIsMultipleGameInstancesAllowed(bool value) => self.SetValue("IsMultipleGameInstancesAllowed", value);
+        public bool GetPreferEmbedded(bool defaultValue = true) => self.GetValue("PreferEmbedded", defaultValue);
+        public void SetPreferEmbedded(bool value) => self.SetValue("PreferEmbedded", value);
+        public bool GetUseBigPictureMode(bool defaultValue = false) => self.GetValue("UseBigPictureMode", defaultValue);
+        public void SetBigPictureMode(bool value) => self.SetValue("UseBigPictureMode", value);
+    }
 }

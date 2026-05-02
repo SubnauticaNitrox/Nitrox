@@ -1,23 +1,26 @@
-﻿using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+﻿using System.ComponentModel;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.Logging.Scopes;
+using Nitrox.Server.Subnautica.Services;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.MODERATOR)]
+internal sealed class SummaryCommand(StatusService statusService, ILogger<SummaryCommand> logger) : ICommandHandler
 {
-    internal class SummaryCommand : Command
+    private readonly StatusService statusService = statusService;
+    private readonly ILogger<SummaryCommand> logger = logger;
+
+    [Description("Shows persisted data")]
+    public async Task Execute(ICommandContext context)
     {
-        private readonly Server server;
-
-        public SummaryCommand(Server server) : base("summary", Perms.MODERATOR, "Shows persisted data")
+        string summary;
+        using (CaptureScope scope = logger.BeginCaptureScope())
         {
-            this.server = server;
-
-            AllowedArgOverflow = true;
+            await statusService.LogServerSummary(context.Permissions);
+            summary = string.Join("", scope.Logs);
         }
-
-        protected override void Execute(CallArgs args)
-        {
-            Perms viewerPerms = args.Sender.OrNull()?.Permissions ?? Perms.PLAYER;
-            SendMessage(args.Sender, server.GetSaveSummary(viewerPerms));
-        }
+        await context.ReplyAsync(summary.TrimEnd('\n'));
     }
 }

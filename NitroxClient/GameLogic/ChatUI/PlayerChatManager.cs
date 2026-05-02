@@ -2,7 +2,6 @@ using System.Collections;
 using Nitrox.Model.Core;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
-using Nitrox.Model.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;
@@ -10,13 +9,13 @@ using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.ChatUI;
 
-public class PlayerChatManager
+public sealed class PlayerChatManager
 {
     public delegate void PlayerChatDelegate(string message);
 
     public delegate void PlayerCommandDelegate(string message);
 
-    private const char SERVER_COMMAND_PREFIX = '/';
+    public const char SERVER_COMMAND_PREFIX = '/';
     public static readonly PlayerChatManager Instance = new();
     private GameObject chatKeyHint;
 
@@ -25,10 +24,7 @@ public class PlayerChatManager
 
     private PlayerChat playerChat;
 
-    public bool IsChatSelected
-    {
-        get => PlayerChat.IsReady && playerChat.selected;
-    }
+    public bool IsChatSelected => PlayerChat.IsReady && playerChat.selected;
 
     public Transform PlayerChatTransform => playerChat.transform;
 
@@ -141,6 +137,11 @@ public class PlayerChatManager
         playerChat.InputText = "";
         playerChat.Select();
         OnPlayerChat?.Invoke(trimmedInput);
+    }
+
+    public void SetAutoCompleteText(string text)
+    {
+        playerChat.AutoCompleteText = text;
     }
 
     public IEnumerator LoadChatKeyHint()

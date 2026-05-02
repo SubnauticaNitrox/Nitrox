@@ -10,8 +10,12 @@ namespace Nitrox.Model.DataStructures;
 /// </summary>
 [Serializable]
 [DataContract]
-public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxId>
+public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxId>
 {
+    [IgnoredMember]
+    private static readonly int[] byteOrder = [15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3];
+
+
     [DataMember(Order = 1)]
     [SerializableMember]
     private Guid guid { get; init; }
@@ -22,10 +26,6 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         guid = Guid.NewGuid();
     }
 
-    /// <summary>
-    ///     Create a NitroxId from a string
-    /// </summary>
-    /// <param name="str">a NitroxID as string</param>
     public NitroxId(string str)
     {
         guid = new Guid(str);
@@ -41,78 +41,52 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         guid = new Guid(bytes);
     }
 
-    protected NitroxId(SerializationInfo info, StreamingContext context)
+    private NitroxId(SerializationInfo info, StreamingContext context)
     {
         byte[] bytes = (byte[])info.GetValue("id", typeof(byte[]));
         guid = new Guid(bytes);
     }
 
-    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
         info.AddValue("id", guid.ToByteArray());
     }
 
-    public static bool operator ==(NitroxId id1, NitroxId id2)
+    public static bool operator ==(NitroxId? id1, NitroxId? id2)
     {
-        if (id1 is null)
+        if (id1 is not null)
         {
-            if (id2 is null)
-            {
-                return true;
-            }
-            return false;
+            return id1.Equals(id2);
         }
-        return id1.Equals(id2);
+
+        return id2 is null;
     }
 
-    public static bool operator !=(NitroxId id1, NitroxId id2)
+    public static bool operator !=(NitroxId? id1, NitroxId? id2)
     {
         return !(id1 == id2);
     }
 
-    public override bool Equals(object obj)
+    public static implicit operator NitroxId(string str)
     {
-        if (ReferenceEquals(null, obj))
-        {
-            return false;
-        }
-        
-        if (obj.GetType() != GetType())
-        {
-            return false;
-        }
-
-        return Equals((NitroxId)obj);
+        return new NitroxId(str);
     }
 
-        
-    public bool Equals(NitroxId other)
+    public static implicit operator NitroxId(Guid guid)
     {
-        if (ReferenceEquals(null, other))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return guid.Equals(other.guid);
-    }
-        
-    public override int GetHashCode()
-    {
-        return guid.GetHashCode();
+        return new NitroxId(guid);
     }
 
-    public override string ToString()
+    public override bool Equals(object? obj) => Equals(obj as NitroxId);
+
+    public bool Equals(NitroxId? other)
     {
-        return guid.ToString();
+        return other is not null && guid.Equals(other.guid);
     }
 
-    [IgnoredMember]
-    private static int[] byteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
+    public override int GetHashCode() => guid.GetHashCode();
+
+    public override string ToString() => guid.ToString();
 
     public NitroxId Increment()
     {
@@ -123,18 +97,13 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         return new NitroxId(nextGuid);
     }
 
-    public int CompareTo(NitroxId other)
+    public int CompareTo(NitroxId? other)
     {
-        if (ReferenceEquals(this, other))
+        if (Equals(this, other))
         {
             return 0;
         }
 
-        if (ReferenceEquals(null, other))
-        {
-            return 1;
-        }
-
-        return guid.CompareTo(other.guid);
+        return other is null ? 1 : guid.CompareTo(other.guid);
     }
 }

@@ -29,14 +29,14 @@ namespace NitroxClient.MonoBehaviours
             return gameObjectsById;
         }
 
-        public static GameObject RequireObjectFrom(NitroxId id)
+        public static GameObject RequireObjectFrom(NitroxId? id)
         {
             Optional<GameObject> gameObject = GetObjectFrom(id);
             Validate.IsPresent(gameObject, $"Game object required from id: {id}");
             return gameObject.Value;
         }
 
-        public static Optional<GameObject> GetObjectFrom(NitroxId id)
+        public static Optional<GameObject> GetObjectFrom(NitroxId? id)
         {
             if (id == null)
             {
@@ -59,13 +59,13 @@ namespace NitroxClient.MonoBehaviours
                       .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
-        public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)
+        public static bool TryGetObjectFrom(NitroxId? id, out GameObject? gameObject)
         {
             gameObject = null;
             return id != null && gameObjectsById.TryGetValue(id, out gameObject) && gameObject;
         }
 
-        public static bool TryGetComponentFrom<T>(NitroxId id, out T component)
+        public static bool TryGetComponentFrom<T>(NitroxId? id, out T component)
         {
             component = default;
             return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) && gameObject &&

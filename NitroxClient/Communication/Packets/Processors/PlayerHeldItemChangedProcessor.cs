@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.Packets;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldItemChanged>
+internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<PlayerHeldItemChanged>
 {
+    private readonly PlayerManager playerManager;
     private int defaultLayer;
     private int viewModelLayer;
-    private readonly PlayerManager playerManager;
 
     public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
@@ -26,20 +26,14 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
         }
     }
 
-    private void SetupLayers()
+    public Task Process(ClientProcessorContext context, PlayerHeldItemChanged packet)
     {
-        defaultLayer = LayerMask.NameToLayer("Default");
-        viewModelLayer = LayerMask.NameToLayer("Viewmodel");
-    }
-
-    public override void Process(PlayerHeldItemChanged packet)
-    {
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.SessionId);
         Validate.IsPresent(opPlayer);
 
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
-            return; // Item can be not spawned yet bc async.
+            return Task.CompletedTask;
         }
 
         Pickupable pickupable = item.GetComponent<Pickupable>();
@@ -73,7 +67,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 item.SetActive(true);
                 tool.SetHandIKTargetsEnabled(true);
                 SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
-                opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime == null;
+                opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
 
                 if (item.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated
                 {
@@ -124,5 +118,12 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
             default:
                 throw new ArgumentOutOfRangeException(nameof(packet.Type));
         }
+        return Task.CompletedTask;
+    }
+
+    private void SetupLayers()
+    {
+        defaultLayer = LayerMask.NameToLayer("Default");
+        viewModelLayer = LayerMask.NameToLayer("Viewmodel");
     }
 }
