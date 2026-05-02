@@ -10,10 +10,13 @@ namespace NitroxClient.Extensions;
 
 public static class GameObjectExtensions
 {
-    /// <summary>
-    ///     Returns true if game object is the local player, playing on the executing machine.
-    /// </summary>
-    public static bool IsLocalPlayer(this GameObject gameObject) => gameObject == Player.main.gameObject;
+    extension(GameObject self)
+    {
+        /// <summary>
+        ///     Returns true if game object is the local player, playing on the executing machine.
+        /// </summary>
+        public bool IsLocalPlayer => self == Player.main.gameObject;
+    }
 
     public static bool TryGetComponentInChildren<T>(this GameObject go, out T component, bool includeInactive = false) where T : Component
     {

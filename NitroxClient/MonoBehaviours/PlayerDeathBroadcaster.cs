@@ -12,10 +12,10 @@ public class PlayerDeathBroadcaster : MonoBehaviour
     {
         localPlayer = this.Resolve<LocalPlayer>();
 
-        Player.main.playerDeathEvent.AddHandler(this, PlayerDeath);
+        Player.main.playerDeathEvent.AddHandler(this, OnPlayerDeath);
     }
 
-    private void PlayerDeath(Player player)
+    private void OnPlayerDeath(Player player)
     {
         if (localPlayer.MarkDeathPointsWithBeacon)
         {
@@ -26,6 +26,6 @@ public class PlayerDeathBroadcaster : MonoBehaviour
 
     public void OnDestroy()
     {
-        Player.main.playerDeathEvent.RemoveHandler(this, PlayerDeath);
+        Player.main.playerDeathEvent.RemoveHandler(this, OnPlayerDeath);
     }
 }
