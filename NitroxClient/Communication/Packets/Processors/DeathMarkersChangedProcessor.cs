@@ -1,20 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class DeathMarkersChangedProcessor : ClientPacketProcessor<DeathMarkersChanged>
+internal sealed class DeathMarkersChangedProcessor(LocalPlayer localPlayer) : IClientPacketProcessor<DeathMarkersChanged>
 {
-    private readonly LocalPlayer localPlayer;
+    private readonly LocalPlayer localPlayer = localPlayer;
 
-    public DeathMarkersChangedProcessor(LocalPlayer localPlayer)
-    {
-        this.localPlayer = localPlayer;
-    }
-
-    public override void Process(DeathMarkersChanged packet)
+    public Task Process(ClientProcessorContext context, DeathMarkersChanged packet)
     {
         localPlayer.MarkDeathPointsWithBeacon = packet.MarkDeathPointsWithBeacon;
+        return Task.CompletedTask;
     }
 }

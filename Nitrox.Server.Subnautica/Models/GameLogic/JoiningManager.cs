@@ -207,7 +207,7 @@ internal sealed class JoiningManager(
             sessionSettings,
             player.InPrecursor,
             player.DisplaySurfaceWater,
-            serverConfig.MarkDeathPointsWithBeacon
+            options.Value.MarkDeathPointsWithBeacon
         );
 
         await packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);

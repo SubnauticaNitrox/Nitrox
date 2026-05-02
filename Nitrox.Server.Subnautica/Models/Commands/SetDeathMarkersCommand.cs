@@ -1,42 +1,23 @@
-using System.IO;
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
-using Nitrox.Server.Subnautica.Models.GameLogic;
-using NitroxModel.Packets;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-internal class SetDeathMarkersCommand : Command
-{
-    private readonly PlayerManager playerManager;
-    private readonly SubnauticaServerConfig serverConfig;
-    private readonly Server server;
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class SetDeathMarkersCommand(IOptions<SubnauticaServerOptions> options) : ICommandHandler<bool> {
+    private readonly IOptions<SubnauticaServerOptions> options = options;
 
-    public SetDeathMarkersCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig, Server server) : base("deathmarkers", Perms.ADMIN, "Sets \"Death Markers\" setting to on/off. If \"on\", a beacon will appear at the location where a player dies.")
+    [Description("Sets \"death markers\" setting to on/off. If \"on\", a beacon will be placed when a player dies at the location of the death.")]
+    public async Task Execute(ICommandContext context, [Description("The true/false state to set the death markers setting to")] bool newState)
     {
-        this.playerManager = playerManager;
-        this.serverConfig = serverConfig;
-        this.server = server;
-        AddParameter(new TypeBoolean("state", true, "on/off to enable/disable death markers"));
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        bool newDeathMarkersState = args.Get<bool>(0);
-        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
+        if(options.Value.MarkDeathPointsWithBeacon == newState)
         {
-            if (serverConfig.MarkDeathPointsWithBeacon != newDeathMarkersState)
-            {
-                serverConfig.MarkDeathPointsWithBeacon = newDeathMarkersState;
-                playerManager.SendPacketToAllPlayers(new DeathMarkersChanged(newDeathMarkersState));
-                SendMessageToAllPlayers($"MarkDeathPointsWithBeacon changed to \"{newDeathMarkersState}\" by {args.SenderName}");
-            }
-            else
-            {
-                SendMessage(args.Sender, $"MarkDeathPointsWithBeacon already set to {newDeathMarkersState}");
-            }
+            await context.ReplyAsync($"MarkDeathPointsWithBeacon already set to {newState}");
+            return;
         }
+        options.Value.MarkDeathPointsWithBeacon = newState;
+        await context.SendToAllAsync(new KeepInventoryChanged(newState));
+        await context.SendToAllAsync($"MarkDeathPointsWithBeacon changed to \"{newState}\" by {context.OriginName}");
     }
 }
