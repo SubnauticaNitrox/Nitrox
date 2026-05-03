@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Nitrox.Model.Extensions;
+namespace Nitrox.Model.Helper;
 
-public static class ObjectExtensions
+public static class ObjectHelper
 {
-    public static string GetStateAsTextForComparison(this object? obj)
+    public static string GetStateAsTextForComparison(object? obj)
     {
         if (obj == null)
         {
