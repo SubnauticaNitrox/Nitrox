@@ -258,23 +258,30 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
     private async Task RestartGameIfCrashedAsync(GameInfo gameInfo, ProcessEx process, string[] args)
     {
-        if (!args.Contains(LauncherConstants.NO_DISCORD_INTEGRATION_FLAG) && await gameTroubleshootService.TryDetectGameCrashAsync(TimeSpan.FromSeconds(10)) == GameTroubleshootService.GameCrashCause.DISCORD_SDK)
+        // Skip restart if already launching without Discord.
+        if (args.Contains(LauncherConstants.NO_DISCORD_INTEGRATION_FLAG))
         {
-            try
+            return;
+        }
+        if (await gameTroubleshootService.TryDetectGameCrashAsync(TimeSpan.FromSeconds(10)) == GameTroubleshootService.GameCrashCause.NO_CRASH)
+        {
+            return;
+        }
+
+        LauncherNotifier.Warning($"Game crashed, restarting game with {LauncherConstants.NO_DISCORD_INTEGRATION_FLAG}...");
+        try
+        {
+            using CancellationTokenSource cts = new(TimeSpan.FromSeconds(30));
+            // Wait for game to close from the crash...
+            while (!cts.IsCancellationRequested && process.IsRunning)
             {
-                using CancellationTokenSource cts = new(TimeSpan.FromSeconds(30));
-                LauncherNotifier.Info("Game crashed, restarting without Discord integration...");
-                // Wait for game to close from the crash...
-                while (!cts.IsCancellationRequested && process.IsRunning)
-                {
-                    await Task.Delay(1000, cts.Token);
-                }
-                await StartGameAsync(gameInfo, [..args, LauncherConstants.NO_DISCORD_INTEGRATION_FLAG]);
+                await Task.Delay(1000, cts.Token);
             }
-            catch (OperationCanceledException)
-            {
-                // ignored
-            }
+            await StartGameAsync(gameInfo, [..args, LauncherConstants.NO_DISCORD_INTEGRATION_FLAG]);
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
         }
     }
 
