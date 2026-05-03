@@ -100,6 +100,11 @@ public sealed class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     public static bool TryGetKeyForPingInstance(PingInstance pingInstance, out string pingKey, out bool isRemotePlayerPing, Action failCallback = null)
     {
         isRemotePlayerPing = false;
+        if (pingInstance.IsLocalOnly)
+        {
+            pingKey = string.Empty;
+            return false;
+        }
         if (pingInstance.TryGetComponent(out SignalPing signalPing))
         {
             pingKey = signalPing.descriptionKey;
@@ -129,7 +134,7 @@ public sealed class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             return false;
         }
 
-        Log.Warn($"Couldn't find PingInstance identifier for {pingInstance.name} under {pingInstance.transform.parent}");
+        Log.Warn($"Couldn't find {nameof(PingInstance)} identifier for {pingInstance.name} under {pingInstance.transform.parent}");
         pingKey = string.Empty;
         return false;
     }

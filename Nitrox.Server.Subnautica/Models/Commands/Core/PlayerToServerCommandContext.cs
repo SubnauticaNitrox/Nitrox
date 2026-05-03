@@ -77,4 +77,6 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
                 break;
         }
     }
+
+    public override string ToString() => $"'{OriginName}' #{OriginId}";
 }
