@@ -106,7 +106,13 @@ public class Items
 
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
-        string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
+        PrefabIdentifier prefabIdentifier = gameObject.GetComponent<PrefabIdentifier>();
+        if (!prefabIdentifier)
+        {
+            Log.Error($"[{nameof(Items)}] Cannot sync dropped object '{gameObject.name}': missing PrefabIdentifier");
+            return;
+        }
+        string classId = prefabIdentifier.ClassId;
         int level = gameObject.TryGetComponent(out LargeWorldEntity largeWorldEntity) ? (int)largeWorldEntity.cellLevel : 0;
 
         WorldEntity droppedItem;
