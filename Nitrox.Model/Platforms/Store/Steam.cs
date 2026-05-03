@@ -142,7 +142,8 @@ public sealed class Steam : IGamePlatform
                 return null;
             }
 
-            string[] commonPaths = [
+            string[] commonPaths =
+            [
                 // Default install location
                 // https://github.com/ValveSoftware/steam-for-linux
                 Path.Combine(homePath, ".local", "share", "Steam"),
