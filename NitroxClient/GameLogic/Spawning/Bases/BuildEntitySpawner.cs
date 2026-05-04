@@ -59,6 +59,10 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             {
                 case MapRoomEntity mapRoomEntity:
                     yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+                    if (mapRoomEntity.ChildEntities.Count > 0)
+                    {
+                        yield return entities.SpawnBatchAsync(mapRoomEntity.ChildEntities, true);
+                    }
                     break;
                 case BaseLeakEntity baseLeakEntity:
                     atLeastOneLeak = true;
