@@ -140,7 +140,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
         this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {
-            if (vm.Server?.Process?.Id != status.ProcessId)
+            if (vm.Server?.LastProcessId != status.ProcessId)
             {
                 return;
             }
