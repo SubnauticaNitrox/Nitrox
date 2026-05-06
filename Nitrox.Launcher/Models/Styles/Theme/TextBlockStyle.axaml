@@ -21,7 +21,6 @@
 
     <Style Selector="TextBlock.link">
         <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
-        <Setter Property="Margin" Value="0 0 0 -4" /> <!-- Removes slight upward offset -->
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ToolTip.Tip" Value="{Binding $self.Tag, Converter={converters:ToStringConverter}, ConverterParameter=url}" />
         <Setter Property="ContextMenu">
