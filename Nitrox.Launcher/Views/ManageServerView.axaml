@@ -235,12 +235,12 @@
                         <TextBox
                             IsEnabled="{Binding !ServerIsOnline}"
                             IsReadOnly="{Binding !Server.IsNewServer}"
-                            MaxLength="10"
+                            MaxLength="30"
                             Text="{Binding ServerSeed, Converter={converters:ToStringConverter}, ConverterParameter=upper}"
                             Watermark="Server seed">
                             <TextBox.Styles>
                                 <Style Selector="TextBox[IsReadOnly=False]">
-                                    <Setter Property="ToolTip.Tip" Value="Leave blank to automatically generate one" />
+                                    <Setter Property="ToolTip.Tip" Value="Leave blank to automatically generate when the server is first run" />
                                 </Style>
                                 <Style Selector="TextBox[IsReadOnly=True]">
                                     <Setter Property="ToolTip.Tip" Value="Seed cannot be changed for servers that have been run" />
