@@ -381,6 +381,27 @@ internal sealed partial class ServerEntry : ObservableObject
                     PlayerNames = [];
                     IsOnline = false;
                     Output.Clear();
+
+                    // Ensure the automatically generated seed (if applicable) is loaded for Launcher use
+                    if (string.IsNullOrWhiteSpace(Seed))
+                    {
+                        try
+                        {
+                            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name);
+                            if (Directory.Exists(saveDir))
+                            {
+                                SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
+                                if (!string.IsNullOrWhiteSpace(config.Seed))
+                                {
+                                    Seed = config.Seed;
+                                }
+                            }
+                        }
+                        catch (Exception seedEx)
+                        {
+                            Log.Warn($"Failed to reload seed from server config after stop: {seedEx.Message}");
+                        }
+                    }
                 });
                 await Dispatcher.UIThread.InvokeAsync(() => IsServerClosing = false);
             }
