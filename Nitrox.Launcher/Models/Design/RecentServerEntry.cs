@@ -3,6 +3,7 @@ using Avalonia.Collections;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nitrox.Launcher.Models.Utils;
+using Nitrox.Model.Constants;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -11,7 +12,7 @@ public partial class RecentServerEntry : ObservableObject
 
     public string ServerName { get; set; } = string.Empty;
     public string ServerIP { get; set; } = string.Empty;
-    public int ServerPort { get; set; } = 11000;
+    public int ServerPort { get; set; } = SubnauticaServerConstants.DEFAULT_PORT;
 
     [ObservableProperty]
     public partial Bitmap ServerIcon { get; set; } = AssetHelper.GetAssetFromStream("/Assets/Images/subnautica-icon.png", static stream => new Bitmap(stream));
@@ -23,7 +24,7 @@ public partial class RecentServerEntry : ObservableObject
     public partial int PlayerCount { get; set; } = 0;
 
     [ObservableProperty]
-    public partial int MaxPlayers { get; set; } = 100;
+    public partial int MaxPlayers { get; set; } = SubnauticaServerConstants.DEFAULT_MAX_PLAYERS;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PlayerNamesTooltip))]

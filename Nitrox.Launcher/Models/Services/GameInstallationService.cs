@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nitrox.Launcher.Models.Design;
@@ -23,85 +24,35 @@ internal sealed partial class GameInstallationService : ObservableObject
 {
     private static readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web);
     private bool hasLoggedInitialCacheSnapshot;
-    private readonly HashSet<string> ignoredGamePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> ignoredGamePaths = new(StringComparer.OrdinalIgnoreCase);
 
     [ObservableProperty]
     public partial KnownGame SelectedGame { get; set; } = new() { PathToGame = string.Empty, Platform = Platform.NONE };
 
     public AvaloniaList<KnownGame> InstalledGames { get; } = [];
 
-    public List<KnownGame> RefreshInstalledGames(GameInfo gameInfo)
+    public async Task<List<KnownGame>> RefreshInstalledGamesAsync(GameInfo gameInfo)
     {
-        GameInstallationCacheData cacheData = LoadKnownGames(gameInfo);
-        if (!hasLoggedInitialCacheSnapshot)
-        {
-            string cachedInstallations = cacheData.KnownGames.Count == 0
-                ? "    none"
-                : string.Join(Environment.NewLine, cacheData.KnownGames.Select(game => $"    {game.PathToGame}"));
-            string ignoredInstallations = cacheData.IgnoredGamePaths.Count == 0
-                ? "    none"
-                : string.Join(Environment.NewLine, cacheData.IgnoredGamePaths.Where(path => !string.IsNullOrWhiteSpace(path)).Select(path => $"    {path}"));
-
-            Log.Info($"Loaded cached {gameInfo.Name} installations:{Environment.NewLine}{cachedInstallations}");
-            Log.Info($"Ignored {gameInfo.Name} installations:{Environment.NewLine}{ignoredInstallations}");
-
-            hasLoggedInitialCacheSnapshot = true;
-        }
+        GameInstallationCacheData cacheData = await LoadKnownGamesAsync(gameInfo);
+        await LogInitialCacheSnapshotAsync(gameInfo, cacheData);
         ReplaceIgnoredGamePaths(cacheData.IgnoredGamePaths);
 
-        List<KnownGame> savedGames = [];
-        foreach (KnownGame normalizedGame in cacheData.KnownGames.Select(Normalize).Where(normalizedGame => !string.IsNullOrWhiteSpace(normalizedGame.PathToGame)))
-        {
-            if (!Directory.Exists(normalizedGame.PathToGame))
-            {
-                Log.Info($"Removing missing {gameInfo.Name} installation from cache: {normalizedGame.PathToGame}");
-                continue;
-            }
+        List<KnownGame> savedGames = await FilterValidSavedGamesAsync(gameInfo, cacheData.KnownGames);
+        List<KnownGame> discoveredGames = GameInstallationFinder
+                                          .FindGamesCached(gameInfo)
+                                          .Select(ToKnownGame)
+                                          .Where(game => !IsIgnoredGamePath(game.PathToGame))
+                                          .ToList();
 
-            savedGames.Add(normalizedGame);
-        }
+        List<KnownGame> mergedGames = savedGames
+                                      .Concat(discoveredGames)
+                                      .Where(game => !string.IsNullOrWhiteSpace(game.PathToGame))
+                                      .Select(Normalize)
+                                      .DistinctBy(game => game.PathToGame, StringComparer.OrdinalIgnoreCase)
+                                      .ToList();
 
-        savedGames = savedGames
-            .Where(game => !IsIgnoredGamePath(game.PathToGame))
-            .ToList();
-        List<KnownGame> discoveredGames = GameInstallationFinder.FindGamesCached(gameInfo)
-            .Select(ToKnownGame)
-            .Where(game => !IsIgnoredGamePath(game.PathToGame))
-            .ToList();
-
-        List<KnownGame> mergedGames = [];
-        mergedGames.AddRange(savedGames);
-        mergedGames.AddRange(discoveredGames);
-        mergedGames = mergedGames
-            .Where(game => !string.IsNullOrWhiteSpace(game.PathToGame))
-            .Select(Normalize)
-            .Where(game => !IsIgnoredGamePath(game.PathToGame))
-            .DistinctBy(game => game.PathToGame, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        KnownGame? selectedGame = TryGetSelectedGame(gameInfo, mergedGames);
-        if (selectedGame is null)
-        {
-            selectedGame = mergedGames.FirstOrDefault();
-        }
-
-        InstalledGames.Clear();
-        foreach (KnownGame discoveredGame in mergedGames)
-        {
-            InstalledGames.Add(discoveredGame);
-        }
-
-        if (selectedGame is null)
-        {
-            SelectedGame = new KnownGame { PathToGame = string.Empty, Platform = Platform.NONE };
-            NitroxUser.PreferredGamePath = string.Empty;
-            NitroxUser.ClearGamePathAndPlatform();
-            SaveKnownGames(gameInfo);
-            return mergedGames;
-        }
-
-        ApplySelection(selectedGame);
-        SaveKnownGames(gameInfo);
+        SelectGameAndUpdateUI(gameInfo, mergedGames);
+        await SaveKnownGamesAsync(gameInfo);
         return mergedGames;
     }
 
@@ -153,8 +104,7 @@ internal sealed partial class GameInstallationService : ObservableObject
 
         AddIgnoredGamePath(normalizedGame.PathToGame);
 
-        bool deletedSelectedGame = IsGamePathSelected(normalizedGame.PathToGame);
-        if (deletedSelectedGame)
+        if (IsGamePathSelected(normalizedGame.PathToGame))
         {
             KnownGame? fallbackGame = InstalledGames.FirstOrDefault();
             if (fallbackGame is null)
@@ -169,11 +119,11 @@ internal sealed partial class GameInstallationService : ObservableObject
             }
         }
 
-        SaveKnownGames(gameInfo);
+        _ = Task.Run(() => SaveKnownGamesAsync(gameInfo));
         return removed;
     }
 
-    public void SelectGameInstallation(GameInfo gameInfo, string path)
+    private void SelectGameInstallation(GameInfo gameInfo, string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         SelectGameInstallation(gameInfo, new KnownGame
@@ -192,7 +142,7 @@ internal sealed partial class GameInstallationService : ObservableObject
             AddOrUpdateInstalledGame(normalizedGame);
         }
         ApplySelection(normalizedGame);
-        SaveKnownGames(gameInfo);
+        _ = Task.Run(() => SaveKnownGamesAsync(gameInfo));
     }
 
     private void AddOrUpdateInstalledGame(KnownGame game)
@@ -209,18 +159,92 @@ internal sealed partial class GameInstallationService : ObservableObject
         InstalledGames.Add(game);
     }
 
-    private GameInstallationCacheData LoadKnownGames(GameInfo gameInfo)
+    private async Task LogInitialCacheSnapshotAsync(GameInfo gameInfo, GameInstallationCacheData cacheData)
+    {
+        if (hasLoggedInitialCacheSnapshot)
+        {
+            return;
+        }
+
+        await Task.Run(() =>
+        {
+            string cachedInstallations = cacheData.KnownGames.Count == 0
+                ? "    none"
+                : string.Join(Environment.NewLine, cacheData.KnownGames.Select(game => $"    {game.PathToGame}"));
+
+            string ignoredInstallations = cacheData.IgnoredGamePaths.Count == 0
+                ? "    none"
+                : string.Join(Environment.NewLine, cacheData.IgnoredGamePaths
+                    .Where(path => !string.IsNullOrWhiteSpace(path))
+                    .Select(path => $"    {path}"));
+
+            Log.Info($"Loaded cached {gameInfo.Name} installations:{Environment.NewLine}{cachedInstallations}");
+            Log.Info($"Ignored {gameInfo.Name} installations:{Environment.NewLine}{ignoredInstallations}");
+        });
+
+        hasLoggedInitialCacheSnapshot = true;
+    }
+
+    private async Task<List<KnownGame>> FilterValidSavedGamesAsync(GameInfo gameInfo, IEnumerable<KnownGame> savedGamesFromCache)
+    {
+        List<KnownGame> validGames = [];
+
+        foreach (KnownGame normalizedGame in savedGamesFromCache
+            .Select(Normalize)
+            .Where(game => !string.IsNullOrWhiteSpace(game.PathToGame)))
+        {
+            bool exists = await Task.Run(() => Directory.Exists(normalizedGame.PathToGame));
+            if (!exists)
+            {
+                Log.Info($"Removing missing {gameInfo.Name} installation from cache: {normalizedGame.PathToGame}");
+                continue;
+            }
+
+            if (!IsIgnoredGamePath(normalizedGame.PathToGame))
+            {
+                validGames.Add(normalizedGame);
+            }
+        }
+
+        return validGames;
+    }
+
+    private void SelectGameAndUpdateUI(GameInfo gameInfo, List<KnownGame> mergedGames)
+    {
+        KnownGame? selectedGame = TryGetSelectedGame(gameInfo, mergedGames);
+        selectedGame ??= mergedGames.FirstOrDefault();
+
+        InstalledGames.Clear();
+        foreach (KnownGame game in mergedGames)
+        {
+            InstalledGames.Add(game);
+        }
+
+        if (selectedGame is null)
+        {
+            SelectedGame = new KnownGame { PathToGame = string.Empty, Platform = Platform.NONE };
+            NitroxUser.PreferredGamePath = string.Empty;
+            NitroxUser.ClearGamePathAndPlatform();
+        }
+        else
+        {
+            ApplySelection(selectedGame);
+        }
+    }
+
+    private async Task<GameInstallationCacheData> LoadKnownGamesAsync(GameInfo gameInfo)
     {
         try
         {
             string cacheFilePath = GetCacheFilePath(gameInfo);
-            if (!File.Exists(cacheFilePath))
+            bool fileExists = await Task.Run(() => File.Exists(cacheFilePath));
+            if (!fileExists)
             {
                 ignoredGamePaths.Clear();
                 return new GameInstallationCacheData();
             }
 
-            string serialized = File.ReadAllText(cacheFilePath);
+            string serialized = await File.ReadAllTextAsync(cacheFilePath);
             GameInstallationCacheData? cacheData = JsonSerializer.Deserialize<GameInstallationCacheData>(serialized, jsonSerializerOptions);
             if (cacheData is not null)
             {
@@ -242,18 +266,18 @@ internal sealed partial class GameInstallationService : ObservableObject
         }
     }
 
-    private void SaveKnownGames(GameInfo gameInfo)
+    private async Task SaveKnownGamesAsync(GameInfo gameInfo)
     {
         try
         {
-            Directory.CreateDirectory(NitroxUser.CachePath);
+            await Task.Run(() => Directory.CreateDirectory(NitroxUser.CachePath));
             GameInstallationCacheData cacheData = new()
             {
                 KnownGames = InstalledGames.Select(Normalize).Where(game => !string.IsNullOrWhiteSpace(game.PathToGame)).ToList(),
                 IgnoredGamePaths = ignoredGamePaths.ToList()
             };
             string serialized = JsonSerializer.Serialize(cacheData, jsonSerializerOptions);
-            File.WriteAllText(GetCacheFilePath(gameInfo), serialized);
+            await File.WriteAllTextAsync(GetCacheFilePath(gameInfo), serialized);
         }
         catch (Exception ex)
         {
@@ -268,29 +292,44 @@ internal sealed partial class GameInstallationService : ObservableObject
         return Path.Combine(NitroxUser.CachePath, $"nitrox_gi_{hash}.cache");
     }
 
-    private KnownGame? TryGetSelectedGame(GameInfo gameInfo, IEnumerable<KnownGame> discoveredGames)
+    private KnownGame? TryGetSelectedGame(GameInfo gameInfo, List<KnownGame> discoveredGames)
     {
-        string selectedPath = NitroxUser.GamePath;
-        if (!string.IsNullOrWhiteSpace(selectedPath) && GameInstallationHelper.HasValidGameFolder(selectedPath, gameInfo) && !IsIgnoredGamePath(selectedPath))
+        string? selectedPath = GetValidGamePath(NitroxUser.GamePath, gameInfo);
+        if (selectedPath is not null)
         {
             return new KnownGame
             {
-                PathToGame = Path.GetFullPath(selectedPath),
+                PathToGame = selectedPath,
                 Platform = NitroxUser.GamePlatform?.Platform ?? GetPlatformFromPath(selectedPath)
             };
         }
 
-        string preferredPath = NitroxUser.PreferredGamePath;
-        if (!string.IsNullOrWhiteSpace(preferredPath) && GameInstallationHelper.HasValidGameFolder(preferredPath, gameInfo) && !IsIgnoredGamePath(preferredPath))
+        string? preferredPath = GetValidGamePath(NitroxUser.PreferredGamePath, gameInfo);
+        if (preferredPath is not null)
         {
             return new KnownGame
             {
-                PathToGame = Path.GetFullPath(preferredPath),
+                PathToGame = preferredPath,
                 Platform = GetPlatformFromPath(preferredPath)
             };
         }
 
         return discoveredGames.FirstOrDefault();
+    }
+
+    private string? GetValidGamePath(string? path, GameInfo gameInfo)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return null;
+        }
+
+        if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo) || IsIgnoredGamePath(path))
+        {
+            return null;
+        }
+
+        return Path.GetFullPath(path);
     }
 
     private static KnownGame Normalize(KnownGame game)

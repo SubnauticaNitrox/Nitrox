@@ -142,9 +142,9 @@ internal partial class OptionsViewModel(GameInstallationService gameInstallation
     }
 
     [RelayCommand]
-    private void RefreshGameInstallations()
+    private async Task RefreshGameInstallations()
     {
-        gameInstallationService.RefreshInstalledGames(GameInfo.Subnautica);
+        await gameInstallationService.RefreshInstalledGamesAsync(GameInfo.Subnautica);
         LauncherNotifier.Success("Refreshed game installations");
     }
 

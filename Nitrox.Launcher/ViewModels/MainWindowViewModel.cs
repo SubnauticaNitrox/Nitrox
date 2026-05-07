@@ -92,7 +92,8 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         {
             bool lightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = lightModeEnabled ? ThemeVariant.Light : ThemeVariant.Dark);
-            gameInstallationService.RefreshInstalledGames(GameInfo.Subnautica);
+
+            Task.Run(async () => await gameInstallationService.RefreshInstalledGamesAsync(GameInfo.Subnautica));
 
             if (!NitroxEnvironment.IsReleaseMode)
             {
