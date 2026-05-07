@@ -8,11 +8,11 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using Nitrox.Model.Serialization;
+using Nitrox.Model.Logger;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class LibraryViewModel(GameInstallationService gameInstallationService, StorageService storageService, DialogService dialogService) : RoutableViewModelBase
+internal partial class LibraryViewModel(GameInstallationService gameInstallationService, StorageService storageService, DialogService dialogService, RecentServerStatusService recentServerStatusService) : RoutableViewModelBase
 {
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RemoveGameInstallationCommand))]
@@ -22,32 +22,60 @@ internal partial class LibraryViewModel(GameInstallationService gameInstallation
     public partial AvaloniaList<KnownGame> LibraryEntries { get; set; } = [];
 
     [ObservableProperty]
-    public partial AvaloniaList<RecentServerEntry>? RecentServers { get; set; }
+    [NotifyCanExecuteChangedFor(nameof(RefreshRecentServersCommand))]
+    public partial AvaloniaList<RecentServerEntry> RecentServers { get; set; } = [];
 
-    internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RefreshRecentServersCommand))]
+    public partial bool IsRefreshingRecentServers { get; set; }
+
+    internal override Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         SelectedGame = gameInstallationService.SelectedGame;
         LibraryEntries = gameInstallationService.InstalledGames;
-        RecentServers = GetRecentServers(); // TODO: Make Async and await this?
+
+        RecentServers = recentServerStatusService.GetRecentServers();
+
+        AvaloniaList<RecentServerEntry> serversToRefresh = recentServerStatusService.GetServersToRefreshOnLoad(RecentServers);
+        _ = recentServerStatusService.RefreshRecentServersAsync(serversToRefresh, false, cancellationToken).ContinueWithHandleError();
+
+        recentServerStatusService.StartAutoRefresh(RecentServers, cancellationToken);
+        return Task.CompletedTask;
     }
 
-    private AvaloniaList<RecentServerEntry> GetRecentServers()
+    internal override Task ViewContentUnloadAsync()
     {
-        AvaloniaList<RecentServerEntry> list = [];
+        recentServerStatusService.SaveOnlineServersState(RecentServers);
+        recentServerStatusService.StopAutoRefresh();
 
-        ServerList.Refresh();
-        foreach (ServerList.Entry entry in ServerList.Instance.Entries)
-        {
-            list.Add(new RecentServerEntry
-            {
-                ServerName = entry.Name,
-                ServerIP = entry.Address,
-                ServerPort = entry.Port
-            });
-        }
-
-        return list;
+        return Task.CompletedTask;
     }
+
+    [RelayCommand(CanExecute = nameof(CanRefreshRecentServers), AllowConcurrentExecutions = false)]
+    private async Task RefreshRecentServers()
+    {
+        try
+        {
+            IsRefreshingRecentServers = true;
+            await recentServerStatusService.RefreshRecentServersAsync(RecentServers, true, CancellationToken.None);
+            LauncherNotifier.Success("Refreshed recent servers");
+        }
+        catch (OperationCanceledException)
+        {
+            LauncherNotifier.Warning("Timed out while refreshing recent server status");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to refresh recent server status");
+            LauncherNotifier.Error("Failed to refresh recent server status");
+        }
+        finally
+        {
+            IsRefreshingRecentServers = false;
+        }
+    }
+
+    private bool CanRefreshRecentServers() => !IsRefreshingRecentServers && RecentServers.Count > 0;
 
     [RelayCommand]
     private void SetSelectedGame(KnownGame game)

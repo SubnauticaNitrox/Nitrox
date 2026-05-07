@@ -132,8 +132,19 @@
                </Grid>
            </ScrollViewer>
 
-           <TextBlock Text="RECENT SERVERS" Margin="0 15 0 -10" FontSize="10"
-                      Foreground="{DynamicResource BrandSubText}" />
+           <Grid Margin="0 15 0 -10" ColumnDefinitions="*, Auto" ColumnSpacing="8">
+               <TextBlock Text="RECENT SERVERS"
+                          FontSize="10"
+                          Foreground="{DynamicResource BrandSubText}" />
+               <Button Grid.Column="1"
+                       Classes="icon"
+                       Width="24"
+                       Height="24"
+                       Command="{Binding RefreshRecentServersCommand}"
+                       ToolTip.Tip="Refresh all recent servers">
+                   <Svg Classes="theme" Path="/Assets/Icons/refresh.svg" />
+               </Button>
+           </Grid>
 
            <ItemsControl ItemsSource="{Binding RecentServers, Mode=OneWay}">
                 <ItemsControl.ItemsPanel>
@@ -163,10 +174,46 @@
                                                 </Transitions>
                                             </controls:GrayscaleControl.Transitions>
                                         </controls:GrayscaleControl>
+                                        <Border Background="#66000000" IsVisible="{Binding IsStatusLoading}">
+                                            <Svg Path="/Assets/Icons/loading.svg"
+                                                 Css="* { fill: #fff; stroke: #fff; }"
+                                                 Width="20"
+                                                 Height="20"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center">
+                                                <Svg.RenderTransform>
+                                                    <TransformGroup>
+                                                        <RotateTransform />
+                                                    </TransformGroup>
+                                                </Svg.RenderTransform>
+                                                <Svg.Styles>
+                                                    <Style Selector="Svg">
+                                                        <Style.Animations>
+                                                            <Animation Duration="0:0:.5" IterationCount="INFINITE">
+                                                                <KeyFrame Cue="0%">
+                                                                    <Setter Property="RotateTransform.Angle" Value="0" />
+                                                                </KeyFrame>
+                                                                <KeyFrame Cue="100%">
+                                                                    <Setter Property="RotateTransform.Angle" Value="360" />
+                                                                </KeyFrame>
+                                                            </Animation>
+                                                        </Style.Animations>
+                                                    </Style>
+                                                </Svg.Styles>
+                                            </Svg>
+                                        </Border>
+                                        <Border Background="#66000000" IsVisible="{Binding ShowVersionMismatchWarning}" ToolTip.Tip="{Binding VersionMismatchTooltip}">
+                                            <Svg Path="/Assets/Icons/warning.svg"
+                                                 Css="* { fill: #fff; stroke: #fff; }"
+                                                 Width="20"
+                                                 Height="20"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" />
+                                        </Border>
                                     </Grid>
                                 </Border>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                    <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding ServerName}" TextWrapping="NoWrap" />
+                                    <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding LocalServerName}" TextWrapping="NoWrap" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="12">
                                         <StackPanel.Styles>
                                             <Style Selector="StackPanel">
@@ -209,7 +256,7 @@
                                     Classes="icon"
                                     Grid.Column="2"
                                     Width="24" Height="24"
-                                    ToolTip.Tip="{Binding ServerAddressTooltip}">
+                                    ToolTip.Tip="{Binding ServerInfoTooltip}">
                                     <Svg Classes="theme" Path="/Assets/Icons/info.svg" />
                                     <Button.Styles>
                                         <Style Selector="Button:pointerover">

@@ -6,7 +6,7 @@ namespace Nitrox.Launcher.ViewModels.Designer;
 internal sealed class DesignLibraryViewModel : LibraryViewModel
 {
 
-    public DesignLibraryViewModel() : base(null!, null!, null!)
+    public DesignLibraryViewModel() : base(null!, null!, null!, null!)
     {
         SelectedGame = new KnownGame
         {
@@ -52,24 +52,24 @@ internal sealed class DesignLibraryViewModel : LibraryViewModel
         [
             new RecentServerEntry
             {
-                ServerName = "nitrox.subnautica-server.net",
+                LocalServerName = "nitrox.subnautica-server.net",
                 PlayerCount = 67,
                 IsOnline = true
             },
             new RecentServerEntry
             {
-                ServerName = "server.nitrox-srv.net"
+                LocalServerName = "server.nitrox-srv.net"
             },
             new RecentServerEntry
             {
-                ServerName = "192.168.0.21",
+                LocalServerName = "192.168.0.21",
                 PlayerCount = 5,
                 MaxPlayers = 6,
                 IsOnline = true
             },
             new RecentServerEntry
             {
-                ServerName = "0.0.0.0",
+                LocalServerName = "0.0.0.0",
                 IsOnline = true,
                 PlayerCount = 1
             }

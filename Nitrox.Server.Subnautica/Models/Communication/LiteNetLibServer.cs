@@ -2,11 +2,15 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Channels;
 using LiteNetLib;
 using LiteNetLib.Layers;
 using LiteNetLib.Utils;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets.Core;
@@ -22,6 +26,8 @@ namespace Nitrox.Server.Subnautica.Models.Communication;
 
 internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
 {
+    private const int MAX_STATUS_PAYLOAD_BYTES = 1500;
+
     private readonly Dictionary<int, PeerContext> contextByPeerId = [];
     private readonly Dictionary<SessionId, PeerContext> contextBySessionId = [];
     private readonly Lock contextLock = new();
@@ -29,6 +35,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
     private readonly EventBasedNetListener listener;
     private readonly ILogger<LiteNetLibServer> logger;
     private readonly IOptions<SubnauticaServerOptions> options;
+    private readonly IOptions<ServerStartOptions> serverStartOptions;
     private readonly PacketRegistryService packetRegistryService;
     private readonly PacketSerializationService packetSerializationService;
     private readonly PlayerManager playerManager;
@@ -36,14 +43,14 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
     private readonly SessionManager sessionManager;
     private readonly Channel<Task> taskChannel = Channel.CreateUnbounded<Task>();
 
-    public LiteNetLibServer(PlayerManager playerManager, SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, IOptions<SubnauticaServerOptions> options,
-                            ILogger<LiteNetLibServer> logger)
+    public LiteNetLibServer(PlayerManager playerManager, SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, IOptions<SubnauticaServerOptions> options, IOptions<ServerStartOptions> serverStartOptions, ILogger<LiteNetLibServer> logger)
     {
         this.playerManager = playerManager;
         this.sessionManager = sessionManager;
         this.packetSerializationService = packetSerializationService;
         this.packetRegistryService = packetRegistryService;
         this.options = options;
+        this.serverStartOptions = serverStartOptions;
         this.logger = logger;
         listener = new EventBasedNetListener();
         server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
@@ -57,6 +64,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         listener.PeerDisconnectedEvent += PeerDisconnected;
         listener.NetworkReceiveEvent += NetworkDataReceived;
         listener.ConnectionRequestEvent += OnConnectionRequest;
+        listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
 
         server.ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length;
         server.BroadcastReceiveEnabled = true;
@@ -266,6 +274,60 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         {
             ArrayPool<byte>.Shared.Return(packetData, true);
         }
+    }
+
+    private void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
+    {
+        if (messageType != UnconnectedMessageType.BasicMessage)
+        {
+            return;
+        }
+
+        try
+        {
+            string request = reader.GetString();
+
+            if (request == RemoteServerStatusConstants.REQUEST_STRING)
+            {
+                HandleRemoteStatusRequest(remoteEndPoint);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.ZLogTrace(ex, $"Failed handling remote server status request");
+        }
+    }
+
+    private void HandleRemoteStatusRequest(IPEndPoint remoteEndPoint)
+    {
+        string[] playerNames = playerManager.ConnectedPlayers()
+                                            .Select(player => player.Name)
+                                            .Where(name => !string.IsNullOrWhiteSpace(name))
+                                            .ToArray();
+
+        RemoteServerStatusResponse response = new()
+        {
+            IsOnline = true,
+            NitroxVersion = NitroxEnvironment.Version.ToString(),
+            ServerName = serverStartOptions.Value.SaveName,
+            HostServerName = serverStartOptions.Value.SaveName,
+            PlayerCount = playerNames.Length,
+            PlayerNames = playerNames,
+            MaxPlayerCount = options.Value.MaxConnections
+        };
+
+        // TODO: Add support for server icon transmittal (server icons are too big for a single UDP packet)
+
+        string responsePayload = JsonSerializer.Serialize(response);
+        if (Encoding.UTF8.GetByteCount(responsePayload) > MAX_STATUS_PAYLOAD_BYTES)
+        {
+            return;
+        }
+
+        NetDataWriter writer = new();
+        writer.Put(RemoteServerStatusConstants.RESPONSE_STRING);
+        writer.Put(responsePayload);
+        server.SendUnconnectedMessage(writer, remoteEndPoint);
     }
 
     private async Task ProcessPacket(PeerContext peerContext, Packet packet)

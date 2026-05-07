@@ -36,6 +36,7 @@ public static partial class ServiceCollectionExtensions
             .AddHostedSingletonService<WriteGrpcPortFileService>()
             .AddSingleton<GameInstallationService>()
             .AddSingleton<ServerService>()
+            .AddSingleton<RecentServerStatusService>()
             .AddSingleton<DialogService>()
             .AddSingleton<StorageService>()
             .AddSingleton<BackupService>()
