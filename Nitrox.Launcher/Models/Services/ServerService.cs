@@ -116,7 +116,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         catch (Exception ex)
         {
             Log.Error(ex, $"Error while starting server \"{server.Name}\"");
-            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{server.Name}\""));
+            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{server.Name}\"", ex.GetFirstNonAggregateMessage()));
             return false;
         }
     }
