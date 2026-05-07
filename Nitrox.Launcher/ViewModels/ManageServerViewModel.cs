@@ -170,10 +170,14 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [MemberNotNull(nameof(Server))]
-    public void LoadFrom(ServerEntry serverEntry)
+    public async Task RefreshAndLoadFromAsync(ServerEntry entry, string? savePath = null)
     {
-        Server = serverEntry;
-
+        savePath ??= entry.Name != null ? Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), entry.Name) : null;
+        if (savePath != null)
+        {
+            await entry.RefreshFromDirectoryAsync(savePath);
+        }
+        Server = entry;
         ServerIsOnline = Server.IsOnline;
         ServerName = Server.Name;
         ServerIcon = Server.ServerIcon;
@@ -373,7 +377,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         {
             StoreConfig(config);
         }
-        LoadFrom(Server);
+        await RefreshAndLoadFromAsync(Server);
     }
 
     [RelayCommand]
@@ -408,8 +412,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     TryDeleteFile(file);
                 }
                 await ZipFile.ExtractToDirectoryAsync(backupFile, SaveFolderDirectory, true);
-                await Server.RefreshFromDirectoryAsync(SaveFolderDirectory);
-                LoadFrom(Server);
+                await RefreshAndLoadFromAsync(Server, SaveFolderDirectory);
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)

@@ -101,7 +101,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
             return;
         }
 
-        manageServerViewModel.LoadFrom(server);
+        await manageServerViewModel.RefreshAndLoadFromAsync(server);
         ChangeView(manageServerViewModel);
     }
 }
