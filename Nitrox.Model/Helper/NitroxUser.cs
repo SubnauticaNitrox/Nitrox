@@ -56,7 +56,6 @@ public static class NitroxUser
         }
     };
 
-    [field: MaybeNull, AllowNull]
     public static string AppDataPath
     {
         get
@@ -140,12 +139,6 @@ public static class NitroxUser
 
     public static string GamePath => string.IsNullOrEmpty(gamePath) ? string.Empty : gamePath;
 
-    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
-    {
-        gamePath = Path.GetFullPath(path);
-        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
-    }
-
     public static string ExecutableRootPath
     {
         get
@@ -220,5 +213,35 @@ public static class NitroxUser
             }
             return field = nitroxAssets;
         }
+    }
+
+    /// <summary>
+    ///     Gets the user home directory of the current operating system user.
+    /// </summary>
+    public static string HomePath
+    {
+        get
+        {
+            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            }
+            if (!Directory.Exists(homePath))
+            {
+                throw new DirectoryNotFoundException("User home directory does not exist or is inaccessible");
+            }
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                throw new InvalidOperationException("User home directory is not given by the operating system");
+            }
+            return homePath;
+        }
+    }
+
+    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
+    {
+        gamePath = Path.GetFullPath(path);
+        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 }
