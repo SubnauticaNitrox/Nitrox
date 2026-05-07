@@ -97,7 +97,11 @@ public partial class RichTextBlock : TextBlock
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
                     string link = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
                     textBlock.Tag = link;
-                    inlines.Add(textBlock);
+                    inlines.Add(new InlineUIContainer
+                    {
+                        BaselineAlignment = BaselineAlignment.Center,
+                        Child = textBlock
+                    });
                     break;
                 case ['[', '#', ..]:
                     ReadOnlySpan<char> colorCode = match[1..match.IndexOfAny("]")];
