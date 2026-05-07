@@ -197,7 +197,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                   ServerIcon != Server.ServerIcon ||
                                   ServerPassword != Server.Password ||
                                   ServerGameMode != Server.GameMode ||
-                                  !string.Equals(ServerSeed, Server.Seed, StringComparison.OrdinalIgnoreCase) ||
+                                  ServerSeed != Server.Seed ||
                                   ServerDefaultPlayerPerm != Server.PlayerPermissions ||
                                   ServerAutoSaveInterval != Server.AutoSaveInterval ||
                                   ServerMaxPlayers != Server.MaxPlayers ||

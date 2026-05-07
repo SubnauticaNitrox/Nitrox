@@ -236,7 +236,7 @@
                             IsEnabled="{Binding !ServerIsOnline}"
                             IsReadOnly="{Binding !Server.IsNewServer}"
                             MaxLength="30"
-                            Text="{Binding ServerSeed, Converter={converters:ToStringConverter}, ConverterParameter=upper}"
+                            Text="{Binding ServerSeed}"
                             Watermark="Server seed">
                             <TextBox.Styles>
                                 <Style Selector="TextBox[IsReadOnly=False]">
