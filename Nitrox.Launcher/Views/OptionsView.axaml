@@ -40,51 +40,129 @@
 
             <!--  Subnautica Runtime Selection  -->
             <StackPanel Spacing="12">
-                <StackPanel Spacing="8">
-                    <TextBlock
-                        FontSize="20"
-                        FontWeight="Bold"
-                        Text="Subnautica Installation" />
-                    <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
-                </StackPanel>
+                <Grid>
+                    <StackPanel Spacing="8">
+                        <TextBlock
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="Subnautica Installation" />
+                        <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
+                    </StackPanel>
+                    <Button
+                        Classes="icon"
+                        Width="24" Height="24"
+                        HorizontalAlignment="Right"
+                        Command="{Binding RefreshGameInstallationsCommand}"
+                        ToolTip.Tip="Recheck the system for any new, non-ignored game installations and add them to the list.">
+                        <Svg Classes="theme" Path="/Assets/Icons/refresh.svg" />
+                    </Button>
+                </Grid>
                 <Border
                     Background="{DynamicResource BrandPanelBackground}"
+                    MinHeight="73"
                     CornerRadius="12"
-                    Padding="22,15">
-                    <Grid ColumnDefinitions=" Auto, *, Auto">
-                        <controls:RecolorImage
-                            Grid.Column="0"
-                            Height="36" Width="36"
-                            Margin="0,0,22,0"
-                            Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
-                            Stretch="Uniform"
-                            ToolTip.Tip="Welcome aboard, Captain!" />
-                        <StackPanel
-                            Grid.Column="1"
-                            HorizontalAlignment="Left"
-                            Spacing="2"
-                            VerticalAlignment="Center">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
-                            <SelectableTextBlock
-                                FontSize="14"
-                                Foreground="{DynamicResource BrandBlack}"
-                                Opacity="0.75"
-                                Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
-                        </StackPanel>
-                        <Button
-                            Classes="primary"
-                            Command="{Binding SetGamePathCommand}"
-                            Content="Change"
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Margin="22,0,0,0"
-                            ToolTip.Tip="Direct the launcher to your game's install location"
-                            Width="120" />
+                    ClipToBounds="True">
+                    <Grid>
+                        <TextBlock
+                            Text="No game installations detected. You must add a game installation to use Nitrox."
+                            FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            IsVisible="{Binding !KnownGames.Count}" />
+                        <ItemsControl ItemsSource="{Binding KnownGames}" >
+                            <ItemsControl.Styles>
+                                <Style Selector="ContentPresenter:nth-child(even) > Border">
+                                    <Setter Property="Background" Value="{DynamicResource BrandBorder}" />
+                                </Style>
+                            </ItemsControl.Styles>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <RadioButton GroupName="GameSelection"
+                                                     Padding="22,15"
+                                                     HorizontalAlignment="Stretch"
+                                                     HorizontalContentAlignment="Stretch"
+                                                     Command="{Binding $parent[ItemsControl].((vm:OptionsViewModel)DataContext).SetSelectedGameCommand}"
+                                                     CommandParameter="{Binding}">
+                                            <RadioButton.Styles>
+                                                <Style Selector="RadioButton">
+                                                    <Style Selector="^[IsChecked=True] controls|RecolorImage">
+                                                        <Setter Property="ToolTip.Tip" Value="Welcome aboard, Captain!" />
+                                                    </Style>
+                                                    <Style Selector="^:pointerover Button">
+                                                        <Setter Property="IsEnabled" Value="True" />
+                                                    </Style>
+                                                    <Style Selector="^ Button">
+                                                        <Setter Property="IsEnabled" Value="False" />
+                                                        <Style Selector="^[IsEnabled=False]">
+                                                            <Setter Property="Opacity" Value="0" />
+                                                        </Style>
+                                                    </Style>
+                                                </Style>
+                                            </RadioButton.Styles>
+                                            <Grid ColumnDefinitions="Auto, *, Auto"
+                                                  HorizontalAlignment="Stretch">
+                                                <controls:RecolorImage
+                                                    Grid.Column="0"
+                                                    Height="36" Width="36"
+                                                    Margin="22,0"
+                                                    Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
+                                                    Stretch="Uniform" />
+                                                <StackPanel Grid.Column="1"
+                                                            HorizontalAlignment="Left"
+                                                            Spacing="2"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        FontWeight="Bold"
+                                                        Text="{Binding Platform, Converter={converters:ToStringConverter}}" />
+                                                    <SelectableTextBlock
+                                                        FontSize="14"
+                                                        Foreground="{DynamicResource BrandBlack}"
+                                                        Opacity="0.75"
+                                                        Text="{Binding PathToGame, FallbackValue='Unknown path'}" />
+                                                </StackPanel>
+                                                <Button Classes="icon" Grid.Column="2"
+                                                        Height="30" Width="30" Padding="5"
+                                                        HorizontalAlignment="Right"
+                                                        Command="{Binding $parent[ItemsControl].((vm:OptionsViewModel)DataContext).RemoveGameInstallationCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        ToolTip.Tip="Remove this game installation from the Nitrox Launcher">
+                                                    <Svg Classes="theme" Path="/Assets/Icons/close.svg" />
+                                                    <Button.Styles>
+                                                        <Style Selector="Button">
+                                                            <Style Selector="^:pointerover">
+                                                                <Setter Property="Background" Value="Red" />
+                                                            </Style>
+                                                        </Style>
+                                                    </Button.Styles>
+                                                </Button>
+                                            </Grid>
+                                            <RadioButton.IsChecked>
+                                                <MultiBinding Converter="{converters:EqualityConverter}">
+                                                    <Binding Path="PathToGame" />
+                                                    <Binding Path="$parent[ItemsControl].((vm:OptionsViewModel)DataContext).SelectedGame.PathToGame" />
+                                                </MultiBinding>
+                                            </RadioButton.IsChecked>
+                                        </RadioButton>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Grid>
                 </Border>
+                <Grid>
+                    <TextBlock Text="Manually add a game installation" VerticalAlignment="Center" />
+                    <Button
+                        Classes="primary"
+                        Command="{Binding AddGameInstallationCommand}"
+                        Content="Add"
+                        HorizontalAlignment="Right"
+                        ToolTip.Tip="Direct the launcher to your game's install location" />
+                </Grid>
             </StackPanel>
 
             <!--  Launch Arguments  -->
@@ -127,9 +205,10 @@
                         <Button
                             Classes="icon"
                             Grid.Column="1"
+                            Width="24" Height="24"
                             Margin="10,0"
                             ToolTip.Tip="{StaticResource InfoIconTooltipText}">
-                            <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="{DynamicResource BrandBlack}" />
+                            <Svg Classes="theme" Path="/Assets/Icons/info.svg" />
 
                             <Button.Styles>
                                 <Style Selector="Button:pointerover">

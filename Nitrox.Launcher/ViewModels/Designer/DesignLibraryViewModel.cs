@@ -3,16 +3,18 @@ using Nitrox.Model.Platforms.Discovery.Models;
 
 namespace Nitrox.Launcher.ViewModels.Designer;
 
-internal class DesignOptionsViewModel : OptionsViewModel
+internal sealed class DesignLibraryViewModel : LibraryViewModel
 {
-    public DesignOptionsViewModel() : base(null!, null!, null!, null!)
+
+    public DesignLibraryViewModel() : base(null!, null!, null!)
     {
         SelectedGame = new KnownGame
         {
             PathToGame = @"C:\Games\Steam\Subnautica",
             Platform = Platform.STEAM
         };
-        KnownGames =
+
+        LibraryEntries =
         [
             new KnownGame
             {
@@ -45,10 +47,33 @@ internal class DesignOptionsViewModel : OptionsViewModel
                 Platform = Platform.NONE
             }
         ];
-        LaunchArgs = "-vrmode none";
-        ProgramDataPath = @"C:\Users\Me\AppData\Roaming\Nitrox";
-        ScreenshotsPath = @"C:\Users\Me\AppData\Roaming\Nitrox\screenshots";
-        SavesPath = @"C:\Users\Me\AppData\Roaming\Nitrox\saves";
-        LogsPath = @"C:\Users\Me\AppData\Roaming\Nitrox\logs";
+
+        RecentServers =
+        [
+            new RecentServerEntry
+            {
+                ServerName = "nitrox.subnautica-server.net",
+                PlayerCount = 67,
+                IsOnline = true
+            },
+            new RecentServerEntry
+            {
+                ServerName = "server.nitrox-srv.net"
+            },
+            new RecentServerEntry
+            {
+                ServerName = "192.168.0.21",
+                PlayerCount = 5,
+                MaxPlayers = 6,
+                IsOnline = true
+            },
+            new RecentServerEntry
+            {
+                ServerName = "0.0.0.0",
+                IsOnline = true,
+                PlayerCount = 1
+            }
+        ];
     }
+
 }

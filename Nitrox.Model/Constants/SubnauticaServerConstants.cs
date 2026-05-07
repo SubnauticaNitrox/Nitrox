@@ -3,6 +3,7 @@ namespace Nitrox.Model.Constants;
 public static class SubnauticaServerConstants
 {
     public const int DEFAULT_PORT = 11000;
+    public const int DEFAULT_MAX_PLAYERS = 100;
 
     /// <summary>
     ///     Default seed in development so starting spawn (escape pod) stays the same.

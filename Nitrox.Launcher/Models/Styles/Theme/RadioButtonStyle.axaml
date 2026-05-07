@@ -56,8 +56,8 @@
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Name="RootBorder">
-                    <StackPanel Orientation="Horizontal">
-                        <Grid Height="32" VerticalAlignment="Top">
+                    <Grid Margin="{TemplateBinding Padding}" ColumnDefinitions="Auto,*" HorizontalAlignment="Stretch">
+                        <Grid Height="32" Grid.Column="0">
                             <Ellipse
                                 Fill="White"
                                 Height="20"
@@ -65,7 +65,8 @@
                                 Stroke="{TemplateBinding Foreground}"
                                 StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                 UseLayoutRounding="False"
-                                Width="20" />
+                                Width="20"
+                                VerticalAlignment="Center" />
                             <Ellipse
                                 Fill="{DynamicResource RadioButtonOuterEllipseCheckedFill}"
                                 Height="20"
@@ -74,7 +75,8 @@
                                 Stroke="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
                                 StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                 UseLayoutRounding="False"
-                                Width="20" />
+                                Width="20"
+                                VerticalAlignment="Center" />
                             <Ellipse
                                 Fill="{DynamicResource RadioButtonCheckGlyphFill}"
                                 Height="8"
@@ -82,19 +84,20 @@
                                 Opacity="0"
                                 Stroke="{DynamicResource RadioButtonCheckGlyphStroke}"
                                 UseLayoutRounding="False"
-                                Width="8" />
+                                Width="8"
+                                VerticalAlignment="Center" />
                         </Grid>
 
                         <ContentPresenter
+                            Grid.Column="1"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             Foreground="{TemplateBinding Foreground}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            Margin="{TemplateBinding Padding}"
                             Name="PART_ContentPresenter"
                             RecognizesAccessKey="True"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>

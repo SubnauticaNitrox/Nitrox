@@ -220,6 +220,21 @@
                                     </Binding>
                                 </RadioButton.IsChecked>
                             </RadioButton>
+                            <RadioButton
+                                Command="{Binding OpenLibraryViewCommand}"
+                                Content="Library"
+                                Tag="/Assets/Images/tabs-icons/library.png"
+                                ToolTip.Tip="Manage your Nitrox library">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:LibraryViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
                             <TextBlock Classes="subheader">EXPLORE</TextBlock>
                             <RadioButton
                                 Command="{Binding OpenCommunityViewCommand}"
@@ -342,6 +357,9 @@
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:ServersViewModel">
                             <views:ServersView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:LibraryViewModel">
+                            <views:LibraryView />
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:ManageServerViewModel">
                             <views:ManageServerView />
