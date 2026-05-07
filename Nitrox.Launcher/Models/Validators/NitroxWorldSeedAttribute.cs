@@ -15,6 +15,6 @@ public sealed partial class NitroxWorldSeedAttribute : TypedValidationAttribute<
             return ValidationResult.Success;
         }
 
-        return new ValidationResult($"The field {context.DisplayName} must contain alphanumeric characters only.");
+        return new ValidationResult($"The field {context.DisplayName} must contain up to 30 alphanumeric characters only.");
     }
 }
