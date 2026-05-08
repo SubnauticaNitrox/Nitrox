@@ -1,4 +1,4 @@
-﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="15">
@@ -57,7 +57,7 @@
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Name="RootBorder">
                     <Grid Margin="{TemplateBinding Padding}" ColumnDefinitions="Auto,*" HorizontalAlignment="Stretch">
-                        <Grid Height="32" Grid.Column="0">
+                        <Grid Height="32" Grid.Column="0" Margin="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:PaddingLeftToRightMarginConverter}}">
                             <Ellipse
                                 Fill="White"
                                 Height="20"
