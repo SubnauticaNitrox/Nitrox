@@ -23,15 +23,11 @@ using Nitrox.Model.Platforms.Store;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
+internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore, GameInstallationService gameInstallationService)
     : RoutableViewModelBase
 {
     public static Task<string>? LastFindSubnauticaTask;
     private static bool hasInstantLaunched;
-    private readonly DialogService dialogService = dialogService;
-    private readonly IKeyValueStore keyValueStore = keyValueStore;
-
-    private readonly ServerService serverService = serverService;
 
     [ObservableProperty]
     public partial Platform GamePlatform { get; set; }
@@ -51,12 +47,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        await Task.Run(() =>
-        {
-            GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-            PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
-            HandleInstantLaunchForDevelopment();
-        }, cancellationToken);
+        await gameInstallationService.EnsureInitialRefreshAsync(GameInfo.Subnautica);
+
+        GamePlatform = gameInstallationService.SelectedGame.Platform;
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "";
+        HandleInstantLaunchForDevelopment();
     }
 
     internal override Task ViewContentUnloadAsync()

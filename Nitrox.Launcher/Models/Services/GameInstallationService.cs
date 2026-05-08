@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,11 +26,22 @@ internal sealed partial class GameInstallationService : ObservableObject
     private static readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web);
     private bool hasLoggedInitialCacheSnapshot;
     private readonly HashSet<string> ignoredGamePaths = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Lock initialRefreshTaskLocker = new();
+    private Task? initialRefreshTask;
 
     [ObservableProperty]
     public partial KnownGame SelectedGame { get; set; } = new() { PathToGame = string.Empty, Platform = Platform.NONE };
 
     public AvaloniaList<KnownGame> InstalledGames { get; } = [];
+
+    public Task EnsureInitialRefreshAsync(GameInfo gameInfo)
+    {
+        lock (initialRefreshTaskLocker)
+        {
+            initialRefreshTask ??= Task.Run(async () => await RefreshInstalledGamesAsync(gameInfo));
+            return initialRefreshTask;
+        }
+    }
 
     public async Task<List<KnownGame>> RefreshInstalledGamesAsync(GameInfo gameInfo)
     {
