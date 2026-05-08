@@ -320,7 +320,7 @@ internal sealed partial class ServerEntry : ObservableObject
         using CancellationTokenSource waitProcessExitCts = new(TimeSpan.FromSeconds(20));
         try
         {
-            while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+            while (ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
             {
                 await Task.Delay(200, waitProcessExitCts.Token);
             }
@@ -364,7 +364,7 @@ internal sealed partial class ServerEntry : ObservableObject
                 await Dispatcher.UIThread.InvokeAsync(() => IsServerClosing = true);
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+                    while (ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
                     {
                         try
                         {
@@ -411,7 +411,7 @@ internal sealed partial class ServerEntry : ObservableObject
                     throw new Exception($"{nameof(launcherPath)} must be set");
                 }
 
-                string serverFile = Path.Combine(launcherPath, GetServerExeName());
+                string serverFile = Path.Combine(launcherPath, GetServerFileName());
                 ProcessStartInfo startInfo = new(serverFile)
                 {
                     WorkingDirectory = launcherPath,
@@ -425,6 +425,17 @@ internal sealed partial class ServerEntry : ObservableObject
                     WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     CreateNoWindow = isEmbeddedMode
                 };
+                // On Steam Deck, start through user-wide .dotnet. The default is system-wide which might not work.
+                if (IsSteamOs())
+                {
+                    string dotnetExecutable = Path.Combine(NitroxUser.HomePath, ".dotnet", "dotnet");
+                    if (!File.Exists(dotnetExecutable))
+                    {
+                        throw new FileNotFoundException("A compatible .NET version must be installed by the user to run the server on SteamOS. Please install dotnet to your user home: ~/.dotnet/");
+                    }
+                    startInfo.FileName = dotnetExecutable;
+                    startInfo.ArgumentList.Insert(0, $"{serverFile}.dll");
+                }
                 // Assist server with finding launcher location.
                 if (Directory.Exists(launcherPath))
                 {

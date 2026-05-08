@@ -18,14 +18,14 @@
     <Design.DataContext>
         <designer:DesignManageServerViewModel />
     </Design.DataContext>
-    <UserControl.KeyBindings>
-        <KeyBinding Command="{Binding ForceDeleteServerCommand}" Gesture="Shift+Delete" />
-    </UserControl.KeyBindings>
     <Grid
         Background="{DynamicResource BrandWhite}"
         Classes="viewPadding"
         RowDefinitions="Auto,*,Auto">
         <StackPanel>
+            <!-- Invisible hotkey buttons (workaround for UserControl.KeyBindings not working if a button has focus; after clicking undo / save button) -->
+            <Button IsVisible="False" Command="{Binding ForceDeleteServerCommand}" HotKey="Shift+Delete" />
+
             <Button
                 Background="Transparent"
                 Command="{Binding BackCommand}"
@@ -235,12 +235,12 @@
                         <TextBox
                             IsEnabled="{Binding !ServerIsOnline}"
                             IsReadOnly="{Binding !Server.IsNewServer}"
-                            MaxLength="10"
-                            Text="{Binding ServerSeed, Converter={converters:ToStringConverter}, ConverterParameter=upper}"
+                            MaxLength="30"
+                            Text="{Binding ServerSeed}"
                             Watermark="Server seed">
                             <TextBox.Styles>
                                 <Style Selector="TextBox[IsReadOnly=False]">
-                                    <Setter Property="ToolTip.Tip" Value="Leave blank to automatically generate one" />
+                                    <Setter Property="ToolTip.Tip" Value="Leave blank to automatically generate when the server is first run" />
                                 </Style>
                                 <Style Selector="TextBox[IsReadOnly=True]">
                                     <Setter Property="ToolTip.Tip" Value="Seed cannot be changed for servers that have been run" />

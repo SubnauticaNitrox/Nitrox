@@ -35,7 +35,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
 
         this.RegisterMessageListener<ServerStatusMessage, ServersViewModel>((message, model) =>
         {
-            ServerEntry entry = model.Servers?.FirstOrDefault(s => s.Process?.Id == message.ProcessId);
+            ServerEntry entry = model.Servers?.FirstOrDefault(s => s.LastProcessId == message.ProcessId);
             if (entry == null)
             {
                 return;
@@ -101,7 +101,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
             return;
         }
 
-        manageServerViewModel.LoadFrom(server);
+        await manageServerViewModel.RefreshAndLoadFromAsync(server);
         ChangeView(manageServerViewModel);
     }
 }

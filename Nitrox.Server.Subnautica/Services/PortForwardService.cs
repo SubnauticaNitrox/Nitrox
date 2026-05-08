@@ -6,7 +6,8 @@ using Mono.Nat;
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
-///     Uses <see cref="SubnauticaServerOptions"/> to automatically open server listening port on network router via <a href="https://en.wikipedia.org/wiki/Universal_Plug_and_Play">UPnP</a>.
+///     Uses <see cref="SubnauticaServerOptions" /> to automatically open server listening port on network router via
+///     <a href="https://en.wikipedia.org/wiki/Universal_Plug_and_Play">UPnP</a>.
 /// </summary>
 /// <remarks>
 ///     By port forwarding, incoming connections will be forwarded to the host machine running the game server.<br /><br />
@@ -14,6 +15,7 @@ namespace Nitrox.Server.Subnautica.Services;
 /// </remarks>
 internal class PortForwardService(IOptionsMonitor<SubnauticaServerOptions> optionsProvider, ILogger<PortForwardService> logger) : BackgroundService
 {
+    private readonly string portMappingDescription = $"Nitrox server with process id {Environment.ProcessId}";
     private readonly ILogger<PortForwardService> logger = logger;
     private readonly ConcurrentDictionary<ushort, bool> openedPorts = [];
     private readonly IOptionsMonitor<SubnauticaServerOptions> optionsProvider = optionsProvider;
@@ -105,7 +107,7 @@ internal class PortForwardService(IOptionsMonitor<SubnauticaServerOptions> optio
             return;
         }
 
-        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp, cancellationToken);
+        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp, portMappingDescription, cancellationToken);
         if (!cancellationToken.IsCancellationRequested)
         {
             switch (mappingResult)
