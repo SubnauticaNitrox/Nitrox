@@ -136,7 +136,10 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         this.keyValueStore = keyValueStore;
         this.serverService = serverService;
 
-        ServerEmbedded = keyValueStore.GetPreferEmbedded();
+        if (!IsDesignMode)
+        {
+            ServerEmbedded = keyValueStore.GetPreferEmbedded();
+        }
 
         this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {

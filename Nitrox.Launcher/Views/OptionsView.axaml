@@ -12,7 +12,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
-    xmlns:models="clr-namespace:Nitrox.Model.Platforms.Discovery.Models;assembly=Nitrox.Model">
+    xmlns:models="clr-namespace:Nitrox.Model.Platforms.Discovery.Models;assembly=Nitrox.Model"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
     <Design.DataContext>
         <designer:DesignOptionsViewModel />
     </Design.DataContext>
@@ -83,6 +84,7 @@
                                     <Border>
                                         <RadioButton GroupName="GameSelection"
                                                      Padding="22,15"
+                                                     design:NitroxAttached.GapWidth="22"
                                                      HorizontalAlignment="Stretch"
                                                      HorizontalContentAlignment="Stretch"
                                                      Command="{Binding $parent[ItemsControl].((vm:OptionsViewModel)DataContext).SetSelectedGameCommand}"
