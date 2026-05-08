@@ -226,13 +226,13 @@ public static class NitroxUser
             {
                 homePath = Environment.GetEnvironmentVariable("HOME");
             }
-            if (!Directory.Exists(homePath))
-            {
-                throw new DirectoryNotFoundException("User home directory does not exist or is inaccessible");
-            }
             if (string.IsNullOrWhiteSpace(homePath))
             {
                 throw new InvalidOperationException("User home directory is not given by the operating system");
+            }
+            if (!Directory.Exists(homePath))
+            {
+                throw new DirectoryNotFoundException("User home directory does not exist or is inaccessible");
             }
             return homePath;
         }
