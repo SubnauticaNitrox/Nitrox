@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -27,7 +27,7 @@ using Config = Nitrox.Model.Configuration.SubnauticaServerOptions;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class ManageServerViewModel : RoutableViewModelBase
+internal partial class ManageServerViewModel : RoutableViewModelBase, IServerViewModel
 {
     private readonly string[] advancedSettingsDeniedFields =
     [
