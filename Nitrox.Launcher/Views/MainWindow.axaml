@@ -202,7 +202,7 @@
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
             <!--  Navigation (left side)  -->
             <Border Classes="nav" Grid.Column="0">
-                <Grid RowDefinitions="80,*">
+                <Grid RowDefinitions="Auto,*">
                     <TextBlock Classes="header">NITROX</TextBlock>
                     <Panel Grid.Row="1">
                         <StackPanel Classes="nav">
@@ -377,7 +377,7 @@
                             Padding="5,10,10,10">
                             <Grid ColumnDefinitions="50,*,20">
                                 <Svg
-                                    Classes="icon"
+                                    Classes="icon theme"
                                     Grid.Column="0"
                                     Margin="0,0,5,0"
                                     VerticalAlignment="Center"
@@ -394,6 +394,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top">
                                     <Svg
+                                        Classes="theme"
                                         Path="/Assets/Icons/close.svg"
                                         VerticalAlignment="Top"
                                         Width="10" />

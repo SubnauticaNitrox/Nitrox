@@ -6,9 +6,9 @@ using Nitrox.Model.Platforms.Discovery.Models;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-public class PlatformToIconConverter : Converter<PlatformToIconConverter>
+internal sealed class PlatformToIconConverter : Converter<PlatformToIconConverter>
 {
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return AssetHelper.GetAssetFromStream(GetIconPathForPlatform(value as Platform?), static stream => new Bitmap(stream));
     }

@@ -37,7 +37,7 @@ internal class App : Application
     public static App Instance;
 
     /// <summary>
-    /// If true, allows duplicate instances of the app to be active.
+    ///     If true, allows duplicate instances of the app to be active.
     /// </summary>
     internal static bool allowInstances;
 

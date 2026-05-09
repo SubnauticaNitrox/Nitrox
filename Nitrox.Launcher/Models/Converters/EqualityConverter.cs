@@ -9,13 +9,13 @@ namespace Nitrox.Launcher.Models.Converters;
 ///     Returns true if values are equal to each other.
 ///     Or if value is singular, if parameter is equal to the value.
 /// </summary>
-public class EqualityConverter : Converter<EqualityConverter>, IMultiValueConverter
+internal sealed class EqualityConverter : Converter<EqualityConverter>, IMultiValueConverter
 {
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => Equals(value, parameter);
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => Equals(value, parameter);
 
-    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
 
-    public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
+    object IMultiValueConverter.Convert(IList<object>? values, Type targetType, object? parameter, CultureInfo culture)
     {
         foreach (object val1 in values)
         {

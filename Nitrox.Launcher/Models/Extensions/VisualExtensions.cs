@@ -31,6 +31,8 @@ public static class VisualExtensions
         }
         else if (OperatingSystem.IsWindows())
         {
+            window.WindowDecorations = WindowDecorations.None;
+
             nint? windowHandle = window.TryGetPlatformHandle()?.Handle;
             if (!windowHandle.HasValue)
             {

@@ -33,7 +33,6 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="ConsoleAppFramework">
             <PrivateAssets>all</PrivateAssets>
@@ -54,11 +53,6 @@
         </PackageReference>
         <PackageReference Include="Svg.Controls.Skia.Avalonia" />
         <PackageReference Include="Xaml.Behaviors.Avalonia" />
-    </ItemGroup>
-    
-    <!-- Temp fix for Avalonia 11.3 bug: https://github.com/AvaloniaUI/Avalonia/discussions/18971#discussioncomment-13533852 -->
-    <ItemGroup Condition="$(_IsLinux) or $(_IsLinuxTarget)">
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     </ItemGroup>
 
     <ItemGroup>
