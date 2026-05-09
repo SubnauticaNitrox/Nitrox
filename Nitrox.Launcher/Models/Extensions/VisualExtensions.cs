@@ -18,13 +18,13 @@ public static class VisualExtensions
         if (OperatingSystem.IsLinux())
         {
             // On Linux systems, Avalonia has trouble allowing windows to resize without "decorations". So we enable it in full, but hide the custom titlebar as it'll look bad.
-            window.SystemDecorations = SystemDecorations.Full;
+            window.WindowDecorations = WindowDecorations.Full;
             NitroxAttached.SetUseCustomTitleBar(window, false);
         }
         else if (OperatingSystem.IsMacOS())
         {
             // On MacOS, it's uncommon to override the system titlebar
-            window.SystemDecorations = SystemDecorations.Full;
+            window.WindowDecorations = WindowDecorations.Full;
             window.ExtendClientAreaToDecorationsHint = false;
             window.ExtendClientAreaTitleBarHeightHint = -1;
             NitroxAttached.SetUseCustomTitleBar(window, false);

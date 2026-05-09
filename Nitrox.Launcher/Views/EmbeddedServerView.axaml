@@ -111,7 +111,7 @@
             <TextBox
                 Grid.Column="0"
                 Text="{Binding ServerCommand}"
-                Watermark="A server command here"
+                PlaceholderText="A server command here"
                 x:Name="ServerCommandTextBox"
                 IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                 <Interaction.Behaviors>
@@ -138,7 +138,6 @@
                     ToolTip.Tip="Send command"
                     IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                     <Svg
-                        Css="* { fill: #fff; stroke: #fff; }"
                         Height="20"
                         Path="/Assets/Icons/send.svg" />
                 </Button>

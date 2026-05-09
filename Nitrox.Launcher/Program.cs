@@ -38,9 +38,11 @@ internal static class Program
 
     private static AppBuilder BuildAvaloniaApp()
     {
+#if DEBUG
         // https://github.com/wieslawsoltes/Svg.Skia?tab=readme-ov-file#avalonia-previewer
         GC.KeepAlive(typeof(SvgImageExtension).Assembly);
         GC.KeepAlive(typeof(Avalonia.Svg.Skia.Svg).Assembly);
+#endif
 
         return App.Create();
     }

@@ -233,7 +233,7 @@ public class ProcessEx : IDisposable
             try
             {
                 result = selector(procEx);
-                if (result is not Process or ProcessEx)
+                if (result is not Process)
                 {
                     procEx?.Dispose();
                 }

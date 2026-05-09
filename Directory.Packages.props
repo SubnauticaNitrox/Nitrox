@@ -6,19 +6,17 @@
     </PropertyGroup>
     
     <PropertyGroup>
-        <AvaloniaVersion>11.3.12</AvaloniaVersion>
-        <NetSdkVersion>10.0.5</NetSdkVersion>
+        <AvaloniaVersion>12.0.2</AvaloniaVersion>
+        <NetSdkVersion>10.0.7</NetSdkVersion>
     </PropertyGroup>
     
     <ItemGroup>
         <PackageVersion Include="AssetsTools.NET" Version="3.0.0-preview1" />
         <PackageVersion Include="Autofac" Version="[4.9.4]" />
         <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-        <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-        <PackageVersion Include="Avalonia.Svg.Skia" Version="11.3.0" />
+        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0" />
+        
         <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
-        <PackageVersion Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
-        <PackageVersion Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6" />
         <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
         <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" />
         <PackageVersion Include="Bogus" Version="35.6.3" />
@@ -60,6 +58,7 @@
         <PackageVersion Include="ServiceScan.SourceGenerator" Version="2.4.1" />
         <PackageVersion Include="SixLabors.ImageSharp" Version="[2.1.11]" />
         <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+        <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.6" />
         <PackageVersion Include="System.Buffers" Version="4.6.1" />
         <PackageVersion Include="System.ComponentModel" Version="4.3.0" />
         <PackageVersion Include="System.IO.Compression" Version="4.3.0" />
@@ -69,6 +68,7 @@
         <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
         <PackageVersion Include="System.Text.Json" Version="$(NetSdkVersion)" />
         <PackageVersion Include="System.ValueTuple" Version="4.6.1" />
+        <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0" />
         <PackageVersion Include="ZLogger" Version="2.5.10" />
     </ItemGroup>
     

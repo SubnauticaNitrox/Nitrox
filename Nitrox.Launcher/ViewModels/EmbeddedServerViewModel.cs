@@ -17,7 +17,7 @@ namespace Nitrox.Launcher.ViewModels;
 /// <summary>
 ///     Each (embedded) running server should have its own ViewModel.
 /// </summary>
-internal partial class EmbeddedServerViewModel : RoutableViewModelBase
+internal partial class EmbeddedServerViewModel : RoutableViewModelBase, IServerViewModel
 {
     private readonly CircularBuffer<string> commandHistory = new(1000);
     private int? selectedHistoryIndex;

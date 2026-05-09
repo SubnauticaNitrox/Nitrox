@@ -2,12 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Net;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -17,7 +15,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
@@ -28,7 +25,6 @@ using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
-using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
@@ -41,7 +37,7 @@ internal class App : Application
     public static App Instance;
 
     /// <summary>
-    ///     If true, allows duplicate instances of the app to be active.
+    /// If true, allows duplicate instances of the app to be active.
     /// </summary>
     internal static bool allowInstances;
 
@@ -88,7 +84,7 @@ internal class App : Application
             preferredRenderingMode = rendering;
             App.allowInstances = allowInstances;
 
-            if (isCrashReport && CrashReporter.GetLastReport() is {} crashLog)
+            if (isCrashReport && CrashReporter.GetLastReport() is { } crashLog)
             {
                 StartupWindowFactory = () => new CrashWindow { DataContext = new CrashWindowViewModel { Title = $"Nitrox {NitroxEnvironment.Version} - Crash Report", Message = crashLog } };
             }
@@ -162,14 +158,20 @@ internal class App : Application
         }
     }
 
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+
+#if DEBUG
+        this.AttachDeveloperTools();
+#endif
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {
         Instance = this;
         Debug.Assert(StartupWindowFactory != null, $"{nameof(StartupWindowFactory)} != null");
 
-        FixAvaloniaPlugins();
         ApplyAppDefaults();
 
         Dispatcher.UIThread.UnhandledException += (_, eventArgs) => HandleUnhandledException(eventArgs.Exception);
@@ -186,20 +188,6 @@ internal class App : Application
         }
 
         CrashReporter.ReportAndExit(ex);
-    }
-
-    /// <summary>
-    ///     Disables Avalonia plugins which are replaced by MVVM Toolkit.
-    /// </summary>
-    private void FixAvaloniaPlugins()
-    {
-        for (int i = BindingPlugins.DataValidators.Count - 1; i >= 0; i--)
-        {
-            if (BindingPlugins.DataValidators[i] is DataAnnotationsValidationPlugin)
-            {
-                BindingPlugins.DataValidators.RemoveAt(i);
-            }
-        }
     }
 
     private void ApplyAppDefaults()
