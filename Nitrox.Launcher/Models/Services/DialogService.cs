@@ -49,7 +49,7 @@ internal sealed class DialogService(Func<Window> dialogOwnerProvider, IEnumerabl
         ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Title = title ?? "Error";
-            model.Description = string.IsNullOrWhiteSpace(description) ? exception.ToString() : $"{description}{Environment.NewLine}{exception}";
+            model.Description = string.IsNullOrWhiteSpace(description) ? exception.ToString() : $"[b][i]{description}[/b][/i]{Environment.NewLine}{Environment.NewLine}[#f94239]{exception}";
             model.ButtonOptions = ButtonOptions.OkClipboard;
         });
 

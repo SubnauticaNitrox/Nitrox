@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,8 +13,9 @@ namespace Nitrox.Launcher.ViewModels.Abstract;
 /// </summary>
 public abstract partial class ModalViewModelBase : ObservableValidator, IMessageReceiver
 {
-    [ObservableProperty] private ButtonOptions? selectedOption;
-
+    [ObservableProperty]
+    public partial ButtonOptions? SelectedOption { get; set; }
+    
     protected ModalViewModelBase()
     {
         // Always run validation first so HasErrors is set (i.e. trigger CanExecute logic).

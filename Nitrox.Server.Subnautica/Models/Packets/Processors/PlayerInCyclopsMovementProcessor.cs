@@ -4,9 +4,8 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class PlayerInCyclopsMovementProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, ILogger<PlayerInCyclopsMovementProcessor> logger) : IAuthPacketProcessor<PlayerInCyclopsMovement>
+internal sealed class PlayerInCyclopsMovementProcessor(EntityRegistry entityRegistry, ILogger<PlayerInCyclopsMovementProcessor> logger) : IAuthPacketProcessor<PlayerInCyclopsMovement>
 {
-    private readonly IPacketSender packetSender = packetSender;
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly ILogger<PlayerInCyclopsMovementProcessor> logger = logger;
 

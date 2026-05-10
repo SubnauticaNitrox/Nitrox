@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using Avalonia.Controls;
 using Nitrox.Model.Platforms.OS.Shared;
 
@@ -7,6 +8,9 @@ namespace Nitrox.Launcher;
 
 internal static class GlobalStatic
 {
+    private const string SERVER_FILE_NAME_NO_EXT = "Nitrox.Server.Subnautica";
+    private static long isSteamOs = -1;
+
     public static bool IsDesignMode => Design.IsDesignMode;
 
     /// <inheritdoc cref="ProcessEx.OpenUri" />
@@ -44,13 +48,51 @@ internal static class GlobalStatic
         return false;
     }
 
-    public static string GetServerExeName()
+    public static string GetServerFileName()
     {
-        string serverExeName = "Nitrox.Server.Subnautica.exe";
-        if (!OperatingSystem.IsWindows())
+        if (OperatingSystem.IsWindows())
         {
-            serverExeName = "Nitrox.Server.Subnautica";
+            return $"{SERVER_FILE_NAME_NO_EXT}.exe";
         }
-        return serverExeName;
+
+        return SERVER_FILE_NAME_NO_EXT;
+    }
+
+    public static string GetServerProcessName()
+    {
+        // On Steam Deck, server process name is "dotnet" as it's started through command line.
+        if (IsSteamOs())
+        {
+            return "dotnet";
+        }
+
+        return GetServerFileName();
+    }
+
+    public static bool IsSteamOs()
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            return false;
+        }
+        switch (Interlocked.Read(ref isSteamOs))
+        {
+            case 1:
+                return true;
+            case 0:
+                return false;
+        }
+
+        try
+        {
+            string osReleaseInfo = File.ReadAllText("/etc/os-release");
+            bool result = osReleaseInfo.Contains(@"NAME=""SteamOS""", StringComparison.Ordinal);
+            Interlocked.Exchange(ref isSteamOs, result ? 1 : 0);
+            return result;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -35,82 +36,86 @@ internal sealed partial class ServerEntry : ObservableObject
     public const string DEFAULT_SERVER_ICON_NAME = "servericon.png";
 
     private static readonly ConcurrentDictionary<string, ServerEntry> entriesByDirectory = [];
-
     private static readonly SubnauticaServerOptions serverDefaults = new();
 
     [ObservableProperty]
-    private bool allowCommands = !serverDefaults.DisableConsole;
+    public partial bool AllowCommands { get; set; } = !serverDefaults.DisableConsole;
 
     [ObservableProperty]
-    private bool allowKeepInventory = serverDefaults.KeepInventoryOnDeath;
+    public partial bool AllowKeepInventory { get; set; } = serverDefaults.KeepInventoryOnDeath;
 
     [ObservableProperty]
-    private bool allowLanDiscovery = serverDefaults.LanDiscovery;
+    public partial bool AllowLanDiscovery { get; set; } = serverDefaults.LanDiscovery;
 
     [ObservableProperty]
-    private bool allowPvP = serverDefaults.PvpEnabled;
+    public partial bool AllowPvP { get; set; } = serverDefaults.PvpEnabled;
 
     [ObservableProperty]
-    private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
+    public partial int AutoSaveInterval { get; set; } = serverDefaults.SaveInterval / 1000;
 
     public Channel<string> CommandQueue = Channel.CreateUnbounded<string>();
     private CancellationTokenSource? cts;
 
     [ObservableProperty]
-    private SubnauticaGameMode gameMode = serverDefaults.GameMode;
+    public partial SubnauticaGameMode GameMode { get; set; } = serverDefaults.GameMode;
 
     /// <summary>
     ///     Should not be set to persist <see cref="IsEmbedded"/> change. Use <see cref="IKeyValueStore" /> instead.
     /// </summary>
     [ObservableProperty]
-    private bool isEmbedded;
+    public partial bool IsEmbedded { get; set; }
 
     [ObservableProperty]
-    private bool isNewServer = true;
+    public partial bool IsNewServer { get; set; } = true;
 
     [ObservableProperty]
-    private bool isOnline;
+    public partial bool IsOnline { get; set; }
 
     [ObservableProperty]
-    private bool isServerClosing;
+    public partial bool IsServerClosing { get; set; }
 
     [ObservableProperty]
-    private DateTime lastAccessedTime = DateTime.Now;
+    public partial DateTime LastAccessedTime { get; set; } = DateTime.Now;
 
     private int lastProcessId;
 
     [ObservableProperty]
-    private int maxPlayers = serverDefaults.MaxConnections;
+    public partial int MaxPlayers { get; set; } = serverDefaults.MaxConnections;
 
     [ObservableProperty]
-    private string? name;
+    public partial string? Name { get; set; }
 
     [ObservableProperty]
-    private string? password;
+    public partial string? Password { get; set; }
 
     [ObservableProperty]
-    private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
+    public partial Perms PlayerPermissions { get; set; } = serverDefaults.DefaultPlayerPerm;
 
     [ObservableProperty]
-    private int players;
+    public partial int PlayerCount { get; set; }
 
     [ObservableProperty]
-    private int port = serverDefaults.ServerPort;
+    [NotifyPropertyChangedFor(nameof(PlayerNamesTooltip))]
+    public partial List<string> PlayerNames { get; set; } = [];
 
     [ObservableProperty]
-    private bool portForward = serverDefaults.PortForward;
+    public partial int Port { get; set; } = serverDefaults.ServerPort;
 
     [ObservableProperty]
-    private string? seed;
+    public partial bool PortForward { get; set; } = serverDefaults.PortForward;
 
     [ObservableProperty]
-    private Bitmap? serverIcon;
+    public partial string? Seed { get; set; }
 
     [ObservableProperty]
-    private Version version = NitroxEnvironment.Version;
+    public partial Bitmap? ServerIcon { get; set; }
+
+    [ObservableProperty]
+    public partial Version Version { get; set; } = NitroxEnvironment.Version;
 
     internal ServerProcess? Process { get; private set; }
     public AvaloniaList<OutputLine> Output { get; } = [];
+    public string? PlayerNamesTooltip => PlayerNames.Count == 0 ? null : string.Join(Environment.NewLine, PlayerNames);
 
     /// <summary>
     ///     Gets the last process id known by this server entry.
@@ -315,7 +320,7 @@ internal sealed partial class ServerEntry : ObservableObject
         using CancellationTokenSource waitProcessExitCts = new(TimeSpan.FromSeconds(20));
         try
         {
-            while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+            while (ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
             {
                 await Task.Delay(200, waitProcessExitCts.Token);
             }
@@ -337,7 +342,7 @@ internal sealed partial class ServerEntry : ObservableObject
         switch (e.PropertyName)
         {
             case nameof(IsOnline) when LastProcessId > 0:
-                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, Players));
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, PlayerCount));
                 break;
         }
         base.OnPropertyChanged(e);
@@ -351,7 +356,7 @@ internal sealed partial class ServerEntry : ObservableObject
             await c.CancelAsync();
         }
         cts?.Dispose();
-        cts = new();
+        cts = new CancellationTokenSource();
         cts.Token.Register(async void () =>
         {
             try
@@ -359,7 +364,7 @@ internal sealed partial class ServerEntry : ObservableObject
                 await Dispatcher.UIThread.InvokeAsync(() => IsServerClosing = true);
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    while (ProcessEx.ProcessExists(GetServerExeName(), ex => ex.Id == LastProcessId))
+                    while (ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
                     {
                         try
                         {
@@ -372,7 +377,8 @@ internal sealed partial class ServerEntry : ObservableObject
                         }
                     }
                     CommandQueue = Channel.CreateUnbounded<string>();
-                    Players = 0;
+                    PlayerCount = 0;
+                    PlayerNames = [];
                     IsOnline = false;
                     Output.Clear();
                 });
@@ -405,7 +411,7 @@ internal sealed partial class ServerEntry : ObservableObject
                     throw new Exception($"{nameof(launcherPath)} must be set");
                 }
 
-                string serverFile = Path.Combine(launcherPath, GetServerExeName());
+                string serverFile = Path.Combine(launcherPath, GetServerFileName());
                 ProcessStartInfo startInfo = new(serverFile)
                 {
                     WorkingDirectory = launcherPath,
@@ -419,6 +425,17 @@ internal sealed partial class ServerEntry : ObservableObject
                     WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     CreateNoWindow = isEmbeddedMode
                 };
+                // On Steam Deck, start through user-wide .dotnet. The default is system-wide which might not work.
+                if (IsSteamOs())
+                {
+                    string dotnetExecutable = Path.Combine(NitroxUser.HomePath, ".dotnet", "dotnet");
+                    if (!File.Exists(dotnetExecutable))
+                    {
+                        throw new FileNotFoundException("A compatible .NET version must be installed by the user to run the server on SteamOS. Please install dotnet to your user home: ~/.dotnet/");
+                    }
+                    startInfo.FileName = dotnetExecutable;
+                    startInfo.ArgumentList.Insert(0, $"{serverFile}.dll");
+                }
                 // Assist server with finding launcher location.
                 if (Directory.Exists(launcherPath))
                 {

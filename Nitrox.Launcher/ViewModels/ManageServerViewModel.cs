@@ -41,60 +41,59 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private readonly StorageService storageService;
 
     [ObservableProperty]
-    private ServerEntry? server;
+    public partial ServerEntry? Server { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowCommands;
+    public partial bool ServerAllowCommands { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowKeepInventory;
+    public partial bool ServerAllowKeepInventory { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowLanDiscovery;
+    public partial bool ServerAllowLanDiscovery { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAllowPvP;
+    public partial bool ServerAllowPvP { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private bool serverAutoPortForward;
+    public partial bool ServerAutoPortForward { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Range(10, 86400, ErrorMessage = "Value must be between 10s and 24 hours (86400s).")]
-    private int serverAutoSaveInterval;
+    public partial int ServerAutoSaveInterval { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private Perms serverDefaultPlayerPerm;
+    public partial Perms ServerDefaultPlayerPerm { get; set; }
 
     [ObservableProperty]
-    private bool serverEmbedded;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private SubnauticaGameMode serverGameMode;
+    public partial bool ServerEmbedded { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private Bitmap? serverIcon;
+    public partial SubnauticaGameMode ServerGameMode { get; set; }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
+    public partial Bitmap? ServerIcon { get; set; }
     private string? serverIconDir;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
-    private bool serverIsOnline;
+    public partial bool ServerIsOnline { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [Range(1, 1000)]
     [NotifyDataErrorInfo]
-    private int serverMaxPlayers;
+    public partial int ServerMaxPlayers { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
@@ -103,28 +102,27 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [FileName]
     [NotEndsWith(".")]
     [NitroxUniqueSaveName(nameof(SavesFolderDir), true, nameof(OriginalServerName))]
-    private string? serverName;
+    public partial string? ServerName { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private string? serverPassword;
+    public partial string? ServerPassword { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
-    private int serverPlayers;
+    public partial int ServerPlayerCount { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Range(ushort.MinValue, ushort.MaxValue)]
-    private int serverPort;
+    public partial int ServerPort { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
-    private string? serverSeed;
-
+    public partial string? ServerSeed { get; set; }
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string? OriginalServerName => Server?.Name;
 
@@ -142,12 +140,12 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
 
         this.RegisterMessageListener<ServerStatusMessage, ManageServerViewModel>((status, vm) =>
         {
-            if (vm.server?.Process?.Id != status.ProcessId)
+            if (vm.Server?.LastProcessId != status.ProcessId)
             {
                 return;
             }
             vm.ServerIsOnline = status.IsOnline;
-            vm.ServerPlayers = status.PlayerCount;
+            vm.ServerPlayerCount = status.PlayerCount;
         });
     }
 
@@ -172,10 +170,14 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [MemberNotNull(nameof(Server))]
-    public void LoadFrom(ServerEntry serverEntry)
+    public async Task RefreshAndLoadFromAsync(ServerEntry entry, string? savePath = null)
     {
-        Server = serverEntry;
-
+        savePath ??= entry.Name != null ? Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), entry.Name) : null;
+        if (savePath != null)
+        {
+            await entry.RefreshFromDirectoryAsync(savePath);
+        }
+        Server = entry;
         ServerIsOnline = Server.IsOnline;
         ServerName = Server.Name;
         ServerIcon = Server.ServerIcon;
@@ -185,7 +187,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerDefaultPlayerPerm = Server.PlayerPermissions;
         ServerAutoSaveInterval = Server.AutoSaveInterval;
         ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
+        ServerPlayerCount = Server.PlayerCount;
         ServerPort = Server.Port;
         ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
@@ -203,7 +205,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                                   ServerDefaultPlayerPerm != Server.PlayerPermissions ||
                                   ServerAutoSaveInterval != Server.AutoSaveInterval ||
                                   ServerMaxPlayers != Server.MaxPlayers ||
-                                  ServerPlayers != Server.Players ||
+                                  ServerPlayerCount != Server.PlayerCount ||
                                   ServerPort != Server.Port ||
                                   ServerAutoPortForward != Server.PortForward ||
                                   ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
@@ -261,7 +263,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         Server.PlayerPermissions = ServerDefaultPlayerPerm;
         Server.AutoSaveInterval = ServerAutoSaveInterval;
         Server.MaxPlayers = ServerMaxPlayers;
-        Server.Players = ServerPlayers;
+        Server.PlayerCount = ServerPlayerCount;
         Server.Port = ServerPort;
         Server.PortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
@@ -311,7 +313,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         ServerDefaultPlayerPerm = Server.PlayerPermissions;
         ServerAutoSaveInterval = Server.AutoSaveInterval;
         ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
+        ServerPlayerCount = Server.PlayerCount;
         ServerPort = Server.Port;
         ServerAutoPortForward = Server.PortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
@@ -375,7 +377,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         {
             StoreConfig(config);
         }
-        LoadFrom(Server);
+        await RefreshAndLoadFromAsync(Server);
     }
 
     [RelayCommand]
@@ -410,8 +412,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                     TryDeleteFile(file);
                 }
                 await ZipFile.ExtractToDirectoryAsync(backupFile, SaveFolderDirectory, true);
-                await Server.RefreshFromDirectoryAsync(SaveFolderDirectory);
-                LoadFrom(Server);
+                await RefreshAndLoadFromAsync(Server, SaveFolderDirectory);
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)

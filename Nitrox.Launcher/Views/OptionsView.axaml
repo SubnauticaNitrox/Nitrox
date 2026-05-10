@@ -236,12 +236,12 @@
                             FontSize="15"
                             Foreground="{DynamicResource BrandBlack}"
                             Opacity="0.75"
-                            Text="{Binding ProgramDataFolderDir}"
+                            Text="{Binding ProgramDataPath}"
                             VerticalAlignment="Center" />
                         <Button
                             Classes="primary"
                             Command="{Binding OpenFolderCommand}"
-                            CommandParameter="{Binding ProgramDataFolderDir}"
+                            CommandParameter="{Binding ProgramDataPath}"
                             Content="Open"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
@@ -252,24 +252,24 @@
                 </Border>
 
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
-                        CommandParameter="{Binding ScreenshotsFolderDir}"
-                        ToolTip.Tip="{Binding ScreenshotsFolderDir}">
+                        CommandParameter="{Binding ScreenshotsPath}"
+                        ToolTip.Tip="{Binding ScreenshotsPath}">
                     <StackPanel>
                         <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                         <TextBlock Text="Open Screenshots folder" />
                     </StackPanel>
                 </Button>
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
-                        CommandParameter="{Binding SavesFolderDir}"
-                        ToolTip.Tip="{Binding SavesFolderDir}">
+                        CommandParameter="{Binding SavesPath}"
+                        ToolTip.Tip="{Binding SavesPath}">
                     <StackPanel>
                         <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                         <TextBlock Text="Open Saves folder" />
                     </StackPanel>
                 </Button>
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
-                        CommandParameter="{Binding LogsFolderDir}"
-                        ToolTip.Tip="{Binding LogsFolderDir}">
+                        CommandParameter="{Binding LogsPath}"
+                        ToolTip.Tip="{Binding LogsPath}">
                     <StackPanel>
                         <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                         <TextBlock Text="Open Logs folder" />

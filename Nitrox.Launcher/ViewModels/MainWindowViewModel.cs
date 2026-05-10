@@ -35,10 +35,10 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
     private readonly UpdatesViewModel updatesViewModel;
 
     [ObservableProperty]
-    private object? activeViewModel;
+    public partial object? ActiveViewModel { get; set; }
 
     [ObservableProperty]
-    private bool updateAvailableOrUnofficial;
+    public partial bool UpdateAvailableOrUnofficial { get; set; }
 
     public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
@@ -75,7 +75,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         });
         this.RegisterMessageListener<NotificationCloseMessage, MainWindowViewModel>(static async (message, vm) =>
         {
-            message.Item.Dismissed = true;
+            message.Item.IsDismissed = true;
             await Task.Delay(1000); // Wait for animations
             if (!IsDesignMode) // Prevent design preview crashes
             {
@@ -145,7 +145,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
-        if (args.Cancel == false && mainWindowProvider().IsClosingByUser(args))
+        if (!args.Cancel && mainWindowProvider().IsClosingByUser(args))
         {
             mainWindowProvider().CloseByCode();
         }

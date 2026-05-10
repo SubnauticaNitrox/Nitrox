@@ -32,29 +32,28 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
     private CancellationTokenSource? downloadCts;
 
     [ObservableProperty]
-    private double downloadProgress;
+    public partial double DownloadProgress { get; set; }
 
     [ObservableProperty]
-    private string? downloadStatus;
+    public partial string? DownloadStatus { get; set; }
 
     [ObservableProperty]
-    private bool newUpdateAvailable;
+    public partial bool NewUpdateAvailable { get; set; }
 
     [ObservableProperty]
-    private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
+    public partial AvaloniaList<NitroxChangelog> NitroxChangelogs { get; set; } = [];
 
     [ObservableProperty]
-    private string? officialVersion;
+    public partial string? OfficialVersion { get; set; }
 
     [ObservableProperty]
-    private bool usingOfficialVersion;
+    public partial bool UsingOfficialVersion { get; set; }
 
     [ObservableProperty]
-    private AvaloniaList<BackupInfo> availableBackups = [];
+    public partial AvaloniaList<BackupInfo> AvailableBackups { get; set; } = [];
 
     [ObservableProperty]
-    private string? version;
-
+    public partial string? Version { get; set; }
     public async Task<bool> IsNitroxUpdateAvailableAsync()
     {
         try

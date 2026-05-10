@@ -17,7 +17,6 @@ namespace Nitrox.Server.Subnautica.Models
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; }
 
-        public PlayerSettings? PlayerSettings => PlayerContext?.PlayerSettings;
         public PlayerContext? PlayerContext { get; set; }
         public PeerId Id { get; init; }
         public SessionId SessionId { get; set; }

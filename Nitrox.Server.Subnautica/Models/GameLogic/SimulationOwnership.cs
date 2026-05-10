@@ -24,7 +24,7 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
         {
             lock (playerLocksById)
             {
-                // If no one is simulating then aquire a lock for this player
+                // If no one is simulating then acquire a lock for this player
                 if (!playerLocksById.TryGetValue(id, out PlayerLock playerLock))
                 {
                     playerLocksById[id] = new PlayerLock(player, requestedLock);

@@ -20,14 +20,15 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
     private int processId;
     private string saveName;
 
-    public ValueTask SetPlayerCount(int playerCount)
+    public ValueTask SetPlayers(string[] players)
     {
         ServerEntry? entry = serverService.GetServerEntryByAnyOf(processId, saveName);
         if (entry == null)
         {
             return CompletedTask;
         }
-        entry.Players = playerCount;
+        entry.PlayerCount = players.Length;
+        entry.PlayerNames = [..players];
         return CompletedTask;
     }
 

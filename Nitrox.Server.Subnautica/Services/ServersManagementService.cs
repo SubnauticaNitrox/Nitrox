@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.IO;
+using System.Linq;
 using System.Threading.Channels;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -114,7 +115,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
 
     private async Task PushPollDataAsync(IServersManagement api)
     {
-        await api.SetPlayerCount(playerManager.PlayerCount);
+        await api.SetPlayers(playerManager.ConnectedPlayers().Select(player => player.Name).ToArray());
     }
 
     private async Task PushLogsAsync(IServersManagement api, CancellationToken cancellationToken)
@@ -154,6 +155,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
         {
             RpcException { Status.StatusCode: StatusCode.Unavailable or StatusCode.Cancelled } => true,
             OperationCanceledException => true,
+            ObjectDisposedException { ObjectName: nameof(StreamingHubClient) } => true,
             _ => false
         };
     }

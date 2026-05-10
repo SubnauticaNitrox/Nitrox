@@ -16,6 +16,8 @@
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+        <!-- Disable CET because not everyone running Nitrox uses an up-to-date Windows. See for more info: https://github.com/SubnauticaNitrox/Nitrox/issues/2637 -->
+        <CETCompat Condition="'$(_IsWindowsTarget)' == 'true'">false</CETCompat>
     </PropertyGroup>
 
     <!-- Nitrox specific properties -->

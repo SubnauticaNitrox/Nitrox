@@ -359,9 +359,21 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
+            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(GetAllLibraryPaths(steamPath)));
         }
 
         return result;
+
+        static string JoinPaths(params IEnumerable<string?> paths)
+        {
+            paths = paths.Where(path => path != null).Distinct().ToList();
+            string? invalidPath = paths.FirstOrDefault(path => path != null && path.Contains(':'));
+            if (invalidPath != null)
+            {
+                throw new Exception($"Path '{invalidPath}' contains invalid character ':'");
+            }
+            return string.Join(":", paths);
+        }
 
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)

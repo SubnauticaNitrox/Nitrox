@@ -23,16 +23,23 @@ public static class NatHelper
         }
     }).ConfigureAwait(false);
 
-    public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
+    /// <summary>
+    ///     Deletes a port mapping from the router firewall.
+    /// </summary>
+    /// <param name="port">Port of the mapping</param>
+    /// <param name="protocol">Protocol of the mapping</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>True if port mapping was successfully removed</returns>
+    public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol, CancellationToken cancellationToken = default)
     {
         int tries = 3;
         while (tries-- >= 0)
         {
-            if (await TryRemoveAsync(port, protocol, ct))
+            if (await TryRemoveAsync(port, protocol, cancellationToken))
             {
                 return true;
             }
-            await Task.Delay(250, ct);
+            await Task.Delay(250, cancellationToken);
         }
         return false;
 
@@ -48,7 +55,7 @@ public static class NatHelper
                 {
                     return false;
                 }
-            }, new Mapping(protocol, port, port), ct).ConfigureAwait(false);
+            }, CreateMapping(port, port, protocol, ""), ct).ConfigureAwait(false);
         }
     }
 
@@ -67,9 +74,8 @@ public static class NatHelper
         }, (port, protocol), ct).ConfigureAwait(false);
     }
 
-    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol, CancellationToken ct = default)
+    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol, string description, CancellationToken ct = default)
     {
-        Mapping mapping = new(protocol, port, port);
         return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
         {
             try
@@ -80,14 +86,7 @@ public static class NatHelper
             {
                 return ExceptionToCode(ex);
             }
-        }, mapping, ct).ConfigureAwait(false);
-    }
-
-    public enum ResultCodes
-    {
-        SUCCESS,
-        CONFLICT_IN_MAPPING_ENTRY,
-        UNKNOWN_ERROR
+        }, CreateMapping(port, port, protocol, description), ct).ConfigureAwait(false);
     }
 
     private static ResultCodes ExceptionToCode(MappingException exception) => exception.ErrorCode switch
@@ -96,11 +95,23 @@ public static class NatHelper
         _ => ResultCodes.UNKNOWN_ERROR
     };
 
+    private static Mapping CreateMapping(int privatePort, int publicPort, Protocol protocol, string description) => new(protocol, privatePort, publicPort, int.MaxValue, description);
+
+    public enum ResultCodes
+    {
+        SUCCESS,
+        CONFLICT_IN_MAPPING_ENTRY,
+        UNKNOWN_ERROR
+    }
+
     private static class MonoNatHelper
     {
         private static readonly ConcurrentDictionary<EndPoint, INatDevice> discoveredDevices = new();
         private static readonly object discoverTaskLocker = new();
-        private static Task<IEnumerable<INatDevice>> discoverTaskCache;
+        private static Task<IEnumerable<INatDevice>>? discoverTaskCache;
+
+        private static DateTime lastFoundDeviceTime;
+        private static readonly object lastFoundDeviceTimeLock = new();
 
         public static Task<IEnumerable<INatDevice>> DiscoverAsync()
         {
@@ -114,49 +125,6 @@ public static class NatHelper
 
                 return discoverTaskCache = DiscoveryUncachedAsync(60000, 5000);
             }
-        }
-
-        private static DateTime lastFoundDeviceTime;
-        private static readonly object lastFoundDeviceTimeLock = new();
-        private static async Task<IEnumerable<INatDevice>> DiscoveryUncachedAsync(int timeoutInMs, int timeoutNoMoreDevicesMs)
-        {
-            void Handler(object sender, DeviceEventArgs args)
-            {
-                lock (lastFoundDeviceTimeLock)
-                {
-                    lastFoundDeviceTime = DateTime.UtcNow;
-                }
-                discoveredDevices.TryAdd(args.Device.DeviceEndpoint, args.Device);
-            }
-
-            NatUtility.DeviceFound += Handler;
-            NatUtility.StartDiscovery();
-            try
-            {
-                CancellationTokenSource cancellation = new(timeoutInMs);
-
-                lock (lastFoundDeviceTimeLock)
-                {
-                    lastFoundDeviceTime = DateTime.UtcNow;
-                }
-                bool hasFoundDeviceRecently = true;
-                while (!cancellation.IsCancellationRequested && hasFoundDeviceRecently)
-                {
-                    lock (lastFoundDeviceTimeLock)
-                    {
-                        hasFoundDeviceRecently = (DateTime.UtcNow - lastFoundDeviceTime).TotalMilliseconds <= timeoutNoMoreDevicesMs;
-                    }
-
-                    await Task.Delay(10, cancellation.Token).ConfigureAwait(false);
-                }
-            }
-            finally
-            {
-                NatUtility.StopDiscovery();
-                NatUtility.DeviceFound -= Handler;
-            }
-
-            return discoveredDevices.Values;
         }
 
         public static async Task<TResult> GetFirstAsync<TResult>(Func<INatDevice, Task<TResult>> predicate) => await GetFirstAsync(static (device, p) => p(device), predicate);
@@ -211,6 +179,47 @@ public static class NatHelper
             } while (!ct.IsCancellationRequested && !discoverTask.IsCompleted);
 
             return default;
+        }
+
+        private static async Task<IEnumerable<INatDevice>> DiscoveryUncachedAsync(int timeoutInMs, int timeoutNoMoreDevicesMs)
+        {
+            void Handler(object sender, DeviceEventArgs args)
+            {
+                lock (lastFoundDeviceTimeLock)
+                {
+                    lastFoundDeviceTime = DateTime.UtcNow;
+                }
+                discoveredDevices.TryAdd(args.Device.DeviceEndpoint, args.Device);
+            }
+
+            NatUtility.DeviceFound += Handler;
+            NatUtility.StartDiscovery();
+            try
+            {
+                CancellationTokenSource cancellation = new(timeoutInMs);
+
+                lock (lastFoundDeviceTimeLock)
+                {
+                    lastFoundDeviceTime = DateTime.UtcNow;
+                }
+                bool hasFoundDeviceRecently = true;
+                while (!cancellation.IsCancellationRequested && hasFoundDeviceRecently)
+                {
+                    lock (lastFoundDeviceTimeLock)
+                    {
+                        hasFoundDeviceRecently = (DateTime.UtcNow - lastFoundDeviceTime).TotalMilliseconds <= timeoutNoMoreDevicesMs;
+                    }
+
+                    await Task.Delay(10, cancellation.Token).ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                NatUtility.StopDiscovery();
+                NatUtility.DeviceFound -= Handler;
+            }
+
+            return discoveredDevices.Values;
         }
     }
 }

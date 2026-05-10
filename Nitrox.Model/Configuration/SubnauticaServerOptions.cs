@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Nitrox.Model.Constants;
 using Nitrox.Model.DataStructures.GameLogic;

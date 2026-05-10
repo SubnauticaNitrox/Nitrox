@@ -35,7 +35,13 @@ internal static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AssignableTo = typeof(IRedactor), Lifetime = ServiceLifetime.Singleton)]
     internal static partial IServiceCollection AddRedactors(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AssignableTo = typeof(IAdminFeature<>), CustomHandler = nameof(AddImplementedAdminFeatures))]
+    /// <summary>
+    ///     Adds an interface -> service mapping that for handling administrative actions.
+    /// </summary>
+    /// <remarks>
+    ///     If multiple instances of the same interface type are registered, then the last registered implementation will be used.
+    /// </remarks>
+    [GenerateServiceRegistrations(AssignableTo = typeof(IAdminFeature<>), CustomHandler = nameof(AddOpenGenericAsExistingSingleton))]
     internal static partial IServiceCollection AddAdminFeatures(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IGameResource), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
@@ -59,6 +65,10 @@ internal static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AssignableTo = typeof(IArgConverter), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
     private static partial IServiceCollection AddCommandArgConverters(this IServiceCollection services);
 
+    private static void AddOpenGenericAsExistingSingleton<TImplementation, TInterface>(this IServiceCollection services) where TImplementation : class, TInterface =>
+        services
+            .AddSingleton(typeof(TInterface), provider => provider.GetRequiredService<TImplementation>());
+
     /// <summary>
     ///     Registers a single command and all of its handlers as can be known by the implemented interfaces.
     /// </summary>
@@ -78,18 +88,6 @@ internal static partial class ServiceCollectionExtensions
                 T owner = provider.GetRequiredService<T>();
                 return new CommandHandlerEntry(owner, handlerType);
             });
-        }
-    }
-
-    private static void AddImplementedAdminFeatures<TImplementation>(this IServiceCollection services) where TImplementation : class, IAdminFeature
-    {
-        foreach (Type featureInterfaceType in typeof(TImplementation).GetInterfaces()
-                                                                     .Where(i => typeof(IAdminFeature).IsAssignableFrom(i))
-                                                                     .Select(i => i.GetGenericArguments())
-                                                                     .Where(types => types.Length == 1)
-                                                                     .Select(types => types[0]))
-        {
-            services.AddSingleton(featureInterfaceType, provider => provider.GetRequiredService<TImplementation>());
         }
     }
 
