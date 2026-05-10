@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 
 namespace Nitrox.Model.Platforms.OS.Shared;
@@ -12,7 +11,7 @@ internal static class PosixFileSystemPermissions
     {
         try
         {
-            string escapedPath = directory.Replace("\"", "\\\"", StringComparison.Ordinal);
+            string escapedPath = directory.Replace("\"", "\\\"");
             using Process process = Process.Start(new ProcessStartInfo
             {
                 FileName = "chmod",

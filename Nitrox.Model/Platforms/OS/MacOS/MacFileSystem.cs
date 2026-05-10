@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Model.Platforms.OS.MacOS;
