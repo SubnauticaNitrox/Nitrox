@@ -82,4 +82,6 @@ internal sealed record HostToServerCommandContext : ICommandContext
                 break;
         }
     }
+
+    public override string ToString() => $"'{OriginName}' #{OriginId}";
 }

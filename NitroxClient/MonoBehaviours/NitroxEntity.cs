@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using Nitrox.Model.DataStructures;
@@ -59,7 +60,7 @@ namespace NitroxClient.MonoBehaviours
                       .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
-        public static bool TryGetObjectFrom(NitroxId? id, out GameObject? gameObject)
+        public static bool TryGetObjectFrom(NitroxId? id, [NotNullWhen(true)] out GameObject? gameObject)
         {
             gameObject = null;
             return id != null && gameObjectsById.TryGetValue(id, out gameObject) && gameObject;

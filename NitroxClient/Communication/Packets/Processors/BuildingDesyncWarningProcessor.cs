@@ -20,6 +20,7 @@ internal sealed class BuildingDesyncWarningProcessor : IClientPacketProcessor<Bu
         {
             OperationTracker tracker = BuildingHandler.Main.EnsureTracker(operation.Key);
             tracker.LastOperationId = operation.Value;
+            tracker.LocalOperations = 0;  // discard locally-queued ops, server's value is now authoritative
             tracker.FailedOperations++;
         }
 

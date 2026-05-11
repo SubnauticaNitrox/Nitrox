@@ -167,12 +167,14 @@ internal sealed class BuildingManager
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
             logger.ZLogError($"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
+            NotifyPlayerDesync(player);
             operationId = -1;
             return false;
         }
         if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out BuildEntity buildEntity))
         {
             logger.ZLogError($"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
+            NotifyPlayerDesync(player);
             operationId = -1;
             return false;
         }

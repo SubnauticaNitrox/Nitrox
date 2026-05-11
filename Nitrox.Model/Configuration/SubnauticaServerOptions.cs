@@ -70,6 +70,9 @@ public sealed partial class SubnauticaServerOptions
     public bool DisableConsole { get; set; }
     public string? AdminPassword { get; set; } = "";
     public bool KeepInventoryOnDeath { get; set; }
+
+    [PropertyDescription("Places a beacon where players die")]
+    public bool MarkDeathPointsWithBeacon { get; set; }
     public bool PvpEnabled { get; set; } = true;
     public bool AutoSave { get; set; } = true;
 

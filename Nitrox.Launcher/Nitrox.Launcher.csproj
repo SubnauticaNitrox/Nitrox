@@ -106,7 +106,7 @@
     <!-- TODO: Fix why ONLY (and not on all build environments that) the MS DLL dependencies for "child project" aren't transitively copied over to launcher project. -->
     <Target Name="_NitroxFixMissingMicrosoftExtensionsDlls" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <ItemGroup>
-            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\$(Configuration)\$(TargetFramework)\Microsoft.Extensions.*.dll" />
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\$(Configuration)\$(TargetFramework)\lib\Microsoft.Extensions.*.dll" />
         </ItemGroup>
 
         <Warning Text="Unable to find Microsoft.Extensions.* dll files from Nitrox.Server.Subnautica"

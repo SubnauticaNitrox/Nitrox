@@ -75,21 +75,40 @@
                                            FontSize="{TemplateBinding FontSize}"
                                            Text="{TemplateBinding Content}" />
                             </Grid>
-                            <!-- Update Available green dot -->
-                            <Border Height="10" Width="10" CornerRadius="5" 
-                                    Background="{DynamicResource BrandOnColor}"
-                                    BorderBrush="{DynamicResource BrandPanelBackground}"
-                                    BorderThickness="2"
-                                    HorizontalAlignment="Left"
-                                    Margin="49.25,13.5,0,0"
-                                    IsVisible="False"
-                                    ToolTip.Tip="New Nitrox update available" />
+                            <!-- Update available green dot -->
+                            <Border
+                                Height="10"
+                                Width="10"
+                                CornerRadius="5"
+                                Background="{DynamicResource BrandOnColor}"
+                                BorderBrush="{DynamicResource BrandPanelBackground}"
+                                BorderThickness="2"
+                                HorizontalAlignment="Left"
+                                Margin="49.25,13.5,0,0"
+                                IsVisible="False"
+                                ToolTip.Tip="New Nitrox update available" />
+                            <!-- Unread notifications badge -->
+                            <Border
+                                Height="10"
+                                Width="10"
+                                CornerRadius="5"
+                                Background="{DynamicResource BrandOnColor}"
+                                BorderBrush="{DynamicResource BrandPanelBackground}"
+                                BorderThickness="2"
+                                HorizontalAlignment="Left"
+                                Margin="49.25,13.5,0,0"
+                                IsVisible="False"
+                                ToolTip.Tip="Unread notifications" />
                         </Panel>
                     </ControlTemplate>
                 </Setter>
-                
+
                 <Style Selector="^.updates Border">
                     <Setter Property="IsVisible" Value="{Binding UpdateAvailableOrUnofficial}" />
+                </Style>
+
+                <Style Selector="^.notifications Border">
+                    <Setter Property="IsVisible" Value="{Binding Notifications.Count}" />
                 </Style>
 
                 <Style Selector="^:pointerover">
@@ -288,6 +307,22 @@
                                 </RadioButton.IsChecked>
                             </RadioButton>
                             <RadioButton
+                                Classes="notifications"
+                                Command="{Binding OpenNotificationsViewCommand}"
+                                Content="Notifications"
+                                Tag="/Assets/Images/tabs-icons/notifications.png"
+                                ToolTip.Tip="View all launcher notifications">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:NotificationsViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <RadioButton
                                 Command="{Binding OpenOptionsViewCommand}"
                                 Content="Options"
                                 Tag="/Assets/Images/tabs-icons/options.png"
@@ -333,7 +368,7 @@
                                  HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Svg.RenderTransform>
                                     <TransformGroup>
-                                        <RotateTransform/>
+                                        <RotateTransform />
                                     </TransformGroup>
                                 </Svg.RenderTransform>
                                 <Svg.Styles>
@@ -372,6 +407,9 @@
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:BlogViewModel">
                             <views:BlogView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:NotificationsViewModel">
+                            <views:NotificationsView />
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:UpdatesViewModel">
                             <views:UpdatesView />

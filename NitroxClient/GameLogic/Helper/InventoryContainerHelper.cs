@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.Helper
         /// </summary>
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
-            if (owner.IsLocalPlayer())
+            if (owner.IsLocalPlayer)
             {
                 return Optional.Of(Inventory.main.container);
             }

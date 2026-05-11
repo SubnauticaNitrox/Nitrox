@@ -28,11 +28,14 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
 
     public Task Process(ClientProcessorContext context, PlayerHeldItemChanged packet)
     {
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.SessionId);
-        Validate.IsPresent(opPlayer);
-
+        if (!playerManager.TryFind(packet.SessionId, out RemotePlayer player))
+        {
+            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find player with session id: {packet.SessionId}.");
+            return Task.CompletedTask;
+        }
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
+            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find entity with id: {packet.ItemId}.");
             return Task.CompletedTask;
         }
 
@@ -41,7 +44,7 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
 
         Validate.NotNull(pickupable.inventoryItem);
 
-        ItemsContainer inventory = opPlayer.Value.Inventory;
+        ItemsContainer inventory = player.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
 
         // Copied from QuickSlots
@@ -49,7 +52,7 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
         {
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL:
                 Validate.IsTrue(tool);
-                ModelPlug.PlugIntoSocket(tool, opPlayer.Value.ItemAttachPoint);
+                ModelPlug.PlugIntoSocket(tool, player.ItemAttachPoint);
                 Utils.SetLayerRecursively(item, viewModelLayer);
                 foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
                 {
@@ -66,8 +69,8 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 }
                 item.SetActive(true);
                 tool.SetHandIKTargetsEnabled(true);
-                SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
-                opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
+                SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
+                player.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
 
                 if (item.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated
                 {
@@ -93,8 +96,8 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 {
                     componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
                 }
-                SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
-                opPlayer.Value.AnimationController["using_tool_first"] = false;
+                SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
+                player.AnimationController["using_tool_first"] = false;
 
                 if (item.TryGetComponent(out FPModel fpModelHolster)) //FPModel needs to be updated
                 {
@@ -104,7 +107,7 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 break;
 
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
-                pickupable.inventoryItem.item.Reparent(opPlayer.Value.ItemAttachPoint);
+                pickupable.inventoryItem.item.Reparent(player.ItemAttachPoint);
                 pickupable.inventoryItem.item.SetVisible(true);
                 Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
                 break;

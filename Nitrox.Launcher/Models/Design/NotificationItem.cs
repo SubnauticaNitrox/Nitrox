@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Input;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,6 +14,8 @@ public partial class NotificationItem : ObservableObject
     public NotificationType Type { get; }
     
     public ICommand CloseCommand { get; }
+
+    public DateTimeOffset Created { get; } = DateTimeOffset.Now;
 
     [ObservableProperty]
     public partial bool IsDismissed { get; set; }

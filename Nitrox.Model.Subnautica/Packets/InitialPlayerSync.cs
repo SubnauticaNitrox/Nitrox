@@ -42,6 +42,7 @@ namespace Nitrox.Model.Subnautica.Packets
         public SessionSettings SessionSettings { get; }
         public bool InPrecursor { get; }
         public bool DisplaySurfaceWater { get; }
+        public bool MarkDeathPointsWithBeacon { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -68,7 +69,8 @@ namespace Nitrox.Model.Subnautica.Packets
             bool keepInventoryOnDeath,
             SessionSettings sessionSettings,
             bool inPrecursor,
-            bool displaySurfaceWater)
+            bool displaySurfaceWater,
+            bool markDeathPointsWithBeacon)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -96,6 +98,7 @@ namespace Nitrox.Model.Subnautica.Packets
             SessionSettings = sessionSettings;
             InPrecursor = inPrecursor;
             DisplaySurfaceWater = displaySurfaceWater;
+            MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -125,7 +128,8 @@ namespace Nitrox.Model.Subnautica.Packets
             bool keepInventoryOnDeath,
             SessionSettings sessionSettings,
             bool inPrecursor,
-            bool displaySurfaceWater)
+            bool displaySurfaceWater,
+            bool markDeathPointsWithBeacon)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -153,6 +157,7 @@ namespace Nitrox.Model.Subnautica.Packets
             SessionSettings = sessionSettings;
             InPrecursor = inPrecursor;
             DisplaySurfaceWater = displaySurfaceWater;
+            MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
         }
     }
 }

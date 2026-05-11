@@ -6,7 +6,7 @@ namespace Nitrox.Launcher.Models.Converters;
 /// <summary>
 ///     Formats the bound value as a relative date string from a DateTime value.
 /// </summary>
-public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter>
+internal sealed class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter>
 {
     private const float DAYS_IN_YEAR = 365.2425f;
     private const float MEAN_DAYS_IN_MONTH = DAYS_IN_YEAR / 12f;
