@@ -445,6 +445,14 @@ public sealed class Steam : IGamePlatform
                     {
                         return appIdMatch.Groups[1].Value;
                     }
+                    
+                    const string defaultPattern = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
+                    Match defaultMatch = Regex.Match(compatToolMapping, defaultPattern);
+                    
+                    if (defaultMatch.Success)
+                    {
+                        return defaultMatch.Groups[1].Value;
+                    }
                 }
 
                 return null;
