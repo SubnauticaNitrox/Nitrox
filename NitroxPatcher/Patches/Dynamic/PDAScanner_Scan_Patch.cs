@@ -83,13 +83,6 @@ public sealed partial class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             // Case in which the scanned entry is fully unlocked
             else if (result == PDAScanner.Result.Researched)
             {
-                // Check if this tech type is already in the complete list to prevent duplicate packets
-                if (PDAScanner.complete.Contains(techType))
-                {
-                    // Already complete, don't send another completion packet
-                    return;
-                }
-                
                 PDAScanFinished packet = new(targetId, techType.ToDto(), entryData.totalFragments, true, entryData.destroyAfterScan);
                 Resolve<IPacketSender>().Send(packet);
             }

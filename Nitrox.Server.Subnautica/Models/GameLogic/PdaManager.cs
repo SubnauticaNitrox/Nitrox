@@ -153,7 +153,10 @@ internal sealed class PdaManager(ILogger<PdaManager> logger) : ISummarize
             if (fullyResearched)
             {
                 PdaState.ScannerPartial.RemoveAllFast(techType, static (entry, toRemove) => entry.TechType.Equals(toRemove));
-                PdaState.ScannerComplete.Add(techType);
+                if (!PdaState.ScannerComplete.Contains(techType))
+                {
+                    PdaState.ScannerComplete.Add(techType);
+                }
             }
             else
             {
