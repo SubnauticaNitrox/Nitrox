@@ -4,8 +4,8 @@ using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using Nitrox.Model;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,6 +34,11 @@ public class DiscordClient : MonoBehaviour
         if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WINEPREFIX"))) // Is wine environment
         {
             Log.Warn("[Discord] Unable to start RPC inside wine environment");
+            return;
+        }
+        if (NitroxEnvironment.CommandLineArgs.Contains(LauncherConstants.NO_DISCORD_INTEGRATION_FLAG, StringComparer.OrdinalIgnoreCase))
+        {
+            Log.Info("[Discord] SDK integration not requested by user, skipping...");
             return;
         }
 

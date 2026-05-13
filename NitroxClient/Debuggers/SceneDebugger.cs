@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Nitrox.Model.Helper;
 using NitroxClient.Debuggers.Drawer;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -226,7 +227,7 @@ public class SceneDebugger : AbstractDebugger
                 GUILayout.Space(5);
                 if (GUILayout.Button("State to clipboard"))
                 {
-                    GUIUtility.systemCopyBuffer = SelectedObject.GetStateAsTextForComparison();
+                    GUIUtility.systemCopyBuffer = ObjectHelper.GetStateAsTextForComparison(SelectedObject);
                 }
             }
 

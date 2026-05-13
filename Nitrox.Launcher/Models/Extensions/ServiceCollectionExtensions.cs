@@ -38,6 +38,7 @@ public static partial class ServiceCollectionExtensions
             .AddSingleton<DialogService>()
             .AddSingleton<StorageService>()
             .AddSingleton<BackupService>()
+            .AddSingleton<GameTroubleshootService>()
             // UI
             .AddSingleton<Window, MainWindow>()
             .AddSingleton<MainWindowViewModel>()

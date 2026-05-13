@@ -14,6 +14,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -23,7 +24,7 @@ using Nitrox.Model.Platforms.Store;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
+internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore, GameTroubleshootService gameTroubleshootService)
     : RoutableViewModelBase
 {
     public static Task<string>? LastFindSubnauticaTask;
@@ -32,6 +33,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private readonly IKeyValueStore keyValueStore = keyValueStore;
 
     private readonly ServerService serverService = serverService;
+    private readonly GameTroubleshootService gameTroubleshootService = gameTroubleshootService;
 
     [ObservableProperty]
     public partial Platform GamePlatform { get; set; }
@@ -249,6 +251,37 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         if (game is null)
         {
             throw new Exception($"Game failed to start through {NitroxUser.GamePlatform?.Name ?? "Standalone"}");
+        }
+
+        await RestartGameIfCrashedAsync(gameInfo, game, args ?? []);
+    }
+
+    private async Task RestartGameIfCrashedAsync(GameInfo gameInfo, ProcessEx process, string[] args)
+    {
+        // Skip restart if already launching without Discord.
+        if (args.Contains(LauncherConstants.NO_DISCORD_INTEGRATION_FLAG))
+        {
+            return;
+        }
+        if (await gameTroubleshootService.TryDetectGameCrashAsync(TimeSpan.FromSeconds(10)) == GameTroubleshootService.GameCrashCause.NO_CRASH)
+        {
+            return;
+        }
+
+        LauncherNotifier.Warning($"Game crashed, restarting game with {LauncherConstants.NO_DISCORD_INTEGRATION_FLAG}...");
+        try
+        {
+            using CancellationTokenSource cts = new(TimeSpan.FromSeconds(30));
+            // Wait for game to close from the crash...
+            while (!cts.IsCancellationRequested && process.IsRunning)
+            {
+                await Task.Delay(1000, cts.Token);
+            }
+            await StartGameAsync(gameInfo, [..args, LauncherConstants.NO_DISCORD_INTEGRATION_FLAG]);
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
         }
     }
 
