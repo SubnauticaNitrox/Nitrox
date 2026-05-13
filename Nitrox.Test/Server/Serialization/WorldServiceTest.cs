@@ -73,14 +73,14 @@ internal sealed class WorldServiceTest
             Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
         });
         Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
-        Assert.IsTrue(pdaState.ScannerFragments.SequenceEqual(pdaStateAfter.ScannerFragments));
+        Assert.IsTrue(pdaState.ScannerFragments.SetEquals(pdaStateAfter.ScannerFragments));
         AssertHelper.IsListEqual(pdaState.ScannerPartial.OrderBy(x => x.TechType.Name), pdaStateAfter.ScannerPartial.OrderBy(x => x.TechType.Name), (entry, entryAfter) =>
         {
             Assert.AreEqual(entry.TechType, entryAfter.TechType);
             Assert.AreEqual(entry.Unlocked, entryAfter.Unlocked);
         });
 
-        Assert.IsTrue(pdaState.ScannerComplete.SequenceEqual(pdaStateAfter.ScannerComplete));
+        Assert.IsTrue(pdaState.ScannerComplete.SetEquals(pdaStateAfter.ScannerComplete));
     }
 
     private static void StoryGoalTest(StoryGoalData storyGoal, StoryGoalData storyGoalAfter)

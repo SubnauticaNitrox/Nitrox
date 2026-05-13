@@ -59,7 +59,7 @@ internal sealed record PdaStateData
     ///     Fully unlocked PDA entries
     /// </summary>
     [DataMember(Order = 7)]
-    public List<NitroxTechType> ScannerComplete { get; } = [];
+    public HashSet<NitroxTechType> ScannerComplete { get; } = [];
 
     /// <summary>
     ///     Gets a full copy of the entire <see cref="PdaStateData" /> which allows for thread safe access.
@@ -76,7 +76,10 @@ internal sealed record PdaStateData
             copy.ScannerFragments.Add(fragment);
         }
         copy.ScannerPartial.AddRange(ScannerPartial);
-        copy.ScannerComplete.AddRange(ScannerComplete);
+        foreach (NitroxTechType techType in ScannerComplete)
+        {
+            copy.ScannerComplete.Add(techType);
+        }
         return copy;
     }
 }
