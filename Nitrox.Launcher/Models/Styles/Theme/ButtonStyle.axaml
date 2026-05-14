@@ -168,14 +168,12 @@
 
         <!--  This overrides button template to use properties from parent Button. DO NOT HARD CODE VALUES HERE.  -->
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Opacity" Value="{Binding $parent[Button].Opacity}" />
             <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
             <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
             <Setter Property="CornerRadius" Value="{Binding $parent[Button].CornerRadius}" />
         </Style>
         <Style Selector="^:pointerover">
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-                <Setter Property="Opacity" Value="{Binding $parent[Button].Opacity}" />
                 <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
                 <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
                 <Setter Property="Cursor" Value="{Binding $parent[Button].Cursor}" />
