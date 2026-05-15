@@ -72,6 +72,7 @@ public sealed class HeroicGames : IGamePlatform
         {
             startInfo = new ProcessStartInfo("xdg-open", $"\"{launchCmd}\"");
         }
+        startInfo.Environment.Add(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath);
 
         Log.Info($"Starting game with heroic uri: {startInfo.FileName} {startInfo.Arguments}");
         return await Task.FromResult(ProcessEx.From(startInfo));
