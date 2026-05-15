@@ -248,18 +248,9 @@
                                 Classes="notifications"
                                 Command="{Binding OpenNotificationsViewCommand}"
                                 Content="Notifications"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:NotificationsViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/notifications.png"
-                                ToolTip.Tip="View all launcher notifications">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:NotificationsViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="View all launcher notifications" />
                             <RadioButton
                                 Command="{Binding OpenOptionsViewCommand}"
                                 Content="Options"
