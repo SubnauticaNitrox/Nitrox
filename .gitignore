@@ -6,6 +6,9 @@
 # Microsoft DI related files
 *.[Dd]evelopment.json
 
+# VS Code CSharp extension
+*.lscache
+
 # MacOS specific
 .DS_Store
 
