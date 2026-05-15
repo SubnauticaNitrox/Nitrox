@@ -6,7 +6,7 @@
     </PropertyGroup>
     
     <PropertyGroup>
-        <AvaloniaVersion>12.0.2</AvaloniaVersion>
+        <AvaloniaVersion>12.0.3</AvaloniaVersion>
         <NetSdkVersion>10.0.7</NetSdkVersion>
     </PropertyGroup>
     
