@@ -201,14 +201,14 @@ public static class Main
         string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", "net472", dllFileName);
         if (!File.Exists(dllPath))
         {
-            Console.Write($"Did not find '{dllFileName}' at '{dllPath}'");
+            Console.Write($"[Nitrox] [WARNING] Did not find '{dllFileName}' at '{dllPath}'");
             dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, dllFileName);
             Console.WriteLine($", looking at {dllPath}");
         }
 
         if (!File.Exists(dllPath))
         {
-            Console.WriteLine($"Nitrox dll missing: {dllPath}");
+            Console.WriteLine($"[Nitrox] [WARNING] dll missing: {dllPath}");
         }
 
         return Assembly.LoadFile(dllPath);
