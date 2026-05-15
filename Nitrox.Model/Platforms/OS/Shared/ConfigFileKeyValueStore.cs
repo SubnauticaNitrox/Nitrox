@@ -10,7 +10,7 @@ public class ConfigFileKeyValueStore : IKeyValueStore
 {
     private bool hasLoaded = false;
     private readonly Dictionary<string, object> keyValuePairs = new();
-    public string FolderPath { get; } = NitroxUser.AppDataPath;
+    public string FolderPath { get; } = NitroxUser.GetSpecializedDirectory(NitroxUser.SpecializedDirectory.Config);
     public string FilePath => Path.Combine(FolderPath, "nitrox.cfg");
 
     public T GetValue<T>(string key, T defaultValue)

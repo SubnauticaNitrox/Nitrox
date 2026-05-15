@@ -56,7 +56,27 @@ public static class NitroxUser
         }
     };
 
-    public static string AppDataPath
+    public static string? AppDataPath
+    {
+        get
+        {
+            if (field != null)
+            {
+                return field;
+            }
+            
+            string? cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(cliDataPath) || !Path.IsPathRooted(cliDataPath))
+            {
+                return null;
+            }
+            
+            Directory.CreateDirectory(cliDataPath);
+            return field = cliDataPath;
+        }
+    }
+
+    public static string DefaultAppDataPath
     {
         get
         {
@@ -79,10 +99,9 @@ public static class NitroxUser
                 }
             }
 
-            string? cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(cliDataPath) && Path.IsPathRooted(cliDataPath))
+            string? cliDataPath = AppDataPath;
+            if (!string.IsNullOrWhiteSpace(cliDataPath))
             {
-                Directory.CreateDirectory(cliDataPath);
                 return field = cliDataPath;
             }
 
@@ -95,11 +114,66 @@ public static class NitroxUser
         }
     }
 
-    public static string CrashLogsPath => Path.Combine(AppDataPath, "crashes");
+    public enum SpecializedDirectory
+    {
+        Data, // user-specific data files
+        Config, // user-specific configuration files
+        State, // user-specific state files
+        Cache, // user-specific non-essential data files
+    }
 
-    public static string ScreenshotsPath => Path.Combine(AppDataPath, "screenshots");
+    private static string GetXDGNameForSpecializedDirectory(SpecializedDirectory directory)
+    {
+        return directory switch
+        {
+            SpecializedDirectory.Data => "XDG_DATA_HOME",
+            SpecializedDirectory.Config => "XDG_CONFIG_HOME",
+            SpecializedDirectory.Cache => "XDG_CACHE_HOME",
+            SpecializedDirectory.State => "XDG_STATE_HOME",
+            _ => throw new ArgumentOutOfRangeException(nameof(directory), directory, null)
+        };
+    }
 
-    public static string CachePath => Path.Combine(AppDataPath, "cache");
+    private static string GetXDGPathForSpecializedDirectory(SpecializedDirectory directory)
+    {
+        string xdgDir = Environment.GetEnvironmentVariable(GetXDGNameForSpecializedDirectory(directory));
+        if (!string.IsNullOrWhiteSpace(xdgDir))
+        {
+            return xdgDir;
+        }
+        
+        return directory switch
+        {
+            SpecializedDirectory.Data => Path.Combine(HomePath, ".local", "share"),
+            SpecializedDirectory.Config => Path.Combine(HomePath, ".config"),
+            SpecializedDirectory.State => Path.Combine(HomePath, ".local", "state"),
+            SpecializedDirectory.Cache => Path.Combine(HomePath, ".cache"),
+            _ => throw new ArgumentOutOfRangeException(nameof(directory), directory, null)
+        };
+    }
+    
+    public static string GetSpecializedDirectory(SpecializedDirectory directory)
+    {
+        if (AppDataPath is { Length: > 0 })
+        {
+            return AppDataPath;
+        }
+        
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return DefaultAppDataPath;
+        }
+        
+        string path = Path.Combine(GetXDGPathForSpecializedDirectory(directory), "Nitrox");
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+    public static string CrashLogsPath => Path.Combine(GetSpecializedDirectory(SpecializedDirectory.State), "crashes");
+
+    public static string ScreenshotsPath => Path.Combine(GetSpecializedDirectory(SpecializedDirectory.Data), "screenshots");
+
+    public static string CachePath => Path.Combine(GetSpecializedDirectory(SpecializedDirectory.Cache), "cache");
 
     /// <summary>
     ///     Tries to get the launcher path that was previously saved by other Nitrox code.
