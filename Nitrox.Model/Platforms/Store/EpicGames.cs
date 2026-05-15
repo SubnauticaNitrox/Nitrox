@@ -26,7 +26,7 @@ public sealed class EpicGames : IGamePlatform
                 pathToGameExe,
                 [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
-                $"-EpicPortal -epicuserid=0 {launchArguments}")
+                $"-EpicPortal {launchArguments}")
         );
     }
 }
