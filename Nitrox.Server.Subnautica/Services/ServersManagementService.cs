@@ -1,6 +1,10 @@
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
+using System.Net.Http;
+using System.Runtime.Versioning;
 using System.Threading.Channels;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -21,11 +25,14 @@ namespace Nitrox.Server.Subnautica.Services;
 internal sealed class ServersManagementService(PlayerManager playerManager, IPacketSender packetSender, CommandService commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
 {
     public static readonly Channel<LogEntry> LogQueue = Channel.CreateBounded<LogEntry>(new BoundedChannelOptions(1000) { FullMode = BoundedChannelFullMode.DropOldest });
+    
     private readonly CommandService commandProcessor = commandProcessor;
     private readonly ILogger<ServersManagementService> logger = logger;
     private readonly IOptions<ServerStartOptions> options = options;
     private readonly PlayerManager playerManager = playerManager;
+    
     private GrpcChannel? channel;
+    private ConnectionInfo? currentConnectionInfo;
     private Task? pushLogsTask;
 
     public override void Dispose() => channel?.Dispose();
@@ -40,19 +47,24 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
         {
             try
             {
-                int? launcherGrpcPortAsync = await GetLauncherGrpcPortAsync();
-                if (launcherGrpcPortAsync == null)
+                // On Windows, connection info is the named pipe name
+                // On Non-Windows, connection info is the port number
+                ConnectionInfo connectionInfo = await GetLauncherConnectionInfoAsync();
+                if (!connectionInfo.IsValid)
                 {
                     await WaitNextAsync();
                     continue;
                 }
-                await RefreshConnectionAsync(launcherGrpcPortAsync);
+                await TryRefreshConnectionAsync(connectionInfo);
 
                 // Push data
-                await PushPollDataAsync(api);
-                if (!pushLogsTask.IsBusyOrDone())
+                if (api != null)
                 {
-                    pushLogsTask = CreateLoopingTask(PushLogsAsync, api, stoppingToken);
+                    await PushPollDataAsync(api);
+                    if (!pushLogsTask.IsBusyOrSuccessful())
+                    {
+                        pushLogsTask = CreateLoopingTask(PushLogsAsync, api, stoppingToken);
+                    }
                 }
             }
             catch (Exception ex)
@@ -67,9 +79,13 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
 
         ValueTask<bool> WaitNextAsync() => refreshTimer.WaitForNextTickAsync(stoppingToken);
 
-        async Task RefreshConnectionAsync(int? grpcPort)
+        async Task TryRefreshConnectionAsync(ConnectionInfo connectionInfo)
         {
-            if (channel?.Target.EndsWith(grpcPort.ToString(), StringComparison.Ordinal) == false)
+            if (!connectionInfo.IsValid)
+            {
+                return;
+            }
+            if (currentConnectionInfo != connectionInfo)
             {
                 channel?.Dispose();
                 channel = null;
@@ -78,9 +94,34 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
                     await api.DisposeAsync();
                 }
                 api = null;
+                currentConnectionInfo = connectionInfo;
             }
 
-            channel ??= GrpcChannel.ForAddress($"http://localhost:{grpcPort}");
+            if (OperatingSystem.IsWindows())
+            {
+                // On Windows, use named pipes for faster IPC
+                channel ??= GrpcChannel.ForAddress("http://localhost", new GrpcChannelOptions
+                {
+                    HttpHandler = new SocketsHttpHandler
+                    {
+                        ConnectCallback = async (_, cancellationToken) =>
+                        {
+                            if (!OperatingSystem.IsWindows())
+                            {
+                                throw new InvalidOperationException($"{nameof(NamedPipeClientStream)} requires Windows OS");
+                            }
+                            NamedPipeClientStream? clientStream = new(".", connectionInfo.PipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+                            await clientStream.ConnectAsync(cancellationToken);
+                            return clientStream;
+                        }
+                    }
+                });
+            }
+            else
+            {
+                channel ??= GrpcChannel.ForAddress($"http://localhost:{connectionInfo.Port}");
+            }
+            
             if (api == null)
             {
                 StreamingHubClientOptions grpcOptions = StreamingHubClientOptions.CreateWithDefault()
@@ -107,7 +148,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
                 {
                     if (!ShouldIgnoreException(ex))
                     {
-                        logger.ZLogError(ex, $"Error during looping task");
+                        logger.ZLogTrace(ex, $"Error during looping task");
                     }
                 }
             }, cancellationToken);
@@ -160,21 +201,18 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
         };
     }
 
-    private async Task<int?> GetLauncherGrpcPortAsync()
+    private async Task<ConnectionInfo> GetLauncherConnectionInfoAsync()
     {
         try
         {
-            string port = await File.ReadAllTextAsync(Path.Combine(Path.GetTempPath(), LauncherConstants.GRPC_LISTEN_PORT_TEMP_FILE_NAME));
-            if (int.TryParse(port.Trim(), out int result))
-            {
-                return result;
-            }
+            string info = await File.ReadAllTextAsync(Path.Combine(Path.GetTempPath(), LauncherConstants.GRPC_LISTEN_PORT_TEMP_FILE_NAME));
+            return ConnectionInfo.From(info);
         }
         catch (Exception)
         {
-            logger.ZLogWarningOnce($"Unable to get gRPC listen port from Nitrox Launcher, it might not be running. Retrying...");
+            logger.ZLogWarningOnce($"Unable to get gRPC connection info from Nitrox Launcher, it might not be running. Retrying...");
         }
-        return null;
+        return new ConnectionInfo();
     }
 
     private class ServerManagementReceiver(CommandService commandProcessor, IPacketSender packetSender) : IServerManagementReceiver
@@ -183,4 +221,36 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
     }
 
     internal record LogEntry(IZLoggerEntry Entry, IZLoggerFormatter Formatter, ZLoggerPlainOptions.LogGeneratorCall Generator, ArrayBufferWriter<byte> Writer);
+
+    internal record ConnectionInfo(int Port = 0,
+                                   [property: SupportedOSPlatform("windows")]
+                                   string? PipeName = null)
+    {
+        [MemberNotNullWhen(true, nameof(PipeName))]
+        public bool IsValid
+        {
+            get
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    return !string.IsNullOrWhiteSpace(PipeName);
+                }
+                return Port > 0;
+            }
+        }
+
+        public static ConnectionInfo From(string info)
+        {
+            if (string.IsNullOrWhiteSpace(info))
+            {
+                return new ConnectionInfo();
+            }
+            info = info.Trim();
+            if (int.TryParse(info, out int port))
+            {
+                return new ConnectionInfo(port);
+            }
+            return new ConnectionInfo(PipeName: info);
+        }
+    }
 }
