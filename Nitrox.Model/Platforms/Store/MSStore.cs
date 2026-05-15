@@ -26,7 +26,7 @@ public sealed class MSStore : IGamePlatform
                 @"C:\Windows\System32\cmd.exe",
                 [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
-                $"""/C start /b "{pathToGameExe}" "--nitrox '{NitroxUser.LauncherPath}' {launchArguments}""",
+                $"""/C start /b "{pathToGameExe}" "--nitrox '{NitroxUser.LauncherPath}' {launchArguments}" """,
                 createWindow: false)
         );
     }
