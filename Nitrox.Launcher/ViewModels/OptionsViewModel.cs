@@ -66,7 +66,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
-        ProgramDataPath = NitroxUser.AppDataPath;
+        ProgramDataPath = NitroxUser.GetSpecializedDirectory(NitroxUser.SpecializedDirectory.Config);
         ScreenshotsPath = NitroxUser.ScreenshotsPath;
         SavesPath = keyValueStore.GetSavesFolderDir();
         LogsPath = Model.Logger.Log.LogDirectory;
