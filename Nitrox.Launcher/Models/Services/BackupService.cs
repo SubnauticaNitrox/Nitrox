@@ -20,7 +20,7 @@ public class BackupService(IKeyValueStore keyValueStore)
 {
     private readonly IKeyValueStore keyValueStore = keyValueStore;
 
-    public static string BackupsDirectory => Path.Combine(NitroxUser.AppDataPath, "backups");
+    public static string BackupsDirectory => Path.Combine(NitroxUser.GetSpecializedDirectory(NitroxUser.SpecializedDirectory.Data), "backups");
 
     /// <summary>
     ///     Creates a backup of the current Nitrox installation and optionally save files.
