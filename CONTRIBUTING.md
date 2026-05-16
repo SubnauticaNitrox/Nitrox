@@ -34,7 +34,7 @@ If you find a bug, you can help the community by submitting an issue. Once the i
 
 🏋️ If this is your first time contributing to Nitrox and you do not have advanced programming experience, we have you covered.
 
-Nitrox has a [list of good first issues](https://github.com/SubnauticaNitrox/Nitrox/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22Complexity%3A%20easy%22) that can be a great way to find something that fits your expertise or technical background.
+Nitrox has a [list of good first issues](https://github.com/SubnauticaNitrox/Nitrox/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22Complexity%3A%20easy%22%20-linked%3Apr%20no%3Aassignee) that can be a great way to find something that fits your expertise or technical background.
 
 ## Pull Request Guidelines
 
