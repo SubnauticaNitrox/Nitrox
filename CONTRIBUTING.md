@@ -14,14 +14,6 @@ Please be kind, patient, and constructive. If you disagree, explain your reasoni
 
 If you can’t finish something, let us know so others can help.
 
-## 🤖 AI Usage
-
-Nitrox is a special kind of software because it interacts closely with Subnautica's codebase, which makes reliable **code generation difficult**. That is why you should be careful when using AI tools: they can easily hallucinate when it comes to in-game Nitrox behavior, because they do not understand how the game interacts with Nitrox.
-
-We welcome the use of AI tools (such as Copilot, Codex, etc.) to **assist** with code or documentation. ⚠️ However, we do not have the resources to review code that does not make sense, or paragraphs that explain the meaning of life, **so you must review everything carefully before submitting**.
-
-🚨 For transparency, you **must declare in your pull request** if AI tools were used to generate any part of your contribution. This helps reviewers and users understand the origin of the code. Please use the dedicated section in the PR template for this purpose. AI-generated code is allowed, but it must be reviewed and tested by you before submission. 🚨
-
 ## ❓ Questions
 
 Please keep our [GitHub issues](https://github.com/SubnauticaNitrox/Nitrox/issues) for bug reports and feature requests. For general questions or complaints, please head to our [Discord](https://discord.gg/E8B4X9s).
@@ -35,6 +27,14 @@ If you find a bug, you can help the community by submitting an issue. Once the i
 🏋️ If this is your first time contributing to Nitrox and you do not have advanced programming experience, we have you covered.
 
 Nitrox has a [list of good first issues](https://github.com/SubnauticaNitrox/Nitrox/issues?q=is%3Aissue%20is%3Aopen%20label%3A%22Complexity%3A%20easy%22%20-linked%3Apr%20no%3Aassignee) that can be a great way to find something that fits your expertise or technical background.
+
+## 🤖 AI Usage
+
+Nitrox is a special kind of software because it interacts closely with Subnautica's codebase, which makes reliable **code generation difficult**. That is why you should be careful when using AI tools: they can easily hallucinate when it comes to in-game Nitrox behavior, because they do not understand how the game interacts with Nitrox.
+
+We welcome the use of AI tools (such as Copilot, Codex, etc.) to **assist** with code or documentation. ⚠️ However, we do not have the resources to review code that does not make sense, or paragraphs that explain the meaning of life, **so you must review everything carefully before submitting**.
+
+🚨 For transparency, you **must declare in your pull request** if AI tools were used to generate any part of your contribution. This helps reviewers and users understand the origin of the code. Please use the dedicated section in the PR template for this purpose. AI-generated code is allowed, but it must be reviewed and tested by you before submission. 🚨
 
 ## Pull Request Guidelines
 
