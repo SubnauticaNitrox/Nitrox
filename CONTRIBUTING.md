@@ -10,7 +10,7 @@ For significant features, or if you are unsure, contact us on [Discord](https://
 
 Treat everyone with respect. We value kindness, patience, and constructive feedback. If you encounter inappropriate behavior, please report it to the team.
 
-We’re all friends here. Please be kind, patient, and constructive. If you disagree, explain your reasoning respectfully and be open to alternatives. Remember that English may not be everyone’s first language, so assume good intent and help each other out.
+Please be kind, patient, and constructive. If you disagree, explain your reasoning respectfully and be open to alternatives. Remember that English may not be everyone’s first language, so assume good intent and help each other out.
 
 If you can’t finish something, let us know so others can help.
 
