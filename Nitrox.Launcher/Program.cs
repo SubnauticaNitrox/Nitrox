@@ -94,7 +94,7 @@ internal static class Program
                     }
                     catch
                     {
-                        cache[args.Name] = assembly = null;
+                        return null;
                     }
                 }
             }
