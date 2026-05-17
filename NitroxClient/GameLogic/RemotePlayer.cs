@@ -382,12 +382,12 @@ public class RemotePlayer : INitroxPlayer
         // Rough estimation for different collider boxes in different animation stages
         if (AnimationController["is_underwater"])
         {
-            Collider.center = new(0f, -0.3f, 0f);
+            Collider.center = new Vector3(0f, -0.3f, 0f);
             Collider.height = 0.5f;
         }
         else
         {
-            Collider.center = new(0f, -0.8f, 0f);
+            Collider.center = new Vector3(0f, -0.8f, 0f);
             Collider.height = 1.5f;
         }
     }
@@ -422,6 +422,7 @@ public class RemotePlayer : INitroxPlayer
             Collider = Body.AddComponent<CapsuleCollider>();
 
             Collider.center = Vector3.zero;
+            Collider.height = refCollider.height;
             Collider.radius = refCollider.radius;
             Collider.direction = refCollider.direction;
             Collider.contactOffset = refCollider.contactOffset;
