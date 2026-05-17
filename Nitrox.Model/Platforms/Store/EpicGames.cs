@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,13 +17,16 @@ public sealed class EpicGames : IGamePlatform
     public bool OwnsGame(string gameDirectory)
     {
         string path = Path.Combine(gameDirectory, ".egstore");
-        if (!Directory.Exists(path))
+        
+        try
         {
+            return Directory.EnumerateFiles(path, "*.manifest", SearchOption.TopDirectoryOnly).Any();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
             return false;
         }
-
-        IEnumerable<string> manifestFiles = Directory.EnumerateFiles(path, "*.manifest", SearchOption.TopDirectoryOnly);
-        return manifestFiles.Any();
     }
 
     public static async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)

@@ -14,7 +14,9 @@ public sealed class Discord : IGamePlatform
 
     public bool OwnsGame(string gameDirectory)
     {
-        return File.Exists(Path.Combine(Directory.GetParent(gameDirectory)?.FullName ?? "..", "journal.sqlite"));
+        return File.Exists(
+            Path.Combine(Path.GetDirectoryName(Path.GetFullPath(gameDirectory)) ?? "..", "journal.sqlite")
+        );
     }
 
     public static async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
