@@ -59,6 +59,11 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             {
                 case MapRoomEntity mapRoomEntity:
                     yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+                    // Restores Scanner Room upgrade chips (#2696)
+                    if (mapRoomEntity.ChildEntities.Count > 0)
+                    {
+                        yield return entities.SpawnBatchAsync(mapRoomEntity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
+                    }
                     break;
                 case BaseLeakEntity baseLeakEntity:
                     atLeastOneLeak = true;
