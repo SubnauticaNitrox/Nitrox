@@ -30,6 +30,10 @@
         <PackageVersion Include="dnlib" Version="4.4.0" />
         <PackageVersion Include="FluentAssertions.Analyzers" Version="[0.34.1]" />
         <PackageVersion Include="FluentAssertions" Version="[7.2.0]" />
+        <PackageVersion Include="Grpc.Core.Api" Version="2.66.0" />
+        <PackageVersion Include="Grpc.Net.Client" Version="2.66.0" />
+        <PackageVersion Include="Grpc.Net.Common" Version="2.66.0" />
+        <PackageVersion Include="Grpc.AspNetCore.Server" Version="2.66.0" />
         <PackageVersion Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
         <PackageVersion Include="HarmonyX" Version="2.10.0" />
         <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />

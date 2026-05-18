@@ -182,7 +182,7 @@ internal sealed partial class ServerEntry : ObservableObject
         if (Process?.Id != processId)
         {
             await ResetCtsAsync();
-            Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, ShouldAttachAsEmbedded(), processId);
+            Process = ServerProcess.Start(this, Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, ShouldAttachAsEmbedded(), processId);
         }
         if (Process is { IsRunning: true })
         {
@@ -302,7 +302,7 @@ internal sealed partial class ServerEntry : ObservableObject
         // Start server and add notify when server closed.
         await ResetCtsAsync();
         IsEmbedded = embedded;
-        Process = ServerProcess.Start(Path.Combine(savesDir, Name), cts, embedded, existingProcessId);
+        Process = ServerProcess.Start(this, Path.Combine(savesDir, Name), cts, embedded, existingProcessId);
 
         Output.Clear();
         IsNewServer = false;
@@ -312,14 +312,20 @@ internal sealed partial class ServerEntry : ObservableObject
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task StopAsync()
     {
-        if (cts != null)
-        {
-            await cts.CancelAsync();
-        }
-        // Ensure the server is dead before continuing. On Linux, if launcher process closes it could otherwise abruptly kill the embedded servers.
-        using CancellationTokenSource waitProcessExitCts = new(TimeSpan.FromSeconds(20));
+        IsServerClosing = true;
+
         try
         {
+            if (!ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
+            {
+                return;
+            }
+
+            Log.Info($"Sending quit command to server '{Name}'.");
+            await CommandQueue.Writer.WriteAsync("quit");
+
+            using CancellationTokenSource waitProcessExitCts = new(TimeSpan.FromSeconds(20));
+
             while (ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
             {
                 await Task.Delay(200, waitProcessExitCts.Token);
@@ -327,7 +333,29 @@ internal sealed partial class ServerEntry : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            // ignored
+            Log.Warn($"Server '{Name}' did not exit after graceful quit command.");
+        }
+        catch (ChannelClosedException ex)
+        {
+            Log.Warn($"Could not send quit command to server '{Name}' because the command queue is closed: {ex}");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Could not send quit command to server '{Name}'.");
+        }
+        finally
+        {
+            if (!ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
+            {
+                if (cts != null)
+                {
+                    await cts.CancelAsync();
+                }
+
+                IsOnline = false;
+            }
+
+            IsServerClosing = false;
         }
     }
 
@@ -351,7 +379,7 @@ internal sealed partial class ServerEntry : ObservableObject
     [MemberNotNull(nameof(cts))]
     internal async Task ResetCtsAsync(bool cancelPreexisting = false)
     {
-        if (cancelPreexisting && cts is {} c)
+        if (cancelPreexisting && cts is { } c)
         {
             await c.CancelAsync();
         }
@@ -362,21 +390,8 @@ internal sealed partial class ServerEntry : ObservableObject
             try
             {
                 await Dispatcher.UIThread.InvokeAsync(() => IsServerClosing = true);
-                await Dispatcher.UIThread.InvokeAsync(async () =>
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    while (ProcessEx.ProcessExists(GetServerProcessName(), ex => ex.Id == LastProcessId))
-                    {
-                        try
-                        {
-                            await CommandQueue.Writer.WriteAsync("quit");
-                            CommandQueue.Writer.TryComplete();
-                        }
-                        catch (ChannelClosedException)
-                        {
-                            await Task.Delay(500);
-                        }
-                    }
-                    CommandQueue = Channel.CreateUnbounded<string>();
                     PlayerCount = 0;
                     PlayerNames = [];
                     IsOnline = false;
@@ -396,11 +411,15 @@ internal sealed partial class ServerEntry : ObservableObject
     internal class ServerProcess : IDisposable
     {
         private ProcessEx? serverProcess;
+        private readonly ServerEntry owner;
+        private readonly CancellationTokenSource processMonitorCts = new();
+        private bool disposed;
         public int Id => serverProcess?.Id ?? -1;
         public bool IsRunning => serverProcess is { IsRunning: true };
 
-        private ServerProcess(string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = -1)
+        private ServerProcess(ServerEntry owner, string saveDir, CancellationTokenSource cts, bool isEmbeddedMode = false, int processId = -1)
         {
+            this.owner = owner;
             cts.Token.Register(Dispose);
             if (processId <= 0)
             {
@@ -453,14 +472,63 @@ internal sealed partial class ServerEntry : ObservableObject
             {
                 serverProcess = ProcessEx.From(System.Diagnostics.Process.GetProcessById(processId));
             }
+
+            _ = MonitorProcessExitAsync(processMonitorCts.Token).ContinueWithHandleError();
+
         }
 
-        public static ServerProcess Start(string saveDir, CancellationTokenSource cts, bool isEmbedded, int processId) => new(saveDir, cts, isEmbedded, processId);
+        private async Task MonitorProcessExitAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested && IsRunning)
+                {
+                    await Task.Delay(500, cancellationToken);
+                }
+
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        owner.IsOnline = false;
+                        owner.IsServerClosing = false;
+                        owner.PlayerCount = 0;
+                        owner.PlayerNames = [];
+                        owner.Output.Clear();
+                    });
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected during normal disposal.
+            }
+        }
+
+        public static ServerProcess Start(ServerEntry owner, string saveDir, CancellationTokenSource cts, bool isEmbedded, int processId) => new(owner, saveDir, cts, isEmbedded, processId);
 
         public void Dispose()
         {
+            if (disposed)
+            {
+                return;
+            }
+
+            disposed = true;
+
+            try
+            {
+                processMonitorCts.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Already disposed.
+            }
+
+            processMonitorCts.Dispose();
+
             serverProcess?.Dispose();
             serverProcess = null;
         }
     }
+
 }

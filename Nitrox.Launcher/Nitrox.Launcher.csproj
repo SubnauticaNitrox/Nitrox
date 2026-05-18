@@ -44,6 +44,8 @@
         <PackageReference Include="dnlib" />
         <PackageReference Include="LitJson" />
         <PackageReference Include="MagicOnion.Server" />
+        <PackageReference Include="Grpc.AspNetCore.Server" />
+        <PackageReference Include="Grpc.Core.Api" GeneratePathProperty="true" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="ServiceScan.SourceGenerator">
@@ -118,6 +120,42 @@
               Retries="3"
               RetryDelayMilliseconds="100"
               SkipUnchangedFiles="True" />
+    </Target>
+
+    <Target Name="_NitroxRestoreNet10RootLibAssets" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)" Condition="'$(TargetFramework)' == 'net10.0'">
+
+	<PropertyGroup>
+		<_LauncherRootLibDir>$(TargetDir)lib\</_LauncherRootLibDir>
+		<_Net10NitroxModelDll>$(MSBuildProjectDirectory)\..\Nitrox.Model\bin\$(Configuration)\net10.0\Nitrox.Model.dll</_Net10NitroxModelDll>
+		<_NetStandardGrpcCoreApiDll>$(PkgGrpc_Core_Api)\lib\netstandard2.1\Grpc.Core.Api.dll</_NetStandardGrpcCoreApiDll>
+	</PropertyGroup>
+
+	<Message Importance="Low"
+		Text="Running _NitroxRestoreNet10RootLibAssets for $(MSBuildProjectName)" />
+
+	<Message Importance="Low"
+		 Text="Restoring net10 Nitrox.Model.dll from '$(_Net10NitroxModelDll)' to '$(_LauncherRootLibDir)'" />
+
+	<Message Importance="Low"
+		 Text="Restoring netstandard2.1 Grpc.Core.Api.dll from '$(_NetStandardGrpcCoreApiDll)' to '$(_LauncherRootLibDir)'" />
+
+	<Error Text="Unable to find net10 Nitrox.Model.dll at '$(_Net10NitroxModelDll)'"
+		 Condition="!Exists('$(_Net10NitroxModelDll)')" />
+
+	<Error Text="Unable to find netstandard2.1 Grpc.Core.Api.dll at '$(_NetStandardGrpcCoreApiDll)'"
+		 Condition="!Exists('$(_NetStandardGrpcCoreApiDll)')" />
+
+	<ItemGroup>
+		 <_Net10RootLibAssets Include="$(_Net10NitroxModelDll)" />
+		 <_Net10RootLibAssets Include="$(_NetStandardGrpcCoreApiDll)" />
+	</ItemGroup>
+
+	<Copy SourceFiles="@(_Net10RootLibAssets)"
+		  DestinationFolder="$(_LauncherRootLibDir)"
+		  OverwriteReadOnlyFiles="True"
+		  SkipUnchangedFiles="False"
+		  Retries="3"
+		  RetryDelayMilliseconds="100" />
     </Target>
 
     <ItemGroup>

@@ -12,6 +12,9 @@
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" />
         <PackageReference Include="MagicOnion.Client" />
+        <PackageReference Include="Grpc.Core.Api" />
+        <PackageReference Include="Grpc.Net.Client" />
+        <PackageReference Include="Grpc.Net.Common" />
         <PackageReference Include="Microsoft.Extensions.Hosting" />
         <PackageReference Include="SixLabors.ImageSharp" />
         <PackageReference Include="ZLogger" />
