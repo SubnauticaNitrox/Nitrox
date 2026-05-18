@@ -137,7 +137,7 @@ public static class NitroxUser
     private static string GetXDGPathForSpecializedDirectory(SpecializedDirectory directory)
     {
         string xdgDir = Environment.GetEnvironmentVariable(GetXDGNameForSpecializedDirectory(directory));
-        if (!string.IsNullOrWhiteSpace(xdgDir))
+        if (!string.IsNullOrWhiteSpace(xdgDir) && Path.IsPathRooted(xdgDir))
         {
             return xdgDir;
         }
