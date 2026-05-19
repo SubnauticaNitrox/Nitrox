@@ -30,6 +30,8 @@ public static class NitroxDirectory
     ///     Gets the path to Nitrox application backups. Note: not server save backups.
     /// </summary>
     public static string BackupsPath => implementation.BackupsPath;
+    
+    public static bool MayRequireMigration => implementation.MayRequireMigration;
 
     private class NitroxDirectoryShared
     {
@@ -151,6 +153,8 @@ public static class NitroxDirectory
         public virtual string LogsPath => Path.Combine(ConfigPath, "logs");
         public virtual string BackupsPath => Path.Combine(ConfigPath, "backups");
 
+        public virtual bool MayRequireMigration => false;
+        
         protected string GetAsNitroxPath(string path)
         {
             if (Path.GetFileName(path) != "Nitrox")
@@ -293,6 +297,14 @@ public static class NitroxDirectory
                     XdgDirectory.STATE => "XDG_STATE_HOME",
                     _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
                 };
+        }
+
+        public override bool MayRequireMigration
+        {
+            get
+            {
+                return Directory.EnumerateFileSystemEntries(Path.Combine(ConfigPath, "saves")).Any();
+            }
         }
 
         private enum XdgDirectory
