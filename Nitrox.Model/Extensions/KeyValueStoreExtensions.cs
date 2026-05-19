@@ -1,13 +1,12 @@
-using System.IO;
 using Nitrox.Model.Helper;
 
 namespace Nitrox.Model.Extensions;
 
 public static class KeyValueStoreExtensions
 {
-    public static string GetSavesFolderDir(this IKeyValueStore? store)
+    public static string GetSavesPath(this IKeyValueStore? store)
     {
-        string defaultPath = Path.Combine(NitroxUser.GetSpecializedDirectory(NitroxUser.SpecializedDirectory.Data), "saves");
+        string defaultPath = NitroxDirectory.SavesPath;
         if (store == null)
         {
             return defaultPath;

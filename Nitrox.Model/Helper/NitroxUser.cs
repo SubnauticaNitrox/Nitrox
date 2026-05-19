@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Nitrox.Model.Constants;
@@ -55,125 +53,6 @@ public static class NitroxUser
             return !string.IsNullOrWhiteSpace(executable) ? Path.GetDirectoryName(executable) : null;
         }
     };
-
-    public static string? AppDataPath
-    {
-        get
-        {
-            if (field != null)
-            {
-                return field;
-            }
-            
-            string? cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
-            if (string.IsNullOrWhiteSpace(cliDataPath) || !Path.IsPathRooted(cliDataPath))
-            {
-                return null;
-            }
-            
-            Directory.CreateDirectory(cliDataPath);
-            return field = cliDataPath;
-        }
-    }
-
-    public static string DefaultAppDataPath
-    {
-        get
-        {
-            if (field != null)
-            {
-                return field;
-            }
-
-            string applicationData = null;
-
-            // On linux Environment.SpecialFolder.ApplicationData returns the Windows version inside wine, this bypasses that behaviour
-            string homeInWineEnv = Environment.GetEnvironmentVariable("WINEHOMEDIR");
-            if (homeInWineEnv is { Length: > 4 })
-            {
-                string homeInWine = homeInWineEnv[4..]; // WINEHOMEDIR is prefixed with \??\
-                if (Directory.Exists(homeInWine))
-                {
-                    applicationData = Path.Combine(homeInWine, ".config");
-                    Directory.CreateDirectory(applicationData); // Create it if it's not there (which should not happen in normal setups)
-                }
-            }
-
-            string? cliDataPath = AppDataPath;
-            if (!string.IsNullOrWhiteSpace(cliDataPath))
-            {
-                return field = cliDataPath;
-            }
-
-            if (!Directory.Exists(applicationData))
-            {
-                applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            }
-
-            return field = Path.Combine(applicationData, "Nitrox");
-        }
-    }
-
-    public enum SpecializedDirectory
-    {
-        Data, // user-specific data files
-        Config, // user-specific configuration files
-        State, // user-specific state files
-        Cache, // user-specific non-essential data files
-    }
-
-    private static string GetXDGNameForSpecializedDirectory(SpecializedDirectory directory)
-    {
-        return directory switch
-        {
-            SpecializedDirectory.Data => "XDG_DATA_HOME",
-            SpecializedDirectory.Config => "XDG_CONFIG_HOME",
-            SpecializedDirectory.Cache => "XDG_CACHE_HOME",
-            SpecializedDirectory.State => "XDG_STATE_HOME",
-            _ => throw new ArgumentOutOfRangeException(nameof(directory), directory, null)
-        };
-    }
-
-    private static string GetXDGPathForSpecializedDirectory(SpecializedDirectory directory)
-    {
-        string xdgDir = Environment.GetEnvironmentVariable(GetXDGNameForSpecializedDirectory(directory));
-        if (!string.IsNullOrWhiteSpace(xdgDir) && Path.IsPathRooted(xdgDir))
-        {
-            return xdgDir;
-        }
-        
-        return directory switch
-        {
-            SpecializedDirectory.Data => Path.Combine(HomePath, ".local", "share"),
-            SpecializedDirectory.Config => Path.Combine(HomePath, ".config"),
-            SpecializedDirectory.State => Path.Combine(HomePath, ".local", "state"),
-            SpecializedDirectory.Cache => Path.Combine(HomePath, ".cache"),
-            _ => throw new ArgumentOutOfRangeException(nameof(directory), directory, null)
-        };
-    }
-    
-    public static string GetSpecializedDirectory(SpecializedDirectory directory)
-    {
-        if (AppDataPath is { Length: > 0 })
-        {
-            return AppDataPath;
-        }
-        
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return DefaultAppDataPath;
-        }
-        
-        string path = Path.Combine(GetXDGPathForSpecializedDirectory(directory), "Nitrox");
-        Directory.CreateDirectory(path);
-        return path;
-    }
-
-    public static string CrashLogsPath => Path.Combine(GetSpecializedDirectory(SpecializedDirectory.State), "crashes");
-
-    public static string ScreenshotsPath => Path.Combine(GetSpecializedDirectory(SpecializedDirectory.Data), "screenshots");
-
-    public static string CachePath => Path.Combine(GetSpecializedDirectory(SpecializedDirectory.Cache), "cache");
 
     /// <summary>
     ///     Tries to get the launcher path that was previously saved by other Nitrox code.
@@ -286,30 +165,6 @@ public static class NitroxUser
                 nitroxAssets = LauncherPath ?? ExecutableRootPath;
             }
             return field = nitroxAssets;
-        }
-    }
-
-    /// <summary>
-    ///     Gets the user home directory of the current operating system user.
-    /// </summary>
-    public static string HomePath
-    {
-        get
-        {
-            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (string.IsNullOrWhiteSpace(homePath))
-            {
-                homePath = Environment.GetEnvironmentVariable("HOME");
-            }
-            if (!Directory.Exists(homePath))
-            {
-                throw new DirectoryNotFoundException("User home directory does not exist or is inaccessible");
-            }
-            if (string.IsNullOrWhiteSpace(homePath))
-            {
-                throw new InvalidOperationException("User home directory is not given by the operating system");
-            }
-            return homePath;
         }
     }
 

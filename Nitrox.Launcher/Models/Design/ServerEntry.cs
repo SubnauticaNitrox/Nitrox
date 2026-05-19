@@ -182,7 +182,7 @@ internal sealed partial class ServerEntry : ObservableObject
         if (Process?.Id != processId)
         {
             await ResetCtsAsync();
-            Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name), cts, ShouldAttachAsEmbedded(), processId);
+            Process = ServerProcess.Start(Path.Combine(KeyValueStore.Instance.GetSavesPath(), Name), cts, ShouldAttachAsEmbedded(), processId);
         }
         if (Process is { IsRunning: true })
         {
@@ -334,7 +334,7 @@ internal sealed partial class ServerEntry : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
     public void OpenSaveFolder()
     {
-        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name!));
+        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesPath(), Name!));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -428,7 +428,7 @@ internal sealed partial class ServerEntry : ObservableObject
                 // On Steam Deck, start through user-wide .dotnet. The default is system-wide which might not work.
                 if (IsSteamOs())
                 {
-                    string dotnetExecutable = Path.Combine(NitroxUser.HomePath, ".dotnet", "dotnet");
+                    string dotnetExecutable = Path.Combine(NitroxDirectory.HomePath, ".dotnet", "dotnet");
                     if (!File.Exists(dotnetExecutable))
                     {
                         throw new FileNotFoundException("A compatible .NET version must be installed by the user to run the server on SteamOS. Please install dotnet to your user home: ~/.dotnet/");

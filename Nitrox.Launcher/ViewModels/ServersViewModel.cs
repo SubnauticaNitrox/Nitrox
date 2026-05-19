@@ -71,7 +71,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
 
         try
         {
-            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectoryAsync(Path.Join(keyValueStore.GetSavesFolderDir(), result!.Name)));
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectoryAsync(Path.Join(keyValueStore.GetSavesPath(), result!.Name)));
             if (serverEntry == null)
             {
                 throw new Exception("Failed to create save file");

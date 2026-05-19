@@ -127,7 +127,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     public string? OriginalServerName => Server?.Name;
 
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server?.Name ?? throw new Exception($"{nameof(Server)} is not set"));
-    private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
+    private string SavesFolderDir => keyValueStore.GetSavesPath();
 
     public ManageServerViewModel(DialogService dialogService, StorageService storageService, IKeyValueStore keyValueStore, ServerService serverService)
     {
@@ -172,7 +172,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [MemberNotNull(nameof(Server))]
     public async Task RefreshAndLoadFromAsync(ServerEntry entry, string? savePath = null)
     {
-        savePath ??= entry.Name != null ? Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), entry.Name) : null;
+        savePath ??= entry.Name != null ? Path.Combine(KeyValueStore.Instance.GetSavesPath(), entry.Name) : null;
         if (savePath != null)
         {
             await entry.RefreshFromDirectoryAsync(savePath);
