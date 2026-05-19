@@ -62,11 +62,11 @@ internal static class ServerStartOptionsExtensions
 
     public static string GetServerConfigFilePath(this ServerStartOptions options) => Path.Combine(options.GetServerSavePath(), typeof(SubnauticaServerOptions).GetCustomAttribute<SerializableFileNameAttribute>()?.FileName ?? throw new InvalidOperationException());
 
-    public static string GetServerSavePath(this ServerStartOptions options) => Path.Combine(options.NitroxAppDataPath ?? throw new InvalidOperationException(), "saves", options.SaveName);
+    public static string GetServerSavePath(this ServerStartOptions options) => Path.Combine(NitroxDirectory.SavesPath, options.SaveName);
 
-    public static string GetServerSaveBackupsPath(this ServerStartOptions options) => Path.Combine(options.GetServerSavePath(), "Backups");
+    public static string GetServerSaveBackupsPath(this ServerStartOptions options) => Path.Combine(options.GetServerSavePath(), "backups");
 
-    public static string GetServerCachePath(this ServerStartOptions options) => Path.Combine(options.NitroxAppDataPath ?? throw new InvalidOperationException(), "cache");
+    public static string GetServerCachePath(this ServerStartOptions options) => NitroxDirectory.CachePath;
 
-    public static string GetServerLogsPath(this ServerStartOptions options) => Path.Combine(options.NitroxAppDataPath ?? throw new InvalidOperationException(), "logs");
+    public static string GetServerLogsPath(this ServerStartOptions options) => NitroxDirectory.LogsPath;
 }

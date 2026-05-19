@@ -227,30 +227,14 @@
                     HorizontalAlignment="Left"
                     Text="This is the location where files used by Nitrox are stored, including your screenshots, saves and logs" />
 
-                <Border
-                    Background="{DynamicResource BrandPanelBackground}"
-                    CornerRadius="12"
-                    Padding="22,15">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <SelectableTextBlock
-                            FontSize="15"
-                            Foreground="{DynamicResource BrandBlack}"
-                            Opacity="0.75"
-                            Text="{Binding ProgramDataPath}"
-                            VerticalAlignment="Center" />
-                        <Button
-                            Classes="primary"
-                            Command="{Binding OpenFolderCommand}"
-                            CommandParameter="{Binding ProgramDataPath}"
-                            Content="Open"
-                            Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Margin="22,0,0,0"
-                            ToolTip.Tip="Open Program Data folder"
-                            Width="120" />
-                    </Grid>
-                </Border>
-
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding ProgramDataPath}"
+                        ToolTip.Tip="{Binding ProgramDataPath}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Configuration folder" />
+                    </StackPanel>
+                </Button>
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
                         CommandParameter="{Binding ScreenshotsPath}"
                         ToolTip.Tip="{Binding ScreenshotsPath}">

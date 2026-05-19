@@ -77,6 +77,6 @@ public static class Hashing
     private static string GetSha256CacheFilePath(string targetFilePath)
     {
         string filePathMd5 = Convert.ToHexStringLower(MD5.HashData(Encoding.UTF8.GetBytes(targetFilePath)));
-        return Path.Combine(NitroxUser.CachePath, Path.ChangeExtension(filePathMd5, "sha256"));
+        return Path.Combine(NitroxDirectory.CachePath, Path.ChangeExtension(filePathMd5, "sha256"));
     }
 }

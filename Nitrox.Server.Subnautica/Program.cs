@@ -54,7 +54,7 @@ internal sealed class Program
             }
             startOptions.GamePath = NitroxUser.GamePath;
         }
-        startOptions.NitroxAppDataPath ??= NitroxUser.AppDataPath;
+        startOptions.NitroxAppDataPath ??= NitroxDirectory.ConfigPath;
         startOptions.NitroxAssetsPath ??= NitroxUser.AssetsPath;
 
         // This hacky code is needed because server still requires game code to startup.

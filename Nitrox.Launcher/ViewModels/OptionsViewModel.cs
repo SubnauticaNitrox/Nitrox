@@ -66,9 +66,9 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
-        ProgramDataPath = NitroxUser.AppDataPath;
-        ScreenshotsPath = NitroxUser.ScreenshotsPath;
-        SavesPath = keyValueStore.GetSavesFolderDir();
+        ProgramDataPath = NitroxDirectory.ConfigPath;
+        ScreenshotsPath = NitroxDirectory.ScreenshotsPath;
+        SavesPath = keyValueStore.GetSavesPath();
         LogsPath = Model.Logger.Log.LogDirectory;
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();

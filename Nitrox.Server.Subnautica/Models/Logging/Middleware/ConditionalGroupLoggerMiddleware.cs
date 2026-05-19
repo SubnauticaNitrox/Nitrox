@@ -17,7 +17,7 @@ internal sealed class ConditionalGroupLoggerMiddleware : ILoggerMiddleware
             context.Cursor = 0;
             try
             {
-                ExecuteNext(ref context);
+                ILoggerMiddleware.ExecuteNext(ref context);
             }
             finally
             {
@@ -26,28 +26,5 @@ internal sealed class ConditionalGroupLoggerMiddleware : ILoggerMiddleware
             }
         }
         next(ref context);
-    }
-
-    private static void ExecuteNext(ref ILoggerMiddleware.Context context)
-    {
-        if (GetNextMiddleware(ref context) is not { } middleware)
-        {
-            return;
-        }
-
-        middleware.ExecuteLogMiddleware(ref context, ExecuteNext);
-    }
-
-    private static ILoggerMiddleware? GetNextMiddleware(ref ILoggerMiddleware.Context context)
-    {
-        if (context.Middleware.Length < 1)
-        {
-            return null;
-        }
-        if (context.Cursor >= context.Middleware.Length)
-        {
-            return null;
-        }
-        return context.Middleware[context.Cursor++];
     }
 }
