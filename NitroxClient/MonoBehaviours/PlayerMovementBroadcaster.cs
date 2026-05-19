@@ -12,7 +12,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
 {
     private LocalPlayer localPlayer;
 
-    public void Awake()
+    private void Awake()
     {
         localPlayer = this.Resolve<LocalPlayer>();
     }
