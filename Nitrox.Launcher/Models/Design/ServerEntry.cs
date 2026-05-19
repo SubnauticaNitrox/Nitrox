@@ -71,6 +71,16 @@ internal sealed partial class ServerEntry : ObservableObject
     [ObservableProperty]
     public partial bool IsOnline { get; set; }
 
+    public bool IsLoading => LoadingStage != null && LoadingProgress < 1.0f;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoading))]
+    public partial string? LoadingStage { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoading))]
+    public partial float LoadingProgress { get; set; }
+
     [ObservableProperty]
     public partial bool IsServerClosing { get; set; }
 
@@ -306,6 +316,9 @@ internal sealed partial class ServerEntry : ObservableObject
 
         Output.Clear();
         IsNewServer = false;
+        // Set loading state BEFORE IsOnline to ensure UI shows loading first
+        LoadingStage = "Starting...";
+        LoadingProgress = 0f;
         IsOnline = true;
     }
 
@@ -342,7 +355,10 @@ internal sealed partial class ServerEntry : ObservableObject
         switch (e.PropertyName)
         {
             case nameof(IsOnline) when LastProcessId > 0:
-                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, PlayerCount));
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, PlayerCount, IsLoading));
+                break;
+            case nameof(IsLoading) when LastProcessId > 0:
+                WeakReferenceMessenger.Default.Send(new ServerStatusMessage(LastProcessId, IsOnline, PlayerCount, IsLoading));
                 break;
         }
         base.OnPropertyChanged(e);
@@ -380,6 +396,7 @@ internal sealed partial class ServerEntry : ObservableObject
                     PlayerCount = 0;
                     PlayerNames = [];
                     IsOnline = false;
+                    LoadingStage = null;
                     Output.Clear();
                 });
                 await Dispatcher.UIThread.InvokeAsync(() => IsServerClosing = false);
