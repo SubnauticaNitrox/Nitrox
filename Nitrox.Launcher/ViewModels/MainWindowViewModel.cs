@@ -18,7 +18,6 @@ using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
-using Nitrox.Model.Platforms.Discovery;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -28,6 +27,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
     private readonly CommunityViewModel communityViewModel;
     private readonly DialogService dialogService;
     private readonly LaunchGameViewModel launchGameViewModel;
+    private readonly LibraryViewModel libraryViewModel;
     private readonly Func<Window> mainWindowProvider;
     private readonly NotificationsViewModel notificationsViewModel;
     private readonly OptionsViewModel optionsViewModel;
@@ -48,11 +48,13 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         DialogService dialogService,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
+        LibraryViewModel libraryViewModel,
         CommunityViewModel communityViewModel,
         BlogViewModel blogViewModel,
         NotificationsViewModel notificationsViewModel,
         UpdatesViewModel updatesViewModel,
         OptionsViewModel optionsViewModel,
+        GameInstallationService gameInstallationService,
         ServerService serverService,
         IKeyValueStore keyValueStore
     )
@@ -60,6 +62,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         this.mainWindowProvider = mainWindowProvider;
         this.dialogService = dialogService;
         this.launchGameViewModel = launchGameViewModel;
+        this.libraryViewModel = libraryViewModel;
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
         this.blogViewModel = blogViewModel;
@@ -96,7 +99,8 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         {
             bool lightModeEnabled = keyValueStore.GetIsLightModeEnabled();
             Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = lightModeEnabled ? ThemeVariant.Light : ThemeVariant.Dark);
-            GameInstallationFinder.FindGameCached(GameInfo.Subnautica);
+
+            _ = gameInstallationService.EnsureInitialRefreshAsync(GameInfo.Subnautica).ContinueWithHandleError();
 
             if (!NitroxEnvironment.IsReleaseMode)
             {
@@ -124,6 +128,9 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenServersViewAsync() => await this.ShowAsync(serversViewModel);
+    
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    public async Task OpenLibraryViewAsync() => await this.ShowAsync(libraryViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenCommunityViewAsync() => await this.ShowAsync(communityViewModel);

@@ -226,13 +226,13 @@ public static class NitroxUser
             {
                 homePath = Environment.GetEnvironmentVariable("HOME");
             }
-            if (!Directory.Exists(homePath))
-            {
-                throw new DirectoryNotFoundException("User home directory does not exist or is inaccessible");
-            }
             if (string.IsNullOrWhiteSpace(homePath))
             {
                 throw new InvalidOperationException("User home directory is not given by the operating system");
+            }
+            if (!Directory.Exists(homePath))
+            {
+                throw new DirectoryNotFoundException("User home directory does not exist or is inaccessible");
             }
             return homePath;
         }
@@ -242,5 +242,11 @@ public static class NitroxUser
     {
         gamePath = Path.GetFullPath(path);
         GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
+    }
+
+    public static void ClearGamePathAndPlatform()
+    {
+        gamePath = string.Empty;
+        GamePlatform = null;
     }
 }

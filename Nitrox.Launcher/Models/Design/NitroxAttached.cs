@@ -19,6 +19,7 @@ public class NitroxAttached : AvaloniaObject
     public static readonly AttachedProperty<bool> IsNumericInputProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("IsNumericInput");
     public static readonly AttachedProperty<bool> HasUserInteractedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("HasUserInteracted");
     public static readonly AttachedProperty<bool> UseCustomTitleBarProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Window, bool>("UseCustomTitleBar", true);
+    public static readonly AttachedProperty<double> GapWidthProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, RadioButton,  double>("GapWidth", 8);
     internal static readonly AsyncCommandButtonTagger AsyncCommandButtonTagger;
 
     static NitroxAttached()
@@ -164,4 +165,8 @@ public class NitroxAttached : AvaloniaObject
     public static bool GetUseCustomTitleBar(Window window) => window.GetValue(UseCustomTitleBarProperty);
 
     public static void SetUseCustomTitleBar(Window window, bool value) => window.SetValue(UseCustomTitleBarProperty, value);
+
+    public static double GetGapWidth(AvaloniaObject element) => element.GetValue(GapWidthProperty);
+
+    public static void SetGapWidth(AvaloniaObject element, double value) => element.SetValue(GapWidthProperty, value);
 }

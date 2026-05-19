@@ -428,12 +428,17 @@
                 ColumnDefinitions="*,*"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
-                <StackPanel Grid.Column="0"
+                <Grid Grid.Column="0"
                             IsEnabled="{Binding !ServerIsOnline}"
                             Background="Transparent">
+                    <Grid.Styles>
+                        <Style Selector="RadioButton">
+                            <Setter Property="Padding" Value="0 7.5" />
+                        </Style>
+                    </Grid.Styles>
                     <OnPlatform>
                         <OnPlatform.Default>
-                            <StackPanel>
+                            <StackPanel VerticalAlignment="Center">
                                 <RadioButton Content="External"
                                              GroupName="Choose runtime option"
                                              IsChecked="{Binding !ServerEmbedded}"
@@ -464,7 +469,7 @@
                                          ToolTip.Tip="Run server in embedded mode within the launcher UI" />
                         </OnPlatform.Linux>
                     </OnPlatform>
-                </StackPanel>
+                </Grid>
 
                 <Panel Grid.Column="1" HorizontalAlignment="Stretch">
                     <Button

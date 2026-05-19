@@ -1,4 +1,4 @@
-﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="15">
@@ -36,7 +36,8 @@
         <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
         <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrush}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="Padding" Value="8,0,0,0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="design:NitroxAttached.GapWidth" Value="8" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -56,8 +57,8 @@
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Name="RootBorder">
-                    <StackPanel Orientation="Horizontal">
-                        <Grid Height="32" VerticalAlignment="Top">
+                    <Grid Margin="{TemplateBinding Padding}" ColumnDefinitions="Auto,Auto,*" HorizontalAlignment="Stretch">
+                        <Grid Grid.Column="0">
                             <Ellipse
                                 Fill="White"
                                 Height="20"
@@ -65,7 +66,8 @@
                                 Stroke="{TemplateBinding Foreground}"
                                 StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                 UseLayoutRounding="False"
-                                Width="20" />
+                                Width="20"
+                                VerticalAlignment="Center" />
                             <Ellipse
                                 Fill="{DynamicResource RadioButtonOuterEllipseCheckedFill}"
                                 Height="20"
@@ -74,7 +76,8 @@
                                 Stroke="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
                                 StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                 UseLayoutRounding="False"
-                                Width="20" />
+                                Width="20"
+                                VerticalAlignment="Center" />
                             <Ellipse
                                 Fill="{DynamicResource RadioButtonCheckGlyphFill}"
                                 Height="8"
@@ -82,19 +85,22 @@
                                 Opacity="0"
                                 Stroke="{DynamicResource RadioButtonCheckGlyphStroke}"
                                 UseLayoutRounding="False"
-                                Width="8" />
+                                Width="8"
+                                VerticalAlignment="Center" />
                         </Grid>
 
+                        <Rectangle Grid.Column="1" Width="{TemplateBinding design:NitroxAttached.GapWidth}" />
+
                         <ContentPresenter
+                            Grid.Column="2"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             Foreground="{TemplateBinding Foreground}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            Margin="{TemplateBinding Padding}"
                             Name="PART_ContentPresenter"
                             RecognizesAccessKey="True"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Input;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -14,17 +14,12 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
-using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.Discovery.Models;
-using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.ViewModels;
 
-internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageService storageService) : RoutableViewModelBase
+internal partial class OptionsViewModel(GameInstallationService gameInstallationService, IKeyValueStore keyValueStore, StorageService storageService, DialogService dialogService) : RoutableViewModelBase
 {
-    private readonly IKeyValueStore keyValueStore = keyValueStore;
-    private readonly StorageService storageService = storageService;
-
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
     public partial string LaunchArgs { get; set; }
@@ -43,6 +38,9 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     [ObservableProperty]
     public partial KnownGame SelectedGame { get; set; }
+
+    [ObservableProperty]
+    public partial AvaloniaList<KnownGame> KnownGames { get; set; }
 
     [ObservableProperty]
     public partial bool ShowResetArgsBtn { get; set; }
@@ -64,7 +62,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
-        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        SelectedGame = gameInstallationService.SelectedGame;
+        KnownGames = gameInstallationService.InstalledGames;
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
         ProgramDataPath = NitroxUser.AppDataPath;
         ScreenshotsPath = NitroxUser.ScreenshotsPath;
@@ -74,53 +73,79 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
-        await Task.Run(() => SetTargetedSubnauticaPath(SelectedGame.PathToGame), cancellationToken).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
-    }
-
-    private void SetTargetedSubnauticaPath(string path)
-    {
-        if (!Directory.Exists(path))
-        {
-            return;
-        }
-
-        PirateDetection.TriggerOnDirectory(path);
-        if (!FileSystem.Instance.IsWritable(Directory.GetCurrentDirectory()) || !FileSystem.Instance.IsWritable(path))
-        {
-            // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
-            if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
-            {
-                LauncherNotifier.Error("Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.");
-                return;
-            }
-        }
-
-        // Save game path as preferred for future sessions.
-        NitroxUser.PreferredGamePath = path;
-        NitroxUser.SetGamePathAndPlatform(path, null);
     }
 
     [RelayCommand]
-    private async Task SetGamePath()
+    private async Task AddGameInstallation()
     {
         string selectedDirectory = await storageService.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
-        if (selectedDirectory == "")
+        if (string.IsNullOrWhiteSpace(selectedDirectory))
         {
             return;
         }
 
-        if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
+        if (selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
-            LauncherNotifier.Error("Invalid subnautica directory");
             return;
         }
 
-        if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
+        string? errorMessage = null;
+        bool added = await Task.Run(() => gameInstallationService.AddGameInstallation(GameInfo.Subnautica, selectedDirectory, out errorMessage));
+        if (!added)
         {
-            await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LauncherNotifier.Success("Applied changes");
+            if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                LauncherNotifier.Error(errorMessage);
+            }
+            return;
         }
+
+        SelectedGame = gameInstallationService.SelectedGame;
+        LauncherNotifier.Success("Added game installation");
+    }
+
+    [RelayCommand]
+    private void SetSelectedGame(KnownGame game)
+    {
+        gameInstallationService.SelectGameInstallation(GameInfo.Subnautica, game);
+        SelectedGame = gameInstallationService.SelectedGame;
+    }
+
+    [RelayCommand]
+    private async Task RemoveGameInstallation(KnownGame game)
+    {
+        if (game == null || string.IsNullOrWhiteSpace(game.PathToGame))
+        {
+            return;
+        }
+
+        DialogBoxViewModel confirmResult = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        {
+            model.Title = $"Are you sure you want to remove the game installation '{game.PathToGame}'?";
+            model.Description = "This will remove the installation from the launcher cache and it will no longer appear in the installation list unless it is added again.";
+            model.ButtonOptions = ButtonOptions.YesNo;
+        });
+
+        if (!confirmResult)
+        {
+            return;
+        }
+
+        if (!gameInstallationService.RemoveGameInstallation(GameInfo.Subnautica, game))
+        {
+            LauncherNotifier.Error("Failed to remove game installation");
+            return;
+        }
+
+        SelectedGame = gameInstallationService.SelectedGame;
+        LauncherNotifier.Success("Game installation removed");
+    }
+
+    [RelayCommand]
+    private async Task RefreshGameInstallations()
+    {
+        await gameInstallationService.RefreshInstalledGamesAsync(GameInfo.Subnautica);
+        LauncherNotifier.Success("Refreshed game installations");
     }
 
     [RelayCommand]

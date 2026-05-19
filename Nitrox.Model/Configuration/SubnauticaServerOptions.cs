@@ -18,7 +18,7 @@ public sealed partial class SubnauticaServerOptions
     public const string CONFIG_SECTION_PATH = "GameServer";
 
     [Range(1, byte.MaxValue)]
-    public byte MaxConnections { get; set; } = 100;
+    public byte MaxConnections { get; set; } = SubnauticaServerConstants.DEFAULT_MAX_PLAYERS;
 
     [Range(1, ushort.MaxValue)]
     public ushort ServerPort { get; set; } = SubnauticaServerConstants.DEFAULT_PORT;
