@@ -8,6 +8,7 @@
         <PackageReference Include="Autofac" />
         <PackageReference Include="LiteNetLib" />
         <PackageReference Include="MagicOnion.Abstractions" />
+        <PackageReference Include="Grpc.Core.Api" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.Win32.Registry" />
         <PackageReference Include="Mono.Nat" />
