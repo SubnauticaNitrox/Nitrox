@@ -23,7 +23,13 @@ public sealed class AI
     /// </summary>
     private readonly HashSet<Type> creatureActionWhitelist =
     [
-        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops), typeof(Poop)
+        typeof(AttackCyclops),
+        typeof(AttackLastTarget),
+        typeof(Poop),
+        typeof(RangedAttackLastTarget),
+        typeof(SwimToHeroPeeper),
+        typeof(SwimToEnzymes),
+        typeof(SwimToMeat)
     ];
 
     /// <summary>
@@ -32,7 +38,11 @@ public sealed class AI
     /// </summary>
     private readonly HashSet<Type> syncedCreatureWhitelist =
     [
-        typeof(ReaperLeviathan), typeof(SeaDragon), typeof(SeaTreader), typeof(GhostLeviathan)
+        typeof(GhostLeviathan),
+        typeof(ReaperLeviathan),
+        typeof(SeaDragon),
+        typeof(SeaTreader),
+        typeof(Stalker)
     ];
 
     public AI(IPacketSender packetSender)
