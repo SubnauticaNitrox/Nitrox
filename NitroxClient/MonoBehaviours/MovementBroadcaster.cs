@@ -38,7 +38,7 @@ public class MovementBroadcaster : MonoBehaviour
 
     public void Update()
     {
-        float currentTime = (float)this.Resolve<TimeManager>().RealTimeElapsed;
+        float currentTime = Time.realtimeSinceStartup;
         if (currentTime < latestBroadcastTime + BROADCAST_PERIOD)
         {
             return;
