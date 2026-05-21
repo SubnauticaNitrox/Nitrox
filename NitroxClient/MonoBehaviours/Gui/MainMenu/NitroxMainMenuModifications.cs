@@ -1,4 +1,4 @@
-﻿using NitroxClient.MonoBehaviours.Discord;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using TMPro;
@@ -22,7 +22,11 @@ public class NitroxMainMenuModifications : MonoBehaviour
         {
             rightSide = MainMenuRightSide.main;
             MultiplayerMenuMods();
-            DiscordClient.InitializeRPMenu();
+
+            if (!NitroxBootstrapper.IsDiscordIntegrationDisabled)
+            {
+                DiscordClient.InitializeRPMenu();
+            }
         }
     }
 

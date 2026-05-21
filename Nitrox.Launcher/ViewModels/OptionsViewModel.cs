@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,11 +54,14 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     public partial bool AllowMultipleGameInstances { get; set; }
 
     [ObservableProperty]
-    public partial bool UseBigPictureMode { get; set; }    
+    public partial bool UseBigPictureMode { get; set; }
+
+    [ObservableProperty]
+    public partial bool DiscordIntegrationEnabled { get; set; }
 
     [ObservableProperty]
     public partial bool IsInReleaseMode { get; set; }
-    
+
     private static string DefaultLaunchArg => "-vrmode none";
     private bool isResettingArgs;
 
@@ -73,6 +76,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
+        DiscordIntegrationEnabled = keyValueStore.GetIsDiscordIntegrationEnabled();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await Task.Run(() => SetTargetedSubnauticaPath(SelectedGame.PathToGame), cancellationToken).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -195,5 +199,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             AllowMultipleGameInstances = false;
         }
         keyValueStore.SetBigPictureMode(value);
+    }
+
+    partial void OnDiscordIntegrationEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsDiscordIntegrationEnabled(value);
     }
 }

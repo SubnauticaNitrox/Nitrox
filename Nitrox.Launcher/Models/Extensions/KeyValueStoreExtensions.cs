@@ -16,5 +16,7 @@ public static class KeyValueStoreExtensions
         public void SetPreferEmbedded(bool value) => self.SetValue("PreferEmbedded", value);
         public bool GetUseBigPictureMode(bool defaultValue = false) => self.GetValue("UseBigPictureMode", defaultValue);
         public void SetBigPictureMode(bool value) => self.SetValue("UseBigPictureMode", value);
+        public bool GetIsDiscordIntegrationEnabled(bool defaultValue = true) => self.GetValue("IsDiscordIntegrationEnabled", defaultValue);
+        public void SetIsDiscordIntegrationEnabled(bool value) => self.SetValue("IsDiscordIntegrationEnabled", value);
     }
 }
