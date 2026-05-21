@@ -1,0 +1,16 @@
+services:
+  nitrox-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      additional_contexts:
+        subnautica: ${SUBNAUTICA_PATH}
+    ports:
+      - "11000:11000/udp"
+    volumes:
+      - ${SUBNAUTICA_PATH}:/subnautica:ro
+      - nitrox-data:/data
+    restart: unless-stopped
+
+volumes:
+  nitrox-data:

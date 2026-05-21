@@ -1,0 +1,8 @@
+.git
+.github
+.vs
+*.user
+*.suo
+
+**/bin/
+**/obj/
