@@ -1,8 +1,13 @@
+x-launcher-common: &launcher-common
+  image: scratch
+  profiles:
+    - launcher
+
 services:
   nitrox-server:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile.Server
       additional_contexts:
         subnautica: ${SUBNAUTICA_PATH}
     ports:
@@ -11,6 +16,56 @@ services:
       - ${SUBNAUTICA_PATH}:/subnautica:ro
       - nitrox-data:/data
     restart: unless-stopped
+    profiles:
+      - server
+
+  launcher-win-x64:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.Launcher
+      additional_contexts:
+        subnautica: ${SUBNAUTICA_PATH}
+      args:
+        RID: win-x64
+        SELF_CONTAINED: ${SELF_CONTAINED:-false}
+    profiles:
+      - launcher
+
+  launcher-linux-x64:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.Launcher
+      additional_contexts:
+        subnautica: ${SUBNAUTICA_PATH}
+      args:
+        RID: linux-x64
+        SELF_CONTAINED: ${SELF_CONTAINED:-false}
+    profiles:
+      - launcher
+
+  launcher-osx-x64:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.Launcher
+      additional_contexts:
+        subnautica: ${SUBNAUTICA_PATH}
+      args:
+        RID: osx-x64
+        SELF_CONTAINED: ${SELF_CONTAINED:-false}
+    profiles:
+      - launcher
+
+  launcher-osx-arm64:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.Launcher
+      additional_contexts:
+        subnautica: ${SUBNAUTICA_PATH}
+      args:
+        RID: osx-arm64
+        SELF_CONTAINED: ${SELF_CONTAINED:-false}
+    profiles:
+      - launcher
 
 volumes:
   nitrox-data:

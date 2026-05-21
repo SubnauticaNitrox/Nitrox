@@ -1,0 +1,20 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+ARG SELF_CONTAINED=false
+ARG RID=linux-x64
+
+RUN apt-get update && apt-get install -y mono-devel && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+COPY . .
+
+RUN --mount=type=bind,from=subnautica,target=/subnautica \
+    SUBNAUTICA_INSTALLATION_PATH=/subnautica \
+    dotnet publish Nitrox.Launcher/Nitrox.Launcher.csproj \
+      -c Release \
+      -r ${RID} \
+      --self-contained ${SELF_CONTAINED} \
+      -o /out
+
+FROM scratch
+COPY --from=build /out /
