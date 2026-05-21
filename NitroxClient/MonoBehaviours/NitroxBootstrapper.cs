@@ -1,3 +1,4 @@
+using System;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine;
@@ -6,7 +7,12 @@ namespace NitroxClient.MonoBehaviours;
 
 public class NitroxBootstrapper : MonoBehaviour
 {
+    private const string DISABLE_DISCORD_INTEGRATION_ARG = "--disable-discord-integration";
+
     internal static NitroxBootstrapper Instance;
+
+    public static bool IsDiscordIntegrationDisabled =>
+        Array.Exists(Environment.GetCommandLineArgs(), arg => arg.Equals(DISABLE_DISCORD_INTEGRATION_ARG, StringComparison.OrdinalIgnoreCase));
 
     // Awake is too early in Subnautica's lifecycle to access PlatformUtils
     // so we pick Start which will always happen after it's initialized
@@ -16,7 +22,15 @@ public class NitroxBootstrapper : MonoBehaviour
         Instance = this;
         gameObject.AddComponent<SceneCleanerPreserve>();
         gameObject.AddComponent<NitroxMainMenuModifications>();
-        gameObject.AddComponent<DiscordClient>();
+
+        if (IsDiscordIntegrationDisabled)
+        {
+            Log.Info("[Discord] Discord integration disabled by launch argument");
+        }
+        else
+        {
+            gameObject.AddComponent<DiscordClient>();
+        }
 
 #if DEBUG
         EnableDeveloperFeatures();
