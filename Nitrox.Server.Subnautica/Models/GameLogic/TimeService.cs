@@ -31,6 +31,18 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     /// </summary>
     private const int NTP_RETRY_INTERVAL_SECONDS = 60;
 
+    /// <summary>
+    ///     Number of consecutive failed retry rounds before the circuit breaker opens and we assume there is
+    ///     no NTP connectivity (e.g. an offline/LAN server).
+    /// </summary>
+    private const int NTP_FAILURE_THRESHOLD = 3;
+
+    /// <summary>
+    ///     Retry interval in seconds used once the circuit breaker has opened. Slows futile attempts right down
+    ///     while still acting as a half-open probe so the server recovers if it later gains connectivity.
+    /// </summary>
+    private const int NTP_OFFLINE_RETRY_INTERVAL_SECONDS = 1800;
+
     private readonly ILogger<TimeService> logger = logger;
     private readonly ILoggerFactory loggerFactory = loggerFactory;
 
@@ -179,6 +191,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
     private void StartNtpTimer()
     {
+        CircuitBreaker circuitBreaker = new(NTP_FAILURE_THRESHOLD);
         Timer retryTimer = new(TimeSpan.FromSeconds(NTP_RETRY_INTERVAL_SECONDS).TotalMilliseconds)
         {
             AutoReset = true,
@@ -191,7 +204,17 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
             {
                 if (onlineMode)
                 {
+                    circuitBreaker.RecordSuccess();
                     retryTimer.Close();
+                    return;
+                }
+
+                // After enough consecutive failures, assume there's no NTP connectivity (e.g. an offline/LAN
+                // server) and slow the retries right down so we stop wasting resources and log lines.
+                if (circuitBreaker.RecordFailure())
+                {
+                    retryTimer.Interval = TimeSpan.FromSeconds(NTP_OFFLINE_RETRY_INTERVAL_SECONDS).TotalMilliseconds;
+                    logger.ZLogInformation($"Could not reach any NTP server after {NTP_FAILURE_THRESHOLD} attempts; assuming no internet connection and slowing NTP retries to every {NTP_OFFLINE_RETRY_INTERVAL_SECONDS}s. This is expected on offline/LAN servers.");
                 }
             }, loggerFactory.CreateLogger<NtpSyncer>());
             ntpSyncer.RequestNtpService();
