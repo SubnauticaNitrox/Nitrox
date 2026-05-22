@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
@@ -33,7 +34,7 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
 
         multiplayerCinematicController.CallAllCinematicModeEnd();
 
-        int identifier = MultiplayerCinematicReference.GetCinematicControllerIdentifier(__instance.gameObject, entity.gameObject);
-        Resolve<PlayerCinematics>().StartCinematicMode(Resolve<IMultiplayerSession>().Reservation.PlayerId, entity.Id, identifier, __instance.playerViewAnimationName);
+        int identifier = __instance.gameObject.GetHierarchyPath(entity.gameObject).GetHashCode();
+        Resolve<PlayerCinematics>().StartCinematicMode(Resolve<LocalPlayer>().SessionId.Value, entity.Id, identifier, __instance.playerViewAnimationName);
     }
 }
