@@ -5,6 +5,7 @@ using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
+using Story;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -34,6 +35,9 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
 
         if (packet.StartPlaying)
         {
+            // For gun terminal, apply animation parameters before starting cinematic
+            ApplyGunTerminalAnimationParameters(entity, remotePlayer);
+            
             // Set InCinematic flag to prevent movement packets from overriding animation state
             remotePlayer.InCinematic = true;
             remotePlayer.AnimationController.UpdatePlayerAnimations = false;
@@ -47,5 +51,46 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             remotePlayer.AnimationController.UpdatePlayerAnimations = true;
         }
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Applies gun terminal-specific animation parameters to the cinematic animator and remote player.
+    /// Must be called BEFORE starting the cinematic to ensure correct animations play.
+    /// </summary>
+    private static void ApplyGunTerminalAnimationParameters(GameObject entity, RemotePlayer remotePlayer)
+    {
+        // Check if this is a gun terminal cinematic
+        if (!entity.TryGetComponent(out PrecursorDisableGunTerminal terminal))
+        {
+            return;
+        }
+
+        // Find the cinematic controller (should be on the terminal)
+        if (!terminal.TryGetComponent(out PlayerCinematicController cinematicController))
+        {
+            Log.Warn($"[GunTerminal] No PlayerCinematicController found on gun terminal");
+            return;
+        }
+
+        // Check if player is cured (story goal)
+        bool playerCured = false;
+        if (StoryGoalManager.main != null && terminal.onPlayerCuredGoal != null)
+        {
+            playerCured = StoryGoalManager.main.IsGoalComplete(terminal.onPlayerCuredGoal.key);
+        }
+
+        // Apply parameters to the cinematic animator (gun terminal's animator)
+        SafeAnimator.SetBool(cinematicController.animator, "first_use", terminal.firstUse);
+        SafeAnimator.SetBool(cinematicController.animator, "cured", playerCured);
+
+        // Apply parameters to the remote player's animator
+        Animator playerAnimator = remotePlayer.Body.GetComponentInChildren<Animator>();
+        if (playerAnimator != null && playerAnimator.gameObject.activeInHierarchy)
+        {
+            SafeAnimator.SetBool(playerAnimator, "using_tool_first", terminal.firstUse);
+            SafeAnimator.SetBool(playerAnimator, "cured", playerCured);
+        }
+
+        Log.Debug($"[GunTerminal] Applied animation parameters - firstUse: {terminal.firstUse}, cured: {playerCured}");
     }
 }

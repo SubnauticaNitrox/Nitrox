@@ -27,6 +27,7 @@ public sealed partial class PlayerCinematicController_OnPlayerCinematicModeEnd_P
         }
 
         int identifier = __instance.gameObject.GetHierarchyPath(entity.gameObject).GetHashCode();
+        Log.Debug($"[CINEMATIC_DEBUG] EndCinematicMode - Controller: {__instance.gameObject.GetFullHierarchyPath()}, Entity: {entity.gameObject.GetFullHierarchyPath()}, Identifier: {identifier}, AnimName: {__instance.playerViewAnimationName}");
         Resolve<PlayerCinematics>().EndCinematicMode(Resolve<LocalPlayer>().SessionId.Value, entity.Id, identifier, __instance.playerViewAnimationName);
     }
 }
