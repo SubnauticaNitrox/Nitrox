@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -169,7 +170,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         return interiorPiece;
     }
 
-    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
+    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity, Entities entities)
     {
         MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
         if (!mapRoomFunctionality)
@@ -177,6 +178,43 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
             yield break;
         }
+
         NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
+
+        List<Entity> upgradeChips = mapRoomEntity.ChildEntities
+                                                 .OfType<InventoryItemEntity>()
+                                                 .ToList<Entity>();
+
+        if (upgradeChips.Count > 0)
+        {
+            ClearMapRoomUpgradeContainer(mapRoomFunctionality);
+            yield return entities.SpawnBatchAsync(upgradeChips, true);
+        }
     }
+
+    private static void ClearMapRoomUpgradeContainer(MapRoomFunctionality mapRoomFunctionality)
+    {
+        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(mapRoomFunctionality.gameObject);
+
+        if (!opContainer.HasValue)
+        {
+            Log.Error($"Couldn't find map room upgrade container on {mapRoomFunctionality.gameObject.GetFullHierarchyPath()}");
+            return;
+        }
+
+        ItemsContainer container = opContainer.Value;
+
+        List<Pickupable> pickupables = container._items.Values
+                                              .SelectMany(itemGroup => itemGroup.items)
+                                              .Select(item => item.item)
+                                              .Where(pickupable => pickupable)
+                                              .ToList();
+
+        foreach (Pickupable pickupable in pickupables)
+        {
+            NitroxEntity.RemoveFrom(pickupable.gameObject);
+            container.RemoveItem(pickupable, true);
+        }
+    }
+
 }
