@@ -1,34 +1,32 @@
 ﻿using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Intercepts bed entry to send a packet and register with SleepManager.
-/// Uses Prefix instead of Transpiler because we need to prevent the original method from
-/// starting the sleep animation - in multiplayer we wait for all players before sleeping.
+/// Handles bed entry for multiplayer sleep coordination.
+/// Bed lie-down animations ARE synced through the cinematic system.
+/// This patch manages the sleep state and multiplayer coordination after the animation completes.
 /// </summary>
 public sealed partial class Bed_EnterInUseMode_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bed t) => t.EnterInUseMode(default(Player)));
 
-    public static bool Prefix(Bed __instance, Player player)
+    public static void Prefix(Bed __instance)
     {
         if (__instance.inUseMode != Bed.InUseMode.None)
         {
-            return false;
+            return;
         }
 
-        player.FreezeStats();
-        player.cinematicModeActive = true;
-        MainCameraControl.main.viewModel.localRotation = UnityEngine.Quaternion.identity;
-        __instance.inUseMode = Bed.InUseMode.Sleeping;
-
+        // Send packet to notify other players for sleep coordination
         Resolve<IPacketSender>().Send(new BedEnter());
         Resolve<SleepManager>().EnterBed(__instance);
-
-        return false;
     }
 }

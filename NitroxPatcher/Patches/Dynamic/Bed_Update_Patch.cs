@@ -1,12 +1,12 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Replaces the bed exit behavior when sleeping to use our SleepManager.
-/// Uses Prefix instead of Transpiler because we completely replace the sleeping branch logic
-/// rather than modifying individual lines.
+/// Handles bed exit input when sleeping.
+/// Bed stand-up animations ARE synced through the cinematic system.
 /// </summary>
 public sealed partial class Bed_Update_Patch : NitroxPatch, IDynamicPatch
 {

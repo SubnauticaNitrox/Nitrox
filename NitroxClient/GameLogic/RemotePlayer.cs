@@ -158,16 +158,19 @@ public class RemotePlayer : INitroxPlayer
 
         Body.SetActive(true);
 
+        // Skip position updates during cinematics - the cinematic controller handles positioning
+        if (InCinematic)
+        {
+            Log.Debug($"[Movement] Skipping position update for {PlayerName} - InCinematic: true");
+            return;
+        }
+
         // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
         SetVehicle(null);
         SetPilotingChair(null);
 
         AnimationController.AimingRotation = aimingRotation;
-        // Only enable velocity-based animations if not in a cinematic (prevents race condition with cinematic packets)
-        if (!InCinematic)
-        {
-            AnimationController.UpdatePlayerAnimations = true;
-        }
+        AnimationController.UpdatePlayerAnimations = true;
         AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
 
         // If in a subroot the position will be relative to the subroot
