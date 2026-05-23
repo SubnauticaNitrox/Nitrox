@@ -9,11 +9,11 @@ namespace Nitrox.Model.Helper;
 /// <summary>
 ///     Provides access to all directories that can be pre-configured by the user of the operating system.
 ///     <br /><br />
-///     For paths that are discovered at runtime (like launcher or game path), use <see cref="NitroxUser"/>
+///     For paths that are discovered at runtime (like launcher or game path), use <see cref="NitroxUser" />
 /// </summary>
 public static class NitroxDirectory
 {
-    private static readonly NitroxDirectoryShared implementation = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new NitroxDirectoryShared() : new NitroxDirectoryLinux();
+    private static readonly NitroxDirectoryShared implementation;
 
     public static string HomePath => implementation.HomePath;
 
@@ -30,7 +30,23 @@ public static class NitroxDirectory
     ///     Gets the path to Nitrox application backups. Note: not server save backups.
     /// </summary>
     public static string BackupsPath => implementation.BackupsPath;
-    
+
+    static NitroxDirectory()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            implementation = new NitroxDirectoryUnix();
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            implementation = new NitroxDirectoryMacOS();
+        }
+        else
+        {
+            implementation = new NitroxDirectoryShared();
+        }
+    }
+
     private class NitroxDirectoryShared
     {
         /// <summary>
@@ -166,7 +182,7 @@ public static class NitroxDirectory
     ///     <a href="https://specifications.freedesktop.org/basedir/latest/">XDG spec</a>, unless <i>--data-path</i> is given
     ///     by the user.
     /// </summary>
-    private class NitroxDirectoryLinux : NitroxDirectoryShared
+    private class NitroxDirectoryUnix : NitroxDirectoryShared
     {
         public override string ConfigPath
         {
@@ -252,6 +268,16 @@ public static class NitroxDirectory
             }
         }
 
+        protected virtual string GetXdgPath(XdgDirectory directory) =>
+            directory switch
+            {
+                XdgDirectory.DATA => Path.Combine(HomePath, ".local", "share"),
+                XdgDirectory.CONFIG => Path.Combine(HomePath, ".config"),
+                XdgDirectory.STATE => Path.Combine(HomePath, ".local", "state"),
+                XdgDirectory.CACHE => Path.Combine(HomePath, ".cache"),
+                _ => NitroxDirectory.ConfigPath
+            };
+
         private string GetXdgPathIfNotWineOrUserGiven(XdgDirectory directory, params string[] folderNames)
         {
             if (WineHomePath is { } winePath)
@@ -272,14 +298,7 @@ public static class NitroxDirectory
             {
                 return xdgPath;
             }
-            xdgPath = directory switch
-            {
-                XdgDirectory.DATA => Path.Combine(HomePath, ".local", "share"),
-                XdgDirectory.CONFIG => Path.Combine(HomePath, ".config"),
-                XdgDirectory.STATE => Path.Combine(HomePath, ".local", "state"),
-                XdgDirectory.CACHE => Path.Combine(HomePath, ".cache"),
-                _ => throw new ArgumentOutOfRangeException(nameof(directory), directory, null)
-            };
+            xdgPath = GetXdgPath(directory);
             xdgPath = Path.Combine([GetAsNitroxPath(xdgPath), ..folderNames]);
             Directory.CreateDirectory(xdgPath);
             return xdgPath;
@@ -295,12 +314,25 @@ public static class NitroxDirectory
                 };
         }
 
-        private enum XdgDirectory
+        protected enum XdgDirectory
         {
             DATA,
             CONFIG,
             STATE,
             CACHE,
         }
+    }
+
+    private class NitroxDirectoryMacOS : NitroxDirectoryUnix
+    {
+        protected override string GetXdgPath(XdgDirectory directory) =>
+            directory switch
+            {
+                XdgDirectory.DATA => Path.Combine(HomePath, "Library", "Application Support"),
+                XdgDirectory.CONFIG => Path.Combine(HomePath, "Library", "Application Support"),
+                XdgDirectory.STATE => Path.Combine(HomePath, "Library", "Application Support"),
+                XdgDirectory.CACHE => Path.Combine(HomePath, "Library", "Caches"),
+                _ => NitroxDirectory.ConfigPath
+            };
     }
 }
