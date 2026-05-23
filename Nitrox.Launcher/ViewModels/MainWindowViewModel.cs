@@ -107,7 +107,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
             }
 
             // Only on Linux we allow changing save paths via XDG spec.
-            if (OperatingSystem.IsLinux())
+            if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
             {
                 Task.Run(() =>
                 {
