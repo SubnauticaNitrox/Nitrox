@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.CinematicController;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
@@ -85,6 +86,27 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 
     protected override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;
 
+    private static void AddBedCinematicControllers(GameObject bedObject)
+    {
+        if (bedObject.GetComponent<MultiplayerCinematicReference>())
+        {
+            return; // Already has the component
+        }
+
+        PlayerCinematicController[] controllers = bedObject.GetComponentsInChildren<PlayerCinematicController>(true);
+        if (controllers.Length == 0)
+        {
+            return; // No cinematic controllers found
+        }
+
+        MultiplayerCinematicReference reference = bedObject.AddComponent<MultiplayerCinematicReference>();
+
+        foreach (PlayerCinematicController controller in controllers)
+        {
+            reference.AddController(controller);
+        }
+    }
+
     public IEnumerator RestoreInteriorPiece(InteriorPieceEntity interiorPiece, Base @base, TaskResult<Optional<GameObject>> result = null)
     {
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: interiorPiece.ClassId))
@@ -105,6 +127,13 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         if (moduleObject)
         {
             NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
+            
+            // Add MultiplayerCinematicReference for beds to enable animation sync
+            if (moduleObject.GetComponent<Bed>())
+            {
+                AddBedCinematicControllers(moduleObject);
+            }
+            
             yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
             entityMetadataManager.ApplyMetadata(moduleObject, interiorPiece.Metadata);
             result.Set(moduleObject);
