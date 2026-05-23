@@ -16,24 +16,6 @@
         <designer:DesignServersViewModel />
     </Design.DataContext>
     <Panel Background="{DynamicResource BrandWhite}" Classes="viewPadding">
-        <Panel IsVisible="{Binding MayRequireMigration}">
-            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="DarkOrange">
-                <TextBlock
-                    FontSize="24"
-                    FontWeight="600"
-                    TextAlignment="Left"
-                    Margin="4">
-                    Migration
-                </TextBlock>
-                <TextBlock
-                    FontSize="16"
-                    Margin="4 10 4 4"
-                    TextAlignment="Left">
-                    The way Nitrox stores files has changed in this version, you may need to manually move the files to the correct places.
-                </TextBlock>
-            </StackPanel>
-        </Panel>
-        
         <Panel IsVisible="{Binding !Servers.Count}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image

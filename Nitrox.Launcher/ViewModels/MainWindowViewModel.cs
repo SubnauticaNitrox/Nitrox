@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -105,6 +106,20 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
                 LauncherNotifier.Info("You're now using Nitrox DEV build");
             }
 
+            // Only on Linux we allow changing save paths via XDG spec.
+            if (OperatingSystem.IsLinux())
+            {
+                Task.Run(() =>
+                {
+                    string legacySavesPath = Path.Combine(NitroxDirectory.ConfigPath, "saves");
+                    if (!NitroxDirectory.SavesPath.Equals(legacySavesPath, StringComparison.OrdinalIgnoreCase) && Directory.EnumerateFileSystemEntries(legacySavesPath).Any())
+                    {
+                        string message = $"It looks like you have save files in the previous location at '{legacySavesPath}', please move them to {NitroxDirectory.SavesPath} to continue using these saves. This is because Nitrox now follows the XDG spec.";
+                        Log.Warn(message);
+                        LauncherNotifier.Warning(message);
+                    }
+                });
+            }
             Task.Run(async () =>
             {
                 if (!NetHelper.HasInternetConnectivity())

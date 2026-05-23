@@ -26,16 +26,12 @@ internal partial class ServersViewModel : RoutableViewModelBase
     private readonly ManageServerViewModel manageServerViewModel;
     [ObservableProperty]
     public partial AvaloniaList<ServerEntry>? Servers { get; set; }
-    [ObservableProperty]
-    public partial bool MayRequireMigration { get; set; }
     public ServersViewModel(IKeyValueStore keyValueStore, DialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
     {
         this.keyValueStore = keyValueStore;
         this.dialogService = dialogService;
         this.serverService = serverService;
         this.manageServerViewModel = manageServerViewModel;
-
-        MayRequireMigration = NitroxDirectory.MayRequireMigration;
 
         this.RegisterMessageListener<ServerStatusMessage, ServersViewModel>((message, model) =>
         {
