@@ -398,3 +398,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Decompiled game assemblies (reference only, not part of the project)
+Assembly-CSharp/
