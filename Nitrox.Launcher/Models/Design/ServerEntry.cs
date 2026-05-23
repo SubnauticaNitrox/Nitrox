@@ -83,7 +83,7 @@ internal sealed partial class ServerEntry : ObservableObject
     public partial int MaxPlayers { get; set; } = serverDefaults.MaxConnections;
 
     [ObservableProperty]
-    public partial string? Name { get; set; }
+    public required partial string Name { get; set; } = "";
 
     [ObservableProperty]
     public partial string? Password { get; set; }
@@ -147,7 +147,10 @@ internal sealed partial class ServerEntry : ObservableObject
 
     public static async Task<ServerEntry?> FromDirectoryAsync(string saveDir)
     {
-        ServerEntry entry = entriesByDirectory.GetOrAdd(saveDir, static _ => new());
+        ServerEntry entry = entriesByDirectory.GetOrAdd(saveDir, static (_, saveDir) => new()
+        {
+            Name = Path.GetFileName(saveDir)
+        }, saveDir);
         await entry.RefreshFromDirectoryAsync(saveDir);
         return entry;
     }
@@ -334,7 +337,7 @@ internal sealed partial class ServerEntry : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
     public void OpenSaveFolder()
     {
-        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesPath(), Name!));
+        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesPath(), Name));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
