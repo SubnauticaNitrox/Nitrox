@@ -48,7 +48,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     public partial bool ShowResetArgsBtn { get; set; }
 
     [ObservableProperty]
-    public partial bool LightModeEnabled { get; set; }
+    public partial bool IsLightModeEnabled { get; set; }
 
     [ObservableProperty]
     public partial bool AllowMultipleGameInstances { get; set; }
@@ -57,7 +57,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     public partial bool UseBigPictureMode { get; set; }
 
     [ObservableProperty]
-    public partial bool DiscordEnabled { get; set; }
+    public partial bool IsDiscordEnabled { get; set; }
 
     [ObservableProperty]
     public partial bool IsInReleaseMode { get; set; }
@@ -73,10 +73,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         ScreenshotsPath = NitroxUser.ScreenshotsPath;
         SavesPath = keyValueStore.GetSavesFolderDir();
         LogsPath = Model.Logger.Log.LogDirectory;
-        LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+        IsLightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
-        DiscordEnabled = keyValueStore.GetIsDiscordEnabled();
+        IsDiscordEnabled = keyValueStore.GetIsDiscordEnabled();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await Task.Run(() => SetTargetedSubnauticaPath(SelectedGame.PathToGame), cancellationToken).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
@@ -177,7 +177,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
     }
 
-    partial void OnLightModeEnabledChanged(bool value)
+    partial void OnIsLightModeEnabledChanged(bool value)
     {
         keyValueStore.SetIsLightModeEnabled(value);
         Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
@@ -201,7 +201,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         keyValueStore.SetBigPictureMode(value);
     }
 
-    partial void OnDiscordEnabledChanged(bool value)
+    partial void OnIsDiscordEnabledChanged(bool value)
     {
         keyValueStore.SetIsDiscordEnabled(value);
     }

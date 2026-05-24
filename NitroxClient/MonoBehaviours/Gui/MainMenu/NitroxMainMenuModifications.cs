@@ -22,7 +22,6 @@ public class NitroxMainMenuModifications : MonoBehaviour
         {
             rightSide = MainMenuRightSide.main;
             MultiplayerMenuMods();
-
             DiscordClient.InitializeRPMenu();
         }
     }
