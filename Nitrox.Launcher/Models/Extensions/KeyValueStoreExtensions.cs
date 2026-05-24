@@ -1,3 +1,4 @@
+using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
 
 namespace Nitrox.Launcher.Models.Extensions;
@@ -16,7 +17,7 @@ public static class KeyValueStoreExtensions
         public void SetPreferEmbedded(bool value) => self.SetValue("PreferEmbedded", value);
         public bool GetUseBigPictureMode(bool defaultValue = false) => self.GetValue("UseBigPictureMode", defaultValue);
         public void SetBigPictureMode(bool value) => self.SetValue("UseBigPictureMode", value);
-        public bool GetIsDiscordIntegrationEnabled(bool defaultValue = true) => self.GetValue("IsDiscordIntegrationEnabled", defaultValue);
-        public void SetIsDiscordIntegrationEnabled(bool value) => self.SetValue("IsDiscordIntegrationEnabled", value);
+        public bool GetIsDiscordEnabled(bool defaultValue = false) => self.GetValue(DiscordConstants.ENABLE_CONFIG_KEY, defaultValue);
+        public void SetIsDiscordEnabled(bool value) => self.SetValue(DiscordConstants.ENABLE_CONFIG_KEY, value);
     }
 }

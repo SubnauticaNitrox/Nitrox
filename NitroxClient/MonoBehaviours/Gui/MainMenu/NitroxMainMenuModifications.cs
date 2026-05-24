@@ -23,10 +23,7 @@ public class NitroxMainMenuModifications : MonoBehaviour
             rightSide = MainMenuRightSide.main;
             MultiplayerMenuMods();
 
-            if (!NitroxBootstrapper.IsDiscordIntegrationDisabled)
-            {
-                DiscordClient.InitializeRPMenu();
-            }
+            DiscordClient.InitializeRPMenu();
         }
     }
 

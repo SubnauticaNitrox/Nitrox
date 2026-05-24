@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +14,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -27,16 +27,6 @@ namespace Nitrox.Launcher.ViewModels;
 internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
     : RoutableViewModelBase
 {
-    public static Task<string>? LastFindSubnauticaTask;
-    private const string DISABLE_DISCORD_INTEGRATION_ARG = "--disable-discord-integration";
-    private static readonly TimeSpan DiscordCrashObservationPeriod = TimeSpan.FromSeconds(45);
-    private static readonly string[] DiscordCrashSignatures =
-    [
-        "discord_game_sdk",
-        "DiscordClient:UpdateActivity",
-        "DiscordClient:InitializeRPMenu",
-        "DiscordGameSDKWrapper.ActivityManager:UpdateActivity"
-    ];
     private static bool hasInstantLaunched;
     private readonly DialogService dialogService = dialogService;
     private readonly IKeyValueStore keyValueStore = keyValueStore;
@@ -157,10 +147,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 }
 
                 // Try inject Nitrox into Subnautica code.
-                if (LastFindSubnauticaTask != null)
-                {
-                    await LastFindSubnauticaTask;
-                }
                 await NitroxEntryPatch.Apply(NitroxUser.GamePath);
 
                 if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
@@ -247,9 +233,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         // Start game & gaming platform if needed.
         string launchArguments = $"{keyValueStore.GetLaunchArguments(gameInfo)} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
 
-        if (!keyValueStore.GetIsDiscordIntegrationEnabled() && !launchArguments.Contains(DISABLE_DISCORD_INTEGRATION_ARG, StringComparison.OrdinalIgnoreCase))
+        if (keyValueStore.GetIsDiscordEnabled() && !launchArguments.Contains(DiscordConstants.ENABLE_ARG, StringComparison.OrdinalIgnoreCase))
         {
-            launchArguments = $"{launchArguments} {DISABLE_DISCORD_INTEGRATION_ARG}";
+            launchArguments = $"{launchArguments} {DiscordConstants.ENABLE_ARG}";
         }
 
         ProcessEx game = NitroxUser.GamePlatform switch
@@ -266,120 +252,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         {
             throw new Exception($"Game failed to start through {NitroxUser.GamePlatform?.Name ?? "Standalone"}");
         }
-
-        if (!launchArguments.Contains(DISABLE_DISCORD_INTEGRATION_ARG, StringComparison.OrdinalIgnoreCase))
-        {
-            _ = MonitorDiscordCrashFallbackAsync(args, game).ContinueWithHandleError();
-        }
-    }
-
-    private async Task MonitorDiscordCrashFallbackAsync(string[]? args, ProcessEx game)
-    {
-        int processId = game.Id;
-        DateTime startedAt = DateTime.UtcNow;
-
-        Log.Info($"Monitoring Subnautica process #{processId} for Discord SDK launch crash for {DiscordCrashObservationPeriod.TotalSeconds:0} seconds");
-
-        try
-        {
-            while (DateTime.UtcNow - startedAt < DiscordCrashObservationPeriod)
-            {
-                await Task.Delay(1000);
-
-                if (!game.IsRunning)
-                {
-                    Log.Warn($"Subnautica process #{processId} exited during Discord crash observation window");
-
-                    if (PlayerLogContainsDiscordCrashSignature(startedAt))
-                    {
-                        Log.Warn("Detected Discord SDK crash signature in Player.log. Relaunching with Discord integration disabled.");
-
-                        LauncherNotifier.Warning("Subnautica appeared to crash while initializing Discord integration. Nitrox is relaunching with Discord integration disabled.");
-
-                        string[] retryArgs = AppendDisableDiscordIntegrationArg(args);
-                        await StartSubnauticaAsync(retryArgs);
-                    }
-
-                    return;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Error while monitoring for Discord SDK crash fallback:");
-        }
-        finally
-        {
-            game.Dispose();
-        }
-    }
-
-    private static string[] AppendDisableDiscordIntegrationArg(string[]? args)
-    {
-        if (args?.Any(arg => arg.Equals(DISABLE_DISCORD_INTEGRATION_ARG, StringComparison.OrdinalIgnoreCase)) == true)
-        {
-            return args;
-        }
-
-        return [.. args ?? [], DISABLE_DISCORD_INTEGRATION_ARG];
-    }
-
-    private static bool PlayerLogContainsDiscordCrashSignature(DateTime launchMonitorStartedAt)
-    {
-        string playerLogPath = GetSubnauticaPlayerLogPath();
-
-        if (!File.Exists(playerLogPath))
-        {
-            Log.Warn($"Unable to inspect Player.log for Discord crash signature because it does not exist: {playerLogPath}");
-            return false;
-        }
-
-        DateTime playerLogLastWriteTime = File.GetLastWriteTimeUtc(playerLogPath);
-        if (playerLogLastWriteTime < launchMonitorStartedAt.AddSeconds(-10))
-        {
-            Log.Info($"Ignoring Player.log for Discord crash detection because it was not updated during this launch attempt: {playerLogPath}");
-            return false;
-        }
-
-        string playerLog = File.ReadAllText(playerLogPath);
-
-        bool hasDiscordCrashSignature = DiscordCrashSignatures.Any(signature => playerLog.Contains(signature, StringComparison.OrdinalIgnoreCase));
-
-        Log.Info($"Discord crash signature detected in Player.log: {hasDiscordCrashSignature}");
-
-        return hasDiscordCrashSignature;
-    }
-
-    private static string GetSubnauticaPlayerLogPath()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Low",
-                "Unknown Worlds",
-                "Subnautica",
-                "Player.log");
-        }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                "Library",
-                "Logs",
-                "Unknown Worlds",
-                "Subnautica",
-                "Player.log");
-        }
-
-        return Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            ".config",
-            "unity3d",
-            "Unknown Worlds",
-            "Subnautica",
-            "Player.log");
     }
 
     private bool ShouldSkipSteam(string args)
