@@ -106,7 +106,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
                 LauncherNotifier.Info("You're now using Nitrox DEV build");
             }
 
-            // Only on Linux we allow changing save paths via XDG spec.
+            // Only on Linux or macOS we allow changing save paths via XDG spec.
             if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
             {
                 Task.Run(() =>
