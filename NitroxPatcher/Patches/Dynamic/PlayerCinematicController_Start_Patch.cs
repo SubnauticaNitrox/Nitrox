@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.BedSync;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using Nitrox.Model.Subnautica.Helper;
@@ -20,6 +21,12 @@ public sealed partial class PlayerCinematicController_Start_Patch : NitroxPatch,
                 Log.Warn($"[PlayerCinematicController_Start_Patch] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
             }
 
+            return;
+        }
+
+        // Skip beds - they use RemoteBedController instead of MultiplayerCinematicReference
+        if (entity.gameObject.GetComponent<Bed>())
+        {
             return;
         }
 
