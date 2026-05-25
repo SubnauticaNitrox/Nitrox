@@ -23,9 +23,9 @@ public class PlayerPing : MonoBehaviour
         }
     }
 
-    public static PlayerPing SpawnPlayerPing(NitroxVector3 location, string playerName, NitroxId pingId, Color playerColor)
+    public static PlayerPing SpawnPlayerPing(NitroxVector3 location, string labelText, NitroxId pingId, Color playerColor)
     {
-        GameObject pingObject = new($"PlayerPing_{playerName}_{pingId}");
+        GameObject pingObject = new($"Nitrox_PlayerPing_{labelText.Replace(" ", "")}_{pingId}");
         pingObject.transform.position = location.ToUnity();
         
         PlayerPing playerPing = pingObject.AddComponent<PlayerPing>();
@@ -34,12 +34,12 @@ public class PlayerPing : MonoBehaviour
         signal.pingType = PingType.Signal;
         signal.origin = pingObject.transform;
         signal.minDist = 5f;
-        signal._label = $"{playerName}'s Ping";
+        signal._label = labelText;
         signal.displayPingInManager = false;
         signal.visible = true;
         signal.Initialize();
 
-        uGUI_Pings pings = Object.FindObjectOfType<uGUI_Pings>();
+        uGUI_Pings pings = FindObjectOfType<uGUI_Pings>();
         if (pings)
         {
             pings.OnColor(signal.Id, playerColor);

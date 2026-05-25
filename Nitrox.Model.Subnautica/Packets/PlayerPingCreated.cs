@@ -4,21 +4,14 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Packets;
 
-namespace NitroxModel.Packets;
+namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class PlayerPingCreated : Packet
+public class PlayerPingCreated(SessionId sessionId, string text, NitroxVector3 position, NitroxId pingId)
+    : Packet
 {
-    public SessionId SessionId { get; }
-    public string PlayerName { get; }
-    public NitroxVector3 Position { get; }
-    public NitroxId PingId { get; }
-
-    public PlayerPingCreated(SessionId sessionId, string playerName, NitroxVector3 position, NitroxId pingId)
-    {
-        SessionId = sessionId;
-        PlayerName = playerName;
-        Position = position;
-        PingId = pingId;
-    }
+    public SessionId SessionId { get; } = sessionId;
+    public string Text { get; } = text;
+    public NitroxVector3 Position { get; } = position;
+    public NitroxId PingId { get; } = pingId;
 }

@@ -1,8 +1,7 @@
-using System.Threading.Tasks;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -15,7 +14,7 @@ internal sealed class PlayerPingCreatedProcessor(LocalPlayer localPlayer) : ICli
             return Task.CompletedTask;
         }
 
-        PlayerPingManager.CreateRemotePing(packet.SessionId, packet.PlayerName, packet.Position, packet.PingId);
+        PlayerPingManager.CreateRemotePing(packet.SessionId, packet.Text, packet.Position, packet.PingId);
         
         return Task.CompletedTask;
     }

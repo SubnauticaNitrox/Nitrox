@@ -16,6 +16,53 @@ public static class GameObjectExtensions
         ///     Returns true if game object is the local player, playing on the executing machine.
         /// </summary>
         public bool IsLocalPlayer => self == Player.main.gameObject;
+
+        public string GetFriendlyName()
+        {
+            string? result = TryGetName(self);
+            result ??= self.name.EndsWith("(Clone)", StringComparison.OrdinalIgnoreCase) ? self.name : null;
+            if (result == null)
+            {
+                // Might be collider / model, so we try a parent.
+                Transform current = self.transform;
+                while ((current = current.parent).AliveOrNull())
+                {
+                    if (current.name is "Cube" or "Sphere" or "Model" or "collision")
+                    {
+                        continue;
+                    }
+                    if (!current.name.EndsWith("(Clone)", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    result = TryGetName(current.gameObject) ?? current.name;
+                    break;
+                }
+            }
+            result = result?.Replace("(Clone)", "");
+            if (result.Contains("_doors", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Door";
+            }
+            return (result ?? self.GetFullHierarchyPath()).ToSpacedTitleCase(false);
+
+            static string? TryGetName(GameObject obj)
+            {
+                if (obj.GetComponent<Pickupable>().AliveOrNull() is { } pickupable)
+                {
+                    return pickupable.GetTechName().Replace("Undiscovered", "").Trim();
+                }
+                if (obj.GetComponent<TechTag>().AliveOrNull() is { } techTag)
+                {
+                    return techTag.type.AsString();
+                }
+                if (obj.GetComponent<TerrainChunkPieceCollider>().AliveOrNull() is { } terrainChunk)
+                {
+                    return $"{LargeWorld.main.GetBiome(terrainChunk.transform.position)} Biome";
+                }
+                return null;
+            }
+        }
     }
 
     public static bool TryGetComponentInChildren<T>(this GameObject go, out T component, bool includeInactive = false) where T : Component

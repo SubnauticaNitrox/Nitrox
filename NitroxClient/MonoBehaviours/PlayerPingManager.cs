@@ -1,20 +1,19 @@
-using System;
 using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Gui.InGame;
-using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
 public class PlayerPingManager : MonoBehaviour
 {
-    private const float MAX_PING_DISTANCE = 1000f;
-    private const float MIN_PING_DISTANCE = 3f;
+    private const float MAX_PING_DISTANCE = 250f;
     private const float MIN_PING_COOLDOWN = 0.5f;
     private const int MAX_ACTIVE_PINGS = 3;
     
@@ -23,9 +22,8 @@ public class PlayerPingManager : MonoBehaviour
     private IPacketSender packetSender;
     private LocalPlayer localPlayer;
     private float lastPingTime;
-    private Camera mainCamera;
     private readonly Dictionary<SessionId, List<PlayerPing>> playerPings = new();
-    private readonly List<PlayerPing> localPlayerPings = new();
+    private readonly List<PlayerPing> localPlayerPings = new(MAX_ACTIVE_PINGS);
 
     public void Awake()
     {
@@ -38,7 +36,7 @@ public class PlayerPingManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(2) && CanCreatePing())
         {
-            TryCreatePing();
+            TryCreatePingFromAim();
         }
     }
 
@@ -57,41 +55,15 @@ public class PlayerPingManager : MonoBehaviour
         return true;
     }
 
-    private void TryCreatePing()
+    private void TryCreatePingFromAim()
     {
-        if (!mainCamera)
+        if (RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE) is { } hit)
         {
-            mainCamera = Camera.main;
-        }
-
-        if (!mainCamera)
-        {
-            return;
-        }
-
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        int layerMask = ~(LayerMask.GetMask("UI", "Ignore Raycast"));
-        RaycastHit[] hits = Physics.RaycastAll(ray, MAX_PING_DISTANCE, layerMask);
-        
-        if (hits.Length > 0)
-        {
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-            
-            foreach (RaycastHit hit in hits)
-            {
-                if (hit.collider.isTrigger || hit.distance < MIN_PING_DISTANCE)
-                {
-                    continue;
-                }
-                
-                Vector3 pingPosition = hit.point + hit.normal * 0.5f;
-                CreatePing(pingPosition);
-                return;
-            }
+            CreatePing(hit.point + hit.normal * 0.5f, hit.collider.gameObject);
         }
     }
 
-    private void CreatePing(Vector3 position)
+    private void CreatePing(Vector3 position, GameObject entityHit)
     {
         lastPingTime = Time.realtimeSinceStartup;
 
@@ -113,30 +85,30 @@ public class PlayerPingManager : MonoBehaviour
         }
 
         NitroxId pingId = new();
-        string playerName = localPlayer.PlayerName;
         SessionId sessionId = localPlayer.SessionId.Value;
         Color playerColor = localPlayer.PlayerSettings.PlayerColor.ToUnity();
+        string label = $"{localPlayer.PlayerName} pinged {entityHit.GetFriendlyName()}";
 
-        PlayerPing newPing = PlayerPing.SpawnPlayerPing(position.ToDto(), playerName, pingId, playerColor);
+        PlayerPing newPing = PlayerPing.SpawnPlayerPing(position.ToDto(), label, pingId, playerColor);
         if (newPing)
         {
             localPlayerPings.Add(newPing);
         }
 
-        packetSender.Send(new PlayerPingCreated(sessionId, playerName, position.ToDto(), pingId));
+        packetSender.Send(new PlayerPingCreated(sessionId, label, position.ToDto(), pingId));
     }
 
-    public static void CreateRemotePing(SessionId sessionId, string playerName, NitroxVector3 position, NitroxId pingId)
+    public static void CreateRemotePing(SessionId sessionId, string labelText, NitroxVector3 position, NitroxId pingId)
     {
         if (!instance)
         {
             return;
         }
         
-        instance.CreateRemotePingInternal(sessionId, playerName, position, pingId);
+        instance.CreateRemotePingInternal(sessionId, labelText, position, pingId);
     }
     
-    private void CreateRemotePingInternal(SessionId sessionId, string playerName, NitroxVector3 position, NitroxId pingId)
+    private void CreateRemotePingInternal(SessionId sessionId, string labelText, NitroxVector3 position, NitroxId pingId)
     {
         if (!playerPings.TryGetValue(sessionId, out List<PlayerPing> pings))
         {
@@ -163,7 +135,7 @@ public class PlayerPingManager : MonoBehaviour
             ? remotePlayerOptional.Value.PlayerSettings.PlayerColor.ToUnity() 
             : Color.yellow;
         
-        PlayerPing newPing = PlayerPing.SpawnPlayerPing(position, playerName, pingId, playerColor);
+        PlayerPing newPing = PlayerPing.SpawnPlayerPing(position, labelText, pingId, playerColor);
         if (newPing)
         {
             pings.Add(newPing);
