@@ -24,46 +24,39 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
     {
         if (skipPrefix)
         {
-            Log.Info($"[CinematicLock] Skipping prefix (skipPrefix=true) for {__instance.gameObject.name}");
             return true;
         }
 
         if (__instance.cinematicModeActive)
         {
-            Log.Info($"[CinematicLock] Cinematic already active for {__instance.gameObject.name}");
             return true;
         }
 
-        // Defensive check: Ensure Player.main is valid before starting cinematic
-        // This prevents race conditions during player initialization or world loading
         if (!Player.main || !Player.main.gameObject.activeInHierarchy)
         {
-            Log.Warn($"[CinematicLock] Player.main not ready (exists: {Player.main != null}, active: {(Player.main ? Player.main.gameObject.activeInHierarchy : false)}) - blocking cinematic start to prevent race condition");
             return false;
-        }
-
-        if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
-        {
-            Log.Warn($"[CinematicLock] No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" - cinematic will work but won't be locked!");
-            return true;
         }
 
         if (!__instance.TryGetComponent(out MultiplayerCinematicController multiplayerCinematicController))
         {
-            Log.Error($"[CinematicLock] No MultiplayerCinematicController for \"{__instance.gameObject.GetFullHierarchyPath()}\" - this shouldn't happen!");
             return true;
         }
 
-        Log.Info($"[CinematicLock] Attempting to start cinematic:");
-        Log.Info($"  - GameObject: {__instance.gameObject.name}");
-        Log.Info($"  - Entity ID: {entity.Id}");
-        Log.Info($"  - Animation: {__instance.playerViewAnimationName}");
-        Log.Info($"  - Full Path: {__instance.gameObject.GetFullHierarchyPath()}");
+        // Skip beds - they use custom bed animation packets instead of cinematic packets
+        if (__instance.GetComponentInParent<Bed>())
+        {
+            return true;
+        }
+
+        // Get or find the NitroxEntity from the cinematic controller's parent hierarchy
+        if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
+        {
+            return true;
+        }
 
         // Check if we already have the lock
         if (Resolve<SimulationOwnership>().HasExclusiveLock(entity.Id))
         {
-            Log.Info($"[CinematicLock] Already have exclusive lock on {entity.Id}, starting cinematic immediately");
             multiplayerCinematicController.CallAllCinematicModeEnd();
             int identifier = __instance.gameObject.GetHierarchyPath(entity.gameObject).GetHashCode();
             Dictionary<string, bool> animationParameters = CaptureAnimationParameters(__instance, entity.gameObject);
@@ -71,49 +64,31 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
             return true;
         }
 
-        Log.Info($"[CinematicLock] Requesting EXCLUSIVE lock for entity {entity.Id}");
-        
         // Request exclusive lock to prevent multiple players from using the same cinematic simultaneously
         CinematicInteraction context = new(__instance, entity, multiplayerCinematicController);
         LockRequest<CinematicInteraction> lockRequest = new(entity.Id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
         Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
 
-        Log.Info($"[CinematicLock] Lock request sent, waiting for response...");
         return false;
     }
 
     private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAcquired, CinematicInteraction context)
     {
-        Log.Info($"[CinematicLock] Lock response received:");
-        Log.Info($"  - Entity ID: {id}");
-        Log.Info($"  - Lock Acquired: {lockAcquired}");
-        Log.Info($"  - GameObject: {context.Controller.gameObject.name}");
-        Log.Info($"  - Animation: {context.Controller.playerViewAnimationName}");
-
         if (lockAcquired)
         {
-            Log.Info($"[CinematicLock] Lock acquired! Starting cinematic for {context.Controller.gameObject.name}");
-            
             context.MultiplayerController.CallAllCinematicModeEnd();
             int identifier = context.Controller.gameObject.GetHierarchyPath(context.Entity.gameObject).GetHashCode();
             Dictionary<string, bool> animationParameters = CaptureAnimationParameters(context.Controller, context.Entity.gameObject);
             
-            // Let the game's original StartCinematicMode run
             skipPrefix = true;
             context.Controller.StartCinematicMode(Player.main);
             skipPrefix = false;
             
-            // Broadcast to other players
             Resolve<PlayerCinematics>().StartCinematicMode(Resolve<LocalPlayer>().SessionId.Value, id, identifier, context.Controller.playerViewAnimationName, animationParameters);
-            
-            Log.Info($"[CinematicLock] Cinematic started successfully");
         }
         else
         {
-            Log.Warn($"[CinematicLock] Lock DENIED for {context.Controller.gameObject.name} - another player is using this cinematic");
-            
-            // Another player is using this cinematic - show visual feedback
-            context.Entity.gameObject.AddComponent<DenyOwnershipHand>();
+            context.Controller.gameObject.AddComponent<DenyOwnershipHand>();
             ErrorMessage.AddMessage("Another player is using this");
         }
     }
@@ -164,7 +139,7 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
         terminal = cinematicController.GetComponentInParent<PrecursorDisableGunTerminal>();
         if (terminal) return terminal;
 
-        Log.Warn($"[{nameof(PlayerCinematicController_StartCinematicMode_Patch)}] Could not find PrecursorDisableGunTerminal component for gun terminal cinematic");
+        Log.Warn($"Could not find PrecursorDisableGunTerminal component for gun terminal cinematic");
         return null;
     }
 
