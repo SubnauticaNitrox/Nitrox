@@ -36,11 +36,6 @@ public class PlayerPingManager : MonoBehaviour
 
     private void Update()
     {
-        if (!mainCamera)
-        {
-            mainCamera = Camera.main;
-        }
-
         if (Input.GetMouseButtonDown(2) && CanCreatePing())
         {
             TryCreatePing();
@@ -49,7 +44,7 @@ public class PlayerPingManager : MonoBehaviour
 
     private bool CanCreatePing()
     {
-        if (Time.time - lastPingTime < MIN_PING_COOLDOWN)
+        if (Time.realtimeSinceStartup - lastPingTime < MIN_PING_COOLDOWN)
         {
             return false;
         }
@@ -64,6 +59,11 @@ public class PlayerPingManager : MonoBehaviour
 
     private void TryCreatePing()
     {
+        if (!mainCamera)
+        {
+            mainCamera = Camera.main;
+        }
+
         if (!mainCamera)
         {
             return;
@@ -93,7 +93,7 @@ public class PlayerPingManager : MonoBehaviour
 
     private void CreatePing(Vector3 position)
     {
-        lastPingTime = Time.time;
+        lastPingTime = Time.realtimeSinceStartup;
 
         if (!localPlayer.SessionId.HasValue)
         {
@@ -156,7 +156,7 @@ public class PlayerPingManager : MonoBehaviour
             pings.RemoveAt(0);
         }
         
-        PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+        PlayerManager playerManager = this.Resolve<PlayerManager>();
         Optional<RemotePlayer> remotePlayerOptional = playerManager.Find(sessionId);
         
         Color playerColor = remotePlayerOptional.HasValue 
