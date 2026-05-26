@@ -20,4 +20,27 @@ internal interface ILoggerMiddleware
 
         public required ILoggerMiddleware[] Middleware { get; set; }
     }
+
+    static void ExecuteNext(ref Context context)
+    {
+        if (GetNextMiddleware(ref context) is not { } middleware)
+        {
+            return;
+        }
+
+        middleware.ExecuteLogMiddleware(ref context, ExecuteNext);
+    }
+
+    static ILoggerMiddleware? GetNextMiddleware(ref Context context)
+    {
+        if (context.Middleware.Length < 1)
+        {
+            return null;
+        }
+        if (context.Cursor >= context.Middleware.Length)
+        {
+            return null;
+        }
+        return context.Middleware[context.Cursor++];
+    }
 }

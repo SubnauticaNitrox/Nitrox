@@ -89,7 +89,7 @@ namespace Nitrox.Model.Logger
             }
         }
 
-        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.AppDataPath ?? "", "logs"));
+        public static string LogDirectory { get; } = Path.GetFullPath(NitroxDirectory.LogsPath);
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName; // TODO: Filter by servername ( .Where(f => f.Name.Contains($"[{SaveName}]")) )
 
