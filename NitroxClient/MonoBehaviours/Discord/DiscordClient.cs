@@ -30,7 +30,7 @@ public class DiscordClient : MonoBehaviour
     {
         if (!IsDiscordRequested)
         {
-            Log.Error("[Discord] disabled by user");
+            Log.Info("[Discord] disabled by user");
             Destroy(this);
             return;
         }
