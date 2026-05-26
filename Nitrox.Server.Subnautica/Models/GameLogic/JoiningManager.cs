@@ -178,6 +178,8 @@ internal sealed class JoiningManager(
 
         player.Entity = wasBrandNewPlayer ? SetupNewPlayerEntity(player) : RespawnExistingEntity(player);
 
+        entityRegistry.ReparentEntity(player.Entity, player.SubRootId.OrNull());
+
         List<GlobalRootEntity> globalRootEntities = worldEntityManager.GetGlobalRootEntities(true);
         bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
