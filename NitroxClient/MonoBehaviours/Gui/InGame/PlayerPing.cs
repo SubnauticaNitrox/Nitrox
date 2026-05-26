@@ -45,7 +45,7 @@ public class PlayerPing : MonoBehaviour
             pings.OnColor(signal.Id, playerColor);
         }
 
-        FMODEmitterController.PlayEventOneShot("event:/sub/cyclops/sonar", 3, Player.main.transform.position);
+        FMODEmitterController.PlayEventOneShot(PlayerPingManager.PING_OK_SOUND, 3, Player.main.transform.position);
         
         return playerPing;
     }

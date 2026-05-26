@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
@@ -11,25 +12,33 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class PlayerPingManager : MonoBehaviour
+internal sealed class PlayerPingManager : MonoBehaviour
 {
     private const float MAX_PING_DISTANCE = 250f;
     private const float MIN_PING_COOLDOWN = 0.5f;
     private const int MAX_ACTIVE_PINGS = 3;
-    
-    private static PlayerPingManager instance;
+    public const string PING_OK_SOUND = "event:/sub/cyclops/sonar";
+    public const string PING_FAIL_SOUND = "event:/tools/divereel/breadcrum";
+
+    private static PlayerPingManager instance = null!;
 
     private RaycastHit? queuedRaycastHit;
-    private IPacketSender packetSender;
-    private LocalPlayer localPlayer;
+    private IPacketSender packetSender = null!;
+    private LocalPlayer localPlayer = null!;
     private float lastPingTime;
-    private readonly Dictionary<SessionId, List<PlayerPing>> playerPings = new();
+    private readonly Dictionary<SessionId, List<PlayerPing>> playerPings = [];
     private readonly List<PlayerPing> localPlayerPings = new(MAX_ACTIVE_PINGS);
 
     public void Awake()
     {
+        if (instance)
+        {
+            Log.Error($"Tried to initialize a second instance of singleton {nameof(PlayerPingManager)}:{Environment.NewLine}{Environment.StackTrace}");
+            Destroy(this);
+            return;
+        }
         instance = this;
-        packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
+        packetSender = this.Resolve<IPacketSender>();
         localPlayer = this.Resolve<LocalPlayer>();
     }
 
@@ -37,21 +46,17 @@ public class PlayerPingManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(2))
         {
-            if (!CanCreatePing())
+            queuedRaycastHit = RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE);
+            if (queuedRaycastHit == null)
             {
-                // Queue the ping after cooldown.
-                queuedRaycastHit = RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE);
-                return;
-            }
-            if (RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE) is { } hit)
-            {
-                CreatePing(hit);
+                // Invalid ping raycast so we play an error sound.
+                FMODEmitterController.PlayEventOneShot(PING_FAIL_SOUND, 3, Player.main.transform.position);
             }
         }
-        else if (queuedRaycastHit is {} hit && CanCreatePing())
+        if (queuedRaycastHit is { } hit && CanCreatePing())
         {
             queuedRaycastHit = null;
-            CreatePing(hit);
+            CreatePing(hit.point + hit.normal * 0.5f, hit.collider.gameObject);
         }
     }
 
@@ -61,7 +66,6 @@ public class PlayerPingManager : MonoBehaviour
         {
             return false;
         }
-
         if (!Player.main || !AvatarInputHandler.main.IsEnabled())
         {
             return false;
@@ -70,15 +74,13 @@ public class PlayerPingManager : MonoBehaviour
         return true;
     }
 
-    private void CreatePing(RaycastHit hit)
-    {
-        CreatePing(hit.point + hit.normal * 0.5f, hit.collider.gameObject);
-    }
-
     private void CreatePing(Vector3 position, GameObject entityHit)
     {
+        if (!entityHit)
+        {
+            return;
+        }
         lastPingTime = Time.realtimeSinceStartup;
-
         if (!localPlayer.SessionId.HasValue)
         {
             return;
