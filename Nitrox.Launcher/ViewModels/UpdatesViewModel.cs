@@ -287,14 +287,14 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
                     string downloadedHash = await Hashing.ComputeMd5HashAsync(zipPath);
                     if (!string.Equals(downloadedHash, downloadInfo.Md5Hash, StringComparison.OrdinalIgnoreCase))
                     {
-                        throw new InvalidDataException($"Download verification failed. Expected hash: {downloadInfo.Md5Hash}, got: {downloadedHash}");
+                        throw new Exception($"Download verification failed. Expected hash: {downloadInfo.Md5Hash}, got: {downloadedHash}");
                     }
                 }
 
                 // Extract the update
                 DownloadStatus = "Extracting...";
                 TryDeleteDirectory(extractPath, true);
-                ZipFile.ExtractToDirectory(zipPath, extractPath);
+                await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
 
                 // Find the Nitrox folder inside the extracted content
                 string nitroxFolder = extractPath;

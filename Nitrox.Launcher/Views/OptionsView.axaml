@@ -184,14 +184,22 @@
                     </WrapPanel.Styles>
 
                     <Border>
-                        <StackPanel>
-                            <TextBlock Text="Enable light mode" />
-                            <CheckBox Classes="switch"
-                                      IsChecked="{Binding LightModeEnabled}"
-                                      ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
-                        </StackPanel>
-                    </Border>
-                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
+						<StackPanel>
+							<TextBlock Text="Light mode" />
+							<CheckBox Classes="switch"
+									  IsChecked="{Binding IsLightModeEnabled}"
+									  ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
+						</StackPanel>
+					</Border>
+					<Border>
+						<StackPanel>
+							<TextBlock Text="Discord integration" />
+							<CheckBox Classes="switch"
+									  IsChecked="{Binding IsDiscordEnabled}"
+									  ToolTip.Tip="Enable Discord Rich Presence and Discord join integration. Disable this if Discord overlay or recording causes the game to crash at startup." />
+						</StackPanel>
+					</Border>
+					<Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch"

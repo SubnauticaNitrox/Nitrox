@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using DiscordGameSDKWrapper;
+using Nitrox.Model;
+using Nitrox.Model.Constants;
+using Nitrox.Model.Core;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
-using Nitrox.Model;
-using Nitrox.Model.Core;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,8 +23,17 @@ public class DiscordClient : MonoBehaviour
     private static Activity activity;
     private static bool showingWindow;
 
+    private static bool? isDiscordRequested;
+    private static bool IsDiscordRequested => isDiscordRequested ??= Array.Exists(Environment.GetCommandLineArgs(), arg => arg.Equals(DiscordConstants.ENABLE_ARG, StringComparison.OrdinalIgnoreCase));
+
     private void Awake()
     {
+        if (!IsDiscordRequested)
+        {
+            Log.Info("[Discord] Skipping initialization, not enabled by user");
+            Destroy(this);
+            return;
+        }
         if (main)
         {
             Log.Error($"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
@@ -41,6 +50,35 @@ public class DiscordClient : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Log.Info("[Discord] Starting Discord client");
         StartDiscordHook();
+    }
+
+    private void Update()
+    {
+        try
+        {
+            discord?.RunCallbacks();
+        }
+        catch (Exception ex)
+        {
+            // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
+            DisposeAndScheduleHookRestart();
+            Log.ErrorOnce($"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+        }
+    }
+
+    private void OnDisable()
+    {
+        Log.Info("[Discord] Shutdown client");
+        discord?.Dispose();
+    }
+
+    private void OnDestroy()
+    {
+        if (main == this)
+        {
+            main = null;
+            activity = default;
+        }
     }
 
     private void StartDiscordHook()
@@ -74,35 +112,6 @@ public class DiscordClient : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        Log.Info("[Discord] Shutdown client");
-        discord?.Dispose();
-    }
-
-    private void OnDestroy()
-    {
-        if (main == this)
-        {
-            main = null;
-            activity = default;
-        }
-    }
-
-    private void Update()
-    {
-        try
-        {
-            discord?.RunCallbacks();
-        }
-        catch (Exception ex)
-        {
-            // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
-            DisposeAndScheduleHookRestart();
-            Log.ErrorOnce($"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
-        }
-    }
-
     private void DisposeAndScheduleHookRestart()
     {
         discord?.Dispose();
@@ -125,7 +134,7 @@ public class DiscordClient : MonoBehaviour
         string ip = string.Join(":", splitSecret.Take(splitSecret.Length - 1));
         string port = splitSecret.Last();
 
-        if(int.TryParse(port, out int portInt))
+        if (int.TryParse(port, out int portInt))
         {
             Log.Error($"[Discord] Port from received secret can't be parsed as int: {port}");
             return;
@@ -149,6 +158,10 @@ public class DiscordClient : MonoBehaviour
 
     public static void InitializeRPMenu()
     {
+        if (!IsDiscordRequested)
+        {
+            return;
+        }
         activity.State = Language.main.Get("Nitrox_DiscordMainMenuState");
         activity.Assets.LargeImage = "icon";
         UpdateActivity();
@@ -156,6 +169,10 @@ public class DiscordClient : MonoBehaviour
 
     public static void InitializeRPInGame(string username, int playerCount, int maxConnections)
     {
+        if (!IsDiscordRequested)
+        {
+            return;
+        }
         activity.State = Language.main.Get("Nitrox_DiscordInGameState");
         activity.Details = Language.main.Get("Nitrox_DiscordInGame").Replace("{PLAYER}", username);
         activity.Timestamps.Start = 0;
@@ -168,6 +185,10 @@ public class DiscordClient : MonoBehaviour
 
     public static void UpdateIpPort(string ipPort)
     {
+        if (!IsDiscordRequested)
+        {
+            return;
+        }
         activity.Party.Id = $"NitroxPartyID:{ipPort}";
         activity.Secrets.Join = ipPort;
         UpdateActivity();
@@ -175,25 +196,22 @@ public class DiscordClient : MonoBehaviour
 
     public static void UpdatePartySize(int size)
     {
+        if (!IsDiscordRequested)
+        {
+            return;
+        }
         activity.Party.Size.CurrentSize = size;
         UpdateActivity();
     }
 
-    private static void UpdateActivity()
-    {
-        activityManager?.UpdateActivity(activity, (result) =>
-        {
-            if (result != Result.Ok)
-            {
-                Log.Error($"[Discord] {result}: Updating Activity failed");
-            }
-        });
-    }
-
     public static void RespondJoinRequest(long userID, ActivityJoinRequestReply reply)
     {
+        if (!IsDiscordRequested)
+        {
+            return;
+        }
         showingWindow = false;
-        activityManager?.SendRequestReply(userID, reply, (result) =>
+        activityManager?.SendRequestReply(userID, reply, result =>
         {
             if (result == Result.Ok)
             {
@@ -203,6 +221,17 @@ public class DiscordClient : MonoBehaviour
             {
                 Log.InGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
                 Log.Error($"[Discord] {result}: Failed to send join response");
+            }
+        });
+    }
+
+    private static void UpdateActivity()
+    {
+        activityManager?.UpdateActivity(activity, result =>
+        {
+            if (result != Result.Ok)
+            {
+                Log.Error($"[Discord] {result}: Updating Activity failed");
             }
         });
     }
