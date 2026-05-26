@@ -18,7 +18,8 @@ public class PlayerPingManager : MonoBehaviour
     private const int MAX_ACTIVE_PINGS = 3;
     
     private static PlayerPingManager instance;
-    
+
+    private RaycastHit? queuedRaycastHit;
     private IPacketSender packetSender;
     private LocalPlayer localPlayer;
     private float lastPingTime;
@@ -34,9 +35,23 @@ public class PlayerPingManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(2) && CanCreatePing())
+        if (Input.GetMouseButtonDown(2))
         {
-            TryCreatePingFromAim();
+            if (!CanCreatePing())
+            {
+                // Queue the ping after cooldown.
+                queuedRaycastHit = RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE);
+                return;
+            }
+            if (RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE) is { } hit)
+            {
+                CreatePing(hit);
+            }
+        }
+        else if (queuedRaycastHit is {} hit && CanCreatePing())
+        {
+            queuedRaycastHit = null;
+            CreatePing(hit);
         }
     }
 
@@ -55,12 +70,9 @@ public class PlayerPingManager : MonoBehaviour
         return true;
     }
 
-    private void TryCreatePingFromAim()
+    private void CreatePing(RaycastHit hit)
     {
-        if (RaycastHelper.GetClosestHitFromAim(MAX_PING_DISTANCE) is { } hit)
-        {
-            CreatePing(hit.point + hit.normal * 0.5f, hit.collider.gameObject);
-        }
+        CreatePing(hit.point + hit.normal * 0.5f, hit.collider.gameObject);
     }
 
     private void CreatePing(Vector3 position, GameObject entityHit)
