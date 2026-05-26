@@ -133,7 +133,12 @@ public sealed class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             pingKey = string.Empty;
             return false;
         }
-
+        // Nitrox-created pings can be ignored.
+        if (pingInstance.name.StartsWith("nitrox_", StringComparison.OrdinalIgnoreCase))
+        {
+            pingKey = string.Empty;
+            return false;
+        }
         Log.Warn($"Couldn't find {nameof(PingInstance)} identifier for {pingInstance.name} under {pingInstance.transform.parent}");
         pingKey = string.Empty;
         return false;
