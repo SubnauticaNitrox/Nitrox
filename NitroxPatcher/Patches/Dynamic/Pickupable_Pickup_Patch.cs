@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -9,7 +10,13 @@ public sealed partial class Pickupable_Pickup_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(Pickupable __instance)
     {
+        MapRoomCamera camera = __instance.GetComponent<MapRoomCamera>();
+        if (camera)
+        {
+            //MapRoomCameraIdentity.NotifyCameraPickedUp(camera);
+            MapRoomCameraIdentity.ReleaseCameraNumber(camera);
+        }
+
         Resolve<Items>().PickedUpByPlayer(__instance.gameObject, __instance.GetTechType());
     }
 }
-

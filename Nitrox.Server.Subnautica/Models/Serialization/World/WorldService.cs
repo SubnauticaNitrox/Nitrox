@@ -8,7 +8,9 @@ using Nitrox.Model.Serialization;
 using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.GameLogic.Players;
@@ -40,6 +42,9 @@ internal class WorldService : IHostedService
     private readonly WorldEntityManager worldEntityManager;
     public IServerSerializer Serializer { get; private set; }
     private string FileEnding => Serializer?.FileEnding ?? "";
+
+    private const string LEGACY_MAP_ROOM_CAMERA_CLASS_ID = "MapRoomCamera";
+    private const string MAP_ROOM_CAMERA_PREFAB_CLASS_ID = "733fd479-0760-4bc2-a03e-281cbf02bfa4";
 
     public WorldService(
         SubnauticaServerProtoBufSerializer protoBufSerializer,
@@ -319,8 +324,17 @@ internal class WorldService : IHostedService
         // Time
         timeService.ActiveTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
         // Entities
+        // Entities
+        // Entities
+        NormalizeLooseMapRoomCameraWorldEntities(pWorldData);
+        PurgeLegacyBrokenMapRoomCameraEntities(pWorldData);
+
         entityRegistry.AddEntities(pWorldData.EntityData.Entities);
         entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
+
+        SanitizeLegacyMapRoomCameraDockingState(entityRegistry);
+        MapRoomCameraRegistry.LoadFromSave(pWorldData.WorldData.GameData?.MapRoomCameraRegistry, entityRegistry);
+
         await escapePodManager.AddKnownPodsAsync(entityRegistry.GetEntities<EscapePodEntity>());
 
         // TODO: hacky code - see WorldEntityManager for more information.
@@ -347,6 +361,220 @@ internal class WorldService : IHostedService
         storyManager.AuroraRealExplosionTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime ?? storyManager.AuroraCountdownTimeMs * 0.001 + 27 - TimeService.DEFAULT_STARTING_GAME_TIME_SECONDS);
 
         logger.ZLogInformation($"World finished loading");
+    }
+
+    private void NormalizeLooseMapRoomCameraWorldEntities(PersistedWorldData pWorldData)
+    {
+        List<WorldEntity> looseCameraEntities = pWorldData.EntityData.Entities
+                                                              .Where(entity => entity != null)
+                                                              .Cast<Entity>()
+                                                              .Concat(pWorldData.GlobalRootData.Entities
+                                                                                          .Where(entity => entity != null)
+                                                                                          .Cast<Entity>())
+                                                              .OfType<WorldEntity>()
+                                                              .Where(entity => entity.ParentId == null)
+                                                              .Where(IsLooseMapRoomCameraWorldEntity)
+                                                              .ToList();
+
+        foreach (WorldEntity worldEntity in looseCameraEntities)
+        {
+            string oldClassId = worldEntity.ClassId ?? "";
+            string oldTechType = worldEntity.TechType?.ToString() ?? "";
+            int oldLevel = worldEntity.Level;
+
+            worldEntity.ClassId = MAP_ROOM_CAMERA_PREFAB_CLASS_ID;
+            worldEntity.TechType = TechType.MapRoomCamera.ToDto();
+
+            if (worldEntity is GlobalRootEntity)
+            {
+                worldEntity.Level = GlobalRootEntity.GLOBAL_ROOT_LEVEL;
+            }
+
+            logger.ZLogWarning($"Normalized loose scanner room camera world entity: id={worldEntity.Id}, oldClassId={oldClassId}, newClassId={worldEntity.ClassId}, oldTechType={oldTechType}, newTechType={worldEntity.TechType}, oldLevel={oldLevel}, newLevel={worldEntity.Level}, entityType={worldEntity.GetType().Name}, position={worldEntity.Transform?.Position}");
+        }
+    }
+
+    private static bool IsLooseMapRoomCameraWorldEntity(WorldEntity worldEntity)
+    {
+        string techType = worldEntity.TechType?.ToString() ?? "";
+        string classId = worldEntity.ClassId ?? "";
+        string entityText = worldEntity.ToString();
+
+        return techType == "MapRoomCamera" ||
+               classId == LEGACY_MAP_ROOM_CAMERA_CLASS_ID ||
+               classId == MAP_ROOM_CAMERA_PREFAB_CLASS_ID ||
+               classId.Contains("MapRoomCamera") ||
+               entityText.Contains("MapRoomCamera");
+    }
+
+    private void PurgeLegacyBrokenMapRoomCameraEntities(PersistedWorldData pWorldData)
+    {
+        HashSet<NitroxId> validDockedCameraIds = pWorldData.GlobalRootData.Entities
+                                                           .OfType<MapRoomEntity>()
+                                                           .Where(mapRoomEntity => mapRoomEntity.CameraDockingIds != null)
+                                                           .SelectMany(mapRoomEntity => mapRoomEntity.CameraDockingIds)
+                                                           .Where(cameraId => cameraId != null)
+                                                           .ToHashSet();
+
+        HashSet<NitroxId> validRegistryCameraIds = pWorldData.WorldData.GameData?.MapRoomCameraRegistry?
+                                                            .Where(entry => entry.CameraId != null)
+                                                            .Select(entry => entry.CameraId)
+                                                            .ToHashSet() ?? [];
+
+        List<Entity> allEntities = pWorldData.EntityData.Entities
+                                     .Where(entity => entity != null)
+                                     .Cast<Entity>()
+                                     .Concat(pWorldData.GlobalRootData.Entities
+                                                           .Where(entity => entity != null)
+                                                           .Cast<Entity>())
+                                     .ToList();
+
+        HashSet<NitroxId> validLooseCameraIds = allEntities
+                                                .OfType<WorldEntity>()
+                                                .Where(entity => entity.Id != null)
+                                                .Where(entity => entity.ParentId == null)
+                                                .Where(IsLooseMapRoomCameraWorldEntity)
+                                                .Select(entity => entity.Id)
+                                                .ToHashSet();
+
+        HashSet<NitroxId> validCameraIds = validDockedCameraIds;
+        validCameraIds.UnionWith(validRegistryCameraIds);
+        validCameraIds.UnionWith(validLooseCameraIds);
+
+        Dictionary<NitroxId, Entity> allEntitiesById = allEntities
+                                                       .Where(entity => entity.Id != null)
+                                                       .GroupBy(entity => entity.Id)
+                                                       .ToDictionary(group => group.Key, group => group.First());
+
+        HashSet<NitroxId> batteryParentIds = allEntities
+                                             .Where(IsBatteryChildEntity)
+                                             .Where(entity => entity.ParentId != null)
+                                             .Select(entity => entity.ParentId)
+                                             .ToHashSet();
+
+        HashSet<NitroxId> legacyCameraIdsToRemove = allEntities
+                                                    .Where(entity => entity.Id != null)
+                                                    .Where(entity => !validCameraIds.Contains(entity.Id))
+                                                    .Where(entity => IsLegacyScannerCameraRootCandidate(entity, batteryParentIds))
+                                                    .Select(entity => entity.Id)
+                                                    .ToHashSet();
+
+        // Extra safety: if the save has battery children whose parent is one of the known bad scanner-camera-like roots,
+        // include the parent root too. This catches old camera roots whose TechType is null or not MapRoomCamera.
+        foreach (NitroxId batteryParentId in batteryParentIds)
+        {
+            if (batteryParentId == null || validCameraIds.Contains(batteryParentId))
+            {
+                continue;
+            }
+
+            if (!allEntitiesById.TryGetValue(batteryParentId, out Entity parentEntity))
+            {
+                continue;
+            }
+
+            if (IsLegacyScannerCameraRootCandidate(parentEntity, batteryParentIds))
+            {
+                legacyCameraIdsToRemove.Add(batteryParentId);
+            }
+        }
+
+        if (legacyCameraIdsToRemove.Count == 0)
+        {
+            logger.ZLogWarning($"No legacy broken scanner room camera root entities matched purge. Battery parents=[{string.Join(", ", batteryParentIds)}], validCameraIds=[{string.Join(", ", validCameraIds)}]");
+            return;
+        }
+
+        int removedEntityCount = RemoveEntitiesAndChildren(pWorldData.EntityData.Entities, legacyCameraIdsToRemove);
+        int removedGlobalRootCount = RemoveEntitiesAndChildren(pWorldData.GlobalRootData.Entities, legacyCameraIdsToRemove);
+
+        pWorldData.WorldData.GameData?.MapRoomCameraRegistry?.RemoveAll(entry => entry.CameraId != null && legacyCameraIdsToRemove.Contains(entry.CameraId));
+
+        logger.ZLogWarning($"Purged legacy broken scanner room camera roots [{string.Join(", ", legacyCameraIdsToRemove)}] and {removedEntityCount + removedGlobalRootCount} total related entities from saved world data.");
+    }
+
+    private static bool IsLegacyScannerCameraRootCandidate(Entity entity, HashSet<NitroxId> batteryParentIds)
+    {
+        if (entity is not WorldEntity worldEntity)
+        {
+            return false;
+        }
+
+        if (worldEntity.ParentId != null)
+        {
+            return false;
+        }
+
+        if (!batteryParentIds.Contains(worldEntity.Id))
+        {
+            return false;
+        }
+
+        string techType = worldEntity.TechType?.ToString() ?? "";
+        string classId = worldEntity.ClassId ?? "";
+        string entityText = worldEntity.ToString();
+
+        return techType == "MapRoomCamera" ||
+               classId.Contains("MapRoomCamera") ||
+               entityText.Contains("MapRoomCamera");
+    }
+
+    private static bool IsBatteryChildEntity(Entity entity)
+    {
+        return entity is PrefabChildEntity childEntity &&
+               childEntity.TechType.ToString() == "Battery";
+    }
+
+    private static int RemoveEntitiesAndChildren<T>(List<T> entities, HashSet<NitroxId> rootIdsToRemove) where T : Entity
+    {
+        HashSet<NitroxId> idsToRemove = new(rootIdsToRemove);
+        bool foundNewChild;
+
+        do
+        {
+            foundNewChild = false;
+
+            foreach (Entity entity in entities.Where(entity => entity != null))
+            {
+                if (entity.ParentId != null &&
+                    entity.Id != null &&
+                    idsToRemove.Contains(entity.ParentId) &&
+                    idsToRemove.Add(entity.Id))
+                {
+                    foundNewChild = true;
+                }
+            }
+        }
+        while (foundNewChild);
+
+        return entities.RemoveAll(entity => entity?.Id != null && idsToRemove.Contains(entity.Id));
+    }
+
+    private void SanitizeLegacyMapRoomCameraDockingState(EntityRegistry entityRegistry)
+    {
+        foreach (MapRoomEntity mapRoomEntity in entityRegistry.GetEntities<MapRoomEntity>())
+        {
+            if (mapRoomEntity.CameraDockingStates == null)
+            {
+                continue;
+            }
+
+            mapRoomEntity.CameraDockingIds ??= [];
+
+            while (mapRoomEntity.CameraDockingIds.Count < mapRoomEntity.CameraDockingStates.Count)
+            {
+                mapRoomEntity.CameraDockingIds.Add(null);
+            }
+
+            for (int i = 0; i < mapRoomEntity.CameraDockingStates.Count; i++)
+            {
+                if (mapRoomEntity.CameraDockingStates[i] && mapRoomEntity.CameraDockingIds[i] == null)
+                {
+                    logger.ZLogWarning($"Clearing legacy scanner room docking state with no camera id. mapRoom={mapRoomEntity.Id}, dockingIndex={i}");
+                    mapRoomEntity.CameraDockingStates[i] = false;
+                }
+            }
+        }
     }
 
     private async Task<bool> LoadWorldFromSavePathAsync(string saveDir)

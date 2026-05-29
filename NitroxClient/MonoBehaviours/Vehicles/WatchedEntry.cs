@@ -26,6 +26,7 @@ public class WatchedEntry
     private readonly Transform transform;
     private readonly Vehicle vehicle;
     private readonly SubControl subControl;
+    private readonly MapRoomCamera mapRoomCamera;
 
     private float latestBroadcastTime;
     private Vector3 latestLocalPositionSent;
@@ -37,6 +38,7 @@ public class WatchedEntry
         this.transform = transform;
         vehicle = transform.GetComponent<Vehicle>();
         subControl = transform.GetComponent<SubControl>();
+        mapRoomCamera = transform.GetComponent<MapRoomCamera>();
     }
 
     private bool IsDrivenVehicle()
@@ -98,12 +100,25 @@ public class WatchedEntry
 
     public void OnBroadcastPosition()
     {
+        if (mapRoomCamera)
+        {
+            latestLocalPositionSent = transform.position;
+            latestLocalRotationSent = transform.rotation;
+            return;
+        }
+
         latestLocalPositionSent = transform.localPosition;
         latestLocalRotationSent = transform.localRotation;
     }
 
     private bool HasVehicleMoved()
     {
+        if (mapRoomCamera)
+        {
+            return Vector3.Distance(latestLocalPositionSent, transform.position) > MINIMAL_MOVEMENT_TRESHOLD ||
+                   Quaternion.Angle(latestLocalRotationSent, transform.rotation) > MINIMAL_ROTATION_TRESHOLD;
+        }
+
         return Vector3.Distance(latestLocalPositionSent, transform.localPosition) > MINIMAL_MOVEMENT_TRESHOLD ||
                Quaternion.Angle(latestLocalRotationSent, transform.localRotation) > MINIMAL_ROTATION_TRESHOLD;
     }

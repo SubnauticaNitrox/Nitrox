@@ -1,13 +1,15 @@
 using System.Collections.Generic;
-using NitroxClient.GameLogic.Settings;
-using NitroxClient.GameLogic.Spawning.Bases;
-using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.MonoBehaviours;
+using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Settings;
+using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;
@@ -160,14 +162,23 @@ public static class BuildUtils
         if (isMapRoomGhost)
         {
             MapRoomFunctionality mapRoomFunctionality = baseGhost.targetBase.GetMapRoomFunctionalityForCell(face.Value.cell);
+            bool hasParentBase = constructableBase.GetComponentInParent<Base>(true);
+
+            if (!mapRoomFunctionality)
+            {
+                mapRoomFunctionality = FindUnregisteredMapRoomFunctionality(baseGhost.targetBase);
+            }
+
             if (mapRoomFunctionality)
             {
                 // As MapRooms can be built as the first piece of a base, we need to make sure that they receive a new id if they're not in a base
-                NitroxId nitroxId = constructableBase.GetComponentInParent<Base>(true) ? id : id.Increment();
+                NitroxId nitroxId = hasParentBase ? id : id.Increment();         
+                
                 NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, nitroxId);
-                moduleObject = mapRoomFunctionality.gameObject;
+                moduleObject = mapRoomFunctionality.gameObject;                
                 return true;
             }
+
             Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
             moduleObject = null;
             return false;
@@ -223,10 +234,79 @@ public static class BuildUtils
         return baseGhost.targetBase.NormalizeCell(baseGhost.targetBase.WorldToGrid(baseGhost.ghostBase.occupiedBounds.center));
     }
 
-    public static MapRoomEntity CreateMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId)
+    public static MapRoomEntity CreateMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId, EntityMetadataManager entityMetadataManager)
     {
         Int3 mapRoomCell = @base.NormalizeCell(@base.WorldToGrid(mapRoomFunctionality.transform.position));
-        return new(id, parentId, mapRoomCell.ToDto());
+        MapRoomEntity mapRoomEntity = new(id, parentId, mapRoomCell.ToDto(), GetMapRoomCameraDockingStates(mapRoomFunctionality), GetMapRoomCameraDockingIds(mapRoomFunctionality));
+
+        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(mapRoomFunctionality.gameObject);
+
+        if (opContainer.HasValue)
+        {
+            ItemsContainer container = opContainer.Value;
+
+            List<Pickupable> pickupables = container._items.Values
+                                                 .SelectMany(itemGroup => itemGroup.items)
+                                                 .Select(item => item.item)
+                                                 .Where(pickupable => pickupable)
+                                                 .ToList();
+
+            foreach (Pickupable pickupable in pickupables)
+            {
+                mapRoomEntity.ChildEntities.Add(Items.ConvertToInventoryItemEntity(pickupable.gameObject, id, entityMetadataManager));
+            }
+        }
+        else
+        {
+            Log.Warn($"Could not find scanner room upgrade container for {mapRoomFunctionality.gameObject.GetFullHierarchyPath()}");
+        }
+
+        return mapRoomEntity;
+    }
+
+    private static List<bool> GetMapRoomCameraDockingStates(MapRoomFunctionality mapRoomFunctionality)
+    {
+        return mapRoomFunctionality.GetComponentsInChildren<MapRoomCameraDocking>(true)
+                                   .OrderBy(docking => docking.gameObject.GetFullHierarchyPath())
+                                   .Select(docking => docking.cameraDocked)
+                                   .ToList();
+    }
+
+    private static List<NitroxId> GetMapRoomCameraDockingIds(MapRoomFunctionality mapRoomFunctionality)
+    {
+        return mapRoomFunctionality.GetComponentsInChildren<MapRoomCameraDocking>(true)
+                                   .OrderBy(docking => docking.gameObject.GetFullHierarchyPath())
+                                   .Select(docking =>
+                                   {
+                                       if (docking.camera && docking.camera.TryGetNitroxId(out NitroxId cameraId))
+                                       {
+                                           return cameraId;
+                                       }
+
+                                       return null;
+                                   })
+                                   .ToList();
+    }
+
+    private static MapRoomFunctionality FindUnregisteredMapRoomFunctionality(Base targetBase)
+    {
+        List<MapRoomFunctionality> candidates = targetBase.GetComponentsInChildren<MapRoomFunctionality>(true)
+                                                          .Where(mapRoomFunctionality => !mapRoomFunctionality.TryGetNitroxId(out _))
+                                                          .ToList();
+
+        if (candidates.Count == 1)
+        {
+            return candidates[0];
+        }
+
+        Log.Warn($"Could not uniquely identify unregistered MapRoomFunctionality under {targetBase.gameObject.GetFullHierarchyPath()}. Found {candidates.Count} candidates.");
+
+        foreach (MapRoomFunctionality candidate in candidates)
+        {
+            Log.Warn($"Unregistered MapRoomFunctionality candidate: {candidate.gameObject.GetFullHierarchyPath()}");
+        }
+
+        return null;
     }
 
     // TODO: Use this for a latter singleplayer save converter
@@ -270,7 +350,7 @@ public static class BuildUtils
                 {
                     continue;
                 }
-                AddChild(CreateMapRoomEntityFrom(mapRoomFunctionality, targetBase, mapRoomId, baseId));
+                AddChild(CreateMapRoomEntityFrom(mapRoomFunctionality, targetBase, mapRoomId, baseId, entityMetadataManager));
             }
             else if (transform.TryGetComponent(out IBaseModule baseModule))
             {

@@ -5,8 +5,10 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
@@ -211,6 +213,7 @@ internal sealed class JoiningManager(
         );
 
         await packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);
+        await ReplayMapRoomCameraRegistryAsync(player.SessionId);
 
         IEnumerable<PlayerContext> GetOtherPlayers(Player player)
         {
@@ -235,6 +238,31 @@ internal sealed class JoiningManager(
             }
             logger.ZLogError($"Unable to find player entity for {player.Name}. Re-creating one");
             return SetupNewPlayerEntity(player);
+        }
+    }
+
+    private async Task ReplayMapRoomCameraRegistryAsync(SessionId sessionId)
+    {
+        List<MapRoomCameraRegistryEntry> cameraRegistryEntries = MapRoomCameraRegistry.GetSaveData();
+
+        logger.ZLogInformation(
+            $"Replaying scanner camera registry to joining session {sessionId}: " +
+            $"count={cameraRegistryEntries.Count}, registry=[{MapRoomCameraRegistry.GetDebugText()}]");
+
+        foreach (MapRoomCameraRegistryEntry entry in cameraRegistryEntries.OrderBy(entry => entry.CameraNumber))
+        {
+            if (entry.CameraId == null || entry.CameraNumber <= 0)
+            {
+                continue;
+            }
+
+            await packetSender.SendPacketAsync(
+                new MapRoomCameraNumberChanged(
+                    entry.CameraId,
+                    entry.CameraNumber,
+                    entry.MapRoomId,
+                    entry.DockingIndex),
+                sessionId);
         }
     }
 
