@@ -63,11 +63,9 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
             Player? serverPlayer = playerManager.GetAllPlayers().FirstOrDefault(p => p.GameObjectId == entityId);
             if (serverPlayer is not null)
             {
-                bool isOnline = playerManager.GetConnectedPlayers().Contains(serverPlayer);
-
                 builder.AppendLine("Player");
                 builder.AppendLine($" └ Name: {serverPlayer.Name}");
-                builder.AppendLine($" └ Online: {isOnline}");
+                builder.AppendLine($" └ Online: {serverPlayer.IsOnline}");
                 builder.AppendLine($" └ Perms: {serverPlayer.Permissions}");
                 builder.AppendLine($" └ GameMode: {serverPlayer.GameMode}");
                 builder.AppendLine($" └ InPrecursor: {serverPlayer.InPrecursor}");

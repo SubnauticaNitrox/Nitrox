@@ -245,6 +245,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         }
 
         assetsBySessionId.Remove(player.SessionId);
+        player.IsOnline = false;
         return Task.CompletedTask;
     }
 }
