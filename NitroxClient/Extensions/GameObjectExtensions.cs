@@ -40,7 +40,7 @@ public static class GameObjectExtensions
                 }
             }
             result = result?.Replace("(Clone)", "");
-            if (result.Contains("_doors", StringComparison.OrdinalIgnoreCase))
+            if (result?.Contains("_doors", StringComparison.OrdinalIgnoreCase) == true)
             {
                 return "Door";
             }
