@@ -55,7 +55,7 @@
     "Nitrox_Mute": "Tắt tiếng {PLAYER}",
     "Nitrox_MuteQuestion": "Tắt tiếng {PLAYER}?",
     "Nitrox_MutedPlayer": "Đã tắt tiếng {PLAYER}",
-    "Nitrox_OK": "OK",
+    "Nitrox_OK": "Ok",
     "Nitrox_OutOfDateClient": "Phiên bản cài đặt Nitrox của bạn đã lỗi thời. Máy chủ: {serverVersion}, phiên bản của bạn: {localVersion}.",
     "Nitrox_OutOfDateServer": "Máy chủ chạy phiên bản cũ hơn của Nitrox. Yêu cầu quản trị viên máy chủ nâng cấp máy chủ hoặc hạ cấp cài đặt Nitrox của bạn. Máy chủ: {serverVersion}, phiên bản của bạn: {localVersion}.",
     "Nitrox_PlayerDeathBeaconLabel": "{PLAYER} đã chết",

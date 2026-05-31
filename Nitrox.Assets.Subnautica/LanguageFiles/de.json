@@ -88,7 +88,7 @@
     "Nitrox_Settings_OfflineClockSyncDuration": "Dauer des Zeitsynchronisations-Prozesses (s)",
     "Nitrox_Settings_Privacy": "Datenschutz",
     "Nitrox_Settings_SafetyLatencyMargin": "Sicherheitslatenzpuffer (ms)",
-    "Nitrox_ShowPing": "Signal anzeigen",
+    "Nitrox_ShowPing": "Ping anzeigen",
     "Nitrox_SilenceChat": "Chat stumm schalten",
     "Nitrox_SilencedChatNotif": "Chat ist nun stumm geschaltet",
     "Nitrox_SleepingPlayers": "{SLEEPING}/{TOTAL} Spieler sind am schlafen.",
