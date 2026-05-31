@@ -8,7 +8,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
 {
     /*
-     * A PrefabChildEntity is a gameobject that resides inside of a spawned prefab.  Although the server knows about these,
+     * A PrefabChildEntity is a gameobject that resides inside a spawned prefab.  Although the server knows about these,
      * it is too cost prohibitive for it to send spawn data for all of these.  Instead, we let the game spawn them and tag
      * the entity after the fact.  An example of this is a keypad in the aurora; there is an overarching Door prefab with 
      * the keypad baked in - we simply update the id of the keypad on spawn.  Each PrefabChildEntity will always bubble up

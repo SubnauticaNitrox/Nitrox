@@ -1,21 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class CreatureActionProcessor : ClientPacketProcessor<CreatureActionChanged>
+internal sealed class CreatureActionProcessor(AI ai) : IClientPacketProcessor<CreatureActionChanged>
 {
-    private readonly AI ai;
+    private readonly AI ai = ai;
 
-    public CreatureActionProcessor(AI ai)
-    {
-        this.ai = ai;
-    }
-
-    public override void Process(CreatureActionChanged packet)
+    public Task Process(ClientProcessorContext context, CreatureActionChanged packet)
     {
         ai.CreatureActionChanged(packet.CreatureId, packet.CreatureActionType);
+        return Task.CompletedTask;
     }
 }

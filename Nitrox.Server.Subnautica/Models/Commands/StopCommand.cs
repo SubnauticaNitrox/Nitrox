@@ -1,26 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[Alias("exit", "halt", "quit", "close")]
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class StopCommand(IHostApplicationLifetime lifetimeService) : ICommandHandler
 {
-    internal class StopCommand : Command
+    private readonly IHostApplicationLifetime lifetimeService = lifetimeService;
+
+    [Description("Stops the server")]
+    public Task Execute(ICommandContext context)
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "exit", "halt", "quit", "close" };
-
-        public StopCommand() : base("stop", Perms.ADMIN, "Stops the server")
-        {
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            Server server = Server.Instance;
-            if (!server.IsRunning)
-            {
-                return;
-            }
-            SendMessageToAllPlayers("Server is shutting down...");
-            server.Stop(shouldSave: true);
-        }
+        lifetimeService.StopApplication();
+        return Task.CompletedTask;
     }
 }

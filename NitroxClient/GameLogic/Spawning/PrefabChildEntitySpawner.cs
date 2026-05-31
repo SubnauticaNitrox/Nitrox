@@ -20,11 +20,11 @@ public class PrefabChildEntitySpawner : SyncEntitySpawner<PrefabChildEntity>
     protected override bool SpawnSync(PrefabChildEntity entity, TaskResult<Optional<GameObject>> result)
     {
         GameObject parent = NitroxEntity.RequireObjectFrom(entity.ParentId);
-        PrefabIdentifier prefab = parent.GetAllComponentsInChildren<PrefabIdentifier>()
+        PrefabIdentifier? prefab = parent.GetAllComponentsInChildren<PrefabIdentifier>()
                                         .Where(prefab => prefab.classId == entity.ClassId)
-                                        .ElementAt(entity.ComponentIndex);
+                                        .ElementAtOrDefault(entity.ComponentIndex);
 
-        if (prefab)
+        if (prefab != null)
         {
             NitroxEntity.SetNewId(prefab.gameObject, entity.Id);
             result.Set(Optional.OfNullable(prefab.gameObject));

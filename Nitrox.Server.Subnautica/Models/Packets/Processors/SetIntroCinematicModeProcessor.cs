@@ -1,41 +1,37 @@
 using System.Linq;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIntroCinematicMode>
+internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager, ILogger<SetIntroCinematicModeProcessor> logger) : IAuthPacketProcessor<SetIntroCinematicMode>
 {
-    private readonly PlayerManager playerManager;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly ILogger<SetIntroCinematicModeProcessor> logger = logger;
 
-    public SetIntroCinematicModeProcessor(PlayerManager playerManager)
+    public async Task Process(AuthProcessorContext context, SetIntroCinematicMode packet)
     {
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(SetIntroCinematicMode packet, Player player)
-    {
-        if (packet.PlayerId != player.Id)
+        if (packet.SessionId != context.Sender.SessionId)
         {
-            Log.Warn($"Received {nameof(SetIntroCinematicMode)} packet where packet.{nameof(SetIntroCinematicMode.PlayerId)} was not equal to sending playerId");
+            logger.ZLogWarning($"Received packet where {nameof(SetIntroCinematicMode.SessionId)} #{packet.SessionId} was not equal to sending {nameof(SetIntroCinematicMode.SessionId)} #{context.Sender.SessionId}");
             return;
         }
 
         packet.PartnerId = null; // Resetting incoming packets just to be safe we don't relay any PartnerId. Server has only authority.
-        player.PlayerContext.IntroCinematicMode = packet.Mode;
-        playerManager.SendPacketToOtherPlayers(packet, player);
-        Log.Debug($"Set IntroCinematicMode to {packet.Mode} for {player.PlayerContext.PlayerName}");
+        context.Sender.PlayerContext.IntroCinematicMode = packet.Mode;
+        await context.SendToOthersAsync(packet);
+        logger.ZLogDebug($"IntroCinematicMode set to {packet.Mode} for {context.Sender.PlayerContext.PlayerName}");
 
         Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
         if (allWaitingPlayers.Length >= 2)
         {
-            Log.Info($"Starting IntroCinematic for {allWaitingPlayers[0].PlayerContext.PlayerName} and {allWaitingPlayers[1].PlayerContext.PlayerName}");
+            logger.ZLogInformation($"Starting IntroCinematic for {allWaitingPlayers[0].PlayerContext.PlayerName} and {allWaitingPlayers[1].PlayerContext.PlayerName}");
 
             allWaitingPlayers[0].PlayerContext.IntroCinematicMode = allWaitingPlayers[1].PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
 
-            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[0].Id, IntroCinematicMode.START, allWaitingPlayers[1].Id));
-            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[1].Id, IntroCinematicMode.START, allWaitingPlayers[0].Id));
+            await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[0].SessionId, IntroCinematicMode.START, allWaitingPlayers[1].SessionId));
+            await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[1].SessionId, IntroCinematicMode.START, allWaitingPlayers[0].SessionId));
         }
     }
 }

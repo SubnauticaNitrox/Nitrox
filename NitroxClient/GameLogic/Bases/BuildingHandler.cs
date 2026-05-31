@@ -9,7 +9,6 @@ using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
@@ -387,7 +386,15 @@ public partial class BuildingHandler
     {
         foreach (KeyValuePair<NitroxId, int> pair in operations)
         {
-            EnsureTracker(pair.Key).ResetToId(pair.Value);
+            OperationTracker tracker = EnsureTracker(pair.Key);
+            // Only reset if the server's snapshot is newer than what we already have.
+            // RegisterOperation() may have already advanced the tracker beyond this
+            // snapshot (e.g. UpdateBase packets received during the initial-sync wait),
+            // so overwriting with a stale value would immediately desync the client.
+            if (tracker.LastOperationId < pair.Value)
+            {
+                tracker.ResetToId(pair.Value);
+            }
         }
     }
 

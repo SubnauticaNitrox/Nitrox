@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using Nitrox.Model.Helper;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState

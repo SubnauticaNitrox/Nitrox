@@ -64,6 +64,12 @@ public class EquipmentSlots
             return;
         }
 
+        // Sync oxygen tank metadata when unequipped
+        if (pickupable.TryGetComponent(out Oxygen oxygen))
+        {
+            entities.EntityMetadataChanged(oxygen, itemId);
+        }
+
         if (owner.TryGetComponent(out Player player))
         {
             entities.EntityMetadataChanged(player, ownerId);

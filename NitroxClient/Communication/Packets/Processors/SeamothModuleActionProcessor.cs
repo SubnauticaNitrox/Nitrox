@@ -1,22 +1,20 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public sealed class SeamothModuleActionProcessor : ClientPacketProcessor<SeamothModulesAction>
+internal sealed class SeamothModuleActionProcessor : IClientPacketProcessor<SeamothModulesAction>
 {
-    public override void Process(SeamothModulesAction packet)
+    public Task Process(ClientProcessorContext context, SeamothModulesAction packet)
     {
         using (PacketSuppressor<SeamothModulesAction>.Suppress())
         {
             if (!NitroxEntity.TryGetComponentFrom(packet.Id, out SeaMoth seamoth))
             {
                 Log.Error($"[{nameof(SeamothModuleActionProcessor)}] Couldn't find SeaMoth component on {packet.Id}");
-                return;
+                return Task.CompletedTask;
             }
 
             switch (packet.TechType.ToUnity())
@@ -27,7 +25,7 @@ public sealed class SeamothModuleActionProcessor : ClientPacketProcessor<Seamoth
                     float charge = chargeArray[packet.SlotID];
                     float slotCharge = seamoth.GetSlotCharge(packet.SlotID);
 
-                    GameObject gameObject = Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform, false);
+                    GameObject gameObject = Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform);
                     ElectricalDefense component = gameObject.GetComponent<ElectricalDefense>();
                     component.charge = charge;
                     component.chargeScalar = slotCharge;
@@ -36,5 +34,6 @@ public sealed class SeamothModuleActionProcessor : ClientPacketProcessor<Seamoth
                 }
             }
         }
+        return Task.CompletedTask;
     }
 }

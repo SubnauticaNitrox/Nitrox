@@ -1,53 +1,24 @@
-using System.IO;
+using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-public class PvpCommand : Command
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class PvpCommand(IOptions<SubnauticaServerOptions> options) : ICommandHandler<bool>
 {
-    private readonly SubnauticaServerConfig serverConfig;
-    private readonly Server server;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
 
-    public PvpCommand(SubnauticaServerConfig serverConfig, Server server) : base("pvp", Perms.ADMIN, "Enables/Disables PvP")
+    [Description("Enables/Disables PvP")]
+    public async Task Execute(ICommandContext context, bool state)
     {
-        AddParameter(new TypeString("state", true, "on/off"));
-
-        this.serverConfig = serverConfig;
-        this.server = server;
-    }
-
-    protected override void Execute(CallArgs args)
-    {
-        string state = args.Get<string>(0).ToLower();
-
-        bool pvpEnabled = false;
-        switch (state)
+        if (options.Value.PvpEnabled == state)
         {
-            case "on":
-                pvpEnabled = true;
-                break;
-            case "off":
-                break;
-            default:
-                SendMessage(args.Sender, "Parameter must be \"on\" or \"off\"");
-                return;
+            await context.ReplyAsync($"PvP is already {state}");
+            return;
         }
 
-
-        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
-        {
-            if (serverConfig.PvPEnabled == pvpEnabled)
-            {
-                SendMessage(args.Sender, $"PvP is already {state}");
-                return;
-            }
-
-            serverConfig.PvPEnabled = pvpEnabled;
-
-            SendMessageToAllPlayers($"PvP is now {state}");
-        }
+        options.Value.PvpEnabled = state;
+        await context.SendToAllAsync($"PvP is now {state}");
     }
 }

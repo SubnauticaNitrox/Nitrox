@@ -12,7 +12,7 @@ public class PieceDeconstructed : OrderedBuildPacket
     public NitroxId PieceId { get; }
     public BuildPieceIdentifier BuildPieceIdentifier { get; }
     public GhostEntity ReplacerGhost { get; }
-    public BaseData BaseData { get; set;  }
+    public BaseData? BaseData { get; set;  }
 
     public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, BaseData baseData, int operationId) : base(operationId)
     {

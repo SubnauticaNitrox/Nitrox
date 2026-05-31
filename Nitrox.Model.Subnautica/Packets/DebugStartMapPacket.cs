@@ -3,16 +3,10 @@ using System.Collections.Generic;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Packets;
 
-namespace Nitrox.Model.Subnautica.Packets
-{
-    [Serializable]
-    public class DebugStartMapPacket : Packet
-    {
-        public List<NitroxVector3> StartPositions { get; }
+namespace Nitrox.Model.Subnautica.Packets;
 
-        public DebugStartMapPacket(List<NitroxVector3> startPositions)
-        {
-            StartPositions = startPositions;
-        }
-    }
+[Serializable]
+public class DebugStartMapPacket(IList<NitroxVector3> startPositions) : Packet
+{
+    public IList<NitroxVector3> StartPositions { get; } = startPositions;
 }

@@ -4,7 +4,7 @@
     MinWidth="500"
     SizeToContent="WidthAndHeight"
     Title="{Binding Title}"
-    d:DesignHeight="450"
+    d:DesignHeight="500"
     d:DesignWidth="800"
     mc:Ignorable="d"
     x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
@@ -19,7 +19,8 @@
         <vm:BackupRestoreViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto, *, Auto">
-        <controls:CustomTitlebar CanMinimize="False" Grid.Row="0" />
+        <controls:CustomTitlebar CanMinimize="False"
+                                 Grid.Row="0" />
 
         <TextBlock
             Classes="modalHeader"

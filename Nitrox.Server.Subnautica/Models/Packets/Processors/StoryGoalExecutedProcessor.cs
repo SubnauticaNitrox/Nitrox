@@ -1,47 +1,38 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoalExecuted>
+internal sealed class StoryGoalExecutedProcessor(IPacketSender packetSender, StoryManager storyManager, StoryScheduler storyScheduler, PdaManager pdaManager, ILogger<StoryGoalExecutedProcessor> logger)
+    : IAuthPacketProcessor<StoryGoalExecuted>
 {
-    private readonly PlayerManager playerManager;
-    private readonly StoryGoalData storyGoalData;
-    private readonly ScheduleKeeper scheduleKeeper;
-    private readonly PDAStateData pdaStateData;
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly StoryManager storyManager = storyManager;
+    private readonly StoryScheduler storyScheduler = storyScheduler;
+    private readonly PdaManager pdaManager = pdaManager;
+    private readonly ILogger<StoryGoalExecutedProcessor> logger = logger;
 
-    public StoryGoalExecutedProcessor(PlayerManager playerManager,  StoryGoalData storyGoalData, ScheduleKeeper scheduleKeeper, PDAStateData pdaStateData)
+    public async Task Process(AuthProcessorContext context, StoryGoalExecuted packet)
     {
-        this.playerManager = playerManager;
-        this.storyGoalData = storyGoalData;
-        this.scheduleKeeper = scheduleKeeper;
-        this.pdaStateData = pdaStateData;
-    }
-
-    public override void Process(StoryGoalExecuted packet, Player player)
-    {
-        Log.Debug($"Processing StoryGoalExecuted: {packet}");
+        logger.ZLogDebug($"Processing packet: {packet}");
         // The switch is structure is similar to StoryGoal.Execute()
-        bool added = storyGoalData.CompletedGoals.Add(packet.Key);
+        bool added = storyManager.AddCompletedStory(packet.Key);
         switch (packet.Type)
         {
             case StoryGoalExecuted.EventType.RADIO:
                 if (added)
                 {
-                    storyGoalData.RadioQueue.Enqueue(packet.Key);
+                    storyManager.QueueRadioStory(packet.Key);
                 }
                 break;
             case StoryGoalExecuted.EventType.PDA:
                 if (packet.Timestamp.HasValue)
                 {
-                    pdaStateData.AddPDALogEntry(new(packet.Key, packet.Timestamp.Value));
+                    pdaManager.AddPDALogEntry(new(packet.Key, packet.Timestamp.Value));
                 }
                 break;
         }
-
-        scheduleKeeper.UnScheduleGoal(packet.Key);
-
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        storyScheduler.UnscheduleStory(packet.Key);
+        await context.SendToOthersAsync(packet);
     }
 }

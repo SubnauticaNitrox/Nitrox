@@ -1,24 +1,19 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours.Gui.Modals;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class ServerStoppedProcessor : ClientPacketProcessor<ServerStopped>
+internal sealed class ServerStoppedProcessor(IClient client) : IClientPacketProcessor<ServerStopped>
 {
-    private readonly IClient client;
+    private readonly IClient client = client;
 
-    public ServerStoppedProcessor(IClient client)
-    {
-        this.client = client;
-    }
-
-    public override void Process(ServerStopped packet)
+    public Task Process(ClientProcessorContext context, ServerStopped packet)
     {
         // We can send the stop instruction right now instead of waiting for the timeout
         client.Stop();
         Modal.Get<ServerStoppedModal>()?.Show();
+        return Task.CompletedTask;
     }
 }

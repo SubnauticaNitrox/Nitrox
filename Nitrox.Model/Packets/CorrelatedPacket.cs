@@ -1,15 +1,10 @@
 ﻿using System;
 
-namespace Nitrox.Model.Packets
-{
-    [Serializable]
-    public abstract class CorrelatedPacket : Packet
-    {
-        public string CorrelationId { get; protected set; }
+namespace Nitrox.Model.Packets;
 
-        protected CorrelatedPacket(string correlationId)
-        {
-            CorrelationId = correlationId;
-        }
-    }
+// TODO: Refactor this away. Use SessionId instead of correlationId.
+[Serializable]
+public abstract class CorrelatedPacket(string correlationId) : Packet
+{
+    public string CorrelationId { get; protected set; } = correlationId;
 }

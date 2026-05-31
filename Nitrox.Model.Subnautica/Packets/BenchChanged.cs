@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
 
@@ -7,13 +8,13 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class BenchChanged : Packet
 {
-    public ushort PlayerId { get; }
+    public SessionId SessionId { get; }
     public NitroxId BenchId { get; }
     public BenchChangeState ChangeState { get; }
 
-    public BenchChanged(ushort playerId, NitroxId benchId, BenchChangeState changeState)
+    public BenchChanged(SessionId sessionId, NitroxId benchId, BenchChangeState changeState)
     {
-        PlayerId = playerId;
+        SessionId = sessionId;
         BenchId = benchId;
         ChangeState = changeState;
     }

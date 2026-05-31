@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -10,10 +11,9 @@ namespace Nitrox.Launcher.Models.Services;
 
 internal sealed class StorageService
 {
-    private IStorageProvider? storageProvider;
-
     // TODO: Remove this hack when Avalonia allows IStorageProvider to be accessed without demanding a Window instance.
-    private IStorageProvider StorageProvider => storageProvider ??= ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault()?.StorageProvider ?? throw new Exception($"{nameof(IStorageProvider)} not available!");
+    [field: MaybeNull, AllowNull]
+    private IStorageProvider StorageProvider => field ??= ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault()?.StorageProvider ?? throw new Exception($"{nameof(IStorageProvider)} not available!");
 
     public async Task<string> OpenFolderPickerAsync(string title, string? startingFolder = null)
     {

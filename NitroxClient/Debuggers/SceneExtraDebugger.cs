@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Helper;
-using Nitrox.Model.Subnautica.Helper;
 using UnityEngine;
 using Mathf = UnityEngine.Mathf;
 
 namespace NitroxClient.Debuggers;
 
 [ExcludeFromCodeCoverage]
-public sealed class SceneExtraDebugger : BaseDebugger
+public sealed class SceneExtraDebugger : AbstractDebugger
 {
+    private const int WINDOW_ID = 424;
+    private const int RESULTS_PER_PAGE = 30;
+
     private readonly SceneDebugger sceneDebugger;
 
     private const KeyCode RAY_CAST_KEY = KeyCode.F9;
@@ -27,7 +29,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
     private string gameObjectSearchCache = string.Empty;
     private bool gameObjectSearching;
     private string gameObjectSearchPatternInvalidMessage = string.Empty;
-    private List<GameObject> gameObjectResults = new();
+    private List<GameObject> gameObjectResults = [];
 
     private Vector2 hierarchyScrollPos;
 
@@ -35,22 +37,8 @@ public sealed class SceneExtraDebugger : BaseDebugger
 
     private const int PAGE_BUTTON_WIDTH = 100;
     private int searchPageIndex;
-    private int resultsPerPage = 30;
 
-    public override bool Enabled
-    {
-        get => base.Enabled;
-        set
-        {
-            base.Enabled = value;
-            if (value)
-            {
-                MoveOverlappingSceneDebugger();
-            }
-        }
-    }
-
-    public SceneExtraDebugger(SceneDebugger sceneDebugger) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
+    public SceneExtraDebugger(SceneDebugger sceneDebugger) : base(WINDOW_ID, 350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
     {
         this.sceneDebugger = sceneDebugger;
         ActiveTab = AddTab("Tools", RenderTabTools);
@@ -58,8 +46,6 @@ public sealed class SceneExtraDebugger : BaseDebugger
         // ReSharper disable once Unity.PreferAddressByIdToGraphicsParams
         circleTexture = new Lazy<Texture>(() => Resources.Load<Material>("Materials/WorldCursor").GetTexture("_MainTex"));
         arrowTexture = new Lazy<Texture>(() => Resources.Load<Texture2D>("Sprites/Arrow"));
-
-        ResetWindowPosition();
     }
 
     public override void OnGUI()
@@ -80,9 +66,11 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 worldMarkerEnabled = !worldMarkerEnabled;
             }
 
-            if (GUILayout.Button($"Ray Casting: {(rayCastingEnabled ? "Active" : "Inactive")}"))
+            if (GUILayout.Button($"Ray Casting ({RAY_CAST_KEY}): {(rayCastingEnabled ? "Active" : "Inactive")}"))
             {
-                Log.InGame($"Ray casting can be enabled/disabled with: {RAY_CAST_KEY}");
+                gameObjectSearching = false;
+                rayCastingEnabled = !rayCastingEnabled;
+                gameObjectSearch = rayCastingEnabled ? "Ray casting is running" : string.Empty;
             }
         }
 
@@ -99,8 +87,8 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 {
                     hierarchyScrollPos = scroll.scrollPosition;
 
-                    int startIndex = resultsPerPage * searchPageIndex;
-                    int endIndex = startIndex + resultsPerPage;
+                    int startIndex = RESULTS_PER_PAGE * searchPageIndex;
+                    int endIndex = startIndex + RESULTS_PER_PAGE;
 
                     if (endIndex > gameObjectResults.Count)
                     {
@@ -129,7 +117,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 GUILayout.FlexibleSpace();
 
                 // Pagination of search results if necessary
-                if (gameObjectResults.Count > resultsPerPage)
+                if (gameObjectResults.Count > RESULTS_PER_PAGE)
                 {
                     using (new GUILayout.HorizontalScope("box"))
                     {
@@ -147,7 +135,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
                         GUI.enabled = true;
 
                         // Get the maximum page number based on the size of the results
-                        int maxPage = gameObjectResults.Count / resultsPerPage;
+                        int maxPage = gameObjectResults.Count / RESULTS_PER_PAGE;
 
                         GUILayout.FlexibleSpace();
                         GUILayout.Label($"Page {searchPageIndex + 1} of {maxPage + 1}", GUILayout.ExpandHeight(true));
@@ -320,32 +308,6 @@ public sealed class SceneExtraDebugger : BaseDebugger
         }
     }
 
-    public override void ResetWindowPosition()
-    {
-        base.ResetWindowPosition();
-        // Align to the right side of the SceneDebugger
-        WindowRect.x = sceneDebugger.WindowRect.x + sceneDebugger.WindowRect.width;
-        WindowRect.y = sceneDebugger.WindowRect.y;
-        
-        float exceedWidth = WindowRect.x + WindowRect.width - Screen.width;
-        if (exceedWidth > 0f)
-        {
-            WindowRect.x -= exceedWidth;
-        }
-        MoveOverlappingSceneDebugger();
-    }
-
-    /// <summary>
-    /// Move the scene debugger if it's overlapping with the extra scene debugger (if they can both hold in the available space)
-    /// </summary>
-    private void MoveOverlappingSceneDebugger()
-    {
-        if (sceneDebugger.WindowRect.width + WindowRect.width < Screen.width && // verify that debuggers can hold at the same time in the screen
-            sceneDebugger.WindowRect.x + sceneDebugger.WindowRect.width + WindowRect.width > Screen.width) // verify that debuggers are really overlapping
-        {
-            sceneDebugger.WindowRect.x = Screen.width - WindowRect.width - sceneDebugger.WindowRect.width;
-        }
-    }
 
     private void UpdateSelectedObjectMarker(Transform selectedTransform)
     {

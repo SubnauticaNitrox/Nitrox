@@ -12,18 +12,20 @@ namespace NitroxClient.MonoBehaviours;
 [ExcludeFromCodeCoverage]
 public class NitroxDebugManager : MonoBehaviour
 {
+    private const int NITROX_DEBUGGER_WINDOW_ID = 420;
+
     private const KeyCode ENABLE_DEBUGGER_HOTKEY = KeyCode.F7;
 
-    private readonly HashSet<BaseDebugger> prevActiveDebuggers = [];
-    private List<BaseDebugger> debuggers;
+    private readonly HashSet<AbstractDebugger> prevActiveDebuggers = [];
+    private List<AbstractDebugger> debuggers;
 
-    private bool showDebuggerList;
+    private bool showDebuggerList = true;
     private bool isDebugging;
     private Rect windowRect;
 
     private void Awake()
     {
-        debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<BaseDebugger>>().ToList();
+        debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<AbstractDebugger>>().ToList();
     }
 
     public static void ToggleCursor()
@@ -39,13 +41,14 @@ public class NitroxDebugManager : MonoBehaviour
         }
 
         // Main window to display all available debuggers.
-        windowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), windowRect, DoWindow, "Nitrox debugging");
+        windowRect = GUILayout.Window(NITROX_DEBUGGER_WINDOW_ID, windowRect, DoWindow, "Nitrox Debugging");
 
         // Render debugger windows if they are enabled.
-        foreach (BaseDebugger debugger in debuggers)
+        foreach (AbstractDebugger debugger in debuggers)
         {
             debugger.OnGUI();
         }
+
     }
 
     public void Update()
@@ -62,12 +65,12 @@ public class NitroxDebugManager : MonoBehaviour
                 ToggleCursor();
             }
 
-            CheckDebuggerHotkeys();
-
-            foreach (BaseDebugger debugger in debuggers.Where(debugger => debugger.Enabled))
+            if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl))
             {
-                debugger.Update();
+                ResetDebuggers();
             }
+
+            CheckDebuggerHotkeys();
         }
     }
 
@@ -76,17 +79,14 @@ public class NitroxDebugManager : MonoBehaviour
         isDebugging = !isDebugging;
         if (isDebugging)
         {
-            UWE.Utils.PushLockCursor(false);
             ShowDebuggers();
+            UWE.Utils.alwaysLockCursor = false;
+            UWE.Utils.lockCursor = false;
         }
         else
         {
-            UWE.Utils.PopLockCursor();
+            UWE.Utils.lockCursor = true;
             HideDebuggers();
-            foreach (BaseDebugger baseDebugger in debuggers)
-            {
-                baseDebugger.ResetWindowPosition();
-            }
         }
     }
 
@@ -101,6 +101,11 @@ public class NitroxDebugManager : MonoBehaviour
                     ToggleCursor();
                 }
 
+                if (GUILayout.Button("Reset (CTRL+R)"))
+                {
+                    ResetDebuggers();
+                }
+
                 if (GUILayout.Button("Show / Hide", GUILayout.Width(100)))
                 {
                     showDebuggerList = !showDebuggerList;
@@ -109,7 +114,7 @@ public class NitroxDebugManager : MonoBehaviour
             }
             if (showDebuggerList)
             {
-                foreach (BaseDebugger debugger in debuggers)
+                foreach (AbstractDebugger debugger in debuggers)
                 {
                     debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger ({debugger.HotkeyString})");
                 }
@@ -119,7 +124,7 @@ public class NitroxDebugManager : MonoBehaviour
 
     private void CheckDebuggerHotkeys()
     {
-        foreach (BaseDebugger debugger in debuggers)
+        foreach (AbstractDebugger debugger in debuggers)
         {
             if (Input.GetKeyDown(debugger.Hotkey) && Input.GetKey(KeyCode.LeftControl) == debugger.HotkeyControlRequired && Input.GetKey(KeyCode.LeftShift) == debugger.HotkeyShiftRequired && Input.GetKey(KeyCode.LeftAlt) == debugger.HotkeyAltRequired)
             {
@@ -128,9 +133,17 @@ public class NitroxDebugManager : MonoBehaviour
         }
     }
 
+    private void ResetDebuggers()
+    {
+        foreach (AbstractDebugger debugger in debuggers)
+        {
+            debugger.ResetWindowPosition();
+        }
+    }
+
     private void HideDebuggers()
     {
-        foreach (BaseDebugger debugger in GetComponents<BaseDebugger>())
+        foreach (AbstractDebugger debugger in GetComponents<AbstractDebugger>())
         {
             if (debugger.Enabled)
             {
@@ -143,7 +156,7 @@ public class NitroxDebugManager : MonoBehaviour
 
     private void ShowDebuggers()
     {
-        foreach (BaseDebugger debugger in prevActiveDebuggers)
+        foreach (AbstractDebugger debugger in prevActiveDebuggers)
         {
             debugger.Enabled = true;
         }

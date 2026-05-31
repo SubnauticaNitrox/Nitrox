@@ -7,15 +7,11 @@ using Nitrox.Model.Helper;
 
 namespace Nitrox.Model.GameLogic.FMOD;
 
-public class FMODWhitelist
+public class FMODWhitelist : IDisposable
 {
+    private readonly Dictionary<string, SoundData> soundsWhitelist = [];
     private readonly HashSet<string> whitelistedPaths = [];
-    private readonly Dictionary<string, SoundData> soundsWhitelist = new();
-
-    public static FMODWhitelist Load(GameInfo game)
-    {
-        return new FMODWhitelist(game);
-    }
+    private bool isDisposed;
 
     private FMODWhitelist(GameInfo game)
     {
@@ -62,13 +58,20 @@ public class FMODWhitelist
         }
     }
 
+    public static FMODWhitelist Load(GameInfo game)
+    {
+        return new FMODWhitelist(game);
+    }
+
     public bool IsWhitelisted(string path)
     {
+        ThrowIfDisposed();
         return whitelistedPaths.Contains(path);
     }
 
     public bool IsWhitelisted(string path, out float radius)
     {
+        ThrowIfDisposed();
         if (soundsWhitelist.TryGetValue(path, out SoundData soundData))
         {
             radius = soundData.Radius;
@@ -81,10 +84,31 @@ public class FMODWhitelist
 
     public bool TryGetSoundData(string path, out SoundData soundData)
     {
+        ThrowIfDisposed();
         return soundsWhitelist.TryGetValue(path, out soundData);
     }
 
-    public ReadOnlyDictionary<string, SoundData> GetWhitelist() => new(soundsWhitelist);
+    public ReadOnlyDictionary<string, SoundData> GetWhitelist()
+    {
+        ThrowIfDisposed();
+        return new ReadOnlyDictionary<string, SoundData>(soundsWhitelist);
+    }
+
+    public void Dispose()
+    {
+        ThrowIfDisposed();
+        isDisposed = true;
+        soundsWhitelist.Clear();
+        whitelistedPaths.Clear();
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (isDisposed)
+        {
+            throw new ObjectDisposedException(nameof(FMODWhitelist));
+        }
+    }
 }
 
 public readonly struct SoundData

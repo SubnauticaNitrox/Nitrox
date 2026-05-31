@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.Packets;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldItemChanged>
+internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<PlayerHeldItemChanged>
 {
+    private readonly PlayerManager playerManager;
     private int defaultLayer;
     private int viewModelLayer;
-    private readonly PlayerManager playerManager;
 
     public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
@@ -26,20 +26,17 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
         }
     }
 
-    private void SetupLayers()
+    public Task Process(ClientProcessorContext context, PlayerHeldItemChanged packet)
     {
-        defaultLayer = LayerMask.NameToLayer("Default");
-        viewModelLayer = LayerMask.NameToLayer("Viewmodel");
-    }
-
-    public override void Process(PlayerHeldItemChanged packet)
-    {
-        Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
-        Validate.IsPresent(opPlayer);
-
+        if (!playerManager.TryFind(packet.SessionId, out RemotePlayer player))
+        {
+            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find player with session id: {packet.SessionId}.");
+            return Task.CompletedTask;
+        }
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
-            return; // Item can be not spawned yet bc async.
+            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find entity with id: {packet.ItemId}.");
+            return Task.CompletedTask;
         }
 
         Pickupable pickupable = item.GetComponent<Pickupable>();
@@ -47,7 +44,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
 
         Validate.NotNull(pickupable.inventoryItem);
 
-        ItemsContainer inventory = opPlayer.Value.Inventory;
+        ItemsContainer inventory = player.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
 
         // Copied from QuickSlots
@@ -55,7 +52,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
         {
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL:
                 Validate.IsTrue(tool);
-                ModelPlug.PlugIntoSocket(tool, opPlayer.Value.ItemAttachPoint);
+                ModelPlug.PlugIntoSocket(tool, player.ItemAttachPoint);
                 Utils.SetLayerRecursively(item, viewModelLayer);
                 foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
                 {
@@ -72,8 +69,8 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 }
                 item.SetActive(true);
                 tool.SetHandIKTargetsEnabled(true);
-                SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
-                opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime == null;
+                SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
+                player.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
 
                 if (item.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated
                 {
@@ -99,8 +96,8 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 {
                     componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
                 }
-                SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
-                opPlayer.Value.AnimationController["using_tool_first"] = false;
+                SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
+                player.AnimationController["using_tool_first"] = false;
 
                 if (item.TryGetComponent(out FPModel fpModelHolster)) //FPModel needs to be updated
                 {
@@ -110,7 +107,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 break;
 
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
-                pickupable.inventoryItem.item.Reparent(opPlayer.Value.ItemAttachPoint);
+                pickupable.inventoryItem.item.Reparent(player.ItemAttachPoint);
                 pickupable.inventoryItem.item.SetVisible(true);
                 Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
                 break;
@@ -124,5 +121,12 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
             default:
                 throw new ArgumentOutOfRangeException(nameof(packet.Type));
         }
+        return Task.CompletedTask;
+    }
+
+    private void SetupLayers()
+    {
+        defaultLayer = LayerMask.NameToLayer("Default");
+        viewModelLayer = LayerMask.NameToLayer("Viewmodel");
     }
 }

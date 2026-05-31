@@ -1,28 +1,24 @@
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
+using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Services;
 
-namespace Nitrox.Server.Subnautica.Models.Packets.Processors
+namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
+
+internal class PlayerSyncFinishedProcessor(SessionManager sessionManager, JoiningManager joiningManager, HibernateService hibernateService)
+    : IAuthPacketProcessor<PlayerSyncFinished>
 {
-    public class PlayerSyncFinishedProcessor : AuthenticatedPacketProcessor<PlayerSyncFinished>
+    private readonly SessionManager sessionManager = sessionManager;
+    private readonly JoiningManager joiningManager = joiningManager;
+    private readonly HibernateService hibernateService = hibernateService;
+
+    public async Task Process(AuthProcessorContext context, PlayerSyncFinished packet)
     {
-        private readonly PlayerManager playerManager;
-        private readonly JoiningManager joiningManager;
-
-        public PlayerSyncFinishedProcessor(PlayerManager playerManager, JoiningManager joiningManager)
+        if (sessionManager.GetSessionCount() > 0)
         {
-            this.playerManager = playerManager;
-            this.joiningManager = joiningManager;
+            await hibernateService.WakeAsync();
         }
 
-        public override void Process(PlayerSyncFinished packet, Player player)
-        {
-            // If this is the first player connecting we need to restart time at this exact moment
-            if (playerManager.GetConnectedPlayers().Count == 1)
-            {
-                Server.Instance.ResumeServer();
-            }
-
-            joiningManager.SyncFinishedCallback?.Invoke();
-        }
+        joiningManager.SyncFinishedCallback?.Invoke();
     }
 }

@@ -4,86 +4,13 @@ namespace Nitrox.Test.Helper.Faker;
 
 public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
 {
-    public enum CollectionType
-    {
-        NONE,
-        ARRAY,
-        LIST,
-        DICTIONARY,
-        SET,
-        QUEUE
-    }
-
     private const int DEFAULT_SIZE = 2;
-
-    public static bool IsCollection(Type t, out CollectionType collectionType)
-    {
-        if (t.IsArray && t.GetArrayRank() == 1)
-        {
-            collectionType = CollectionType.ARRAY;
-            return true;
-        }
-
-        if (t.IsGenericType)
-        {
-            Type[] genericInterfacesDefinition = t.GetInterfaces()
-                                                  .Where(i => i.IsGenericType)
-                                                  .Select(i => i.GetGenericTypeDefinition())
-                                                  .ToArray();
-
-            if (genericInterfacesDefinition.Any(i => i == typeof(IList<>)))
-            {
-                collectionType = CollectionType.LIST;
-                return true;
-            }
-
-            if (genericInterfacesDefinition.Any(i => i == typeof(IDictionary<,>)))
-            {
-                collectionType = CollectionType.DICTIONARY;
-                return true;
-            }
-
-            if (genericInterfacesDefinition.Any(i => i == typeof(ISet<>)))
-            {
-                collectionType = CollectionType.SET;
-                return true;
-            }
-
-            Type genericTypeDefinition = t.GetGenericTypeDefinition();
-            if (genericTypeDefinition == typeof(Queue<>) || genericTypeDefinition == typeof(ThreadSafeQueue<>)) // Queue has no defining interface
-            {
-                collectionType = CollectionType.QUEUE;
-                return true;
-            }
-        }
-
-        collectionType = CollectionType.NONE;
-        return false;
-    }
-
-    public static bool TryGetCollectionTypes(Type type, out Type[] types)
-    {
-        if (!IsCollection(type, out CollectionType collectionType))
-        {
-            types = [];
-            return false;
-        }
-
-        if (collectionType == CollectionType.ARRAY)
-        {
-            types = [type.GetElementType()];
-            return true;
-        }
-
-        types = type.GenericTypeArguments;
-        return true;
-    }
-
-    public int GenerateSize = DEFAULT_SIZE;
-    public Type OutputCollectionType;
+    private readonly Func<HashSet<Type>, object> generateAction;
 
     private readonly INitroxFaker[] subFakers;
-    private readonly Func<HashSet<Type>, object> generateAction;
+
+    public int GenerateSize = DEFAULT_SIZE;
+    public readonly Type OutputCollectionType;
 
     public NitroxCollectionFaker(Type type, CollectionType collectionType)
     {
@@ -93,7 +20,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
         switch (collectionType)
         {
             case CollectionType.ARRAY:
-                Type arrayType = OutputType = type.GetElementType();
+                Type arrayType = OutputType = type.GetElementType() ?? type.GetGenericArguments()[0];
                 elementFaker = GetOrCreateFaker(arrayType);
                 subFakers = [elementFaker];
 
@@ -196,7 +123,86 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
         }
     }
 
+    public static bool IsCollection(Type t, out CollectionType collectionType)
+    {
+        if (t.IsArray && t.GetArrayRank() == 1)
+        {
+            collectionType = CollectionType.ARRAY;
+            return true;
+        }
+
+        if (t.IsGenericType)
+        {
+            if (t.GetGenericTypeDefinition() == typeof(IList<>))
+            {
+                collectionType = CollectionType.ARRAY;
+                return true;
+            }
+
+            Type[] genericInterfacesDefinition = t.GetInterfaces()
+                                                  .Where(i => i.IsGenericType)
+                                                  .Select(i => i.GetGenericTypeDefinition())
+                                                  .ToArray();
+
+            if (genericInterfacesDefinition.Any(i => i == typeof(IList<>)))
+            {
+                collectionType = CollectionType.LIST;
+                return true;
+            }
+
+            if (genericInterfacesDefinition.Any(i => i == typeof(IDictionary<,>)))
+            {
+                collectionType = CollectionType.DICTIONARY;
+                return true;
+            }
+
+            if (genericInterfacesDefinition.Any(i => i == typeof(ISet<>)))
+            {
+                collectionType = CollectionType.SET;
+                return true;
+            }
+
+            Type genericTypeDefinition = t.GetGenericTypeDefinition();
+            if (genericTypeDefinition == typeof(Queue<>) || genericTypeDefinition == typeof(ThreadSafeQueue<>)) // Queue has no defining interface
+            {
+                collectionType = CollectionType.QUEUE;
+                return true;
+            }
+        }
+
+        collectionType = CollectionType.NONE;
+        return false;
+    }
+
+    public static bool TryGetCollectionTypes(Type type, out Type[] types)
+    {
+        if (!IsCollection(type, out CollectionType collectionType))
+        {
+            types = [];
+            return false;
+        }
+
+        if (collectionType == CollectionType.ARRAY)
+        {
+            types = [type.GetElementType()];
+            return true;
+        }
+
+        types = type.GenericTypeArguments;
+        return true;
+    }
+
     public INitroxFaker[] GetSubFakers() => subFakers;
 
     public object GenerateUnsafe(HashSet<Type> typeTree) => generateAction.Invoke(typeTree);
+
+    public enum CollectionType
+    {
+        NONE,
+        ARRAY,
+        LIST,
+        DICTIONARY,
+        SET,
+        QUEUE
+    }
 }

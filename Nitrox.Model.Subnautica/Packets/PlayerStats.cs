@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets;
 
@@ -7,7 +8,7 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class PlayerStats : Packet
 {
-    public ushort PlayerId { get; set; }
+    public SessionId SessionId { get; set; }
     public float Oxygen { get; }
     public float MaxOxygen { get; }
     public float Health { get; }
@@ -15,9 +16,9 @@ public class PlayerStats : Packet
     public float Water { get; }
     public float InfectionAmount { get; }
 
-    public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
+    public PlayerStats(SessionId sessionId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
     {
-        PlayerId = playerId;
+        SessionId = sessionId;
         Oxygen = oxygen;
         MaxOxygen = maxOxygen;
         Health = health;

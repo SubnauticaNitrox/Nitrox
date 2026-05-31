@@ -14,11 +14,9 @@ public class NitroxCyclops : MonoBehaviour
     public VirtualCyclops Virtual;
     private CyclopsMotor cyclopsMotor;
     private SubRoot subRoot;
-    private SubControl subControl;
     private Rigidbody rigidbody;
     private WorldForces worldForces;
     private Stabilizer stabilizer;
-    private CharacterController controller;
     private CyclopsNoiseManager cyclopsNoiseManager;
 
     public readonly Dictionary<INitroxPlayer, CyclopsPawn> Pawns = [];
@@ -29,11 +27,9 @@ public class NitroxCyclops : MonoBehaviour
     {
         cyclopsMotor = Player.mainObject.GetComponent<CyclopsMotor>();
         subRoot = GetComponent<SubRoot>();
-        subControl = GetComponent<SubControl>();
         rigidbody = GetComponent<Rigidbody>();
         worldForces = GetComponent<WorldForces>();
         stabilizer = GetComponent<Stabilizer>();
-        controller = cyclopsMotor.controller;
         cyclopsNoiseManager = GetComponent<CyclopsNoiseManager>();
 
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, false, true);

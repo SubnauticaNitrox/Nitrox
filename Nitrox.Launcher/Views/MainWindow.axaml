@@ -75,21 +75,40 @@
                                            FontSize="{TemplateBinding FontSize}"
                                            Text="{TemplateBinding Content}" />
                             </Grid>
-                            <!-- Update Available green dot -->
-                            <Border Height="10" Width="10" CornerRadius="5" 
-                                    Background="{DynamicResource BrandOnColor}"
-                                    BorderBrush="{DynamicResource BrandPanelBackground}"
-                                    BorderThickness="2"
-                                    HorizontalAlignment="Left"
-                                    Margin="49.25,13.5,0,0"
-                                    IsVisible="False"
-                                    ToolTip.Tip="New Nitrox update available" />
+                            <!-- Update available green dot -->
+                            <Border
+                                Height="10"
+                                Width="10"
+                                CornerRadius="5"
+                                Background="{DynamicResource BrandOnColor}"
+                                BorderBrush="{DynamicResource BrandPanelBackground}"
+                                BorderThickness="2"
+                                HorizontalAlignment="Left"
+                                Margin="49.25,13.5,0,0"
+                                IsVisible="False"
+                                ToolTip.Tip="New Nitrox update available" />
+                            <!-- Unread notifications badge -->
+                            <Border
+                                Height="10"
+                                Width="10"
+                                CornerRadius="5"
+                                Background="{DynamicResource BrandOnColor}"
+                                BorderBrush="{DynamicResource BrandPanelBackground}"
+                                BorderThickness="2"
+                                HorizontalAlignment="Left"
+                                Margin="49.25,13.5,0,0"
+                                IsVisible="False"
+                                ToolTip.Tip="Unread notifications" />
                         </Panel>
                     </ControlTemplate>
                 </Setter>
-                
+
                 <Style Selector="^.updates Border">
                     <Setter Property="IsVisible" Value="{Binding UpdateAvailableOrUnofficial}" />
+                </Style>
+
+                <Style Selector="^.notifications Border">
+                    <Setter Property="IsVisible" Value="{Binding Notifications.Count}" />
                 </Style>
 
                 <Style Selector="^:pointerover">
@@ -178,7 +197,7 @@
     </Interaction.Behaviors>
 
     <Panel>
-        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
+        <controls:CustomTitlebar Opacity="0.6" />
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
             <!--  Navigation (left side)  -->
@@ -273,6 +292,22 @@
                                 </RadioButton.IsChecked>
                             </RadioButton>
                             <RadioButton
+                                Classes="notifications"
+                                Command="{Binding OpenNotificationsViewCommand}"
+                                Content="Notifications"
+                                Tag="/Assets/Images/tabs-icons/notifications.png"
+                                ToolTip.Tip="View all launcher notifications">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
+                                        <Binding.ConverterParameter>
+                                            <generic:List x:TypeArguments="system:Type">
+                                                <x:Type TypeName="vm:NotificationsViewModel" />
+                                            </generic:List>
+                                        </Binding.ConverterParameter>
+                                    </Binding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <RadioButton
                                 Command="{Binding OpenOptionsViewCommand}"
                                 Content="Options"
                                 Tag="/Assets/Images/tabs-icons/options.png"
@@ -318,7 +353,7 @@
                                  HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Svg.RenderTransform>
                                     <TransformGroup>
-                                        <RotateTransform/>
+                                        <RotateTransform />
                                     </TransformGroup>
                                 </Svg.RenderTransform>
                                 <Svg.Styles>
@@ -355,6 +390,9 @@
                         <DataTemplate x:DataType="vm:BlogViewModel">
                             <views:BlogView />
                         </DataTemplate>
+                        <DataTemplate x:DataType="vm:NotificationsViewModel">
+                            <views:NotificationsView />
+                        </DataTemplate>
                         <DataTemplate x:DataType="vm:UpdatesViewModel">
                             <views:UpdatesView />
                         </DataTemplate>
@@ -384,7 +422,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border
-                            Classes.dismiss="{Binding Dismissed}"
+                            Classes.dismiss="{Binding IsDismissed}"
                             Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
                             Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
                             Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"

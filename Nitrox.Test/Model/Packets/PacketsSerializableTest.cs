@@ -61,7 +61,7 @@ public class PacketsSerializableTest
 
         foreach (ValueTuple<Packet, Packet> packet in generatedPackets)
         {
-            Packet deserialized = Packet.Deserialize(packet.Item1.Serialize());
+            Packet? deserialized = Packet.Deserialize(packet.Item1.Serialize());
 
             packet.Item1.ShouldCompare(deserialized, $"with {packet.Item1.GetType()}", config);
 

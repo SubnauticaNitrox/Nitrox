@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
@@ -7,48 +9,47 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
 /// <remarks>
-/// Regular <see cref="WorldEntity"/> are held in cells and should be registered in <see cref="worldEntitiesByBatchId"/> and <see cref="worldEntitiesByCell"/>.
-/// But <see cref="GlobalRootEntity"/> are held in their own root object (GlobalRoot) so they should never be registered in cells (they're seeable at all times).
+///     Regular <see cref="WorldEntity" /> are held in cells and should be registered in <see cref="worldEntitiesByCell" />
+///     .
+///     But <see cref="GlobalRootEntity" /> are held in their own root object (GlobalRoot) so they should never be
+///     registered in cells (they're seeable at all times).
 /// </remarks>
-public class WorldEntityManager
+// TODO: Refactor to not use internal dictionaries but instead depend on EntityRegistry for data. Maybe add API to EntityRegistry to set custom filter+indexer on entity type (i.e. WorldEntity) for improved world entity lookups?
+internal sealed class WorldEntityManager
 {
+    private readonly BatchEntitySpawner batchEntitySpawner;
+    private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
-
-    /// <summary>
-    ///     World entities can disappear if you go out of range.
-    /// </summary>
-    private readonly Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell;
 
     /// <summary>
     ///     Global root entities that are always visible.
     /// </summary>
-    private readonly Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById;
+    internal Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById = [];
 
-    private readonly BatchEntitySpawner batchEntitySpawner;
+    private readonly Lock globalRootEntitiesLock = new();
+    private readonly ILogger<WorldEntityManager> logger;
     private readonly PlayerManager playerManager;
 
-    private readonly object worldEntitiesLock;
-    private readonly object globalRootEntitiesLock;
+    private readonly Lock worldEntitiesLock = new();
+    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
 
-    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager)
+    /// <summary>
+    ///     World entities can disappear if you go out of range.
+    /// </summary>
+    internal Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell = [];
+
+    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager, ILogger<WorldEntityManager> logger)
     {
-        List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
-
-        globalRootEntitiesById = entityRegistry.GetEntities<GlobalRootEntity>().ToDictionary(entity => entity.Id);
-
-        worldEntitiesByCell = worldEntities.Where(entity => entity is not GlobalRootEntity)
-                                               .GroupBy(entity => entity.AbsoluteEntityCell)
-                                               .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
+        this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
         this.playerManager = playerManager;
-
-        worldEntitiesLock = new();
-        globalRootEntitiesLock = new();
+        this.logger = logger;
     }
 
     public List<GlobalRootEntity> GetGlobalRootEntities(bool rootOnly = false)
@@ -96,13 +97,13 @@ public class WorldEntityManager
         return [];
     }
 
-    public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell newCell, out WorldEntity worldEntity)
+    public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell? newCell, out WorldEntity worldEntity)
     {
         lock (worldEntitiesLock)
         {
             if (!entityRegistry.TryGetEntityById(id, out worldEntity))
             {
-                Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {id} because it isn't registered");
+                logger.ZLogWarningOnce($"can't update entity position of {id} because it isn't registered");
                 newCell = null;
                 return false;
             }
@@ -122,7 +123,7 @@ public class WorldEntityManager
             worldEntity.Transform.Rotation = rotation;
 
             newCell = worldEntity.AbsoluteEntityCell;
-            
+
             if (oldCell != newCell)
             {
                 EntitySwitchedCells(worldEntity, oldCell, newCell);
@@ -178,10 +179,10 @@ public class WorldEntityManager
     }
 
     /// <summary>
-    /// Automatically registers a WorldEntity in its AbsoluteEntityCell
+    ///     Automatically registers a WorldEntity in its AbsoluteEntityCell
     /// </summary>
     /// <remarks>
-    /// The provided should NOT be a GlobalRootEntity (they don't stand in cells)
+    ///     The provided should NOT be a GlobalRootEntity (they don't stand in cells)
     /// </remarks>
     public void RegisterWorldEntity(WorldEntity entity)
     {
@@ -201,7 +202,7 @@ public class WorldEntityManager
     }
 
     /// <summary>
-    /// Automatically unregisters a WorldEntity in its AbsoluteEntityCell
+    ///     Automatically unregisters a WorldEntity in its AbsoluteEntityCell
     /// </summary>
     public void UnregisterWorldEntity(WorldEntity entity)
     {
@@ -219,7 +220,7 @@ public class WorldEntityManager
         }
     }
 
-    public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
+    public async Task LoadAllUnspawnedEntitiesAsync(CancellationToken token)
     {
         int totalBatches = SubnauticaMap.DimensionsInBatches.X * SubnauticaMap.DimensionsInBatches.Y * SubnauticaMap.DimensionsInBatches.Z;
         int batchesLoaded = 0;
@@ -231,9 +232,9 @@ public class WorldEntityManager
             {
                 for (int z = 0; z < SubnauticaMap.DimensionsInBatches.Z; z++)
                 {
-                    int spawned = LoadUnspawnedEntities(new(x, y, z), true);
+                    int spawned = await LoadUnspawnedEntitiesAsync(new(x, y, z), true);
 
-                    Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
+                    logger.ZLogDebug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
                     batchesLoaded++;
                 }
@@ -241,20 +242,25 @@ public class WorldEntityManager
 
             if (batchesLoaded > 0)
             {
-                Log.Info($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
+                logger.ZLogInformation($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
             }
         }
     }
 
-    public int LoadUnspawnedEntities(NitroxInt3 batchId, bool suppressLogs)
+    public Task<int> LoadUnspawnedEntitiesAsync(NitroxInt3 batchId, bool suppressLogs)
     {
-        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
+        return batchRegistrationTasks.GetOrAdd(batchId, id => new Lazy<Task<int>>(() => LoadAndRegisterBatchInternalAsync(id, suppressLogs))).Value;
+    }
+
+    private async Task<int> LoadAndRegisterBatchInternalAsync(NitroxInt3 batchId, bool suppressLogs)
+    {
+        List<Entity> spawnedEntities = await batchEntitySpawner.LoadUnspawnedEntitiesAsync(batchId, suppressLogs);
 
         List<WorldEntity> entitiesInCells = spawnedEntities.Where(entity => typeof(WorldEntity).IsAssignableFrom(entity.GetType()) &&
-                                                                                entity.GetType() != typeof(CellRootEntity) &&
-                                                                                entity.GetType() != typeof(GlobalRootEntity))
-                                                               .Cast<WorldEntity>()
-                                                               .ToList();
+                                                                            entity.GetType() != typeof(CellRootEntity) &&
+                                                                            entity.GetType() != typeof(GlobalRootEntity))
+                                                           .Cast<WorldEntity>()
+                                                           .ToList();
 
         // UWE stores entities serialized with a handful of parent cell roots.  These only represent a small fraction of all possible cell
         // roots that could exist.  There is no reason for the server to know about these and much easier to consider top-level world entities
@@ -264,7 +270,7 @@ public class WorldEntityManager
             foreach (WorldEntity worldEntity in cellRoot.ChildEntities.Cast<WorldEntity>())
             {
                 worldEntity.ParentId = null;
-                worldEntity.Transform.SetParent(null, true);
+                worldEntity.Transform.SetParent(null);
                 entitiesInCells.Add(worldEntity);
             }
 
@@ -283,35 +289,6 @@ public class WorldEntityManager
         return entitiesInCells.Count;
     }
 
-    private void EntitySwitchedCells(WorldEntity entity, AbsoluteEntityCell oldCell, AbsoluteEntityCell newCell)
-    {
-        if (entity is GlobalRootEntity)
-        {
-            return; // We don't care what cell a global root entity resides in.  Only phasing entities.
-        }
-
-        if (oldCell != newCell)
-        {
-            lock (worldEntitiesLock)
-            {
-                // Specifically remove entity from oldCell
-                UnregisterWorldEntityFromCell(entity.Id, oldCell);
-
-                // Automatically add entity to its new cell
-                RegisterWorldEntityInCell(entity, newCell);
-                
-                // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
-                foreach (Player player in playerManager.ConnectedPlayers())
-                {
-                    if (player.HasCellLoaded(newCell) && !player.HasCellLoaded(oldCell))
-                    {
-                        player.SendPacket(new SpawnEntities(entity));
-                    }
-                }
-            }
-        }
-    }
-
     public void StopTrackingEntity(WorldEntity entity)
     {
         if (entity is GlobalRootEntity)
@@ -324,7 +301,7 @@ public class WorldEntityManager
         }
     }
 
-    public bool TryDestroyEntity(NitroxId entityId, out Entity entity)
+    public bool TryDestroyEntity(NitroxId entityId, [NotNullWhen(true)] out Entity? entity)
     {
         Optional<Entity> optEntity = entityRegistry.RemoveEntity(entityId);
 
@@ -344,7 +321,8 @@ public class WorldEntityManager
     }
 
     /// <summary>
-    /// To avoid risking not having the same entity in <see cref="globalRootEntitiesById"/> and in EntityRegistry, we update both at the same time.
+    ///     To avoid risking not having the same entity in <see cref="globalRootEntitiesById" /> and in EntityRegistry, we
+    ///     update both at the same time.
     /// </summary>
     public void AddOrUpdateGlobalRootEntity(GlobalRootEntity entity, bool addOrUpdateRegistry = true)
     {
@@ -358,8 +336,38 @@ public class WorldEntityManager
         }
     }
 
+    private void EntitySwitchedCells(WorldEntity entity, AbsoluteEntityCell oldCell, AbsoluteEntityCell newCell)
+    {
+        if (entity is GlobalRootEntity)
+        {
+            return; // We don't care what cell a global root entity resides in.  Only phasing entities.
+        }
+
+        if (oldCell != newCell)
+        {
+            lock (worldEntitiesLock)
+            {
+                // Specifically remove entity from oldCell
+                UnregisterWorldEntityFromCell(entity.Id, oldCell);
+
+                // Automatically add entity to its new cell
+                RegisterWorldEntityInCell(entity, newCell);
+
+                // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
+                foreach (Player player in playerManager.ConnectedPlayers())
+                {
+                    if (player.HasCellLoaded(newCell) && !player.HasCellLoaded(oldCell))
+                    {
+                        packetSender.SendPacketAsync(new SpawnEntities(entity), player.SessionId);
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>
-    /// Iterative breadth-first search which gets all children player entities in <paramref name="parentEntity"/>'s hierarchy.
+    ///     Iterative breadth-first search which gets all children player entities in <paramref name="parentEntity" />'s
+    ///     hierarchy.
     /// </summary>
     private List<PlayerEntity> FindPlayerEntitiesInChildren(Entity parentEntity)
     {

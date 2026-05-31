@@ -6,7 +6,6 @@ using NitroxClient.Communication;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 
@@ -101,6 +100,11 @@ public sealed class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     public static bool TryGetKeyForPingInstance(PingInstance pingInstance, out string pingKey, out bool isRemotePlayerPing, Action failCallback = null)
     {
         isRemotePlayerPing = false;
+        if (pingInstance.IsLocalOnly)
+        {
+            pingKey = string.Empty;
+            return false;
+        }
         if (pingInstance.TryGetComponent(out SignalPing signalPing))
         {
             pingKey = signalPing.descriptionKey;
@@ -129,8 +133,13 @@ public sealed class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             pingKey = string.Empty;
             return false;
         }
-
-        Log.Warn($"Couldn't find PingInstance identifier for {pingInstance.name} under {pingInstance.transform.parent}");
+        // Nitrox-created pings can be ignored.
+        if (pingInstance.name.StartsWith("nitrox_", StringComparison.OrdinalIgnoreCase))
+        {
+            pingKey = string.Empty;
+            return false;
+        }
+        Log.Warn($"Couldn't find {nameof(PingInstance)} identifier for {pingInstance.name} under {pingInstance.transform.parent}");
         pingKey = string.Empty;
         return false;
     }

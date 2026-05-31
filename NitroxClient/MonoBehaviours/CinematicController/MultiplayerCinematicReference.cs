@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours.CinematicController;
 
 public class MultiplayerCinematicReference : MonoBehaviour
 {
-    private readonly Dictionary<string, Dictionary<int, MultiplayerCinematicController>> controllerByKey = new();
+    private readonly Dictionary<string, Dictionary<int, MultiplayerCinematicController>> controllerByKey = [];
 
     private bool isEscapePod;
 
@@ -52,7 +52,7 @@ public class MultiplayerCinematicReference : MonoBehaviour
         controller.CallCinematicModeEnd(player);
     }
 
-    public static int GetCinematicControllerIdentifier(GameObject controller, GameObject reference) => controller.gameObject.GetHierarchyPath(reference).GetHashCode();
+    private static int GetCinematicControllerIdentifier(GameObject controller, GameObject reference) => controller.gameObject.GetHierarchyPath(reference).GetHashCode();
 
     public void AddController(PlayerCinematicController playerController)
     {
@@ -73,7 +73,10 @@ public class MultiplayerCinematicReference : MonoBehaviour
 
         MultiplayerCinematicController controller = MultiplayerCinematicController.Initialize(playerController);
         controller.AddOtherControllers(allControllers);
-        allControllers.ForEach(x => x.AddOtherControllers(new[] { controller }));
+        foreach (MultiplayerCinematicController? x in allControllers)
+        {
+            x.AddOtherControllers([controller]);
+        }
 
         controllers.Add(identifier, controller);
     }

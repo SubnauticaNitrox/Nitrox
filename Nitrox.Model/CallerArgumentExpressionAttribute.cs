@@ -1,6 +1,6 @@
+#if NETFRAMEWORK
 using System;
 
-#if NETFRAMEWORK
 namespace Nitrox.Model;
 
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]

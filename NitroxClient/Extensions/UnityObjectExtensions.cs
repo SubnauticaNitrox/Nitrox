@@ -18,7 +18,9 @@ public static class UnityObjectExtensions
     /// <returns>The requested type or null if not available.</returns>
     public static T Resolve<T>(this UnityEngine.Object _, bool prelifeTime = false) where T : class
     {
+#pragma warning disable DIMA001 // TODO: Consider refactoring how patches are done so that services can be supplied via constructor parameters (i.e. normal DI workflow)
         return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
+#pragma warning restore DIMA001
     }
 
     /// <summary>

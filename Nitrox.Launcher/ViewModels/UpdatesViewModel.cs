@@ -14,6 +14,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -31,29 +32,28 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
     private CancellationTokenSource? downloadCts;
 
     [ObservableProperty]
-    private double downloadProgress;
+    public partial double DownloadProgress { get; set; }
 
     [ObservableProperty]
-    private string? downloadStatus;
+    public partial string? DownloadStatus { get; set; }
 
     [ObservableProperty]
-    private bool newUpdateAvailable;
+    public partial bool NewUpdateAvailable { get; set; }
 
     [ObservableProperty]
-    private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
+    public partial AvaloniaList<NitroxChangelog> NitroxChangelogs { get; set; } = [];
 
     [ObservableProperty]
-    private string? officialVersion;
+    public partial string? OfficialVersion { get; set; }
 
     [ObservableProperty]
-    private bool usingOfficialVersion;
+    public partial bool UsingOfficialVersion { get; set; }
 
     [ObservableProperty]
-    private AvaloniaList<BackupInfo> availableBackups = [];
+    public partial AvaloniaList<BackupInfo> AvailableBackups { get; set; } = [];
 
     [ObservableProperty]
-    private string? version;
-
+    public partial string? Version { get; set; }
     public async Task<bool> IsNitroxUpdateAvailableAsync()
     {
         try
@@ -158,7 +158,7 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
             scriptContent = $"""
                              #!/bin/bash
                              echo "Waiting for Nitrox Launcher to close..."
-                             while pgrep -x "Nitrox.Launcher" > /dev/null; do
+                             while pgrep -x "{NitroxConstants.LAUNCHER_APP_NAME}" > /dev/null; do
                                  sleep 1
                              done
                              echo "Cleaning old installation..."
@@ -287,14 +287,14 @@ internal partial class UpdatesViewModel(NitroxWebsiteApiService nitroxWebsiteApi
                     string downloadedHash = await Hashing.ComputeMd5HashAsync(zipPath);
                     if (!string.Equals(downloadedHash, downloadInfo.Md5Hash, StringComparison.OrdinalIgnoreCase))
                     {
-                        throw new InvalidDataException($"Download verification failed. Expected hash: {downloadInfo.Md5Hash}, got: {downloadedHash}");
+                        throw new Exception($"Download verification failed. Expected hash: {downloadInfo.Md5Hash}, got: {downloadedHash}");
                     }
                 }
 
                 // Extract the update
                 DownloadStatus = "Extracting...";
                 TryDeleteDirectory(extractPath, true);
-                ZipFile.ExtractToDirectory(zipPath, extractPath);
+                await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
 
                 // Find the Nitrox folder inside the extracted content
                 string nitroxFolder = extractPath;

@@ -1,26 +1,20 @@
 using System.Collections;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<PlayerJoinedMultiplayerSession>
+internal sealed class PlayerJoinedMultiplayerSessionProcessor(PlayerManager playerManager, Entities entities) : IClientPacketProcessor<PlayerJoinedMultiplayerSession>
 {
-    private readonly PlayerManager playerManager;
-    private readonly Entities entities;
+    private readonly Entities entities = entities;
+    private readonly PlayerManager playerManager = playerManager;
 
-    public PlayerJoinedMultiplayerSessionProcessor(PlayerManager playerManager, Entities entities)
-    {
-        this.playerManager = playerManager;
-        this.entities = entities;
-    }
-
-    public override void Process(PlayerJoinedMultiplayerSession packet)
+    public Task Process(ClientProcessorContext context, PlayerJoinedMultiplayerSession packet)
     {
         CoroutineHost.StartCoroutine(SpawnRemotePlayer(packet));
+        return Task.CompletedTask;
     }
 
     private IEnumerator SpawnRemotePlayer(PlayerJoinedMultiplayerSession packet)

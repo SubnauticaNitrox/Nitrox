@@ -1,24 +1,16 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
-using Nitrox.Model.Subnautica.Packets;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class CyclopsFireSuppressionProcessor(Cyclops cyclops) : IClientPacketProcessor<CyclopsFireSuppression>
 {
-    public class CyclopsFireSuppressionProcessor : ClientPacketProcessor<CyclopsFireSuppression>
+    private readonly Cyclops cyclops = cyclops;
+
+    public Task Process(ClientProcessorContext context, CyclopsFireSuppression fireSuppressionPacket)
     {
-        private readonly IPacketSender packetSender;
-        private readonly Cyclops cyclops;
-
-        public CyclopsFireSuppressionProcessor(IPacketSender packetSender, Cyclops cyclops)
-        {
-            this.packetSender = packetSender;
-            this.cyclops = cyclops;
-        }
-
-        public override void Process(CyclopsFireSuppression fireSuppressionPacket)
-        {
-            cyclops.StartFireSuppression(fireSuppressionPacket.Id);
-        }
+        cyclops.StartFireSuppression(fireSuppressionPacket.Id);
+        return Task.CompletedTask;
     }
 }

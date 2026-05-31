@@ -1,35 +1,25 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class ChangeServerPasswordCommand(ILogger<ChangeServerPasswordCommand> logger, IOptions<SubnauticaServerOptions> serverConfig) : ICommandHandler, ICommandHandler<string>
 {
-    internal class ChangeServerPasswordCommand : Command
+    private readonly IOptions<SubnauticaServerOptions> serverConfig = serverConfig;
+    private readonly ILogger<ChangeServerPasswordCommand> logger = logger;
+
+    [Description("Changes server password. Clear it without argument")]
+    public async Task Execute(ICommandContext context, [Description("The new server password")] string newPassword) => await SetPasswordAsync(context, newPassword);
+
+    [Description("Clears server password")]
+    public async Task Execute(ICommandContext context) => await SetPasswordAsync(context, "");
+
+    private async Task SetPasswordAsync(ICommandContext context, string password)
     {
-        private readonly Server server;
-        private readonly SubnauticaServerConfig serverConfig;
-
-        public ChangeServerPasswordCommand(Server server, SubnauticaServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
-        {
-            AddParameter(new TypeString("password", false, "The new server password"));
-
-            this.server = server;
-            this.serverConfig = serverConfig;
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            string password = args.Get(0) ?? string.Empty;
-
-            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
-            {
-                serverConfig.ServerPassword = password;
-            }
-
-            Log.InfoSensitive("Server password changed to \"{password}\" by {playername}", password, args.SenderName);
-            SendMessageToPlayer(args.Sender, "Server password has been updated");
-        }
+        serverConfig.Value.ServerPassword = password;
+        logger.LogServerPasswordChanged(password, context.OriginName, context.OriginId);
+        await context.ReplyAsync("Server password has been updated");
     }
 }

@@ -10,6 +10,17 @@ namespace Nitrox.Model.Core;
 /// </summary>
 public static class NitroxServiceLocator
 {
+    public static Func<Type, object> Locator { get; set; } = type =>
+    {
+        CheckServiceResolutionViability();
+        return CurrentLifetimeScope.Resolve(type);
+    };
+    public static Func<Type, object> OptionalLocator { get; set; } = type =>
+    {
+        CheckServiceResolutionViability();
+        return CurrentLifetimeScope.ResolveOptional(type);
+    };
+
     private static IContainer DependencyContainer { get; set; }
     private static ILifetimeScope CurrentLifetimeScope { get; set; }
     public static event EventHandler LifetimeScopeEnded;
@@ -73,8 +84,7 @@ public static class NitroxServiceLocator
     public static T LocateService<T>()
         where T : class
     {
-        CheckServiceResolutionViability();
-        return CurrentLifetimeScope.Resolve<T>();
+        return (T)Locator(typeof(T));
     }
 
     /// <summary>
@@ -82,8 +92,7 @@ public static class NitroxServiceLocator
     /// </summary>
     public static object LocateService(Type serviceType)
     {
-        CheckServiceResolutionViability();
-        return CurrentLifetimeScope.Resolve(serviceType);
+        return Locator(serviceType);
     }
 
     /// <summary>
@@ -93,8 +102,7 @@ public static class NitroxServiceLocator
     /// <returns>Optional that might or might not hold the service instance.</returns>
     public static Optional<T> LocateOptionalService<T>() where T : class
     {
-        CheckServiceResolutionViability();
-        return Optional.OfNullable(CurrentLifetimeScope.ResolveOptional<T>());
+        return Optional<T>.OfNullable((T)OptionalLocator(typeof(T)));
     }
 
     /// <summary>
@@ -104,8 +112,7 @@ public static class NitroxServiceLocator
     /// <returns>Optional that might or might not hold the service instance.</returns>
     public static Optional<object> LocateOptionalService(Type serviceType)
     {
-        CheckServiceResolutionViability();
-        return Optional.OfNullable(CurrentLifetimeScope.ResolveOptional(serviceType));
+        return Optional.OfNullable(OptionalLocator(serviceType));
     }
 
     /// <summary>

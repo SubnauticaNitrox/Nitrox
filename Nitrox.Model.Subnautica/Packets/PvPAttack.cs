@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.Packets;
 
 namespace Nitrox.Model.Subnautica.Packets;
@@ -6,13 +7,13 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class PvPAttack : Packet
 {
-    public ushort TargetPlayerId { get; }
+    public SessionId TargetSessionId { get; }
     public float Damage { get; set; }
     public AttackType Type { get; }
 
-    public PvPAttack(ushort targetPlayerId, float damage, AttackType type)
+    public PvPAttack(SessionId targetSessionId, float damage, AttackType type)
     {
-        TargetPlayerId = targetPlayerId;
+        TargetSessionId = targetSessionId;
         Damage = damage;
         Type = type;
     }

@@ -8,7 +8,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Model.Subnautica.Packets;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -19,35 +19,58 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
+internal sealed class BuildingResyncProcessor(Entities entities, EntityMetadataManager entityMetadataManager) : IClientPacketProcessor<BuildingResync>
 {
-    private readonly Entities entities;
-    private readonly EntityMetadataManager entityMetadataManager;
+    private readonly Entities entities = entities;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
 
-    public BuildingResyncProcessor(Entities entities, EntityMetadataManager entityMetadataManager)
-    {
-        this.entities = entities;
-        this.entityMetadataManager = entityMetadataManager;
-    }
-
-    public override void Process(BuildingResync packet)
+    public Task Process(ClientProcessorContext context, BuildingResync packet)
     {
         if (!BuildingHandler.Main)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         BuildingHandler.Main.StartCoroutine(ResyncBuildingEntities(packet.BuildEntities, packet.ModuleEntities));
+        return Task.CompletedTask;
     }
 
-    public IEnumerator ResyncBuildingEntities(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
+    /// <summary>
+    ///     Destroys manually ghosts, modules, interior pieces and vehicles of a base
+    /// </summary>
+    /// <remarks>
+    ///     This is the destructive way of clearing the base, if the base isn't modified consequently, IBaseModuleGeometry
+    ///     under the base cells may start spamming errors.
+    /// </remarks>
+    private static void ClearBaseChildren(Base @base)
+    {
+        for (int i = @base.transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = @base.transform.GetChild(i);
+            if (child.GetComponent<IBaseModule>().AliveOrNull() || child.GetComponent<Constructable>() ||
+                child.GetComponent<PlaceTool>())
+            {
+                UnityEngine.Object.Destroy(child.gameObject);
+            }
+        }
+        foreach (VehicleDockingBay vehicleDockingBay in @base.GetComponentsInChildren<VehicleDockingBay>(true))
+        {
+            if (vehicleDockingBay.dockedVehicle)
+            {
+                UnityEngine.Object.Destroy(vehicleDockingBay.dockedVehicle.gameObject);
+                vehicleDockingBay.SetVehicleUndocked();
+            }
+        }
+    }
+
+    private IEnumerator ResyncBuildingEntities(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
         BuildingHandler.Main.StartResync(buildEntities);
-        yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing BuildEntities"));
+        yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, "Encountered an exception while resyncing BuildEntities"));
 
         BuildingHandler.Main.StartResync(moduleEntities);
-        yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities"));
+        yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, "Encountered an exception while resyncing ModuleEntities"));
         BuildingHandler.Main.StopResync();
 
         stopwatch.Stop();
@@ -62,7 +85,8 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     }
 
     /// <summary>
-    ///     Tries to overwrite components of the provided type found in GlobalRoot's hierarchy by the provided list of entities to update.
+    ///     Tries to overwrite components of the provided type found in GlobalRoot's hierarchy by the provided list of entities
+    ///     to update.
     ///     If no component is found to be corresponding to a provided entity, the entity will be spawned independently.
     ///     Other components of the provided type which weren't updated shall be destroyed.
     /// </summary>
@@ -73,9 +97,9 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     /// <typeparam name="E">The GlobalRootEntity type which will be updated</typeparam>
     /// <param name="overwrite">A function to overwrite a given component by a given entity</param>
     /// <param name="correspondingPredicate">
-    /// Predicate to determine if an entity can overwrite the GameObject of the provided component.
+    ///     Predicate to determine if an entity can overwrite the GameObject of the provided component.
     /// </param>
-    public IEnumerator UpdateEntities<C,E>(List<E> entitiesToUpdate, Func<C, E, IEnumerator> overwrite, Func<E, C, bool> correspondingPredicate) where C : Component where E : GlobalRootEntity
+    private IEnumerator UpdateEntities<C, E>(List<E> entitiesToUpdate, Func<C, E, IEnumerator> overwrite, Func<E, C, bool> correspondingPredicate) where C : Component where E : GlobalRootEntity
     {
         List<C> unmarkedComponents = new();
         Dictionary<NitroxId, E> entitiesToUpdateById = entitiesToUpdate.ToDictionary(e => e.Id);
@@ -98,7 +122,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         {
             E entity = entitiesToUpdate[i];
             C associatedComponent = unmarkedComponents.Find(c =>
-                correspondingPredicate(entity, c));
+                                                                correspondingPredicate(entity, c));
             yield return overwrite(associatedComponent, entity).OnYieldError(Log.Error);
 
             unmarkedComponents.Remove(associatedComponent);
@@ -117,7 +141,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         }
     }
 
-    public IEnumerator OverwriteBase(Base @base, BuildEntity buildEntity)
+    private IEnumerator OverwriteBase(Base @base, BuildEntity buildEntity)
     {
         Log.Info($"[Base RESYNC] Overwriting base with id {buildEntity.Id}");
         ClearBaseChildren(@base);
@@ -142,38 +166,11 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         }
     }
 
-    public IEnumerator OverwriteModule(Constructable constructable, ModuleEntity moduleEntity)
+    private IEnumerator OverwriteModule(Constructable constructable, ModuleEntity moduleEntity)
     {
         Log.Info($"[Module RESYNC] Overwriting module with id {moduleEntity.Id}");
         ModuleEntitySpawner.ApplyModuleData(moduleEntity, constructable.gameObject);
         entityMetadataManager.ApplyMetadata(constructable.gameObject, moduleEntity.Metadata);
         yield break;
-    }
-
-    /// <summary>
-    /// Destroys manually ghosts, modules, interior pieces and vehicles of a base
-    /// </summary>
-    /// <remarks>
-    /// This is the destructive way of clearing the base, if the base isn't modified consequently, IBaseModuleGeometry under the base cells may start spamming errors.
-    /// </remarks>
-    public static void ClearBaseChildren(Base @base)
-    {
-        for (int i = @base.transform.childCount - 1; i >= 0; i--)
-        {
-            Transform child = @base.transform.GetChild(i);
-            if (child.GetComponent<IBaseModule>().AliveOrNull() || child.GetComponent<Constructable>() ||
-                child.GetComponent<PlaceTool>())
-            {
-                UnityEngine.Object.Destroy(child.gameObject);
-            }
-        }
-        foreach (VehicleDockingBay vehicleDockingBay in @base.GetComponentsInChildren<VehicleDockingBay>(true))
-        {
-            if (vehicleDockingBay.dockedVehicle)
-            {
-                UnityEngine.Object.Destroy(vehicleDockingBay.dockedVehicle.gameObject);
-                vehicleDockingBay.SetVehicleUndocked();
-            }
-        }
     }
 }

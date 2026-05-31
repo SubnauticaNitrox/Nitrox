@@ -1,8 +1,7 @@
 using System.Reflection;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -12,15 +11,15 @@ public sealed partial class StasisSphere_Shoot_Patch : NitroxPatch, IDynamicPatc
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StasisSphere t) => t.Shoot(default, default, default, default, default));
 
-    private static ushort? LocalPlayerId => Resolve<LocalPlayer>().PlayerId;
+    private static SessionId? LocalSessionId => Resolve<LocalPlayer>().SessionId;
 
     public static void Prefix(StasisSphere __instance, Vector3 position, Quaternion rotation, float speed, float lifeTime, float chargeNormalized)
     {
-        if (__instance.GetComponent<BulletManager.RemotePlayerBullet>() || !LocalPlayerId.HasValue)
+        if (__instance.GetComponent<BulletManager.RemotePlayerBullet>() || !LocalSessionId.HasValue)
         {
             return;
         }
 
-        Resolve<IPacketSender>().Send(new StasisSphereShot(LocalPlayerId.Value, position.ToDto(), rotation.ToDto(), speed, lifeTime, chargeNormalized));
+        Resolve<IPacketSender>().Send(new StasisSphereShot(LocalSessionId.Value, position.ToDto(), rotation.ToDto(), speed, lifeTime, chargeNormalized));
     }
 }

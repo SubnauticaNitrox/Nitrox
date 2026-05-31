@@ -1,0 +1,46 @@
+using System.Buffers;
+
+namespace Nitrox.Server.Subnautica.Models.Logging.Middleware.Core;
+
+internal interface ILoggerMiddleware
+{
+    public delegate void NextCall(ref Context context);
+
+    void ExecuteLogMiddleware(ref Context context, NextCall next);
+
+    public ref struct Context
+    {
+        public Context()
+        {
+        }
+
+        public IBufferWriter<byte> Writer { get; init; } = null!;
+        public IZLoggerEntry Entry { get; init; } = null!;
+        public int Cursor { get; set; }
+
+        public required ILoggerMiddleware[] Middleware { get; set; }
+    }
+
+    static void ExecuteNext(ref Context context)
+    {
+        if (GetNextMiddleware(ref context) is not { } middleware)
+        {
+            return;
+        }
+
+        middleware.ExecuteLogMiddleware(ref context, ExecuteNext);
+    }
+
+    static ILoggerMiddleware? GetNextMiddleware(ref Context context)
+    {
+        if (context.Middleware.Length < 1)
+        {
+            return null;
+        }
+        if (context.Cursor >= context.Middleware.Length)
+        {
+            return null;
+        }
+        return context.Middleware[context.Cursor++];
+    }
+}

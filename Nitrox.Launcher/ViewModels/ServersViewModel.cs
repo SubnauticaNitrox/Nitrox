@@ -25,8 +25,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
     private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
     [ObservableProperty]
-    private AvaloniaList<ServerEntry>? servers;
-
+    public partial AvaloniaList<ServerEntry>? Servers { get; set; }
     public ServersViewModel(IKeyValueStore keyValueStore, DialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
     {
         this.keyValueStore = keyValueStore;
@@ -36,12 +35,12 @@ internal partial class ServersViewModel : RoutableViewModelBase
 
         this.RegisterMessageListener<ServerStatusMessage, ServersViewModel>((message, model) =>
         {
-            ServerEntry entry = model.Servers?.FirstOrDefault(s => s.Process?.Id == message.ProcessId);
+            ServerEntry entry = model.Servers?.FirstOrDefault(s => s.LastProcessId == message.ProcessId);
             if (entry == null)
             {
                 return;
             }
-            entry.Players = message.PlayerCount;
+            entry.PlayerCount = message.PlayerCount;
             entry.IsOnline = message.IsOnline;
         });
 
@@ -59,7 +58,6 @@ internal partial class ServersViewModel : RoutableViewModelBase
     internal override async Task ViewContentLoadAsync(CancellationToken cancellationToken = default)
     {
         Servers = [..await serverService.GetServersAsync()];
-        await serverService.DetectAndAttachRunningServersAsync();
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
@@ -73,7 +71,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
 
         try
         {
-            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result!.Name)));
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectoryAsync(Path.Join(keyValueStore.GetSavesPath(), result!.Name)));
             if (serverEntry == null)
             {
                 throw new Exception("Failed to create save file");
@@ -103,7 +101,7 @@ internal partial class ServersViewModel : RoutableViewModelBase
             return;
         }
 
-        manageServerViewModel.LoadFrom(server);
+        await manageServerViewModel.RefreshAndLoadFromAsync(server);
         ChangeView(manageServerViewModel);
     }
 }

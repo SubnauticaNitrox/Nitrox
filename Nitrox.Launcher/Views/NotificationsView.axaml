@@ -1,0 +1,159 @@
+<UserControl
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
+    x:Class="Nitrox.Launcher.Views.NotificationsView"
+    x:DataType="vm:NotificationsViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:notifications="clr-namespace:Avalonia.Controls.Notifications;assembly=Avalonia.Controls"
+    xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Styles>
+        <Style Selector="Border.notification">
+            <Style Selector="^.info">
+                <Setter Property="Background" Value="{DynamicResource BrandInformation}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/info.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^.success">
+                <Setter Property="Background" Value="{DynamicResource BrandSuccess}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/success.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^.warning">
+                <Setter Property="Background" Value="{DynamicResource BrandWarning}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/warning.svg" />
+                </Style>
+            </Style>
+            <Style Selector="^.error">
+                <Setter Property="Background" Value="{DynamicResource BrandError}" />
+                <Style Selector="^ :is(Svg).icon">
+                    <Setter Property="Path" Value="/Assets/Icons/error.svg" />
+                </Style>
+            </Style>
+        </Style>
+    </UserControl.Styles>
+
+    <Design.DataContext>
+        <vm:NotificationsViewModel>
+            <vm:NotificationsViewModel.NotificationHistory>
+                <design:NotificationItem Message="Example error notification" Type="Error" />
+                <design:NotificationItem Message="Example info notification" Type="Information" />
+                <design:NotificationItem Message="Example warning notification" Type="Warning" />
+                <design:NotificationItem Message="Example success notification" Type="Success" />
+            </vm:NotificationsViewModel.NotificationHistory>
+        </vm:NotificationsViewModel>
+    </Design.DataContext>
+
+    <Grid Background="{DynamicResource BrandWhite}">
+        <ScrollViewer Classes="main">
+            <StackPanel Classes="viewPadding" Spacing="20">
+                <StackPanel Spacing="15">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="header" Text="Notifications" Grid.Column="0" />
+                        <Button
+                            Classes="anycontent"
+                            Command="{Binding ClearAllCommand}"
+                            Grid.Column="1"
+                            IsVisible="{Binding NotificationHistory.Count}"
+                            Padding="15,8"
+                            ToolTip.Tip="Clear all notifications">
+                            <TextBlock Text="Clear All" FontWeight="Bold" />
+                        </Button>
+                    </Grid>
+                    <controls:RichTextBlock>
+                        View launcher notifications that you might have missed.
+                    </controls:RichTextBlock>
+                </StackPanel>
+
+                <ItemsControl ItemsSource="{Binding NotificationHistory, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="design:NotificationItem">
+                            <Border
+                                Classes="notification"
+                                Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static notifications:NotificationType.Error}}"
+                                Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static notifications:NotificationType.Information}}"
+                                Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static notifications:NotificationType.Success}}"
+                                Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static notifications:NotificationType.Warning}}"
+                                CornerRadius="5"
+                                Margin="0,0,0,10"
+                                MinHeight="60"
+                                Padding="15">
+                                <Grid ColumnDefinitions="50,*,30">
+                                    <Svg
+                                        Classes="icon"
+                                        Css="* { fill: #fff; stroke: #fff; }"
+                                        Grid.Column="0"
+                                        Margin="0,0,10,0"
+                                        VerticalAlignment="Center"
+                                        Width="25" />
+                                    <StackPanel
+                                        Orientation="Vertical"
+                                        Grid.Column="1">
+                                        <TextBlock
+                                            Foreground="White"
+                                            Text="{Binding Message}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Center" />
+                                        <TextBlock
+                                            Foreground="{DynamicResource BrandSubText}"
+                                            Text="{Binding Created.LocalDateTime}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Center" />
+                                    </StackPanel>
+
+                                    <Button
+                                        Classes="anycontent"
+                                        Command="{Binding $parent[ItemsControl].((vm:NotificationsViewModel)DataContext).RemoveNotificationCommand}"
+                                        CommandParameter="{Binding}"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Padding="5"
+                                        ToolTip.Tip="Remove notification"
+                                        VerticalAlignment="Top">
+                                        <Svg
+                                            Css="* { fill: #fff; stroke: #fff; }"
+                                            Path="/Assets/Icons/close.svg"
+                                            Width="12" />
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            IsVisible="{Binding !NotificationHistory.Count}"
+            Spacing="10"
+            VerticalAlignment="Center">
+            <Svg
+                Css="* { fill: #888; stroke: #888; }"
+                Height="64"
+                HorizontalAlignment="Center"
+                Path="/Assets/Icons/info.svg"
+                Width="64" />
+            <TextBlock
+                FontSize="18"
+                Foreground="#888"
+                HorizontalAlignment="Center"
+                Text="No notifications yet" />
+            <TextBlock
+                FontSize="14"
+                Foreground="#666"
+                HorizontalAlignment="Center"
+                Text="Notifications will appear here when they occur" />
+        </StackPanel>
+    </Grid>
+</UserControl>

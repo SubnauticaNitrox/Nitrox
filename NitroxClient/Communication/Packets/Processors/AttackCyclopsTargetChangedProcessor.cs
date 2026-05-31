@@ -1,14 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class AttackCyclopsTargetChangedProcessor : ClientPacketProcessor<AttackCyclopsTargetChanged>
+internal sealed class AttackCyclopsTargetChangedProcessor : IClientPacketProcessor<AttackCyclopsTargetChanged>
 {
-    public override void Process(AttackCyclopsTargetChanged packet)
+    public Task Process(ClientProcessorContext context, AttackCyclopsTargetChanged packet)
     {
         AI.AttackCyclopsTargetChanged(packet.CreatureId, packet.TargetId, packet.AggressiveToNoiseAmount);
+        return Task.CompletedTask;
     }
 }

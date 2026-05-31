@@ -8,7 +8,7 @@ namespace Nitrox.Model.Platforms.OS.Windows;
 [SupportedOSPlatform("windows")]
 public class RegistryTest
 {
-    [OSTestMethod("windows")]
+    [OSTestMethod(OperatingSystems.Windows)]
     public async Task WaitsForRegistryKeyToExist()
     {
         const string PATH_TO_KEY = @"SOFTWARE\Nitrox\test";

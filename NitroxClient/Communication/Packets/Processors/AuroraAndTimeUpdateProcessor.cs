@@ -1,20 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeUpdate>
+internal sealed class AuroraAndTimeUpdateProcessor(TimeManager timeManager) : IClientPacketProcessor<AuroraAndTimeUpdate>
 {
-    private readonly TimeManager timeManager;
+    private readonly TimeManager timeManager = timeManager;
 
-    public AuroraAndTimeUpdateProcessor(TimeManager timeManager)
-    {
-        this.timeManager = timeManager;
-    }
-
-    public override void Process(AuroraAndTimeUpdate packet)
+    public Task Process(ClientProcessorContext context, AuroraAndTimeUpdate packet)
     {
         timeManager.ProcessUpdate(packet.TimeData.TimePacket);
         StoryManager.UpdateAuroraData(packet.TimeData.AuroraEventData);
@@ -23,5 +17,6 @@ public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeU
         {
             StoryManager.RestoreAurora();
         }
+        return Task.CompletedTask;
     }
 }

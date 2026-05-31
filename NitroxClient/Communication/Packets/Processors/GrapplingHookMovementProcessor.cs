@@ -1,13 +1,13 @@
 using Nitrox.Model.Subnautica.Packets;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class GrapplingHookMovementProcessor : ClientPacketProcessor<GrapplingHookMovement>
+internal sealed class GrapplingHookMovementProcessor : IClientPacketProcessor<GrapplingHookMovement>
 {
-    public override void Process(GrapplingHookMovement packet)
+    public Task Process(ClientProcessorContext context, GrapplingHookMovement packet)
     {
         Exosuit exosuit = NitroxEntity.RequireObjectFrom(packet.ExosuitId).RequireComponent<Exosuit>();
         IExosuitArm arm = packet.ArmSide == Exosuit.Arm.Left ? exosuit.leftArm : exosuit.rightArm;
@@ -15,7 +15,7 @@ public class GrapplingHookMovementProcessor : ClientPacketProcessor<GrapplingHoo
         if (arm is not ExosuitGrapplingArm grapplingArm)
         {
             Log.Error($"{packet.ArmSide} arm of exosuit {packet.ExosuitId} is not a grappling arm");
-            return;
+            return Task.CompletedTask;
         }
 
         if (grapplingArm.hook.resting)
@@ -28,5 +28,6 @@ public class GrapplingHookMovementProcessor : ClientPacketProcessor<GrapplingHoo
         rb.position = packet.Position.ToUnity();
         rb.velocity = packet.Velocity.ToUnity();
         rb.rotation = packet.Rotation.ToUnity();
+        return Task.CompletedTask;
     }
 }

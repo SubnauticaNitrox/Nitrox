@@ -3,20 +3,20 @@
     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
     xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-    xmlns:server="clr-namespace:Nitrox.Model.Server;assembly=Nitrox.Model"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:gameLogic="clr-namespace:Nitrox.Model.DataStructures.GameLogic;assembly=Nitrox.Model">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <ThemeVariantScope RequestedThemeVariant="Dark">
                     <Border Background="#000000" Padding="10">
-                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
+                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type gameLogic:SubnauticaGameMode}" />
                     </Border>
                 </ThemeVariantScope>
                 <ThemeVariantScope RequestedThemeVariant="Light">
                     <Border Background="#FFFFFF" Padding="10">
-                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
+                        <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type gameLogic:SubnauticaGameMode}" />
                     </Border>
                 </ThemeVariantScope>
             </StackPanel>

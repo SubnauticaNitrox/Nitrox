@@ -24,8 +24,7 @@
     <Grid RowDefinitions="Auto,*,Auto">
         <controls:CustomTitlebar
             CanMinimize="False"
-            Grid.RowSpan="2"
-            ShowTitle="False" />
+            Grid.RowSpan="2" />
         <TextBlock
             FontSize="{Binding TitleFontSize}"
             FontWeight="{Binding TitleFontWeight}"
@@ -39,7 +38,7 @@
             Grid.Row="1"
             HorizontalScrollBarVisibility="Disabled"
             Margin="24,20,10,20">
-            <SelectableTextBlock
+            <controls:SelectableRichTextBlock
                 FontSize="{Binding DescriptionFontSize}"
                 FontWeight="{Binding DescriptionFontWeight}"
                 IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"

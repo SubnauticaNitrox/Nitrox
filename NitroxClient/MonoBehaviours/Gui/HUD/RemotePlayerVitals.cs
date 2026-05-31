@@ -28,7 +28,6 @@ public class RemotePlayerVitals : MonoBehaviour
     /// <summary>
     ///     Creates a player vitals UI elements for the player id.
     /// </summary>
-    /// <param name="playerId">Unique player id to create the vitals UI elements for.</param>
     public static RemotePlayerVitals CreateForPlayer(RemotePlayer remotePlayer)
     {
         RemotePlayerVitals vitals = new GameObject("RemotePlayerVitals").AddComponent<RemotePlayerVitals>();
@@ -42,7 +41,7 @@ public class RemotePlayerVitals : MonoBehaviour
             vitals.CreateStats(vitals.canvas);
         } catch (Exception ex)
         {
-            Log.Error(ex, $"Encountered an error while creating vitals for player {remotePlayer.PlayerId}, destroying them.");
+            Log.Error(ex, $"Encountered an error while creating vitals for player {remotePlayer.SessionId}, destroying them.");
             Destroy(vitals.gameObject);
             return null;
         }

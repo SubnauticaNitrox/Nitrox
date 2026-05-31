@@ -5,32 +5,29 @@ using UnityEngine.XR;
 namespace NitroxClient.MonoBehaviours.Cyclops;
 
 /// <summary>
-/// A replacement for <see cref="GroundMotor"/> while Local Player is in a Cyclops.
+///     A replacement for <see cref="GroundMotor" /> while Local Player is in a Cyclops.
 /// </summary>
 public partial class CyclopsMotor : GroundMotor
 {
-    public GroundMotor ActualMotor { get; private set; }
-    public CyclopsPawn Pawn;
+    private Transform? body;
+    private NitroxCyclops? cyclops;
+    private SubRoot? sub;
 
-    private Transform body;
-    private NitroxCyclops cyclops;
-    private SubRoot sub;
-    private Transform realAxis;
+    private Vector3 latestVelocity, verticalVelocity;
+
     private Transform virtualAxis;
     private WorldForces worldForces;
 
+    public CyclopsPawn Pawn { get; set; }
+    public GroundMotor ActualMotor { get; private set; }
+
     public Vector3 Up => virtualAxis.up;
     public float DeltaTime => Time.fixedDeltaTime;
-
-    private Vector3 verticalVelocity;
-    private Vector3 latestVelocity;
 
     public new void Awake()
     {
         controller = GetComponent<CharacterController>();
         controller.enabled = false;
-        controller.stepOffset = controllerSetup.stepOffset;
-        controller.slopeLimit = controllerSetup.slopeLimit;
 
         rb = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
@@ -47,12 +44,13 @@ public partial class CyclopsMotor : GroundMotor
 
     public void Initialize(GroundMotor reference)
     {
+        controllerSetup = reference.controllerSetup;
+
         ActualMotor = reference;
         movement = reference.movement;
         jumping = reference.jumping;
         movingPlatform = reference.movingPlatform;
         sliding = reference.sliding;
-        controllerSetup = reference.controllerSetup;
         floatingModeSetup = reference.floatingModeSetup;
         allowMidAirJumping = reference.allowMidAirJumping;
         minWindSpeedToAffectMovement = reference.minWindSpeedToAffectMovement;
@@ -74,21 +72,59 @@ public partial class CyclopsMotor : GroundMotor
         RecalculateConstants();
     }
 
-    public void SetCyclops(NitroxCyclops cyclops, SubRoot subRoot, CyclopsPawn pawn)
+    public void SetCyclops(NitroxCyclops nitroxCyclops, SubRoot subRoot, CyclopsPawn pawn)
     {
-        this.cyclops = cyclops;
+        cyclops = nitroxCyclops;
+        virtualAxis = nitroxCyclops.Virtual.axis;
         sub = subRoot;
-        realAxis = sub.subAxis;
-        virtualAxis = cyclops.Virtual.axis;
         Pawn = pawn;
     }
 
-    public void Setup(bool enabled)
+    public override Vector3 UpdateMove()
+    {
+        if (!canControl)
+        {
+            return Vector3.zero;
+        }
+
+        // Compute movements velocities based on inputs and previous movement
+        Position = Pawn.Position;
+        Center = cyclops.Virtual.transform.TransformVector(Pawn.Controller.center);
+        Pawn.Handle.transform.localRotation = body.localRotation;
+
+        sprinting = false;
+        verticalVelocity += CalculateVerticalVelocity();
+        Vector3 horizontalVelocity = CalculateInputVelocity();
+
+        // movement.velocity gives velocity info for the animations and footsteps
+        movement.velocity = Move(horizontalVelocity);
+        return movement.velocity;
+    }
+
+    public void ToggleCyclopsMotor(bool toggled)
+    {
+        GroundMotor groundMotor = toggled ? this : ActualMotor;
+        Player.main.playerController.SetEnabled(false);
+        Player.main.groundMotor = groundMotor;
+
+        Player.main.footStepSounds.groundMoveable = groundMotor;
+        Player.main.playerController.groundController = groundMotor;
+        if (Player.main.playerController.activeController is GroundMotor)
+        {
+            Player.main.playerController.activeController = groundMotor;
+        }
+        // SetMotorMode sets some important variables in the motor abstract class PlayerMotor
+        Player.main.playerController.SetMotorMode(Player.MotorMode.Walk);
+
+        Player.main.playerController.SetEnabled(true);
+    }
+
+    private void Setup(bool isEnabled)
     {
         verticalVelocity = Vector3.zero;
         latestVelocity = Vector3.zero;
 
-        if (enabled)
+        if (isEnabled)
         {
             rb.isKinematic = false;
             Player.wantInterpolate = false;
@@ -114,35 +150,14 @@ public partial class CyclopsMotor : GroundMotor
         Pawn?.SetReference();
     }
 
-    public override Vector3 UpdateMove()
-    {
-        if (!canControl)
-        {
-            return Vector3.zero;
-        }
-
-        // Compute movements velocities based on inputs and previous movement
-        Position = Pawn.Position;
-        Center = cyclops.Virtual.transform.TransformVector(Pawn.Controller.center);
-        Pawn.Handle.transform.localRotation = body.localRotation;
-
-        sprinting = false;
-        verticalVelocity += CalculateVerticalVelocity();
-        Vector3 horizontalVelocity = CalculateInputVelocity();
-
-        // movement.velocity gives velocity info for the animations and footsteps
-        movement.velocity = Move(horizontalVelocity);
-        return movement.velocity;
-    }
-
     /// <summary>
-    /// Simulates player movement on its pawn and update the grounded state
+    ///     Simulates player movement on its pawn and update the grounded state
     /// </summary>
     /// <remarks>
-    /// Adapted from <see cref="GroundMotor.UpdateFunction"/>
+    ///     Adapted from <see cref="GroundMotor.UpdateFunction" />
     /// </remarks>
     /// <returns>Pawn's local velocity</returns>
-    public Vector3 Move(Vector3 horizontalVelocity)
+    private Vector3 Move(Vector3 horizontalVelocity)
     {
         Vector3 beforePosition = Pawn.Position;
 
@@ -174,7 +189,7 @@ public partial class CyclopsMotor : GroundMotor
         }
 
         latestVelocity = instantVelocity;
-        
+
         Vector3 instantVelocityXZ = instantVelocity._X0Z();
         if (velocityXZ == Vector3.zero)
         {
@@ -224,10 +239,10 @@ public partial class CyclopsMotor : GroundMotor
     }
 
     /// <summary>
-    /// Calculates vertical velocity variation based on the grounded state.
-    /// Code adapted from <see cref="GroundMotor.ApplyGravityAndJumping"/>.
+    ///     Calculates vertical velocity variation based on the grounded state.
+    ///     Code adapted from <see cref="GroundMotor.ApplyGravityAndJumping" />.
     /// </summary>
-    public Vector3 CalculateVerticalVelocity()
+    private Vector3 CalculateVerticalVelocity()
     {
         if (!jumpPressed)
         {
@@ -268,10 +283,10 @@ public partial class CyclopsMotor : GroundMotor
     }
 
     /// <summary>
-    /// Calculates instantaneous horizontal velocity from input for the <see cref="Pawn"/> object.
-    /// Code adapted from <see cref="GroundMotor.ApplyInputVelocityChange"/>.
+    ///     Calculates instantaneous horizontal velocity from input for the <see cref="Pawn" /> object.
+    ///     Code adapted from <see cref="GroundMotor.ApplyInputVelocityChange" />.
     /// </summary>
-    public Vector3 CalculateInputVelocity()
+    private Vector3 CalculateInputVelocity()
     {
         // Project the movement input to the right rotation
         float moveMinMagnitude = Mathf.Min(1f, movementInputDirection.magnitude);
@@ -291,7 +306,7 @@ public partial class CyclopsMotor : GroundMotor
         if (grounded && TooSteep())
         {
             velocity = GetSlidingDirection();
-            Vector3 moveProjectedOnSlope =  Vector3.Project(movementInputDirection, velocity);
+            Vector3 moveProjectedOnSlope = Vector3.Project(movementInputDirection, velocity);
             velocity += moveProjectedOnSlope * sliding.speedControl + (movementInputDirection - moveProjectedOnSlope) * sliding.sidewaysControl;
             velocity *= sliding.slidingSpeed;
         }
@@ -329,7 +344,7 @@ public partial class CyclopsMotor : GroundMotor
         }
 
         float maxSpeed = GetMaxAcceleration(grounded) * DeltaTime;
-        
+
         Vector3 difference = velocity - latestVelocity;
         if (difference.sqrMagnitude > maxSpeed * maxSpeed)
         {
@@ -354,24 +369,5 @@ public partial class CyclopsMotor : GroundMotor
     {
         float dotUp = Vector3.Dot(groundNormal, Up);
         return dotUp <= Mathf.Cos(controller.slopeLimit * Mathf.Deg2Rad);
-    }
-
-    public void ToggleCyclopsMotor(bool toggled)
-    {
-        GroundMotor groundMotor = toggled ? this : ActualMotor;
-        Player.main.playerController.SetEnabled(false);
-        Player.main.groundMotor = groundMotor;
-
-        Player.main.footStepSounds.groundMoveable = groundMotor;
-        Player.main.groundMotor = groundMotor;
-        Player.main.playerController.groundController = groundMotor;
-        if (Player.main.playerController.activeController is GroundMotor)
-        {
-            Player.main.playerController.activeController = groundMotor;
-        }
-        // SetMotorMode sets some important variables in the motor abstract class PlayerMotor
-        Player.main.playerController.SetMotorMode(Player.MotorMode.Walk);
-
-        Player.main.playerController.SetEnabled(true);
     }
 }

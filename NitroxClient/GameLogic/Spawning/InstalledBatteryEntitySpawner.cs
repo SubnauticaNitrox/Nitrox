@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using NitroxClient.Communication;
@@ -15,7 +16,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
 {
     protected override IEnumerator SpawnAsync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        if (!CanSpawn(entity, out EnergyMixin energyMixin, out string errorLog))
+        if (!CanSpawn(entity, out EnergyMixin? energyMixin, out string errorLog))
         {
             Log.Error(errorLog);
             result.Set(Optional.Empty);
@@ -53,7 +54,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
 
     protected override bool SpawnsOwnChildren(InstalledBatteryEntity entity) => false;
 
-    private bool CanSpawn(InstalledBatteryEntity entity, out EnergyMixin energyMixin, out string errorLog)
+    private bool CanSpawn(InstalledBatteryEntity entity, [NotNullWhen(true)] out EnergyMixin? energyMixin, [NotNullWhen(false)] out string? errorLog)
     {
         if (!NitroxEntity.TryGetObjectFrom(entity.ParentId, out GameObject parentObject))
         {
@@ -63,9 +64,9 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
         }
 
         energyMixin = parentObject.GetAllComponentsInChildren<EnergyMixin>()
-                                  .ElementAt(entity.ComponentIndex);
+                                  .ElementAtOrDefault(entity.ComponentIndex);
 
-        if (!energyMixin)
+        if (energyMixin == null)
         {
             errorLog = $"Unable to find EnergyMixin on parent to install battery {entity}";
             return false;

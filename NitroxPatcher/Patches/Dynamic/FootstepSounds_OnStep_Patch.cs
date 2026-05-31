@@ -4,11 +4,11 @@ using System.Reflection;
 using System.Reflection.Emit;
 using FMOD.Studio;
 using HarmonyLib;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -86,8 +86,8 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
 
     private static void SendFootstepPacket(FMODAsset asset)
     {
-        ushort? playerId = Resolve<LocalPlayer>().PlayerId;
-        if (!playerId.HasValue)
+        SessionId? sessionId = Resolve<LocalPlayer>().SessionId;
+        if (!sessionId.HasValue)
         {
             return;
         }
@@ -108,7 +108,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
                 return;
         }
 
-        FootstepPacket footstepPacket = new(playerId.Value, assetIndex);
+        FootstepPacket footstepPacket = new(sessionId.Value, assetIndex);
         Resolve<IPacketSender>().Send(footstepPacket);
     }
 }

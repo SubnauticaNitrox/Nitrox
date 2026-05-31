@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
@@ -10,8 +12,6 @@ using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.MonoBehaviours.Vehicles;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.GameLogic.PlayerAnimation;
-using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
@@ -34,7 +34,7 @@ public class RemotePlayer : INitroxPlayer
     private readonly FMODWhitelist fmodWhitelist;
 
     public PlayerContext PlayerContext { get; }
-    public GameObject Body { get; private set; }
+    public GameObject? Body { get; private set; }
     public GameObject PlayerModel { get; private set; }
     public Rigidbody RigidBody { get; private set; }
     public CapsuleCollider Collider { get; private set; }
@@ -44,13 +44,13 @@ public class RemotePlayer : INitroxPlayer
     public Transform ItemAttachPoint { get; private set; }
     public RemotePlayerVitals vitals { get; private set; }
 
-    public ushort PlayerId => PlayerContext.PlayerId;
+    public SessionId SessionId => PlayerContext.SessionId;
     public string PlayerName => PlayerContext.PlayerName;
     public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
     public Vehicle Vehicle { get; private set; }
     public SubRoot SubRoot { get; private set; }
-    public EscapePod EscapePod { get; private set; }
+    public EscapePod? EscapePod { get; private set; }
     public PilotingChair PilotingChair { get; private set; }
     public InfectedMixin InfectedMixin { get; private set; }
     public LiveMixin LiveMixin { get; private set; }
@@ -270,7 +270,7 @@ public class RemotePlayer : INitroxPlayer
         }
     }
 
-    public void SetEscapePod(EscapePod newEscapePod)
+    public void SetEscapePod(EscapePod? newEscapePod)
     {
         if (EscapePod != newEscapePod)
         {
@@ -382,12 +382,12 @@ public class RemotePlayer : INitroxPlayer
         // Rough estimation for different collider boxes in different animation stages
         if (AnimationController["is_underwater"])
         {
-            Collider.center = new(0f, -0.3f, 0f);
+            Collider.center = new Vector3(0f, -0.3f, 0f);
             Collider.height = 0.5f;
         }
         else
         {
-            Collider.center = new(0f, -0.8f, 0f);
+            Collider.center = new Vector3(0f, -0.8f, 0f);
             Collider.height = 1.5f;
         }
     }
@@ -422,6 +422,7 @@ public class RemotePlayer : INitroxPlayer
             Collider = Body.AddComponent<CapsuleCollider>();
 
             Collider.center = Vector3.zero;
+            Collider.height = refCollider.height;
             Collider.radius = refCollider.radius;
             Collider.height = refCollider.height;
             Collider.direction = refCollider.direction;
@@ -529,7 +530,7 @@ public class RemotePlayer : INitroxPlayer
         }
     }
 
-    public void SetGameMode(NitroxGameMode gameMode)
+    public void SetGameMode(SubnauticaGameMode gameMode)
     {
         PlayerContext.GameMode = gameMode;
         RefreshVitalsVisibility();
@@ -540,7 +541,7 @@ public class RemotePlayer : INitroxPlayer
         if (vitals)
         {
             // TODO: only show health and oxygen in freedom mode
-            bool visible = PlayerContext.GameMode != NitroxGameMode.CREATIVE;
+            bool visible = PlayerContext.GameMode != SubnauticaGameMode.CREATIVE;
             vitals.SetStatsVisible(visible);
         }
     }
@@ -551,6 +552,6 @@ public class RemotePlayer : INitroxPlayer
     /// </summary>
     public bool CanBeAttacked()
     {
-        return !SubRoot && !EscapePod && PlayerContext.GameMode != NitroxGameMode.CREATIVE;
+        return !SubRoot && !EscapePod && PlayerContext.GameMode != SubnauticaGameMode.CREATIVE;
     }
 }

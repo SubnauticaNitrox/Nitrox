@@ -12,6 +12,6 @@ public sealed class MacFileSystem : FileSystem
 
     public override bool SetFullAccessToCurrentUser(string directory)
     {
-        throw new System.NotImplementedException();
+        return PosixFileSystemPermissions.SetFullAccessToCurrentUser(directory);
     }
 }

@@ -1,19 +1,18 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class SeaDragonSwatAttackProcessor : ClientPacketProcessor<SeaDragonSwatAttack>
+internal sealed class SeaDragonSwatAttackProcessor : IClientPacketProcessor<SeaDragonSwatAttack>
 {
-    public override void Process(SeaDragonSwatAttack packet)
+    public Task Process(ClientProcessorContext context, SeaDragonSwatAttack packet)
     {
         if (!NitroxEntity.TryGetComponentFrom(packet.SeaDragonId, out SeaDragonMeleeAttack seaDragonMeleeAttack) ||
             !NitroxEntity.TryGetObjectFrom(packet.TargetId, out GameObject targetObject))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         using (PacketSuppressor<SeaDragonSwatAttack>.Suppress())
@@ -21,5 +20,6 @@ public class SeaDragonSwatAttackProcessor : ClientPacketProcessor<SeaDragonSwatA
             seaDragonMeleeAttack.seaDragon.Aggression.Value = packet.Aggression;
             seaDragonMeleeAttack.SwatAttack(targetObject, packet.IsRightHand);
         }
+        return Task.CompletedTask;
     }
 }

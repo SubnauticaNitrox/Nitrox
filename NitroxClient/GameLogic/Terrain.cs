@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
@@ -77,7 +75,7 @@ public class Terrain
         {
             if (cellsPendingSync)
             {
-                CellVisibilityChanged cellsChanged = new(multiplayerSession.Reservation.PlayerId, addedCells, removedCells);
+                CellVisibilityChanged cellsChanged = new(multiplayerSession.Reservation.SessionId, addedCells, removedCells);
                 packetSender.Send(cellsChanged);
 
                 addedCells.Clear();

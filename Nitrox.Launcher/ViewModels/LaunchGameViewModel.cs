@@ -14,6 +14,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
@@ -26,7 +27,6 @@ namespace Nitrox.Launcher.ViewModels;
 internal partial class LaunchGameViewModel(DialogService dialogService, ServerService serverService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
     : RoutableViewModelBase
 {
-    public static Task<string>? LastFindSubnauticaTask;
     private static bool hasInstantLaunched;
     private readonly DialogService dialogService = dialogService;
     private readonly IKeyValueStore keyValueStore = keyValueStore;
@@ -34,10 +34,10 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     private readonly ServerService serverService = serverService;
 
     [ObservableProperty]
-    private Platform gamePlatform;
+    public partial Platform GamePlatform { get; set; }
 
     [ObservableProperty]
-    private string? platformToolTip;
+    public partial string? PlatformToolTip { get; set; }
 
     public Bitmap[] GalleryImageSources { get; } =
     [
@@ -147,10 +147,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 }
 
                 // Try inject Nitrox into Subnautica code.
-                if (LastFindSubnauticaTask != null)
-                {
-                    await LastFindSubnauticaTask;
-                }
                 await NitroxEntryPatch.Apply(NitroxUser.GamePath);
 
                 if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
@@ -236,6 +232,12 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
         // Start game & gaming platform if needed.
         string launchArguments = $"{keyValueStore.GetLaunchArguments(gameInfo)} {string.Join(" ", args ?? NitroxEnvironment.CommandLineArgs)}";
+
+        if (keyValueStore.GetIsDiscordEnabled() && !launchArguments.Contains(DiscordConstants.ENABLE_ARG, StringComparison.OrdinalIgnoreCase))
+        {
+            launchArguments = $"{launchArguments} {DiscordConstants.ENABLE_ARG}";
+        }
+
         ProcessEx game = NitroxUser.GamePlatform switch
         {
             Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments), keyValueStore.GetUseBigPictureMode()),

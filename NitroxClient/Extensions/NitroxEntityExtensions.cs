@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
@@ -8,19 +9,19 @@ namespace NitroxClient.Extensions;
 
 public static class NitroxEntityExtensions
 {
-    public static bool TryGetNitroxEntity(this Component component, out NitroxEntity nitroxEntity)
+    public static bool TryGetNitroxEntity(this Component component, [NotNullWhen(true)] out NitroxEntity? nitroxEntity)
     {
         nitroxEntity = null;
         return component && component.TryGetComponent(out nitroxEntity);
     }
 
-    public static bool TryGetNitroxEntity(this GameObject gameObject, out NitroxEntity nitroxEntity)
+    public static bool TryGetNitroxEntity(this GameObject gameObject, [NotNullWhen(true)] out NitroxEntity? nitroxEntity)
     {
         nitroxEntity = null;
         return gameObject && gameObject.TryGetComponent(out nitroxEntity);
     }
 
-    public static bool TryGetNitroxId(this GameObject gameObject, out NitroxId nitroxId)
+    public static bool TryGetNitroxId(this GameObject gameObject, [NotNullWhen(true)] out NitroxId? nitroxId)
     {
         if (!gameObject || !gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
         {
@@ -32,7 +33,7 @@ public static class NitroxEntityExtensions
         return nitroxId != null;
     }
 
-    public static bool TryGetNitroxId(this Component component, out NitroxId nitroxId)
+    public static bool TryGetNitroxId(this Component component, [NotNullWhen(true)] out NitroxId? nitroxId)
     {
         if (!component || !component.TryGetComponent(out NitroxEntity nitroxEntity))
         {
@@ -46,7 +47,7 @@ public static class NitroxEntityExtensions
 
     public static bool TryGetIdOrWarn(
         this GameObject gameObject,
-        out NitroxId nitroxId,
+        [NotNullWhen(true)] out NitroxId? nitroxId,
         [CallerMemberName] string methodName = "",
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0)
@@ -70,7 +71,7 @@ public static class NitroxEntityExtensions
 
     public static bool TryGetIdOrWarn(
         this Component component,
-        out NitroxId nitroxId,
+        [NotNullWhen(true)] out NitroxId? nitroxId,
         [CallerMemberName] string methodName = "",
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0)

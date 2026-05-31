@@ -28,7 +28,7 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
     /// <summary>
     /// Get an average of remote delta times gathered until now without the ones which are not in the standard deviation range.
     /// </summary>
-    public bool TryGetSafeAverageRTD(out long average)
+    public bool TryGetSafeAverageRtd(out long average)
     {
         if (deltas.Count == 0)
         {

@@ -28,10 +28,10 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
         public NitroxTechType TechType { get; set; }
 
         [DataMember(Order = 3)]
-        public EntityMetadata Metadata { get; set; }
+        public EntityMetadata? Metadata { get; set; }
 
         [DataMember(Order = 4)]
-        public NitroxId ParentId { get; set; }
+        public NitroxId? ParentId { get; set; }
 
         [DataMember(Order = 5)]
         public List<Entity> ChildEntities { get; set; } = [];

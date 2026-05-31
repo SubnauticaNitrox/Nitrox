@@ -7,36 +7,31 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Helper;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
+internal sealed class WorldEntitySpawner(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership) : SyncEntitySpawner<WorldEntity>
 {
-    private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
-    private readonly Dictionary<Int3, BatchCells> batchCellsById;
-
-    public WorldEntitySpawner(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
+    private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver = new(entityMetadataManager, entities, simulationOwnership);
+    private readonly Lazy<Dictionary<Int3, BatchCells>> batchCellsById = new(() =>
     {
-        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(entityMetadataManager, playerManager, localPlayer, entities, simulationOwnership);
-
         if (NitroxEnvironment.IsNormal)
         {
-            batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
+            return (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
         }
-    }
+        return [];
+    });
 
-    protected override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator? SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
         bool foundParentCell = TryFindAwakeParentCell(entity, out EntityCell parentCell);
         if (foundParentCell)
         {
             parentCell.EnsureRoot();
         }
-        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
+        Optional<GameObject> parent = entity.ParentId != null ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
         // No place to spawn the entity
         if (!foundParentCell && !parent.HasValue)
@@ -86,7 +81,7 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
         Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
         Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
 
-        if (batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
+        if (batchCellsById.Value.TryGetValue(batchId, out BatchCells batchCells))
         {
             parentCell = batchCells.Get(cellId, entity.Level);
             // in both states, the cell is awake
@@ -105,7 +100,7 @@ public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
         Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
         Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
 
-        if (!batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
+        if (!batchCellsById.Value.TryGetValue(batchId, out BatchCells batchCells))
         {
             batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
         }

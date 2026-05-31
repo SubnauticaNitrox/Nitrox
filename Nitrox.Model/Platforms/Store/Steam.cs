@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -107,13 +108,23 @@ public sealed class Steam : IGamePlatform
         return steam;
     }
 
-    private static string? GetExeFile()
+    public static string? GetExeFile()
     {
         string steamExecutable = "";
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            steamExecutable = Path.Combine(RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", steamExecutable), "steam.exe");
+            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
+
+            if (string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Steam"
+                );
+            }
+
+            steamExecutable = Directory.Exists(steamPath) ? Path.Combine(steamPath, "steam.exe") : "";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
@@ -121,20 +132,50 @@ public sealed class Steam : IGamePlatform
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            string userHomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (!Directory.Exists(userHomePath))
+            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            }
+            if (!Directory.Exists(homePath))
             {
                 return null;
             }
 
-            string steamPath = Path.Combine(userHomePath, ".steam", "steam");
-            // support flatpak
-            if (!Directory.Exists(steamPath))
-            {
-                steamPath = Path.Combine(userHomePath, ".var", "app", "com.valvesoftware.Steam", "data", "Steam");
-            }
+            string[] commonPaths = [
+                // Default install location
+                // https://github.com/ValveSoftware/steam-for-linux
+                Path.Combine(homePath, ".local", "share", "Steam"),
+                // Those symlinks are often use as a backward-compatibility (Debian, Ubuntu, Fedora, ArchLinux)
+                // https://wiki.archlinux.org/title/steam, https://askubuntu.com/questions/227502/where-are-steam-games-installed
+                Path.Combine(homePath, ".steam", "steam"),
+                Path.Combine(homePath, ".steam", "root"),
+                // Flatpack install
+                // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
+            ];
 
-            steamExecutable = Path.Combine(steamPath, "steam.sh");
+            string steamPath = "";
+            foreach (string path in commonPaths)
+            {
+                try
+                {
+                    if (Directory.GetFileSystemEntries(path).Any())
+                    {
+                        steamPath = path;
+                        break;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamExecutable = Path.Combine(steamPath, "steam.sh");
+            }
         }
 
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
@@ -219,10 +260,16 @@ public sealed class Steam : IGamePlatform
         {
             throw new Exception("Steam was not found on your machine.");
         }
+        // Game will play inside Proton so it needs launcher path to be a Wine-supported path!
+        string launcherPath = NitroxUser.LauncherPath;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(launcherPath))
+        {
+            launcherPath = $"Z:{launcherPath.Replace("/", "\\")}";
+        }
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
-            args = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
+            args = $@"-applaunch {steamAppId} --nitrox ""{launcherPath}"" {args}";
             if (bigPictureMode)
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
@@ -245,7 +292,7 @@ public sealed class Steam : IGamePlatform
             Arguments = args,
             EnvironmentVariables =
             {
-                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
                 ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay
@@ -318,9 +365,21 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
+            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(GetAllLibraryPaths(steamPath)));
         }
 
         return result;
+
+        static string JoinPaths(params IEnumerable<string?> paths)
+        {
+            paths = paths.Where(path => path != null).Distinct().ToList();
+            string? invalidPath = paths.FirstOrDefault(path => path != null && path.Contains(':'));
+            if (invalidPath != null)
+            {
+                throw new Exception($"Path '{invalidPath}' contains invalid character ':'");
+            }
+            return string.Join(":", paths);
+        }
 
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)
@@ -391,6 +450,14 @@ public sealed class Steam : IGamePlatform
                     if (appIdMatch.Success)
                     {
                         return appIdMatch.Groups[1].Value;
+                    }
+                    
+                    const string defaultPattern = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
+                    Match defaultMatch = Regex.Match(compatToolMapping, defaultPattern);
+                    
+                    if (defaultMatch.Success)
+                    {
+                        return defaultMatch.Groups[1].Value;
                     }
                 }
 

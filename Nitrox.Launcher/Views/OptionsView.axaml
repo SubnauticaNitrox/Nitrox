@@ -184,14 +184,22 @@
                     </WrapPanel.Styles>
 
                     <Border>
-                        <StackPanel>
-                            <TextBlock Text="Enable light mode" />
-                            <CheckBox Classes="switch"
-                                      IsChecked="{Binding LightModeEnabled}"
-                                      ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
-                        </StackPanel>
-                    </Border>
-                    <Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
+						<StackPanel>
+							<TextBlock Text="Light mode" />
+							<CheckBox Classes="switch"
+									  IsChecked="{Binding IsLightModeEnabled}"
+									  ToolTip.Tip="Enable this option to use the Nitrox launcher in light mode" />
+						</StackPanel>
+					</Border>
+					<Border>
+						<StackPanel>
+							<TextBlock Text="Discord integration" />
+							<CheckBox Classes="switch"
+									  IsChecked="{Binding IsDiscordEnabled}"
+									  ToolTip.Tip="Enable Discord Rich Presence and Discord join integration. Disable this if Discord overlay or recording causes the game to crash at startup." />
+						</StackPanel>
+					</Border>
+					<Border IsVisible="{Binding SelectedGame.Platform, Converter={converters:EqualityConverter}, ConverterParameter={x:Static models:Platform.STEAM}}">
                         <StackPanel>
                             <TextBlock Text="Allow multiple game instances" />
                             <CheckBox Classes="switch"
@@ -227,49 +235,33 @@
                     HorizontalAlignment="Left"
                     Text="This is the location where files used by Nitrox are stored, including your screenshots, saves and logs" />
 
-                <Border
-                    Background="{DynamicResource BrandPanelBackground}"
-                    CornerRadius="12"
-                    Padding="22,15">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <SelectableTextBlock
-                            FontSize="15"
-                            Foreground="{DynamicResource BrandBlack}"
-                            Opacity="0.75"
-                            Text="{Binding ProgramDataFolderDir}"
-                            VerticalAlignment="Center" />
-                        <Button
-                            Classes="primary"
-                            Command="{Binding OpenFolderCommand}"
-                            CommandParameter="{Binding ProgramDataFolderDir}"
-                            Content="Open"
-                            Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Margin="22,0,0,0"
-                            ToolTip.Tip="Open Program Data folder"
-                            Width="120" />
-                    </Grid>
-                </Border>
-
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
-                        CommandParameter="{Binding ScreenshotsFolderDir}"
-                        ToolTip.Tip="{Binding ScreenshotsFolderDir}">
+                        CommandParameter="{Binding ProgramDataPath}"
+                        ToolTip.Tip="{Binding ProgramDataPath}">
+                    <StackPanel>
+                        <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
+                        <TextBlock Text="Open Configuration folder" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="icon" Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{Binding ScreenshotsPath}"
+                        ToolTip.Tip="{Binding ScreenshotsPath}">
                     <StackPanel>
                         <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                         <TextBlock Text="Open Screenshots folder" />
                     </StackPanel>
                 </Button>
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
-                        CommandParameter="{Binding SavesFolderDir}"
-                        ToolTip.Tip="{Binding SavesFolderDir}">
+                        CommandParameter="{Binding SavesPath}"
+                        ToolTip.Tip="{Binding SavesPath}">
                     <StackPanel>
                         <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                         <TextBlock Text="Open Saves folder" />
                     </StackPanel>
                 </Button>
                 <Button Classes="icon" Command="{Binding OpenFolderCommand}"
-                        CommandParameter="{Binding LogsFolderDir}"
-                        ToolTip.Tip="{Binding LogsFolderDir}">
+                        CommandParameter="{Binding LogsPath}"
+                        ToolTip.Tip="{Binding LogsPath}">
                     <StackPanel>
                         <controls:RecolorImage Source="/Assets/Images/world-manager/window.png" />
                         <TextBlock Text="Open Logs folder" />

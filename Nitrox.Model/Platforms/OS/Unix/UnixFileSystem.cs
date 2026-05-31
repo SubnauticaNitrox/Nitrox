@@ -12,6 +12,6 @@ public sealed class UnixFileSystem : FileSystem
 
     public override bool SetFullAccessToCurrentUser(string directory)
     {
-        throw new System.NotImplementedException();
+        return PosixFileSystemPermissions.SetFullAccessToCurrentUser(directory);
     }
 }

@@ -1,14 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class RangedAttackLastTargetUpdateProcessor : ClientPacketProcessor<RangedAttackLastTargetUpdate>
+internal sealed class RangedAttackLastTargetUpdateProcessor : IClientPacketProcessor<RangedAttackLastTargetUpdate>
 {
-    public override void Process(RangedAttackLastTargetUpdate packet)
+    public Task Process(ClientProcessorContext context, RangedAttackLastTargetUpdate packet)
     {
         AI.RangedAttackLastTargetUpdate(packet.CreatureId, packet.TargetId, packet.AttackTypeIndex, packet.State);
+        return Task.CompletedTask;
     }
 }

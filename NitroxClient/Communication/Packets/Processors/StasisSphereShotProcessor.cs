@@ -1,22 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class StasisSphereShotProcessor : ClientPacketProcessor<StasisSphereShot>
+internal sealed class StasisSphereShotProcessor(BulletManager bulletManager) : IClientPacketProcessor<StasisSphereShot>
 {
-    private readonly BulletManager bulletManager;
+    private readonly BulletManager bulletManager = bulletManager;
 
-    public StasisSphereShotProcessor(BulletManager bulletManager)
+    public Task Process(ClientProcessorContext context, StasisSphereShot packet)
     {
-        this.bulletManager = bulletManager;
-    }
-
-    public override void Process(StasisSphereShot packet)
-    {
-        bulletManager.ShootStasisSphere(packet.PlayerId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.Speed, packet.LifeTime, packet.ChargeNormalized);
+        bulletManager.ShootStasisSphere(packet.SessionId, packet.Position.ToUnity(), packet.Rotation.ToUnity(), packet.Speed, packet.LifeTime, packet.ChargeNormalized);
+        return Task.CompletedTask;
     }
 }

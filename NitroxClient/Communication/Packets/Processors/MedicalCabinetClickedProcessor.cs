@@ -1,15 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabinetClicked>
+internal sealed class MedicalCabinetClickedProcessor : IClientPacketProcessor<MedicalCabinetClicked>
 {
-    public override void Process(MedicalCabinetClicked packet)
+    public Task Process(ClientProcessorContext context, MedicalCabinetClicked packet)
     {
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
         MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
@@ -32,5 +31,6 @@ public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabin
                 cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 2f);
             }
         }
+        return Task.CompletedTask;
     }
 }

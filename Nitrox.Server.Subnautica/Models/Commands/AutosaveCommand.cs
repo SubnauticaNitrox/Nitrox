@@ -1,43 +1,32 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract;
-using Nitrox.Server.Subnautica.Models.Commands.Abstract.Type;
+using Nitrox.Server.Subnautica.Models.Commands.Core;
 
-namespace Nitrox.Server.Subnautica.Models.Commands
+namespace Nitrox.Server.Subnautica.Models.Commands;
+
+[RequiresPermission(Perms.ADMIN)]
+internal sealed class AutoSaveCommand(IOptions<SubnauticaServerOptions> serverOptionsProvider) : ICommandHandler<bool>
 {
-    internal class AutoSaveCommand : Command
+    private readonly IOptions<SubnauticaServerOptions> serverOptionsProvider = serverOptionsProvider;
+
+    [Description("Whether autosave should be on or off")]
+    public async Task Execute(ICommandContext context, bool toggle)
     {
-        private readonly Server server;
-        private readonly SubnauticaServerConfig serverConfig;
-
-        public AutoSaveCommand(Server server, SubnauticaServerConfig serverConfig) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
+        SubnauticaServerOptions options = serverOptionsProvider.Value;
+        if (toggle)
         {
-            AddParameter(new TypeBoolean("on/off", true, "Whether autosave should be on or off"));
-
-            this.server = server;
-            this.serverConfig = serverConfig;
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            bool toggle = args.Get<bool>(0);
-
-            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
+            // Ensure save interval is a sensible value before turning on auto saving.
+            if (options.SaveInterval <= 1000)
             {
-                if (toggle)
-                {
-                    serverConfig.DisableAutoSave = false;
-                    Server.Instance.EnablePeriodicSaving();
-                    SendMessage(args.Sender, "Enabled periodical saving");
-                }
-                else
-                {
-                    serverConfig.DisableAutoSave = true;
-                    Server.Instance.DisablePeriodicSaving();
-                    SendMessage(args.Sender, "Disabled periodical saving");
-                }
+                options.SaveInterval = new SubnauticaServerOptions().SaveInterval;
             }
+            options.AutoSave = true;
+            await context.ReplyAsync("Enabled periodical saving");
+        }
+        else
+        {
+            options.AutoSave = false;
+            await context.ReplyAsync("Disabled periodical saving");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Nitrox.Model.Subnautica.Packets
             ForceRespawn = forceRespawn;
         }
 
-        public SpawnEntities(Entity entity, SimulatedEntity simulatedEntity = null, bool forceRespawn = false)
+        public SpawnEntities(Entity entity, SimulatedEntity? simulatedEntity = null, bool forceRespawn = false)
         {
             Entities = [entity];
             Simulations = [];

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
@@ -15,12 +15,7 @@ public static class NitroxUser
 {
     public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
     private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
-    private static string? appDataPath;
-    private static string? launcherPath;
     private static string gamePath = "";
-    private static string? executableRootPath;
-    private static string? executablePath;
-    private static string? assetsPath;
 
     private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
     {
@@ -28,7 +23,7 @@ public static class NitroxUser
         () =>
         {
             Assembly currentAsm = Assembly.GetEntryAssembly();
-            if (currentAsm?.GetName().Name?.Equals("Nitrox.Launcher") ?? false)
+            if (currentAsm?.GetName().Name?.Equals(NitroxConstants.LAUNCHER_APP_NAME) ?? false)
             {
                 return Path.GetDirectoryName(currentAsm.Location);
             }
@@ -53,56 +48,11 @@ public static class NitroxUser
         },
         () =>
         {
-            using ProcessEx proc = ProcessEx.GetFirstProcess("Nitrox.Launcher");
+            using ProcessEx proc = ProcessEx.GetFirstProcess(NitroxConstants.LAUNCHER_APP_NAME);
             string executable = proc?.MainModule.FileName;
             return !string.IsNullOrWhiteSpace(executable) ? Path.GetDirectoryName(executable) : null;
         }
     };
-
-    public static string AppDataPath
-    {
-        get
-        {
-            if (appDataPath != null)
-            {
-                return appDataPath;
-            }
-
-            string applicationData = null;
-
-            // On linux Environment.SpecialFolder.ApplicationData returns the Windows version inside wine, this bypasses that behaviour
-            string homeInWineEnv = Environment.GetEnvironmentVariable("WINEHOMEDIR");
-            if (homeInWineEnv is { Length: > 4 })
-            {
-                string homeInWine = homeInWineEnv[4..]; // WINEHOMEDIR is prefixed with \??\
-                if (Directory.Exists(homeInWine))
-                {
-                    applicationData = Path.Combine(homeInWine, ".config");
-                    Directory.CreateDirectory(applicationData); // Create it if it's not there (which should not happen in normal setups)
-                }
-            }
-
-            string? cliDataPath = NitroxEnvironment.CommandLineArgs.GetCommandArgs("--data-path").FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(cliDataPath) && Path.IsPathRooted(cliDataPath))
-            {
-                Directory.CreateDirectory(cliDataPath);
-                return appDataPath = cliDataPath;
-            }
-
-            if (!Directory.Exists(applicationData))
-            {
-                applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            }
-
-            return appDataPath = Path.Combine(applicationData, "Nitrox");
-        }
-    }
-
-    public static string CrashLogsPath => Path.Combine(AppDataPath, "crashes");
-
-    public static string ScreenshotsPath => Path.Combine(AppDataPath, "screenshots");
-
-    public static string CachePath => Path.Combine(AppDataPath, "cache");
 
     /// <summary>
     ///     Tries to get the launcher path that was previously saved by other Nitrox code.
@@ -111,9 +61,9 @@ public static class NitroxUser
     {
         get
         {
-            if (launcherPath != null)
+            if (field != null)
             {
-                return launcherPath;
+                return field;
             }
 
             foreach (Func<string> retriever in launcherPathDataSources)
@@ -121,7 +71,7 @@ public static class NitroxUser
                 string path = retriever();
                 if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
                 {
-                    return launcherPath = path;
+                    return field = path;
                 }
             }
 
@@ -142,19 +92,13 @@ public static class NitroxUser
 
     public static string GamePath => string.IsNullOrEmpty(gamePath) ? string.Empty : gamePath;
 
-    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
-    {
-        gamePath = Path.GetFullPath(path);
-        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
-    }
-
     public static string ExecutableRootPath
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(executableRootPath))
+            if (!string.IsNullOrWhiteSpace(field))
             {
-                return executableRootPath;
+                return field;
             }
             string exePath = ExecutableFilePath;
             if (exePath == null)
@@ -162,7 +106,7 @@ public static class NitroxUser
                 throw new Exception("Executable root path is unavailable");
             }
 
-            return executableRootPath = Path.GetDirectoryName(exePath) ?? throw new Exception("Executable root path is unavailable");
+            return field = Path.GetDirectoryName(exePath) ?? throw new Exception("Executable root path is unavailable");
         }
     }
 
@@ -170,9 +114,9 @@ public static class NitroxUser
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(executablePath))
+            if (!string.IsNullOrWhiteSpace(field))
             {
-                return executablePath;
+                return field;
             }
 
             Assembly entryAssembly = Assembly.GetEntryAssembly();
@@ -190,7 +134,7 @@ public static class NitroxUser
             {
                 path = Path.Combine(Path.GetDirectoryName(path) ?? throw new InvalidOperationException($"Failed to get directory from path: '{path}'"), Path.GetFileNameWithoutExtension(path));
             }
-            return executablePath = path;
+            return field = path;
         }
     }
 
@@ -198,9 +142,9 @@ public static class NitroxUser
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(assetsPath))
+            if (!string.IsNullOrWhiteSpace(field))
             {
-                return assetsPath;
+                return field;
             }
 
             string nitroxAssets;
@@ -220,7 +164,13 @@ public static class NitroxUser
             {
                 nitroxAssets = LauncherPath ?? ExecutableRootPath;
             }
-            return assetsPath = nitroxAssets;
+            return field = nitroxAssets;
         }
+    }
+
+    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
+    {
+        gamePath = Path.GetFullPath(path);
+        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
     }
 }

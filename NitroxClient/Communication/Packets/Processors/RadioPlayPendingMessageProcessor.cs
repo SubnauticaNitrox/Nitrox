@@ -1,15 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using Story;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class RadioPlayPendingMessageProcessor : IClientPacketProcessor<RadioPlayPendingMessage>
 {
-    public class RadioPlayPendingMessageProcessor : ClientPacketProcessor<RadioPlayPendingMessage>
+    public Task Process(ClientProcessorContext context, RadioPlayPendingMessage packet)
     {
-        public override void Process(RadioPlayPendingMessage packet)
-        {
-            StoryGoalManager.main.ExecutePendingRadioMessage();
-        }
+        StoryGoalManager.main.ExecutePendingRadioMessage();
+        return Task.CompletedTask;
     }
 }

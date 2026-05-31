@@ -21,8 +21,8 @@ namespace NitroxClient.Debuggers.Drawer;
 /// </summary>
 public class DrawerManager
 {
-    private readonly Dictionary<Type, IDrawer<object>> drawers = new();
-    private readonly Dictionary<Type, IEditorDrawer<object>> editorDrawers = new();
+    private readonly Dictionary<Type, IDrawer<object>> drawers = [];
+    private readonly Dictionary<Type, IEditorDrawer<object>> editorDrawers = [];
 
     public DrawerManager(SceneDebugger sceneDebugger)
     {
@@ -37,6 +37,7 @@ public class DrawerManager
         MaterialDrawer materialDrawer = new();
         ImageDrawer imageDrawer = new(colorDrawer, materialDrawer, rectDrawer);
         NitroxEntityDrawer nitroxEntityDrawer = new();
+        RigidbodyDrawer rigidbodyDrawer = new(vectorDrawer);
 
         AddDrawer<NitroxEntityDrawer, NitroxEntity>(nitroxEntityDrawer);
         AddDrawer<NitroxEntityDrawer, NitroxId>(nitroxEntityDrawer);
@@ -68,13 +69,14 @@ public class DrawerManager
         AddDrawer<TextDrawer, Text>(new(colorDrawer, materialDrawer));
         AddDrawer<ToggleDrawer, Toggle>(new(sceneDebugger, selectableDrawer, unityEventDrawer));
         AddDrawer<ToggleGroupDrawer, ToggleGroup>();
-        AddDrawer<RigidbodyDrawer, Rigidbody>(new(vectorDrawer));
+        AddDrawer<RigidbodyDrawer, Rigidbody>(rigidbodyDrawer);
         AddDrawer<TransformDrawer, Transform>(new(sceneDebugger, vectorDrawer));
         AddDrawer<UnityEventDrawer, UnityEvent>(unityEventDrawer);
         AddDrawer<UnityEventDrawer, UnityEvent<bool>>(unityEventDrawer);
         AddDrawer<VFXControllerDrawer, VFXController>(new(vectorDrawer, sceneDebugger));
         AddDrawer<AnimatorDrawer, Animator>();
         AddDrawer<CharacterControllerDrawer, CharacterController>(new(vectorDrawer));
+        AddDrawer<BoxColliderDrawer, BoxCollider>(new(vectorDrawer, rigidbodyDrawer));
 
         AddEditor<VectorDrawer, Vector2>(vectorDrawer);
         AddEditor<VectorDrawer, Vector3>(vectorDrawer);
@@ -86,6 +88,7 @@ public class DrawerManager
         AddEditor<ColorDrawer, Color>(colorDrawer);
         AddEditor<ColorDrawer, Color32>(colorDrawer);
         AddEditor<MaterialDrawer, Material>(materialDrawer);
+        AddEditor<MaterialDrawer, PhysicMaterial>(materialDrawer);
         AddEditor<RectDrawer, Rect>(rectDrawer);
         AddEditor<RectDrawer, RectOffset>(rectDrawer);
     }

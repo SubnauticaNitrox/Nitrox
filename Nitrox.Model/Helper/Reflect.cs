@@ -77,7 +77,7 @@ public static class Reflect
         return (PropertyInfo)GetMemberInfo(expression);
     }
 
-    private static MemberInfo GetMemberInfo(LambdaExpression expression, Type implementingType = null)
+    private static MemberInfo GetMemberInfo(LambdaExpression expression, Type? implementingType = null)
     {
         Expression currentExpression = expression.Body;
         while (true)

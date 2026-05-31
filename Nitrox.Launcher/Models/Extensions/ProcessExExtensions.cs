@@ -29,5 +29,20 @@ public static class ProcessExExtensions
 
             // TODO: Support "bring to front" on Wayland window manager.
         }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            using Process proc = Process.Start(new ProcessStartInfo
+            {
+                FileName = "osascript",
+                ArgumentList =
+                {
+                    "-e",
+                    $"tell application \"System Events\" to set frontmost of every process whose unix id is {process.Id} to true",
+                },
+                UseShellExecute = false,
+                RedirectStandardError = true,
+            });
+            proc?.WaitForExit(milliseconds: 5000);
+        }
     }
 }

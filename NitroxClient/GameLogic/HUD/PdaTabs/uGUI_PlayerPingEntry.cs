@@ -5,10 +5,8 @@ using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.Gui.Modals;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,7 +52,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     {
         NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, _) =>
         {
-            if (player is RemotePlayer remotePlayer && remotePlayer.PlayerId == playerId)
+            if (player is RemotePlayer remotePlayer && remotePlayer.SessionId == playerId)
             {
                 RefreshMuteButton();
             }

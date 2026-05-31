@@ -1,29 +1,22 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
+internal sealed class EntityDestroyedPacketProcessor(PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<EntityDestroyed>
 {
-    private readonly PlayerManager playerManager;
-    private readonly EntitySimulation entitySimulation;
-    private readonly WorldEntityManager worldEntityManager;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
-    public EntityDestroyedPacketProcessor(PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
-    {
-        this.playerManager = playerManager;
-        this.worldEntityManager = worldEntityManager;
-        this.entitySimulation = entitySimulation;
-    }
-
-    public override void Process(EntityDestroyed packet, Player destroyingPlayer)
+    public async Task Process(AuthProcessorContext context, EntityDestroyed packet)
     {
         entitySimulation.EntityDestroyed(packet.Id);
 
-        if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity entity))
+        if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity? entity))
         {
             if (entity is VehicleEntity vehicleEntity)
             {
@@ -32,10 +25,10 @@ public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<Entit
 
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
-                bool isOtherPlayer = player != destroyingPlayer;
+                bool isOtherPlayer = player != context.Sender;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    player.SendPacket(packet);
+                    await context.SendAsync(packet, player.SessionId);
                 }
             }
         }

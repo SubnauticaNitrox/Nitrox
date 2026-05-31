@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nitrox.Model.Core;
 using NitroxClient.GameLogic;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace NitroxClient.MonoBehaviours.CinematicController;
 
 public class MultiplayerCinematicController : MonoBehaviour
 {
-    private readonly Dictionary<ushort, RemotePlayerCinematicController> controllerByPlayerId = new();
+    private readonly Dictionary<SessionId, RemotePlayerCinematicController> controllerBySessionId = new();
 
     /// <summary>
     ///     MCCs with the same Animator to reset state if needed.
@@ -34,14 +35,14 @@ public class MultiplayerCinematicController : MonoBehaviour
 
     public void CallAllCinematicModeEnd()
     {
-        foreach (RemotePlayerCinematicController remoteController in controllerByPlayerId.Values)
+        foreach (RemotePlayerCinematicController remoteController in controllerBySessionId.Values)
         {
             remoteController.EndCinematicMode(true);
         }
 
         foreach (MultiplayerCinematicController controller in multiplayerControllerSameAnimator)
         {
-            foreach (RemotePlayerCinematicController remoteController in controller.controllerByPlayerId.Values)
+            foreach (RemotePlayerCinematicController remoteController in controller.controllerBySessionId.Values)
             {
                 remoteController.EndCinematicMode(true);
             }
@@ -50,7 +51,7 @@ public class MultiplayerCinematicController : MonoBehaviour
 
     private RemotePlayerCinematicController GetController(RemotePlayer player)
     {
-        if (controllerByPlayerId.TryGetValue(player.PlayerId, out RemotePlayerCinematicController controller))
+        if (controllerBySessionId.TryGetValue(player.SessionId, out RemotePlayerCinematicController controller))
         {
             return controller;
         }
@@ -58,16 +59,16 @@ public class MultiplayerCinematicController : MonoBehaviour
         player.PlayerDisconnectEvent.AddHandler(gameObject, OnPlayerDisconnect);
 
         controller = CreateNewControllerForPlayer();
-        controllerByPlayerId.Add(player.PlayerId, controller);
+        controllerBySessionId.Add(player.SessionId, controller);
         return controller;
     }
 
     public void OnPlayerDisconnect(RemotePlayer player)
     {
-        if (controllerByPlayerId.TryGetValue(player.PlayerId, out RemotePlayerCinematicController controller))
+        if (controllerBySessionId.TryGetValue(player.SessionId, out RemotePlayerCinematicController controller))
         {
             Destroy(controller);
-            controllerByPlayerId.Remove(player.PlayerId);
+            controllerBySessionId.Remove(player.SessionId);
         }
     }
 

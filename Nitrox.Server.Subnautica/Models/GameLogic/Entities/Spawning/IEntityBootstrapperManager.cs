@@ -3,7 +3,7 @@ using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-public interface IEntityBootstrapperManager
+internal interface IEntityBootstrapperManager
 {
     public void PrepareEntityIfRequired(ref WorldEntity spawnedEntity, DeterministicGenerator generator);
 }

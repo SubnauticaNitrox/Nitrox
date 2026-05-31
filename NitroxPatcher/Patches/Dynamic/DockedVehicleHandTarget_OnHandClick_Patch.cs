@@ -3,7 +3,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -49,7 +48,7 @@ public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPa
             }
 
             Vehicles.EngagePlayerMovementSuppressor(vehicle);
-            Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId, true));
+            Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.SessionId, true));
 
             skipPrefix = true;
             context.Target.OnHandClick(context.GuiHand);

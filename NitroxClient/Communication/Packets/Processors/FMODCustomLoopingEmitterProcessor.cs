@@ -1,19 +1,18 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class FMODCustomLoopingEmitterProcessor : ClientPacketProcessor<FMODCustomLoopingEmitterPacket>
+internal sealed class FMODCustomLoopingEmitterProcessor : IClientPacketProcessor<FMODCustomLoopingEmitterPacket>
 {
-    public override void Process(FMODCustomLoopingEmitterPacket packet)
+    public Task Process(ClientProcessorContext context, FMODCustomLoopingEmitterPacket packet)
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject emitterControllerObject))
         {
             Log.ErrorOnce($"[{nameof(FMODCustomLoopingEmitterProcessor)}] Couldn't find entity {packet.Id}");
-            return;
+            return Task.CompletedTask;
         }
 
         if (!emitterControllerObject.TryGetComponent(out FMODEmitterController fmodEmitterController))
@@ -23,5 +22,6 @@ public class FMODCustomLoopingEmitterProcessor : ClientPacketProcessor<FMODCusto
         }
 
         fmodEmitterController.PlayCustomLoopingEmitter(packet.AssetPath);
+        return Task.CompletedTask;
     }
 }

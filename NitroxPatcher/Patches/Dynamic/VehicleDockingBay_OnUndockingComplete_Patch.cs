@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -18,6 +17,6 @@ public sealed partial class VehicleDockingBay_OnUndockingComplete_Patch : Nitrox
             return;
         }
 
-        Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId, false));
+        Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.SessionId, false));
     }
 }

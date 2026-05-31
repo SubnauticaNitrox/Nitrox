@@ -44,7 +44,7 @@ public abstract class FileSystem
     /// </summary>
     /// <param name="file">File or program to open or execute.</param>
     /// <returns>Instance of a running process. Should be disposed.</returns>
-    public virtual Process OpenOrExecuteFile(string file)
+    public virtual Process? OpenOrExecuteFile(string file)
     {
         if (string.IsNullOrWhiteSpace(file))
         {

@@ -43,7 +43,7 @@
         </viewModels:CrashWindowViewModel>
     </Design.DataContext>
     <DockPanel LastChildFill="True">
-        <controls:CustomTitlebar DockPanel.Dock="Top" IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" ShowTitle="True" />
+        <controls:CustomTitlebar DockPanel.Dock="Top" ShowTitle="True" />
         <Grid RowDefinitions="*,Auto">
             <ScrollViewer>
                 <!--  TODO: Nice color highlighting (with option to click on line to open the source file?)  -->

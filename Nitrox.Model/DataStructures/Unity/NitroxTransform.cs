@@ -28,7 +28,7 @@ namespace Nitrox.Model.DataStructures.Unity
             }
         }
 
-        public NitroxTransform Parent;
+        public NitroxTransform? Parent;
 
         [IgnoredMember]
         public NitroxVector3 Position
@@ -64,7 +64,7 @@ namespace Nitrox.Model.DataStructures.Unity
             }
         }
 
-        public void SetParent(NitroxTransform parent, bool worldPositionStays = true)
+        public void SetParent(NitroxTransform? parent, bool worldPositionStays = true)
         {
             if (!worldPositionStays)
             {

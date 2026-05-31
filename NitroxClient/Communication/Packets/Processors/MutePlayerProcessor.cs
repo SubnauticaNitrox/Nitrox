@@ -1,31 +1,27 @@
-﻿using Nitrox.Model.DataStructures;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using Nitrox.Model.Packets;
+﻿using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class MutePlayerProcessor : ClientPacketProcessor<MutePlayer>
+internal sealed class MutePlayerProcessor(PlayerManager playerManager) : IClientPacketProcessor<MutePlayer>
 {
-    private readonly PlayerManager playerManager;
+    public delegate void PlayerMuted(SessionId sessionId, bool muted);
 
-    public delegate void PlayerMuted(ushort playerId, bool muted);
+    private readonly PlayerManager playerManager = playerManager;
     public PlayerMuted OnPlayerMuted;
 
-    public MutePlayerProcessor(PlayerManager playerManager)
-    {
-        this.playerManager = playerManager;
-    }
-
-    public override void Process(MutePlayer packet)
+    public Task Process(ClientProcessorContext context, MutePlayer packet)
     {
         // We only need to notice if that's another player than local player
-        Optional<RemotePlayer> player = playerManager.Find(packet.PlayerId);
+        Optional<RemotePlayer> player = playerManager.Find(packet.SessionId);
         if (player.HasValue)
         {
             player.Value.PlayerContext.IsMuted = packet.Muted;
         }
-        OnPlayerMuted(packet.PlayerId, packet.Muted);
+        OnPlayerMuted(packet.SessionId, packet.Muted);
+        return Task.CompletedTask;
     }
 }

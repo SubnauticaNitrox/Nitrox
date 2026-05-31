@@ -1,4 +1,5 @@
 using System;
+using Nitrox.Model.Core;
 using Nitrox.Model.Packets;
 
 namespace Nitrox.Model.Subnautica.Packets;
@@ -6,12 +7,12 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class FootstepPacket : Packet
 {
-    public ushort PlayerID { get; }
+    public SessionId SessionId { get; }
     public StepSounds AssetIndex { get; }
 
-    public FootstepPacket(ushort playerID, StepSounds assetIndex)
+    public FootstepPacket(SessionId sessionId, StepSounds assetIndex)
     {
-        PlayerID = playerID;
+        SessionId = sessionId;
         AssetIndex = assetIndex;
 
         DeliveryMethod = Networking.NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;

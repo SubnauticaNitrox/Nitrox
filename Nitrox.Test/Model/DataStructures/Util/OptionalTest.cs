@@ -61,7 +61,7 @@ public class OptionalTest
     {
         Optional<Random> op = Optional.Of(new Random());
         Assert.IsTrue(op.HasValue);
-        Assert.ThrowsException<ArgumentNullException>(() => { op = null; }, "Setting optional to null should not be allowed.");
+        Assert.ThrowsException<ArgumentNullException>(() => { op = Optional.Of(((Random)null)!); }, "Setting optional to null should not be allowed.");
         op = Optional.Empty;
         Assert.IsFalse(op.HasValue);
     }

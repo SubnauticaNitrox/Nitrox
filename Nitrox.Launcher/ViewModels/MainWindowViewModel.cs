@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -29,16 +30,17 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
     private readonly DialogService dialogService;
     private readonly LaunchGameViewModel launchGameViewModel;
     private readonly Func<Window> mainWindowProvider;
+    private readonly NotificationsViewModel notificationsViewModel;
     private readonly OptionsViewModel optionsViewModel;
     private readonly ServerService serverService;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
 
     [ObservableProperty]
-    private object? activeViewModel;
+    public partial object? ActiveViewModel { get; set; }
 
     [ObservableProperty]
-    private bool updateAvailableOrUnofficial;
+    public partial bool UpdateAvailableOrUnofficial { get; set; }
 
     public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
@@ -49,6 +51,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         LaunchGameViewModel launchGameViewModel,
         CommunityViewModel communityViewModel,
         BlogViewModel blogViewModel,
+        NotificationsViewModel notificationsViewModel,
         UpdatesViewModel updatesViewModel,
         OptionsViewModel optionsViewModel,
         ServerService serverService,
@@ -61,6 +64,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
         this.blogViewModel = blogViewModel;
+        this.notificationsViewModel = notificationsViewModel;
         this.updatesViewModel = updatesViewModel;
         this.optionsViewModel = optionsViewModel;
         this.serverService = serverService;
@@ -69,17 +73,23 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         this.RegisterMessageListener<ShowPreviousViewMessage, MainWindowViewModel>(static (message, vm) => vm.BackToAsync(message.RoutableViewModelType));
         this.RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
         {
-            Dispatcher.UIThread.Invoke(() => vm.Notifications.Add(message.Item));
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                vm.Notifications.Add(message.Item);
+            });
             await Task.Delay(7000);
             WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
         });
         this.RegisterMessageListener<NotificationCloseMessage, MainWindowViewModel>(static async (message, vm) =>
         {
-            message.Item.Dismissed = true;
+            message.Item.IsDismissed = true;
             await Task.Delay(1000); // Wait for animations
             if (!IsDesignMode) // Prevent design preview crashes
             {
-                vm.Notifications.Remove(message.Item);
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    vm.Notifications.Remove(message.Item);
+                });
             }
         });
 
@@ -96,6 +106,20 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
                 LauncherNotifier.Info("You're now using Nitrox DEV build");
             }
 
+            // Only on Linux or macOS we allow changing save paths via XDG spec.
+            if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+            {
+                Task.Run(() =>
+                {
+                    string legacySavesPath = Path.Combine(NitroxDirectory.ConfigPath, "saves");
+                    if (!NitroxDirectory.SavesPath.Equals(legacySavesPath, StringComparison.OrdinalIgnoreCase) && Directory.EnumerateFileSystemEntries(legacySavesPath).Any())
+                    {
+                        string message = $"It looks like you have save files in the previous location at '{legacySavesPath}', please move them to {NitroxDirectory.SavesPath} to continue using these saves. This is because Nitrox now follows the XDG spec.";
+                        Log.Warn(message);
+                        LauncherNotifier.Warning(message);
+                    }
+                });
+            }
             Task.Run(async () =>
             {
                 if (!NetHelper.HasInternetConnectivity())
@@ -123,6 +147,9 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
     public async Task OpenBlogViewAsync() => await this.ShowAsync(blogViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
+    public async Task OpenNotificationsViewAsync() => await this.ShowAsync(notificationsViewModel);
+
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenUpdatesViewAsync() => await this.ShowAsync(updatesViewModel);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
@@ -145,7 +172,7 @@ internal partial class MainWindowViewModel : ViewModelBase, IRoutingScreen
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
-        if (args.Cancel == false && mainWindowProvider().IsClosingByUser(args))
+        if (!args.Cancel && mainWindowProvider().IsClosingByUser(args))
         {
             mainWindowProvider().CloseByCode();
         }

@@ -1,16 +1,14 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.MonoBehaviours;
 using UWE;
 using Terrain = NitroxClient.GameLogic.Terrain;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
+internal sealed class PlayerTeleportedProcessor : IClientPacketProcessor<PlayerTeleported>
 {
-    public override void Process(PlayerTeleported packet)
+    public Task Process(ClientProcessorContext context, PlayerTeleported packet)
     {
         Player.main.OnPlayerPositionCheat();
 
@@ -19,21 +17,22 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
         {
             currentVehicle.TeleportVehicle(packet.DestinationTo.ToUnity(), currentVehicle.transform.rotation);
             Player.main.WaitForTeleportation();
-            return;
+            return Task.CompletedTask;
         }
 
         Player.main.SetPosition(packet.DestinationTo.ToUnity());
-        
+
         if (packet.SubRootID.HasValue && NitroxEntity.TryGetComponentFrom(packet.SubRootID.Value, out SubRoot subRoot))
         {
             Player.main.SetCurrentSub(subRoot, true);
-            return;
+            return Task.CompletedTask;
         }
-        
+
         // Freeze the player while it's loading its new position
         Player.main.cinematicModeActive = true;
         Player.main.WaitForTeleportation();
 
         CoroutineHost.StartCoroutine(Terrain.SafeWaitForWorldLoad());
+        return Task.CompletedTask;
     }
 }

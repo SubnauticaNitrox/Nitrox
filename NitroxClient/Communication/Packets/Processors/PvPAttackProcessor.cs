@@ -1,16 +1,16 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Packets.Processors.Core;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public class PvPAttackProcessor : ClientPacketProcessor<PvPAttack>
+internal sealed class PvPAttackProcessor : IClientPacketProcessor<PvPAttack>
 {
-    public override void Process(PvPAttack packet)
+    public Task Process(ClientProcessorContext context, PvPAttack packet)
     {
         if (Player.main && Player.main.liveMixin)
         {
             Player.main.liveMixin.TakeDamage(packet.Damage);
         }
+        return Task.CompletedTask;
     }
 }

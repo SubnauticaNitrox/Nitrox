@@ -4,14 +4,15 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
+using LiteNetLib.Layers;
 using LiteNetLib.Utils;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.Modals;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 
@@ -47,13 +48,15 @@ public class LiteNetLibClient : IClient
         };
 
 
-        client = new NetManager(listener)
+        client = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
         {
             UpdateTime = 15,
             ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
             IPv6Enabled = true,
 #if DEBUG
-            DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+            DisconnectTimeout = 300_000, //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+#else
+            DisconnectTimeout = 30_000, // 30 seconds; prevents false disconnects when post-sync game-loading stalls LiteNetLib briefly
 #endif
         };
     }

@@ -5,6 +5,8 @@ namespace Nitrox.Model.Extensions;
 
 public static class TaskExtensions
 {
+    public static bool IsBusyOrSuccessful(this Task? task) => task is { IsCompleted: true, IsFaulted: false, IsCanceled: false };
+
     /// <summary>
     ///     Calls an action if an error happens.
     /// </summary>

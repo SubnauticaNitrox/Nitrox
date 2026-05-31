@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
@@ -13,7 +14,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 public class EscapePodEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public List<ushort> Players { get; set; } = [];
+    public List<PeerId> Players { get; set; } = [];
 
     [IgnoreConstructor]
     protected EscapePodEntity()
@@ -34,7 +35,7 @@ public class EscapePodEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public EscapePodEntity(List<ushort> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public EscapePodEntity(List<PeerId> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         Players = players;

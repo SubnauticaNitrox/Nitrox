@@ -1,33 +1,28 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+internal sealed class FireDousedProcessor(IPacketSender packetSender) : IClientPacketProcessor<FireDoused>
 {
-    public class FireDousedProcessor : ClientPacketProcessor<FireDoused>
+    private readonly IPacketSender packetSender = packetSender;
+
+    /// <summary>
+    ///     Finds and executes <see cref="Fire.Douse(float)" />. If the fire is extinguished, it will pass a large float to
+    ///     trigger the private
+    ///     <see cref="Fire.Extinguish()" /> method.
+    /// </summary>
+    public Task Process(ClientProcessorContext context, FireDoused packet)
     {
-        private readonly IPacketSender packetSender;
+        GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
 
-        public FireDousedProcessor(IPacketSender packetSender)
+        using (PacketSuppressor<FireDoused>.Suppress())
         {
-            this.packetSender = packetSender;
+            fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
         }
-
-        /// <summary>
-        /// Finds and executes <see cref="Fire.Douse(float)"/>. If the fire is extinguished, it will pass a large float to trigger the private
-        /// <see cref="Fire.Extinguish()"/> method.
-        /// </summary>
-        public override void Process(FireDoused packet)
-        {
-            GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-
-            using (PacketSuppressor<FireDoused>.Suppress())
-            {
-                fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
-            }
-        }
+        return Task.CompletedTask;
     }
 }

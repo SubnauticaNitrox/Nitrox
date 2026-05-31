@@ -4,7 +4,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using Nitrox.Model.Subnautica.DataStructures;
 using NitroxPatcher.Helper;
 using NitroxPatcher.Patches.Persistent;
 using UnityEngine;
