@@ -32,6 +32,14 @@ public class BaseLeakEntitySpawner : SyncEntitySpawner<BaseLeakEntity>
             return true;
         }
 
+        // Skip spawning leaks that are already at full health (fully repaired)
+        // This handles edge cases where a leak was repaired but the save hasn't persisted yet
+        if (entity.Health >= 100f)
+        {
+            Log.Debug($"[{nameof(BaseLeakEntitySpawner)}] Skipping spawn of fully repaired leak {entity.Id} (Health: {entity.Health})");
+            return true;
+        }
+
         BaseLeakManager baseLeakManager = baseHullStrength.gameObject.EnsureComponent<BaseLeakManager>();
         baseLeakManager.EnsureLeak(entity.RelativeCell.ToUnity(), entity.Id, entity.Health);
         return true;
