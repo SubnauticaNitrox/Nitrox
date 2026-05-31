@@ -1,12 +1,14 @@
 using System.Buffers;
 using System.Threading;
 using LiteNetLib;
+using LiteNetLib.Layers;
 using LiteNetLib.Utils;
 using Mono.Nat;
+using Nitrox.Model.Core;
 using Nitrox.Model.Serialization;
-using Nitrox.Server.Subnautica.Models.Packets;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets;
 
 namespace Nitrox.Server.Subnautica.Models.Communication;
 
@@ -18,8 +20,9 @@ public class LiteNetLibServer : NitroxServer
     public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, JoiningManager joiningManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, joiningManager, entitySimulation, serverConfig)
     {
         listener = new EventBasedNetListener();
-        server = new NetManager(listener)
+        server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
         {
+            UseNativeSockets = true,
             IPv6Enabled = true
         };
     }
