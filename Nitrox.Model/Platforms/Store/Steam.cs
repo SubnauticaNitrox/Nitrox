@@ -260,10 +260,16 @@ public sealed class Steam : IGamePlatform
         {
             throw new Exception("Steam was not found on your machine.");
         }
+        // Game will play inside Proton so it needs launcher path to be a Wine-supported path!
+        string launcherPath = NitroxUser.LauncherPath;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(launcherPath))
+        {
+            launcherPath = $"Z:{launcherPath.Replace("/", "\\")}";
+        }
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
-            args = $@"-applaunch {steamAppId} --nitrox ""{NitroxUser.LauncherPath}"" {args}";
+            args = $@"-applaunch {steamAppId} --nitrox ""{launcherPath}"" {args}";
             if (bigPictureMode)
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
@@ -286,7 +292,7 @@ public sealed class Steam : IGamePlatform
             Arguments = args,
             EnvironmentVariables =
             {
-                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
                 ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay

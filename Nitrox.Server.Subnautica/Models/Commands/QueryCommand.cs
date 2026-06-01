@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -11,11 +12,11 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.ADMIN)]
-internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, ILogger<QueryCommand> logger) : ICommandHandler<NitroxId>
+internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager) : ICommandHandler<NitroxId>
 {
     private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly PlayerManager playerManager = playerManager;
     private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
-    private readonly ILogger<QueryCommand> logger = logger;
 
     [Description("Query the entity associated with the given NitroxId")]
     public async Task Execute(ICommandContext context, [Description("NitroxId of an entity")] NitroxId entityId)
@@ -41,7 +42,8 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
                 builder.AppendLine("   └ Child");
                 builder.AppendLine($"     └ Type: {childEntity.GetType().Name}");
                 builder.AppendLine($"     └ Id: {childEntity.Id}");
-                builder.AppendLine($"     └ Metadata: {childEntity.Metadata?.ToString() ?? "none"}");
+                builder.AppendLine($"     └ TechType: {childEntity.TechType}");
+                builder.AppendLine($"     └ Metadata: {childEntity.Metadata?.ToString() ?? "<null>"}");
                 builder.AppendLine($"     └ Children: {childEntity.ChildEntities.Count}");
             }
         }
@@ -54,6 +56,36 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
             builder.AppendLine($" └ SpawnedByServer: {worldEntity.SpawnedByServer}");
             builder.AppendLine($" └ {worldEntity.Transform}");
             builder.AppendLine($" └ Cell: {(worldEntity is GlobalRootEntity ? "global root" : worldEntity.AbsoluteEntityCell.ToString())}");
+        }
+
+        if (entity is PlayerEntity)
+        {
+            Player? serverPlayer = playerManager.GetAllPlayers().FirstOrDefault(p => p.GameObjectId == entityId);
+            if (serverPlayer is not null)
+            {
+                builder.AppendLine("Player");
+                builder.AppendLine($" └ Name: {serverPlayer.Name}");
+                builder.AppendLine($" └ Online: {serverPlayer.IsOnline}");
+                builder.AppendLine($" └ Perms: {serverPlayer.Permissions}");
+                builder.AppendLine($" └ GameMode: {serverPlayer.GameMode}");
+                builder.AppendLine($" └ InPrecursor: {serverPlayer.InPrecursor}");
+                builder.AppendLine($" └ Stats: {serverPlayer.Stats}");
+                builder.AppendLine($" └ DisplaySurfaceWater: {serverPlayer.DisplaySurfaceWater}");
+                builder.AppendLine($" └ Position: {serverPlayer.Position}");
+                builder.AppendLine($" └ LastStoredPosition: {serverPlayer.LastStoredPosition?.ToString() ?? "<null>"}");
+                builder.AppendLine($" └ SubRootId: {serverPlayer.SubRootId.OrNull()?.ToString() ?? "<null>"}");
+                builder.AppendLine($" └ LastStoredSubRootID: {serverPlayer.LastStoredSubRootID.OrNull()?.ToString() ?? "<null>"}");
+
+                if (entity.ParentId != serverPlayer.SubRootId.OrNull())
+                {
+                    builder.AppendLine("⚠ ParentId doesn't match SubRootId");
+                }
+            }
+            else
+            {
+                builder.AppendLine("Player");
+                builder.AppendLine("⚠ Unable to find player record for this entity id)");
+            }
         }
 
         bool isLocked = simulationOwnershipData.TryGetLock(entityId, out SimulationOwnershipData.PlayerLock playerLock);

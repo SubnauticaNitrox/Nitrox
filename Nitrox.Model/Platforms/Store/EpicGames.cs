@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery.Models;
@@ -15,7 +17,16 @@ public sealed class EpicGames : IGamePlatform
     public bool OwnsGame(string gameDirectory)
     {
         string path = Path.Combine(gameDirectory, ".egstore");
-        return Directory.Exists(path) && Directory.GetFiles(path).Length > 1;
+        
+        try
+        {
+            return Directory.EnumerateFiles(path, "*.manifest", SearchOption.TopDirectoryOnly).Any();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+            return false;
+        }
     }
 
     public static async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)

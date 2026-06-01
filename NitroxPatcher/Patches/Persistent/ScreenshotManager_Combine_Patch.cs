@@ -14,8 +14,8 @@ public partial class ScreenshotManager_Combine_Patch : NitroxPatch, IPersistentP
     {
         __result = path2 switch
         {
-            ScreenshotManager.screenshotsFolderName => NitroxUser.ScreenshotsPath,
-            { } filename when path1 == ScreenshotManager.savePath => Path.Combine(NitroxUser.ScreenshotsPath, Path.GetFileName(filename)),
+            ScreenshotManager.screenshotsFolderName => NitroxDirectory.ScreenshotsPath,
+            { } filename when path1 == ScreenshotManager.savePath => Path.Combine(NitroxDirectory.ScreenshotsPath, Path.GetFileName(filename)),
             _ => null
         };
         return __result == null; // Run original method if we didn't handle (result is null).

@@ -181,7 +181,8 @@ internal sealed class JoiningManager(
         List<GlobalRootEntity> globalRootEntities = worldEntityManager.GetGlobalRootEntities(true);
         bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
-        InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
+        InitialPlayerSync initialPlayerSync = new(
+            player.GameObjectId,
             wasBrandNewPlayer,
             assignedEscapePodId,
             player.EquippedItems,
@@ -221,7 +222,7 @@ internal sealed class JoiningManager(
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, player.SubRootId.OrNull(), []);
             entityRegistry.AddOrUpdate(playerEntity);
             worldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;

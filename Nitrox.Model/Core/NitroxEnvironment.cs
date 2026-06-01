@@ -14,8 +14,6 @@ public static class NitroxEnvironment
     private static bool hasSet;
     private static Assembly? executingAssembly;
 
-    private static string[]? commandLineArgs;
-
     private static string? appName;
 
     private static Assembly ExecutingAssembly => executingAssembly ??= Assembly.GetExecutingAssembly();
@@ -127,9 +125,9 @@ public static class NitroxEnvironment
     {
         get
         {
-            if (commandLineArgs != null)
+            if (field != null)
             {
-                return commandLineArgs;
+                return field;
             }
 
             IEnumerable<string> args = Environment.GetCommandLineArgs().Skip(1);
@@ -138,7 +136,7 @@ public static class NitroxEnvironment
             {
                 args = args.Select(p => p.Trim('\''));
             }
-            return commandLineArgs ??= args.ToArray();
+            return field = args.ToArray();
         }
     }
 

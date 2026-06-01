@@ -35,6 +35,7 @@ public class PatchesTranspilerTest
         [typeof(CreatureDeath_SpawnRespawner_Patch), 2],
         [typeof(CyclopsDestructionEvent_DestroyCyclops_Patch), 3],
         [typeof(CyclopsDestructionEvent_SpawnLootAsync_Patch), 7],
+        [typeof(CyclopsHelmHUDManager_Update_Patch), 2],
         [typeof(CyclopsShieldButton_OnClick_Patch), -6],
         [typeof(CyclopsSonarButton_Update_Patch), 3],
         [typeof(CyclopsSonarDisplay_NewEntityOnSonar_Patch), 3],

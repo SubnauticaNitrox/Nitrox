@@ -17,7 +17,7 @@ internal static class CrashReporter
 
         try
         {
-            string crashPath = NitroxUser.CrashLogsPath;
+            string crashPath = NitroxDirectory.CrashLogsPath;
             if (!string.IsNullOrWhiteSpace(crashPath))
             {
                 Directory.CreateDirectory(crashPath);
@@ -49,7 +49,7 @@ internal static class CrashReporter
 
     public static string? GetLastReport()
     {
-        string crashLogsPath = NitroxUser.CrashLogsPath;
+        string crashLogsPath = NitroxDirectory.CrashLogsPath;
         if (Directory.Exists(crashLogsPath) && Directory.EnumerateFiles(crashLogsPath).OrderDescending().FirstOrDefault() is { } crashLog)
         {
             return File.ReadAllText(crashLog);

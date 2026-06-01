@@ -24,29 +24,6 @@ internal abstract class MiddlewareZLoggerFormatter : IZLoggerFormatter
             Entry = entry,
             Middleware = Middleware
         };
-        ExecuteNext(ref context);
-    }
-
-    private static void ExecuteNext(ref ILoggerMiddleware.Context context)
-    {
-        if (GetNextMiddleware(ref context) is not { } middleware)
-        {
-            return;
-        }
-
-        middleware.ExecuteLogMiddleware(ref context, ExecuteNext);
-    }
-
-    private static ILoggerMiddleware? GetNextMiddleware(ref ILoggerMiddleware.Context context)
-    {
-        if (context.Middleware.Length < 1)
-        {
-            return null;
-        }
-        if (context.Cursor >= context.Middleware.Length)
-        {
-            return null;
-        }
-        return context.Middleware[context.Cursor++];
+        ILoggerMiddleware.ExecuteNext(ref context);
     }
 }

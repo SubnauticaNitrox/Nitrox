@@ -1,4 +1,4 @@
-﻿using NitroxClient.MonoBehaviours.Discord;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using TMPro;

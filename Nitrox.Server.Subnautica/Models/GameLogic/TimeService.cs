@@ -119,7 +119,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
     public TimeChange MakeTimePacket()
     {
-        return new(GameTime.TotalSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), ActiveTime.TotalMilliseconds, ntpSyncer.OnlineMode, ntpSyncer.CorrectionOffset.Ticks);
+        return new(GameTime.TotalSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), ActiveTime.TotalSeconds, ntpSyncer.OnlineMode, ntpSyncer.CorrectionOffset.Ticks);
     }
 
     /// <summary>
