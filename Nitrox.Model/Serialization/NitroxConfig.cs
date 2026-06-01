@@ -49,10 +49,10 @@ public static class NitroxConfig
         return result;
     }
 
-    public static T Load<T>(string dirPath, ILogger? logger = null) where T : class, new()
+    public static T Load<T>(string path, ILogger? logger = null) where T : class, new()
     {
         T config = new();
-        LoadIntoObject(Path.Combine(dirPath, SerializableFileNameAttribute.GetFileName<T>()), config, logger);
+        LoadIntoObject(Path.Combine(path, SerializableFileNameAttribute.GetFileName<T>()), config, logger);
         return config;
     }
 
