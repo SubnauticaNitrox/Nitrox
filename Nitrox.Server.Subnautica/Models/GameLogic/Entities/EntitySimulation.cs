@@ -36,6 +36,10 @@ internal sealed class EntitySimulation : ISessionCleaner
         List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
         List<WorldEntity> addedEntities = FilterSimulatableEntities(player, entities);
 
+        foreach (WorldEntity child in addedEntities.SelectMany(GetSimulatableChildren).ToList())
+            if (simulationOwnershipData.TryToAcquire(child.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
+                addedEntities.Add(child);
+
         List<SimulatedEntity> ownershipChanges = new();
 
         foreach (WorldEntity entity in addedEntities)
@@ -49,9 +53,15 @@ internal sealed class EntitySimulation : ISessionCleaner
 
     public void FillWithRemovedCells(Player player, AbsoluteEntityCell removedCell, List<SimulatedEntity> ownershipChanges)
     {
-        List<WorldEntity> entities = worldEntityManager.GetEntities(removedCell);
+        List<WorldEntity> rootEntities = worldEntityManager.GetEntities(removedCell);
+        IEnumerable<WorldEntity> entities = rootEntities.Concat(rootEntities.SelectMany(GetSimulatableChildren));
         IEnumerable<WorldEntity> revokedEntities = entities.Where(entity => !player.CanSee(entity) && simulationOwnershipData.RevokeIfOwner(entity.Id, player));
         AssignEntitiesToOtherPlayers(player.SessionId, revokedEntities, ownershipChanges);
+    }
+
+    private IEnumerable<WorldEntity> GetSimulatableChildren(WorldEntity entity)
+    {
+        return entity.ChildEntities.OfType<WorldEntity>().Where(ShouldSimulateEntity);
     }
 
     public void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
