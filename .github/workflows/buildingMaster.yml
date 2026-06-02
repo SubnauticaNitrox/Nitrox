@@ -10,7 +10,7 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
     - name: Checking out repository
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
   build:
     needs: setup
@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Debug, Release]
-        runtime: [win-x64, linux-x64, linux-arm64]
+        runtime: [win-x64, win-arm64, linux-x64, linux-arm64, osx-x64, osx-arm64]
     steps:
     - name: Build
       run: dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c ${{ matrix.configuration }} -r ${{ matrix.runtime }}
@@ -32,7 +32,7 @@ jobs:
       run: dotnet test Nitrox.Test/Nitrox.Test.csproj --logger trx --results-directory "test_results"
 
     - name: Upload Test Results
-      uses: EnricoMi/publish-unit-test-result-action/linux@3a74b2957438d0b6e2e61d67b05318aa25c9e6c6 # v2.20.0
+      uses: EnricoMi/publish-unit-test-result-action/linux@c950f6fb443cb5af20a377fd0dfaa78838901040 # v2.23.0
       if: (!cancelled())
       with:
         files: |
