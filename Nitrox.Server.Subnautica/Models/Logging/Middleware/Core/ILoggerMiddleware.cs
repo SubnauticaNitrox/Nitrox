@@ -8,19 +8,6 @@ internal interface ILoggerMiddleware
 
     void ExecuteLogMiddleware(ref Context context, NextCall next);
 
-    public ref struct Context
-    {
-        public Context()
-        {
-        }
-
-        public IBufferWriter<byte> Writer { get; init; } = null!;
-        public IZLoggerEntry Entry { get; init; } = null!;
-        public int Cursor { get; set; }
-
-        public required ILoggerMiddleware[] Middleware { get; set; }
-    }
-
     static void ExecuteNext(ref Context context)
     {
         if (GetNextMiddleware(ref context) is not { } middleware)
@@ -42,5 +29,18 @@ internal interface ILoggerMiddleware
             return null;
         }
         return context.Middleware[context.Cursor++];
+    }
+
+    public ref struct Context
+    {
+        public Context()
+        {
+        }
+
+        public IBufferWriter<byte> Writer { get; init; } = null!;
+        public IZLoggerEntry Entry { get; init; } = null!;
+        public int Cursor { get; set; }
+
+        public required ILoggerMiddleware[] Middleware { get; set; }
     }
 }

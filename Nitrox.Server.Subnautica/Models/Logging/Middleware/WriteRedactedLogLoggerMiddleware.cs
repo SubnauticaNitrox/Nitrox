@@ -14,7 +14,7 @@ internal sealed partial record WriteRedactedLogLoggerMiddleware : ILoggerMiddlew
     private FrozenDictionary<string, List<IRedactor>>.AlternateLookup<ReadOnlySpan<char>> redactionLookup;
 
     [GeneratedRegex(@"\{[^\}]+\}", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.NonBacktracking)]
-    private partial Regex ParameterTagRegex { get; }
+    private static partial Regex ParameterTagRegex { get; }
 
     public required IRedactor[] Redactors
     {

@@ -22,9 +22,13 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
 
     private static IEnumerable<ILoggerMiddleware> GetMiddleware(NitroxFormatterOptions options)
     {
-        if (options.OmitWhenCaptured)
+        if (options.IsOmittedOnCapture)
         {
             yield return new BreakLoggerMiddleware { BreakCondition = static (ref context) => context.Entry.TryGetProperty(out CaptureScope _) };
+        }
+        if (options.RequiredPropertyTypes.Length > 0)
+        {
+            yield return new BreakIfNoneOfPropertyLoggerMiddleware { Properties = [..options.RequiredPropertyTypes] };
         }
         yield return new WriteLoggerMiddleware
         {
@@ -41,7 +45,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
             yield return new ConditionalGroupLoggerMiddleware
             {
                 Condition = static context => !context.Entry.TryGetProperty(out PlainScope _),
-                Group =
+                TrueGroup =
                 [
                     new WriteTimeLoggerMiddleware { Format = options.TimestampFormat ?? "" },
                     new GroupLoggerMiddleware { Group = GetLogLevelMiddleware(options).ToArray() },
@@ -51,7 +55,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
                 ]
             };
         }
-        if (options.UseRedaction)
+        if (options.HasRedactors)
         {
             yield return new WriteRedactedLogLoggerMiddleware { Redactors = options.Redactors };
         }

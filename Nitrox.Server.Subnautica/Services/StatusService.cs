@@ -5,6 +5,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
@@ -43,22 +44,20 @@ internal sealed class StatusService(
     public async Task StartedAsync(CancellationToken cancellationToken)
     {
         appStartStopWatch.Stop();
+        SubnauticaServerOptions o = options.Value;
         logger.ZLogInformation($"Server started in {double.Round(appStartStopWatch.Elapsed.TotalSeconds, 3):@Seconds} seconds");
-        logger.ZLogInformation($"Server is listening on port {options.Value.ServerPort} UDP");
-        logger.ZLogInformation($"Using {options.Value.SerializerMode} as save file serializer");
-        logger.ZLogInformation($"Server Password: '{(string.IsNullOrWhiteSpace(options.Value.ServerPassword) ? "" : options.Value.ServerPassword):@password}'");
-        logger.ZLogInformation($"Admin Password: '{(string.IsNullOrWhiteSpace(options.Value.AdminPassword) ? "" : options.Value.AdminPassword):@password}'");
-        logger.ZLogInformation($"Autobackup: {(options.Value.MaxBackups < 1 ? "DISABLED" : $"ENABLED (Max: {options.Value.MaxBackups})")}");
+        logger.ZLogInformation($"Server is listening on port {o.ServerPort} UDP");
+        logger.ZLogInformation($"Using {o.SerializerMode} as save file serializer");
+        logger.ZLogInformation($"Server Password: '{(string.IsNullOrWhiteSpace(o.ServerPassword) ? "" : o.ServerPassword):@password}'");
+        logger.ZLogInformation($"Admin Password: '{(string.IsNullOrWhiteSpace(o.AdminPassword) ? "" : o.AdminPassword):@password}'");
+        logger.ZLogInformation($"Autobackup: {(o.MaxBackups < 1 ? "DISABLED" : $"ENABLED (Max: {o.MaxBackups})")}");
         logger.ZLogInformation($"Loaded save:");
         await LogServerSummary();
         await LogIps();
 
         async Task LogIps()
         {
-            // Note: Do not use capture scope here because no redaction happens in captured logs.
-            /* TODO: Find a way to group logs and output in one go so that unrelated logs aren't in-between.
-             * Need to implement this by buffering ZLoggerEntry in a queue and writing once signaled (e.g. log scope gets disposed)
-             */
+            using (logger.BeginAtomicScope())
             using (logger.BeginPlainScope())
             {
                 logger.ZLogInformation($"Use IP to connect:");

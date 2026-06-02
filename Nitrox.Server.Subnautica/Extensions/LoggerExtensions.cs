@@ -2,6 +2,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Logging;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 
@@ -106,10 +107,17 @@ internal static partial class LoggerExtensions
 
         public IDisposable? BeginPrefixScope(string prefix) => logger.BeginScope(new PrefixScope(prefix));
 
-        /// <inheritdoc cref="CaptureScope" />
-        public CaptureScope BeginCaptureScope()
+        /// <inheritdoc cref="AtomicScope" />
+        public DisposeWrapper BeginAtomicScope()
         {
-            CaptureScope scope = new();
+            AtomicScope scope = new();
+            return new DisposeWrapper(scope, logger.BeginScope(scope));
+        }
+
+        /// <inheritdoc cref="CaptureScope" />
+        public CaptureScope BeginCaptureScope(bool logCapturedLogsOnDispose = false)
+        {
+            CaptureScope scope = new(logCapturedLogsOnDispose ? logger : null);
             IDisposable disposable = logger.BeginScope(scope);
             scope.InnerDisposable = disposable;
             return scope;
