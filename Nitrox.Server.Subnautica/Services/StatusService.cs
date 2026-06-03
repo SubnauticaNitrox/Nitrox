@@ -5,7 +5,6 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
-using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
@@ -53,35 +52,7 @@ internal sealed class StatusService(
         logger.ZLogInformation($"Autobackup: {(o.MaxBackups < 1 ? "DISABLED" : $"ENABLED (Max: {o.MaxBackups})")}");
         logger.ZLogInformation($"Loaded save:");
         await LogServerSummary();
-        await LogIps();
-
-        async Task LogIps()
-        {
-            using (logger.BeginAtomicScope())
-            using (logger.BeginPlainScope())
-            {
-                logger.ZLogInformation($"Use IP to connect:");
-                using (logger.BeginPrefixScope("\t"))
-                {
-                    logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
-                    foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
-                    {
-                        switch (origin)
-                        {
-                            case NetHelper.MachineIpOrigin.LAN:
-                                logger.LogLanIp(address);
-                                break;
-                            case NetHelper.MachineIpOrigin.VPN:
-                                logger.LogVpnIp(networkName!, address);
-                                break;
-                            case NetHelper.MachineIpOrigin.WAN:
-                                logger.LogWanIp(address);
-                                break;
-                        }
-                    }
-                }
-            }
-        }
+        await LogIpsAsync();
     }
 
     public Task StoppingAsync(CancellationToken cancellationToken)
@@ -93,6 +64,34 @@ internal sealed class StatusService(
     }
 
     public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public async Task LogIpsAsync()
+    {
+        using (logger.BeginAtomicScope())
+        using (logger.BeginPlainScope())
+        {
+            logger.ZLogInformation($"Use IP to connect:");
+            using (logger.BeginPrefixScope("\t"))
+            {
+                logger.ZLogInformation($"{IPAddress.Loopback} - You (Local)");
+                foreach ((IPAddress address, NetHelper.MachineIpOrigin origin, string? networkName) in await NetHelper.GetAllKnownIpsAsync())
+                {
+                    switch (origin)
+                    {
+                        case NetHelper.MachineIpOrigin.LAN:
+                            logger.LogLanIp(address);
+                            break;
+                        case NetHelper.MachineIpOrigin.VPN:
+                            logger.LogVpnIp(networkName!, address);
+                            break;
+                        case NetHelper.MachineIpOrigin.WAN:
+                            logger.LogWanIp(address);
+                            break;
+                    }
+                }
+            }
+        }
+    }
 
     /// <summary>
     ///     Logs a user-friendly summary of the entire server state.
