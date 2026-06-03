@@ -144,8 +144,8 @@ internal static partial class ServiceCollectionExtensions
         public IServiceCollection AddCommands() =>
             services.AddHostedSingletonService<CommandService>()
                     .AddHostedSingletonService<ConsoleInputService>()
-                    .AddSingleton<CommandRegistry>()
-                    .AddSingleton<Func<CommandRegistry>>(provider => provider.GetRequiredService<CommandRegistry>)
+                    .AddHostedSingletonService<CommandRegistryService>()
+                    .AddSingleton<Func<CommandRegistryService>>(provider => provider.GetRequiredService<CommandRegistryService>)
                     .AddCommandHandlers()
                     .AddCommandArgConverters()
                     .AddSingleton<IHostLifetime, ConsoleInputService.NoCtrlCCancelLifetime>();

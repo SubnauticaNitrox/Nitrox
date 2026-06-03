@@ -1,4 +1,3 @@
-using System.Threading.Channels;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using ZLogger.Providers;
 
@@ -42,9 +41,9 @@ internal sealed class ZLoggerAtomicConsoleLoggerProvider : ILoggerProvider, ISup
         await processor.DisposeAsync().ConfigureAwait(false);
     }
 
-    public void SetScopeProvider(IExternalScopeProvider scopeProvider)
+    public void SetScopeProvider(IExternalScopeProvider provider)
     {
-        this.scopeProvider = scopeProvider;
+        scopeProvider = provider;
     }
 
     private sealed class DualAsyncLogProcessor(AtomicAsyncLogProcessor processor1, AtomicAsyncLogProcessor processor2, Func<LogLevel, bool> levelFilter) : IAsyncLogProcessor

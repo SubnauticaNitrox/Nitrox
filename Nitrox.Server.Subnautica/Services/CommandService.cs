@@ -12,13 +12,13 @@ namespace Nitrox.Server.Subnautica.Services;
 /// <summary>
 ///     Enables processing of commands from a string.
 /// </summary>
-internal sealed partial class CommandService(CommandRegistry registry, ILogger<CommandService> logger, ILoggerFactory loggerFactory) : IHostedLifecycleService, ICommandSubmit
+internal sealed partial class CommandService(CommandRegistryService registry, ILogger<CommandService> logger, ILoggerFactory loggerFactory) : IHostedLifecycleService, ICommandSubmit
 {
     private const int MAX_ARGS = 8;
     private readonly ILogger<CommandService> logger = logger;
     private readonly ILoggerFactory loggerFactory = loggerFactory;
 
-    private readonly CommandRegistry registry = registry;
+    private readonly CommandRegistryService registry = registry;
     private readonly Channel<Task> runningCommands = Channel.CreateUnbounded<Task>();
     private Task commandWaiterTask;
 
@@ -213,7 +213,7 @@ internal sealed partial class CommandService(CommandRegistry registry, ILogger<C
         runningCommands.Writer.TryWrite(tryRunHandlerTask);
         return tryRunHandlerTask;
 
-        static async Task<ConvertResult[][]> TryConvertStringParamsToObjectParams(CommandRegistry registry, List<string> args, Type[] parameterTypes)
+        static async Task<ConvertResult[][]> TryConvertStringParamsToObjectParams(CommandRegistryService registry, List<string> args, Type[] parameterTypes)
         {
             List<ConvertResult[]> result = null;
             for (int i = 0; i < parameterTypes.Length; i++)
