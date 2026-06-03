@@ -42,5 +42,15 @@ internal interface ILoggerMiddleware
         public int Cursor { get; set; }
 
         public required ILoggerMiddleware[] Middleware { get; set; }
+
+        public void ReplaceMiddleware(ILoggerMiddleware middleware)
+        {
+            int index = Cursor - 1;
+            if (index < 0)
+            {
+                return;
+            }
+            Middleware[index] = middleware;
+        }
     }
 }

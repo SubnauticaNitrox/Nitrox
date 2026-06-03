@@ -6,6 +6,7 @@ namespace Nitrox.Server.Subnautica.Models.Configuration;
 
 internal sealed class NitroxFormatterOptions : ConsoleFormatterOptions
 {
+    public required IServiceProvider ServiceProvider { get; init; }
     public LoggerColorBehavior ColorBehavior { get; set; } = LoggerColorBehavior.Disabled;
 
     /// <summary>
@@ -25,6 +26,8 @@ internal sealed class NitroxFormatterOptions : ConsoleFormatterOptions
     public bool IsPlain { get; set; }
 
     public IRedactor[] Redactors { get; set; } = [];
+
+    public Func<IServiceProvider, string>? HeaderFactory { get; set; }
 
     /// <summary>
     ///     Gets or sets the property types that are required for this log formatter to function.

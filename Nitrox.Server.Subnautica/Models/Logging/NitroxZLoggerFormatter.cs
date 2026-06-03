@@ -22,6 +22,10 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
 
     private static IEnumerable<ILoggerMiddleware> GetMiddleware(NitroxFormatterOptions options)
     {
+        if (options.HeaderFactory is { } headerFactory)
+        {
+            yield return new WriteHeaderLoggerMiddleware(options.ServiceProvider) { TextFactory = headerFactory };
+        }
         if (options.IsOmittedOnCapture)
         {
             yield return new BreakLoggerMiddleware { BreakCondition = static (ref context) => context.Entry.TryGetProperty(out CaptureScope _) };

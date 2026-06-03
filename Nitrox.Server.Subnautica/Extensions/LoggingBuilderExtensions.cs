@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Console;
+using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Logging.ZLogger;
@@ -24,17 +25,17 @@ internal static class LoggingBuilderExtensions
                    .AddNitroxAtomicZLoggerConsole(static (options, provider) =>
                    {
                        options.IncludeScopes = true;
-                       options.UseNitroxFormatter(o =>
+                       options.UseNitroxFormatter(provider, o =>
                        {
                            o.IsOmittedOnCapture = true;
                            bool isEmbedded = provider.GetRequiredService<IOptions<ServerStartOptions>>().Value.IsEmbedded;
                            o.ColorBehavior = isEmbedded ? LoggerColorBehavior.Disabled : LoggerColorBehavior.Enabled;
                        });
                    })
-                   .AddNitroxZLoggerPlain(options =>
+                   .AddNitroxZLoggerPlain(static (options, provider) =>
                    {
                        options.IncludeScopes = true;
-                       options.UseNitroxFormatter(o =>
+                       options.UseNitroxFormatter(provider, o =>
                        {
                            o.IsOmittedOnCapture = true;
                            o.IsPlain = true;
@@ -43,7 +44,7 @@ internal static class LoggingBuilderExtensions
                    .AddNitroxZLoggerPlain(static (options, provider) =>
                    {
                        options.IncludeScopes = true;
-                       options.UseNitroxFormatter(o =>
+                       options.UseNitroxFormatter(provider, o =>
                        {
                            o.RequiredPropertyTypes = [typeof(CaptureScope)];
                            o.Redactors = provider.GetRequiredService<IEnumerable<IRedactor>>()?.ToArray() ?? [];
@@ -66,8 +67,23 @@ internal static class LoggingBuilderExtensions
                        };
                        options.RollingInterval = RollingInterval.Day;
                        options.IncludeScopes = true;
-                       options.UseNitroxFormatter(o =>
+                       options.UseNitroxFormatter(provider, o =>
                        {
+                           o.HeaderFactory = provider =>
+                           {
+                               const int LEFT_AND_RIGHT_PADDING = 4;
+                               const int PADDING_SPACING = 1;
+                               const char PADDING_CHAR = '=';
+                               string headerLine = $"{NitroxEnvironment.AppName} {NitroxEnvironment.Version} {NitroxEnvironment.GitHash}";
+                               headerLine = $"{new string(' ', PADDING_SPACING)}{headerLine}";
+                               return $"""
+
+
+                                       {new string(PADDING_CHAR, headerLine.Length + PADDING_SPACING + LEFT_AND_RIGHT_PADDING * 2)}
+                                       {headerLine.PadLeft(headerLine.Length + LEFT_AND_RIGHT_PADDING, PADDING_CHAR)}{new string(' ', PADDING_SPACING)}{new string(PADDING_CHAR, LEFT_AND_RIGHT_PADDING)}
+                                       {new string(PADDING_CHAR, headerLine.Length + PADDING_SPACING + LEFT_AND_RIGHT_PADDING * 2)}
+                                       """;
+                           };
                            o.IsOmittedOnCapture = true;
                            o.Redactors = provider.GetRequiredService<IEnumerable<IRedactor>>()?.ToArray() ?? [];
                        });
