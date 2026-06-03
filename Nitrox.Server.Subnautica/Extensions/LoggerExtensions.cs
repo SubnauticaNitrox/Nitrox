@@ -108,10 +108,11 @@ internal static partial class LoggerExtensions
         public IDisposable? BeginPrefixScope(string prefix) => logger.BeginScope(new PrefixScope(prefix));
 
         /// <inheritdoc cref="AtomicScope" />
-        public DisposeWrapper BeginAtomicScope()
+        public AtomicScope BeginAtomicScope()
         {
             AtomicScope scope = new();
-            return new DisposeWrapper(scope, logger.BeginScope(scope));
+            scope.InnerDisposable = logger.BeginScope(scope);
+            return scope;
         }
 
         /// <inheritdoc cref="CaptureScope" />

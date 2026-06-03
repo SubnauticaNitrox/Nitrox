@@ -5,11 +5,12 @@ namespace Nitrox.Server.Subnautica.Models.Logging.Scopes;
 /// <summary>
 ///     Groups logs for atomic writing. This avoids other unrelated logs being inserted.
 /// </summary>
-internal sealed record AtomicScope : IDisposable
+internal sealed record AtomicScope : IAsyncDisposable
 {
     private readonly List<QueuedEntry> entries = [];
+    public IDisposable? InnerDisposable { get; set; }
 
-    public Lock Locker
+    public SemaphoreSlim Locker
     {
         get => Interlocked.CompareExchange(ref field, null, null);
         set => Interlocked.CompareExchange(ref field, value, null);
@@ -21,16 +22,23 @@ internal sealed record AtomicScope : IDisposable
         return true;
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        lock (Locker)
+        try
         {
-            Task.Delay(100).Wait();
+            while (!await Locker.WaitAsync(TimeSpan.FromMicroseconds(100)))
+            {
+            }
             foreach (QueuedEntry queuedEntry in entries)
             {
                 queuedEntry.Post();
             }
         }
+        finally
+        {
+            Locker.Release();
+        }
+        InnerDisposable?.Dispose();
         entries.Clear();
     }
 

@@ -67,7 +67,7 @@ internal sealed class StatusService(
 
     public async Task LogIpsAsync()
     {
-        using (logger.BeginAtomicScope())
+        await using (logger.BeginAtomicScope())
         using (logger.BeginPlainScope())
         {
             logger.ZLogInformation($"Use IP to connect:");

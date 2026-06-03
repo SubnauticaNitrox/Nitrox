@@ -37,8 +37,8 @@ internal interface ILoggerMiddleware
         {
         }
 
-        public IBufferWriter<byte> Writer { get; init; } = null!;
-        public IZLoggerEntry Entry { get; init; } = null!;
+        public required IBufferWriter<byte> Writer { get; init; }
+        public required IZLoggerEntry Entry { get; init; }
         public int Cursor { get; set; }
 
         public required ILoggerMiddleware[] Middleware { get; set; }

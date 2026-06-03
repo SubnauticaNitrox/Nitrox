@@ -66,7 +66,7 @@ internal sealed class ZLoggerAtomicConsoleLoggerProvider : ILoggerProvider, ISup
 
     private sealed record AtomicAsyncLogProcessor(AsyncStreamLineMessageWriter Processor) : IAsyncLogProcessor
     {
-        private readonly Lock postLocker = new();
+        private readonly SemaphoreSlim postLocker = new(1, 1);
 
         public async ValueTask DisposeAsync()
         {
@@ -81,9 +81,16 @@ internal sealed class ZLoggerAtomicConsoleLoggerProvider : ILoggerProvider, ISup
                 scope.AddLogEntry(log, Processor);
                 return;
             }
-            lock (postLocker)
+            try
             {
+                while (!postLocker.Wait(TimeSpan.FromMicroseconds(100)))
+                {
+                }
                 Processor.Post(log);
+            }
+            finally
+            {
+                postLocker.Release();
             }
         }
     }

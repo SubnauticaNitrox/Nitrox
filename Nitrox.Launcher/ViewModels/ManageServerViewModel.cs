@@ -381,7 +381,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void OpenWorldFolder() => OpenDirectory(SaveFolderDirectory);
+    private void OpenWorldFolder() => OpenPath(SaveFolderDirectory);
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()

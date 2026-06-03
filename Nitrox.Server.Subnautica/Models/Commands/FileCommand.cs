@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
@@ -18,31 +18,19 @@ internal sealed class FileCommand(IOptions<ServerStartOptions> options, ILogger<
     {
         try
         {
-            try
+            string? lastWriteLogFilePath = Directory.EnumerateFiles(NitroxDirectory.LogsPath, $"*_{options.Value.SaveName}_*").OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(lastWriteLogFilePath))
             {
-                string? lastWriteLogFilePath = Directory.EnumerateFiles(NitroxDirectory.LogsPath, $"*_{options.Value.SaveName}_*").OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault();
-                if (string.IsNullOrWhiteSpace(lastWriteLogFilePath))
-                {
-                    logger.ZLogInformation($"Log file is unavailable");
-                    return Task.CompletedTask;
-                }
-                using Process proc = Process.Start(new ProcessStartInfo
-                {
-                    FileName = lastWriteLogFilePath,
-                    UseShellExecute = true,
-                    Verb = "open"
-                });
-                logger.ZLogInformation($"Opening log file at: {lastWriteLogFilePath:@Path}");
+                logger.ZLogInformation($"Log file is unavailable");
+                return Task.CompletedTask;
             }
-            catch (Exception ex)
-            {
-                logger.ZLogError(ex, $"Failed to open latest log file");
-            }
-            return Task.CompletedTask;
+            ProcessEx.OpenPath(lastWriteLogFilePath);
+            logger.ZLogInformation($"Opening log file at: {lastWriteLogFilePath:@Path}");
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            return Task.FromException(exception);
+            logger.ZLogError(ex, $"Failed to open latest log file");
         }
+        return Task.CompletedTask;
     }
 }

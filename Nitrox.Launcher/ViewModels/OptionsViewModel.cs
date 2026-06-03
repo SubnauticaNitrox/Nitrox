@@ -166,7 +166,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         try
         {
-            if (!OpenDirectory(dir))
+            if (!OpenPath(dir))
             {
                 LauncherNotifier.Error("Can't open. Directory does not exist.");
             }

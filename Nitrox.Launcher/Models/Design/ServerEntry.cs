@@ -337,7 +337,7 @@ internal sealed partial class ServerEntry : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSaveFolder))]
     public void OpenSaveFolder()
     {
-        OpenDirectory(Path.Combine(KeyValueStore.Instance.GetSavesPath(), Name));
+        OpenPath(Path.Combine(KeyValueStore.Instance.GetSavesPath(), Name));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
