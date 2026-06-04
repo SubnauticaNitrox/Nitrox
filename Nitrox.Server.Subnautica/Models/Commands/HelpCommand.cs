@@ -10,20 +10,20 @@ namespace Nitrox.Server.Subnautica.Models.Commands;
 ///     Shows helpful information about available commands.
 /// </summary>
 [Alias("?")]
-internal sealed class HelpCommand(Func<CommandRegistry> registryProvider) : ICommandHandler, ICommandHandler<string>
+internal sealed class HelpCommand(Func<CommandRegistryService> registryProvider) : ICommandHandler, ICommandHandler<string>
 {
     /// <summary>
     ///     <see cref="Func{TResult}" /> is used to lazily retrieve the registry as otherwise it would cause cyclic-dependency
     ///     error if immediately requested by the <see cref="HelpCommand" /> constructor.
     /// </summary>
-    private readonly Func<CommandRegistry> registryProvider = registryProvider;
+    private readonly Func<CommandRegistryService> registryProvider = registryProvider;
 
     [Description("Shows this help page")]
     public async Task Execute(ICommandContext context)
     {
         StringBuilder sb = new();
         sb.AppendLine("~~~ COMMAND HELP PAGE ~~~");
-        CommandRegistry registry = registryProvider();
+        CommandRegistryService registry = registryProvider();
         foreach (CommandHandlerEntry handler in registry
                                                 .Handlers
                                                 .OrderBy(h => h.Owner is HelpCommand ? 0 : 1)

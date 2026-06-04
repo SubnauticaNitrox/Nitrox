@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
@@ -24,12 +24,7 @@ internal sealed class DirectoryCommand(IOptions<ServerStartOptions> optionsProvi
         }
 
         logger.ZLogInformation($"Opening directory {path:@Path}");
-        using Process proc = Process.Start(new ProcessStartInfo
-        {
-            FileName = path,
-            UseShellExecute = true,
-            Verb = "open"
-        });
+        ProcessEx.OpenPath(path);
         return Task.CompletedTask;
     }
 

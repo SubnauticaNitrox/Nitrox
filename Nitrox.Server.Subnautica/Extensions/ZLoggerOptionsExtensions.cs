@@ -5,12 +5,13 @@ namespace Nitrox.Server.Subnautica.Extensions;
 
 internal static class ZLoggerOptionsExtensions
 {
-    public static T UseNitroxFormatter<T>(this T options, Action<NitroxFormatterOptions>? configure = null) where T : ZLoggerOptions
+    public static T UseNitroxFormatter<T>(this T options, IServiceProvider provider, Action<NitroxFormatterOptions>? configure = null) where T : ZLoggerOptions
     {
         options.UseFormatter(() =>
         {
             NitroxFormatterOptions formatterOptions = new()
             {
+                ServiceProvider = provider,
                 IncludeScopes = options.IncludeScopes
             };
             configure?.Invoke(formatterOptions);

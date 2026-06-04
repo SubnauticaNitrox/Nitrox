@@ -172,23 +172,30 @@ public class ProcessEx : IDisposable
     }
 
     /// <summary>
-    ///     Opens a directory in the default OS directory viewer.
+    ///     Opens a path to a file or directory using the default OS action.
     /// </summary>
-    /// <param name="directory">Directory to open</param>
-    /// <returns>True if directory opened successfully, false if directory does not exist.</returns>
-    public static bool OpenDirectory(string? directory)
+    /// <param name="path">Path to a file or directory to open.</param>
+    /// <returns>True if path opened successfully, false if path does not exist or is empty.</returns>
+    public static bool OpenPath(string? path)
     {
-        if (!Directory.Exists(directory))
+        if (string.IsNullOrWhiteSpace(path))
         {
             return false;
         }
-        using Process? proc = Process.Start(new ProcessStartInfo
+        try
         {
-            FileName = directory,
-            Verb = "open",
-            UseShellExecute = true
-        });
-        return true;
+            using Process? proc = Process.Start(new ProcessStartInfo
+            {
+                FileName = path,
+                Verb = "open",
+                UseShellExecute = true
+            });
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public static ProcessEx? GetFirstProcess(string procName, Func<ProcessEx, bool>? predicate = null)

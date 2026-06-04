@@ -29,7 +29,7 @@ static class ConsoleUnhandledErrorHandler
 
         if (key.Key == ConsoleKey.L)
         {
-            ProcessEx.OpenDirectory(Log.LogDirectory);
+            ProcessEx.OpenPath(Log.LogDirectory);
         }
 
         Environment.Exit(1);
