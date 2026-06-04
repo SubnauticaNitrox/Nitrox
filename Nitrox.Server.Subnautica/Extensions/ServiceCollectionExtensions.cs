@@ -147,8 +147,7 @@ internal static partial class ServiceCollectionExtensions
                     .AddHostedSingletonService<CommandRegistryService>()
                     .AddSingleton<Func<CommandRegistryService>>(provider => provider.GetRequiredService<CommandRegistryService>)
                     .AddCommandHandlers()
-                    .AddCommandArgConverters()
-                    .AddSingleton<IHostLifetime, ConsoleInputService.NoCtrlCCancelLifetime>();
+                    .AddCommandArgConverters();
 
         /// <summary>
         ///     Adds all the services and managers necessary to simulate a Subnautica world.

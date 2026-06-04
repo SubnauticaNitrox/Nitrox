@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Text;
 using Nitrox.Model.DataStructures;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
@@ -224,40 +223,6 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
                 Console.CursorVisible = true;
             }
             Console.CursorLeft = lastPosition;
-        }
-    }
-
-    /// <summary>
-    ///     Provides a <see cref="IHostLifetime" /> implementation that prevents Ctrl+C from cancelling the
-    ///     application.
-    /// </summary>
-    internal class NoCtrlCCancelLifetime : IHostLifetime, IDisposable
-    {
-        private PosixSignalRegistration? sigIntRegistration;
-        private PosixSignalRegistration? sigQuitRegistration;
-        private PosixSignalRegistration? sigTermRegistration;
-
-        public Task WaitForStartAsync(CancellationToken cancellationToken)
-        {
-            RegisterShutdownHandlers();
-            return Task.CompletedTask;
-
-            void RegisterShutdownHandlers()
-            {
-                Action<PosixSignalContext> handler = static context => context.Cancel = true;
-                sigIntRegistration = PosixSignalRegistration.Create(PosixSignal.SIGINT, handler);
-                sigQuitRegistration = PosixSignalRegistration.Create(PosixSignal.SIGQUIT, handler);
-                sigTermRegistration = PosixSignalRegistration.Create(PosixSignal.SIGTERM, handler);
-            }
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-        public void Dispose()
-        {
-            sigIntRegistration?.Dispose();
-            sigQuitRegistration?.Dispose();
-            sigTermRegistration?.Dispose();
         }
     }
 }
