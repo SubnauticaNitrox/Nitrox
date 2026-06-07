@@ -424,6 +424,7 @@ public class RemotePlayer : INitroxPlayer
             Collider.center = Vector3.zero;
             Collider.height = refCollider.height;
             Collider.radius = refCollider.radius;
+            Collider.height = refCollider.height;
             Collider.direction = refCollider.direction;
             Collider.contactOffset = refCollider.contactOffset;
             Collider.isTrigger = true;
