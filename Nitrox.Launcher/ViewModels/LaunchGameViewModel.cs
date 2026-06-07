@@ -104,14 +104,28 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         Log.Info("Launching Subnautica in multiplayer mode");
         try
         {
+            if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
+            {
+                ChangeView(optionsViewModel);
+                LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
+                return;
+            }
+            if (GameInstallationHelper.IsNativeMacOSGameLayout(NitroxUser.GamePath, GameInfo.Subnautica))
+            {
+                const string message = "Native macOS Subnautica client injection is not supported yet. The launcher can detect your Steam install, but Nitrox multiplayer currently needs a Windows Subnautica install through Wine or a future native client/runtime port.";
+                Log.Warn(message);
+                LauncherNotifier.Error(message);
+                await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                {
+                    model.Title = "Native macOS multiplayer is not supported";
+                    model.Description = message;
+                    model.ButtonOptions = ButtonOptions.Ok;
+                });
+                return;
+            }
+
             bool setupResult = await Task.Run(async () =>
             {
-                if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
-                {
-                    ChangeView(optionsViewModel);
-                    LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
-                    return false;
-                }
                 if (PirateDetection.HasTriggered)
                 {
                     LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
@@ -123,11 +137,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 }
                 if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
                 {
-                    return false;
-                }
-                if (GameInstallationHelper.IsNativeMacOSGameLayout(NitroxUser.GamePath, GameInfo.Subnautica))
-                {
-                    LauncherNotifier.Error("Native macOS Subnautica client injection is not supported yet. The launcher can detect and start the native game in singleplayer, or use a Windows install through Wine experimentally.");
                     return false;
                 }
 
