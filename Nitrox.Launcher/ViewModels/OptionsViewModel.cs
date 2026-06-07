@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -83,6 +84,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     private void SetTargetedSubnauticaPath(string path)
     {
+        path = GameInstallationHelper.NormalizeGamePath(path, GameInfo.Subnautica);
         if (!Directory.Exists(path))
         {
             return;
@@ -101,7 +103,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
         // Save game path as preferred for future sessions.
         NitroxUser.PreferredGamePath = path;
-        NitroxUser.SetGamePathAndPlatform(path, null);
+        bool inferPlatform = !RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || !GameInstallationHelper.IsWindowsGameLayout(path, GameInfo.Subnautica);
+        NitroxUser.SetGamePathAndPlatform(path, null, inferPlatform);
     }
 
     [RelayCommand]
@@ -113,12 +116,13 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             return;
         }
 
-        if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
+        if (!GameInstallationHelper.HasValidGameFolder(selectedDirectory, GameInfo.Subnautica))
         {
-            LauncherNotifier.Error("Invalid subnautica directory");
+            LauncherNotifier.Error("Invalid Subnautica directory. Select Subnautica.app, its Contents folder, or a Windows install root for Wine.");
             return;
         }
 
+        selectedDirectory = GameInstallationHelper.NormalizeGamePath(selectedDirectory, GameInfo.Subnautica);
         if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
             await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));

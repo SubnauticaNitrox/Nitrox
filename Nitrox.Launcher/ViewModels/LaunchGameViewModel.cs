@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,6 +17,7 @@ using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Platforms.Store;
@@ -82,7 +82,10 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 return;
             }
 
-            NitroxEntryPatch.Remove(NitroxUser.GamePath);
+            if (!GameInstallationHelper.IsNativeMacOSGameLayout(NitroxUser.GamePath, GameInfo.Subnautica))
+            {
+                NitroxEntryPatch.Remove(NitroxUser.GamePath);
+            }
             await StartSubnauticaAsync();
         }
         catch (Exception ex)
@@ -122,6 +125,11 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 {
                     return false;
                 }
+                if (GameInstallationHelper.IsNativeMacOSGameLayout(NitroxUser.GamePath, GameInfo.Subnautica))
+                {
+                    LauncherNotifier.Error("Native macOS Subnautica client injection is not supported yet. The launcher can detect and start the native game in singleplayer, or use a Windows install through Wine experimentally.");
+                    return false;
+                }
 
                 // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
                 try
@@ -137,7 +145,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
                     File.Copy(
                         patcherDllPath,
-                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
+                        Path.Combine(GetGameLayout().ManagedPath, PATCHER_DLL_NAME),
                         true
                     );
                 }
@@ -223,9 +231,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     {
         LauncherNotifier.Info("Starting game");
 
-        string gameExePathSuffix = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "MacOS" : string.Empty;
-        string gameExePath = Path.Combine(NitroxUser.GamePath, gameExePathSuffix, gameInfo.ExeName);
-        if (!File.Exists(gameExePath))
+        if (!GameInstallationHelper.TryGetGameExecutablePath(NitroxUser.GamePath, gameInfo, out string gameExePath))
         {
             throw new FileNotFoundException($"Unable to find {gameInfo.ExeName}");
         }
@@ -281,5 +287,15 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return false; // Default: use Steam unless explicitly disabled for special cases
+    }
+
+    private static GameInstallationLayout GetGameLayout()
+    {
+        if (GameInstallationHelper.TryGetGameInstallation(NitroxUser.GamePath, GameInfo.Subnautica, out GameInstallationLayout layout))
+        {
+            return layout;
+        }
+
+        throw new DirectoryNotFoundException("Subnautica installation path is invalid");
     }
 }

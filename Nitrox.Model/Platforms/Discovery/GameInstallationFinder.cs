@@ -19,6 +19,7 @@ public static class GameInstallationFinder
     private static readonly Dictionary<GameLibraries, IGameFinder> finders = new()
     {
         { GameLibraries.STEAM, new SteamFinder() },
+        { GameLibraries.WINE, new WineFinder() },
         { GameLibraries.EPIC, new EpicGamesFinder() },
         { GameLibraries.HEROIC, new HeroicGamesFinder() },
         { GameLibraries.MICROSOFT, new MicrosoftFinder() },
@@ -49,13 +50,21 @@ public static class GameInstallationFinder
                 }
             };
         }
+        if (!string.IsNullOrWhiteSpace(NitroxUser.GamePath) && GameInstallationHelper.HasValidGameFolder(NitroxUser.GamePath, gameInfo))
+        {
+            return GameFinderResult.Ok(NitroxUser.GamePath);
+        }
 
         List<GameFinderResult> finderResults = FindGame(gameInfo, gameLibraries).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
         GameFinderResult? potentiallyValidResult = finderResults.LastOrDefault();
         if (potentiallyValidResult is { IsOk: true })
         {
             Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
-            NitroxUser.SetGamePathAndPlatform(potentiallyValidResult.Path, GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin) ?? GamePlatforms.GetPlatformByGameDir(potentiallyValidResult.Path));
+            NitroxUser.SetGamePathAndPlatform(
+                potentiallyValidResult.Path,
+                GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin),
+                potentiallyValidResult.Origin != GameLibraries.WINE
+            );
             return potentiallyValidResult;
         }
 
