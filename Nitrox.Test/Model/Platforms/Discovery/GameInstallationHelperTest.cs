@@ -113,6 +113,30 @@ public class GameInstallationHelperTest
         }
     }
 
+    [OSTestMethod(OperatingSystems.OSX)]
+    public void WineFinder_ShouldFindSteamSubnauticaInsideWinePrefix()
+    {
+        string tempDir = CreateTempDir();
+        try
+        {
+            string prefix = Path.Combine(tempDir, ".wine");
+            string steamApps = Path.Combine(prefix, "drive_c", "Program Files (x86)", "Steam", "steamapps");
+            string gameRoot = Path.Combine(steamApps, "common", "Subnautica");
+            Directory.CreateDirectory(steamApps);
+            File.WriteAllText(Path.Combine(steamApps, $"appmanifest_{GameInfo.Subnautica.SteamAppId}.acf"), "");
+            CreateWindowsSubnautica(gameRoot);
+
+            Nitrox.Model.Platforms.Discovery.InstallationFinders.Core.GameFinderResult result = WineFinder.FindGameInPrefixes(GameInfo.Subnautica, [prefix]);
+
+            result.IsOk.Should().BeTrue();
+            result.Path.Should().Be(gameRoot);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
     private static string CreateTempDir()
     {
         string tempDir = Path.Combine(Path.GetTempPath(), $"NitroxTest_{Guid.NewGuid():N}");

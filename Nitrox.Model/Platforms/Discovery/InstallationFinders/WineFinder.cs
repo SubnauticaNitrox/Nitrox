@@ -20,7 +20,12 @@ public sealed class WineFinder : IGameFinder
             return Error("Wine prefix detection is only supported on macOS");
         }
 
-        foreach (string prefixPath in GetCandidatePrefixes())
+        return FindGameInPrefixes(gameInfo, GetCandidatePrefixes());
+    }
+
+    internal static GameFinderResult FindGameInPrefixes(GameInfo gameInfo, IEnumerable<string> prefixes)
+    {
+        foreach (string prefixPath in prefixes)
         {
             foreach (string steamPath in GetSteamPaths(prefixPath))
             {

@@ -8,7 +8,7 @@ This document tracks the current macOS state of the Nitrox launcher. It is not a
 - .NET 10 SDK.
 - Git.
 - Steam for native macOS Subnautica detection.
-- Optional: Wine or a Wine-compatible wrapper when using a Windows Subnautica install.
+- Optional for multiplayer on macOS: Wine or a Wine-compatible wrapper when using a Windows Subnautica install. The launcher looks for `wine64` or `wine` on `PATH`; `NITROX_WINE_EXE=/path/to/wine` can be used to override that.
 
 ## Build and run
 
@@ -50,19 +50,20 @@ Use `-r osx-x64` for Intel Macs. The bundle output is under `Nitrox.Launcher/bin
   - `Subnautica.app/Contents`
   - the Steam common `Subnautica` folder that contains `Subnautica.app`
   - a Windows install root containing `Subnautica.exe` and `Subnautica_Data/Managed`
-- Windows Subnautica installs inside common macOS Wine-style prefixes are searched when possible:
+- Windows Subnautica installs inside common macOS Wine-style prefixes are searched when possible and are saved as the Wine platform:
   - `~/.wine`
   - `~/.local/share/wineprefixes/*`
   - `~/Games/*` entries with `drive_c`
   - `~/Library/Application Support/CrossOver/Bottles/*`
-- Standalone Windows executable launch on macOS uses `wine64` or `wine` from `PATH` and infers `WINEPREFIX` from paths containing `drive_c`.
+- Wine launches use `wine64` or `wine` from `PATH`, infer `WINEPREFIX` from paths containing `drive_c`, and pass `NITROX_LAUNCHER_PATH` into the Wine process.
+- If a native macOS `Subnautica.app` is selected, the launcher keeps multiplayer blocked with a clear message. Use a Windows Steam/Subnautica install inside Wine for multiplayer testing.
 
 ## What does not work yet
 
 ### Launcher blockers
 
 - The launcher still needs real-device UI verification on macOS with an installed .NET 10 SDK.
-- The Wine path support is intentionally minimal. It does not manage Wine installation, bottle creation, or wrapper-specific launchers.
+- The Wine path support does not manage Wine installation, bottle creation, or wrapper-specific launchers.
 - Native Steam launch has not been verified end to end on macOS hardware in this change.
 
 ### Native macOS client/runtime blockers
@@ -73,24 +74,29 @@ Use `-r osx-x64` for Intel Macs. The bundle output is under `Nitrox.Launcher/bin
 
 ### Wine-wrapper blockers
 
-- Wine launch requires a working `wine64` or `wine` executable on `PATH`.
+- Wine launch requires a working `wine64` or `wine` executable on `PATH`, or `NITROX_WINE_EXE` pointing at a Wine executable.
 - Steam overlay and Steam client integration inside Wine are not handled by the launcher yet.
 - CrossOver-style paths are detected as prefixes, but CrossOver itself is not invoked or required by this project.
+- The Windows Steam/Subnautica install inside Wine must already be legitimate and functional before Nitrox can patch and launch it.
 
 ## Tests
 
-Focused path and detection tests live in `Nitrox.Test/Model/Platforms/Discovery/GameInstallationHelperTest.cs`.
+Focused path, detection, and Wine launch-command tests live in:
+
+- `Nitrox.Test/Model/Platforms/Discovery/GameInstallationHelperTest.cs`
+- `Nitrox.Test/Model/Platforms/Store/WineTest.cs`
 
 Run the relevant tests with:
 
 ```bash
-dotnet test Nitrox.Test/Nitrox.Test.csproj --filter GameInstallationHelperTest
+dotnet test Nitrox.Test/Nitrox.Test.csproj --filter "GameInstallationHelperTest|WineTest"
 ```
 
 ## Suggested next tasks
 
 1. Verify the launcher UI on a macOS machine with .NET 10 SDK installed and enough disk space for restore/build.
 2. Test native Steam detection with an actual `Subnautica.app` install.
-3. Test Wine launch against a clean Wine prefix containing Steam and Windows Subnautica.
-4. Decide whether Wine/Steam should get a first-class platform adapter instead of the current standalone Wine launch path.
-5. Split native macOS client/runtime investigation into a separate project or issue; keep it outside launcher support work.
+3. Install Wine on macOS and test launch against a clean Wine prefix containing Steam and Windows Subnautica.
+4. Verify patching and local server join from the Wine-launched Windows game.
+5. Decide whether the launcher should automate Wine prefix creation or keep setup manual.
+6. Split native macOS client/runtime investigation into a separate project or issue; keep it outside launcher support work.

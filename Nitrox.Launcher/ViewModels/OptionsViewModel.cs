@@ -18,6 +18,7 @@ using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.Store;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -103,8 +104,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
         // Save game path as preferred for future sessions.
         NitroxUser.PreferredGamePath = path;
-        bool inferPlatform = !RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || !GameInstallationHelper.IsWindowsGameLayout(path, GameInfo.Subnautica);
-        NitroxUser.SetGamePathAndPlatform(path, null, inferPlatform);
+        bool isWineLayout = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && GameInstallationHelper.IsWindowsGameLayout(path, GameInfo.Subnautica);
+        NitroxUser.SetGamePathAndPlatform(path, isWineLayout ? GamePlatforms.GetPlatformByFlag(GameLibraries.WINE) : null, !isWineLayout);
     }
 
     [RelayCommand]
@@ -127,7 +128,18 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         {
             await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LauncherNotifier.Success("Applied changes");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && GameInstallationHelper.IsNativeMacOSGameLayout(selectedDirectory, GameInfo.Subnautica))
+            {
+                LauncherNotifier.Warning("Native macOS Subnautica was selected. Singleplayer can be launched, but multiplayer requires a Windows install through Wine.");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && GameInstallationHelper.IsWindowsGameLayout(selectedDirectory, GameInfo.Subnautica))
+            {
+                LauncherNotifier.Success("Applied Wine Subnautica path");
+            }
+            else
+            {
+                LauncherNotifier.Success("Applied changes");
+            }
         }
     }
 

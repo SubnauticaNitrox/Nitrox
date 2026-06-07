@@ -260,6 +260,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
             MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),
             Discord => await Discord.StartGameAsync(gameExePath, launchArguments),
+            Wine => await Wine.StartGameAsync(gameExePath, launchArguments),
             _ => await Standalone.StartGameAsync(gameExePath, launchArguments),
         };
 

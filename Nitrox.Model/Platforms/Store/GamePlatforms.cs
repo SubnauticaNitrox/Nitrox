@@ -13,7 +13,8 @@ public static class GamePlatforms
         { GameLibraries.EPIC, new EpicGames() },
         { GameLibraries.HEROIC, new HeroicGames() },
         { GameLibraries.MICROSOFT, new MSStore() },
-        { GameLibraries.DISCORD, new Discord() }
+        { GameLibraries.DISCORD, new Discord() },
+        { GameLibraries.WINE, new Wine() }
     };
 
     public static IGamePlatform? GetPlatformByFlag(GameLibraries gameLibraries) => allPlatforms.GetValueOrDefault(gameLibraries);
