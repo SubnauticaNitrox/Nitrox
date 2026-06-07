@@ -96,7 +96,27 @@ public sealed class Wine : IGamePlatform
             return configuredPath;
         }
 
-        return FindExecutableOnPath("wine64") ?? FindExecutableOnPath("wine");
+        return FindExecutableOnPath("wine64") ??
+               FindExecutableOnPath("wine") ??
+               FindExecutableInCommonMacOSLocations();
+    }
+
+    private static string? FindExecutableInCommonMacOSLocations()
+    {
+        string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        string[] candidatePaths =
+        [
+            "/opt/homebrew/bin/wine",
+            "/opt/homebrew/bin/wine64",
+            "/usr/local/bin/wine",
+            "/usr/local/bin/wine64",
+            Path.Combine(homePath, "Applications", "Wine Stable.app", "Contents", "Resources", "wine", "bin", "wine"),
+            Path.Combine(homePath, "Applications", "Wine Stable.app", "Contents", "Resources", "wine", "bin", "wine64"),
+            "/Applications/Wine Stable.app/Contents/Resources/wine/bin/wine",
+            "/Applications/Wine Stable.app/Contents/Resources/wine/bin/wine64"
+        ];
+
+        return candidatePaths.FirstOrDefault(File.Exists);
     }
 
     private static string? FindExecutableOnPath(string executableName)

@@ -8,7 +8,7 @@ This document tracks the current macOS state of the Nitrox launcher. It is not a
 - .NET 10 SDK.
 - Git.
 - Steam for native macOS Subnautica detection.
-- Optional for multiplayer on macOS: Wine or a Wine-compatible wrapper when using a Windows Subnautica install. The launcher looks for `wine64` or `wine` on `PATH`; `NITROX_WINE_EXE=/path/to/wine` can be used to override that.
+- Optional for multiplayer on macOS: Wine or a Wine-compatible wrapper when using a Windows Subnautica install. The launcher looks for `wine64` or `wine` on `PATH`, common Homebrew Wine paths, and Wine Stable app locations; `NITROX_WINE_EXE=/path/to/wine` can be used to override that.
 
 ## Build and run
 
@@ -55,8 +55,12 @@ Use `-r osx-x64` for Intel Macs. The bundle output is under `Nitrox.Launcher/bin
   - `~/.local/share/wineprefixes/*`
   - `~/Games/*` entries with `drive_c`
   - `~/Library/Application Support/CrossOver/Bottles/*`
-- Wine launches use `wine64` or `wine` from `PATH`, infer `WINEPREFIX` from paths containing `drive_c`, and pass `NITROX_LAUNCHER_PATH` into the Wine process.
+- Wine launches use `wine64` or `wine` from `PATH` or common macOS install locations, infer `WINEPREFIX` from paths containing `drive_c`, and pass `NITROX_LAUNCHER_PATH` into the Wine process.
 - If a native macOS `Subnautica.app` is selected, the launcher keeps multiplayer blocked with a clear message. Use a Windows Steam/Subnautica install inside Wine for multiplayer testing.
+- Current Windows Steam builds may need to be started with `-no-cef-sandbox` under Wine before installing Subnautica, for example:
+  ```bash
+  WINEPREFIX="$HOME/Games/NitroxWine" wine "$HOME/Games/NitroxWine/drive_c/Program Files (x86)/Steam/steam.exe" -no-cef-sandbox steam://install/264710
+  ```
 
 ## What does not work yet
 
