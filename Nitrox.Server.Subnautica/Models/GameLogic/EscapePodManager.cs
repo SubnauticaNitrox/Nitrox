@@ -44,7 +44,7 @@ internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry enti
 
     private async Task<EscapePodEntity> CreateNewEscapePodAsync()
     {
-        EscapePodEntity escapePod = new(await GetStartPositionAsync(), new NitroxId(), new EscapePodMetadata(false, false));
+        EscapePodEntity escapePod = new(await GetStartPositionAsync(), new NitroxId(), new EscapePodMetadata(false, false, false, false));
 
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "5c06baec-0539-4f26-817d-78443548cc52", new NitroxTechType("Radio"), 0, null, escapePod.Id));
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "c0175cf7-0b6a-4a1d-938f-dad0dbb6fa06", new NitroxTechType("MedicalCabinet"), 0, null, escapePod.Id));
