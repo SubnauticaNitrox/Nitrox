@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Model.Helper
@@ -42,7 +43,8 @@ namespace Nitrox.Model.Helper
 
         private static bool IsPirateByDirectory(string subnauticaRoot)
         {
-            string subdirDll = Path.Combine(subnauticaRoot, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll");
+            string dataPath = GetGameDataPath(subnauticaRoot);
+            string subdirDll = Path.Combine(dataPath, "Plugins", "x86_64", "steam_api64.dll");
             if (File.Exists(subdirDll) && !FileSystem.Instance.IsTrustedFile(subdirDll))
             {
                 return true;
@@ -55,6 +57,16 @@ namespace Nitrox.Model.Helper
             }
 
             return false;
+        }
+
+        private static string GetGameDataPath(string subnauticaRoot)
+        {
+            if (GameInstallationHelper.TryGetGameInstallation(subnauticaRoot, GameInfo.Subnautica, out GameInstallationLayout layout))
+            {
+                return Path.GetDirectoryName(layout.ManagedPath) ?? Path.Combine(layout.RootPath, GameInfo.Subnautica.DataFolder);
+            }
+
+            return Path.Combine(subnauticaRoot, GameInfo.Subnautica.DataFolder);
         }
 
         private static void OnPirateDetected()

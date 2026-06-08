@@ -86,6 +86,7 @@ dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r osx-arm64 -p:C
 ### Wine-wrapper blockers
 
 - Wine launch requires a working `wine64` or `wine` executable on `PATH`, or `NITROX_WINE_EXE` pointing at a Wine executable.
+- Apple Silicon Wine graphics support may need extra configuration. Plain Wine can fail D3D11 feature-level creation, while DXVK through MoltenVK can fail if the Vulkan stack does not expose required features such as `geometryShader`.
 - Steam overlay and Steam client integration inside Wine are not handled by the launcher yet.
 - CrossOver-style paths are detected as prefixes, but CrossOver itself is not invoked or required by this project.
 - The Windows Steam/Subnautica install inside Wine must already be legitimate and functional before Nitrox can patch and launch it.
