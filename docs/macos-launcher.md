@@ -37,6 +37,13 @@ scripts/macos-launcher.sh bundle
 
 Use `-r osx-x64` for Intel Macs. The bundle output is under `Nitrox.Launcher/bin/Release/net10.0/<rid>/Nitrox.app.zip`.
 
+If the only available Subnautica install is the Windows build inside a Wine prefix, point the build at that install so the Unity reference assemblies can be resolved:
+
+```bash
+export SUBNAUTICA_INSTALLATION_PATH="$HOME/Games/NitroxWine/drive_c/Program Files (x86)/Steam/steamapps/common/Subnautica"
+dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Release -r osx-arm64 -p:CreateAppBundle=true
+```
+
 ## Current behavior
 
 - Launcher config/data uses the existing macOS `NitroxDirectory` mapping:
@@ -93,6 +100,7 @@ Focused path, detection, and Wine launch-command tests live in:
 Run the relevant tests with:
 
 ```bash
+export SUBNAUTICA_INSTALLATION_PATH="$HOME/Games/NitroxWine/drive_c/Program Files (x86)/Steam/steamapps/common/Subnautica"
 dotnet test Nitrox.Test/Nitrox.Test.csproj --filter "GameInstallationHelperTest|WineTest"
 ```
 
