@@ -18,6 +18,12 @@ namespace Nitrox.Model.Platforms.Store;
 public sealed class Wine : IGamePlatform
 {
     private const string WineExecutableOverrideEnvKey = "NITROX_WINE_EXE";
+    private const string DisableIpv6EnvKey = "NITROX_DISABLE_IPV6";
+    private const string ClientConnectTimeoutMsEnvKey = "NITROX_CLIENT_CONNECT_TIMEOUT_MS";
+    private const string LiteNetLibManualModeEnvKey = "NITROX_LITENETLIB_MANUAL_MODE";
+    private const string LiteNetLibCrcFallbackEnvKey = "NITROX_LITENETLIB_CRC_FALLBACK";
+    private const string LiteNetLibDisableNativeSocketsEnvKey = "NITROX_DISABLE_LITENETLIB_NATIVE_SOCKETS";
+
     public string Name => nameof(Wine);
     public Platform Platform => Platform.WINE;
 
@@ -66,6 +72,12 @@ public sealed class Wine : IGamePlatform
 #endif
 
         startInfo.EnvironmentVariables[NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPath;
+        startInfo.EnvironmentVariables[DisableIpv6EnvKey] = Environment.GetEnvironmentVariable(DisableIpv6EnvKey) ?? "1";
+        startInfo.EnvironmentVariables[ClientConnectTimeoutMsEnvKey] = Environment.GetEnvironmentVariable(ClientConnectTimeoutMsEnvKey) ?? "10000";
+        startInfo.EnvironmentVariables[LiteNetLibManualModeEnvKey] = Environment.GetEnvironmentVariable(LiteNetLibManualModeEnvKey) ?? "0";
+        startInfo.EnvironmentVariables[LiteNetLibCrcFallbackEnvKey] = Environment.GetEnvironmentVariable(LiteNetLibCrcFallbackEnvKey) ?? "1";
+        startInfo.EnvironmentVariables[LiteNetLibDisableNativeSocketsEnvKey] = Environment.GetEnvironmentVariable(LiteNetLibDisableNativeSocketsEnvKey) ?? "1";
+
         string? inferredPrefix = InferWinePrefix(pathToGameExe);
         if (!string.IsNullOrWhiteSpace(inferredPrefix) && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("WINEPREFIX")))
         {
