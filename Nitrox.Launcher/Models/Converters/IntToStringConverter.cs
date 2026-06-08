@@ -7,17 +7,17 @@ namespace Nitrox.Launcher.Models.Converters;
 /// <summary>
 ///     Formats the bound value as a string from an integer.
 /// </summary>
-public partial class IntToStringConverter : Converter<IntToStringConverter>
+internal sealed partial class IntToStringConverter : Converter<IntToStringConverter>
 {
     [GeneratedRegex("[^0-9]")]
     private static partial Regex DigitReplaceRegex { get; }
 
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return value?.ToString() ?? "";
     }
 
-    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
         {
