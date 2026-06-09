@@ -27,6 +27,60 @@ public class WineTest
         }
     }
 
+    [TestMethod]
+    public void FindSteamExecutableForGame_ShouldReturnSteamExeFromSteamLibrary()
+    {
+        string tempDir = CreateTempDir();
+        try
+        {
+            string steamRoot = Path.Combine(tempDir, "drive_c", "Program Files (x86)", "Steam");
+            string gameRoot = Path.Combine(steamRoot, "steamapps", "common", "Subnautica");
+            string steamExePath = Path.Combine(steamRoot, "steam.exe");
+            string gameExePath = Path.Combine(gameRoot, "Subnautica.exe");
+            Directory.CreateDirectory(gameRoot);
+            File.WriteAllText(steamExePath, "");
+            File.WriteAllText(gameExePath, "");
+
+            Wine.FindSteamExecutableForGame(gameExePath).Should().Be(steamExePath);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [TestMethod]
+    public void CreateSteamStartInfoIfNeeded_ShouldBuildSteamLaunchCommand()
+    {
+        string tempDir = CreateTempDir();
+        try
+        {
+            string steamRoot = Path.Combine(tempDir, "drive_c", "Program Files (x86)", "Steam");
+            string gameRoot = Path.Combine(steamRoot, "steamapps", "common", "Subnautica");
+            string steamExePath = Path.Combine(steamRoot, "steam.exe");
+            string gameExePath = Path.Combine(gameRoot, "Subnautica.exe");
+            string winePath = Path.Combine(tempDir, "bin", "wine64");
+            Directory.CreateDirectory(gameRoot);
+            Directory.CreateDirectory(Path.GetDirectoryName(winePath)!);
+            File.WriteAllText(steamExePath, "");
+            File.WriteAllText(gameExePath, "");
+            File.WriteAllText(winePath, "");
+
+            System.Diagnostics.ProcessStartInfo? startInfo = Wine.CreateSteamStartInfoIfNeeded(gameExePath, winePath);
+
+            startInfo.Should().NotBeNull();
+            startInfo!.FileName.Should().Be(winePath);
+            startInfo.WorkingDirectory.Should().Be(steamRoot);
+            startInfo.ArgumentList.First().Should().Be(steamExePath);
+            startInfo.ArgumentList.Should().Contain("-nobootstrapupdate");
+            startInfo.ArgumentList.Should().Contain("-cef-disable-gpu");
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
     [OSTestMethod(OperatingSystems.OSX)]
     public void CreateStartInfo_ShouldBuildWineLaunchCommand()
     {

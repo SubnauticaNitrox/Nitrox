@@ -18,11 +18,29 @@ namespace Nitrox.Model.Platforms.Store;
 public sealed class Wine : IGamePlatform
 {
     private const string WineExecutableOverrideEnvKey = "NITROX_WINE_EXE";
+    private const string SteamStartupDelayMsEnvKey = "NITROX_WINE_STEAM_STARTUP_DELAY_MS";
     private const string DisableIpv6EnvKey = "NITROX_DISABLE_IPV6";
     private const string ClientConnectTimeoutMsEnvKey = "NITROX_CLIENT_CONNECT_TIMEOUT_MS";
     private const string LiteNetLibManualModeEnvKey = "NITROX_LITENETLIB_MANUAL_MODE";
     private const string LiteNetLibCrcFallbackEnvKey = "NITROX_LITENETLIB_CRC_FALLBACK";
     private const string LiteNetLibDisableNativeSocketsEnvKey = "NITROX_DISABLE_LITENETLIB_NATIVE_SOCKETS";
+    private const int DefaultSteamStartupDelayMs = 10_000;
+    private static readonly string SteamLaunchArguments = string.Join(" ",
+    [
+        "-noverifyfiles",
+        "-nobootstrapupdate",
+        "-skipinitialbootstrap",
+        "-norepairfiles",
+        "-overridepackageurl",
+        "-vgui",
+        "-noreactlogin",
+        "-allosarches",
+        "-cef-force-32bit",
+        "-no-cef-sandbox",
+        "-cef-disable-sandbox",
+        "-cef-disable-gpu",
+        "-cef-disable-gpu-sandbox"
+    ]);
 
     public string Name => nameof(Wine);
     public Platform Platform => Platform.WINE;
@@ -33,12 +51,19 @@ public sealed class Wine : IGamePlatform
                GameInstallationHelper.IsWindowsGameLayout(gameDirectory, GameInfo.Subnautica);
     }
 
-    public static Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
+    public static async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
     {
         string? wineExecutable = FindWineExecutable();
         if (wineExecutable == null)
         {
             throw new GamePlatformException(GameLibraries.WINE, "Wine was not found. Install Wine and Windows Steam/Subnautica in a Wine prefix, or set NITROX_WINE_EXE to the wine executable path.");
+        }
+
+        ProcessStartInfo? steamStartInfo = CreateSteamStartInfoIfNeeded(pathToGameExe, wineExecutable);
+        if (steamStartInfo != null)
+        {
+            using Process? steamProcess = Process.Start(steamStartInfo);
+            await Task.Delay(GetSteamStartupDelayMs());
         }
 
         ProcessStartInfo startInfo = CreateStartInfo(pathToGameExe, launchArguments, wineExecutable, NitroxUser.LauncherPath);
@@ -48,7 +73,18 @@ public sealed class Wine : IGamePlatform
             throw new GamePlatformException(GameLibraries.WINE, "Subnautica exited immediately after starting through Wine.");
         }
 
-        return Task.FromResult(process);
+        return process;
+    }
+
+    internal static ProcessStartInfo? CreateSteamStartInfoIfNeeded(string pathToGameExe, string wineExecutable)
+    {
+        string? steamExecutable = FindSteamExecutableForGame(pathToGameExe);
+        if (steamExecutable == null)
+        {
+            return null;
+        }
+
+        return CreateStartInfo(steamExecutable, SteamLaunchArguments, wineExecutable, NitroxUser.LauncherPath);
     }
 
     internal static ProcessStartInfo CreateStartInfo(string pathToGameExe, string launchArguments, string wineExecutable, string launcherPath)
@@ -85,6 +121,20 @@ public sealed class Wine : IGamePlatform
         }
 
         return startInfo;
+    }
+
+    internal static string? FindSteamExecutableForGame(string pathToGameExe)
+    {
+        string[] pathParts = pathToGameExe.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries);
+        int steamAppsIndex = Array.FindIndex(pathParts, static part => part.Equals("steamapps", StringComparison.OrdinalIgnoreCase));
+        if (steamAppsIndex <= 0)
+        {
+            return null;
+        }
+
+        string steamPath = Path.DirectorySeparatorChar + string.Join(Path.DirectorySeparatorChar.ToString(), pathParts.Take(steamAppsIndex));
+        string steamExecutable = Path.Combine(steamPath, "steam.exe");
+        return File.Exists(steamExecutable) ? steamExecutable : null;
     }
 
     internal static string? InferWinePrefix(string windowsExePath)
@@ -205,6 +255,17 @@ public sealed class Wine : IGamePlatform
             parsedArguments.Add(currentArgument.ToString());
             currentArgument.Clear();
         }
+    }
+
+    private static int GetSteamStartupDelayMs()
+    {
+        string? configuredDelay = Environment.GetEnvironmentVariable(SteamStartupDelayMsEnvKey);
+        if (int.TryParse(configuredDelay, out int delay) && delay >= 0)
+        {
+            return delay;
+        }
+
+        return DefaultSteamStartupDelayMs;
     }
 
     private static string QuoteArgument(string argument)
