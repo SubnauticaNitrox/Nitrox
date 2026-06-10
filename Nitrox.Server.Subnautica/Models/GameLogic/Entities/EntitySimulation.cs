@@ -62,9 +62,13 @@ internal sealed class EntitySimulation : ISessionCleaner
             foreach (WorldEntity entity in GetEntitiesOfCell(cell))
             {
                 if (player.CanSee(entity))
+                {
                     continue;
+                }
                 if (!simulationOwnershipData.RevokeIfOwner(entity.Id, simulatingPlayer))
+                {
                     continue;
+                }
 
                 yield return entity;
             }
