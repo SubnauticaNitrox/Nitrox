@@ -25,6 +25,7 @@ internal sealed class LoginCommand(IOptions<SubnauticaServerOptions> optionsProv
                 if (activePassword == adminPassword)
                 {
                     player.Permissions = Perms.ADMIN;
+                    await context.ReplyAsync(new PermsChanged(Perms.ADMIN));
                     await context.ReplyAsync($"You've been made {nameof(Perms.ADMIN)} on this server!");
                 }
                 else
