@@ -398,3 +398,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Docker / Environment
+**/.env
+**/out
