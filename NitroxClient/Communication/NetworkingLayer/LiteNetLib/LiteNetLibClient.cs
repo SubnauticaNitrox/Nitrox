@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,17 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 
 public class LiteNetLibClient : IClient
 {
-    private readonly NetManager client;
+    private const string DisableIpv6EnvKey = "NITROX_DISABLE_IPV6";
+    private const string ConnectTimeoutMsEnvKey = "NITROX_CLIENT_CONNECT_TIMEOUT_MS";
+    private const string ManualModeEnvKey = "NITROX_LITENETLIB_MANUAL_MODE";
+    private const string DisableCrcEnvKey = "NITROX_DISABLE_LITENETLIB_CRC";
+    private const string CrcFallbackEnvKey = "NITROX_LITENETLIB_CRC_FALLBACK";
+    private const string DisableNativeSocketsEnvKey = "NITROX_DISABLE_LITENETLIB_NATIVE_SOCKETS";
+
+    private readonly EventBasedNetListener listener;
+    private readonly bool useManualMode;
+    private bool useCrc;
+    private NetManager client;
 
     private readonly AutoResetEvent connectedEvent = new(false);
     private readonly NetDataWriter dataWriter = new();
@@ -38,7 +49,9 @@ public class LiteNetLibClient : IClient
     {
         this.packetReceiver = packetReceiver;
         this.networkDebugger = networkDebugger;
-        EventBasedNetListener listener = new();
+        useManualMode = IsTruthyEnvironmentVariable(ManualModeEnvKey);
+
+        listener = new EventBasedNetListener();
         listener.PeerConnectedEvent += Connected;
         listener.PeerDisconnectedEvent += Disconnected;
         listener.NetworkReceiveEvent += ReceivedNetworkData;
@@ -47,18 +60,8 @@ public class LiteNetLibClient : IClient
             LatencyUpdateCallback?.Invoke(peer.RemoteTimeDelta);
         };
 
-
-        client = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
-        {
-            UpdateTime = 15,
-            ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
-            IPv6Enabled = true,
-#if DEBUG
-            DisconnectTimeout = 300_000, //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
-#else
-            DisconnectTimeout = 30_000, // 30 seconds; prevents false disconnects when post-sync game-loading stalls LiteNetLib briefly
-#endif
-        };
+        useCrc = NitroxEnvironment.IsReleaseMode && !IsTruthyEnvironmentVariable(DisableCrcEnvKey);
+        client = CreateClient();
     }
 
     public async Task StartAsync(string ipAddress, int serverPort)
@@ -67,13 +70,39 @@ public class LiteNetLibClient : IClient
 
         // ConfigureAwait(false) is needed because Unity uses a custom "UnitySynchronizationContext". Which makes async/await work like Unity coroutines.
         // Because this Task.Run is async-over-sync this would otherwise blocks the main thread as it wants to, without ConfigureAwait(false), continue on the same thread (i.e. main thread).
+        await ConnectAsync(ipAddress, serverPort).ConfigureAwait(false);
+
+        if (!IsConnected && useCrc && IsTruthyEnvironmentVariable(CrcFallbackEnvKey))
+        {
+            Log.Info("LiteNetLib CRC connection failed; retrying without CRC packet layer");
+            client.Stop();
+            connectedEvent.Reset();
+            useCrc = false;
+            client = CreateClient();
+            await ConnectAsync(ipAddress, serverPort).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ConnectAsync(string ipAddress, int serverPort)
+    {
+        Console.WriteLine($"[Nitrox] LiteNetLib connect start {ipAddress}:{serverPort}; manual={useManualMode}; ipv6={client.IPv6Enabled}; timeout={GetConnectTimeout()}ms; release={NitroxEnvironment.IsReleaseMode}; crc={useCrc}");
+
         await Task.Run(() =>
         {
-            client.Start();
+            if (useManualMode)
+            {
+                client.StartInManualMode(0);
+            }
+            else
+            {
+                client.Start();
+            }
+
             client.Connect(ipAddress, serverPort, "nitrox");
         }).ConfigureAwait(false);
 
-        connectedEvent.WaitOne(2000);
+        WaitForConnection();
+        Console.WriteLine($"[Nitrox] LiteNetLib connect finished; connected={IsConnected}; peers={client.ConnectedPeersCount}");
         connectedEvent.Reset();
     }
 
@@ -97,7 +126,17 @@ public class LiteNetLibClient : IClient
     /// <summary>
     ///     This should be called <b>once</b> each game tick
     /// </summary>
-    public void PollEvents() => client.PollEvents();
+    public void PollEvents()
+    {
+        if (useManualMode)
+        {
+            client.ManualUpdate(0);
+        }
+        else
+        {
+            client.PollEvents();
+        }
+    }
 
     private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
@@ -122,6 +161,7 @@ public class LiteNetLibClient : IClient
         IsConnected = true;
         connectedEvent.Set();
         Log.Info("Connected to server");
+        Console.WriteLine("[Nitrox] LiteNetLib connected to server");
     }
 
     private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
@@ -133,7 +173,8 @@ public class LiteNetLibClient : IClient
         }
 
         IsConnected = false;
-        Log.Info("Disconnected from server");
+        Log.Info($"Disconnected from server: {disconnectInfo.Reason} ({disconnectInfo.SocketErrorCode})");
+        Console.WriteLine($"[Nitrox] LiteNetLib disconnected: {disconnectInfo.Reason} ({disconnectInfo.SocketErrorCode})");
     }
 
     internal void ForceUpdate()
@@ -147,5 +188,62 @@ public class LiteNetLibClient : IClient
         manualModeFieldInfo.SetValue(client, false);
         // We set it back to its high value so another ping isn't sent while we're waiting for the previous one
         PingInterval = pingInterval;
+    }
+
+    private void WaitForConnection()
+    {
+        int timeout = GetConnectTimeout();
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (stopwatch.ElapsedMilliseconds < timeout)
+        {
+            PollEvents();
+            if (connectedEvent.WaitOne(15))
+            {
+                return;
+            }
+        }
+    }
+
+    private static int GetConnectTimeout()
+    {
+        string timeoutValue = Environment.GetEnvironmentVariable(ConnectTimeoutMsEnvKey);
+        if (int.TryParse(timeoutValue, out int timeout) && timeout > 0)
+        {
+            return timeout;
+        }
+
+        return 2000;
+    }
+
+    private NetManager CreateClient()
+    {
+        return new NetManager(listener, GetPacketLayer())
+        {
+            UpdateTime = 15,
+            ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
+            IPv6Enabled = !IsTruthyEnvironmentVariable(DisableIpv6EnvKey),
+            UseNativeSockets = !IsTruthyEnvironmentVariable(DisableNativeSocketsEnvKey),
+#if DEBUG
+            DisconnectTimeout = 300_000, //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+#else
+            DisconnectTimeout = 30_000, // 30 seconds; prevents false disconnects when post-sync game-loading stalls LiteNetLib briefly
+#endif
+        };
+    }
+
+    private PacketLayerBase GetPacketLayer()
+    {
+        if (!useCrc)
+        {
+            return null;
+        }
+
+        return new Crc32cLayer();
+    }
+
+    private static bool IsTruthyEnvironmentVariable(string key)
+    {
+        string value = Environment.GetEnvironmentVariable(key);
+        return value is "1" or "true" or "TRUE" or "True" or "yes" or "YES" or "Yes";
     }
 }
