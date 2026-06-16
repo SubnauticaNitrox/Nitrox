@@ -82,7 +82,10 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 return;
             }
 
-            NitroxEntryPatch.Remove(NitroxUser.GamePath);
+            if (!IsNativeMacOSGameLayout(NitroxUser.GamePath, GameInfo.Subnautica))
+            {
+                NitroxEntryPatch.Remove(NitroxUser.GamePath);
+            }
             await StartSubnauticaAsync();
         }
         catch (Exception ex)
@@ -107,6 +110,19 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 {
                     ChangeView(optionsViewModel);
                     LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
+                    return false;
+                }
+                if (IsNativeMacOSGameLayout(NitroxUser.GamePath, GameInfo.Subnautica))
+                {
+                    const string message = "Native macOS Subnautica client injection is not supported yet. The launcher can detect and launch the native client for singleplayer, but multiplayer needs native client runtime support first.";
+                    Log.Warn(message);
+                    LauncherNotifier.Error(message);
+                    await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                    {
+                        model.Title = "Native macOS multiplayer is not supported";
+                        model.Description = message;
+                        model.ButtonOptions = ButtonOptions.Ok;
+                    });
                     return false;
                 }
                 if (PirateDetection.HasTriggered)
@@ -281,5 +297,12 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         return false; // Default: use Steam unless explicitly disabled for special cases
+    }
+
+    private static bool IsNativeMacOSGameLayout(string path, GameInfo gameInfo)
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) &&
+               File.Exists(Path.Combine(path, "MacOS", gameInfo.ExeName)) &&
+               Directory.Exists(Path.Combine(path, gameInfo.DataFolder, "Managed"));
     }
 }
