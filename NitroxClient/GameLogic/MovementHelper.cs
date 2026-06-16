@@ -36,6 +36,7 @@ namespace NitroxClient.GameLogic
 
             float distance = difference.magnitude;
 
+            // NaN guard to recover if distance becomes invalid 
             if (float.IsNaN(distance) || distance > 20f)
             {
                 // This should be a one-off teleport.
@@ -61,6 +62,7 @@ namespace NitroxClient.GameLogic
                 return angularVelocty;
             }
 
+            // Guard for NaN when remoteRotation and gameobjects rotation are parallel (witnessed during macOS habitat transition)
             if (float.IsNaN(angle) || float.IsNaN(axis.x))
             {
                 gameObject.transform.rotation = remoteRotation;
