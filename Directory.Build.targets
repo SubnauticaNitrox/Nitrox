@@ -3,7 +3,6 @@
 
     <PropertyGroup>
         <_GitShortHashFilePath>$(IntermediateOutputPath)git_short_hash.cache</_GitShortHashFilePath>
-        <_PathSeparator>$([System.IO.Path]::DirectorySeparatorChar)</_PathSeparator>
     </PropertyGroup>
 
     <Target Name="_CreateGitShortHashCacheFile" Inputs="$(_GitRefHashFilePath)" Outputs="$(_GitShortHashFilePath)" Condition="Exists('$(_GitRefHashFilePath)')">
@@ -52,21 +51,17 @@
         </DiscoverGame>
         <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game '$(GameName)' on your machine" />
         <PropertyGroup>
-            <GameDir Condition="Exists('$(GameDir)')">$(GameDir)$(_PathSeparator)</GameDir>
-            <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)$(_PathSeparator)</GameDir>
+            <GameDir Condition="Exists('$(GameDir)')">$(GameDir)\</GameDir>
+            <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)\</GameDir>
             <GameDataFolder>Subnautica_Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">
-            <GameDataFolder>Resources$(_PathSeparator)Data</GameDataFolder>
-        </PropertyGroup>
-        <PropertyGroup Condition="Exists('$(GameDir)Subnautica_Data')">
-            <GameDataFolder>Subnautica_Data</GameDataFolder>
+            <GameDataFolder>Resources\Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup>
-            <GameManagedDir>$(GameDir)$(GameDataFolder)$(_PathSeparator)Managed$(_PathSeparator)</GameManagedDir>
-            <GameVersionFile>$(GameDir)$(GameDataFolder)$(_PathSeparator)StreamingAssets$(_PathSeparator)SNUnmanagedData$(_PathSeparator)plastic_status.ignore</GameVersionFile>
+            <GameManagedDir>$(GameDir)$(GameDataFolder)\Managed\</GameManagedDir>
+            <GameVersionFile>$(GameDir)$(GameDataFolder)\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
         </PropertyGroup>
-        <Error Condition="!Exists('$(GameVersionFile)')" Text="Failed to find the game version file at '$(GameVersionFile)'" />
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />
         </ReadLinesFromFile>
