@@ -52,8 +52,8 @@
         </DiscoverGame>
         <Error Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' == ''" Text="Failed to find the game '$(GameName)' on your machine" />
         <PropertyGroup>
-            <GameDir Condition="'$(GameDir)' != '' and Exists('$(GameDir)')">$(GameDir)$(_PathSeparator)</GameDir>
-            <GameDir Condition="'$(GameDir)' == '' and '$(SUBNAUTICA_INSTALLATION_PATH)' != ''">$(SUBNAUTICA_INSTALLATION_PATH)$(_PathSeparator)</GameDir>
+            <GameDir Condition="Exists('$(GameDir)')">$(GameDir)$(_PathSeparator)</GameDir>
+            <GameDir Condition="!Exists('$(GameDir)')">$(SUBNAUTICA_INSTALLATION_PATH)$(_PathSeparator)</GameDir>
             <GameDataFolder>Subnautica_Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">
