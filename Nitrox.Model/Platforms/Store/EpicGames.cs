@@ -17,6 +17,10 @@ public sealed class EpicGames : IGamePlatform
     public bool OwnsGame(string gameDirectory)
     {
         string path = Path.Combine(gameDirectory, ".egstore");
+        if (!Directory.Exists(path))
+        {
+            return false;
+        }
         
         try
         {

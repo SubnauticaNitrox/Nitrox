@@ -19,6 +19,7 @@ public static class GameInstallationFinder
     private static readonly Dictionary<GameLibraries, IGameFinder> finders = new()
     {
         { GameLibraries.STEAM, new SteamFinder() },
+        { GameLibraries.WINE, new WineFinder() },
         { GameLibraries.EPIC, new EpicGamesFinder() },
         { GameLibraries.HEROIC, new HeroicGamesFinder() },
         { GameLibraries.MICROSOFT, new MicrosoftFinder() },
@@ -45,9 +46,20 @@ public static class GameInstallationFinder
                     HeroicGames => GameLibraries.HEROIC,
                     MSStore => GameLibraries.MICROSOFT,
                     Discord => GameLibraries.DISCORD,
+                    Wine => GameLibraries.WINE,
                     _ => throw new ArgumentOutOfRangeException()
                 }
             };
+        }
+        if (!string.IsNullOrWhiteSpace(NitroxUser.GamePath) && GameInstallationHelper.HasValidGameFolder(NitroxUser.GamePath, gameInfo))
+        {
+            GameLibraries origin = GameInstallationHelper.IsWindowsGameLayout(NitroxUser.GamePath, gameInfo) ? GameLibraries.WINE : GameLibraries.CONFIG;
+            if (origin == GameLibraries.WINE)
+            {
+                NitroxUser.SetGamePathAndPlatform(NitroxUser.GamePath, GamePlatforms.GetPlatformByFlag(GameLibraries.WINE), false);
+            }
+
+            return GameFinderResult.Ok(NitroxUser.GamePath) with { Origin = origin };
         }
 
         List<GameFinderResult> finderResults = FindGame(gameInfo, gameLibraries).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
@@ -55,7 +67,11 @@ public static class GameInstallationFinder
         if (potentiallyValidResult is { IsOk: true })
         {
             Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
-            NitroxUser.SetGamePathAndPlatform(potentiallyValidResult.Path, GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin) ?? GamePlatforms.GetPlatformByGameDir(potentiallyValidResult.Path));
+            NitroxUser.SetGamePathAndPlatform(
+                potentiallyValidResult.Path,
+                GamePlatforms.GetPlatformByFlag(potentiallyValidResult.Origin),
+                potentiallyValidResult.Origin != GameLibraries.WINE
+            );
             return potentiallyValidResult;
         }
 

@@ -21,24 +21,29 @@ public enum GameLibraries
     STEAM = 1 << 2,
 
     /// <summary>
+    /// Windows game installation in a Wine-style prefix.
+    /// </summary>
+    WINE = 1 << 3,
+
+    /// <summary>
     /// Epic games
     /// </summary>
-    EPIC = 1 << 3,
+    EPIC = 1 << 4,
 
     /// <summary>
     /// Heroic Games Launcher
     /// </summary>
-    HEROIC = 1 << 4,
+    HEROIC = 1 << 5,
 
     /// <summary>
     /// Microsoft store
     /// </summary>
-    MICROSOFT = 1 << 5,
+    MICROSOFT = 1 << 6,
 
     /// <summary>
     /// Discord game store
     /// </summary>
-    DISCORD = 1 << 6,
+    DISCORD = 1 << 7,
 
     /// <summary>
     /// Related to an official game platform
@@ -48,7 +53,7 @@ public enum GameLibraries
     /// <summary>
     /// Related to an external provider source
     /// </summary>
-    CUSTOM = CONFIG | ENVIRONMENT,
+    CUSTOM = CONFIG | ENVIRONMENT | WINE,
 
     /// <summary>
     /// All Nitrox supported provider

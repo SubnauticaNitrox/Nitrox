@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
@@ -38,10 +40,7 @@ public sealed class SteamFinder : IGameFinder
             }
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            path = Path.Combine(path, $"{gameInfo.Name}.app", "Contents");
-        }
+        path = GameInstallationHelper.NormalizeGamePath(path, gameInfo);
         if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
             return Error($"Path '{path}' known by Steam for '{gameInfo.FullName}' does not point to a valid game file structure");
@@ -50,7 +49,7 @@ public sealed class SteamFinder : IGameFinder
         return Ok(path);
     }
 
-    private static string GetSteamPath()
+    internal static string GetSteamPath()
     {
         // OSX: Steam dynamic data isn't near the steam exe. Because it can't (or isn't supposed to) write anything inside application bundle.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -79,20 +78,43 @@ public sealed class SteamFinder : IGameFinder
     /// <summary>
     /// Finds game install directory by iterating through all the steam game libraries configured, matching the given appid.
     /// </summary>
-    private static string? SearchAllInstallations(string libraryFolders, int appid, string gameName)
+    internal static string? SearchAllInstallations(string libraryFolders, int appid, string gameName)
     {
         if (!File.Exists(libraryFolders))
         {
             return null;
         }
 
-        StreamReader file = new(libraryFolders);
-        char[] trimChars = [' ', '\t'];
+        string steamPath = Directory.GetParent(Path.GetDirectoryName(libraryFolders) ?? "")?.FullName ?? "";
+        foreach (string libraryPath in GetLibraryPaths(libraryFolders).Append(steamPath).Where(static path => !string.IsNullOrWhiteSpace(path)).Distinct())
+        {
+            if (File.Exists(Path.Combine(libraryPath, "steamapps", $"appmanifest_{appid}.acf")))
+            {
+                return Path.Combine(libraryPath, "steamapps", "common", gameName);
+            }
+        }
 
+        return null;
+    }
+
+    internal static IEnumerable<string> GetLibraryPaths(string libraryFolders)
+    {
+        if (!File.Exists(libraryFolders))
+        {
+            yield break;
+        }
+
+        using StreamReader file = new(libraryFolders);
+        char[] trimChars = [' ', '\t'];
         while (file.ReadLine() is { } line)
         {
             line = line.Trim(trimChars);
-            Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
+            Match regMatch = Regex.Match(line, "\"([^\"]+)\"\\s+\"(.*)\"");
+            if (!regMatch.Success)
+            {
+                continue;
+            }
+
             string key = regMatch.Groups[1].Value;
 
             // New format (about 2021-07-16) uses "path" key instead of steam-library-index as key. If either, it could be steam game path.
@@ -101,14 +123,7 @@ public sealed class SteamFinder : IGameFinder
                 continue;
             }
 
-            string value = regMatch.Groups[2].Value;
-
-            if (File.Exists(Path.Combine(value, "steamapps", $"appmanifest_{appid}.acf")))
-            {
-                return Path.Combine(value, "steamapps", "common", gameName);
-            }
+            yield return regMatch.Groups[2].Value.Replace(@"\\", @"\");
         }
-
-        return null;
     }
 }
