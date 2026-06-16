@@ -1,5 +1,6 @@
 extern alias JB;
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery.Models;
@@ -27,7 +28,7 @@ public sealed record GameFinderResult
     {
         return new GameFinderResult
         {
-            FinderName = callerCodeFile[(callerCodeFile.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^3],
+            FinderName = Path.GetFileNameWithoutExtension(callerCodeFile),
             ErrorMessage = message
         };
     }
@@ -39,7 +40,7 @@ public sealed record GameFinderResult
     {
         return new GameFinderResult
         {
-            FinderName = callerCodeFile[(callerCodeFile.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^3]
+            FinderName = Path.GetFileNameWithoutExtension(callerCodeFile)
         };
     }
 
@@ -48,7 +49,7 @@ public sealed record GameFinderResult
         Validate.NotNull(path);
         return new GameFinderResult
         {
-            FinderName = callerCodeFile[(callerCodeFile.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^3],
+            FinderName = Path.GetFileNameWithoutExtension(callerCodeFile),
             Path = path
         };
     }
