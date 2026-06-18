@@ -25,17 +25,17 @@ internal sealed class NtpRetryCircuitBreaker
     {
         if (IsOpen)
         {
-            return new(openRetryDelay, breakerOpened: false);
+            return new(openRetryDelay, BreakerOpened: false);
         }
 
         consecutiveFailures++;
         if (consecutiveFailures < failureThreshold)
         {
-            return new(closedRetryDelay, breakerOpened: false);
+            return new(closedRetryDelay, BreakerOpened: false);
         }
 
         IsOpen = true;
-        return new(openRetryDelay, breakerOpened: true);
+        return new(openRetryDelay, BreakerOpened: true);
     }
 
     public void RegisterSuccess()
