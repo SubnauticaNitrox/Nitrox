@@ -30,17 +30,25 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     ///     Time in seconds between each ntp connection attempt.
     /// </summary>
     private const int NTP_RETRY_INTERVAL_SECONDS = 60;
+    private const int NTP_RETRY_BREAKER_INTERVAL_MINUTES = 10;
+    private const int NTP_RETRY_BREAKER_FAILURE_THRESHOLD = 3;
 
     private readonly ILogger<TimeService> logger = logger;
     private readonly ILoggerFactory loggerFactory = loggerFactory;
+    private readonly NtpRetryCircuitBreaker ntpRetryCircuitBreaker = new(
+        TimeSpan.FromSeconds(NTP_RETRY_INTERVAL_SECONDS),
+        TimeSpan.FromMinutes(NTP_RETRY_BREAKER_INTERVAL_MINUTES),
+        NTP_RETRY_BREAKER_FAILURE_THRESHOLD);
 
     private readonly NtpSyncer ntpSyncer = ntpSyncer;
     private readonly IPacketSender packetSender = packetSender;
 
     private readonly PeriodicTimer resyncTimer = new(TimeSpan.FromSeconds(RESYNC_INTERVAL_SECONDS));
     private readonly Stopwatch stopWatch = new();
+    private readonly Lock ntpRetryTimerLock = new();
 
     private double activeRealTimeSeconds;
+    private Timer? ntpRetryTimer;
 
     public TimeSkippedEventHandler? TimeSkipped;
 
@@ -140,14 +148,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         // We only need the correction offset to be calculated once
-        ntpSyncer.Setup((onlineMode, _) =>
-        {
-            if (!onlineMode)
-            {
-                // until we get online even once, we'll retry the ntp sync sequence every NTP_RETRY_INTERVAL
-                StartNtpTimer();
-            }
-        }, loggerFactory.CreateLogger<NtpSyncer>());
+        ntpSyncer.Setup(OnNtpSyncCompleted, loggerFactory.CreateLogger<NtpSyncer>());
         ntpSyncer.RequestNtpService();
 
         while (!stoppingToken.IsCancellationRequested)
@@ -177,25 +178,53 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
         return Task.CompletedTask;
     }
 
-    private void StartNtpTimer()
+    private void OnNtpSyncCompleted(bool onlineMode, TimeSpan _)
     {
-        Timer retryTimer = new(TimeSpan.FromSeconds(NTP_RETRY_INTERVAL_SECONDS).TotalMilliseconds)
+        if (onlineMode)
         {
-            AutoReset = true,
+            ntpRetryCircuitBreaker.RegisterSuccess();
+            CloseNtpRetryTimer();
+            return;
+        }
+
+        RetryDecision retryDecision = ntpRetryCircuitBreaker.RegisterFailure();
+        if (retryDecision.BreakerOpened)
+        {
+            logger.ZLogWarning($"NTP sync failed {NTP_RETRY_BREAKER_FAILURE_THRESHOLD} times in a row; delaying the next retry for {retryDecision.Delay.TotalMinutes:0} minutes.");
+        }
+
+        StartNtpTimer(retryDecision.Delay);
+    }
+
+    private void StartNtpTimer(TimeSpan retryDelay)
+    {
+        CloseNtpRetryTimer();
+
+        Timer retryTimer = new(retryDelay.TotalMilliseconds)
+        {
+            AutoReset = false,
         };
         retryTimer.Elapsed += delegate
         {
-            // Reset the syncer before starting another round of it
             ntpSyncer.Complete();
-            ntpSyncer.Setup((onlineMode, _) =>
-            {
-                if (onlineMode)
-                {
-                    retryTimer.Close();
-                }
-            }, loggerFactory.CreateLogger<NtpSyncer>());
+            ntpSyncer.Setup(OnNtpSyncCompleted, loggerFactory.CreateLogger<NtpSyncer>());
             ntpSyncer.RequestNtpService();
         };
+
+        lock (ntpRetryTimerLock)
+        {
+            ntpRetryTimer = retryTimer;
+        }
+
         retryTimer.Start();
+    }
+
+    private void CloseNtpRetryTimer()
+    {
+        lock (ntpRetryTimerLock)
+        {
+            ntpRetryTimer?.Close();
+            ntpRetryTimer = null;
+        }
     }
 }
