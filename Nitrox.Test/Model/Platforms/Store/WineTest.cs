@@ -28,6 +28,28 @@ public class WineTest
     }
 
     [TestMethod]
+    public void InferWinePrefix_ShouldReturnAncestorPrefixContainingSteam()
+    {
+        string tempDir = CreateTempDir();
+        try
+        {
+            string prefix = Path.Combine(tempDir, "Games", "NitroxGPTK");
+            string steamExePath = Path.Combine(prefix, "drive_c", "Program Files (x86)", "Steam", "steam.exe");
+            string gameExePath = Path.Combine(prefix, "steamapps-backup", "common", "Subnautica", "Subnautica.exe");
+            Directory.CreateDirectory(Path.GetDirectoryName(steamExePath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(gameExePath)!);
+            File.WriteAllText(steamExePath, "");
+            File.WriteAllText(gameExePath, "");
+
+            Wine.InferWinePrefix(gameExePath).Should().Be(prefix);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [TestMethod]
     public void FindSteamExecutableForGame_ShouldReturnSteamExeFromSteamLibrary()
     {
         string tempDir = CreateTempDir();
@@ -37,6 +59,30 @@ public class WineTest
             string gameRoot = Path.Combine(steamRoot, "steamapps", "common", "Subnautica");
             string steamExePath = Path.Combine(steamRoot, "steam.exe");
             string gameExePath = Path.Combine(gameRoot, "Subnautica.exe");
+            Directory.CreateDirectory(gameRoot);
+            File.WriteAllText(steamExePath, "");
+            File.WriteAllText(gameExePath, "");
+
+            Wine.FindSteamExecutableForGame(gameExePath).Should().Be(steamExePath);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [TestMethod]
+    public void FindSteamExecutableForGame_ShouldReturnSteamExeFromAncestorPrefix()
+    {
+        string tempDir = CreateTempDir();
+        try
+        {
+            string prefix = Path.Combine(tempDir, "NitroxGPTK");
+            string steamRoot = Path.Combine(prefix, "drive_c", "Program Files (x86)", "Steam");
+            string gameRoot = Path.Combine(prefix, "steamapps-backup", "common", "Subnautica");
+            string steamExePath = Path.Combine(steamRoot, "steam.exe");
+            string gameExePath = Path.Combine(gameRoot, "Subnautica.exe");
+            Directory.CreateDirectory(steamRoot);
             Directory.CreateDirectory(gameRoot);
             File.WriteAllText(steamExePath, "");
             File.WriteAllText(gameExePath, "");

@@ -129,12 +129,15 @@ public sealed class Wine : IGamePlatform
         int steamAppsIndex = Array.FindIndex(pathParts, static part => part.Equals("steamapps", StringComparison.OrdinalIgnoreCase));
         if (steamAppsIndex <= 0)
         {
-            return null;
+            return FindSteamExecutableInPrefix(Environment.GetEnvironmentVariable("WINEPREFIX")) ??
+                   FindSteamExecutableInAncestorPrefix(pathToGameExe);
         }
 
         string steamPath = Path.DirectorySeparatorChar + string.Join(Path.DirectorySeparatorChar.ToString(), pathParts.Take(steamAppsIndex));
         string steamExecutable = Path.Combine(steamPath, "steam.exe");
-        return File.Exists(steamExecutable) ? steamExecutable : null;
+        return File.Exists(steamExecutable) ? steamExecutable :
+            FindSteamExecutableInPrefix(Environment.GetEnvironmentVariable("WINEPREFIX")) ??
+            FindSteamExecutableInAncestorPrefix(pathToGameExe);
     }
 
     internal static string? InferWinePrefix(string windowsExePath)
@@ -143,11 +146,46 @@ public sealed class Wine : IGamePlatform
         int driveCIndex = Array.FindIndex(pathParts, static part => part.Equals("drive_c", StringComparison.OrdinalIgnoreCase));
         if (driveCIndex <= 0)
         {
-            return null;
+            return FindAncestorPrefix(windowsExePath);
         }
 
         string prefix = Path.DirectorySeparatorChar + string.Join(Path.DirectorySeparatorChar.ToString(), pathParts.Take(driveCIndex));
         return Directory.Exists(prefix) ? prefix : null;
+    }
+
+    private static string? FindSteamExecutableInAncestorPrefix(string pathToGameExe)
+    {
+        return FindSteamExecutableInPrefix(FindAncestorPrefix(pathToGameExe));
+    }
+
+    private static string? FindAncestorPrefix(string pathToGameExe)
+    {
+        DirectoryInfo? directory = new(Path.GetDirectoryName(pathToGameExe) ?? pathToGameExe);
+        while (directory != null)
+        {
+            if (FindSteamExecutableInPrefix(directory.FullName) != null)
+            {
+                return directory.FullName;
+            }
+            directory = directory.Parent;
+        }
+
+        return null;
+    }
+
+    private static string? FindSteamExecutableInPrefix(string? prefix)
+    {
+        if (string.IsNullOrWhiteSpace(prefix))
+        {
+            return null;
+        }
+
+        string[] steamCandidates =
+        [
+            Path.Combine(prefix, "drive_c", "Program Files (x86)", "Steam", "steam.exe"),
+            Path.Combine(prefix, "drive_c", "Program Files", "Steam", "steam.exe")
+        ];
+        return steamCandidates.FirstOrDefault(File.Exists);
     }
 
     internal static string? FindWineExecutable()
