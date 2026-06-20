@@ -29,7 +29,7 @@
     "Nitrox_EnterName": "Enter your player name",
     "Nitrox_ErrorDesyncDetected": "[Safe Building] This base is currently desynced so you can't modify it unless you resync buildings (in Nitrox settings)",
     "Nitrox_ErrorRecentBuildUpdate": "Cannot modify a base that was recently updated by another player",
-    "Nitrox_Failure": "An error occurred",
+    "Nitrox_Failure": "An error occured",
     "Nitrox_FinishedResyncRequest": "Took {TIME}ms to resync {COUNT} entities",
     "Nitrox_FirewallInterfering": "Seems like your firewall settings are interfering",
     "Nitrox_HideIp": "Hide IP addresses",
