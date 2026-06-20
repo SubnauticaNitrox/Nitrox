@@ -62,7 +62,7 @@ public class DiscordClient : MonoBehaviour
         {
             // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
             DisposeAndScheduleHookRestart();
-            Log.ErrorOnce($"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            Log.ErrorOnce($"An error occurred while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
