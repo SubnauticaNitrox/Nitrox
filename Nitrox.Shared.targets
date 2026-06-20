@@ -216,8 +216,10 @@
               SkipUnchangedFiles="True"
               ContinueOnError="ErrorAndStop" />
 
+        <Exec Condition="$(_IsMacOS)" Command="chmod +x &quot;$(_MacOSDir)$(AssemblyName)&quot;" />
+
         <!-- Remove quarantine that prevents app from being run after download -->
-        <Exec Condition="$(_IsMacOS)" Command="xattr -r -d com.apple.quarantine $(_AppBundleDir)" />
+        <Exec Condition="$(_IsMacOS)" Command="xattr -r -d com.apple.quarantine &quot;$(_AppBundleDir)&quot;" ContinueOnError="WarnAndContinue" />
 
         <ZipDirectory SourceDirectory="$(_ZipDir)"
                       DestinationFile="$(_ZipFilePath)"
