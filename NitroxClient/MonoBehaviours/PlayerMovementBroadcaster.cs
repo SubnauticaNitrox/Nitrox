@@ -26,6 +26,13 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             return;
         }
 
+        // Don't broadcast movement during cinematics - the cinematic controller handles positioning
+        if (Player.main.cinematicModeActive)
+        {
+            Log.Debug($"[Movement] Skipping movement broadcast - cinematicModeActive: true");
+            return;
+        }
+
         // Freecam does disable main camera control
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
         if (!MainCameraControl.main.isActiveAndEnabled &&

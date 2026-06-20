@@ -50,14 +50,20 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
         {
             // It can happen that the player turns in circles around himself in the vehicle. This stops it.
             player.RigidBody.angularVelocity = Vector3.zero;
-            vehicles.SetOnPilotMode(packet.VehicleId, packet.SessionId, true);
+            // Set InCinematic to prevent movement packets from clearing vehicle state during undocking
+            player.InCinematic = true;
+            // Set enterAnimation to false to prevent the enter animation from playing when player_in is set
+            // Then set player_in to true so that when FinishVehicleUndocking calls SetVehicle,
+            // it won't trigger the enter animation (since player_in is already true)
+            vehicle.mainAnimator.SetBool("enterAnimation", false);
+            vehicle.mainAnimator.SetBool("player_in", true);
         }
         vehicleDockingBay.StartCoroutine(StartUndockingAnimation(vehicleDockingBay));
 
         if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
         {
             vehicleMovementReplicator.ClearBuffer();
-            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Clear MovementReplicator on {packet.VehicleId}");
+            Log.Debug($"[{nameof(VehicleUndockingProcessor)}] Clear MovementReplicator on {packet.VehicleId}");
         }
     }
 
@@ -70,20 +76,27 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
         vehicleDockingBay.dockedVehicle = null;
         vehicleDockingBay.CancelInvoke(nameof(VehicleDockingBay.RepairVehicle));
         vehicle.docked = false;
+        // We look up the player again (instead of passing from StartVehicleUndocking) because
+        // the player could have disconnected between the start and finish packets
         if (remotePlayerManager.TryFind(packet.SessionId, out RemotePlayer player))
         {
+            // Clear InCinematic flag now that undocking is complete
+            player.InCinematic = false;
             // Sometimes the player is not set accordingly which stretches the player's model instead of putting them in place
             // after undocking. This fixes it (the player rigid body seems to not be set right sometimes)
             player.SetSubRoot(null);
-            player.SetVehicle(null);
-            player.SetVehicle(vehicle);
+            // Only call SetVehicle if not already in this vehicle to avoid replaying the enter animation
+            if (player.Vehicle != vehicle)
+            {
+                player.SetVehicle(vehicle);
+            }
         }
         vehicles.SetOnPilotMode(packet.VehicleId, packet.SessionId, true);
 
         if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
         {
             vehicleMovementReplicator.enabled = true;
-            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Enabled MovementReplicator on {packet.VehicleId}");
+            Log.Debug($"[{nameof(VehicleUndockingProcessor)}] Enabled MovementReplicator on {packet.VehicleId}");
         }
 
         Log.Debug("Set vehicle undocking complete");
