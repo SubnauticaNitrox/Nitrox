@@ -261,10 +261,11 @@ public sealed class Steam : IGamePlatform
             throw new Exception("Steam was not found on your machine.");
         }
         // Game will play inside Proton so it needs launcher path to be a Wine-supported path!
-        string launcherPath = NitroxUser.LauncherPath;
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(launcherPath))
+        string nativeLauncherPath = NitroxUser.LauncherPath;
+        string launcherPath = nativeLauncherPath;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(nativeLauncherPath))
         {
-            launcherPath = $"Z:{launcherPath.Replace("/", "\\")}";
+            launcherPath = $"Z:{nativeLauncherPath.Replace("/", "\\")}";
         }
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
@@ -314,45 +315,15 @@ public sealed class Steam : IGamePlatform
                 }
             }
 
+            List<string> steamLibraryPaths = GetAllLibraryPaths(steamPath);
+
             string sniperAppId = "1628350";
             string sniperRuntimePath = Path.Combine(GetLibraryPath(steamPath, sniperAppId), "steamapps", "common", "SteamLinuxRuntime_sniper");
 
-            string protonPath = null;
             string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
-            string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString()) ?? "proton_9";
-            bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
-            if (isValveProton)
-            {
-                int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
-                if (index != -1)
-                {
-                    protonVersion = protonVersion[(index + "proton_".Length)..];
-                }
-                if (protonVersion == "experimental")
-                {
-                    protonVersion = "-";
-                }
-
-                foreach (string path in GetAllLibraryPaths(steamPath))
-                {
-                    foreach (string dir in Directory.EnumerateDirectories(Path.Combine(path, "steamapps", "common")))
-                    {
-                        if (dir.Contains($"Proton {protonVersion}"))
-                        {
-                            protonPath = dir;
-                            break;
-                        }
-                    }
-                    if (protonPath != null)
-                    {
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                protonPath = Path.Combine(protonRoot, protonVersion);
-            }
+            string? protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
+            string? protonPath = protonVersion != null ? ResolveConfiguredProtonPath(protonVersion, steamLibraryPaths, protonRoot) : null;
+            protonPath ??= FindBestAvailableProtonPath(steamLibraryPaths, protonRoot);
             if (protonPath == null)
             {
                 throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
@@ -365,7 +336,7 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
-            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(GetAllLibraryPaths(steamPath)));
+            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(steamLibraryPaths.Append(nativeLauncherPath)));
         }
 
         return result;
@@ -468,6 +439,82 @@ public sealed class Steam : IGamePlatform
                 Log.Debug(ex);
                 return null;
             }
+        }
+
+        static string? ResolveConfiguredProtonPath(string protonVersion, IEnumerable<string> steamLibraryPaths, string protonRoot)
+        {
+            if (protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase))
+            {
+                int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
+                if (index != -1)
+                {
+                    protonVersion = protonVersion[(index + "proton_".Length)..];
+                }
+                if (protonVersion == "experimental")
+                {
+                    protonVersion = "-";
+                }
+
+                foreach (string dir in EnumerateSteamCommonDirectories(steamLibraryPaths))
+                {
+                    if (Path.GetFileName(dir).Contains($"Proton {protonVersion}", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dir, "proton")))
+                    {
+                        return dir;
+                    }
+                }
+
+                return null;
+            }
+
+            string customProtonPath = Path.Combine(protonRoot, protonVersion);
+            return File.Exists(Path.Combine(customProtonPath, "proton")) ? customProtonPath : null;
+        }
+
+        static string? FindBestAvailableProtonPath(IEnumerable<string> steamLibraryPaths, string protonRoot)
+        {
+            string? valveProton = EnumerateSteamCommonDirectories(steamLibraryPaths)
+                                   .Where(HasProtonExecutable)
+                                   .Select(path => (Path: path, Version: GetValveProtonVersion(Path.GetFileName(path))))
+                                   .Where(candidate => candidate.Version != null)
+                                   .OrderByDescending(candidate => candidate.Version)
+                                   .Select(candidate => candidate.Path)
+                                   .FirstOrDefault();
+
+            if (valveProton != null)
+            {
+                return valveProton;
+            }
+
+            return EnumerateSteamCommonDirectories(steamLibraryPaths)
+                   .FirstOrDefault(path => HasProtonExecutable(path) && Path.GetFileName(path).Contains("Experimental", StringComparison.OrdinalIgnoreCase))
+                   ?? EnumerateDirectories(protonRoot).FirstOrDefault(HasProtonExecutable);
+        }
+
+        static IEnumerable<string> EnumerateSteamCommonDirectories(IEnumerable<string> steamLibraryPaths)
+        {
+            return steamLibraryPaths.Select(path => Path.Combine(path, "steamapps", "common"))
+                                    .SelectMany(EnumerateDirectories);
+        }
+
+        static IEnumerable<string> EnumerateDirectories(string path)
+        {
+            return Directory.Exists(path) ? Directory.EnumerateDirectories(path) : [];
+        }
+
+        static bool HasProtonExecutable(string path)
+        {
+            return File.Exists(Path.Combine(path, "proton"));
+        }
+
+        static Version? GetValveProtonVersion(string directoryName)
+        {
+            Match match = Regex.Match(directoryName, @"^Proton\s+(\d+(?:\.\d+)*)", RegexOptions.IgnoreCase);
+            if (match.Success && Version.TryParse(match.Groups[1].Value, out Version version))
+            {
+                return version;
+            }
+
+            return null;
         }
     }
 
