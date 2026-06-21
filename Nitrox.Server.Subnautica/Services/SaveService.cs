@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Server.Subnautica.Models.AppEvents;
@@ -19,11 +20,14 @@ internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISave
     private readonly IOptions<ServerStartOptions> startOptions = startOptions;
     private readonly Func<WorldService> worldServiceProvider = worldServiceProvider;
 
+    public async Task QueueSaveAsync(CancellationToken cancellationToken, [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1) => await QueueActionAsync(new ServiceAction(ServiceActionType.SAVE, callerFilePath, callerLineNumber), cancellationToken);
+
     protected override async Task ExecuteQueuedActionAsync(ServiceAction action, CancellationToken stoppingToken)
     {
-        switch (action)
+        logger.ZLogTrace($"Save requested by {action.CallerFilePath}:{action.CallerLineNumber}");
+        switch (action.Type)
         {
-            case ServiceAction.SAVE:
+            case ServiceActionType.SAVE:
                 string savePath = startOptions.Value.GetServerSavePath();
                 if (!worldServiceProvider().Save(savePath))
                 {
@@ -119,11 +123,13 @@ internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISave
         }
     }
 
-    async Task IEvent<IHibernate.SleepArgs>.OnEventAsync(IHibernate.SleepArgs args) => await QueueActionAsync(ServiceAction.SAVE);
+    async Task IEvent<IHibernate.SleepArgs>.OnEventAsync(IHibernate.SleepArgs args) => await QueueSaveAsync(CancellationToken.None);
 
     Task IEvent<IHibernate.WakeArgs>.OnEventAsync(IHibernate.WakeArgs args) => Task.CompletedTask;
 
-    internal enum ServiceAction
+    internal record ServiceAction(ServiceActionType Type, string CallerFilePath = "", int CallerLineNumber = -1);
+
+    internal enum ServiceActionType
     {
         SAVE
     }

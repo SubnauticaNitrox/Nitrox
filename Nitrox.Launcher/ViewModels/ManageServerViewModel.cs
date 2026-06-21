@@ -90,6 +90,9 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     public partial bool ServerIsOnline { get; set; }
 
     [ObservableProperty]
+    public partial bool ServerIsLoading { get; set; }
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(RestoreBackupCommand), nameof(StartServerCommand))]
     [Range(1, 1000)]
     [NotifyDataErrorInfo]
@@ -145,6 +148,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
                 return;
             }
             vm.ServerIsOnline = status.IsOnline;
+            vm.ServerIsLoading = status.IsLoading;
             vm.ServerPlayerCount = status.PlayerCount;
         });
     }
@@ -179,6 +183,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
         }
         Server = entry;
         ServerIsOnline = Server.IsOnline;
+        ServerIsLoading = Server.IsLoading;
         ServerName = Server.Name;
         ServerIcon = Server.ServerIcon;
         ServerPassword = Server.Password;
