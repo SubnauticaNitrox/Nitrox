@@ -160,7 +160,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
                 }
                 else if (moduleObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
                 {
-                    builtPiece = BuildUtils.CreateMapRoomEntityFrom(mapRoomFunctionality, parentBase, entityId, parentId);
+                    builtPiece = BuildUtils.CreateMapRoomEntityFrom(mapRoomFunctionality, parentBase, entityId, parentId, Resolve<EntityMetadataManager>());
                 }
             }
 
