@@ -59,8 +59,11 @@ namespace NitroxClient.GameLogic
 
             if (lockAquired)
             {
-                SimulateEntity(id, lockType);
-                TreatVehicleEntity(id, true, lockType);
+                if (!TreatMapRoomCameraEntity(id, true, lockType) &&
+                    !TreatVehicleEntity(id, true, lockType))
+                {
+                    SimulateEntity(id, lockType);
+                }
             }
 
             if (lockRequestsById.TryGetValue(id, out LockRequestBase lockRequest))
@@ -84,7 +87,8 @@ namespace NitroxClient.GameLogic
         {
             bool isLocalPlayerNewOwner = multiplayerSession.Reservation.SessionId == simulatedEntity.SessionId;
 
-            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
+            if (TreatMapRoomCameraEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
+                TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
                 newerSimulationById.ContainsKey(simulatedEntity.Id))
             {
                 return;
@@ -143,13 +147,52 @@ namespace NitroxClient.GameLogic
             return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
         }
 
+        public bool TreatMapRoomCameraEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)
+        {
+            if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject) ||
+                !gameObject.GetComponent<MapRoomCamera>())
+            {
+                return false;
+            }
+
+            MovementReplicator movementReplicator = gameObject.GetComponent<MovementReplicator>();
+
+            if (isLocalPlayerNewOwner)
+            {
+                if (movementReplicator)
+                {
+                    Object.Destroy(movementReplicator);
+                }
+
+                EntityPositionBroadcaster.StopWatchingEntity(entityId);
+                MovementBroadcaster.RegisterWatched(gameObject, entityId);
+                SimulateEntity(entityId, simulationLockType);
+            }
+            else
+            {
+                if (!movementReplicator)
+                {
+                    movementReplicator = MovementReplicator.AddReplicatorToObject(gameObject);
+                }
+                else
+                {
+                    movementReplicator.ClearBuffer();
+                }
+
+                MovementBroadcaster.UnregisterWatched(entityId);
+                EntityPositionBroadcaster.StopWatchingEntity(entityId);
+                StopSimulatingEntity(entityId);
+            }
+
+            return true;
+        }
+
         public bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)
         {
             if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject) || !IsVehicle(gameObject))
             {
                 return false;
             }
-            
             MovementReplicator movementReplicator = gameObject.GetComponent<MovementReplicator>();
             if (isLocalPlayerNewOwner)
             {
@@ -164,8 +207,13 @@ namespace NitroxClient.GameLogic
             {
                 if (!movementReplicator)
                 {
-                    MovementReplicator.AddReplicatorToObject(gameObject);
+                    movementReplicator = MovementReplicator.AddReplicatorToObject(gameObject);
                 }
+                else
+                {
+                    movementReplicator.ClearBuffer();
+                }
+
                 MovementBroadcaster.UnregisterWatched(entityId);
                 StopSimulatingEntity(entityId);
             }
