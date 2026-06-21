@@ -17,7 +17,7 @@ public sealed partial class CrafterLogic_NotifyPickup_Patch : NitroxPatch, IDyna
     public static void Prefix(CrafterLogic __instance)
     {
         // See GhostCrafter_OnCraftingBegin_Patch.Postfix to know why we get NitroxId on CrafterLogic
-        if (__instance.TryGetIdOrWarn(out NitroxId crafterId))
+        if (TryGetCrafterSyncId(__instance, out NitroxId crafterId))
         {
             // Below code is adapted from CrafterLogic.TryPickupAsync
 
@@ -50,5 +50,16 @@ public sealed partial class CrafterLogic_NotifyPickup_Patch : NitroxPatch, IDyna
         }
 
         // The Pickup() item codepath will inform the server that the item was added to the inventory.
+    }
+
+    private static bool TryGetCrafterSyncId(CrafterLogic crafterLogic, out NitroxId crafterId)
+    {
+        MapRoomFunctionality mapRoomFunctionality = crafterLogic.GetComponentInParent<MapRoomFunctionality>(true);
+        if (mapRoomFunctionality && mapRoomFunctionality.TryGetNitroxId(out crafterId))
+        {
+            return true;
+        }
+
+        return crafterLogic.TryGetIdOrWarn(out crafterId);
     }
 }
