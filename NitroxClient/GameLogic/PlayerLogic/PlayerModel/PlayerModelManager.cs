@@ -81,6 +81,13 @@ public class PlayerModelManager
         // we also take a dependency on the lack of signalping later to differentiate remote player pings from others.
         Object.DestroyImmediate(signalBase.GetComponent<SignalPing>());
 
+        // Disable the SphereCollider on the signal to prevent it from triggering proximity events
+        // (e.g., precursor pedestals, doors) when the remote player approaches
+        if (signalBase.TryGetComponent(out SphereCollider sphereCollider))
+        {
+            sphereCollider.enabled = false;
+        }
+
         SetInGamePingColor(player, ping);
     }
 
