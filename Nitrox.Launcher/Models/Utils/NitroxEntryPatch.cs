@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
 using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Utils;
@@ -31,7 +32,7 @@ public static class NitroxEntryPatch
     {
         ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath, nameof(subnauticaBasePath));
 
-        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
+        string subnauticaManagedPath = GetManagedPath(subnauticaBasePath);
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
@@ -134,7 +135,7 @@ public static class NitroxEntryPatch
 
         Log.Debug("Removing Nitrox entry point from Subnautica");
 
-        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
+        string subnauticaManagedPath = GetManagedPath(subnauticaBasePath);
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
@@ -200,7 +201,7 @@ public static class NitroxEntryPatch
 
     public static bool IsPatchApplied(string subnauticaBasePath)
     {
-        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
+        string subnauticaManagedPath = GetManagedPath(subnauticaBasePath);
         string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
 
         using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
@@ -210,5 +211,15 @@ public static class NitroxEntryPatch
 
             return awakeMethod.Body.Instructions[0]?.ToString() == NITROX_EXECUTE_INSTRUCTION;
         }
+    }
+
+    private static string GetManagedPath(string subnauticaBasePath)
+    {
+        if (GameInstallationHelper.TryGetGameInstallation(subnauticaBasePath, GameInfo.Subnautica, out GameInstallationLayout layout))
+        {
+            return layout.ManagedPath;
+        }
+
+        return Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
     }
 }

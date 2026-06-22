@@ -168,9 +168,9 @@ public static class NitroxUser
         }
     }
 
-    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform)
+    public static void SetGamePathAndPlatform(string path, IGamePlatform? platform, bool inferPlatform = true)
     {
         gamePath = Path.GetFullPath(path);
-        GamePlatform = platform ?? GamePlatforms.GetPlatformByGameDir(path);
+        GamePlatform = platform ?? (inferPlatform ? GamePlatforms.GetPlatformByGameDir(path) : null);
     }
 }

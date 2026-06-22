@@ -20,6 +20,7 @@ public class PlatformToIconConverter : Converter<PlatformToIconConverter>
         Platform.HEROIC => "/Assets/Images/store-icons/heroic.png",
         Platform.MICROSOFT => "/Assets/Images/store-icons/xbox.png",
         Platform.DISCORD => "/Assets/Images/store-icons/discord.png",
+        Platform.WINE => "/Assets/Images/store-icons/missing.png",
         _ => "/Assets/Images/store-icons/missing.png",
     };
 }

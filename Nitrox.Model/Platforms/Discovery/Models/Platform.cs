@@ -20,5 +20,8 @@ public enum Platform
     MICROSOFT,
 
     [Description("Discord")]
-    DISCORD
+    DISCORD,
+
+    [Description("Wine")]
+    WINE
 }

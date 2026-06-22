@@ -7,6 +7,7 @@ using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Model.Core;
 using Nitrox.Model.Logger;
+using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Utils;
@@ -22,7 +23,8 @@ internal static class GameInspect
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallPath);
 
-            string gameVersionFile = Path.Combine(gameInstallPath, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+            string dataPath = GetGameDataPath(gameInstallPath);
+            string gameVersionFile = Path.Combine(dataPath, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
             if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion < NitroxEnvironment.GameMinimumVersion)
             {
                 if (dialogService != null)
@@ -47,6 +49,16 @@ internal static class GameInspect
         }
 
         return false;
+    }
+
+    private static string GetGameDataPath(string gameInstallPath)
+    {
+        if (GameInstallationHelper.TryGetGameInstallation(gameInstallPath, GameInfo.Subnautica, out GameInstallationLayout layout))
+        {
+            return Path.GetDirectoryName(layout.ManagedPath) ?? Path.Combine(layout.RootPath, GameInfo.Subnautica.DataFolder);
+        }
+
+        return Path.Combine(gameInstallPath, GameInfo.Subnautica.DataFolder);
     }
 
     /// <summary>

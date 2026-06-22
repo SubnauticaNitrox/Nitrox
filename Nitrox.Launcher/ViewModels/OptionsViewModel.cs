@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -17,6 +18,7 @@ using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
+using Nitrox.Model.Platforms.Store;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -83,6 +85,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
     private void SetTargetedSubnauticaPath(string path)
     {
+        path = GameInstallationHelper.NormalizeGamePath(path, GameInfo.Subnautica);
         if (!Directory.Exists(path))
         {
             return;
@@ -101,7 +104,8 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
 
         // Save game path as preferred for future sessions.
         NitroxUser.PreferredGamePath = path;
-        NitroxUser.SetGamePathAndPlatform(path, null);
+        bool isWineLayout = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && GameInstallationHelper.IsWindowsGameLayout(path, GameInfo.Subnautica);
+        NitroxUser.SetGamePathAndPlatform(path, isWineLayout ? GamePlatforms.GetPlatformByFlag(GameLibraries.WINE) : null, !isWineLayout);
     }
 
     [RelayCommand]
@@ -113,17 +117,29 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             return;
         }
 
-        if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
+        if (!GameInstallationHelper.HasValidGameFolder(selectedDirectory, GameInfo.Subnautica))
         {
-            LauncherNotifier.Error("Invalid subnautica directory");
+            LauncherNotifier.Error("Invalid Subnautica directory. Select Subnautica.app, its Contents folder, or a Windows install root for Wine.");
             return;
         }
 
+        selectedDirectory = GameInstallationHelper.NormalizeGamePath(selectedDirectory, GameInfo.Subnautica);
         if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
             await Task.Run(() => SetTargetedSubnauticaPath(selectedDirectory));
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LauncherNotifier.Success("Applied changes");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && GameInstallationHelper.IsNativeMacOSGameLayout(selectedDirectory, GameInfo.Subnautica))
+            {
+                LauncherNotifier.Warning("Native macOS Subnautica was selected. Singleplayer can be launched, but multiplayer requires a Windows install through Wine.");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && GameInstallationHelper.IsWindowsGameLayout(selectedDirectory, GameInfo.Subnautica))
+            {
+                LauncherNotifier.Success("Applied Wine Subnautica path");
+            }
+            else
+            {
+                LauncherNotifier.Success("Applied changes");
+            }
         }
     }
 
