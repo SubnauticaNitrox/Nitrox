@@ -23,6 +23,109 @@ public sealed class Steam : IGamePlatform
 
     private static string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
 
+    public static string? GetExeFile()
+    {
+        string steamExecutable = "";
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
+
+            if (string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Steam"
+                );
+            }
+
+            steamExecutable = Directory.Exists(steamPath) ? Path.Combine(steamPath, "steam.exe") : "";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            steamExecutable = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            }
+            if (!Directory.Exists(homePath))
+            {
+                return null;
+            }
+
+            string[] commonPaths =
+            [
+                // Default install location
+                // https://github.com/ValveSoftware/steam-for-linux
+                Path.Combine(homePath, ".local", "share", "Steam"),
+                // Those symlinks are often use as a backward-compatibility (Debian, Ubuntu, Fedora, ArchLinux)
+                // https://wiki.archlinux.org/title/steam, https://askubuntu.com/questions/227502/where-are-steam-games-installed
+                Path.Combine(homePath, ".steam", "steam"),
+                Path.Combine(homePath, ".steam", "root"),
+                // Flatpack install
+                // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
+            ];
+
+            string steamPath = "";
+            foreach (string path in commonPaths)
+            {
+                try
+                {
+                    if (Directory.GetFileSystemEntries(path).Any())
+                    {
+                        steamPath = path;
+                        break;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamExecutable = Path.Combine(steamPath, "steam.sh");
+            }
+        }
+
+        return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
+    }
+
+    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
+    {
+        bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
+        try
+        {
+            using ProcessEx steam = await StartPlatformAsync();
+            if (steam == null)
+            {
+                throw new GamePlatformException(GameLibraries.STEAM, "Platform is not running and could not be found.");
+            }
+        }
+        catch (OperationCanceledException ex)
+        {
+            throw new GamePlatformException(GameLibraries.STEAM, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+        }
+
+        if (bigPictureMode)
+        {
+            if (isPlatformStartingUp)
+            {
+                // TODO: Instead of waiting, detect when Steam Big Picture is ready to be started by Steam.
+                await Task.Delay(2000);
+            }
+            await LaunchSteamBigPictureModeAsync();
+        }
+
+        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
+    }
+
     public bool OwnsGame(string gameRootPath)
     {
         if (GetExeFile() == null)
@@ -108,108 +211,6 @@ public sealed class Steam : IGamePlatform
         return steam;
     }
 
-    public static string? GetExeFile()
-    {
-        string steamExecutable = "";
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
-
-            if (string.IsNullOrWhiteSpace(steamPath))
-            {
-                steamPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "Steam"
-                );
-            }
-
-            steamExecutable = Directory.Exists(steamPath) ? Path.Combine(steamPath, "steam.exe") : "";
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            steamExecutable = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (string.IsNullOrWhiteSpace(homePath))
-            {
-                homePath = Environment.GetEnvironmentVariable("HOME");
-            }
-            if (!Directory.Exists(homePath))
-            {
-                return null;
-            }
-
-            string[] commonPaths = [
-                // Default install location
-                // https://github.com/ValveSoftware/steam-for-linux
-                Path.Combine(homePath, ".local", "share", "Steam"),
-                // Those symlinks are often use as a backward-compatibility (Debian, Ubuntu, Fedora, ArchLinux)
-                // https://wiki.archlinux.org/title/steam, https://askubuntu.com/questions/227502/where-are-steam-games-installed
-                Path.Combine(homePath, ".steam", "steam"),
-                Path.Combine(homePath, ".steam", "root"),
-                // Flatpack install
-                // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
-                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
-                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
-            ];
-
-            string steamPath = "";
-            foreach (string path in commonPaths)
-            {
-                try
-                {
-                    if (Directory.GetFileSystemEntries(path).Any())
-                    {
-                        steamPath = path;
-                        break;
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-            if (!string.IsNullOrWhiteSpace(steamPath))
-            {
-                steamExecutable = Path.Combine(steamPath, "steam.sh");
-            }
-        }
-
-        return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
-    }
-
-    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
-    {
-        bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
-        try
-        {
-            using ProcessEx steam = await StartPlatformAsync();
-            if (steam == null)
-            {
-                throw new GamePlatformException(GameLibraries.STEAM, "Platform is not running and could not be found.");
-            }
-        }
-        catch (OperationCanceledException ex)
-        {
-            throw new GamePlatformException(GameLibraries.STEAM, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
-        }
-
-        if (bigPictureMode)
-        {
-            if (isPlatformStartingUp)
-            {
-                // TODO: Instead of waiting, detect when Steam Big Picture is ready to be started by Steam.
-                await Task.Delay(2000);
-            }
-            await LaunchSteamBigPictureModeAsync();
-        }
-
-        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
-    }
-
     private static async Task LaunchSteamBigPictureModeAsync()
     {
         string? steamExe = GetExeFile();
@@ -261,16 +262,15 @@ public sealed class Steam : IGamePlatform
             throw new Exception("Steam was not found on your machine.");
         }
         // Game will play inside Proton so it needs launcher path to be a Wine-supported path!
-        string nativeLauncherPath = NitroxUser.LauncherPath;
-        string launcherPath = nativeLauncherPath;
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(nativeLauncherPath))
+        string launcherPathWithinGame = NitroxUser.LauncherPath;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !string.IsNullOrWhiteSpace(launcherPathWithinGame))
         {
-            launcherPath = $"Z:{nativeLauncherPath.Replace("/", "\\")}";
+            launcherPathWithinGame = $"Z:{launcherPathWithinGame.Replace("/", "\\")}";
         }
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
-            args = $@"-applaunch {steamAppId} --nitrox ""{launcherPath}"" {args}";
+            args = $@"-applaunch {steamAppId} --nitrox ""{launcherPathWithinGame}"" {args}";
             if (bigPictureMode)
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
@@ -293,7 +293,7 @@ public sealed class Steam : IGamePlatform
             Arguments = args,
             EnvironmentVariables =
             {
-                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPath,
+                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPathWithinGame,
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
                 ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay
@@ -322,12 +322,13 @@ public sealed class Steam : IGamePlatform
 
             string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
             string? protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
-            string? protonPath = protonVersion != null ? ResolveConfiguredProtonPath(protonVersion, steamLibraryPaths, protonRoot) : null;
-            protonPath ??= FindBestAvailableProtonPath(steamLibraryPaths, protonRoot);
+            string? protonPath = protonVersion != null ? FindConfiguredProtonPath(protonVersion, steamLibraryPaths, protonRoot) : null;
+            protonPath ??= FindBestFallbackProtonPath(steamLibraryPaths, protonRoot);
             if (protonPath == null)
             {
                 throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
             }
+            Log.Debug($"Starting game with proton: {protonPath}");
 
             result.FileName = Path.Combine(sniperRuntimePath, "_v2-entry-point");
             result.Arguments = $" --verb=run -- \"{Path.Combine(protonPath, "proton")}\" run \"{gameFilePath}\" {args}";
@@ -336,7 +337,7 @@ public sealed class Steam : IGamePlatform
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
-            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(steamLibraryPaths.Append(nativeLauncherPath)));
+            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(steamLibraryPaths.Append(NitroxUser.LauncherPath)));
         }
 
         return result;
@@ -356,13 +357,20 @@ public sealed class Steam : IGamePlatform
         static string GetLibraryPath(string steamPath, string gameId)
         {
             string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
-            string content = File.ReadAllText(libraryFoldersPath);
+            string content;
+            try
+            {
+                content = File.ReadAllText(libraryFoldersPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                return "";
+            }
 
             // Regex to match library folder entries
             Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
-            MatchCollection matches = folderRegex.Matches(content);
-
-            foreach (Match match in matches)
+            foreach (Match match in folderRegex.Matches(content))
             {
                 string path = match.Groups[2].Value;
                 string apps = match.Groups[3].Value;
@@ -374,7 +382,7 @@ public sealed class Steam : IGamePlatform
                 }
             }
 
-            return ""; // Return empty string if not found
+            return "";
         }
 
         static List<string> GetAllLibraryPaths(string steamPath)
@@ -384,10 +392,8 @@ public sealed class Steam : IGamePlatform
 
             // Regex to match library folder entries
             Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
-            MatchCollection matches = folderRegex.Matches(content);
-
             List<string> libraryPaths = [];
-            foreach (Match match in matches)
+            foreach (Match match in folderRegex.Matches(content))
             {
                 string path = match.Groups[2].Value.Replace("\\\\", "\\");
                 if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
@@ -422,10 +428,9 @@ public sealed class Steam : IGamePlatform
                     {
                         return appIdMatch.Groups[1].Value;
                     }
-                    
-                    const string defaultPattern = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
-                    Match defaultMatch = Regex.Match(compatToolMapping, defaultPattern);
-                    
+
+                    const string DEFAULT_PATTERN = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
+                    Match defaultMatch = Regex.Match(compatToolMapping, DEFAULT_PATTERN);
                     if (defaultMatch.Success)
                     {
                         return defaultMatch.Groups[1].Value;
@@ -436,12 +441,12 @@ public sealed class Steam : IGamePlatform
             }
             catch (Exception ex)
             {
-                Log.Debug(ex);
+                Log.Error(ex);
                 return null;
             }
         }
 
-        static string? ResolveConfiguredProtonPath(string protonVersion, IEnumerable<string> steamLibraryPaths, string protonRoot)
+        static string? FindConfiguredProtonPath(string protonVersion, IEnumerable<string> steamLibraryPaths, string protonRoot)
         {
             if (protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase))
             {
@@ -470,24 +475,18 @@ public sealed class Steam : IGamePlatform
             return File.Exists(Path.Combine(customProtonPath, "proton")) ? customProtonPath : null;
         }
 
-        static string? FindBestAvailableProtonPath(IEnumerable<string> steamLibraryPaths, string protonRoot)
+        static string? FindBestFallbackProtonPath(IEnumerable<string> steamLibraryPaths, string protonRoot)
         {
             string? valveProton = EnumerateSteamCommonDirectories(steamLibraryPaths)
-                                   .Where(HasProtonExecutable)
-                                   .Select(path => (Path: path, Version: GetValveProtonVersion(Path.GetFileName(path))))
-                                   .Where(candidate => candidate.Version != null)
-                                   .OrderByDescending(candidate => candidate.Version)
-                                   .Select(candidate => candidate.Path)
-                                   .FirstOrDefault();
+                                  .Where(HasProtonExecutable)
+                                  .Select(path => (Path: path, FolderName: Path.GetFileName(path), Version: GetValveProtonVersion(Path.GetFileName(path))))
+                                  .OrderByDescending(candidate => candidate.Version)
+                                  .ThenByDescending(candidate => candidate.FolderName.Contains("Experimental", StringComparison.OrdinalIgnoreCase))
+                                  .Select(candidate => candidate.Path)
+                                  .FirstOrDefault();
+            return valveProton ?? EnumerateDirectories(protonRoot).FirstOrDefault(HasProtonExecutable);
 
-            if (valveProton != null)
-            {
-                return valveProton;
-            }
-
-            return EnumerateSteamCommonDirectories(steamLibraryPaths)
-                   .FirstOrDefault(path => HasProtonExecutable(path) && Path.GetFileName(path).Contains("Experimental", StringComparison.OrdinalIgnoreCase))
-                   ?? EnumerateDirectories(protonRoot).FirstOrDefault(HasProtonExecutable);
+            static bool HasProtonExecutable(string path) => File.Exists(Path.Combine(path, "proton"));
         }
 
         static IEnumerable<string> EnumerateSteamCommonDirectories(IEnumerable<string> steamLibraryPaths)
@@ -498,12 +497,14 @@ public sealed class Steam : IGamePlatform
 
         static IEnumerable<string> EnumerateDirectories(string path)
         {
-            return Directory.Exists(path) ? Directory.EnumerateDirectories(path) : [];
-        }
-
-        static bool HasProtonExecutable(string path)
-        {
-            return File.Exists(Path.Combine(path, "proton"));
+            try
+            {
+                return Directory.EnumerateDirectories(path);
+            }
+            catch (Exception ex) when (ex is IOException or DirectoryNotFoundException)
+            {
+                return [];
+            }
         }
 
         static Version? GetValveProtonVersion(string directoryName)
