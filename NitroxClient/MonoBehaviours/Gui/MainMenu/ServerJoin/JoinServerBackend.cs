@@ -131,7 +131,7 @@ public static class JoinServerBackend
                 _                                     => ex.Message
             };
 
-            Log.ErrorSensitive("{error}: {ip}:{port}. {reason}", Language.main.Get("Nitrox_UnableToConnect"), serverIp, serverPort, reason);
+            Log.ErrorSensitive("Unable to contact remote server: {ip}:{port}. {reason}", serverIp, serverPort, ex.Message);
             string msg = $"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}.\n{reason}";
 
             if (ip.IsLocalhost())
