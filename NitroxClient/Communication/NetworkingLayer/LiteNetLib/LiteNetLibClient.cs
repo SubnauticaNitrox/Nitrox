@@ -25,6 +25,9 @@ public class LiteNetLibClient : IClient
     private readonly INetworkDebugger networkDebugger;
     private readonly PacketReceiver packetReceiver;
     private readonly FieldInfo manualModeFieldInfo = typeof(NetManager).GetField("_manualMode", BindingFlags.Instance | BindingFlags.NonPublic);
+    
+    private DisconnectInfo? lastDisconnectInfo;
+    public  DisconnectInfo? ConnectFailReason => lastDisconnectInfo;
 
     public bool IsConnected { get; private set; }
     public int PingInterval
@@ -126,14 +129,14 @@ public class LiteNetLibClient : IClient
 
     private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
-        // Check must happen before IsConnected is set to false, so that it doesn't send an exception when we aren't even ingame
-        if (Multiplayer.Active)
+        lastDisconnectInfo = disconnectInfo;
+        // If we were never connected, this is a connect-time failure, not an in-game disconnect.
+        if (IsConnected && Multiplayer.Active)
         {
             Modal.Get<LostConnectionModal>()?.Show();
         }
-
         IsConnected = false;
-        Log.Info("Disconnected from server");
+        Log.Error($"Disconnected from server. Reason: {disconnectInfo.Reason}, SocketError: {disconnectInfo.SocketErrorCode}");
     }
 
     internal void ForceUpdate()
