@@ -15,6 +15,7 @@ using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
+using LiteNetLib;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 
