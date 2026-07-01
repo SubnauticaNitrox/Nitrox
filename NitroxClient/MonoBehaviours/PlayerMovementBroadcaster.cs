@@ -10,7 +10,31 @@ namespace NitroxClient.MonoBehaviours;
 
 public class PlayerMovementBroadcaster : MonoBehaviour
 {
+    /// <remarks>
+    /// In unity position units. Refer to <see cref="ShouldBroadcastMovement"/> for use infos.
+    /// </remarks>
+    private const float MINIMAL_MOVEMENT_THRESHOLD = 0.05f;
+    /// <remarks>
+    /// In degrees (°). Refer to <see cref="ShouldBroadcastMovement"/> for use infos.
+    /// </remarks>
+    private const float MINIMAL_ROTATION_THRESHOLD = 0.05f;
+    /// <remarks>
+    /// In units/s. Refer to <see cref="ShouldBroadcastMovement"/> for use infos.
+    /// </remarks>
+    private const float MINIMAL_VELOCITY_THRESHOLD = 0.1f;
+    /// <remarks>
+    /// In seconds. Refer to <see cref="ShouldBroadcastMovement"/> for use infos.
+    /// </remarks>
+    private const float MAX_TIME_WITHOUT_BROADCAST = 5f;
+    /// <inheritdoc cref="MAX_TIME_WITHOUT_BROADCAST"/>
+    private const float SAFETY_BROADCAST_WINDOW = 0.2f;
+
     private LocalPlayer localPlayer;
+
+    private float latestBroadcastTime;
+    private Vector3 latestPositionSent;
+    private Quaternion latestBodyRotationSent;
+    private bool hasSentStoppedPacket;
 
     public void Awake()
     {
@@ -66,7 +90,65 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             currentPosition = subRootTransform.TransformPoint(currentPosition);
         }
 
+        if (!ShouldBroadcastMovement(currentPosition, bodyRotation, playerVelocity))
+        {
+            return;
+        }
+        latestPositionSent = currentPosition;
+        latestBodyRotationSent = bodyRotation;
+
         localPlayer.BroadcastLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation);
+    }
+
+    /// <summary>
+    /// Rate limiter which prevents non-moving players from spamming movement packets following some rules:
+    /// - packets are never sent more often than <see cref="MovementBroadcaster.BROADCAST_PERIOD"/> allows
+    /// - position changes less than <see cref="MINIMAL_MOVEMENT_THRESHOLD"/> and rotation changes less than <see cref="MINIMAL_ROTATION_THRESHOLD"/> are ignored
+    /// - once the player comes to a full stop (velocity below <see cref="MINIMAL_VELOCITY_THRESHOLD"/>), exactly one final packet is sent so remote
+    /// machines settle on the stopped state, after which broadcasting stops completely until the player moves again
+    /// - if the player has velocity but hasn't moved past the position/rotation threshold yet (e.g. oscillating in place), a periodic resync every
+    /// <see cref="MAX_TIME_WITHOUT_BROADCAST"/> (with a <see cref="SAFETY_BROADCAST_WINDOW"/> grace period) corrects any drift accumulating remotely
+    /// </summary>
+    private bool ShouldBroadcastMovement(Vector3 currentPosition, Quaternion bodyRotation, Vector3 velocity)
+    {
+        float currentTime = (float)this.Resolve<TimeManager>().RealTimeElapsed;
+        if (currentTime < latestBroadcastTime + MovementBroadcaster.BROADCAST_PERIOD)
+        {
+            return false;
+        }
+
+        bool hasMoved = Vector3.Distance(latestPositionSent, currentPosition) > MINIMAL_MOVEMENT_THRESHOLD ||
+                        Quaternion.Angle(latestBodyRotationSent, bodyRotation) > MINIMAL_ROTATION_THRESHOLD;
+        if (hasMoved)
+        {
+            latestBroadcastTime = currentTime;
+            hasSentStoppedPacket = false;
+            return true;
+        }
+
+        bool isStandingStill = velocity.sqrMagnitude < MINIMAL_VELOCITY_THRESHOLD * MINIMAL_VELOCITY_THRESHOLD;
+        if (isStandingStill)
+        {
+            if (hasSentStoppedPacket)
+            {
+                return false;
+            }
+            latestBroadcastTime = currentTime;
+            hasSentStoppedPacket = true;
+            return true;
+        }
+
+        if (currentTime > latestBroadcastTime + MAX_TIME_WITHOUT_BROADCAST)
+        {
+            if (currentTime > latestBroadcastTime + MAX_TIME_WITHOUT_BROADCAST + SAFETY_BROADCAST_WINDOW)
+            {
+                // only reset the broadcast timer after the safety window has elapsed, mirroring WatchedEntry.ShouldBroadcastMovement
+                latestBroadcastTime = currentTime;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     private bool BroadcastPlayerInCyclopsMovement()

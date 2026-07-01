@@ -61,6 +61,8 @@ public class RemotePlayer : INitroxPlayer
 
     public CyclopsPawn Pawn { get; set; }
 
+    private float lastPositionUpdateTime = -1f;
+
     public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
     {
         PlayerContext = playerContext;
@@ -156,9 +158,14 @@ public class RemotePlayer : INitroxPlayer
         SetVehicle(null);
         SetPilotingChair(null);
 
+        // Movement packets no longer arrive at a fixed cadence (idle players send none at all, moving players are throttled),
+        // so the correction has to be based on how long it's actually been since the last packet instead of a fixed timestep.
+        float correctionTime = lastPositionUpdateTime >= 0f ? Mathf.Max(Time.time - lastPositionUpdateTime, Time.fixedDeltaTime) : Time.fixedDeltaTime;
+        lastPositionUpdateTime = Time.time;
+
         AnimationController.AimingRotation = aimingRotation;
         AnimationController.UpdatePlayerAnimations = true;
-        AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
+        AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, correctionTime);
 
         // If in a subroot the position will be relative to the subroot
         if (SubRoot && SubRoot.isBase)
@@ -171,7 +178,7 @@ public class RemotePlayer : INitroxPlayer
         }
 
         RigidBody.velocity = AnimationController.Velocity;
-        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime);
+        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, correctionTime);
     }
 
     public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)
