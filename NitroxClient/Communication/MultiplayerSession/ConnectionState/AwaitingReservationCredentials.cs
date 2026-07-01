@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Helper;
 using Nitrox.Model.MultiplayerSession;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
 
@@ -19,9 +18,8 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             {
                 ValidateState(sessionConnectionContext);
 
-                string reservationCorrelationId = Guid.NewGuid().ToString();
-                RequestSessionReservation(sessionConnectionContext, reservationCorrelationId);
-                AwaitSessionReservation(sessionConnectionContext, reservationCorrelationId);
+                RequestSessionReservation(sessionConnectionContext);
+                AwaitSessionReservation(sessionConnectionContext, sessionConnectionContext.SessionPolicy.SessionId);
             }
             catch (Exception)
             {
@@ -31,19 +29,19 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             return Task.CompletedTask;
         }
 
-        private void RequestSessionReservation(IMultiplayerSessionConnectionContext sessionConnectionContext, string reservationCorrelationId)
+        private void RequestSessionReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
             IClient client = sessionConnectionContext.Client;
             PlayerSettings playerSettings = sessionConnectionContext.PlayerSettings;
             AuthenticationContext authenticationContext = sessionConnectionContext.AuthenticationContext;
 
-            MultiplayerSessionReservationRequest requestPacket = new(reservationCorrelationId, playerSettings, authenticationContext);
+            MultiplayerSessionReservationRequest requestPacket = new(playerSettings, authenticationContext);
             client.Send(requestPacket);
         }
 
-        private void AwaitSessionReservation(IMultiplayerSessionConnectionContext sessionConnectionContext, string reservationCorrelationId)
+        private void AwaitSessionReservation(IMultiplayerSessionConnectionContext sessionConnectionContext, SessionId reservationSessionId)
         {
-            AwaitingSessionReservation nextState = new AwaitingSessionReservation(reservationCorrelationId);
+            AwaitingSessionReservation nextState = new(reservationSessionId);
             sessionConnectionContext.UpdateConnectionState(nextState);
         }
 

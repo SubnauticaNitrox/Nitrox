@@ -1,6 +1,5 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
@@ -34,12 +33,8 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         private void EnterMultiplayerSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            IClient client = sessionConnectionContext.Client;
-            MultiplayerSessionReservation reservation = sessionConnectionContext.Reservation;
-            string correlationId = reservation.CorrelationId;
-
-            PlayerJoiningMultiplayerSession packet = new(correlationId);
-            client.Send(packet);
+            PlayerJoiningMultiplayerSession packet = new();
+            sessionConnectionContext.Client.Send(packet);
         }
 
         private void ChangeState(IMultiplayerSessionConnectionContext sessionConnectionContext)

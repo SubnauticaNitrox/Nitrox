@@ -15,15 +15,13 @@ internal sealed class MultiplayerSessionReservationRequestProcessor(PlayerManage
     {
         logger.ZLogInformation($"Processing reservation request from {packet.AuthenticationContext.Username}");
 
-        string correlationId = packet.CorrelationId;
         PlayerSettings playerSettings = packet.PlayerSettings;
         AuthenticationContext authenticationContext = packet.AuthenticationContext;
         MultiplayerSessionReservation reservation = playerManager.ReservePlayerContext(
             context.Sender.SessionId,
             context.Sender.EndPoint,
             playerSettings,
-            authenticationContext,
-            correlationId);
+            authenticationContext);
 
         logger.ZLogInformation($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation}");
         await context.ReplyAsync(reservation);

@@ -68,26 +68,25 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         SessionId sessionId,
         IPEndPoint endPoint,
         PlayerSettings playerSettings,
-        AuthenticationContext authenticationContext,
-        string correlationId)
+        AuthenticationContext authenticationContext)
     {
         if (Math.Min(reservedPlayerNames.Count - 1, 0) >= options.Value.MaxConnections)
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
-            return new MultiplayerSessionReservation(correlationId, rejectedState);
+            return new MultiplayerSessionReservation(sessionId, rejectedState);
         }
 
         if (!string.IsNullOrEmpty(options.Value.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != options.Value.ServerPassword))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
-            return new MultiplayerSessionReservation(correlationId, rejectedState);
+            return new MultiplayerSessionReservation(sessionId, rejectedState);
         }
 
 
         if (!PlayerNameRegex().IsMatch(authenticationContext.Username))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
-            return new MultiplayerSessionReservation(correlationId, rejectedState);
+            return new MultiplayerSessionReservation(sessionId, rejectedState);
         }
 
         string playerName = authenticationContext.Username;
@@ -96,13 +95,13 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         if (player?.IsPermaDeath == true && options.Value.IsHardcore())
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
-            return new MultiplayerSessionReservation(correlationId, rejectedState);
+            return new MultiplayerSessionReservation(sessionId, rejectedState);
         }
 
         if (reservedPlayerNames.Contains(playerName))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED;
-            return new MultiplayerSessionReservation(correlationId, rejectedState);
+            return new MultiplayerSessionReservation(sessionId, rejectedState);
         }
         reservedPlayerNames.Add(playerName);
 
@@ -119,7 +118,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
         reservations.Add(session.Id, playerContext);
 
-        return new MultiplayerSessionReservation(correlationId, session.Id);
+        return new MultiplayerSessionReservation(sessionId);
     }
 
     public Player CreatePlayerData(SessionId sessionId, out bool wasBrandNewPlayer)

@@ -6,23 +6,15 @@ using Nitrox.Model.Packets;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class MultiplayerSessionReservation : CorrelatedPacket
+public sealed class MultiplayerSessionReservation(
+    SessionId sessionId,
+    MultiplayerSessionReservationState reservationState = MultiplayerSessionReservationState.RESERVED)
+    : Packet
 {
-    public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState) : base(correlationId)
-    {
-        ReservationState = reservationState;
-    }
-
-    public MultiplayerSessionReservation(string correlationId, SessionId sessionId,
-                                         MultiplayerSessionReservationState reservationState = MultiplayerSessionReservationState.RESERVED) : this(correlationId, reservationState)
-    {
-        SessionId = sessionId;
-    }
-
     /// <summary>
     ///     Gets the session id of the player.
     /// </summary>
-    public SessionId SessionId { get; }
+    public SessionId SessionId { get; } = sessionId;
 
-    public MultiplayerSessionReservationState ReservationState { get; }
+    public MultiplayerSessionReservationState ReservationState { get; } = reservationState;
 }
