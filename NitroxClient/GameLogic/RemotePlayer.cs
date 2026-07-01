@@ -61,6 +61,12 @@ public class RemotePlayer : INitroxPlayer
 
     public CyclopsPawn Pawn { get; set; }
 
+    /// <remarks>
+    /// In units/s. Mirrors <see cref="PlayerMovementBroadcaster"/>'s own threshold for what counts as "not moving",
+    /// since this is checking whether the sender already decided this packet represents a full stop.
+    /// </remarks>
+    private const float STOPPED_VELOCITY_THRESHOLD = 0.1f;
+
     private float lastPositionUpdateTime = -1f;
 
     public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
@@ -165,7 +171,14 @@ public class RemotePlayer : INitroxPlayer
 
         AnimationController.AimingRotation = aimingRotation;
         AnimationController.UpdatePlayerAnimations = true;
-        AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, correctionTime);
+
+        // A (near) zero velocity means the sender has come to a full stop and won't send any further packets until it moves
+        // again. GetCorrectedVelocity/GetCorrectedAngularVelocity below compute a "keep nudging towards the target" value
+        // that's meant to be re-evaluated on the next packet; since no further packet is coming, any left-over non-zero
+        // result (e.g. from residual jitter) would otherwise keep getting integrated by physics forever, causing the
+        // remote player to drift or spin in place indefinitely instead of actually coming to rest.
+        bool hasStopped = velocity.sqrMagnitude < STOPPED_VELOCITY_THRESHOLD * STOPPED_VELOCITY_THRESHOLD;
+        AnimationController.Velocity = hasStopped ? Vector3.zero : MovementHelper.GetCorrectedVelocity(position, velocity, Body, correctionTime);
 
         // If in a subroot the position will be relative to the subroot
         if (SubRoot && SubRoot.isBase)
@@ -177,8 +190,18 @@ public class RemotePlayer : INitroxPlayer
             aimingRotation = vehicleAngle * aimingRotation;
         }
 
-        RigidBody.velocity = AnimationController.Velocity;
-        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, correctionTime);
+        if (hasStopped)
+        {
+            Body.transform.position = position;
+            Body.transform.rotation = bodyRotation;
+            RigidBody.velocity = Vector3.zero;
+            RigidBody.angularVelocity = Vector3.zero;
+        }
+        else
+        {
+            RigidBody.velocity = AnimationController.Velocity;
+            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, correctionTime);
+        }
     }
 
     public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)
