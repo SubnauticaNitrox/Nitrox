@@ -9,7 +9,7 @@ internal sealed class PlayerJoiningMultiplayerSessionProcessor(JoiningManager jo
 
     public Task Process(AnonProcessorContext context, PlayerJoiningMultiplayerSession packet)
     {
-        joiningManager.AddToJoinQueue(context.Sender.SessionId, packet.ReservationKey);
+        joiningManager.AddToJoinQueue(context.Sender.SessionId);
         return Task.CompletedTask;
     }
 }

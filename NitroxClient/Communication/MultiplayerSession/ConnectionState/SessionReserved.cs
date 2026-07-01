@@ -37,15 +37,14 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IClient client = sessionConnectionContext.Client;
             MultiplayerSessionReservation reservation = sessionConnectionContext.Reservation;
             string correlationId = reservation.CorrelationId;
-            string reservationKey = reservation.ReservationKey;
 
-            PlayerJoiningMultiplayerSession packet = new PlayerJoiningMultiplayerSession(correlationId, reservationKey);
+            PlayerJoiningMultiplayerSession packet = new(correlationId);
             client.Send(packet);
         }
 
         private void ChangeState(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            SessionJoined nextState = new SessionJoined();
+            SessionJoined nextState = new();
             sessionConnectionContext.UpdateConnectionState(nextState);
         }
     }

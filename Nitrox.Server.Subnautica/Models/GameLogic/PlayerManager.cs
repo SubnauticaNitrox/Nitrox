@@ -25,8 +25,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     private readonly ThreadSafeDictionary<string, Player> allPlayersByName = [];
     private readonly ThreadSafeDictionary<SessionId, Player> connectedPlayersBySessionId = [];
-    private readonly ThreadSafeDictionary<SessionId, ConnectionAssets> assetsBySessionId = [];
-    private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
+    private readonly ThreadSafeDictionary<SessionId, PlayerContext> reservations = [];
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
     private readonly SessionManager sessionManager = sessionManager;
@@ -39,9 +38,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     public IEnumerable<Player> ConnectedPlayers()
     {
-        return assetsBySessionId.Values
-                                 .Where(assetPackage => assetPackage.Player != null)
-                                 .Select(assetPackage => assetPackage.Player);
+        return connectedPlayersBySessionId.Values;
     }
 
     public List<Player> GetConnectedPlayers() => ConnectedPlayers().ToList();
@@ -56,9 +53,9 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         return ConnectedPlayers().Where(player => player.SessionId != excludeSessionId).ToList();
     }
 
-    public PlayerContext? GetPlayerContext(string reservationKey)
+    public PlayerContext? GetPlayerReservation(SessionId sessionId)
     {
-        return reservations.TryGetValue(reservationKey, out PlayerContext playerContext) ? playerContext : null;
+        return reservations.TryGetValue(sessionId, out PlayerContext player) ? player : null;
     }
 
     public void AddSavedPlayer(Player player)
@@ -107,14 +104,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED;
             return new MultiplayerSessionReservation(correlationId, rejectedState);
         }
-
-        assetsBySessionId.TryGetValue(sessionId, out ConnectionAssets assetPackage);
-        if (assetPackage == null)
-        {
-            assetPackage = new ConnectionAssets();
-            assetsBySessionId.Add(sessionId, assetPackage);
-            reservedPlayerNames.Add(playerName);
-        }
+        reservedPlayerNames.Add(playerName);
 
         bool hasSeenPlayerBefore = player != null;
         NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
@@ -126,20 +116,16 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
         // TODO: At some point, store the muted state of a player
         PlayerContext playerContext = new(playerName, session.Id, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);
-        string reservationKey = Guid.NewGuid().ToString();
 
-        reservations.Add(reservationKey, playerContext);
-        assetPackage.ReservationKey = reservationKey;
+        reservations.Add(session.Id, playerContext);
 
-        return new MultiplayerSessionReservation(correlationId, session.Id, reservationKey);
+        return new MultiplayerSessionReservation(correlationId, session.Id);
     }
 
-    public Player CreatePlayerData(SessionId sessionId, string reservationKey, out bool wasBrandNewPlayer)
+    public Player CreatePlayerData(SessionId sessionId, out bool wasBrandNewPlayer)
     {
-        PlayerContext playerContext = reservations[reservationKey];
+        PlayerContext playerContext = reservations[sessionId];
         Validate.NotNull(playerContext);
-        ConnectionAssets assetPackage = assetsBySessionId[sessionId];
-        Validate.NotNull(assetPackage);
 
         wasBrandNewPlayer = playerContext.WasBrandNewPlayer;
 
@@ -181,9 +167,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         // reconnecting players need to have their cell visibility refreshed
         player.ClearVisibleCells();
 
-        assetPackage.Player = player;
-        assetPackage.ReservationKey = null;
-        reservations.Remove(reservationKey);
+        reservations.Remove(sessionId);
 
         return player;
     }
@@ -225,27 +209,12 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         {
             return Task.CompletedTask;
         }
-        if (!assetsBySessionId.TryGetValue(player.SessionId, out ConnectionAssets assetPackage))
-        {
-            return Task.CompletedTask;
-        }
 
-        if (assetPackage.ReservationKey != null)
-        {
-            PlayerContext playerContext = reservations[assetPackage.ReservationKey];
-            reservedPlayerNames.Remove(playerContext.PlayerName);
-            reservations.Remove(assetPackage.ReservationKey);
-        }
-
-        if (assetPackage.Player != null)
-        {
-            reservedPlayerNames.Remove(player.Name);
-            connectedPlayersBySessionId.Remove(player.SessionId);
-            logger.ZLogInformation($"{player.Name} left the game");
-        }
-
-        assetsBySessionId.Remove(player.SessionId);
+        reservedPlayerNames.Remove(player.Name);
+        reservations.Remove(player.SessionId);
+        connectedPlayersBySessionId.Remove(player.SessionId);
         player.IsOnline = false;
+        logger.ZLogInformation($"{player.Name} left the game");
         return Task.CompletedTask;
     }
 }

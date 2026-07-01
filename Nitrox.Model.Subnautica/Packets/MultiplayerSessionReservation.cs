@@ -13,11 +13,10 @@ public class MultiplayerSessionReservation : CorrelatedPacket
         ReservationState = reservationState;
     }
 
-    public MultiplayerSessionReservation(string correlationId, SessionId sessionId, string reservationKey,
+    public MultiplayerSessionReservation(string correlationId, SessionId sessionId,
                                          MultiplayerSessionReservationState reservationState = MultiplayerSessionReservationState.RESERVED) : this(correlationId, reservationState)
     {
         SessionId = sessionId;
-        ReservationKey = reservationKey;
     }
 
     /// <summary>
@@ -25,6 +24,5 @@ public class MultiplayerSessionReservation : CorrelatedPacket
     /// </summary>
     public SessionId SessionId { get; }
 
-    public string ReservationKey { get; }
     public MultiplayerSessionReservationState ReservationState { get; }
 }

@@ -1,6 +1,5 @@
 ﻿using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.MultiplayerSession;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 

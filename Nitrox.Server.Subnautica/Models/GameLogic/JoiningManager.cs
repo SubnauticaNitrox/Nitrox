@@ -46,7 +46,7 @@ internal sealed class JoiningManager(
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly SessionSettings sessionSettings = sessionSettings;
 
-    private readonly ThreadSafeQueue<(SessionId, string)> joinQueue = new();
+    private readonly ThreadSafeQueue<SessionId> joinQueue = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
     public Action? SyncFinishedCallback { get; private set; }
@@ -66,23 +66,23 @@ internal sealed class JoiningManager(
 
             try
             {
-                (SessionId sessionId, string reservationKey) = joinQueue.Dequeue();
-                string? name = playerManager.GetPlayerContext(reservationKey)?.PlayerName;
+                SessionId sessionId = joinQueue.Dequeue();
+                string? name = playerManager.GetPlayerReservation(sessionId)?.PlayerName;
                 if (name == null)
                 {
                     continue;
                 }
 
                 // Do this after dequeuing because everyone's position shifts forward
-                (SessionId, string)[] array = [.. joinQueue];
+                SessionId[] array = [.. joinQueue];
                 for (int i = 0; i < array.Length; i++)
                 {
-                    (SessionId s, _) = array[i];
+                    SessionId s = array[i];
                     await packetSender.SendPacketAsync(new JoinQueueInfo(i + 1, options.Value.InitialSyncTimeout), s);
                 }
 
                 logger.ZLogInformation($"Starting sync for player {name}");
-                await SendInitialSyncAsync(sessionId, reservationKey);
+                await SendInitialSyncAsync(sessionId);
 
                 using CancellationTokenSource source = new(options.Value.InitialSyncTimeout);
                 bool syncFinished = false;
@@ -125,13 +125,13 @@ internal sealed class JoiningManager(
         }
     }
 
-    public void AddToJoinQueue(SessionId sessionId, string reservationKey)
+    public void AddToJoinQueue(SessionId sessionId)
     {
         // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
         lock (queueLocker)
         {
-            logger.ZLogInformation($"Added player {playerManager.GetPlayerContext(reservationKey)?.PlayerName} to queue");
-            joinQueue.Enqueue((sessionId, reservationKey));
+            logger.ZLogInformation($"Added player {playerManager.GetPlayerReservation(sessionId)?.PlayerName} to queue");
+            joinQueue.Enqueue(sessionId);
 
             if (queueActive)
             {
@@ -147,9 +147,9 @@ internal sealed class JoiningManager(
         }
     }
 
-    private async Task SendInitialSyncAsync(SessionId sessionId, string reservationKey)
+    private async Task SendInitialSyncAsync(SessionId sessionId)
     {
-        Player player = playerManager.CreatePlayerData(sessionId, reservationKey, out bool wasBrandNewPlayer);
+        Player player = playerManager.CreatePlayerData(sessionId, out bool wasBrandNewPlayer);
         (NitroxId assignedEscapePodId, EscapePodEntity? newlyCreatedEscapePod) = await escapePodManager.AssignPlayerToEscapePodAsync(player.Id);
 
         if (wasBrandNewPlayer)
@@ -248,7 +248,7 @@ internal sealed class JoiningManager(
     public Task OnEventAsync(ISessionCleaner.Args args)
     {
         // They may have been queued, so just erase their entry
-        joinQueue.RemoveWhere(tuple => Equals(tuple.Item1, args.Session.Id));
+        joinQueue.RemoveWhere(sessionId => Equals(sessionId, args.Session.Id));
         return Task.CompletedTask;
     }
 }
