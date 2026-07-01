@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 ValidateState(sessionConnectionContext);
 
                 RequestSessionReservation(sessionConnectionContext);
-                AwaitSessionReservation(sessionConnectionContext, sessionConnectionContext.SessionPolicy.SessionId);
+                AwaitSessionReservation(sessionConnectionContext);
             }
             catch (Exception)
             {
@@ -39,9 +39,9 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             client.Send(requestPacket);
         }
 
-        private void AwaitSessionReservation(IMultiplayerSessionConnectionContext sessionConnectionContext, SessionId reservationSessionId)
+        private void AwaitSessionReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            AwaitingSessionReservation nextState = new(reservationSessionId);
+            AwaitingSessionReservation nextState = new();
             sessionConnectionContext.UpdateConnectionState(nextState);
         }
 

@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            SessionReserved connectionState = new SessionReserved();
+            SessionReserved connectionState = new();
 
             // Act
             Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
@@ -26,10 +26,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         public void JoinSessionShouldSendPlayerJoiningMultiplayerSessionPacket()
         {
             // Arrange
-            MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
-                TestConstants.TEST_CORRELATION_ID,
-                TestConstants.TEST_PLAYER_ID,
-                TestConstants.TEST_RESERVATION_KEY);
+            MultiplayerSessionReservation successfulReservation = new(TestConstants.TestSessionId);
 
             IClient client = Substitute.For<IClient>();
             client.IsConnected.Returns(true);
@@ -38,7 +35,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             connectionContext.Reservation.Returns(successfulReservation);
             connectionContext.Client.Returns(client);
 
-            SessionReserved connectionState = new SessionReserved();
+            SessionReserved connectionState = new();
 
             // Act
             connectionState.JoinSession(connectionContext);
@@ -51,10 +48,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         public void JoinSessionShouldTransitionToSessionJoinedState()
         {
             // Arrange
-            MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
-                TestConstants.TEST_CORRELATION_ID,
-                TestConstants.TEST_PLAYER_ID,
-                TestConstants.TEST_RESERVATION_KEY);
+            MultiplayerSessionReservation successfulReservation = new(TestConstants.TestSessionId);
 
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(true);
@@ -63,7 +57,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             connectionContext.Reservation.Returns(successfulReservation);
             connectionContext.Client.Returns(serverClient);
 
-            SessionReserved connection = new SessionReserved();
+            SessionReserved connection = new();
 
             // Act
             connection.JoinSession(connectionContext);
@@ -80,7 +74,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
-            SessionReserved connectionState = new SessionReserved();
+            SessionReserved connectionState = new();
 
             // Act
             connectionState.Disconnect(connectionContext);
@@ -97,7 +91,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
-            SessionReserved connectionState = new SessionReserved();
+            SessionReserved connectionState = new();
 
             // Act
             connectionState.Disconnect(connectionContext);
@@ -114,7 +108,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
-            SessionReserved connection = new SessionReserved();
+            SessionReserved connection = new();
 
             // Act
             connection.Disconnect(connectionContext);

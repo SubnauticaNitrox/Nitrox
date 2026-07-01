@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Packets.Exceptions;
