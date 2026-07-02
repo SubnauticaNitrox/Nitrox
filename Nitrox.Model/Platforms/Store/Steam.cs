@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
@@ -269,7 +270,7 @@ public sealed class Steam : IGamePlatform
         // Start game through Steam so Steam Overlay loads properly. TODO: HACK - this way should be removed if we add a call SteamAPI_Init before Unity Engine shows graphics, see https://partner.steamgames.com/doc/features/overlay.
         if (!skipSteam)
         {
-            args = $@"-applaunch {steamAppId} --nitrox ""{launcherPath}"" {args}";
+            args = $@"-applaunch {steamAppId} --nitrox ""{launcherPath}"" --{NitroxConstants.HOST_HOME_ENV_VAR_NAME.ToLower().Replace('_', '-')} ""{NitroxDirectory.HomePath}"" {args}";
             if (bigPictureMode)
             {
                 // Keep Steam client minimized but active in background to maintain overlay functionality
@@ -293,6 +294,7 @@ public sealed class Steam : IGamePlatform
             EnvironmentVariables =
             {
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPath,
+                [NitroxConstants.HOST_HOME_ENV_VAR_NAME] = NitroxDirectory.HomePath,
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppId"] = steamAppId.ToString(), // Primary Steam API var
                 ["STEAM_OVERLAY"] = "1", // Force enable Steam overlay

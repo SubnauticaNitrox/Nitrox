@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery.Models;
 using Nitrox.Model.Platforms.OS.Shared;
@@ -24,7 +25,7 @@ public sealed class Discord : IGamePlatform
         return await Task.FromResult(
             ProcessEx.Start(
                 pathToGameExe,
-                [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
+                [(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath), (NitroxConstants.HOST_HOME_ENV_VAR_NAME, NitroxDirectory.HomePath)],
                 Path.GetDirectoryName(pathToGameExe),
                 launchArguments
             )

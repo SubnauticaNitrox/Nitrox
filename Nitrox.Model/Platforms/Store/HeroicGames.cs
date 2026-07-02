@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Platforms.Discovery.InstallationFinders;
 using Nitrox.Model.Platforms.Discovery.InstallationFinders.Core;
@@ -73,6 +74,7 @@ public sealed class HeroicGames : IGamePlatform
             startInfo = new ProcessStartInfo("xdg-open", $"\"{launchCmd}\"");
         }
         startInfo.Environment.Add(NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath);
+        startInfo.Environment.Add(NitroxConstants.HOST_HOME_ENV_VAR_NAME, NitroxDirectory.HomePath);
 
         Log.Info($"Starting game with heroic uri: {startInfo.FileName} {startInfo.Arguments}");
         return await Task.FromResult(ProcessEx.From(startInfo));
