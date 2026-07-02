@@ -23,19 +23,19 @@ namespace Nitrox.Model.Logger
     {
         private static Serilog.ILogger logger = Serilog.Core.Logger.None;
         private static Serilog.ILogger inGameLogger = Serilog.Core.Logger.None;
-        private static readonly HashSet<int> logOnceCache = new();
+        private static readonly HashSet<int> logOnceCache = [];
         private static bool isSetup;
-        private static string logFileName;
+        private static string? logFileName;
 
         private static readonly object playerNameLock = new();
-        private static string playerName = "";
+
         public static string PlayerName
         {
             get
             {
                 lock (playerNameLock)
                 {
-                    return playerName;
+                    return field;
                 }
             }
             set
@@ -44,31 +44,28 @@ namespace Nitrox.Model.Logger
                 {
                     lock (playerNameLock)
                     {
-                        playerName = "";
+                        field = "";
                     }
                     return;
                 }
                 lock (playerNameLock)
                 {
-                    playerName = $"[{value}]";
+                    field = $"[{value}]";
                 }
 
-                if (logger != null)
-                {
-                    Info($"Setting player name to {value}");
-                }
+                Info($"Setting player name to {value}");
             }
-        }
+        } = "";
 
         private static readonly object saveNameLock = new();
-        private static string saveName = "";
+
         public static string SaveName
         {
             get
             {
                 lock (saveNameLock)
                 {
-                    return saveName;
+                    return field;
                 }
             }
             set
@@ -77,23 +74,21 @@ namespace Nitrox.Model.Logger
                 {
                     lock (saveNameLock)
                     {
-                        saveName = "";
+                        field = "";
                     }
                     return;
                 }
 
                 lock (saveNameLock)
                 {
-                    saveName = $"[{value}]";
+                    field = $"[{value}]";
                 }
             }
-        }
+        } = "";
 
         public static string LogDirectory { get; } = Path.GetFullPath(NitroxDirectory.LogsPath);
 
-        public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName; // TODO: Filter by servername ( .Where(f => f.Name.Contains($"[{SaveName}]")) )
-
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true, Action<string>? logOutputCallback = null)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger? gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true, Action<string>? logOutputCallback = null)
         {
             if (isSetup)
             {
