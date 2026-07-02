@@ -204,14 +204,12 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
 
     public Task OnEventAsync(ISessionCleaner.Args args)
     {
-        if (!connectedPlayersBySessionId.TryGetValue(args.Session.Id, out Player player))
+        reservations.Remove(args.Session.Id);
+        if (!connectedPlayersBySessionId.Remove(args.Session.Id, out Player player))
         {
             return Task.CompletedTask;
         }
-
         reservedPlayerNames.Remove(player.Name);
-        reservations.Remove(player.SessionId);
-        connectedPlayersBySessionId.Remove(player.SessionId);
         player.IsOnline = false;
         logger.ZLogInformation($"{player.Name} left the game");
         return Task.CompletedTask;
