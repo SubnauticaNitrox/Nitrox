@@ -14,7 +14,6 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 public class PlayerModelManager
 {
     private readonly IEnumerable<IColorSwapManager> colorSwapManagers;
-    private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers;
 
     public PlayerModelManager(IEnumerable<IColorSwapManager> colorSwapManagers)
     {
@@ -26,9 +25,15 @@ public class PlayerModelManager
         Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player, colorSwapManagers));
     }
 
-    public void RegisterEquipmentVisibilityHandler(GameObject playerModel)
+    /// <remarks>
+    /// This manager is registered as a single shared instance (<c>InstancePerLifetimeScope</c>), so the returned handlers
+    /// must be kept by the caller (one list per remote player) instead of being cached here. Storing them on this manager
+    /// previously caused every remote player to share the same handler list, so only the most recently (re)spawned
+    /// remote player's equipment would ever be updated correctly.
+    /// </remarks>
+    public List<IEquipmentVisibilityHandler> RegisterEquipmentVisibilityHandler(GameObject playerModel)
     {
-        equipmentVisibilityHandlers = new List<IEquipmentVisibilityHandler>
+        return new List<IEquipmentVisibilityHandler>
         {
             new DiveSuitVisibilityHandler(playerModel),
             new ScubaSuitVisibilityHandler(playerModel),
@@ -39,7 +44,7 @@ public class PlayerModelManager
         };
     }
 
-    public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
+    public static void UpdateEquipmentVisibility(List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers, ReadOnlyCollection<TechType> currentEquipment)
     {
         foreach (IEquipmentVisibilityHandler equipmentVisibilityHandler in equipmentVisibilityHandlers)
         {
