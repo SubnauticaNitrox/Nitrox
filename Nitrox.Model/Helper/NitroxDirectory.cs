@@ -110,9 +110,15 @@ public static class NitroxDirectory
         {
             get
             {
-                if (field == "")
+                // Empty string is special value to indicate no --data-path is set. Always return null.
+                if (field is "")
                 {
                     return null;
+                }
+                // ... otherwise if value is not null it can only be a valid path.
+                if (field is not null)
+                {
+                    return field;
                 }
 
                 // If user specified a path, use it as is.

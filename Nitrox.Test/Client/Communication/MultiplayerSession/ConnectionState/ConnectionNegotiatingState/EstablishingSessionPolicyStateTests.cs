@@ -1,4 +1,5 @@
-﻿using Nitrox.Test.Client.Communication.MultiplayerSession;
+﻿using Nitrox.Model.Core;
+using Nitrox.Test.Client.Communication.MultiplayerSession;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Packets.Exceptions;
 using Nitrox.Model.Subnautica.Packets;
@@ -14,9 +15,9 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, false));
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TestSessionId, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, false));
 
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             connectionState.NegotiateReservationAsync(connectionContext);
@@ -30,9 +31,9 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, true));
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TestSessionId, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, true));
 
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             connectionState.NegotiateReservationAsync(connectionContext);
@@ -42,29 +43,13 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         }
 
         [TestMethod]
-        public void NegotiateShouldThrowUncorrelatedPacketExceptionWhenThePolicyHasTheWrongCorrelationId()
-        {
-            // Arrange
-            IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy("wrong", false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, false));
-
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
-
-            // Act
-            Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
-
-            // Assert
-            action.Should().Throw<UncorrelatedPacketException>();
-        }
-
-        [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionIfTheSessionPolicyIsNull()
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.SessionPolicy.Returns((MultiplayerSessionPolicy)null);
 
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
@@ -78,7 +63,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             Action action = () => connectionState.JoinSession(connectionContext);
@@ -95,7 +80,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             connectionState.Disconnect(connectionContext);
@@ -112,7 +97,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             connectionState.Disconnect(connectionContext);
@@ -129,7 +114,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
-            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+            EstablishingSessionPolicy connectionState = new();
 
             // Act
             connectionState.Disconnect(connectionContext);

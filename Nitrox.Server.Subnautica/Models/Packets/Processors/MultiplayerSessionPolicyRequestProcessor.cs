@@ -1,5 +1,4 @@
 ﻿using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Nitrox.Server.Subnautica.Models.Packets.Processors.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
@@ -14,6 +13,6 @@ internal sealed class MultiplayerSessionPolicyRequestProcessor(IOptions<Subnauti
     {
         logger.ZLogInformation($"Providing session policies...");
         SubnauticaServerOptions options = configProvider.Value;
-        await context.ReplyAsync(new MultiplayerSessionPolicy(packet.CorrelationId, options.DisableConsole, options.MaxConnections, options.IsPasswordRequired()));
+        await context.ReplyAsync(new MultiplayerSessionPolicy(context.Sender.SessionId, options.DisableConsole, options.MaxConnections, options.IsPasswordRequired()));
     }
 }

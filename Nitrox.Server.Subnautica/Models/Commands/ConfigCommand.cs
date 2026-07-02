@@ -18,6 +18,7 @@ internal sealed class ConfigCommand(IOptions<ServerStartOptions> optionsProvider
         {
             // TODO: Handle this case to generate config?
             await context.ReplyAsync("No configuration file exists");
+            return;
         }
 
         FileSystem.Instance.OpenOrExecuteFile(filePath);

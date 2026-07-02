@@ -62,12 +62,10 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         private static void EstablishSessionPolicy(IMultiplayerSessionConnectionContext sessionConnectionContext, IClient client)
         {
-            string policyRequestCorrelationId = Guid.NewGuid().ToString();
-
-            MultiplayerSessionPolicyRequest requestPacket = new MultiplayerSessionPolicyRequest(policyRequestCorrelationId);
+            MultiplayerSessionPolicyRequest requestPacket = new();
             client.Send(requestPacket);
 
-            EstablishingSessionPolicy nextState = new EstablishingSessionPolicy(policyRequestCorrelationId);
+            EstablishingSessionPolicy nextState = new();
             sessionConnectionContext.UpdateConnectionState(nextState);
         }
 
