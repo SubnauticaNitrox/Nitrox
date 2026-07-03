@@ -52,6 +52,12 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
     public TimeSkippedEventHandler? TimeSkipped;
 
+    public override void Dispose()
+    {
+        CloseNtpRetryTimer();
+        base.Dispose();
+    }
+
     /// <summary>
     ///     Gets the total game time the server was actively simulating the game. See
     ///     <see cref="HibernateService.IsSleeping" /> for more information.
