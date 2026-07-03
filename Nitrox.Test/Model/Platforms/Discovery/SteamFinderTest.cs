@@ -7,7 +7,7 @@ namespace Nitrox.Test.Model.Platforms.Discovery;
 public class SteamFinderTest
 {
     [TestMethod]
-    public void SearchAllInstallations_ShouldParseModernLibraryFoldersVdf()
+    public void SearchAllInstallations_ShouldParseSpaceSeparatedLibraryFoldersVdf()
     {
         string tempDir = CreateTempDir();
         try
@@ -39,6 +39,65 @@ public class SteamFinderTest
         }
         finally
         {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [TestMethod]
+    public void GetLibraryPaths_ShouldIgnoreAppEntriesInLibraryFoldersVdf()
+    {
+        string tempDir = CreateTempDir();
+        try
+        {
+            string libraryRoot = Path.Combine(tempDir, "SteamLibrary");
+            string legacyLibraryRoot = Path.Combine(tempDir, "LegacySteamLibrary");
+            string libraryFolders = Path.Combine(tempDir, "libraryfolders.vdf");
+            File.WriteAllText(libraryFolders, $$"""
+                                                "libraryfolders"
+                                                {
+                                                    "0"
+                                                    {
+                                                        "path" "{{libraryRoot}}"
+                                                        "apps"
+                                                        {
+                                                            "{{GameInfo.Subnautica.SteamAppId}}" "1"
+                                                        }
+                                                    }
+                                                    "1" "{{legacyLibraryRoot}}"
+                                                }
+                                                """);
+
+            string[] paths = SteamFinder.GetLibraryPaths(libraryFolders).ToArray();
+
+            paths.Should().Equal(libraryRoot, legacyLibraryRoot);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [TestMethod]
+    public void SearchAllInstallations_ShouldHandleRelativeLibraryFoldersPath()
+    {
+        string tempDir = CreateTempDir();
+        string currentDirectory = Environment.CurrentDirectory;
+        try
+        {
+            Environment.CurrentDirectory = tempDir;
+            File.WriteAllText("libraryfolders.vdf", """
+                                                    "libraryfolders"
+                                                    {
+                                                    }
+                                                    """);
+
+            Action search = () => SteamFinder.SearchAllInstallations("libraryfolders.vdf", GameInfo.Subnautica.SteamAppId, GameInfo.Subnautica.Name);
+
+            search.Should().NotThrow();
+        }
+        finally
+        {
+            Environment.CurrentDirectory = currentDirectory;
             Directory.Delete(tempDir, true);
         }
     }

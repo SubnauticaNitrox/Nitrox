@@ -52,7 +52,7 @@ public sealed class SteamFinder : IGameFinder
         return Ok(path);
     }
 
-    internal static string GetSteamPath()
+    private static string GetSteamPath()
     {
         // OSX: Steam dynamic data isn't near the steam exe. Because it can't (or isn't supposed to) write anything inside application bundle.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -88,8 +88,7 @@ public sealed class SteamFinder : IGameFinder
             return null;
         }
 
-        string steamPath = Directory.GetParent(Path.GetDirectoryName(libraryFolders) ?? "")?.FullName ?? "";
-        foreach (string libraryPath in GetLibraryPaths(libraryFolders).Append(steamPath).Where(static path => !string.IsNullOrWhiteSpace(path)).Distinct())
+        foreach (string libraryPath in GetLibraryPaths(libraryFolders).Where(static path => !string.IsNullOrWhiteSpace(path)).Distinct())
         {
             if (File.Exists(Path.Combine(libraryPath, "steamapps", $"appmanifest_{appid}.acf")))
             {
@@ -109,9 +108,21 @@ public sealed class SteamFinder : IGameFinder
 
         using StreamReader file = new(libraryFolders);
         char[] trimChars = [' ', '\t'];
+        int depth = 0;
         while (file.ReadLine() is { } line)
         {
             line = line.Trim(trimChars);
+            if (line == "{")
+            {
+                depth++;
+                continue;
+            }
+            if (line == "}")
+            {
+                depth = Math.Max(0, depth - 1);
+                continue;
+            }
+
             Match regMatch = Regex.Match(line, "\"([^\"]+)\"\\s+\"(.*)\"");
             if (!regMatch.Success)
             {
@@ -120,8 +131,8 @@ public sealed class SteamFinder : IGameFinder
 
             string key = regMatch.Groups[1].Value;
 
-            // New format (about 2021-07-16) uses "path" key instead of steam-library-index as key. If either, it could be steam game path.
-            if (!key.Equals("path", StringComparison.OrdinalIgnoreCase) && !int.TryParse(key, out _))
+            // Current libraryfolders.vdf entries use a nested "path" key; older entries used top-level numeric keys.
+            if (!key.Equals("path", StringComparison.OrdinalIgnoreCase) && (depth > 1 || !int.TryParse(key, out _)))
             {
                 continue;
             }

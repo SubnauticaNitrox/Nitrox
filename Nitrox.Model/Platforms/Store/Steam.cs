@@ -128,13 +128,7 @@ public sealed class Steam : IGamePlatform
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            string[] commonPaths =
-            [
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx"),
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Applications", "Steam.app", "Contents", "MacOS", "steam_osx"),
-                Path.Combine(Path.DirectorySeparatorChar.ToString(), "Applications", "Steam.app", "Contents", "MacOS", "steam_osx")
-            ];
-            steamExecutable = commonPaths.FirstOrDefault(File.Exists) ?? "";
+            steamExecutable = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
