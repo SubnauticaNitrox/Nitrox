@@ -21,7 +21,7 @@ public class GameInstallationHelperTest
 
             normalized.Should().Be(appContents);
             GameInstallationHelper.HasValidGameFolder(normalized, GameInfo.Subnautica).Should().BeTrue();
-            GameInstallationHelper.IsNativeMacOSGameLayout(normalized, GameInfo.Subnautica).Should().BeTrue();
+            GameInstallationHelper.HasGameExecutable(steamGameRoot, GameInfo.Subnautica).Should().BeTrue();
         }
         finally
         {
@@ -43,8 +43,8 @@ public class GameInstallationHelperTest
             string normalized = GameInstallationHelper.NormalizeGamePath(appBundle, GameInfo.Subnautica);
 
             normalized.Should().Be(appContents);
-            GameInstallationHelper.TryGetGameExecutablePath(normalized, GameInfo.Subnautica, out string executablePath).Should().BeTrue();
-            executablePath.Should().Be(Path.Combine(appContents, "MacOS", "Subnautica"));
+            GameInstallationHelper.HasValidGameFolder(appBundle, GameInfo.Subnautica).Should().BeTrue();
+            GameInstallationHelper.HasGameExecutable(appBundle, GameInfo.Subnautica).Should().BeTrue();
         }
         finally
         {

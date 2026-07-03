@@ -31,24 +31,7 @@ public static class GameInstallationHelper
         return TryGetGameInstallation(path, gameInfo, out GameInstallationLayout layout) ? layout.RootPath : Path.GetFullPath(path);
     }
 
-    public static bool TryGetGameExecutablePath(string path, GameInfo gameInfo, out string executablePath)
-    {
-        if (TryGetGameInstallation(path, gameInfo, out GameInstallationLayout layout))
-        {
-            executablePath = layout.ExecutablePath;
-            return true;
-        }
-
-        executablePath = "";
-        return false;
-    }
-
-    public static bool IsNativeMacOSGameLayout(string path, GameInfo gameInfo)
-    {
-        return TryGetGameInstallation(path, gameInfo, out GameInstallationLayout layout) && layout.Kind == GameInstallationKind.NativeMacOS;
-    }
-
-    public static bool TryGetGameInstallation(string path, GameInfo gameInfo, out GameInstallationLayout layout)
+    private static bool TryGetGameInstallation(string path, GameInfo gameInfo, out GameInstallationLayout layout)
     {
         layout = null;
         if (string.IsNullOrWhiteSpace(path))
@@ -82,7 +65,7 @@ public static class GameInstallationHelper
             string nativeMacManagedPath = Path.Combine(rootPath, gameInfo.DataFolder, "Managed");
             if (File.Exists(nativeMacExecutable) && Directory.Exists(nativeMacManagedPath))
             {
-                layout = new(rootPath, nativeMacExecutable, nativeMacManagedPath, GameInstallationKind.NativeMacOS);
+                layout = new(rootPath, nativeMacExecutable);
                 return true;
             }
         }
@@ -91,7 +74,7 @@ public static class GameInstallationHelper
         string hostManagedPath = Path.Combine(rootPath, gameInfo.DataFolder, "Managed");
         if (File.Exists(hostExecutable) && Directory.Exists(hostManagedPath))
         {
-            layout = new(rootPath, hostExecutable, hostManagedPath, GameInstallationKind.Host);
+            layout = new(rootPath, hostExecutable);
             return true;
         }
 
@@ -114,12 +97,6 @@ public static class GameInstallationHelper
 
         yield return Path.Combine(path, $"{gameInfo.Name}.app", "Contents");
     }
-}
 
-public sealed record GameInstallationLayout(string RootPath, string ExecutablePath, string ManagedPath, GameInstallationKind Kind);
-
-public enum GameInstallationKind
-{
-    Host,
-    NativeMacOS
+    private sealed record GameInstallationLayout(string RootPath, string ExecutablePath);
 }
