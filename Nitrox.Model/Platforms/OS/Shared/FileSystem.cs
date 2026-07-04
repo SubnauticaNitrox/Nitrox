@@ -75,7 +75,7 @@ public abstract class FileSystem
     /// </summary>
     /// <param name="fileName">File or program name to get the full path from.</param>
     /// <returns></returns>
-    public string GetFullPath(string fileName)
+    public string? GetFullPath(string fileName)
     {
         if (File.Exists(fileName))
         {
@@ -142,7 +142,7 @@ public abstract class FileSystem
     /// <param name="replaceFile">If true, overwrites the file matching the output path.</param>
     /// <returns>Full path to the newly created zip or null if no files are found to zip.</returns>
     /// <exception cref="IOException">If zip file already exists.</exception>
-    public string ZipFilesInDirectory(string dir, string outputPath = null, string fileSearchPattern = "*", bool replaceFile = false)
+    public string? ZipFilesInDirectory(string dir, string? outputPath = null, string fileSearchPattern = "*", bool replaceFile = false)
     {
         if (string.IsNullOrWhiteSpace(dir))
         {
@@ -260,11 +260,11 @@ public abstract class FileSystem
         {
             return false;
         }
+
         string randFileName = Path.GetRandomFileName();
         try
         {
-            File.Create(Path.Combine(directory, randFileName)).Close();
-            File.Delete(Path.Combine(directory, randFileName));
+            File.Create(Path.Combine(directory, randFileName), 1, FileOptions.DeleteOnClose).Dispose();
             return true;
         }
         catch
