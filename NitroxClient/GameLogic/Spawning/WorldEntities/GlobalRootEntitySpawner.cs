@@ -48,6 +48,8 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
         gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
+        RepairLooseMapRoomCameraVisibility(gameObject);
+
         if (entity.ParentId != null && NitroxEntity.TryGetComponentFrom(entity.ParentId, out Transform parentTransform))
         {
             // WaterParks have a child named "items_root" where the fish are put
@@ -75,6 +77,40 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         {
             PlacedWorldEntitySpawner.AdditionalSpawningSteps(gameObject);
         }
+    }
+
+    private static void RepairLooseMapRoomCameraVisibility(GameObject gameObject)
+    {
+        MapRoomCamera camera = gameObject.GetComponent<MapRoomCamera>();
+        if (!camera)
+        {
+            return;
+        }
+
+        gameObject.SetActive(true);
+
+        Pickupable pickupable = gameObject.GetComponent<Pickupable>();
+        if (pickupable)
+        {
+            pickupable.Activate(true);
+            pickupable.SetVisible(true);
+        }
+
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>(true);
+        Collider[] colliders = gameObject.GetComponentsInChildren<Collider>(true);
+
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.enabled = true;
+        }
+
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = true;
+        }
+
+        camera.readyForControl = true;
+        camera.justStartedControl = false;
     }
 
     public static void SetupObjectInWaterPark(GameObject gameObject, LargeWorldEntity largeWorldEntity, WaterPark waterPark)

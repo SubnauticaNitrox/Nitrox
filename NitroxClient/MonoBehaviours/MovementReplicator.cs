@@ -42,7 +42,7 @@ public abstract class MovementReplicator : MonoBehaviour
     /// <summary>
     /// Current time must be based on real time to avoid effects from time changes/speed.
     /// </summary>
-    private float CurrentTime => (float)this.Resolve<TimeManager>().RealTimeElapsed;
+    private float CurrentTime => Time.realtimeSinceStartup;
 
     public void AddSnapshot(MovementData movementData, float time)
     {
@@ -70,7 +70,7 @@ public abstract class MovementReplicator : MonoBehaviour
             }
         }
 
-        float occurrenceTime = time + INTERPOLATION_TIME + maxAllowedLatency;
+        float occurrenceTime = currentTime + INTERPOLATION_TIME;
 
         // Cleaning any previous value change that would occur later than the newly received snapshot
         while (buffer.Last != null && buffer.Last.Value.IsSnapshotNewer(occurrenceTime))
@@ -142,6 +142,16 @@ public abstract class MovementReplicator : MonoBehaviour
             buffer.RemoveFirst();
         }
 
+        // If we fall badly behind, don't replay hundreds of old vehicle snapshots.
+        // Keep only the latest small interpolation window so remote vehicles recover live instead of performing delayed catch-up.
+        if (buffer.Count > MovementBroadcaster.BROADCAST_FREQUENCY)
+        {
+            while (buffer.Count > 2)
+            {
+                buffer.RemoveFirst();
+            }
+        }
+
         LinkedListNode<Snapshot> firstNode = buffer.First;
         if (firstNode == null)
         {
@@ -196,6 +206,10 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public static MovementReplicator AddReplicatorToObject(GameObject gameObject)
     {
+        if (gameObject.GetComponent<MapRoomCamera>())
+        {
+            return gameObject.AddComponent<MapRoomCameraMovementReplicator>();
+        }
         if (gameObject.GetComponent<SeaMoth>())
         {
             return gameObject.AddComponent<SeamothMovementReplicator>();

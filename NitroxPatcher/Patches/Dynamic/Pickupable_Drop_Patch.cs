@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -14,5 +15,11 @@ public sealed partial class Pickupable_Drop_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         Resolve<Items>().Dropped(__instance.gameObject, __instance.GetTechType());
+
+        MapRoomCamera camera = __instance.GetComponent<MapRoomCamera>();
+        if (camera)
+        {
+            __instance.StartCoroutine(MapRoomCameraIdentity.RequestCameraNumberWhenReady(camera));
+        }
     }
 }

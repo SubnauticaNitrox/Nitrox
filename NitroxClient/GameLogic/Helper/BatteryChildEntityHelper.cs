@@ -19,9 +19,10 @@ public static class BatteryChildEntityHelper
 {
     private static readonly Lazy<Entities> entities = new (() => NitroxServiceLocator.LocateService<Entities>());
 
-    public static void TryPopulateInstalledBattery(GameObject gameObject, List<Entity> toPopulate, NitroxId parentId)
+    public static void TryPopulateInstalledBattery(GameObject gameObject, List<Entity> toPopulate, NitroxId parentId, bool allowDefaultBattery = true)
     {
-        if (gameObject.TryGetComponent(out EnergyMixin energyMixin))
+        if (gameObject.TryGetComponent(out EnergyMixin energyMixin) &&
+            (allowDefaultBattery || energyMixin.batterySlot?.storedItem != null))
         {
             PopulateInstalledBattery(energyMixin, toPopulate, parentId);
         }

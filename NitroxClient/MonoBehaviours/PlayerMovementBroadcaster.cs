@@ -1,9 +1,10 @@
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours.Cyclops;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.MonoBehaviours.Cyclops;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -26,9 +27,16 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             return;
         }
 
+        bool hasMapRoomCameraAnchor = MapRoomCameraPlayerAnchor.TryGet(out Vector3 anchoredPosition,
+                                                                       out Vector3 anchoredVelocity,
+                                                                       out Quaternion anchoredBodyRotation,
+                                                                       out Quaternion anchoredAimingRotation);
+
         // Freecam does disable main camera control
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
-        if (!MainCameraControl.main.isActiveAndEnabled &&
+        // Scanner room camera control can also disable normal camera control, but we still need to broadcast the anchored player body transform.
+        if (!hasMapRoomCameraAnchor &&
+            !MainCameraControl.main.isActiveAndEnabled &&
             !uGUI_CameraCyclops.main.content.activeSelf)
         {
             return;
@@ -39,7 +47,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             return;
         }
 
-        if (Player.main.isPiloting)
+        if (!hasMapRoomCameraAnchor && Player.main.isPiloting)
         {
             return;
         }
@@ -50,6 +58,14 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
         Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
         Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
+
+        if (hasMapRoomCameraAnchor)
+        {
+            currentPosition = anchoredPosition;
+            playerVelocity = anchoredVelocity;
+            bodyRotation = anchoredBodyRotation;
+            aimingRotation = anchoredAimingRotation;
+        }
 
         SubRoot subRoot = Player.main.GetCurrentSub();
 
