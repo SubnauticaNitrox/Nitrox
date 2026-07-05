@@ -27,6 +27,6 @@
             "osx": {
                 "program": "${workspaceFolder}/Nitrox.Server.Subnautica/bin/Debug/net10.0/Nitrox.Server.Subnautica"
             }
-        },
+        }
     ]
 }
