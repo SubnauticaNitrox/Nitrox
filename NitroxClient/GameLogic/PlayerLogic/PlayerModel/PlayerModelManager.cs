@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment;
@@ -44,7 +43,7 @@ public class PlayerModelManager
         };
     }
 
-    public static void UpdateEquipmentVisibility(List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers, ReadOnlyCollection<TechType> currentEquipment)
+    public static void UpdateEquipmentVisibility(List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers, IReadOnlyList<TechType> currentEquipment)
     {
         foreach (IEquipmentVisibilityHandler equipmentVisibilityHandler in equipmentVisibilityHandlers)
         {

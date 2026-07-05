@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic.HUD;
@@ -33,7 +32,7 @@ public class RemotePlayer : INitroxPlayer
     private readonly PlayerModelManager playerModelManager;
     private readonly PlayerVitalsManager playerVitalsManager;
     private readonly FMODWhitelist fmodWhitelist;
-    private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers;
+    private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers = [];
 
     public PlayerContext PlayerContext { get; }
     public GameObject? Body { get; private set; }
@@ -396,7 +395,7 @@ public class RemotePlayer : INitroxPlayer
 
     public void UpdateEquipmentVisibility(List<TechType> equippedItems)
     {
-        PlayerModelManager.UpdateEquipmentVisibility(equipmentVisibilityHandlers, new ReadOnlyCollection<TechType>(equippedItems));
+        PlayerModelManager.UpdateEquipmentVisibility(equipmentVisibilityHandlers, equippedItems);
     }
 
     /// <summary>
