@@ -95,7 +95,9 @@ public class PlayerModelManager
     {
         ColorSwapAsyncOperation swapOperation = new(player, colorSwapManagers);
 
-        swapOperation.BeginColorSwap();
+        // Spread the (potentially expensive, first-time-per-texture) task creation across frames so that setting up
+        // a newly joined remote player's clothing colors doesn't stall already-connected clients for a single frame.
+        yield return swapOperation.BeginColorSwapOverFrames();
         yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
         swapOperation.ApplySwappedColors();
     }

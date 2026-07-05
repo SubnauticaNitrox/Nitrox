@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,10 +8,25 @@ namespace NitroxClient.Extensions;
 
 public static class RendererExtensions
 {
+    // Every remote player model is a clone of the same prototype prefab, so the source Texture2D of a given
+    // body part is the exact same asset for every player. Caching its readback avoids repeating the expensive
+    // Graphics.Blit + ReadPixels GPU/CPU sync stall (see Clone()) for every single player join.
+    private static readonly Dictionary<Texture2D, Color[]> sourceTexturePixelCache = new();
+
     //This entire method is necessary in order to deal with the fact that UWE compiles Subnautica in a mode
     //that prevents us from accessing the pixel map of the 2D textures they apply to their materials.
     public static Texture2D Clone(this Texture2D sourceTexture)
     {
+        Texture2D clonedTexture = new(sourceTexture.width, sourceTexture.height);
+
+        if (sourceTexturePixelCache.TryGetValue(sourceTexture, out Color[] cachedPixels))
+        {
+            clonedTexture.SetPixels(cachedPixels);
+            clonedTexture.Apply();
+            return clonedTexture;
+            // "clonedTexture" now has the same pixels from "texture" and it's readable, without touching the GPU.
+        }
+
         // Create a temporary RenderTexture of the same size as the texture
         RenderTexture tmp = RenderTexture.GetTemporary(
             sourceTexture.width,
@@ -25,8 +41,6 @@ public static class RendererExtensions
         RenderTexture previous = RenderTexture.active;
         // Set the current RenderTexture to the temporary one we created
         RenderTexture.active = tmp;
-        // Create a new readable Texture2D to copy the pixels to it
-        Texture2D clonedTexture = new(sourceTexture.width, sourceTexture.height);
         // Copy the pixels from the RenderTexture to the new Texture
         clonedTexture.ReadPixels(new Rect(0, 0, tmp.width, tmp.height), 0, 0);
         clonedTexture.Apply();
@@ -34,6 +48,8 @@ public static class RendererExtensions
         RenderTexture.active = previous;
         // Release the temporary RenderTexture
         RenderTexture.ReleaseTemporary(tmp);
+
+        sourceTexturePixelCache[sourceTexture] = clonedTexture.GetPixels();
 
         return clonedTexture;
         // "clonedTexture" now has the same pixels from "texture" and it's readable.

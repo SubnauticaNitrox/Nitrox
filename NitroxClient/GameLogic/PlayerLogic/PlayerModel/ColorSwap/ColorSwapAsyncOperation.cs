@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,6 +14,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         private readonly IEnumerable<IColorSwapManager> colorSwapManagers;
         private readonly Dictionary<string, Color[]> texturePixelIndexes;
         private int taskCount = -1;
+        private volatile bool tasksCreated;
 
         public ColorSwapAsyncOperation(INitroxPlayer nitroxPlayer, IEnumerable<IColorSwapManager> colorSwapManagers)
         {
@@ -37,7 +39,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
         public bool IsColorSwapComplete()
         {
-            return taskCount == 0;
+            return tasksCreated && taskCount == 0;
         }
 
         public ColorSwapAsyncOperation BeginColorSwap()
@@ -52,9 +54,35 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
                 .ToList();
 
             taskCount = tasks.Count;
+            tasksCreated = true;
             tasks.ForEach(task => ThreadPool.QueueUserWorkItem(ExecuteTask, task));
 
             return this;
+        }
+
+        /// <summary>
+        /// Same as <see cref="BeginColorSwap"/>, but creates one manager's task per yielded frame instead of all of
+        /// them in one frame. Each <see cref="IColorSwapManager.CreateColorSwapTask"/> call can involve an expensive,
+        /// main-thread-only GPU texture readback (see <see cref="Extensions.RendererExtensions.Clone"/>), so spreading
+        /// the creation over several frames turns a single noticeable hitch into several smaller, imperceptible ones.
+        /// </summary>
+        public IEnumerator BeginColorSwapOverFrames()
+        {
+            if (taskCount >= 0)
+            {
+                throw new InvalidOperationException("This operation has already been started.");
+            }
+
+            taskCount = 0;
+            foreach (IColorSwapManager manager in colorSwapManagers)
+            {
+                Action<ColorSwapAsyncOperation> task = manager.CreateColorSwapTask(nitroxPlayer);
+                Interlocked.Increment(ref taskCount);
+                ThreadPool.QueueUserWorkItem(ExecuteTask, task);
+                yield return null;
+            }
+
+            tasksCreated = true;
         }
 
         public void ApplySwappedColors()
