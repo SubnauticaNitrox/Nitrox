@@ -46,7 +46,8 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         {
             if (taskCount >= 0)
             {
-                throw new InvalidOperationException("This operation has already been started.");
+                Log.Error("This operation has already been started.");
+                return this;
             }
 
             List<Action<ColorSwapAsyncOperation>> tasks = colorSwapManagers
@@ -70,7 +71,8 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         {
             if (taskCount >= 0)
             {
-                throw new InvalidOperationException("This operation has already been started.");
+                Log.Error("This operation has already been started.");
+                yield break;
             }
 
             taskCount = 0;
