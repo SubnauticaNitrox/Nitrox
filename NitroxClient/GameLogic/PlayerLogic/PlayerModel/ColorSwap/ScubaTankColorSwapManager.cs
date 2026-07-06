@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy;
 using UnityEngine;
 using static NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants;
 
@@ -9,42 +6,22 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 {
     public class ScubaTankColorSwapManager : IColorSwapManager
     {
-        public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
+        public void ApplyPlayerColor(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
             Color playerColor = nitroxPlayer.PlayerSettings.PlayerColor.ToUnity();
-            IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
+            PlayerColorRenderTextures renderTextures = PlayerColorRenderTextures.GetOrAdd(playerModel);
 
             SkinnedMeshRenderer scubaTankRenderer = playerModel.GetRenderer(SCUBA_TANK_GAME_OBJECT_NAME);
+            RenderTexture texture = GpuRecolorer.Recolor(
+                (Texture2D)scubaTankRenderer.material.mainTexture,
+                playerColor,
+                RecolorRegion.FullTexture(ColorSwapMode.Hue).WithHueRange(0f, 30f));
+            renderTextures.Track(texture);
 
-            Color[] texturePixels = scubaTankRenderer.material.GetSourcePixels();
-
-            return operation =>
-            {
-                HsvSwapper scubaTankFilter = new HsvSwapper(colorSwapStrategy);
-                scubaTankFilter.SetHueRange(0f, 30f);
-
-                scubaTankFilter.SwapColors(texturePixels);
-
-                operation.UpdateIndex(SCUBA_TANK_INDEX_KEY, texturePixels);
-            };
-        }
-
-        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
-        {
-            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(SCUBA_TANK_GAME_OBJECT_NAME).material.mainTexture;
-        }
-
-        public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)
-        {
-            Color[] scubaTankPixelIndexes = pixelIndex[SCUBA_TANK_INDEX_KEY];
-
-            GameObject playerModel = nitroxPlayer.PlayerModel;
-            SkinnedMeshRenderer scubaTankRenderer = playerModel.GetRenderer(SCUBA_TANK_GAME_OBJECT_NAME);
-
-            scubaTankRenderer.material.UpdateMainTextureColors(scubaTankPixelIndexes);
-            scubaTankRenderer.material.SetTexture("_MainTex", scubaTankRenderer.material.mainTexture);
-            scubaTankRenderer.material.SetTexture("_SpecTex", scubaTankRenderer.material.mainTexture);
+            scubaTankRenderer.material.mainTexture = texture;
+            scubaTankRenderer.material.SetTexture("_MainTex", texture);
+            scubaTankRenderer.material.SetTexture("_SpecTex", texture);
         }
     }
 }
