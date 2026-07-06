@@ -16,16 +16,9 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer basicFinRenderer = playerModel.GetRenderer(FINS_GAME_OBJECT_NAME);
-            basicFinRenderer.material.ApplyClonedTexture();
-
-            SkinnedMeshRenderer chargedFinRenderer = playerModel.GetRenderer(CHARGED_FINS_GAME_OBJECT_NAME);
-            chargedFinRenderer.material.ApplyClonedTexture();
-
-            SkinnedMeshRenderer glideFinRenderer = playerModel.GetRenderer(GLIDE_FINS_GAME_OBJECT_NAME);
-            glideFinRenderer.material.ApplyClonedTexture();
 
             //All fin models use the same texture.
-            Color[] texturePixels = basicFinRenderer.material.GetMainTexturePixels();
+            Color[] texturePixels = basicFinRenderer.material.GetSourcePixels();
 
             return operation =>
             {
@@ -36,6 +29,12 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
                 operation.UpdateIndex(FINS_INDEX_KEY, texturePixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            //All fin models use the same texture.
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(FINS_GAME_OBJECT_NAME).material.mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

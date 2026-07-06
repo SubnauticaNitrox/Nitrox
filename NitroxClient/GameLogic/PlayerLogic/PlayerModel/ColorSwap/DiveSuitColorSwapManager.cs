@@ -16,11 +16,9 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer diveSuitRenderer = playerModel.GetRenderer(DIVE_SUIT_GAME_OBJECT_NAME);
-            diveSuitRenderer.material.ApplyClonedTexture();
-            diveSuitRenderer.materials[1].ApplyClonedTexture();
 
-            Color[] bodyTexturePixels = diveSuitRenderer.material.GetMainTexturePixels();
-            Color[] armTexturePixels = diveSuitRenderer.materials[1].GetMainTexturePixels();
+            Color[] bodyTexturePixels = diveSuitRenderer.material.GetSourcePixels();
+            Color[] armTexturePixels = diveSuitRenderer.materials[1].GetSourcePixels();
 
             return operation =>
             {
@@ -33,6 +31,13 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
                 operation.UpdateIndex(DIVE_SUIT_INDEX_KEY, bodyTexturePixels);
                 operation.UpdateIndex(DIVE_SUIT_ARMS_INDEX_KEY, armTexturePixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            SkinnedMeshRenderer diveSuitRenderer = nitroxPlayer.PlayerModel.GetRenderer(DIVE_SUIT_GAME_OBJECT_NAME);
+            yield return (Texture2D)diveSuitRenderer.material.mainTexture;
+            yield return (Texture2D)diveSuitRenderer.materials[1].mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

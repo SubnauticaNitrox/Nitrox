@@ -16,13 +16,11 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSaturationVibrancySwapper(playerColor);
 
             SkinnedMeshRenderer radiationHelmetRenderer = playerModel.GetRenderer(RADIATION_HELMET_GAME_OBJECT_NAME);
-            radiationHelmetRenderer.material.ApplyClonedTexture();
 
             SkinnedMeshRenderer radiationSuitNeckClaspRenderer = playerModel.GetRenderer(RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME);
-            radiationSuitNeckClaspRenderer.material.ApplyClonedTexture();
 
-            Color[] helmetPixels = radiationHelmetRenderer.material.GetMainTexturePixels();
-            Color[] neckClaspPixels = radiationSuitNeckClaspRenderer.material.GetMainTexturePixels();
+            Color[] helmetPixels = radiationHelmetRenderer.material.GetSourcePixels();
+            Color[] neckClaspPixels = radiationSuitNeckClaspRenderer.material.GetSourcePixels();
 
             return operation =>
             {
@@ -34,8 +32,14 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
                 radiationHelmetFilter.SwapColors(neckClaspPixels);
 
                 operation.UpdateIndex(RADIATION_HELMET_INDEX_KEY, helmetPixels);
-                operation.UpdateIndex(RADIATION_SUIT_NECK_CLASP_INDEX_KEY, helmetPixels);
+                operation.UpdateIndex(RADIATION_SUIT_NECK_CLASP_INDEX_KEY, neckClaspPixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(RADIATION_HELMET_GAME_OBJECT_NAME).material.mainTexture;
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME).material.mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

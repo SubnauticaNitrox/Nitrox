@@ -16,11 +16,10 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer rebreatherRenderer = playerModel.GetRenderer(REBREATHER_GAME_OBJECT_NAME);
-            rebreatherRenderer.material.ApplyClonedTexture();
 
             FixRebreatherMaterials(playerModel, rebreatherRenderer);
 
-            Color[] texturePixels = rebreatherRenderer.material.GetMainTexturePixels();
+            Color[] texturePixels = rebreatherRenderer.material.GetSourcePixels();
 
             return operation =>
             {
@@ -31,6 +30,11 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
                 operation.UpdateIndex(REBREATHER_INDEX_KEY, texturePixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(REBREATHER_GAME_OBJECT_NAME).material.mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

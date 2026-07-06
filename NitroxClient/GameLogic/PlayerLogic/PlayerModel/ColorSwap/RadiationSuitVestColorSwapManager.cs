@@ -16,9 +16,8 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSaturationVibrancySwapper(playerColor);
 
             SkinnedMeshRenderer radiationVestRenderer = playerModel.GetRenderer(RADIATION_SUIT_VEST_GAME_OBJECT_NAME);
-            radiationVestRenderer.material.ApplyClonedTexture();
 
-            Color[] texturePixels = radiationVestRenderer.material.GetMainTexturePixels();
+            Color[] texturePixels = radiationVestRenderer.material.GetSourcePixels();
 
             return operation =>
             {
@@ -30,6 +29,11 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
                 operation.UpdateIndex(RADIATION_SUIT_VEST_INDEX_KEY, texturePixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(RADIATION_SUIT_VEST_GAME_OBJECT_NAME).material.mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

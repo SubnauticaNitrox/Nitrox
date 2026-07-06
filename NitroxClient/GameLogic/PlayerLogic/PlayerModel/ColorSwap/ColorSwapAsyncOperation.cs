@@ -64,8 +64,8 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         /// <summary>
         /// Same as <see cref="BeginColorSwap"/>, but creates one manager's task per yielded frame instead of all of
         /// them in one frame. Each <see cref="IColorSwapManager.CreateColorSwapTask"/> call can involve an expensive,
-        /// main-thread-only GPU texture readback (see <see cref="Extensions.RendererExtensions.Clone"/>), so spreading
-        /// the creation over several frames turns a single noticeable hitch into several smaller, imperceptible ones.
+        /// main-thread-only GPU texture readback (see <see cref="Extensions.RendererExtensions.GetSourcePixels(Texture2D)"/>),
+        /// so spreading the creation over several frames turns a single noticeable hitch into several smaller, imperceptible ones.
         /// </summary>
         public IEnumerator BeginColorSwapOverFrames()
         {
@@ -74,6 +74,9 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
                 Log.Error("This operation has already been started.");
                 yield break;
             }
+
+            IEnumerable<Texture2D> sourceTextures = colorSwapManagers.SelectMany(manager => manager.GetSourceTextures(nitroxPlayer));
+            yield return sourceTextures.PrewarmSourcePixelsAsync();
 
             taskCount = 0;
             foreach (IColorSwapManager manager in colorSwapManagers)
@@ -95,6 +98,25 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             }
 
             colorSwapManagers.ForEach(manager => manager.ApplyPlayerColor(texturePixelIndexes, nitroxPlayer));
+        }
+
+        /// <summary>
+        /// Same as <see cref="ApplySwappedColors"/>, but applies one manager's final textures per yielded frame
+        /// instead of all managers (up to ~18 texture uploads) in a single frame.
+        /// </summary>
+        public IEnumerator ApplySwappedColorsOverFrames()
+        {
+            if (taskCount != 0)
+            {
+                Log.Error("Colors must be swapped before the changes can be applied to the player model.");
+                yield break;
+            }
+
+            foreach (IColorSwapManager manager in colorSwapManagers)
+            {
+                manager.ApplyPlayerColor(texturePixelIndexes, nitroxPlayer);
+                yield return null;
+            }
         }
 
         private void ExecuteTask(object state)

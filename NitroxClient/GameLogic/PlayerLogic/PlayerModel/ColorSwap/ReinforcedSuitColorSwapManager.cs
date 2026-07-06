@@ -23,15 +23,12 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer reinforcedSuitRenderer = playerModel.GetRenderer(REINFORCED_SUIT_GAME_OBJECT_NAME);
-            reinforcedSuitRenderer.material.ApplyClonedTexture();
-            reinforcedSuitRenderer.materials[1].ApplyClonedTexture();
 
             SkinnedMeshRenderer reinforcedGloveRenderer = playerModel.GetRenderer(REINFORCED_GLOVES_GAME_OBJECT_NAME);
-            reinforcedGloveRenderer.material.ApplyClonedTexture();
 
-            Color[] suitTexturePixels = reinforcedSuitRenderer.material.GetMainTexturePixels();
-            Color[] armsTexturePixels = reinforcedSuitRenderer.materials[1].GetMainTexturePixels();
-            Color[] gloveTexturePixels = reinforcedGloveRenderer.material.GetMainTexturePixels();
+            Color[] suitTexturePixels = reinforcedSuitRenderer.material.GetSourcePixels();
+            Color[] armsTexturePixels = reinforcedSuitRenderer.materials[1].GetSourcePixels();
+            Color[] gloveTexturePixels = reinforcedGloveRenderer.material.GetSourcePixels();
 
             return operation =>
             {
@@ -47,6 +44,14 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
                 operation.UpdateIndex(REINFORCED_SUIT_ARMS_INDEX_KEY, armsTexturePixels);
                 operation.UpdateIndex(REINFORCED_GLOVES_INDEX_KEY, gloveTexturePixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            SkinnedMeshRenderer reinforcedSuitRenderer = nitroxPlayer.PlayerModel.GetRenderer(REINFORCED_SUIT_GAME_OBJECT_NAME);
+            yield return (Texture2D)reinforcedSuitRenderer.material.mainTexture;
+            yield return (Texture2D)reinforcedSuitRenderer.materials[1].mainTexture;
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(REINFORCED_GLOVES_GAME_OBJECT_NAME).material.mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

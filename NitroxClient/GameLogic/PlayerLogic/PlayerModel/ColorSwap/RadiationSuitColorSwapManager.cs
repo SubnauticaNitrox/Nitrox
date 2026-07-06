@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy;
@@ -29,13 +29,14 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             HueSwapper hueSwapper = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer radiationSuitRenderer = playerModel.GetRenderer(RADIATION_SUIT_GAME_OBJECT_NAME);
-            radiationSuitRenderer.material.ApplyClonedTexture();
-            radiationSuitRenderer.materials[1].ApplyClonedTexture();
 
-            Color[] legPixelBlock = radiationSuitRenderer.material.GetMainTexturePixelBlock(legTextureBlock);
-            Color[] feetPixelBlock = radiationSuitRenderer.material.GetMainTexturePixelBlock(feetTextureBlock);
-            Color[] beltPixelBlock = radiationSuitRenderer.material.GetMainTexturePixelBlock(beltTextureBlock);
-            Color[] armSleevesPixels = radiationSuitRenderer.materials[1].GetMainTexturePixels();
+            int textureWidth = ((Texture2D)radiationSuitRenderer.material.mainTexture).width;
+            Color[] fullPixels = radiationSuitRenderer.material.GetSourcePixels();
+
+            Color[] legPixelBlock = fullPixels.ExtractBlock(textureWidth, legTextureBlock);
+            Color[] feetPixelBlock = fullPixels.ExtractBlock(textureWidth, feetTextureBlock);
+            Color[] beltPixelBlock = fullPixels.ExtractBlock(textureWidth, beltTextureBlock);
+            Color[] armSleevesPixels = radiationSuitRenderer.materials[1].GetSourcePixels();
 
             return operation =>
             {
@@ -63,6 +64,13 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             };
         }
 
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            SkinnedMeshRenderer radiationSuitRenderer = nitroxPlayer.PlayerModel.GetRenderer(RADIATION_SUIT_GAME_OBJECT_NAME);
+            yield return (Texture2D)radiationSuitRenderer.material.mainTexture;
+            yield return (Texture2D)radiationSuitRenderer.materials[1].mainTexture;
+        }
+
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)
         {
             Color[] armSleevesPixels = pixelIndex[RADIATION_SUIT_ARMS_INDEX_KEY];
@@ -74,9 +82,15 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
             SkinnedMeshRenderer radiationSuitRenderer = playerModel.GetRenderer(RADIATION_SUIT_GAME_OBJECT_NAME);
 
-            radiationSuitRenderer.material.UpdateMainTextureColors(legPixels, legTextureBlock);
-            radiationSuitRenderer.material.UpdateMainTextureColors(feetPixels, feetTextureBlock);
-            radiationSuitRenderer.material.UpdateMainTextureColors(beltPixels, beltTextureBlock);
+            // Patch the swapped blocks into a fresh full-texture copy so the whole leg/feet/belt texture can be
+            // uploaded to the GPU in a single Apply() call instead of one partial upload per block.
+            int textureWidth = ((Texture2D)radiationSuitRenderer.material.mainTexture).width;
+            Color[] fullPixels = radiationSuitRenderer.material.GetSourcePixels();
+            fullPixels.InsertBlock(textureWidth, legTextureBlock, legPixels);
+            fullPixels.InsertBlock(textureWidth, feetTextureBlock, feetPixels);
+            fullPixels.InsertBlock(textureWidth, beltTextureBlock, beltPixels);
+
+            radiationSuitRenderer.material.UpdateMainTextureColors(fullPixels);
             radiationSuitRenderer.materials[1].UpdateMainTextureColors(armSleevesPixels);
 
             radiationSuitRenderer.material.SetTexture("_MainText", radiationSuitRenderer.material.mainTexture);

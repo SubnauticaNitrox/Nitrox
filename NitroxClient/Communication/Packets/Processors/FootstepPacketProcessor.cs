@@ -29,7 +29,7 @@ internal sealed class FootstepPacketProcessor : IClientPacketProcessor<FootstepP
     public Task Process(ClientProcessorContext context, FootstepPacket packet)
     {
         Optional<RemotePlayer> player = remotePlayerManager.Find(packet.SessionId);
-        if (player.HasValue)
+        if (player.HasValue && player.Value.Body)
         {
             FMODAsset asset = packet.AssetIndex switch
             {

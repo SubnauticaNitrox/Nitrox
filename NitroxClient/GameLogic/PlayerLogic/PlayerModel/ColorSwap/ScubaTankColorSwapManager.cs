@@ -16,9 +16,8 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer scubaTankRenderer = playerModel.GetRenderer(SCUBA_TANK_GAME_OBJECT_NAME);
-            scubaTankRenderer.material.ApplyClonedTexture();
 
-            Color[] texturePixels = scubaTankRenderer.material.GetMainTexturePixels();
+            Color[] texturePixels = scubaTankRenderer.material.GetSourcePixels();
 
             return operation =>
             {
@@ -29,6 +28,11 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
                 operation.UpdateIndex(SCUBA_TANK_INDEX_KEY, texturePixels);
             };
+        }
+
+        public IEnumerable<Texture2D> GetSourceTextures(INitroxPlayer nitroxPlayer)
+        {
+            yield return (Texture2D)nitroxPlayer.PlayerModel.GetRenderer(SCUBA_TANK_GAME_OBJECT_NAME).material.mainTexture;
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)

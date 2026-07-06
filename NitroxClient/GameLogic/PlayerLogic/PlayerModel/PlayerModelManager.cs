@@ -97,6 +97,6 @@ public class PlayerModelManager
 
         yield return swapOperation.BeginColorSwapOverFrames();
         yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
-        swapOperation.ApplySwappedColors();
+        yield return swapOperation.ApplySwappedColorsOverFrames();
     }
 }
