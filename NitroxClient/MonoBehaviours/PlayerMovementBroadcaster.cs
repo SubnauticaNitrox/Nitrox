@@ -77,17 +77,17 @@ public class PlayerMovementBroadcaster : MonoBehaviour
 
         SubRoot subRoot = Player.main.GetCurrentSub();
 
-        // If in a subroot the position will be relative to the subroot
-        if (subRoot)
+        // If in a base the position/rotation is sent relative to the base, matching what RemotePlayer.UpdatePosition
+        // expects (it only converts back from local to world space for SubRoot.isBase). Vehicles (e.g. Cyclops) are
+        // intentionally excluded here since the receiver doesn't convert those back either.
+        if (subRoot && subRoot.isBase)
         {
-            // Rotate relative player position relative to the subroot (else there are problems with respawning)
             Transform subRootTransform = subRoot.transform;
             Quaternion undoVehicleAngle = subRootTransform.rotation.GetInverse();
             currentPosition = currentPosition - subRootTransform.position;
             currentPosition = undoVehicleAngle * currentPosition;
             bodyRotation = undoVehicleAngle * bodyRotation;
             aimingRotation = undoVehicleAngle * aimingRotation;
-            currentPosition = subRootTransform.TransformPoint(currentPosition);
         }
 
         if (!ShouldBroadcastMovement(currentPosition, bodyRotation, playerVelocity))
