@@ -1,25 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
-namespace Nitrox.Server.Subnautica.Models.GameLogic.Players
+namespace Nitrox.Server.Subnautica.Models.GameLogic.Players;
+
+internal sealed class PlayerData
 {
-    [DataContract]
-    internal sealed class PlayerData
+    public List<PersistedPlayerData> Players = [];
+
+    public List<Player> GetPlayers()
     {
-        [DataMember(Order = 1)]
-        public List<PersistedPlayerData> Players = [];
+        return Players.Select(playerData => playerData.ToPlayer()).ToList();
+    }
 
-        public List<Player> GetPlayers()
-        {
-            return Players.Select(playerData => playerData.ToPlayer()).ToList();
-        }
+    public static PlayerData From(IEnumerable<Player> players)
+    {
+        List<PersistedPlayerData> persistedPlayers = players.Select(PersistedPlayerData.FromPlayer).ToList();
 
-        public static PlayerData From(IEnumerable<Player> players)
-        {
-            List<PersistedPlayerData> persistedPlayers = players.Select(PersistedPlayerData.FromPlayer).ToList();
-
-            return new PlayerData { Players = persistedPlayers };
-        }
+        return new PlayerData { Players = persistedPlayers };
     }
 }

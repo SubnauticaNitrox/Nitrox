@@ -1,42 +1,32 @@
-using System.Runtime.Serialization;
+namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-namespace Nitrox.Server.Subnautica.Models.GameLogic
+internal sealed class StoryTimingData
 {
-    [Serializable]
-    [DataContract]
-    internal sealed class StoryTimingData
+    /// <summary>
+    ///     Game time elapsed in seconds.
+    /// </summary>
+    public double ElapsedSeconds { get; set; }
+
+    public double? AuroraCountdownTime { get; set; }
+
+    public double? AuroraWarningTime { get; set; }
+
+    /// <summary>
+    ///     Time elapsed in real-time. In seconds.
+    /// </summary>
+    public double RealTimeElapsed { get; set; }
+
+    public double? AuroraRealExplosionTime { get; set; }
+
+    public static StoryTimingData From(StoryManager storyManager, TimeService timeService)
     {
-        /// <summary>
-        ///     Game time elapsed in seconds.
-        /// </summary>
-        [DataMember(Order = 1)]
-        public double ElapsedSeconds { get; set; }
-
-        [DataMember(Order = 2)]
-        public double? AuroraCountdownTime { get; set; }
-
-        [DataMember(Order = 3)]
-        public double? AuroraWarningTime { get; set; }
-
-        /// <summary>
-        ///     Time elapsed in real-time. In seconds.
-        /// </summary>
-        [DataMember(Order = 4)]
-        public double RealTimeElapsed { get; set; }
-
-        [DataMember(Order = 5)]
-        public double? AuroraRealExplosionTime { get; set; }
-
-        public static StoryTimingData From(StoryManager storyManager, TimeService timeService)
+        return new StoryTimingData
         {
-            return new StoryTimingData
-            {
-                ElapsedSeconds = timeService.GameTime.TotalSeconds,
-                AuroraCountdownTime = storyManager.AuroraCountdownTimeMs,
-                AuroraWarningTime = storyManager.AuroraWarningTimeMs,
-                RealTimeElapsed = timeService.ActiveTime.TotalSeconds,
-                AuroraRealExplosionTime = storyManager.AuroraRealExplosionTime.TotalSeconds
-            };
-        }
+            ElapsedSeconds = timeService.GameTime.TotalSeconds,
+            AuroraCountdownTime = storyManager.AuroraCountdownTimeMs,
+            AuroraWarningTime = storyManager.AuroraWarningTimeMs,
+            RealTimeElapsed = timeService.ActiveTime.TotalSeconds,
+            AuroraRealExplosionTime = storyManager.AuroraRealExplosionTime.TotalSeconds
+        };
     }
 }
