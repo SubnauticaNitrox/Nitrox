@@ -46,7 +46,6 @@ internal sealed class StatusService(
         SubnauticaServerOptions o = options.Value;
         logger.ZLogInformation($"Server started in {double.Round(appStartStopWatch.Elapsed.TotalSeconds, 3):@Seconds} seconds");
         logger.ZLogInformation($"Server is listening on port {o.ServerPort} UDP");
-        logger.ZLogInformation($"Using {o.SerializerMode} as save file serializer");
         logger.ZLogInformation($"Server Password: '{(string.IsNullOrWhiteSpace(o.ServerPassword) ? "" : o.ServerPassword):@password}'");
         logger.ZLogInformation($"Admin Password: '{(string.IsNullOrWhiteSpace(o.AdminPassword) ? "" : o.AdminPassword):@password}'");
         logger.ZLogInformation($"Autobackup: {(o.MaxBackups < 1 ? "DISABLED" : $"ENABLED (Max: {o.MaxBackups})")}");
