@@ -1,35 +1,31 @@
-// Disabled because these patches cause certain animations to break (such as https://github.com/SubnauticaNitrox/Nitrox/issues/2287)
-// TODO: reenable after the 1.8 release and fix animations
-#if false
+using System;
+using System.CodeDom.Compiler;
 using System.Reflection;
-using NitroxClient.Communication.Abstract;
+using HarmonyLib;
+using Nitrox.Model.Helper;
+using NitroxClient.Extensions;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.CinematicController;
-using NitroxClient.Unity.Helper;
-using Nitrox.Model.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class PlayerCinematicController_OnPlayerCinematicModeEnd_Patch : NitroxPatch, IDynamicPatch
+public sealed class PlayerCinematicController_OnPlayerCinematicModeEnd_Patch : NitroxPatch, IDynamicPatch, INitroxPatch
 {
-    private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.OnPlayerCinematicModeEnd());
+	private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.OnPlayerCinematicModeEnd());
 
-    public static void Prefix(PlayerCinematicController __instance)
-    {
-        if (!__instance.cinematicModeActive)
-        {
-            return;
-        }
+	public static void Prefix(PlayerCinematicController __instance)
+	{
+		if (__instance.cinematicModeActive && __instance.TryGetComponentInParent<NitroxEntity>(out var component, includeInactive: true) && !component.gameObject.GetComponent<Bed>() && NitroxPatch.Resolve<LocalPlayer>().SessionId.HasValue)
+		{
+			int hashCode = __instance.gameObject.GetHierarchyPath(component.gameObject).GetHashCode();
+			NitroxPatch.Resolve<PlayerCinematics>().EndCinematicMode(NitroxPatch.Resolve<LocalPlayer>().SessionId.Value, component.Id, hashCode, __instance.playerViewAnimationName);
+		}
+	}
 
-        if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
-        {
-            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
-            return;
-        }
-
-        int identifier = MultiplayerCinematicReference.GetCinematicControllerIdentifier(__instance.gameObject, entity.gameObject);
-        Resolve<PlayerCinematics>().EndCinematicMode(Resolve<IMultiplayerSession>().Reservation.PlayerId, entity.Id, identifier, __instance.playerViewAnimationName);
-    }
+	[GeneratedCode("Nitrox.Analyzers", "1.0.13.0")]
+	public override void Patch(Harmony harmony)
+	{
+		PatchMultiple(harmony, targetMethod, new Action<PlayerCinematicController>(Prefix).Method);
+	}
 }
-#endif

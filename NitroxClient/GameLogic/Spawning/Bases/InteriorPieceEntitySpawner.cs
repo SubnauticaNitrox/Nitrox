@@ -5,10 +5,12 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.BedSync;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -76,7 +78,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 
         yield return entities.SpawnBatchAsync(batch, true);
 
-        if (result.Get().Value.TryGetComponent(out PowerSource powerSource))
+        if (entity.Metadata is not PowerSourceMetadata && result.Get().Value.TryGetComponent(out PowerSource powerSource))
         {
             // TODO: Have synced/restored power
             powerSource.SetPower(powerSource.maxPower);
@@ -105,6 +107,10 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         if (moduleObject)
         {
             NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
+            if (moduleObject.GetComponent<Bed>() && !moduleObject.GetComponent<RemoteBedController>())
+            {
+                moduleObject.AddComponent<RemoteBedController>();
+            }
             yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
             entityMetadataManager.ApplyMetadata(moduleObject, interiorPiece.Metadata);
             result.Set(moduleObject);
@@ -169,7 +175,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         return interiorPiece;
     }
 
-    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
+    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity, EntityMetadataManager entityMetadataManager)
     {
         MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
         if (!mapRoomFunctionality)
@@ -178,5 +184,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             yield break;
         }
         NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
+        entityMetadataManager.ApplyMetadata(mapRoomFunctionality.gameObject, mapRoomEntity.Metadata);
+        yield return MapRoomCameras.EnsureCameraIdsDeferred(mapRoomFunctionality);
     }
 }

@@ -1,6 +1,8 @@
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -23,13 +25,16 @@ internal sealed class PDAScanFinishedProcessor : IClientPacketProcessor<PDAScanF
             PDAScanner.complete.Add(packetTechType);
             return Task.CompletedTask;
         }
-        if (PDAScanner.GetPartialEntryByKey(packetTechType, out PDAScanner.Entry entry))
+        int previousUnlocked = PDAScanner.GetPartialEntryByKey(packetTechType, out PDAScanner.Entry entry) ? entry.unlocked : 0;
+        PDAScanner.Entry updatedEntry = PDAScanner.Add(packetTechType, packet.UnlockedAmount);
+        if (updatedEntry != null && updatedEntry.unlocked > previousUnlocked && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
         {
-            entry.unlocked = packet.UnlockedAmount;
-        }
-        else
-        {
-            PDAScanner.Add(packetTechType, packet.UnlockedAmount);
+            int totalFragments = PDAScanner.GetEntryData(packetTechType)?.totalFragments ?? 1;
+            if (totalFragments > 1)
+            {
+                float percentage = Mathf.RoundToInt((float)updatedEntry.unlocked / totalFragments * 100f);
+                ErrorMessage.AddError(Language.main.GetFormat("ScannerInstanceScanned", Language.main.Get(packetTechType.AsString()), percentage, updatedEntry.unlocked, totalFragments));
+            }
         }
         return Task.CompletedTask;
     }

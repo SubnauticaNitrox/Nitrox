@@ -20,11 +20,13 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 {
     private readonly Entities entities;
     private readonly BaseLeakEntitySpawner baseLeakEntitySpawner;
+    private readonly EntityMetadataManager entityMetadataManager;
 
-    public BuildEntitySpawner(Entities entities, BaseLeakEntitySpawner baseLeakEntitySpawner)
+    public BuildEntitySpawner(Entities entities, BaseLeakEntitySpawner baseLeakEntitySpawner, EntityMetadataManager entityMetadataManager)
     {
         this.entities = entities;
         this.baseLeakEntitySpawner = baseLeakEntitySpawner;
+        this.entityMetadataManager = entityMetadataManager;
     }
 
     protected override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
@@ -58,7 +60,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             switch (childEntity)
             {
                 case MapRoomEntity mapRoomEntity:
-                    yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+                    yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity, entityMetadataManager);
                     break;
                 case BaseLeakEntity baseLeakEntity:
                     atLeastOneLeak = true;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.BedSync;
 using NitroxClient.MonoBehaviours.Overrides;
 using Nitrox.Model.DataStructures;
 using UnityEngine;
@@ -24,8 +25,11 @@ public static class BuildingPostSpawner
         }
         else if (gameObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
         {
-            // TODO: remove once scanner rooms are properly synced
-            Log.InGame(Language.main.Get("Nitrox_ScannerRoomWarn"));
+            return MapRoomCameras.EnsureCameraIdsDeferred(mapRoomFunctionality);
+        }
+        else if (gameObject.TryGetComponent(out Bed bed))
+        {
+            SetupBed(bed.gameObject);
             return null;
         }
 
@@ -107,5 +111,13 @@ public static class BuildingPostSpawner
         NitroxId planterId = waterParkId.Increment();
 
         NitroxEntity.SetNewId(waterPark.planter.gameObject, planterId);
+    }
+
+    public static void SetupBed(GameObject bedObject)
+    {
+        if (!bedObject.GetComponent<RemoteBedController>())
+        {
+            bedObject.AddComponent<RemoteBedController>();
+        }
     }
 }

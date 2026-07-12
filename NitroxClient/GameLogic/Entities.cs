@@ -66,9 +66,9 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BaseLeakEntity)] = new BaseLeakEntitySpawner(liveMixinManager);
-            entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this, (BaseLeakEntitySpawner)entitySpawnersByType[typeof(BaseLeakEntity)]);
+            entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this, (BaseLeakEntitySpawner)entitySpawnersByType[typeof(BaseLeakEntity)], entityMetadataManager);
             entitySpawnersByType[typeof(RadiationLeakEntity)] = new RadiationLeakEntitySpawner(timeManager);
-            entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
+            entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this, entityMetadataManager);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
             entitySpawnersByType[typeof(OxygenPipeEntity)] = new OxygenPipeEntitySpawner((WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
             entitySpawnersByType[typeof(PlacedWorldEntity)] = new PlacedWorldEntitySpawner((WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
@@ -196,6 +196,8 @@ namespace NitroxClient.GameLogic
                     AddPendingParentEntity(entity);
                     continue;
                 }
+
+                MapRoomCameras.DestroyStaleLocalCamera(entity.Id);
 
                 // Executing the spawn instructions whether they're sync or async
                 IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];

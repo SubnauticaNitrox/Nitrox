@@ -680,7 +680,7 @@ event:/sub/base/power_up_3D;false;false;0
 event:/sub/base/pressure_damage_heavy;false;false;0
 event:/sub/base/pressure_damage_light;false;false;0
 event:/sub/base/pressure_damage_medium;false;false;0
-event:/sub/base/seamoth_dock;false;false;0
+event:/sub/base/seamoth_dock;true;true;20
 event:/sub/base/solar_panel_death;false;false;0
 event:/sub/base/thermal_plant_death;false;false;0
 event:/sub/base/vendingmachine_use;true;false;20
@@ -789,7 +789,7 @@ event:/sub/exo/claw_hit_terain;true;true;40
 event:/sub/exo/claw_pickup;true;true;40
 event:/sub/exo/claw_punch;true;true;40
 event:/sub/exo/dock_exo_cyclops;false;false;0
-event:/sub/exo/dock_exo_moonpool;false;false;0
+event:/sub/exo/dock_exo_moonpool;true;true;20
 event:/sub/exo/drill_hit_loop;false;true;50
 event:/sub/exo/drill_loop;false;true;50
 event:/sub/exo/enter_exo;false;false;0
@@ -881,7 +881,7 @@ event:/sub/seamoth/crush_depth_update;false;false;0
 event:/sub/seamoth/crush_depth_warning;false;false;0
 event:/sub/seamoth/depth_update;false;false;0
 event:/sub/seamoth/depth_warning;false;false;0
-event:/sub/seamoth/dock;false;false;0
+event:/sub/seamoth/dock;true;true;20
 event:/sub/seamoth/dock_seamoth_cyclops;false;false;0
 event:/sub/seamoth/enter_seamoth;false;false;50
 event:/sub/seamoth/first_use;false;false;0

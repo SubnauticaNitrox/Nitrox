@@ -4,9 +4,11 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
@@ -17,10 +19,12 @@ namespace NitroxClient.GameLogic.Spawning.Bases;
 public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
 {
     private readonly Entities entities;
+    private readonly EntityMetadataManager entityMetadataManager;
 
-    public ModuleEntitySpawner(Entities entities)
+    public ModuleEntitySpawner(Entities entities, EntityMetadataManager entityMetadataManager)
     {
         this.entities = entities;
+        this.entityMetadataManager = entityMetadataManager;
     }
 
     protected override IEnumerator SpawnAsync(ModuleEntity entity, TaskResult<Optional<GameObject>> result)
@@ -40,6 +44,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield break;
         }
         GameObject moduleObject = result.Get().Value;
+        entityMetadataManager.ApplyMetadata(moduleObject, entity.Metadata);
         
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(moduleObject);
         if (opContainer.HasValue)
@@ -53,7 +58,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InstalledModuleEntity>().ToList<Entity>(), true);
         }
         
-        if (moduleObject.TryGetComponent(out PowerSource powerSource))
+        if (entity.Metadata is not PowerSourceMetadata && moduleObject.TryGetComponent(out PowerSource powerSource))
         {
             // TODO: Have synced/restored power
             powerSource.SetPower(powerSource.maxPower);

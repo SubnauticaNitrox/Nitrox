@@ -104,7 +104,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
+        containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
+        containerBuilder.RegisterType<MapRoomCameras>().InstancePerLifetimeScope();
             containerBuilder.Register(_ => FMODWhitelist.Load(GameInfo.Subnautica)).InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();

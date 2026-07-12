@@ -56,6 +56,8 @@ public class RemotePlayer : INitroxPlayer
     public InfectedMixin InfectedMixin { get; private set; }
     public LiveMixin LiveMixin { get; private set; }
 
+    public bool InCinematic { get; set; }
+
     public readonly Event<RemotePlayer> PlayerDeathEvent = new();
 
     public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
@@ -153,12 +155,15 @@ public class RemotePlayer : INitroxPlayer
 
         Body.SetActive(true);
 
-        // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
-        SetVehicle(null);
-        SetPilotingChair(null);
+        if (!InCinematic)
+        {
+            // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
+            SetVehicle(null);
+            SetPilotingChair(null);
 
-        AnimationController.AimingRotation = aimingRotation;
-        AnimationController.UpdatePlayerAnimations = true;
+            AnimationController.AimingRotation = aimingRotation;
+            AnimationController.UpdatePlayerAnimations = true;
+        }
         AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
 
         // If in a subroot the position will be relative to the subroot
@@ -354,6 +359,7 @@ public class RemotePlayer : INitroxPlayer
         SetPilotingChair(null);
         SetVehicle(null);
         SetSubRoot(null);
+        InCinematic = false;
         AnimationController.UpdatePlayerAnimations = true;
         AnimationController.Reset();
         ArmsController.SetWorldIKTarget(null, null);

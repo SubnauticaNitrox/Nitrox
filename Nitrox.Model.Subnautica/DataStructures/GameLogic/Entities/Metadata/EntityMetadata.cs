@@ -45,8 +45,10 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(86, typeof(GenericConsoleMetadata))]
     [ProtoInclude(87, typeof(BlueprintHandTargetMetadata))]
     [ProtoInclude(88, typeof(PrecursorDisableGunTerminalMetadata))]
-    [ProtoInclude(89, typeof(OxygenMetadata))]
-    public abstract class EntityMetadata
+[ProtoInclude(89, typeof(OxygenMetadata))]
+[ProtoInclude(90, typeof(PowerSourceMetadata))]
+[ProtoInclude(91, typeof(MapRoomMetadata))]
+public abstract class EntityMetadata
     {
     }
 }

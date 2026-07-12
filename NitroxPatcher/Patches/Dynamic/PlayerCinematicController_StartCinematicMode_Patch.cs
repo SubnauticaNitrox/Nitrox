@@ -1,43 +1,76 @@
-// Disabled because these patches cause certain animations to break (such as https://github.com/SubnauticaNitrox/Nitrox/issues/2287)
-// TODO: reenable after the 1.8 release and fix animations
-#if false
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Reflection;
-using NitroxClient.Communication.Abstract;
+using HarmonyLib;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Logger;
+using NitroxClient.Extensions;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
-using NitroxClient.Unity.Helper;
-using Nitrox.Model.Helper;
+using Story;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class PlayerCinematicController_StartCinematicMode_Patch : NitroxPatch, IDynamicPatch
+public sealed class PlayerCinematicController_StartCinematicMode_Patch : NitroxPatch, IDynamicPatch, INitroxPatch
 {
-    private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.StartCinematicMode(default));
+	private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.StartCinematicMode(null));
 
-    public static void Prefix(PlayerCinematicController __instance)
-    {
-        if (__instance.cinematicModeActive)
-        {
-            return;
-        }
+	public static void Prefix(PlayerCinematicController __instance)
+	{
+		if (!__instance.cinematicModeActive && (bool)Player.main && Player.main.gameObject.activeInHierarchy && __instance.TryGetComponent<MultiplayerCinematicController>(out var component) && !__instance.GetComponentInParent<Bed>() && __instance.TryGetComponentInParent<NitroxEntity>(out var component2, includeInactive: true) && NitroxPatch.Resolve<LocalPlayer>().SessionId.HasValue)
+		{
+			component.CallAllCinematicModeEnd();
+			int hashCode = __instance.gameObject.GetHierarchyPath(component2.gameObject).GetHashCode();
+			Dictionary<string, bool> animationParameters = CaptureAnimationParameters(__instance, component2.gameObject);
+			NitroxPatch.Resolve<PlayerCinematics>().StartCinematicMode(NitroxPatch.Resolve<LocalPlayer>().SessionId.Value, component2.Id, hashCode, __instance.playerViewAnimationName, animationParameters);
+		}
+	}
 
-        if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
-        {
-            Log.Warn($"[{nameof(PlayerCinematicController_StartCinematicMode_Patch)}] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
-            return;
-        }
+	private static Dictionary<string, bool> CaptureAnimationParameters(PlayerCinematicController cinematicController, GameObject entityRoot)
+	{
+		Dictionary<string, bool> dictionary = new Dictionary<string, bool>();
+		if (cinematicController.playerViewAnimationName == "precursor_deactivate_gun")
+		{
+			PrecursorDisableGunTerminal precursorDisableGunTerminal = FindTerminalComponent(entityRoot, cinematicController);
+			if ((bool)precursorDisableGunTerminal)
+			{
+				bool value = StoryGoalManager.main != null && precursorDisableGunTerminal.onPlayerCuredGoal != null && StoryGoalManager.main.IsGoalComplete(precursorDisableGunTerminal.onPlayerCuredGoal.key);
+				dictionary["first_use"] = precursorDisableGunTerminal.firstUse;
+				dictionary["cured"] = value;
+				dictionary["using_tool_first"] = precursorDisableGunTerminal.firstUse;
+			}
+		}
+		return dictionary;
+	}
 
-        if (!__instance.TryGetComponent(out MultiplayerCinematicController multiplayerCinematicController))
-        {
-            Log.Error($"[{nameof(PlayerCinematicController_StartCinematicMode_Patch)}] - No MultiplayerCinematicController for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
-            return;
-        }
+	private static PrecursorDisableGunTerminal FindTerminalComponent(GameObject entityRoot, PlayerCinematicController cinematicController)
+	{
+		PrecursorDisableGunTerminal component = entityRoot.GetComponent<PrecursorDisableGunTerminal>();
+		if ((bool)component)
+		{
+			return component;
+		}
+		component = entityRoot.GetComponentInChildren<PrecursorDisableGunTerminal>();
+		if ((bool)component)
+		{
+			return component;
+		}
+		component = cinematicController.GetComponentInParent<PrecursorDisableGunTerminal>();
+		if ((bool)component)
+		{
+			return component;
+		}
+		Log.Warn("Could not find PrecursorDisableGunTerminal component for gun terminal cinematic");
+		return null;
+	}
 
-        multiplayerCinematicController.CallAllCinematicModeEnd();
-
-        int identifier = MultiplayerCinematicReference.GetCinematicControllerIdentifier(__instance.gameObject, entity.gameObject);
-        Resolve<PlayerCinematics>().StartCinematicMode(Resolve<IMultiplayerSession>().Reservation.PlayerId, entity.Id, identifier, __instance.playerViewAnimationName);
-    }
+	[GeneratedCode("Nitrox.Analyzers", "1.0.13.0")]
+	public override void Patch(Harmony harmony)
+	{
+		PatchMultiple(harmony, targetMethod, new Action<PlayerCinematicController>(Prefix).Method);
+	}
 }
-#endif
