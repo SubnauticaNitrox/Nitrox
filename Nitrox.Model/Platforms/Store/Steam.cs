@@ -315,10 +315,14 @@ public sealed class Steam : IGamePlatform
                 }
             }
 
-            List<string> steamLibraryPaths = GetAllLibraryPaths(steamPath);
-
             string sniperAppId = "1628350";
-            string sniperRuntimePath = Path.Combine(GetLibraryPath(steamPath, sniperAppId), "steamapps", "common", "SteamLinuxRuntime_sniper");
+            if (!TryGetSteamAppLibraryPath(steamPath, sniperAppId, out string gameSteamLibraryPath) || !Directory.Exists(gameSteamLibraryPath))
+            {
+                throw new Exception("Could not find or access the Steam compatibility runtime 'sniper'");
+            }
+            string sniperRuntimePath = Path.Combine(gameSteamLibraryPath, "steamapps", "common", "SteamLinuxRuntime_sniper");
+
+            List<string> steamLibraryPaths = GetAllLibraryPaths(steamPath);
 
             string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
             string? protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
@@ -351,38 +355,6 @@ public sealed class Steam : IGamePlatform
                 throw new Exception($"Path '{invalidPath}' contains invalid character ':'");
             }
             return string.Join(":", paths);
-        }
-
-        // function to get library path for given game id
-        static string GetLibraryPath(string steamPath, string gameId)
-        {
-            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
-            string content;
-            try
-            {
-                content = File.ReadAllText(libraryFoldersPath);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                return "";
-            }
-
-            // Regex to match library folder entries
-            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
-            foreach (Match match in folderRegex.Matches(content))
-            {
-                string path = match.Groups[2].Value;
-                string apps = match.Groups[3].Value;
-
-                // Check if the gameId exists in the apps section
-                if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
-                {
-                    return path;
-                }
-            }
-
-            return "";
         }
 
         static List<string> GetAllLibraryPaths(string steamPath)
@@ -517,6 +489,47 @@ public sealed class Steam : IGamePlatform
 
             return null;
         }
+    }
+
+    /// <summary>
+    ///     Tries to get the Steam library path of a game from the provided Steam root path.
+    /// </summary>
+    /// <param name="steamPath">The root to where Steam is installed (has the Steam executable file)</param>
+    /// <param name="gameId">The Steam App ID to return the library path of.</param>
+    /// <param name="gameLibraryPath">The resulting path if found or empty string</param>
+    /// <returns>True if the Steam has a known library path of the given game id</returns>
+    private static bool TryGetSteamAppLibraryPath(string steamPath, string gameId, out string gameLibraryPath)
+    {
+        gameLibraryPath = "";
+
+        string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+        string content;
+        try
+        {
+            content = File.ReadAllText(libraryFoldersPath);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+            return false;
+        }
+
+        // Regex to match library folder entries
+        Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
+        foreach (Match match in folderRegex.Matches(content))
+        {
+            string path = match.Groups[2].Value;
+            string apps = match.Groups[3].Value;
+
+            // Check if the gameId exists in the apps section
+            if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
+            {
+                gameLibraryPath = path;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static DateTime GetSteamConsoleLogLastWrite(string steamExePath)
