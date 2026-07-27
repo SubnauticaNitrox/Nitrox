@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -316,32 +317,30 @@ public sealed class Steam : IGamePlatform
             }
 
             string sniperAppId = "1628350";
-            if (!TryGetSteamAppLibraryPath(steamPath, sniperAppId, out string gameSteamLibraryPath) || !Directory.Exists(gameSteamLibraryPath))
+            SteamLibrariesVdf steamLibraries = SteamLibrariesVdf.Load(steamPath);
+            if (!steamLibraries.TryGetSteamAppLibraryPath(sniperAppId, out string steamRuntimeLibraryPath) || !Directory.Exists(steamRuntimeLibraryPath))
             {
                 throw new Exception("Could not find or access the Steam compatibility runtime 'sniper'");
             }
-            string sniperRuntimePath = Path.Combine(gameSteamLibraryPath, "steamapps", "common", "SteamLinuxRuntime_sniper");
+            string steamRuntimePath = Path.Combine(steamRuntimeLibraryPath, "steamapps", "common", "SteamLinuxRuntime_sniper");
 
-            List<string> steamLibraryPaths = GetAllLibraryPaths(steamPath);
-
-            string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
-            string? protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
-            string? protonPath = protonVersion != null ? FindConfiguredProtonPath(protonVersion, steamLibraryPaths, protonRoot) : null;
-            protonPath ??= FindBestFallbackProtonPath(steamLibraryPaths, protonRoot);
+            string? protonVersion = GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
+            string? protonPath = protonVersion != null ? steamLibraries.GetProtonPathByVersion(protonVersion) : null;
+            protonPath ??= steamLibraries.GetBestFallbackProtonPath();
             if (protonPath == null)
             {
-                throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
+                throw new Exception("Steam Proton is unavailable. Please try change game properties in Steam to use the Proton compatibility layer.");
             }
             Log.Debug($"Starting game with proton: {protonPath}");
 
-            result.FileName = Path.Combine(sniperRuntimePath, "_v2-entry-point");
+            result.FileName = Path.Combine(steamRuntimePath, "_v2-entry-point");
             result.Arguments = $" --verb=run -- \"{Path.Combine(protonPath, "proton")}\" run \"{gameFilePath}\" {args}";
             result.EnvironmentVariables.Add("STEAM_COMPAT_APP_ID", steamAppId.ToString());
             result.EnvironmentVariables.Add("WINEPREFIX", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_CLIENT_INSTALL_PATH", steamPath);
             result.EnvironmentVariables.Add("STEAM_COMPAT_DATA_PATH", compatdataPath);
             result.EnvironmentVariables.Add("STEAM_OVERLAY_LINUX", "1"); // Enable Steam overlay and API for controller input and OSK support (Proton-specific)
-            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths(steamLibraryPaths.Append(NitroxUser.LauncherPath)));
+            result.EnvironmentVariables.Add("PRESSURE_VESSEL_FILESYSTEMS_RW", JoinPaths([..steamLibraries.GetAllLibraryPaths(), NitroxUser.LauncherPath]));
         }
 
         return result;
@@ -357,33 +356,7 @@ public sealed class Steam : IGamePlatform
             return string.Join(":", paths);
         }
 
-        static List<string> GetAllLibraryPaths(string steamPath)
-        {
-            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
-            string content = File.ReadAllText(libraryFoldersPath);
-
-            // Regex to match library folder entries
-            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
-            List<string> libraryPaths = [];
-            foreach (Match match in folderRegex.Matches(content))
-            {
-                string path = match.Groups[2].Value.Replace("\\\\", "\\");
-                if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
-                {
-                    libraryPaths.Add(path);
-                }
-            }
-            // Add the default Steam library path
-            string defaultLibraryPath = Path.Combine(steamPath);
-            if (!libraryPaths.Contains(defaultLibraryPath))
-            {
-                libraryPaths.Add(defaultLibraryPath);
-            }
-
-            return libraryPaths;
-        }
-
-        static string? GetProtonVersionFromConfigVdf(string configVdfFile, string appId)
+        static string? GetProtonVersionOfSteamApp(string configVdfFile, string appId)
         {
             try
             {
@@ -417,57 +390,196 @@ public sealed class Steam : IGamePlatform
                 return null;
             }
         }
+    }
 
-        static string? FindConfiguredProtonPath(string protonVersion, IEnumerable<string> steamLibraryPaths, string protonRoot)
+    private static bool HasProtonExecutable(string path) => File.Exists(Path.Combine(path, "proton"));
+
+    private static DateTime GetSteamConsoleLogLastWrite(string steamExePath)
+    {
+        string steamLogsPath = steamExePath switch
         {
-            if (protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase))
+            not null when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs"),
+            not null when Path.GetDirectoryName(steamExePath) is { } steamPath => Path.Combine(steamPath, "logs"),
+            _ => throw new FileNotFoundException("Failed to find Steam console log file")
+        };
+        return File.GetLastWriteTime(Path.Combine(steamLogsPath, "console_log.txt"));
+    }
+
+    /// <summary>
+    ///     Helper class for extracting information based on Steam Libraries VDF file.
+    /// </summary>
+    private class SteamLibrariesVdf
+    {
+        private readonly string steamRootPath;
+        private readonly string vdfContent;
+        private List<string>? allLibraryPathsCache;
+
+        private string ProtonRootPath => Path.Combine(steamRootPath, "compatibilitytools.d");
+
+        private SteamLibrariesVdf(string steamRootPath, string vdfContent)
+        {
+            this.steamRootPath = steamRootPath;
+            this.vdfContent = vdfContent;
+        }
+
+        public static SteamLibrariesVdf Load(string steamRootPath) => new(steamRootPath, File.ReadAllText(Path.Combine(steamRootPath, "config", "libraryfolders.vdf")));
+
+        /// <summary>
+        ///     Tries to get the Steam library path of a game from the provided Steam root path.
+        /// </summary>
+        /// <param name="steamPath">The root to where Steam is installed (has the Steam executable file)</param>
+        /// <param name="gameId">The Steam App ID to return the library path of.</param>
+        /// <param name="gameLibraryPath">The resulting path if found or empty string</param>
+        /// <returns>True if the Steam has a known library path of the given game id</returns>
+        public bool TryGetSteamAppLibraryPath(string gameId, out string gameLibraryPath)
+        {
+            gameLibraryPath = "";
+
+            // Regex to match library folder entries
+            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
+            foreach (Match match in folderRegex.Matches(vdfContent))
             {
-                int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
-                if (index != -1)
+                string path = match.Groups[2].Value;
+                string apps = match.Groups[3].Value;
+
+                // Check if the gameId exists in the apps section
+                if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
                 {
-                    protonVersion = protonVersion[(index + "proton_".Length)..];
+                    gameLibraryPath = path;
+                    return true;
                 }
-                if (protonVersion == "experimental")
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Gets the path to a Proton installation by version.
+        /// </summary>
+        /// <param name="protonVersion">The proton version, can be formatted as a key found in Steam VDF files.</param>
+        public string? GetProtonPathByVersion(string protonVersion)
+        {
+            // If Steam proton version, we expect a Steam VDF formatted version.
+            if (protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase) is var index and > -1)
+            {
+                protonVersion = protonVersion[(index + "proton_".Length)..];
+
+                // First, try directly going to the proton path using the version for faster access.
+                if (GetProtonPathFast(GetAllLibraryPaths().Select(path => Path.Combine(path, "steamapps", "common")), protonVersion) is { } protonPath && HasProtonExecutable(protonPath))
                 {
-                    protonVersion = "-";
+                    return protonPath;
                 }
 
-                foreach (string dir in EnumerateSteamCommonDirectories(steamLibraryPaths))
+                // Slow fallback: iterate directories to find proton by version.
+                Regex protonNameRegex = new(@$"\bproton\b\s+\b{Regex.Escape(protonVersion)}\b", RegexOptions.IgnoreCase);
+                foreach (string steamLibraryDirectory in EnumerateDirectoriesOfSteamApps())
                 {
-                    if (Path.GetFileName(dir).Contains($"Proton {protonVersion}", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dir, "proton")))
+                    string folderName = Path.GetFileName(steamLibraryDirectory);
+                    if (!protonNameRegex.IsMatch(folderName))
                     {
-                        return dir;
+                        continue;
+                    }
+                    if (HasProtonExecutable(steamLibraryDirectory))
+                    {
+                        return steamLibraryDirectory;
                     }
                 }
 
                 return null;
             }
 
-            string customProtonPath = Path.Combine(protonRoot, protonVersion);
-            return File.Exists(Path.Combine(customProtonPath, "proton")) ? customProtonPath : null;
+            // If custom Proton (non-Steam), try path directly.
+            string customProtonPath = Path.Combine(ProtonRootPath, protonVersion);
+            return HasProtonExecutable(customProtonPath) ? customProtonPath : null;
+
+            static string? GetProtonPathFast(IEnumerable<string> steamLibraries, string protonVersion)
+            {
+                string[] protonFolderNames = GetProtonNamesByVersion(protonVersion).ToArray();
+                foreach (string steamLibraryDirectory in steamLibraries)
+                {
+                    foreach (string protonFolderName in protonFolderNames)
+                    {
+                        string expectedProtonPath = Path.Combine(steamLibraryDirectory, protonFolderName);
+                        if (HasProtonExecutable(expectedProtonPath))
+                        {
+                            return expectedProtonPath;
+                        }
+                    }
+                }
+                return null;
+
+                static IEnumerable<string> GetProtonNamesByVersion(string protonVersion)
+                {
+                    if (string.IsNullOrWhiteSpace(protonVersion))
+                    {
+                        yield break;
+                    }
+
+                    if (decimal.TryParse(protonVersion, out decimal parsedVersion))
+                    {
+                        if (parsedVersion == 9)
+                        {
+                            yield return "Proton 9.0 (Beta)";
+                        }
+                        yield return $"Proton {parsedVersion.ToString("0.0###", CultureInfo.InvariantCulture)}";
+                    }
+                    else if (protonVersion.Contains("experimental", StringComparison.OrdinalIgnoreCase))
+                    {
+                        yield return "Proton - Experimental";
+                    }
+                    else
+                    {
+                        // Proton folder name is version name as title case.
+                        yield return $"Proton {char.ToUpperInvariant(protonVersion[0])}{protonVersion[1..]}";
+                    }
+                }
+            }
         }
 
-        static string? FindBestFallbackProtonPath(IEnumerable<string> steamLibraryPaths, string protonRoot)
+        /// <summary>
+        ///     Gets the path to the latest version of proton, preferring a stable release, that is currently installed.
+        /// </summary>
+        public string? GetBestFallbackProtonPath()
         {
-            string? valveProton = EnumerateSteamCommonDirectories(steamLibraryPaths)
+            string? valveProton = EnumerateDirectoriesOfSteamApps()
                                   .Where(HasProtonExecutable)
                                   .Select(path => (Path: path, FolderName: Path.GetFileName(path), Version: GetValveProtonVersion(Path.GetFileName(path))))
                                   .OrderByDescending(candidate => candidate.Version)
                                   .ThenByDescending(candidate => candidate.FolderName.Contains("Experimental", StringComparison.OrdinalIgnoreCase))
                                   .Select(candidate => candidate.Path)
                                   .FirstOrDefault();
-            return valveProton ?? EnumerateDirectories(protonRoot).FirstOrDefault(HasProtonExecutable);
-
-            static bool HasProtonExecutable(string path) => File.Exists(Path.Combine(path, "proton"));
+            return valveProton ?? EnumerateDirectories(ProtonRootPath).FirstOrDefault(HasProtonExecutable);
         }
 
-        static IEnumerable<string> EnumerateSteamCommonDirectories(IEnumerable<string> steamLibraryPaths)
+        public IReadOnlyCollection<string> GetAllLibraryPaths()
         {
-            return steamLibraryPaths.Select(path => Path.Combine(path, "steamapps", "common"))
-                                    .SelectMany(EnumerateDirectories);
+            if (allLibraryPathsCache != null)
+            {
+                return allLibraryPathsCache;
+            }
+
+            // Regex to match library folder entries
+            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
+            List<string> libraryPaths = [];
+            foreach (Match match in folderRegex.Matches(vdfContent))
+            {
+                string path = match.Groups[2].Value.Replace("\\\\", "\\");
+                if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
+                {
+                    libraryPaths.Add(path);
+                }
+            }
+            // Add the default Steam library path
+            string defaultLibraryPath = Path.Combine(steamRootPath);
+            if (!libraryPaths.Contains(defaultLibraryPath))
+            {
+                libraryPaths.Add(defaultLibraryPath);
+            }
+
+            return allLibraryPathsCache = libraryPaths;
         }
 
-        static IEnumerable<string> EnumerateDirectories(string path)
+        private static IEnumerable<string> EnumerateDirectories(string path)
         {
             try
             {
@@ -479,7 +591,7 @@ public sealed class Steam : IGamePlatform
             }
         }
 
-        static Version? GetValveProtonVersion(string directoryName)
+        private static Version? GetValveProtonVersion(string directoryName)
         {
             Match match = Regex.Match(directoryName, @"^Proton\s+(\d+(?:\.\d+)*)", RegexOptions.IgnoreCase);
             if (match.Success && Version.TryParse(match.Groups[1].Value, out Version version))
@@ -489,57 +601,7 @@ public sealed class Steam : IGamePlatform
 
             return null;
         }
-    }
 
-    /// <summary>
-    ///     Tries to get the Steam library path of a game from the provided Steam root path.
-    /// </summary>
-    /// <param name="steamPath">The root to where Steam is installed (has the Steam executable file)</param>
-    /// <param name="gameId">The Steam App ID to return the library path of.</param>
-    /// <param name="gameLibraryPath">The resulting path if found or empty string</param>
-    /// <returns>True if the Steam has a known library path of the given game id</returns>
-    private static bool TryGetSteamAppLibraryPath(string steamPath, string gameId, out string gameLibraryPath)
-    {
-        gameLibraryPath = "";
-
-        string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
-        string content;
-        try
-        {
-            content = File.ReadAllText(libraryFoldersPath);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex);
-            return false;
-        }
-
-        // Regex to match library folder entries
-        Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
-        foreach (Match match in folderRegex.Matches(content))
-        {
-            string path = match.Groups[2].Value;
-            string apps = match.Groups[3].Value;
-
-            // Check if the gameId exists in the apps section
-            if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
-            {
-                gameLibraryPath = path;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static DateTime GetSteamConsoleLogLastWrite(string steamExePath)
-    {
-        string steamLogsPath = steamExePath switch
-        {
-            not null when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs"),
-            not null when Path.GetDirectoryName(steamExePath) is { } steamPath => Path.Combine(steamPath, "logs"),
-            _ => throw new FileNotFoundException("Failed to find Steam console log file")
-        };
-        return File.GetLastWriteTime(Path.Combine(steamLogsPath, "console_log.txt"));
+        private IEnumerable<string> EnumerateDirectoriesOfSteamApps() => GetAllLibraryPaths().Select(path => Path.Combine(path, "steamapps", "common")).SelectMany(EnumerateDirectories);
     }
 }
