@@ -93,6 +93,7 @@ public class ExtensionsTest
         new[] { "blabla", "--other=test", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test");
         new[] { "blabla", "--other=test", "other2", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test");
         new[] { "blabla", "--other", "test", "other2", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test", "other2");
+        new[] { "blabla", "--other", "test", "other2", "--nitrox-host-home", "/home/steamuser" }.GetCommandArgs("--nitrox-host-home").Should().BeEquivalentTo("/home/steamuser");
     }
 
     [Flags]

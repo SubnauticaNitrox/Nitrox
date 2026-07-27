@@ -3,18 +3,11 @@ using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 
-namespace Nitrox.Model.Subnautica.Packets
-{
-    [Serializable]
-    public class MultiplayerSessionReservationRequest : CorrelatedPacket
-    {
-        public PlayerSettings PlayerSettings { get; }
-        public AuthenticationContext AuthenticationContext { get; }
+namespace Nitrox.Model.Subnautica.Packets;
 
-        public MultiplayerSessionReservationRequest(string correlationId, PlayerSettings playerSettings, AuthenticationContext authenticationContext) : base(correlationId)
-        {
-            PlayerSettings = playerSettings;
-            AuthenticationContext = authenticationContext;
-        }
-    }
+[Serializable]
+public class MultiplayerSessionReservationRequest(PlayerSettings playerSettings, AuthenticationContext authenticationContext) : Packet
+{
+    public PlayerSettings PlayerSettings { get; } = playerSettings;
+    public AuthenticationContext AuthenticationContext { get; } = authenticationContext;
 }

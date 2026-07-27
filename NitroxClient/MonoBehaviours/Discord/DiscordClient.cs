@@ -40,7 +40,7 @@ public class DiscordClient : MonoBehaviour
             return;
         }
 
-        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WINEPREFIX"))) // Is wine environment
+        if (NitroxEnvironment.IsWine)
         {
             Log.Warn("[Discord] Unable to start RPC inside wine environment");
             return;

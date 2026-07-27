@@ -25,7 +25,7 @@ internal sealed class SaveService(Func<WorldService> worldServiceProvider, ISave
         {
             case ServiceAction.SAVE:
                 string savePath = startOptions.Value.GetServerSavePath();
-                if (!worldServiceProvider().Save(savePath))
+                if (!await worldServiceProvider().SaveAsync(savePath, stoppingToken))
                 {
                     return;
                 }

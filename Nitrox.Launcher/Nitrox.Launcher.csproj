@@ -105,8 +105,14 @@
     <!-- These dependencies are forced as DLL files, instead of implicit dependency (as Microsoft.AspNetCore.App.Ref). -->
     <!-- TODO: Fix why ONLY (and not on all build environments that) the MS DLL dependencies for "child project" aren't transitively copied over to launcher project. -->
     <Target Name="_NitroxFixMissingMicrosoftExtensionsDlls" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
-        <ItemGroup>
+        <ItemGroup Condition="'$(Configuration)' == 'Debug'">
             <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\$(Configuration)\$(TargetFramework)\lib\Microsoft.Extensions.*.dll" />
+        </ItemGroup>
+        <ItemGroup Condition="'$(Configuration)' != 'Debug' AND '$(RuntimeIdentifier)' == ''">
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\Release\$(TargetFramework)\lib\Microsoft.Extensions.*.dll" />
+        </ItemGroup>
+        <ItemGroup Condition="'$(Configuration)' != 'Debug' AND '$(RuntimeIdentifier)' != ''">
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\Nitrox.Server.Subnautica\bin\Release\$(TargetFramework)\$(RuntimeIdentifier)\lib\Microsoft.Extensions.*.dll" />
         </ItemGroup>
 
         <Warning Text="Unable to find Microsoft.Extensions.* dll files from Nitrox.Server.Subnautica"
