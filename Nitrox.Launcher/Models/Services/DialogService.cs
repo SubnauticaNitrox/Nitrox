@@ -45,10 +45,11 @@ internal sealed class DialogService(Func<Window> dialogOwnerProvider, IEnumerabl
         }
     }
 
-    public Task ShowErrorAsync(Exception exception, string? title = null, string? description = null) =>
+    public Task ShowErrorAsync(Exception exception, string? windowTitle = null, string? description = null) =>
         ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Title = title ?? "Error";
+            model.WindowTitle = windowTitle;
+            model.Title = exception.GetFirstNonAggregateMessage();
             model.Description = string.IsNullOrWhiteSpace(description) ? exception.ToString() : $"[b][i]{description}[/b][/i]{Environment.NewLine}{Environment.NewLine}[#f94239]{exception}";
             model.ButtonOptions = ButtonOptions.OkClipboard;
         });

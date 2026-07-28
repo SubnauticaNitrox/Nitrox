@@ -32,7 +32,7 @@ internal static class StaticCommands
             string text = controlOrText switch
             {
                 ContentControl when window is ModalBase { DataContext: DialogBoxViewModel context } =>
-                    $"{context.Title}{Environment.NewLine}{(context.Description.StartsWith(context.Title) ? context.Description[context.Title.Length..].TrimStart() : context.Description)}",
+                    $"{context.WindowTitle}{Environment.NewLine}{(context.Description.StartsWith(context.Title) ? context.Description[context.Title.Length..].TrimStart() : context.Description)}",
                 ContentControl when window is { DataContext: CrashWindowViewModel context } => context.Message,
                 ContentControl cc => cc.Content?.ToString(),
                 _ => controlOrText?.ToString()
