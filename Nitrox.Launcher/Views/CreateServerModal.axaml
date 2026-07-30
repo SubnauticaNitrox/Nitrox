@@ -30,7 +30,7 @@
                         MaxLength="120"
                         MaxWidth="400"
                         Text="{Binding Name, Converter={converters:TrimConverter}}"
-                        Watermark="My server">
+                        PlaceholderText="My server">
                         <Interaction.Behaviors>
                             <behaviors:FocusOnViewShowBehavior />
                         </Interaction.Behaviors>

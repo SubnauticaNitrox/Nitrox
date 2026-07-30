@@ -19,8 +19,8 @@
     xmlns:views="clr-namespace:Nitrox.Launcher.Views"
     xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
     xmlns:designer="clr-namespace:Nitrox.Launcher.ViewModels.Designer"
+    xmlns:abstract="clr-namespace:Nitrox.Launcher.ViewModels.Abstract"
     xmlns:core="clr-namespace:Nitrox.Model.Core;assembly=Nitrox.Model">
     <Window.Title>
         <MultiBinding StringFormat="{}{0} - V{1} ({2})">
@@ -202,7 +202,7 @@
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
             <!--  Navigation (left side)  -->
             <Border Classes="nav" Grid.Column="0">
-                <Grid RowDefinitions="80,*">
+                <Grid RowDefinitions="Auto,*">
                     <TextBlock Classes="header">NITROX</TextBlock>
                     <Panel Grid.Row="1">
                         <StackPanel Classes="nav">
@@ -210,66 +210,28 @@
                             <RadioButton
                                 Command="{Binding OpenLaunchGameViewCommand}"
                                 Content="Play game"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:LaunchGameViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/play.png"
-                                ToolTip.Tip="Play game">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:LaunchGameViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="Play game" />
                             <RadioButton
                                 Command="{Binding OpenServersViewCommand}"
                                 Content="Servers"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type abstract:IServerViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/server.png"
-                                ToolTip.Tip="Configure and start servers">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:ServersViewModel" />
-                                                <x:Type TypeName="vm:ManageServerViewModel" />
-                                                <x:Type TypeName="vm:EmbeddedServerViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="Configure and start servers" />
                             <TextBlock Classes="subheader">EXPLORE</TextBlock>
                             <RadioButton
                                 Command="{Binding OpenCommunityViewCommand}"
                                 Content="Community"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:CommunityViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/community.png"
-                                ToolTip.Tip="Join Nitrox community">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:CommunityViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="Join Nitrox community" />
                             <RadioButton
                                 Command="{Binding OpenBlogViewCommand}"
                                 Content="Blog"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:BlogViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/blog.png"
-                                ToolTip.Tip="Read latest news from the Dev Blog">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:BlogViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="Read latest news from the Dev Blog" />
                         </StackPanel>
                         <StackPanel
                             Classes="nav"
@@ -279,49 +241,22 @@
                                 Classes="updates"
                                 Command="{Binding OpenUpdatesViewCommand}"
                                 Content="Updates"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:UpdatesViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/update.png"
-                                ToolTip.Tip="Check latest updates from Nitrox">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:UpdatesViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="Check latest updates from Nitrox" />
                             <RadioButton
                                 Classes="notifications"
                                 Command="{Binding OpenNotificationsViewCommand}"
                                 Content="Notifications"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:NotificationsViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/notifications.png"
-                                ToolTip.Tip="View all launcher notifications">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:NotificationsViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="View all launcher notifications" />
                             <RadioButton
                                 Command="{Binding OpenOptionsViewCommand}"
                                 Content="Options"
+                                IsChecked="{Binding ActiveViewModel, Converter={converters:IsTypeConverter}, ConverterParameter={x:Type vm:OptionsViewModel}, Mode=OneWay}"
                                 Tag="/Assets/Images/tabs-icons/options.png"
-                                ToolTip.Tip="Configure your Nitrox setup">
-                                <RadioButton.IsChecked>
-                                    <Binding Path="ActiveViewModel" Converter="{converters:IsTypeConverter}" Mode="OneWay">
-                                        <Binding.ConverterParameter>
-                                            <generic:List x:TypeArguments="system:Type">
-                                                <x:Type TypeName="vm:OptionsViewModel" />
-                                            </generic:List>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </RadioButton.IsChecked>
-                            </RadioButton>
+                                ToolTip.Tip="Configure your Nitrox setup" />
                         </StackPanel>
                     </Panel>
                 </Grid>
@@ -433,8 +368,7 @@
                             Padding="5,10,10,10">
                             <Grid ColumnDefinitions="50,*,20">
                                 <Svg
-                                    Classes="icon"
-                                    Css="* { fill: #fff; stroke: #fff; }"
+                                    Classes="icon theme"
                                     Grid.Column="0"
                                     Margin="0,0,5,0"
                                     VerticalAlignment="Center"
@@ -451,7 +385,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top">
                                     <Svg
-                                        Css="* { fill: #fff; stroke: #fff; }"
+                                        Classes="theme"
                                         Path="/Assets/Icons/close.svg"
                                         VerticalAlignment="Top"
                                         Width="10" />
