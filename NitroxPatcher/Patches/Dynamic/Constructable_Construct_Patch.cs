@@ -197,8 +197,8 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
         Dictionary<NitroxId, NitroxBaseFace> updatedChildren = childEntities.OfType<InteriorPieceEntity>()
             .ToDictionary(entity => entity.Id, entity => entity.BaseFace);
         // Same for MapRooms
-        Dictionary<NitroxId, NitroxInt3> updatedMapRooms = childEntities.OfType<MapRoomEntity>()
-            .ToDictionary(entity => entity.Id, entity => entity.Cell);
+        Dictionary<NitroxId, MapRoomPlacement> updatedMapRooms = childEntities.OfType<MapRoomEntity>()
+            .ToDictionary(entity => entity.Id, entity => new MapRoomPlacement(entity.Cell, entity.ScanOrigin));
 
         BuildingHandler.Main.EnsureTracker(baseId).LocalOperations++;
         int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(baseId);

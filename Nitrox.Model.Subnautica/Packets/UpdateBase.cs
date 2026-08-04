@@ -15,12 +15,12 @@ public sealed class UpdateBase : OrderedBuildPacket
     public Entity BuiltPieceEntity { get; set; }
     public Dictionary<NitroxId, NitroxBaseFace> UpdatedChildren { get; set; }
     public Dictionary<NitroxId, NitroxInt3> UpdatedMoonpools { get; set; }
-    public Dictionary<NitroxId, NitroxInt3> UpdatedMapRooms { get; set; }
+    public Dictionary<NitroxId, MapRoomPlacement> UpdatedMapRooms { get; set; }
     public (NitroxId, NitroxId) ChildrenTransfer { get; }
 
     public UpdateBase(NitroxId baseId, NitroxId formerGhostId, BaseData baseData, Entity builtPieceEntity,
                       Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools,
-                      Dictionary<NitroxId, NitroxInt3> updatedMapRooms, (NitroxId, NitroxId) childrenTransfer, int operationId) : base(operationId)
+                      Dictionary<NitroxId, MapRoomPlacement> updatedMapRooms, (NitroxId, NitroxId) childrenTransfer, int operationId) : base(operationId)
     {
         BaseId = baseId;
         FormerGhostId = formerGhostId;

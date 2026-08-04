@@ -430,6 +430,7 @@ internal sealed class WorldServiceTest
                                         break;
                                     case MapRoomEntity mapRoomEntity when globalRootEntityAfter is MapRoomEntity mapRoomEntityAfter:
                                         Assert.AreEqual(mapRoomEntity.Cell, mapRoomEntityAfter.Cell);
+                                        Assert.AreEqual(mapRoomEntity.ScanOrigin, mapRoomEntityAfter.ScanOrigin);
                                         break;
                                     case ModuleEntity moduleEntity when globalRootEntityAfter is ModuleEntity moduleEntityAfter:
                                         Assert.AreEqual(moduleEntity.ConstructedAmount, moduleEntityAfter.ConstructedAmount);

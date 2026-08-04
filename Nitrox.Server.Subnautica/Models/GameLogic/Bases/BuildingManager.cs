@@ -204,11 +204,12 @@ internal sealed class BuildingManager
                 childEntity.Cell = updatedMoonpool.Value;
             }
         }
-        foreach (KeyValuePair<NitroxId, NitroxInt3> updatedMapRoom in updateBase.UpdatedMapRooms)
+        foreach (KeyValuePair<NitroxId, MapRoomPlacement> updatedMapRoom in updateBase.UpdatedMapRooms)
         {
             if (entityRegistry.TryGetEntityById(updatedMapRoom.Key, out MapRoomEntity childEntity))
             {
-                childEntity.Cell = updatedMapRoom.Value;
+                childEntity.Cell = updatedMapRoom.Value.Cell;
+                childEntity.ScanOrigin = updatedMapRoom.Value.ScanOrigin;
             }
         }
 

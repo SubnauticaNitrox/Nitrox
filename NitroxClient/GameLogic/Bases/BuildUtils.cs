@@ -226,7 +226,10 @@ public static class BuildUtils
     public static MapRoomEntity CreateMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId)
     {
         Int3 mapRoomCell = @base.NormalizeCell(@base.WorldToGrid(mapRoomFunctionality.transform.position));
-        return new(id, parentId, mapRoomCell.ToDto());
+        NitroxVector3? scanOrigin = mapRoomFunctionality.wireFrameWorld
+            ? mapRoomFunctionality.wireFrameWorld.position.ToDto()
+            : null;
+        return new(id, parentId, mapRoomCell.ToDto(), scanOrigin);
     }
 
     // TODO: Use this for a latter singleplayer save converter
