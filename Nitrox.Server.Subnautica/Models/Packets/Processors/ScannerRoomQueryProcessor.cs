@@ -21,14 +21,7 @@ internal sealed class ScannerRoomQueryProcessor(
 
     public async Task Process(AuthProcessorContext context, ScannerRoomQuery packet)
     {
-        if (!queryLimiter.TryEnter(context.Sender.SessionId, out IDisposable? lease))
-        {
-            diagnostics.QueryThrottled();
-            await ReplyWithStatus(context, packet, ScannerRoomQueryStatus.Rejected, ScannerRoomQueryParameters.NormalizeRange(packet.ReportedRange));
-            diagnostics.PagesSent(1);
-            return;
-        }
-
+        IDisposable lease = await queryLimiter.EnterAsync(context.Sender.SessionId);
         using (lease)
         {
             ScannerRoomQueryResult result;

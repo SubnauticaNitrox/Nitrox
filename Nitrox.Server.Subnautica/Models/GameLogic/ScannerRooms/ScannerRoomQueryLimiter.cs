@@ -6,30 +6,41 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.ScannerRooms;
 
 internal sealed class ScannerRoomQueryLimiter
 {
-    private static readonly long minimumIntervalTicks = Stopwatch.Frequency / 2;
     private readonly ConcurrentDictionary<SessionId, QueryState> states = new();
+    private readonly long minimumIntervalTicks;
 
-    public bool TryEnter(SessionId sessionId, out IDisposable? lease)
+    public ScannerRoomQueryLimiter() : this(TimeSpan.FromMilliseconds(500))
+    {
+    }
+
+    internal ScannerRoomQueryLimiter(TimeSpan minimumInterval)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(minimumInterval, TimeSpan.Zero);
+        minimumIntervalTicks = checked((long)Math.Ceiling(minimumInterval.TotalSeconds * Stopwatch.Frequency));
+    }
+
+    public async Task<IDisposable> EnterAsync(SessionId sessionId)
     {
         QueryState state = states.GetOrAdd(sessionId, _ => new QueryState());
-        if (!state.Gate.Wait(0))
+        await state.Gate.WaitAsync();
+        try
         {
-            lease = null;
-            return false;
-        }
+            long now = Stopwatch.GetTimestamp();
+            long previous = Interlocked.Read(ref state.LastStarted);
+            long remainingTicks = minimumIntervalTicks - (now - previous);
+            if (previous != 0 && remainingTicks > 0)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(remainingTicks / (double)Stopwatch.Frequency));
+            }
 
-        long now = Stopwatch.GetTimestamp();
-        long previous = Interlocked.Read(ref state.LastStarted);
-        if (previous != 0 && now - previous < minimumIntervalTicks)
+            Interlocked.Exchange(ref state.LastStarted, Stopwatch.GetTimestamp());
+            return new QueryLease(state.Gate);
+        }
+        catch
         {
             state.Gate.Release();
-            lease = null;
-            return false;
+            throw;
         }
-
-        Interlocked.Exchange(ref state.LastStarted, now);
-        lease = new QueryLease(state.Gate);
-        return true;
     }
 
     private sealed class QueryState

@@ -13,17 +13,20 @@ namespace Nitrox.Test.Server.GameLogic.ScannerRooms;
 public sealed class ScannerRoomQueryProcessorTest
 {
     [TestMethod]
-    public void LimiterSerializesQueriesPerSession()
+    public async Task LimiterQueuesQueriesPerSessionWithoutBlockingOtherPlayers()
     {
-        ScannerRoomQueryLimiter limiter = new();
+        ScannerRoomQueryLimiter limiter = new(TimeSpan.Zero);
 
-        limiter.TryEnter((SessionId)1, out IDisposable? firstLease).Should().BeTrue();
-        limiter.TryEnter((SessionId)1, out IDisposable? duplicateLease).Should().BeFalse();
-        limiter.TryEnter((SessionId)2, out IDisposable? otherPlayerLease).Should().BeTrue();
+        IDisposable firstLease = await limiter.EnterAsync((SessionId)1);
+        Task<IDisposable> queuedLeaseTask = limiter.EnterAsync((SessionId)1);
+        IDisposable otherPlayerLease = await limiter.EnterAsync((SessionId)2);
 
-        duplicateLease.Should().BeNull();
-        firstLease!.Dispose();
-        otherPlayerLease!.Dispose();
+        queuedLeaseTask.IsCompleted.Should().BeFalse();
+        otherPlayerLease.Dispose();
+        firstLease.Dispose();
+
+        IDisposable queuedLease = await queuedLeaseTask;
+        queuedLease.Dispose();
     }
 
     [TestMethod]
