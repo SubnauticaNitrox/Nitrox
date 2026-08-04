@@ -361,6 +361,18 @@ internal sealed class WorldEntityManager
         return true;
     }
 
+    /// <summary>
+    /// Removes every child hierarchy while keeping world-entity indexes and lifecycle observers in sync.
+    /// </summary>
+    public void CleanChildren(Entity entity)
+    {
+        // TryDestroyEntity removes each child from this collection, so enumerate a stable id snapshot.
+        foreach (NitroxId childId in entity.ChildEntities.Select(childEntity => childEntity.Id).ToList())
+        {
+            TryDestroyEntity(childId, out _);
+        }
+    }
+
     private static List<WorldEntity> GetWorldEntitiesInHierarchy(Entity rootEntity)
     {
         List<WorldEntity> worldEntities = [];

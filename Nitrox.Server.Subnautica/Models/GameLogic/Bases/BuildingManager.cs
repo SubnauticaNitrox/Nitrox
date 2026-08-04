@@ -117,13 +117,9 @@ internal sealed class BuildingManager
                 {
                     worldEntityManager.RemoveGlobalRootEntity(entity.Id);
                 }
-                else if (entity is WorldEntity)
-                {
-                    worldEntityManager.TryDestroyEntity(entity.Id, out _);
-                }
                 else
                 {
-                    entityRegistry.RemoveEntity(entity.Id);
+                    worldEntityManager.TryDestroyEntity(entity.Id, out _);
                 }
             }
 
@@ -267,11 +263,11 @@ internal sealed class BuildingManager
         // which avoids an o(n) search in interiorPieceEntity's children, and makes it into a o(1) get
         if (entityRegistry.TryGetEntityById(leftPlanterId, out PlanterEntity leftPlanterEntity))
         {
-            entityRegistry.CleanChildren(leftPlanterEntity);
+            worldEntityManager.CleanChildren(leftPlanterEntity);
         }
         if (entityRegistry.TryGetEntityById(rightPlanterId, out PlanterEntity rightPlanterEntity))
         {
-            entityRegistry.CleanChildren(rightPlanterEntity);
+            worldEntityManager.CleanChildren(rightPlanterEntity);
         }
     }
 

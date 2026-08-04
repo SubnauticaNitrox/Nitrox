@@ -4,9 +4,10 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class ClearPlanterProcessor(EntityRegistry entityRegistry, ILogger<ClearPlanterProcessor> logger) : IAuthPacketProcessor<ClearPlanter>
+internal sealed class ClearPlanterProcessor(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, ILogger<ClearPlanterProcessor> logger) : IAuthPacketProcessor<ClearPlanter>
 {
     private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
     private readonly ILogger<ClearPlanterProcessor> logger = logger;
 
     public Task Process(AuthProcessorContext context, ClearPlanter packet)
@@ -18,7 +19,7 @@ internal sealed class ClearPlanterProcessor(EntityRegistry entityRegistry, ILogg
         }
 
         // No need to transmit this packet since the operation is automatically done on remote clients
-        entityRegistry.CleanChildren(planterEntity);
+        worldEntityManager.CleanChildren(planterEntity);
         return Task.CompletedTask;
     }
 }
