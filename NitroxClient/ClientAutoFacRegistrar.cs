@@ -15,6 +15,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
+using NitroxClient.GameLogic.ScannerRooms;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
@@ -113,6 +114,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SleepManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ScannerRoomSnapshotStore>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ScannerRoomManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BulletManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NtpSyncer>().InstancePerLifetimeScope();
         }

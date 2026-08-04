@@ -33,7 +33,17 @@ public sealed class ScannerRoomQueryServiceTest
     [DataRow(1000f, 500f)]
     public void RangeIsClampedAndQuantized(float input, float expected)
     {
-        ScannerRoomQueryService.NormalizeRange(input).Should().Be(expected);
+        ScannerRoomQueryParameters.NormalizeRange(input).Should().Be(expected);
+    }
+
+    [TestMethod]
+    public void NoSelectionIsCanonicalizedToNull()
+    {
+        NitroxTechType quartz = new("Quartz");
+
+        ScannerRoomQueryParameters.NormalizeSelection(NitroxTechType.None).Should().BeNull();
+        ScannerRoomQueryParameters.NormalizeSelection(null).Should().BeNull();
+        ScannerRoomQueryParameters.NormalizeSelection(quartz).Should().BeSameAs(quartz);
     }
 
     [TestMethod]

@@ -19,9 +19,6 @@ internal sealed class ScannerRoomQueryService(
     IOptions<SubnauticaServerOptions> options,
     ILogger<ScannerRoomQueryService> logger)
 {
-    internal const float MINIMUM_RANGE = 300f;
-    internal const float MAXIMUM_RANGE = 500f;
-    internal const float RANGE_INCREMENT = 50f;
     private const float LEGACY_ORIGIN_REPAIR_DISTANCE = 25f;
 
     private readonly EntityRegistry entityRegistry = entityRegistry;
@@ -41,7 +38,8 @@ internal sealed class ScannerRoomQueryService(
         NitroxVector3? observedOrigin,
         CancellationToken cancellationToken = default)
     {
-        float effectiveRange = NormalizeRange(reportedRange);
+        float effectiveRange = ScannerRoomQueryParameters.NormalizeRange(reportedRange);
+        selectedTechType = ScannerRoomQueryParameters.NormalizeSelection(selectedTechType);
         if (!options.Value.EnableScannerRoomResourceSync)
         {
             return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.Rejected, effectiveRange, selectedTechType);
@@ -55,11 +53,6 @@ internal sealed class ScannerRoomQueryService(
         if (origin == null)
         {
             return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.OriginUnavailable, effectiveRange, selectedTechType);
-        }
-
-        if (selectedTechType?.Equals(NitroxTechType.None) == true)
-        {
-            selectedTechType = null;
         }
 
         float loadRadius = effectiveRange + resourceCatalog.MaximumRelativeOffset;
@@ -90,17 +83,6 @@ internal sealed class ScannerRoomQueryService(
         return status == ScannerRoomQueryStatus.NotModified
                    ? new(status, effectiveRange, selectedTechType, revision, [], [])
                    : new(status, effectiveRange, selectedTechType, revision, summaries, targets);
-    }
-
-    internal static float NormalizeRange(float reportedRange)
-    {
-        if (!float.IsFinite(reportedRange))
-        {
-            return MINIMUM_RANGE;
-        }
-
-        float clamped = Math.Clamp(reportedRange, MINIMUM_RANGE, MAXIMUM_RANGE);
-        return MINIMUM_RANGE + MathF.Floor((clamped - MINIMUM_RANGE) / RANGE_INCREMENT) * RANGE_INCREMENT;
     }
 
     private NitroxVector3? ResolveOrigin(Player player, MapRoomEntity mapRoom, NitroxVector3? observedOrigin)
