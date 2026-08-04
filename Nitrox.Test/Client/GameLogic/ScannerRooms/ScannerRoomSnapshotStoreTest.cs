@@ -22,9 +22,12 @@ public sealed class ScannerRoomSnapshotStoreTest
         secondResult.Should().Be(ScannerRoomSnapshotApplyResult.WaitingForPages);
         store.TryGetSnapshot(roomId, out _).Should().BeFalse();
 
-        ScannerRoomSnapshotApplyResult firstResult = store.AcceptPage(Page(query.RequestId, 0, 2, [new ScannerResourceSummary(quartz, 2)], [Target(1)]));
+        ScannerRoomSnapshotApplyResult firstResult = store.AcceptPage(
+            Page(query.RequestId, 0, 2, [new ScannerResourceSummary(quartz, 2)], [Target(1)]),
+            out ScannerRoomQueryStatus? acceptedStatus);
 
         firstResult.Should().Be(ScannerRoomSnapshotApplyResult.Applied);
+        acceptedStatus.Should().Be(ScannerRoomQueryStatus.Complete);
         store.TryGetSnapshot(roomId, out ScannerRoomSnapshot? snapshot).Should().BeTrue();
         snapshot!.AvailableResources.Should().ContainSingle(summary => summary.Count == 2);
         snapshot.Targets.Select(target => target.TrackerIndex).Should().Equal((ushort)1, (ushort)2);
@@ -104,7 +107,8 @@ public sealed class ScannerRoomSnapshotStoreTest
         ScannerRoomQueryTicket refresh = store.BeginQuery(roomId, 300, quartz);
 
         ScannerRoomSnapshotPageData notModified = Page(refresh.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.NotModified);
-        store.AcceptPage(notModified).Should().Be(ScannerRoomSnapshotApplyResult.NotModified);
+        store.AcceptPage(notModified, out ScannerRoomQueryStatus? acceptedStatus).Should().Be(ScannerRoomSnapshotApplyResult.NotModified);
+        acceptedStatus.Should().Be(ScannerRoomQueryStatus.NotModified);
         store.TryGetSnapshot(roomId, out ScannerRoomSnapshot? snapshot).Should().BeTrue();
         snapshot!.Targets.Should().ContainSingle();
     }
@@ -140,6 +144,40 @@ public sealed class ScannerRoomSnapshotStoreTest
             []);
 
         store.AcceptPage(notModified).Should().Be(ScannerRoomSnapshotApplyResult.Failed);
+    }
+
+    [TestMethod]
+    public void ExposesRejectedStatusOnlyForWellFormedCurrentResponse()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket stale = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, quartz);
+
+        store.AcceptPage(
+                Page(stale.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.Rejected),
+                out ScannerRoomQueryStatus? staleStatus)
+            .Should().Be(ScannerRoomSnapshotApplyResult.Ignored);
+        staleStatus.Should().BeNull();
+
+        store.AcceptPage(
+                Page(current.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.Rejected),
+                out ScannerRoomQueryStatus? acceptedStatus)
+            .Should().Be(ScannerRoomSnapshotApplyResult.Failed);
+        acceptedStatus.Should().Be(ScannerRoomQueryStatus.Rejected);
+    }
+
+    [TestMethod]
+    public void DoesNotExposeRejectedStatusFromMalformedEnvelope()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, quartz);
+
+        store.AcceptPage(
+                Page(current.RequestId, 1, 2, [], [], ScannerRoomQueryStatus.Rejected),
+                out ScannerRoomQueryStatus? acceptedStatus)
+            .Should().Be(ScannerRoomSnapshotApplyResult.Failed);
+
+        acceptedStatus.Should().BeNull();
     }
 
     [TestMethod]

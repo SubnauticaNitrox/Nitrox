@@ -1,0 +1,62 @@
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
+using NitroxClient.GameLogic.ScannerRooms;
+
+namespace Nitrox.Test.Client.GameLogic.ScannerRooms;
+
+[TestClass]
+public sealed class ScannerRoomResourceAuthorityStateTest
+{
+    [TestMethod]
+    public void StartsPendingAndSuppressesVanillaResources()
+    {
+        ScannerRoomResourceAuthorityState state = new();
+
+        state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Pending);
+        state.SuppressVanillaResources.Should().BeTrue();
+    }
+
+    [DataTestMethod]
+    [DataRow(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete)]
+    [DataRow(ScannerRoomSnapshotApplyResult.NotModified, ScannerRoomQueryStatus.NotModified)]
+    public void ValidSnapshotResponseBecomesAuthoritative(
+        ScannerRoomSnapshotApplyResult result,
+        ScannerRoomQueryStatus status)
+    {
+        ScannerRoomResourceAuthorityState state = new();
+
+        state.ObserveAcceptedResponse(result, status).Should().BeTrue();
+
+        state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Authoritative);
+        state.SuppressVanillaResources.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void OnlyAcceptedRejectedFailureEnablesRollback()
+    {
+        ScannerRoomResourceAuthorityState state = new();
+
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Ignored, ScannerRoomQueryStatus.Rejected).Should().BeFalse();
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Failed, null).Should().BeFalse();
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Failed, ScannerRoomQueryStatus.Failed).Should().BeFalse();
+        state.SuppressVanillaResources.Should().BeTrue();
+
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Failed, ScannerRoomQueryStatus.Rejected).Should().BeTrue();
+
+        state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Rollback);
+        state.SuppressVanillaResources.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void AuthoritativeResponseRecoversFromRollbackAndReconnectResetsPending()
+    {
+        ScannerRoomResourceAuthorityState state = new();
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Failed, ScannerRoomQueryStatus.Rejected);
+
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.NotModified, ScannerRoomQueryStatus.NotModified).Should().BeTrue();
+        state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Authoritative);
+
+        state.ResetToPending().Should().BeTrue();
+        state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Pending);
+        state.SuppressVanillaResources.Should().BeTrue();
+    }
+}

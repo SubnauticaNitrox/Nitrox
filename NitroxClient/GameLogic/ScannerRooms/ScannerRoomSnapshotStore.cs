@@ -66,10 +66,13 @@ internal sealed class ScannerRoomSnapshotStore
         }
     }
 
-    public ScannerRoomSnapshotApplyResult AcceptPage(ScannerRoomSnapshotPageData page)
+    public ScannerRoomSnapshotApplyResult AcceptPage(ScannerRoomSnapshotPageData page) => AcceptPage(page, out _);
+
+    public ScannerRoomSnapshotApplyResult AcceptPage(ScannerRoomSnapshotPageData page, out ScannerRoomQueryStatus? acceptedStatus)
     {
         lock (storeLock)
         {
+            acceptedStatus = null;
             if (!rooms.TryGetValue(page.MapRoomId, out RoomState? room) || room.Pending is not { } pending || pending.RequestId != page.RequestId)
             {
                 return ScannerRoomSnapshotApplyResult.Ignored;
@@ -79,17 +82,27 @@ internal sealed class ScannerRoomSnapshotStore
                 return ScannerRoomSnapshotApplyResult.Ignored;
             }
 
-            if (page.Status == ScannerRoomQueryStatus.NotModified)
+            if (page.Status != ScannerRoomQueryStatus.Complete)
             {
                 room.Pending = null;
-                return room.Snapshot is { } snapshot &&
-                       snapshot.Revision == page.Revision &&
-                       snapshot.EffectiveRange.Equals(page.EffectiveRange) &&
-                       TechTypesEqual(snapshot.SelectedTechType, page.SelectedTechType)
-                           ? ScannerRoomSnapshotApplyResult.NotModified
-                           : ScannerRoomSnapshotApplyResult.Failed;
+                if (!IsValidStatusPage(page))
+                {
+                    return ScannerRoomSnapshotApplyResult.Failed;
+                }
+
+                acceptedStatus = page.Status;
+                if (page.Status == ScannerRoomQueryStatus.NotModified)
+                {
+                    return room.Snapshot is { } snapshot &&
+                           snapshot.Revision == page.Revision &&
+                           snapshot.EffectiveRange.Equals(page.EffectiveRange) &&
+                           TechTypesEqual(snapshot.SelectedTechType, page.SelectedTechType)
+                               ? ScannerRoomSnapshotApplyResult.NotModified
+                               : ScannerRoomSnapshotApplyResult.Failed;
+                }
+                return ScannerRoomSnapshotApplyResult.Failed;
             }
-            if (page.Status != ScannerRoomQueryStatus.Complete || page.PageCount == 0 || page.PageIndex >= page.PageCount)
+            if (page.PageCount == 0 || page.PageIndex >= page.PageCount)
             {
                 room.Pending = null;
                 return ScannerRoomSnapshotApplyResult.Failed;
@@ -106,6 +119,7 @@ internal sealed class ScannerRoomSnapshotStore
 
             room.Snapshot = pending.BuildSnapshot(page.MapRoomId);
             room.Pending = null;
+            acceptedStatus = ScannerRoomQueryStatus.Complete;
             return ScannerRoomSnapshotApplyResult.Applied;
         }
     }
@@ -160,6 +174,12 @@ internal sealed class ScannerRoomSnapshotStore
 
     private static bool TechTypesEqual(NitroxTechType? left, NitroxTechType? right) =>
         ReferenceEquals(left, right) || left?.Equals(right) == true;
+
+    private static bool IsValidStatusPage(ScannerRoomSnapshotPageData page) =>
+        page.PageIndex == 0 &&
+        page.PageCount == 1 &&
+        page.AvailableResources.Count == 0 &&
+        page.Targets.Count == 0;
 
     private sealed class RoomState
     {

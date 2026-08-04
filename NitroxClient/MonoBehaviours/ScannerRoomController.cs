@@ -22,6 +22,7 @@ public sealed class ScannerRoomController : MonoBehaviour
     private readonly HashSet<TechType> authoritativeTechTypes = [];
     private readonly HashSet<Collider> localInteractionColliders = [];
     private readonly ScannerRoomRefreshScheduler refreshScheduler = new();
+    private readonly ScannerRoomResourceAuthorityState resourceAuthority = new();
     private MapRoomFunctionality mapRoom = null!;
     private NitroxId mapRoomId = null!;
     private ScannerRoomRequestTrigger? requestTrigger;
@@ -33,7 +34,8 @@ public sealed class ScannerRoomController : MonoBehaviour
     private int reconnectRefreshPending;
     private int stateClearPending;
 
-    public bool HasAuthoritativeSnapshot => authoritativeSnapshot != null;
+    public bool ShouldSuppressVanillaResources =>
+        Volatile.Read(ref stateClearPending) != 0 || resourceAuthority.SuppressVanillaResources;
 
     public static ScannerRoomController Attach(MapRoomFunctionality mapRoom, NitroxId mapRoomId)
     {
@@ -79,10 +81,10 @@ public sealed class ScannerRoomController : MonoBehaviour
     /// <summary>
     /// Replaces the scanner list with server-provided resource types and rebuilds the vanilla controls.
     /// </summary>
-    /// <returns>Whether authoritative state was available and the vanilla local-database lookup should be skipped.</returns>
+    /// <returns>Whether synchronized state owns the list and the vanilla local-database lookup should be skipped.</returns>
     public bool TryApplyAuthoritativeResourceList(uGUI_MapRoomScanner scanner)
     {
-        if (authoritativeSnapshot == null)
+        if (!ShouldSuppressVanillaResources)
         {
             return false;
         }
@@ -107,16 +109,18 @@ public sealed class ScannerRoomController : MonoBehaviour
     /// <summary>
     /// Replaces the room-local resource nodes for the requested vanilla scan type.
     /// </summary>
-    /// <returns>Whether authoritative state was available and the vanilla local-database lookup should be skipped.</returns>
+    /// <returns>Whether synchronized state owns the nodes and the vanilla local-database lookup should be skipped.</returns>
     public bool TryApplyAuthoritativeResourceNodes(TechType requestedTechType)
     {
-        if (authoritativeSnapshot == null || virtualResourceCache == null)
+        if (!ShouldSuppressVanillaResources)
         {
             return false;
         }
 
         List<ResourceTrackerDatabase.ResourceInfo> replacementNodes = [];
-        if (SnapshotMatchesSelection(authoritativeSnapshot, requestedTechType))
+        if (authoritativeSnapshot != null &&
+            virtualResourceCache != null &&
+            SnapshotMatchesSelection(authoritativeSnapshot, requestedTechType))
         {
             IReadOnlyList<ScannerRoomVirtualResource<ResourceTrackerDatabase.ResourceInfo>> virtualResources =
                 virtualResourceCache.Resolve(authoritativeSnapshot.Targets);
@@ -136,14 +140,7 @@ public sealed class ScannerRoomController : MonoBehaviour
             mapRoom.resourceNodes.Add(resourceNode);
         }
 
-        if (!resourceTracker)
-        {
-            resourceTracker = UnityEngine.Object.FindObjectOfType<uGUI_ResourceTracker>();
-        }
-        if (resourceTracker)
-        {
-            resourceTracker.gatherNextTick = true;
-        }
+        NotifyResourceTrackerChanged();
         return true;
     }
 
@@ -169,7 +166,13 @@ public sealed class ScannerRoomController : MonoBehaviour
 
         if (scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
         {
+            resourceAuthority.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete);
             ApplySnapshot(snapshot!);
+        }
+        else
+        {
+            // Post-spawn attachment can happen after vanilla has already populated local nodes and blips.
+            ClearSynchronizedResourceState();
         }
     }
 
@@ -195,7 +198,7 @@ public sealed class ScannerRoomController : MonoBehaviour
 
         if (Interlocked.Exchange(ref stateClearPending, 0) != 0)
         {
-            ClearAuthoritativeState();
+            EnterPendingState();
         }
         if (sessionJoined)
         {
@@ -268,14 +271,34 @@ public sealed class ScannerRoomController : MonoBehaviour
         return true;
     }
 
-    private void OnSnapshotChanged(NitroxId changedMapRoomId, ScannerRoomSnapshotApplyResult result)
+    private void OnSnapshotChanged(ScannerRoomSnapshotUpdate update)
     {
-        if (!mapRoomId.Equals(changedMapRoomId) || result != ScannerRoomSnapshotApplyResult.Applied)
+        if (!mapRoomId.Equals(update.MapRoomId))
         {
             return;
         }
 
-        if (scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
+        bool supersededPendingReset = false;
+        if (ScannerRoomResourceAuthorityState.IsAuthorityDecision(update.Result, update.AcceptedStatus))
+        {
+            // A correlated response can arrive before this component's next Update after reconnect. It supersedes the
+            // queued reset and fully replaces or restores resource state below.
+            supersededPendingReset = Interlocked.Exchange(ref stateClearPending, 0) != 0;
+        }
+        ScannerRoomResourceAuthorityMode previousMode = resourceAuthority.Mode;
+        resourceAuthority.ObserveAcceptedResponse(update.Result, update.AcceptedStatus);
+        if (resourceAuthority.Mode == ScannerRoomResourceAuthorityMode.Rollback)
+        {
+            if (previousMode != ScannerRoomResourceAuthorityMode.Rollback || supersededPendingReset)
+            {
+                RestoreVanillaResourceState();
+            }
+            return;
+        }
+
+        if (resourceAuthority.Mode == ScannerRoomResourceAuthorityMode.Authoritative &&
+            (update.Result is ScannerRoomSnapshotApplyResult.Applied or ScannerRoomSnapshotApplyResult.NotModified) &&
+            scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
         {
             ApplySnapshot(snapshot!);
         }
@@ -283,6 +306,7 @@ public sealed class ScannerRoomController : MonoBehaviour
 
     private void OnSessionJoined()
     {
+        Interlocked.Exchange(ref stateClearPending, 1);
         sessionJoined = true;
         Interlocked.Exchange(ref reconnectRefreshPending, 1);
     }
@@ -293,20 +317,19 @@ public sealed class ScannerRoomController : MonoBehaviour
         sessionJoined = false;
     }
 
-    private void ClearAuthoritativeState()
+    private void EnterPendingState()
+    {
+        resourceAuthority.ResetToPending();
+        ClearSynchronizedResourceState();
+    }
+
+    private void ClearSynchronizedResourceState()
     {
         authoritativeSnapshot = null;
         authoritativeTechTypes.Clear();
         mapRoom.resourceNodes.Clear();
 
-        if (!resourceTracker)
-        {
-            resourceTracker = UnityEngine.Object.FindObjectOfType<uGUI_ResourceTracker>();
-        }
-        if (resourceTracker)
-        {
-            resourceTracker.gatherNextTick = true;
-        }
+        NotifyResourceTrackerChanged();
 
         uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
         if (scanner)
@@ -317,6 +340,38 @@ public sealed class ScannerRoomController : MonoBehaviour
             scanner.RebuildResourceList();
         }
         RefreshBlipsWithoutAdvancingScan();
+    }
+
+    private void RestoreVanillaResourceState()
+    {
+        authoritativeSnapshot = null;
+        authoritativeTechTypes.Clear();
+        mapRoom.resourceNodes.Clear();
+
+        uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+        if (scanner)
+        {
+            scanner.UpdateAvailableTechTypes();
+        }
+        if (mapRoom.typeToScan != TechType.None)
+        {
+            mapRoom.ObtainResourceNodes(mapRoom.typeToScan);
+        }
+
+        NotifyResourceTrackerChanged();
+        RefreshBlipsWithoutAdvancingScan();
+    }
+
+    private void NotifyResourceTrackerChanged()
+    {
+        if (!resourceTracker)
+        {
+            resourceTracker = UnityEngine.Object.FindObjectOfType<uGUI_ResourceTracker>();
+        }
+        if (resourceTracker)
+        {
+            resourceTracker.gatherNextTick = true;
+        }
     }
 
     private void ApplySnapshot(ScannerRoomSnapshot snapshot)

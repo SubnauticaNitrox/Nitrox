@@ -11,5 +11,5 @@ public sealed partial class uGUI_MapRoomScanner_OnResourceDiscovered_Patch : Nit
     public static bool Prefix(uGUI_MapRoomScanner __instance) =>
         !__instance.mapRoom ||
         !__instance.mapRoom.TryGetComponent(out ScannerRoomController controller) ||
-        !controller.HasAuthoritativeSnapshot;
+        !controller.ShouldSuppressVanillaResources;
 }

@@ -9,5 +9,5 @@ public sealed partial class MapRoomFunctionality_OnResourceRemoved_Patch : Nitro
         (MapRoomFunctionality mapRoom) => mapRoom.OnResourceRemoved(default(ResourceTrackerDatabase.ResourceInfo)));
 
     public static bool Prefix(MapRoomFunctionality __instance) =>
-        !__instance || !__instance.TryGetComponent(out ScannerRoomController controller) || !controller.HasAuthoritativeSnapshot;
+        !__instance || !__instance.TryGetComponent(out ScannerRoomController controller) || !controller.ShouldSuppressVanillaResources;
 }

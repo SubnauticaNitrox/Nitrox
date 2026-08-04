@@ -9,5 +9,5 @@ public sealed partial class MapRoomFunctionality_OnResourceDiscovered_Patch : Ni
         (MapRoomFunctionality mapRoom) => mapRoom.OnResourceDiscovered(default(ResourceTrackerDatabase.ResourceInfo)));
 
     public static bool Prefix(MapRoomFunctionality __instance) =>
-        !__instance || !__instance.TryGetComponent(out ScannerRoomController controller) || !controller.HasAuthoritativeSnapshot;
+        !__instance || !__instance.TryGetComponent(out ScannerRoomController controller) || !controller.ShouldSuppressVanillaResources;
 }

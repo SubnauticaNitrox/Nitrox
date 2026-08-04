@@ -3,12 +3,18 @@ using System.Diagnostics;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.GameLogic.ScannerRooms;
+
+internal readonly record struct ScannerRoomSnapshotUpdate(
+    NitroxId MapRoomId,
+    ScannerRoomSnapshotApplyResult Result,
+    ScannerRoomQueryStatus? AcceptedStatus);
 
 internal sealed class ScannerRoomManager : IDisposable
 {
@@ -18,7 +24,7 @@ internal sealed class ScannerRoomManager : IDisposable
     private readonly ScannerRoomRequestCoordinator requestCoordinator = new();
     private readonly ScannerRoomSnapshotPageQueue snapshotPageQueue = new();
 
-    public event Action<NitroxId, ScannerRoomSnapshotApplyResult>? SnapshotChanged;
+    public event Action<ScannerRoomSnapshotUpdate>? SnapshotChanged;
     public event Action? SessionJoined;
     public event Action? StateCleared;
 
@@ -74,24 +80,30 @@ internal sealed class ScannerRoomManager : IDisposable
             packet.PageIndex,
             packet.PageCount,
             packet.AvailableResources,
-            packet.Targets));
+            packet.Targets), out ScannerRoomQueryStatus? acceptedStatus);
 
-        bool isTerminal = result is ScannerRoomSnapshotApplyResult.Applied or
-            ScannerRoomSnapshotApplyResult.NotModified or
-            ScannerRoomSnapshotApplyResult.Failed;
-        if (isTerminal)
+        bool shouldDispatch = requestCoordinator.ObserveResponse(
+            packet.MapRoomId,
+            packet.RequestId,
+            result,
+            GetTimestampSeconds(),
+            out ScannerRoomDispatch dispatch);
+        try
         {
-            SnapshotChanged?.Invoke(packet.MapRoomId, result);
+            if (result is ScannerRoomSnapshotApplyResult.Applied or
+                ScannerRoomSnapshotApplyResult.NotModified or
+                ScannerRoomSnapshotApplyResult.Failed)
+            {
+                SnapshotChanged?.Invoke(new ScannerRoomSnapshotUpdate(packet.MapRoomId, result, acceptedStatus));
+            }
         }
-
-        if (requestCoordinator.ObserveResponse(
-                packet.MapRoomId,
-                packet.RequestId,
-                result,
-                GetTimestampSeconds(),
-                out ScannerRoomDispatch dispatch))
+        finally
         {
-            Dispatch(dispatch);
+            // A Unity reconciliation callback must not strand a request which was already completed in the store.
+            if (shouldDispatch)
+            {
+                Dispatch(dispatch);
+            }
         }
     }
 
@@ -118,8 +130,14 @@ internal sealed class ScannerRoomManager : IDisposable
         if (requestCoordinator.TryExpire(mapRoomId, now, out ScannerRoomExpiredRequest expiredRequest, out ScannerRoomDispatch dispatch))
         {
             snapshotStore.CancelQuery(expiredRequest.MapRoomId, expiredRequest.RequestId);
-            SnapshotChanged?.Invoke(expiredRequest.MapRoomId, ScannerRoomSnapshotApplyResult.Failed);
-            Dispatch(dispatch);
+            try
+            {
+                SnapshotChanged?.Invoke(new ScannerRoomSnapshotUpdate(expiredRequest.MapRoomId, ScannerRoomSnapshotApplyResult.Failed, null));
+            }
+            finally
+            {
+                Dispatch(dispatch);
+            }
         }
     }
 
