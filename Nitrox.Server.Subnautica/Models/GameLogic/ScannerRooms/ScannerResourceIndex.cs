@@ -25,6 +25,62 @@ internal sealed class ScannerResourceIndex(IScannerRoomResourceCatalog resourceC
 
     public void EntityMoved(WorldEntity entity) => AddOrReplace(entity);
 
+    /// <summary>
+    /// Replaces the index contents with entities restored directly into the world services.
+    /// This is intentionally separate from lifecycle notifications because save restoration
+    /// bypasses normal entity tracking events.
+    /// </summary>
+    public void Hydrate(IEnumerable<WorldEntity> restoredEntities)
+    {
+        Dictionary<NitroxInt3, Dictionary<ScannerResourceNodeKey, ScannerResourceNode>> hydratedNodesByBatch = [];
+        Dictionary<NitroxId, List<(NitroxInt3 BatchId, ScannerResourceNodeKey Key)>> hydratedKeysByEntity = [];
+
+        foreach (WorldEntity entity in restoredEntities)
+        {
+            RemoveEntity(entity.Id, hydratedNodesByBatch, hydratedKeysByEntity);
+
+            List<ScannerResourceNode> nodes = CreateNodes(entity);
+            if (nodes.Count == 0)
+            {
+                continue;
+            }
+
+            List<(NitroxInt3 BatchId, ScannerResourceNodeKey Key)> entityKeys = new(nodes.Count);
+            foreach (ScannerResourceNode node in nodes)
+            {
+                if (!hydratedNodesByBatch.TryGetValue(node.BatchId, out Dictionary<ScannerResourceNodeKey, ScannerResourceNode>? batchNodes))
+                {
+                    batchNodes = hydratedNodesByBatch[node.BatchId] = [];
+                }
+                batchNodes[node.Key] = node;
+                entityKeys.Add((node.BatchId, node.Key));
+            }
+            hydratedKeysByEntity[entity.Id] = entityKeys;
+        }
+
+        lock (indexLock)
+        {
+            bool changed = !HasSameNodesUnsafe(hydratedNodesByBatch);
+
+            nodesByBatch.Clear();
+            foreach ((NitroxInt3 batchId, Dictionary<ScannerResourceNodeKey, ScannerResourceNode> nodes) in hydratedNodesByBatch)
+            {
+                nodesByBatch.Add(batchId, nodes);
+            }
+
+            keysByEntity.Clear();
+            foreach ((NitroxId entityId, List<(NitroxInt3 BatchId, ScannerResourceNodeKey Key)> keys) in hydratedKeysByEntity)
+            {
+                keysByEntity.Add(entityId, keys);
+            }
+
+            if (changed)
+            {
+                Interlocked.Increment(ref revision);
+            }
+        }
+    }
+
     public void EntityUntracked(WorldEntity entity)
     {
         lock (indexLock)
@@ -114,21 +170,56 @@ internal sealed class ScannerResourceIndex(IScannerRoomResourceCatalog resourceC
 
     private bool RemoveEntityUnsafe(NitroxId entityId)
     {
-        if (!keysByEntity.Remove(entityId, out List<(NitroxInt3 BatchId, ScannerResourceNodeKey Key)>? keys))
+        return RemoveEntity(entityId, nodesByBatch, keysByEntity);
+    }
+
+    private bool HasSameNodesUnsafe(Dictionary<NitroxInt3, Dictionary<ScannerResourceNodeKey, ScannerResourceNode>> otherNodesByBatch)
+    {
+        if (nodesByBatch.Count != otherNodesByBatch.Count)
+        {
+            return false;
+        }
+
+        foreach ((NitroxInt3 batchId, Dictionary<ScannerResourceNodeKey, ScannerResourceNode> otherBatchNodes) in otherNodesByBatch)
+        {
+            if (!nodesByBatch.TryGetValue(batchId, out Dictionary<ScannerResourceNodeKey, ScannerResourceNode>? batchNodes) ||
+                batchNodes.Count != otherBatchNodes.Count)
+            {
+                return false;
+            }
+
+            foreach ((ScannerResourceNodeKey key, ScannerResourceNode otherNode) in otherBatchNodes)
+            {
+                if (!batchNodes.TryGetValue(key, out ScannerResourceNode node) || !node.Equals(otherNode))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static bool RemoveEntity(
+        NitroxId entityId,
+        Dictionary<NitroxInt3, Dictionary<ScannerResourceNodeKey, ScannerResourceNode>> targetNodesByBatch,
+        Dictionary<NitroxId, List<(NitroxInt3 BatchId, ScannerResourceNodeKey Key)>> targetKeysByEntity)
+    {
+        if (!targetKeysByEntity.Remove(entityId, out List<(NitroxInt3 BatchId, ScannerResourceNodeKey Key)>? keys))
         {
             return false;
         }
 
         foreach ((NitroxInt3 batchId, ScannerResourceNodeKey key) in keys)
         {
-            if (!nodesByBatch.TryGetValue(batchId, out Dictionary<ScannerResourceNodeKey, ScannerResourceNode>? batchNodes))
+            if (!targetNodesByBatch.TryGetValue(batchId, out Dictionary<ScannerResourceNodeKey, ScannerResourceNode>? batchNodes))
             {
                 continue;
             }
             batchNodes.Remove(key);
             if (batchNodes.Count == 0)
             {
-                nodesByBatch.Remove(batchId);
+                targetNodesByBatch.Remove(batchId);
             }
         }
         return true;

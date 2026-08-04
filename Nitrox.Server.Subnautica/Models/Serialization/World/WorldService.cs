@@ -12,6 +12,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.GameLogic.Players;
+using Nitrox.Server.Subnautica.Models.GameLogic.ScannerRooms;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 using Nitrox.Server.Subnautica.Services;
@@ -37,6 +38,7 @@ internal class WorldService : IHostedService
     private readonly StoryScheduler storyScheduler;
     private readonly TimeService timeService;
     private readonly SaveDataUpgrade[] upgrades;
+    private readonly ScannerResourceIndex scannerResourceIndex;
     private readonly WorldEntityManager worldEntityManager;
     public IServerSerializer Serializer { get; private set; }
     private string FileEnding => Serializer?.FileEnding ?? "";
@@ -52,6 +54,7 @@ internal class WorldService : IHostedService
         StoryScheduler storyScheduler,
         StoryManager storyManager,
         WorldEntityManager worldEntityManager,
+        ScannerResourceIndex scannerResourceIndex,
         TimeService timeService,
         PdaManager pdaManager,
         EscapePodManager escapePodManager,
@@ -69,6 +72,7 @@ internal class WorldService : IHostedService
         this.storyScheduler = storyScheduler;
         this.storyManager = storyManager;
         this.worldEntityManager = worldEntityManager;
+        this.scannerResourceIndex = scannerResourceIndex;
         this.timeService = timeService;
         this.pdaManager = pdaManager;
         this.escapePodManager = escapePodManager;
@@ -338,6 +342,7 @@ internal class WorldService : IHostedService
             worldEntityManager.worldEntitiesByCell = worldEntities.Where(entity => entity is not GlobalRootEntity)
                                                                   .GroupBy(entity => entity.AbsoluteEntityCell)
                                                                   .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
+            scannerResourceIndex.Hydrate(worldEntities);
 
             foreach (Player player in pWorldData.PlayerData.GetPlayers())
             {

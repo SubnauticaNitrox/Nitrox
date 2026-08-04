@@ -59,6 +59,50 @@ public sealed class ScannerResourceIndexTest
         index.Query(batches, NitroxVector3.Zero, 10).Should().ContainSingle();
     }
 
+    [TestMethod]
+    public void HydratingRestoredSaveEntitiesIndexesScannablesWithoutTrackingEvents()
+    {
+        ScannerResourceIndex index = CreateIndex();
+        WorldEntity restoredEntity = CreateEntity(new NitroxVector3(10, -20, 30));
+        IReadOnlyList<NitroxInt3> batches = BatchesFor(new NitroxVector3(12, -20, 30));
+
+        index.Hydrate([restoredEntity]);
+
+        ScannerResourceNode node = index.Query(batches, restoredEntity.Transform.Position, 20).Should().ContainSingle().Which;
+        node.Key.EntityId.Should().Be(restoredEntity.Id);
+        node.Position.Should().Be(new NitroxVector3(12, -20, 30));
+    }
+
+    [TestMethod]
+    public void RepeatedRestoredSaveHydrationIsIdempotent()
+    {
+        ScannerResourceIndex index = CreateIndex();
+        WorldEntity restoredEntity = CreateEntity(NitroxVector3.Zero);
+        IReadOnlyList<NitroxInt3> batches = BatchesFor(new NitroxVector3(2, 0, 0));
+
+        index.Hydrate([restoredEntity]);
+        long firstRevision = index.Revision;
+        firstRevision.Should().Be(1);
+
+        index.Hydrate([restoredEntity]);
+
+        index.Revision.Should().Be(firstRevision);
+        index.Query(batches, NitroxVector3.Zero, 10).Should().ContainSingle();
+    }
+
+    [TestMethod]
+    public void RestoredSaveHydrationReplacesPreviouslyIndexedEntities()
+    {
+        ScannerResourceIndex index = CreateIndex();
+        WorldEntity staleEntity = CreateEntity(NitroxVector3.Zero);
+        IReadOnlyList<NitroxInt3> batches = BatchesFor(new NitroxVector3(2, 0, 0));
+        index.EntityTracked(staleEntity);
+
+        index.Hydrate([]);
+
+        index.Query(batches, NitroxVector3.Zero, 10).Should().BeEmpty();
+    }
+
     private static ScannerResourceIndex CreateIndex() => new(new TestCatalog());
 
     private static IReadOnlyList<NitroxInt3> BatchesFor(NitroxVector3 position) => [new AbsoluteEntityCell(position, 3).BatchId];
