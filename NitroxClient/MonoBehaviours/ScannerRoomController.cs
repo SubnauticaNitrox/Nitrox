@@ -173,7 +173,14 @@ public sealed class ScannerRoomController : MonoBehaviour
         }
     }
 
-    private void Start() => RequestInitialSnapshot();
+    private void Start()
+    {
+        UpdateRefreshActivity(Time.unscaledTime);
+        if (refreshScheduler.HasRefreshActivity)
+        {
+            RequestInitialSnapshot();
+        }
+    }
 
     private void Update()
     {
@@ -190,10 +197,17 @@ public sealed class ScannerRoomController : MonoBehaviour
         {
             ClearAuthoritativeState();
         }
+        if (sessionJoined)
+        {
+            scannerRoomManager.PumpRequests(mapRoomId);
+        }
         if (sessionJoined && Interlocked.Exchange(ref reconnectRefreshPending, 0) != 0)
         {
-            RequestImmediateSnapshot();
-            return;
+            if (refreshScheduler.HasRefreshActivity)
+            {
+                RequestImmediateSnapshot();
+                return;
+            }
         }
         if (sessionJoined && refreshScheduler.IsRefreshDue(now))
         {
@@ -276,10 +290,7 @@ public sealed class ScannerRoomController : MonoBehaviour
     private void OnStateCleared()
     {
         Interlocked.Exchange(ref stateClearPending, 1);
-        if (!scannerRoomManager.IsSessionJoined)
-        {
-            sessionJoined = false;
-        }
+        sessionJoined = false;
     }
 
     private void ClearAuthoritativeState()

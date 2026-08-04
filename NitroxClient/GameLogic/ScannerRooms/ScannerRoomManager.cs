@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -14,6 +15,7 @@ internal sealed class ScannerRoomManager : IDisposable
     private readonly IPacketSender packetSender;
     private readonly ScannerRoomSnapshotStore snapshotStore;
     private readonly IMultiplayerSession multiplayerSession;
+    private readonly ScannerRoomRequestCoordinator requestCoordinator = new();
 
     public event Action<NitroxId, ScannerRoomSnapshotApplyResult>? SnapshotChanged;
     public event Action? SessionJoined;
@@ -32,13 +34,15 @@ internal sealed class ScannerRoomManager : IDisposable
         Multiplayer.OnAfterMultiplayerEnd += Clear;
     }
 
-    public uint RequestSnapshot(NitroxId mapRoomId, float range, NitroxTechType? selectedTechType, NitroxVector3? observedOrigin)
+    public void RequestSnapshot(NitroxId mapRoomId, float range, NitroxTechType? selectedTechType, NitroxVector3? observedOrigin)
     {
         range = ScannerRoomQueryParameters.NormalizeRange(range);
         selectedTechType = ScannerRoomQueryParameters.NormalizeSelection(selectedTechType);
-        ScannerRoomQueryTicket ticket = snapshotStore.BeginQuery(mapRoomId, range, selectedTechType);
-        packetSender.Send(new ScannerRoomQuery(mapRoomId, ticket.RequestId, range, selectedTechType, ticket.KnownRevision, observedOrigin));
-        return ticket.RequestId;
+        ScannerRoomRequestParameters request = new(range, selectedTechType, observedOrigin);
+        if (requestCoordinator.EnqueueOrReplace(mapRoomId, request, out ScannerRoomDispatch dispatch))
+        {
+            Dispatch(dispatch);
+        }
     }
 
     public void ProcessPage(ScannerRoomSnapshotPage packet)
@@ -55,18 +59,47 @@ internal sealed class ScannerRoomManager : IDisposable
             packet.AvailableResources,
             packet.Targets));
 
-        if (result is ScannerRoomSnapshotApplyResult.Applied or ScannerRoomSnapshotApplyResult.NotModified or ScannerRoomSnapshotApplyResult.Failed)
+        bool isTerminal = result is ScannerRoomSnapshotApplyResult.Applied or
+            ScannerRoomSnapshotApplyResult.NotModified or
+            ScannerRoomSnapshotApplyResult.Failed;
+        if (isTerminal)
         {
             SnapshotChanged?.Invoke(packet.MapRoomId, result);
+        }
+
+        if (requestCoordinator.ObserveResponse(
+                packet.MapRoomId,
+                packet.RequestId,
+                result,
+                GetTimestampSeconds(),
+                out ScannerRoomDispatch dispatch))
+        {
+            Dispatch(dispatch);
         }
     }
 
     public bool TryGetSnapshot(NitroxId mapRoomId, out ScannerRoomSnapshot? snapshot) => snapshotStore.TryGetSnapshot(mapRoomId, out snapshot);
 
-    public void RemoveRoom(NitroxId mapRoomId) => snapshotStore.RemoveRoom(mapRoomId);
+    public void RemoveRoom(NitroxId mapRoomId)
+    {
+        requestCoordinator.RemoveRoom(mapRoomId);
+        snapshotStore.RemoveRoom(mapRoomId);
+    }
+
+    public void PumpRequests(NitroxId mapRoomId)
+    {
+        double now = GetTimestampSeconds();
+        if (requestCoordinator.TryExpire(mapRoomId, now, out ScannerRoomExpiredRequest expiredRequest, out ScannerRoomDispatch dispatch))
+        {
+            snapshotStore.CancelQuery(expiredRequest.MapRoomId, expiredRequest.RequestId);
+            SnapshotChanged?.Invoke(expiredRequest.MapRoomId, ScannerRoomSnapshotApplyResult.Failed);
+            Dispatch(dispatch);
+        }
+    }
 
     public void Clear()
     {
+        requestCoordinator.Clear();
         snapshotStore.Clear();
         StateCleared?.Invoke();
     }
@@ -89,4 +122,34 @@ internal sealed class ScannerRoomManager : IDisposable
             SessionJoined?.Invoke();
         }
     }
+
+    private void Dispatch(ScannerRoomDispatch dispatch)
+    {
+        ScannerRoomRequestParameters request = dispatch.Request;
+        ScannerRoomQueryTicket ticket = snapshotStore.BeginQuery(dispatch.MapRoomId, request.Range, request.SelectedTechType);
+        double now = GetTimestampSeconds();
+        if (!requestCoordinator.ConfirmDispatch(dispatch.MapRoomId, ticket.RequestId, now))
+        {
+            snapshotStore.CancelQuery(dispatch.MapRoomId, ticket.RequestId);
+            return;
+        }
+
+        bool sent = packetSender.Send(new ScannerRoomQuery(
+            dispatch.MapRoomId,
+            ticket.RequestId,
+            request.Range,
+            request.SelectedTechType,
+            ticket.KnownRevision,
+            request.ObservedOrigin));
+        if (!sent)
+        {
+            snapshotStore.CancelQuery(dispatch.MapRoomId, ticket.RequestId);
+            if (requestCoordinator.AbortDispatch(dispatch.MapRoomId, ticket.RequestId, out ScannerRoomDispatch nextDispatch))
+            {
+                Dispatch(nextDispatch);
+            }
+        }
+    }
+
+    private static double GetTimestampSeconds() => Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency;
 }

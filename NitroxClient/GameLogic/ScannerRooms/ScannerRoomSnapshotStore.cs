@@ -82,9 +82,12 @@ internal sealed class ScannerRoomSnapshotStore
             if (page.Status == ScannerRoomQueryStatus.NotModified)
             {
                 room.Pending = null;
-                return room.Snapshot?.Revision == page.Revision
+                return room.Snapshot is { } snapshot &&
+                       snapshot.Revision == page.Revision &&
+                       snapshot.EffectiveRange.Equals(page.EffectiveRange) &&
+                       TechTypesEqual(snapshot.SelectedTechType, page.SelectedTechType)
                            ? ScannerRoomSnapshotApplyResult.NotModified
-                           : ScannerRoomSnapshotApplyResult.Ignored;
+                           : ScannerRoomSnapshotApplyResult.Failed;
             }
             if (page.Status != ScannerRoomQueryStatus.Complete || page.PageCount == 0 || page.PageIndex >= page.PageCount)
             {
@@ -113,6 +116,20 @@ internal sealed class ScannerRoomSnapshotStore
         {
             snapshot = rooms.TryGetValue(mapRoomId, out RoomState? room) ? room.Snapshot : null;
             return snapshot != null;
+        }
+    }
+
+    public bool CancelQuery(NitroxId mapRoomId, uint requestId)
+    {
+        lock (storeLock)
+        {
+            if (!rooms.TryGetValue(mapRoomId, out RoomState? room) || room.Pending?.RequestId != requestId)
+            {
+                return false;
+            }
+
+            room.Pending = null;
+            return true;
         }
     }
 

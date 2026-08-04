@@ -57,4 +57,31 @@ public sealed class ScannerRoomRefreshSchedulerTest
         scheduler.WasRefreshedRecently(11).Should().BeTrue();
         scheduler.WasRefreshedRecently(11.001).Should().BeFalse();
     }
+
+    [TestMethod]
+    public void InactiveRoomSkipsInitialAndReconnectRefreshes()
+    {
+        ScannerRoomRefreshScheduler scheduler = new();
+        scheduler.SetActivity(false, false, 0);
+
+        bool shouldRefreshOnStart = scheduler.HasRefreshActivity;
+        scheduler.SetActivity(true, true, 1);
+        scheduler.SetActivity(false, false, 2);
+        bool shouldRefreshOnReconnect = scheduler.HasRefreshActivity;
+
+        shouldRefreshOnStart.Should().BeFalse();
+        shouldRefreshOnReconnect.Should().BeFalse();
+    }
+
+    [DataTestMethod]
+    [DataRow(true, false)]
+    [DataRow(false, true)]
+    [DataRow(true, true)]
+    public void SelectedOrOpenRoomRefreshesAcrossLifecycleTransitions(bool selectionActive, bool catalogActive)
+    {
+        ScannerRoomRefreshScheduler scheduler = new();
+        scheduler.SetActivity(selectionActive, catalogActive, 0);
+
+        scheduler.HasRefreshActivity.Should().BeTrue();
+    }
 }

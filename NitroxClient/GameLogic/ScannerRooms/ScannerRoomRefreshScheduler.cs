@@ -16,6 +16,8 @@ internal sealed class ScannerRoomRefreshScheduler
     private double nextCatalogRefresh = double.PositiveInfinity;
     private double lastRefresh = double.NegativeInfinity;
 
+    public bool HasRefreshActivity => selectionActive || catalogActive;
+
     public void SetActivity(bool selectionActive, bool catalogActive, double now)
     {
         if (this.selectionActive != selectionActive)

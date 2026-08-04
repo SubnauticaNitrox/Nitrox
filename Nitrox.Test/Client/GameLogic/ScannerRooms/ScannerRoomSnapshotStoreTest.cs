@@ -70,6 +70,50 @@ public sealed class ScannerRoomSnapshotStoreTest
         snapshot!.Targets.Should().ContainSingle();
     }
 
+    [TestMethod]
+    public void InvalidNotModifiedResponseTerminatesPendingRequestAsFailure()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket refresh = store.BeginQuery(roomId, 300, quartz);
+
+        ScannerRoomSnapshotPageData notModified = Page(refresh.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.NotModified);
+
+        store.AcceptPage(notModified).Should().Be(ScannerRoomSnapshotApplyResult.Failed);
+    }
+
+    [TestMethod]
+    public void NotModifiedCannotReuseSnapshotFromDifferentQueryParameters()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, quartz);
+        store.AcceptPage(Page(first.RequestId, 0, 1, [new ScannerResourceSummary(quartz, 1)], [Target(1)]));
+        ScannerRoomQueryTicket changedRange = store.BeginQuery(roomId, 350, quartz);
+        ScannerRoomSnapshotPageData notModified = new(
+            roomId,
+            changedRange.RequestId,
+            ScannerRoomQueryStatus.NotModified,
+            350,
+            quartz,
+            42,
+            0,
+            1,
+            [],
+            []);
+
+        store.AcceptPage(notModified).Should().Be(ScannerRoomSnapshotApplyResult.Failed);
+    }
+
+    [TestMethod]
+    public void CancelsOnlyTheMatchingTimedOutRequest()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket timedOut = store.BeginQuery(roomId, 300, quartz);
+
+        store.CancelQuery(roomId, timedOut.RequestId + 1).Should().BeFalse();
+        store.CancelQuery(roomId, timedOut.RequestId).Should().BeTrue();
+        store.AcceptPage(Page(timedOut.RequestId, 0, 1, [], [])).Should().Be(ScannerRoomSnapshotApplyResult.Ignored);
+    }
+
     private ScannerRoomSnapshotPageData Page(
         uint requestId,
         ushort pageIndex,
