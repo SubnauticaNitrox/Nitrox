@@ -32,6 +32,10 @@ internal sealed class WorldEntityManager
     internal Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById = [];
 
     private readonly Lock globalRootEntitiesLock = new();
+    // Lifecycle observers are synchronous, but entity mutations can originate from concurrent packet processors.
+    // Keep each committed mutation and its notification in one reentrant critical section so callbacks cannot be
+    // published out of order. Reentrancy is required by paths which delegate to another lifecycle method.
+    private readonly Lock lifecycleOrderLock = new();
     private readonly ILogger<WorldEntityManager> logger;
     private readonly PlayerManager playerManager;
     private readonly IReadOnlyList<IWorldEntityLifecycleObserver> lifecycleObservers;
@@ -102,83 +106,89 @@ internal sealed class WorldEntityManager
 
     public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell? newCell, out WorldEntity worldEntity)
     {
-        lock (worldEntitiesLock)
+        lock (lifecycleOrderLock)
         {
-            if (!entityRegistry.TryGetEntityById(id, out worldEntity))
+            lock (worldEntitiesLock)
             {
-                logger.ZLogWarningOnce($"can't update entity position of {id} because it isn't registered");
-                newCell = null;
-                return false;
-            }
-
-            // Return early because a GlobalRootEntity doesn't have an AbsoluteEntityCell, thus it would throw an exception
-            if (worldEntity is GlobalRootEntity)
-            {
-                worldEntity.Transform.Position = position;
-                worldEntity.Transform.Rotation = rotation;
-                newCell = null;
-            }
-            else
-            {
-                AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
-
-                worldEntity.Transform.Position = position;
-                worldEntity.Transform.Rotation = rotation;
-
-                newCell = worldEntity.AbsoluteEntityCell;
-
-                if (oldCell != newCell)
+                if (!entityRegistry.TryGetEntityById(id, out worldEntity))
                 {
-                    EntitySwitchedCells(worldEntity, oldCell, newCell);
+                    logger.ZLogWarningOnce($"can't update entity position of {id} because it isn't registered");
+                    newCell = null;
+                    return false;
+                }
+
+                // Return early because a GlobalRootEntity doesn't have an AbsoluteEntityCell, thus it would throw an exception
+                if (worldEntity is GlobalRootEntity)
+                {
+                    worldEntity.Transform.Position = position;
+                    worldEntity.Transform.Rotation = rotation;
+                    newCell = null;
+                }
+                else
+                {
+                    AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
+
+                    worldEntity.Transform.Position = position;
+                    worldEntity.Transform.Rotation = rotation;
+
+                    newCell = worldEntity.AbsoluteEntityCell;
+
+                    if (oldCell != newCell)
+                    {
+                        EntitySwitchedCells(worldEntity, oldCell, newCell);
+                    }
                 }
             }
-        }
 
-        NotifyEntityMoved(worldEntity);
-        return true;
+            NotifyEntityMoved(worldEntity);
+            return true;
+        }
     }
 
     public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
     {
-        Optional<Entity> removedEntity = Optional.Empty;
-        List<WorldEntity> removedWorldEntities = [];
-        lock (globalRootEntitiesLock)
+        lock (lifecycleOrderLock)
         {
-            if (removeFromRegistry)
+            Optional<Entity> removedEntity = Optional.Empty;
+            List<WorldEntity> removedWorldEntities = [];
+            lock (globalRootEntitiesLock)
             {
-                // In case there were player entities under the removed entity, we need to reparent them to the GlobalRoot
-                // to make sure that they won't be removed
-                if (entityRegistry.TryGetEntityById(entityId, out GlobalRootEntity globalRootEntity))
+                if (removeFromRegistry)
                 {
-                    MovePlayerChildrenToRoot(globalRootEntity);
-                }
-                removedEntity = entityRegistry.RemoveEntity(entityId);
-
-                if (removedEntity.HasValue)
-                {
-                    removedWorldEntities = GetWorldEntitiesInHierarchy(removedEntity.Value);
-                    foreach (GlobalRootEntity removedGlobalRootEntity in removedWorldEntities.OfType<GlobalRootEntity>())
+                    // In case there were player entities under the removed entity, we need to reparent them to the GlobalRoot
+                    // to make sure that they won't be removed
+                    if (entityRegistry.TryGetEntityById(entityId, out GlobalRootEntity globalRootEntity))
                     {
-                        globalRootEntitiesById.Remove(removedGlobalRootEntity.Id);
+                        MovePlayerChildrenToRoot(globalRootEntity);
+                    }
+                    removedEntity = entityRegistry.RemoveEntity(entityId);
+
+                    if (removedEntity.HasValue)
+                    {
+                        removedWorldEntities = GetWorldEntitiesInHierarchy(removedEntity.Value);
+                        foreach (GlobalRootEntity removedGlobalRootEntity in removedWorldEntities.OfType<GlobalRootEntity>())
+                        {
+                            globalRootEntitiesById.Remove(removedGlobalRootEntity.Id);
+                        }
                     }
                 }
+                if (globalRootEntitiesById.Remove(entityId, out GlobalRootEntity entity) &&
+                    removedWorldEntities.All(worldEntity => worldEntity.Id != entity.Id))
+                {
+                    removedWorldEntities.Add(entity);
+                }
             }
-            if (globalRootEntitiesById.Remove(entityId, out GlobalRootEntity entity) &&
-                removedWorldEntities.All(worldEntity => worldEntity.Id != entity.Id))
-            {
-                removedWorldEntities.Add(entity);
-            }
-        }
 
-        foreach (WorldEntity removedWorldEntity in removedWorldEntities)
-        {
-            if (removedWorldEntity is not GlobalRootEntity)
+            foreach (WorldEntity removedWorldEntity in removedWorldEntities)
             {
-                UnregisterWorldEntity(removedWorldEntity);
+                if (removedWorldEntity is not GlobalRootEntity)
+                {
+                    UnregisterWorldEntity(removedWorldEntity);
+                }
+                NotifyEntityUntracked(removedWorldEntity);
             }
-            NotifyEntityUntracked(removedWorldEntity);
+            return removedEntity;
         }
-        return removedEntity;
     }
 
     public void MovePlayerChildrenToRoot(GlobalRootEntity globalRootEntity)
@@ -197,13 +207,16 @@ internal sealed class WorldEntityManager
 
     public void TrackEntityInTheWorld(WorldEntity entity)
     {
-        if (entity is GlobalRootEntity globalRootEntity)
+        lock (lifecycleOrderLock)
         {
-            AddOrUpdateGlobalRootEntity(globalRootEntity, false);
-            return;
-        }
+            if (entity is GlobalRootEntity globalRootEntity)
+            {
+                AddOrUpdateGlobalRootEntity(globalRootEntity, false);
+                return;
+            }
 
-        RegisterWorldEntity(entity);
+            RegisterWorldEntity(entity);
+        }
     }
 
     /// <summary>
@@ -214,11 +227,14 @@ internal sealed class WorldEntityManager
     /// </remarks>
     public void RegisterWorldEntity(WorldEntity entity)
     {
-        RegisterWorldEntityInCell(entity, entity.AbsoluteEntityCell);
-        NotifyEntityTracked(entity);
+        lock (lifecycleOrderLock)
+        {
+            RegisterWorldEntityInCell(entity, entity.AbsoluteEntityCell);
+            NotifyEntityTracked(entity);
+        }
     }
 
-    public void RegisterWorldEntityInCell(WorldEntity entity, AbsoluteEntityCell cell)
+    private void RegisterWorldEntityInCell(WorldEntity entity, AbsoluteEntityCell cell)
     {
         lock (worldEntitiesLock)
         {
@@ -233,12 +249,12 @@ internal sealed class WorldEntityManager
     /// <summary>
     ///     Automatically unregisters a WorldEntity in its AbsoluteEntityCell
     /// </summary>
-    public void UnregisterWorldEntity(WorldEntity entity)
+    private void UnregisterWorldEntity(WorldEntity entity)
     {
         UnregisterWorldEntityFromCell(entity.Id, entity.AbsoluteEntityCell);
     }
 
-    public void UnregisterWorldEntityFromCell(NitroxId entityId, AbsoluteEntityCell cell)
+    private void UnregisterWorldEntityFromCell(NitroxId entityId, AbsoluteEntityCell cell)
     {
         lock (worldEntitiesLock)
         {
@@ -320,45 +336,51 @@ internal sealed class WorldEntityManager
 
     public void StopTrackingEntity(WorldEntity entity)
     {
-        if (entity is GlobalRootEntity)
+        lock (lifecycleOrderLock)
         {
-            RemoveGlobalRootEntity(entity.Id, false);
-        }
-        else
-        {
-            UnregisterWorldEntity(entity);
-            NotifyEntityUntracked(entity);
+            if (entity is GlobalRootEntity)
+            {
+                RemoveGlobalRootEntity(entity.Id, false);
+            }
+            else
+            {
+                UnregisterWorldEntity(entity);
+                NotifyEntityUntracked(entity);
+            }
         }
     }
 
     public bool TryDestroyEntity(NitroxId entityId, [NotNullWhen(true)] out Entity? entity)
     {
-        Optional<Entity> optEntity = entityRegistry.RemoveEntity(entityId);
-
-        if (!optEntity.HasValue)
+        lock (lifecycleOrderLock)
         {
-            entity = null;
-            return false;
-        }
-        entity = optEntity.Value;
+            Optional<Entity> optEntity = entityRegistry.RemoveEntity(entityId);
 
-        foreach (WorldEntity removedWorldEntity in GetWorldEntitiesInHierarchy(entity))
-        {
-            if (removedWorldEntity is GlobalRootEntity)
+            if (!optEntity.HasValue)
             {
-                lock (globalRootEntitiesLock)
+                entity = null;
+                return false;
+            }
+            entity = optEntity.Value;
+
+            foreach (WorldEntity removedWorldEntity in GetWorldEntitiesInHierarchy(entity))
+            {
+                if (removedWorldEntity is GlobalRootEntity)
                 {
-                    globalRootEntitiesById.Remove(removedWorldEntity.Id);
+                    lock (globalRootEntitiesLock)
+                    {
+                        globalRootEntitiesById.Remove(removedWorldEntity.Id);
+                    }
                 }
+                else
+                {
+                    UnregisterWorldEntity(removedWorldEntity);
+                }
+                NotifyEntityUntracked(removedWorldEntity);
             }
-            else
-            {
-                UnregisterWorldEntity(removedWorldEntity);
-            }
-            NotifyEntityUntracked(removedWorldEntity);
-        }
 
-        return true;
+            return true;
+        }
     }
 
     /// <summary>
@@ -366,10 +388,13 @@ internal sealed class WorldEntityManager
     /// </summary>
     public void CleanChildren(Entity entity)
     {
-        // TryDestroyEntity removes each child from this collection, so enumerate a stable id snapshot.
-        foreach (NitroxId childId in entity.ChildEntities.Select(childEntity => childEntity.Id).ToList())
+        lock (lifecycleOrderLock)
         {
-            TryDestroyEntity(childId, out _);
+            // TryDestroyEntity removes each child from this collection, so enumerate a stable id snapshot.
+            foreach (NitroxId childId in entity.ChildEntities.Select(childEntity => childEntity.Id).ToList())
+            {
+                TryDestroyEntity(childId, out _);
+            }
         }
     }
 
@@ -404,15 +429,18 @@ internal sealed class WorldEntityManager
     /// </summary>
     public void AddOrUpdateGlobalRootEntity(GlobalRootEntity entity, bool addOrUpdateRegistry = true)
     {
-        lock (globalRootEntitiesLock)
+        lock (lifecycleOrderLock)
         {
-            if (addOrUpdateRegistry)
+            lock (globalRootEntitiesLock)
             {
-                entityRegistry.AddOrUpdate(entity);
+                if (addOrUpdateRegistry)
+                {
+                    entityRegistry.AddOrUpdate(entity);
+                }
+                globalRootEntitiesById[entity.Id] = entity;
             }
-            globalRootEntitiesById[entity.Id] = entity;
+            NotifyEntityTracked(entity);
         }
-        NotifyEntityTracked(entity);
     }
 
     private void NotifyEntityTracked(WorldEntity entity)

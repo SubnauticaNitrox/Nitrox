@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Nitrox.Model.Configuration;
@@ -41,6 +42,106 @@ public sealed class WorldEntityLifecycleObserverTest
         manager.StopTrackingEntity(entity);
 
         observer.Events.Should().Equal("tracked", "moved", "untracked");
+    }
+
+    [TestMethod]
+    public async Task UntrackCannotOvertakeBlockedTrackPublication()
+    {
+        TrackPublicationGate gate = new();
+        ScannerResourceIndex scannerResourceIndex = new(new TestScannerCatalog());
+        LifecycleCompletionObserver completionObserver = new();
+        EntityRegistry registry = new(Substitute.For<ILogger<EntityRegistry>>());
+        WorldEntityManager manager = new(
+            null!,
+            registry,
+            null!,
+            null!,
+            [gate, scannerResourceIndex, completionObserver],
+            Substitute.For<ILogger<WorldEntityManager>>());
+        WorldEntity entity = CreateWorldEntity();
+        registry.AddEntity(entity);
+
+        Task registrationTask = Task.Run(() => manager.RegisterWorldEntity(entity));
+        if (!gate.TrackEntered.Wait(TimeSpan.FromSeconds(5)))
+        {
+            gate.AllowTrackPublication.Set();
+            await registrationTask;
+            Assert.Fail("The tracked callback was never reached.");
+        }
+
+        ManualResetEventSlim untrackStarted = new(false);
+        Task untrackTask = Task.Run(() =>
+        {
+            untrackStarted.Set();
+            manager.StopTrackingEntity(entity);
+        });
+        if (!untrackStarted.Wait(TimeSpan.FromSeconds(5)))
+        {
+            gate.AllowTrackPublication.Set();
+            await Task.WhenAll(registrationTask, untrackTask);
+            Assert.Fail("The untrack operation was never started.");
+        }
+
+        bool untrackOvertookTrack = completionObserver.UntrackPublished.Wait(TimeSpan.FromSeconds(1));
+        gate.AllowTrackPublication.Set();
+        await Task.WhenAll(registrationTask, untrackTask);
+
+        untrackOvertookTrack.Should().BeFalse();
+        scannerResourceIndex.Query([entity.AbsoluteEntityCell.BatchId], entity.Transform.Position, 1).Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public async Task RetrackedGenerationCannotBeOverwrittenByOlderMovementPublication()
+    {
+        MovementPublicationGate gate = new();
+        ScannerResourceIndex scannerResourceIndex = new(new TestScannerCatalog());
+        LifecycleCompletionObserver completionObserver = new();
+        EntityRegistry registry = new(Substitute.For<ILogger<EntityRegistry>>());
+        WorldEntityManager manager = new(
+            null!,
+            registry,
+            null!,
+            null!,
+            [gate, scannerResourceIndex, completionObserver],
+            Substitute.For<ILogger<WorldEntityManager>>());
+        WorldEntity oldEntity = CreateWorldEntity();
+        registry.AddEntity(oldEntity);
+        manager.RegisterWorldEntity(oldEntity);
+        completionObserver.TrackPublished.Reset();
+
+        NitroxVector3 stalePosition = new(50, 0, 0);
+        Task movementTask = Task.Run(() => manager.TryUpdateEntityPosition(oldEntity.Id, stalePosition, NitroxQuaternion.Identity, out _, out _));
+        if (!gate.MovementEntered.Wait(TimeSpan.FromSeconds(5)))
+        {
+            gate.AllowMovementPublication.Set();
+            await movementTask;
+            Assert.Fail("The movement callback was never reached.");
+        }
+
+        NitroxVector3 replacementPosition = new(400, 0, 0);
+        WorldEntity replacement = CreateWorldEntity(replacementPosition, oldEntity.Id);
+        ManualResetEventSlim replacementStarted = new(false);
+        Task replacementTask = Task.Run(() =>
+        {
+            replacementStarted.Set();
+            manager.StopTrackingEntity(oldEntity);
+            registry.AddOrUpdate(replacement);
+            manager.RegisterWorldEntity(replacement);
+        });
+        if (!replacementStarted.Wait(TimeSpan.FromSeconds(5)))
+        {
+            gate.AllowMovementPublication.Set();
+            await Task.WhenAll(movementTask, replacementTask);
+            Assert.Fail("The replacement operation was never started.");
+        }
+
+        bool replacementOvertookMovement = completionObserver.TrackPublished.Wait(TimeSpan.FromSeconds(1));
+        gate.AllowMovementPublication.Set();
+        await Task.WhenAll(movementTask, replacementTask);
+
+        replacementOvertookMovement.Should().BeFalse();
+        scannerResourceIndex.Query([new AbsoluteEntityCell(stalePosition, 3).BatchId], stalePosition, 1).Should().BeEmpty();
+        scannerResourceIndex.Query([replacement.AbsoluteEntityCell.BatchId], replacementPosition, 1).Should().ContainSingle();
     }
 
     [TestMethod]
@@ -239,6 +340,17 @@ public sealed class WorldEntityLifecycleObserverTest
         new NitroxId(),
         parent);
 
+    private static WorldEntity CreateWorldEntity(NitroxVector3 position, NitroxId id) => new(
+        position,
+        NitroxQuaternion.Identity,
+        NitroxVector3.One,
+        new NitroxTechType("Quartz"),
+        3,
+        TestScannerCatalog.ClassId,
+        true,
+        id,
+        null);
+
     private sealed class TestScannerCatalog : IScannerRoomResourceCatalog
     {
         public const string ClassId = "scanner-lifecycle-quartz";
@@ -271,5 +383,59 @@ public sealed class WorldEntityLifecycleObserverTest
             Events.Add("untracked");
             UntrackedEntityIds.Add(entity.Id);
         }
+    }
+
+    private sealed class TrackPublicationGate : IWorldEntityLifecycleObserver
+    {
+        public ManualResetEventSlim TrackEntered { get; } = new(false);
+        public ManualResetEventSlim AllowTrackPublication { get; } = new(false);
+
+        public void EntityTracked(WorldEntity entity)
+        {
+            TrackEntered.Set();
+            AllowTrackPublication.Wait();
+        }
+
+        public void EntityMoved(WorldEntity entity)
+        {
+        }
+
+        public void EntityUntracked(WorldEntity entity)
+        {
+        }
+    }
+
+    private sealed class MovementPublicationGate : IWorldEntityLifecycleObserver
+    {
+        public ManualResetEventSlim MovementEntered { get; } = new(false);
+        public ManualResetEventSlim AllowMovementPublication { get; } = new(false);
+
+        public void EntityTracked(WorldEntity entity)
+        {
+        }
+
+        public void EntityMoved(WorldEntity entity)
+        {
+            MovementEntered.Set();
+            AllowMovementPublication.Wait();
+        }
+
+        public void EntityUntracked(WorldEntity entity)
+        {
+        }
+    }
+
+    private sealed class LifecycleCompletionObserver : IWorldEntityLifecycleObserver
+    {
+        public ManualResetEventSlim TrackPublished { get; } = new(false);
+        public ManualResetEventSlim UntrackPublished { get; } = new(false);
+
+        public void EntityTracked(WorldEntity entity) => TrackPublished.Set();
+
+        public void EntityMoved(WorldEntity entity)
+        {
+        }
+
+        public void EntityUntracked(WorldEntity entity) => UntrackPublished.Set();
     }
 }
