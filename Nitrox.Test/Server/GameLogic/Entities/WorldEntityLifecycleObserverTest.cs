@@ -61,7 +61,7 @@ public sealed class WorldEntityLifecycleObserverTest
         WorldEntity entity = CreateWorldEntity();
         registry.AddEntity(entity);
 
-        Task registrationTask = Task.Run(() => manager.RegisterWorldEntity(entity));
+        Task registrationTask = RunConcurrently(() => manager.RegisterWorldEntity(entity));
         if (!gate.TrackEntered.Wait(TimeSpan.FromSeconds(5)))
         {
             gate.AllowTrackPublication.Set();
@@ -70,7 +70,7 @@ public sealed class WorldEntityLifecycleObserverTest
         }
 
         ManualResetEventSlim untrackStarted = new(false);
-        Task untrackTask = Task.Run(() =>
+        Task untrackTask = RunConcurrently(() =>
         {
             untrackStarted.Set();
             manager.StopTrackingEntity(entity);
@@ -110,7 +110,7 @@ public sealed class WorldEntityLifecycleObserverTest
         completionObserver.TrackPublished.Reset();
 
         NitroxVector3 stalePosition = new(50, 0, 0);
-        Task movementTask = Task.Run(() => manager.TryUpdateEntityPosition(oldEntity.Id, stalePosition, NitroxQuaternion.Identity, out _, out _));
+        Task movementTask = RunConcurrently(() => manager.TryUpdateEntityPosition(oldEntity.Id, stalePosition, NitroxQuaternion.Identity, out _, out _));
         if (!gate.MovementEntered.Wait(TimeSpan.FromSeconds(5)))
         {
             gate.AllowMovementPublication.Set();
@@ -121,7 +121,7 @@ public sealed class WorldEntityLifecycleObserverTest
         NitroxVector3 replacementPosition = new(400, 0, 0);
         WorldEntity replacement = CreateWorldEntity(replacementPosition, oldEntity.Id);
         ManualResetEventSlim replacementStarted = new(false);
-        Task replacementTask = Task.Run(() =>
+        Task replacementTask = RunConcurrently(() =>
         {
             replacementStarted.Set();
             manager.StopTrackingEntity(oldEntity);
@@ -350,6 +350,12 @@ public sealed class WorldEntityLifecycleObserverTest
         true,
         id,
         null);
+
+    private static Task RunConcurrently(Action action) => Task.Factory.StartNew(
+        action,
+        CancellationToken.None,
+        TaskCreationOptions.LongRunning,
+        TaskScheduler.Default);
 
     private sealed class TestScannerCatalog : IScannerRoomResourceCatalog
     {
