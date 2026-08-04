@@ -141,7 +141,7 @@ internal sealed class WorldEntityManager
     public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
     {
         Optional<Entity> removedEntity = Optional.Empty;
-        GlobalRootEntity? removedGlobalRootEntity = null;
+        List<WorldEntity> removedWorldEntities = [];
         lock (globalRootEntitiesLock)
         {
             if (removeFromRegistry)
@@ -153,15 +153,30 @@ internal sealed class WorldEntityManager
                     MovePlayerChildrenToRoot(globalRootEntity);
                 }
                 removedEntity = entityRegistry.RemoveEntity(entityId);
+
+                if (removedEntity.HasValue)
+                {
+                    removedWorldEntities = GetWorldEntitiesInHierarchy(removedEntity.Value);
+                    foreach (GlobalRootEntity removedGlobalRootEntity in removedWorldEntities.OfType<GlobalRootEntity>())
+                    {
+                        globalRootEntitiesById.Remove(removedGlobalRootEntity.Id);
+                    }
+                }
             }
-            if (globalRootEntitiesById.Remove(entityId, out GlobalRootEntity entity))
+            if (globalRootEntitiesById.Remove(entityId, out GlobalRootEntity entity) &&
+                removedWorldEntities.All(worldEntity => worldEntity.Id != entity.Id))
             {
-                removedGlobalRootEntity = entity;
+                removedWorldEntities.Add(entity);
             }
         }
-        if (removedGlobalRootEntity != null)
+
+        foreach (WorldEntity removedWorldEntity in removedWorldEntities)
         {
-            NotifyEntityUntracked(removedGlobalRootEntity);
+            if (removedWorldEntity is not GlobalRootEntity)
+            {
+                UnregisterWorldEntity(removedWorldEntity);
+            }
+            NotifyEntityUntracked(removedWorldEntity);
         }
         return removedEntity;
     }
@@ -327,12 +342,48 @@ internal sealed class WorldEntityManager
         }
         entity = optEntity.Value;
 
-        if (entity is WorldEntity worldEntity)
+        foreach (WorldEntity removedWorldEntity in GetWorldEntitiesInHierarchy(entity))
         {
-            StopTrackingEntity(worldEntity);
+            if (removedWorldEntity is GlobalRootEntity)
+            {
+                lock (globalRootEntitiesLock)
+                {
+                    globalRootEntitiesById.Remove(removedWorldEntity.Id);
+                }
+            }
+            else
+            {
+                UnregisterWorldEntity(removedWorldEntity);
+            }
+            NotifyEntityUntracked(removedWorldEntity);
         }
 
         return true;
+    }
+
+    private static List<WorldEntity> GetWorldEntitiesInHierarchy(Entity rootEntity)
+    {
+        List<WorldEntity> worldEntities = [];
+        List<Entity> entitiesToSearch = [rootEntity];
+        HashSet<NitroxId> visitedEntityIds = [];
+
+        while (entitiesToSearch.Count > 0)
+        {
+            Entity entity = entitiesToSearch[^1];
+            entitiesToSearch.RemoveAt(entitiesToSearch.Count - 1);
+
+            if (!visitedEntityIds.Add(entity.Id))
+            {
+                continue;
+            }
+            if (entity is WorldEntity worldEntity)
+            {
+                worldEntities.Add(worldEntity);
+            }
+            entitiesToSearch.AddRange(entity.ChildEntities);
+        }
+
+        return worldEntities;
     }
 
     /// <summary>

@@ -117,6 +117,10 @@ internal sealed class BuildingManager
                 {
                     worldEntityManager.RemoveGlobalRootEntity(entity.Id);
                 }
+                else if (entity is WorldEntity)
+                {
+                    worldEntityManager.TryDestroyEntity(entity.Id, out _);
+                }
                 else
                 {
                     entityRegistry.RemoveEntity(entity.Id);
