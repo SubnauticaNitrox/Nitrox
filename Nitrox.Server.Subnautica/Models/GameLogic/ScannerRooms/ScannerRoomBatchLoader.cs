@@ -5,8 +5,8 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 namespace Nitrox.Server.Subnautica.Models.GameLogic.ScannerRooms;
 
 /// <summary>
-/// Serializes Scanner Room initiated cold loads. BatchEntitySpawner currently owns
-/// shared random state, so widening this semaphore requires making that spawner re-entrant first.
+/// Limits Scanner Room batch-loading fan-out. BatchEntitySpawner independently serializes
+/// every cold parse/spawn operation at the owner of its shared mutable state.
 /// </summary>
 internal sealed class ScannerRoomBatchLoader(WorldEntityManager worldEntityManager) : IScannerRoomBatchLoader
 {

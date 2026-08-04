@@ -38,6 +38,7 @@ internal sealed class BatchEntitySpawner(
     private readonly XorRandom random = randomFactory.GetUnityLikeRandom();
     private readonly SubnauticaUweWorldEntityFactory worldEntityFactory = worldEntityFactory;
 
+    private readonly BatchLoadGate coldLoadGate = new();
     private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<List<Entity>>>> batchLoadTasks = new();
     private readonly Lock emptyBatchesLock = new();
 
@@ -76,7 +77,12 @@ internal sealed class BatchEntitySpawner(
         return batchLoadTasks.GetOrAdd(batchId, id => new Lazy<Task<List<Entity>>>(() => LoadBatchInternalAsync(id, fullCacheCreation))).Value;
     }
 
-    private async Task<List<Entity>> LoadBatchInternalAsync(NitroxInt3 batchId, bool fullCacheCreation)
+    private Task<List<Entity>> LoadBatchInternalAsync(NitroxInt3 batchId, bool fullCacheCreation)
+    {
+        return coldLoadGate.RunAsync(() => ParseAndSpawnBatchAsync(batchId, fullCacheCreation));
+    }
+
+    private async Task<List<Entity>> ParseAndSpawnBatchAsync(NitroxInt3 batchId, bool fullCacheCreation)
     {
         DeterministicGenerator deterministicBatchGenerator = new(options.Value.Seed, batchId.ToString());
         List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
