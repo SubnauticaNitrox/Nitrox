@@ -10,18 +10,22 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 internal sealed class ScannerRoomQueryProcessor(
     ScannerRoomQueryService queryService,
     ScannerRoomQueryLimiter queryLimiter,
+    ScannerRoomDiagnostics diagnostics,
     ILogger<ScannerRoomQueryProcessor> logger) : IAuthPacketProcessor<ScannerRoomQuery>
 {
     private const int TARGETS_PER_PAGE = 256;
     private readonly ScannerRoomQueryService queryService = queryService;
     private readonly ScannerRoomQueryLimiter queryLimiter = queryLimiter;
+    private readonly ScannerRoomDiagnostics diagnostics = diagnostics;
     private readonly ILogger<ScannerRoomQueryProcessor> logger = logger;
 
     public async Task Process(AuthProcessorContext context, ScannerRoomQuery packet)
     {
         if (!queryLimiter.TryEnter(context.Sender.SessionId, out IDisposable? lease))
         {
+            diagnostics.QueryThrottled();
             await ReplyWithStatus(context, packet, ScannerRoomQueryStatus.Rejected, ScannerRoomQueryParameters.NormalizeRange(packet.ReportedRange));
+            diagnostics.PagesSent(1);
             return;
         }
 
@@ -42,12 +46,15 @@ internal sealed class ScannerRoomQueryProcessor(
             {
                 logger.ZLogError(ex, $"Failed Scanner Room query {packet.RequestId} for room {packet.MapRoomId} from {context.Sender.Name}");
                 await ReplyWithStatus(context, packet, ScannerRoomQueryStatus.Failed, ScannerRoomQueryParameters.NormalizeRange(packet.ReportedRange));
+                diagnostics.PagesSent(1);
                 return;
             }
 
-            foreach (ScannerRoomSnapshotPage page in CreatePages(packet, result))
+            IReadOnlyList<ScannerRoomSnapshotPage> pages = CreatePages(packet, result);
+            foreach (ScannerRoomSnapshotPage page in pages)
             {
                 await context.ReplyAsync(page);
+                diagnostics.PagesSent(1);
             }
         }
     }

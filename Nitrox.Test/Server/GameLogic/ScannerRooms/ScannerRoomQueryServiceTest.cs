@@ -87,11 +87,13 @@ public sealed class ScannerRoomQueryServiceTest
         registry.AddEntity(mapRoom);
         RecordingBatchLoader batchLoader = new();
         SubnauticaServerOptions serverOptions = new() { EnableScannerRoomResourceSync = true };
+        ScannerRoomDiagnostics diagnostics = new(Options.Create(serverOptions), Substitute.For<ILogger<ScannerRoomDiagnostics>>());
         ScannerRoomQueryService service = new(
             registry,
             index,
             catalog,
             batchLoader,
+            diagnostics,
             Options.Create(serverOptions),
             Substitute.For<ILogger<ScannerRoomQueryService>>());
         Player player = CreatePlayer(origin);
@@ -106,6 +108,17 @@ public sealed class ScannerRoomQueryServiceTest
         unchanged.Status.Should().Be(ScannerRoomQueryStatus.NotModified);
         unchanged.AvailableResources.Should().BeEmpty();
         unchanged.Targets.Should().BeEmpty();
+
+        ScannerRoomDiagnosticsSnapshot metrics = diagnostics.GetSnapshot();
+        metrics.RequestsReceived.Should().Be(2);
+        metrics.QueriesCompleted.Should().Be(2);
+        metrics.QueriesInFlight.Should().Be(0);
+        metrics.BatchLoadsInFlight.Should().Be(0);
+        metrics.BatchesRequested.Should().Be(batchLoader.LastBatchCount * 2);
+        metrics.ResourceTypesMatched.Should().Be(2);
+        metrics.TargetsMatched.Should().Be(2);
+        metrics.CompleteResponses.Should().Be(1);
+        metrics.NotModifiedResponses.Should().Be(1);
     }
 
     private static Player CreatePlayer(NitroxVector3 position) => new(

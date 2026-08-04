@@ -16,6 +16,7 @@ internal sealed class ScannerRoomQueryService(
     ScannerResourceIndex resourceIndex,
     IScannerRoomResourceCatalog resourceCatalog,
     IScannerRoomBatchLoader batchLoader,
+    ScannerRoomDiagnostics diagnostics,
     IOptions<SubnauticaServerOptions> options,
     ILogger<ScannerRoomQueryService> logger)
 {
@@ -25,6 +26,7 @@ internal sealed class ScannerRoomQueryService(
     private readonly ScannerResourceIndex resourceIndex = resourceIndex;
     private readonly IScannerRoomResourceCatalog resourceCatalog = resourceCatalog;
     private readonly IScannerRoomBatchLoader batchLoader = batchLoader;
+    private readonly ScannerRoomDiagnostics diagnostics = diagnostics;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<ScannerRoomQueryService> logger = logger;
     private readonly Lock originRepairLock = new();
@@ -38,51 +40,73 @@ internal sealed class ScannerRoomQueryService(
         NitroxVector3? observedOrigin,
         CancellationToken cancellationToken = default)
     {
-        float effectiveRange = ScannerRoomQueryParameters.NormalizeRange(reportedRange);
-        selectedTechType = ScannerRoomQueryParameters.NormalizeSelection(selectedTechType);
-        if (!options.Value.EnableScannerRoomResourceSync)
+        long queryStartedAt = diagnostics.QueryStarted();
+        ScannerRoomQueryStatus finalStatus = ScannerRoomQueryStatus.Failed;
+        try
         {
-            return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.Rejected, effectiveRange, selectedTechType);
+            float effectiveRange = ScannerRoomQueryParameters.NormalizeRange(reportedRange);
+            selectedTechType = ScannerRoomQueryParameters.NormalizeSelection(selectedTechType);
+            if (!options.Value.EnableScannerRoomResourceSync)
+            {
+                finalStatus = ScannerRoomQueryStatus.Rejected;
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.Rejected, effectiveRange, selectedTechType);
+            }
+            if (!entityRegistry.TryGetEntityById(mapRoomId, out MapRoomEntity? mapRoom))
+            {
+                finalStatus = ScannerRoomQueryStatus.InvalidRoom;
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.InvalidRoom, effectiveRange, selectedTechType);
+            }
+
+            NitroxVector3? origin = ResolveOrigin(player, mapRoom, observedOrigin);
+            if (origin == null)
+            {
+                finalStatus = ScannerRoomQueryStatus.OriginUnavailable;
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.OriginUnavailable, effectiveRange, selectedTechType);
+            }
+
+            float loadRadius = effectiveRange + resourceCatalog.MaximumRelativeOffset;
+            IReadOnlyList<NitroxInt3> batchIds = ScannerBatchCoverage.EnumerateIntersectingBatches(origin.Value, loadRadius);
+            diagnostics.BatchLoadStarted(batchIds.Count);
+            try
+            {
+                await batchLoader.LoadAsync(batchIds, cancellationToken);
+            }
+            finally
+            {
+                diagnostics.BatchLoadCompleted();
+            }
+
+            IReadOnlyList<ScannerResourceNode> nodes = resourceIndex.Query(batchIds, origin.Value, effectiveRange);
+            List<ScannerResourceSummary> summaries = nodes.GroupBy(node => node.TechType)
+                                                                 .OrderBy(group => group.Key.Name, StringComparer.Ordinal)
+                                                                 .Select(group => new ScannerResourceSummary(group.Key, group.Count()))
+                                                                 .ToList();
+
+            List<ScannerResourceTarget> targets = selectedTechType == null
+                ? []
+                : nodes.Where(node => node.TechType.Equals(selectedTechType))
+                       .OrderBy(node => SquaredDistance(node.Position, origin.Value))
+                       .ThenBy(node => node.Key.EntityId)
+                       .ThenBy(node => node.Key.TrackerIndex)
+                       .Select(node => new ScannerResourceTarget(node.Key.EntityId, node.Key.TrackerIndex, node.TechType, node.Position))
+                       .ToList();
+            diagnostics.ResultMatched(summaries.Count, targets.Count);
+
+            ulong revision = ScannerRoomSnapshotRevision.Compute(effectiveRange, selectedTechType, summaries, targets);
+            ScannerRoomQueryStatus status = knownRevision != 0 && knownRevision == revision
+                                                ? ScannerRoomQueryStatus.NotModified
+                                                : ScannerRoomQueryStatus.Complete;
+            finalStatus = status;
+
+            logger.ZLogDebug($"Scanner Room {mapRoomId} query for {player.Name} returned {summaries.Count:@ResourceTypes} resource types and {targets.Count:@Targets} selected targets across {batchIds.Count:@Batches} batches.");
+            return status == ScannerRoomQueryStatus.NotModified
+                       ? new(status, effectiveRange, selectedTechType, revision, [], [])
+                       : new(status, effectiveRange, selectedTechType, revision, summaries, targets);
         }
-        if (!entityRegistry.TryGetEntityById(mapRoomId, out MapRoomEntity? mapRoom))
+        finally
         {
-            return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.InvalidRoom, effectiveRange, selectedTechType);
+            diagnostics.QueryCompleted(queryStartedAt, finalStatus);
         }
-
-        NitroxVector3? origin = ResolveOrigin(player, mapRoom, observedOrigin);
-        if (origin == null)
-        {
-            return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.OriginUnavailable, effectiveRange, selectedTechType);
-        }
-
-        float loadRadius = effectiveRange + resourceCatalog.MaximumRelativeOffset;
-        IReadOnlyList<NitroxInt3> batchIds = ScannerBatchCoverage.EnumerateIntersectingBatches(origin.Value, loadRadius);
-        await batchLoader.LoadAsync(batchIds, cancellationToken);
-
-        IReadOnlyList<ScannerResourceNode> nodes = resourceIndex.Query(batchIds, origin.Value, effectiveRange);
-        List<ScannerResourceSummary> summaries = nodes.GroupBy(node => node.TechType)
-                                                             .OrderBy(group => group.Key.Name, StringComparer.Ordinal)
-                                                             .Select(group => new ScannerResourceSummary(group.Key, group.Count()))
-                                                             .ToList();
-
-        List<ScannerResourceTarget> targets = selectedTechType == null
-            ? []
-            : nodes.Where(node => node.TechType.Equals(selectedTechType))
-                   .OrderBy(node => SquaredDistance(node.Position, origin.Value))
-                   .ThenBy(node => node.Key.EntityId)
-                   .ThenBy(node => node.Key.TrackerIndex)
-                   .Select(node => new ScannerResourceTarget(node.Key.EntityId, node.Key.TrackerIndex, node.TechType, node.Position))
-                   .ToList();
-
-        ulong revision = ScannerRoomSnapshotRevision.Compute(effectiveRange, selectedTechType, summaries, targets);
-        ScannerRoomQueryStatus status = knownRevision != 0 && knownRevision == revision
-                                            ? ScannerRoomQueryStatus.NotModified
-                                            : ScannerRoomQueryStatus.Complete;
-
-        logger.ZLogDebug($"Scanner Room {mapRoomId} query for {player.Name} returned {summaries.Count:@ResourceTypes} resource types and {targets.Count:@Targets} selected targets across {batchIds.Count:@Batches} batches.");
-        return status == ScannerRoomQueryStatus.NotModified
-                   ? new(status, effectiveRange, selectedTechType, revision, [], [])
-                   : new(status, effectiveRange, selectedTechType, revision, summaries, targets);
     }
 
     private NitroxVector3? ResolveOrigin(Player player, MapRoomEntity mapRoom, NitroxVector3? observedOrigin)

@@ -174,6 +174,7 @@ internal static partial class ServiceCollectionExtensions
                     .AddSingleton<IScannerRoomBatchLoader, ScannerRoomBatchLoader>()
                     .AddSingleton<ScannerRoomQueryService>()
                     .AddSingleton<ScannerRoomQueryLimiter>()
+                    .AddSingleton<ScannerRoomDiagnostics>()
                     .AddSingleton<EntitySimulation>()
                     .AddSingleton<EscapePodManager>()
                     .AddSingleton<PdaManager>()
