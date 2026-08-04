@@ -45,6 +45,45 @@ internal sealed class SubnauticaAssetsManager : AssetsManager, IDisposable
         return assetFileInstance;
     }
 
+    public AssetFileInfo GetPrefabGameObjectInfoFromBundle(AssetsFileInstance assetFileInst)
+    {
+        AssetFileInfo assetBundleInfo = assetFileInst.file.Metadata.GetAssetInfo(1);
+        AssetTypeValueField assetBundleValue = GetBaseField(assetFileInst, assetBundleInfo);
+        AssetTypeValueField assetBundleContainer = assetBundleValue["m_Container.Array"];
+        long rootAssetPathId = assetBundleContainer.Children[0][1]["asset.m_PathID"].AsLong;
+
+        return assetFileInst.file.Metadata.GetAssetInfo(rootAssetPathId);
+    }
+
+    public IEnumerable<(AssetsFileInstance AssetFile, AssetFileInfo AssetInfo, AssetTypeValueField Value)> GetMonoBehavioursFromGameObject(AssetsFileInstance inst, AssetFileInfo targetGameObjectValue, string targetClassName)
+    {
+        AssetTypeValueField gameObject = GetBaseField(inst, targetGameObjectValue);
+        AssetTypeValueField components = gameObject["m_Component"]["Array"];
+
+        foreach (AssetTypeValueField child in components.Children)
+        {
+            AssetTypeValueField childPtr = child["component"];
+            AssetExternal childExt = GetExtAsset(inst, childPtr, true);
+            AssetFileInfo childInfo = childExt.info;
+
+            if (childInfo.GetTypeId(childExt.file.file) != (int)AssetClassID.MonoBehaviour)
+            {
+                continue;
+            }
+
+            AssetExternal childSafeExt = GetExtAssetSafe(inst, childPtr);
+            AssetTypeValueField monoBehaviour = childSafeExt.baseField;
+            AssetTypeValueField monoScriptPtr = monoBehaviour["m_Script"];
+            AssetExternal monoScriptExt = GetExtAsset(childExt.file, monoScriptPtr);
+            AssetTypeValueField monoScript = monoScriptExt.baseField;
+
+            if (monoScript["m_ClassName"].AsString == targetClassName)
+            {
+                yield return (childSafeExt.file, childInfo, monoBehaviour);
+            }
+        }
+    }
+
     /// <summary>
     ///     Copied from https://github.com/nesrak1/AssetsTools.NET#full-monobehaviour-writing-example
     /// </summary>
@@ -53,42 +92,12 @@ internal sealed class SubnauticaAssetsManager : AssetsManager, IDisposable
     /// <param name="targetClassName">Class name of the target MonoBehaviour</param>
     public AssetFileInfo? GetMonoBehaviourFromGameObject(AssetsFileInstance inst, AssetFileInfo targetGameObjectValue, string targetClassName)
     {
-        //example for finding a specific script and modifying the script on a GameObject
-        AssetTypeValueField playerBf = GetBaseField(inst, targetGameObjectValue);
-        AssetTypeValueField playerComponentArr = playerBf["m_Component"]["Array"];
-
-        AssetFileInfo monoBehaviourInf = null;
-        //first let's search for the MonoBehaviour we want in a GameObject
-        foreach (AssetTypeValueField child in playerComponentArr.Children)
+        foreach ((AssetsFileInstance _, AssetFileInfo assetInfo, AssetTypeValueField _) in GetMonoBehavioursFromGameObject(inst, targetGameObjectValue, targetClassName))
         {
-            //get component info (but don't deserialize yet, loading assets we don't need is wasteful)
-            AssetTypeValueField childPtr = child["component"];
-            AssetExternal childExt = GetExtAsset(inst, childPtr, true);
-            AssetFileInfo childInf = childExt.info;
-
-            //skip if not MonoBehaviour
-            if (childInf.GetTypeId(inst.file) != (int)AssetClassID.MonoBehaviour)
-            {
-                continue;
-            }
-
-            //actually deserialize the MonoBehaviour asset now
-            AssetTypeValueField childBf = GetExtAssetSafe(inst, childPtr).baseField;
-            AssetTypeValueField monoScriptPtr = childBf["m_Script"];
-
-            //get MonoScript from MonoBehaviour
-            AssetExternal monoScriptExt = GetExtAsset(childExt.file, monoScriptPtr);
-            AssetTypeValueField monoScriptBf = monoScriptExt.baseField;
-
-            string className = monoScriptBf["m_ClassName"].AsString;
-            if (className == targetClassName)
-            {
-                monoBehaviourInf = childInf;
-                break;
-            }
+            return assetInfo;
         }
 
-        return monoBehaviourInf;
+        return null;
     }
 
     public NitroxTransform GetTransformFromGameObject(AssetsFileInstance assetFileInst, AssetTypeValueField rootGameObject, string parentName, bool isEntitySlotAsset)
