@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,6 +178,15 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
             yield break;
         }
-        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
+
+        CompleteMapRoomRestore(
+            () => NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id),
+            () => BuildingPostSpawner.SetupScannerRoom(mapRoomFunctionality, mapRoomEntity.Id));
+    }
+
+    internal static void CompleteMapRoomRestore(Action assignId, Action setupScannerRoom)
+    {
+        assignId();
+        setupScannerRoom();
     }
 }
