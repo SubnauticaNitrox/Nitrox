@@ -193,46 +193,42 @@ internal sealed class ScannerRoomResourceCatalogResource(
 
     private static ScannerResourceDescriptor[] ParsePrefab(SubnauticaAssetsManager manager, AssetsFileInstance assetFile, AssetFileInfo rootGameObject)
     {
-        List<ScannerResourceDescriptor> descriptors = [];
-        NitroxTransform rootRelativeTransform = new(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One);
-        int trackerOrdinal = 0;
-        ParseGameObject(manager, assetFile, rootGameObject, rootRelativeTransform, (int)TechType.None, descriptors, ref trackerOrdinal);
-        return [.. descriptors];
+        ScannerResourcePrefabNode root = ReadGameObject(
+            manager,
+            assetFile,
+            rootGameObject,
+            NitroxVector3.Zero,
+            NitroxQuaternion.Identity,
+            NitroxVector3.One);
+        return ScannerResourcePrefabParser.Parse(root);
     }
 
-    private static void ParseGameObject(
+    private static ScannerResourcePrefabNode ReadGameObject(
         SubnauticaAssetsManager manager,
         AssetsFileInstance assetFile,
         AssetFileInfo gameObjectInfo,
-        NitroxTransform relativeTransform,
-        int fallbackTechType,
-        List<ScannerResourceDescriptor> descriptors,
-        ref int trackerOrdinal)
+        NitroxVector3 localPosition,
+        NitroxQuaternion localRotation,
+        NitroxVector3 localScale)
     {
+        int prefabTechType = (int)TechType.None;
         foreach ((AssetsFileInstance _, AssetFileInfo _, AssetTypeValueField techTag) in manager.GetMonoBehavioursFromGameObject(assetFile, gameObjectInfo, "TechTag"))
         {
             int serializedTechType = techTag["type"].AsInt;
             if (serializedTechType != (int)TechType.None)
             {
-                fallbackTechType = serializedTechType;
+                prefabTechType = serializedTechType;
                 break;
             }
         }
 
+        List<ScannerResourceTrackerData> trackers = [];
         foreach ((AssetsFileInstance _, AssetFileInfo _, AssetTypeValueField resourceTracker) in manager.GetMonoBehavioursFromGameObject(assetFile, gameObjectInfo, RESOURCE_TRACKER_CLASS_NAME))
         {
-            ushort trackerIndex = checked((ushort)trackerOrdinal++);
-            if (ScannerResourceDescriptorFactory.TryCreate(
-                    resourceTracker["m_Enabled"].AsBool,
-                    resourceTracker["techType"].AsInt,
-                    resourceTracker["overrideTechType"].AsInt,
-                    fallbackTechType,
-                    trackerIndex,
-                    relativeTransform.Position,
-                    out ScannerResourceDescriptor descriptor))
-            {
-                descriptors.Add(descriptor);
-            }
+            trackers.Add(new ScannerResourceTrackerData(
+                resourceTracker["m_Enabled"].AsBool,
+                resourceTracker["techType"].AsInt,
+                resourceTracker["overrideTechType"].AsInt));
         }
 
         AssetTypeValueField gameObject = manager.GetBaseField(assetFile, gameObjectInfo);
@@ -240,22 +236,23 @@ internal sealed class ScannerRoomResourceCatalogResource(
         AssetExternal transformExternal = manager.GetExtAsset(assetFile, transformPtr);
         AssetTypeValueField transform = transformExternal.baseField;
 
+        List<ScannerResourcePrefabNode> children = [];
         foreach (AssetTypeValueField childTransformPtr in transform["m_Children"])
         {
             AssetExternal childTransformExternal = manager.GetExtAsset(transformExternal.file, childTransformPtr);
             AssetTypeValueField childTransform = childTransformExternal.baseField;
             AssetExternal childGameObjectExternal = manager.GetExtAsset(childTransformExternal.file, childTransform["m_GameObject"]);
 
-            NitroxTransform childRelativeTransform = new(
+            children.Add(ReadGameObject(
+                manager,
+                childGameObjectExternal.file,
+                childGameObjectExternal.info,
                 childTransform["m_LocalPosition"].ToNitroxVector3(),
                 childTransform["m_LocalRotation"].ToNitroxQuaternion(),
-                childTransform["m_LocalScale"].ToNitroxVector3())
-            {
-                Parent = relativeTransform
-            };
-
-            ParseGameObject(manager, childGameObjectExternal.file, childGameObjectExternal.info, childRelativeTransform, fallbackTechType, descriptors, ref trackerOrdinal);
+                childTransform["m_LocalScale"].ToNitroxVector3()));
         }
+
+        return new ScannerResourcePrefabNode(localPosition, localRotation, localScale, prefabTechType, trackers, children);
     }
 
     private readonly record struct Cache(int Version, string SourceFingerprint, Dictionary<string, ScannerResourceDescriptor[]> DescriptorsByClassId)
