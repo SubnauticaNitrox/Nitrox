@@ -16,6 +16,7 @@ internal sealed class ScannerRoomManager : IDisposable
     private readonly ScannerRoomSnapshotStore snapshotStore;
     private readonly IMultiplayerSession multiplayerSession;
     private readonly ScannerRoomRequestCoordinator requestCoordinator = new();
+    private readonly ScannerRoomSnapshotPageQueue snapshotPageQueue = new();
 
     public event Action<NitroxId, ScannerRoomSnapshotApplyResult>? SnapshotChanged;
     public event Action? SessionJoined;
@@ -45,7 +46,23 @@ internal sealed class ScannerRoomManager : IDisposable
         }
     }
 
-    public void ProcessPage(ScannerRoomSnapshotPage packet)
+    public void EnqueuePage(ScannerRoomSnapshotPage packet) => snapshotPageQueue.Enqueue(packet);
+
+    public int ProcessQueuedPages(int pageBudget) => snapshotPageQueue.Process(pageBudget, ProcessQueuedPageSafely);
+
+    private void ProcessQueuedPageSafely(ScannerRoomSnapshotPage packet)
+    {
+        try
+        {
+            ProcessQueuedPage(packet);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Failed to process Scanner Room snapshot page {packet.PageIndex + 1}/{packet.PageCount} for room {packet.MapRoomId}");
+        }
+    }
+
+    private void ProcessQueuedPage(ScannerRoomSnapshotPage packet)
     {
         ScannerRoomSnapshotApplyResult result = snapshotStore.AcceptPage(new ScannerRoomSnapshotPageData(
             packet.MapRoomId,
@@ -82,12 +99,21 @@ internal sealed class ScannerRoomManager : IDisposable
 
     public void RemoveRoom(NitroxId mapRoomId)
     {
+        snapshotPageQueue.RemoveRoom(mapRoomId);
         requestCoordinator.RemoveRoom(mapRoomId);
         snapshotStore.RemoveRoom(mapRoomId);
     }
 
     public void PumpRequests(NitroxId mapRoomId)
     {
+        // Receiving a large response is not a missing-response timeout. Keep the active request alive while any of its
+        // pages are waiting for their frame-budgeted turn.
+        if (requestCoordinator.TryGetActiveRequestId(mapRoomId, out uint activeRequestId) &&
+            snapshotPageQueue.HasQueuedPage(mapRoomId, activeRequestId))
+        {
+            return;
+        }
+
         double now = GetTimestampSeconds();
         if (requestCoordinator.TryExpire(mapRoomId, now, out ScannerRoomExpiredRequest expiredRequest, out ScannerRoomDispatch dispatch))
         {
@@ -99,6 +125,7 @@ internal sealed class ScannerRoomManager : IDisposable
 
     public void Clear()
     {
+        snapshotPageQueue.Clear();
         requestCoordinator.Clear();
         snapshotStore.Clear();
         StateCleared?.Invoke();
@@ -106,6 +133,7 @@ internal sealed class ScannerRoomManager : IDisposable
 
     public void Dispose()
     {
+        snapshotPageQueue.Clear();
         multiplayerSession.ConnectionStateChanged -= OnConnectionStateChanged;
         Multiplayer.OnBeforeMultiplayerStart -= Clear;
         Multiplayer.OnAfterMultiplayerEnd -= Clear;

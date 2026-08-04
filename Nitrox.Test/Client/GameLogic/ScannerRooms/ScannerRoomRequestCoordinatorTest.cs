@@ -160,6 +160,23 @@ public sealed class ScannerRoomRequestCoordinatorTest
         retry.Should().Be(new ScannerRoomDispatch(firstRoomId, request));
     }
 
+    [TestMethod]
+    public void ReportsOnlyConfirmedActiveRequestIds()
+    {
+        ScannerRoomRequestCoordinator coordinator = new();
+        ScannerRoomRequestParameters request = Request(300, "Quartz", 1);
+
+        coordinator.EnqueueOrReplace(firstRoomId, request, out _).Should().BeTrue();
+        coordinator.TryGetActiveRequestId(firstRoomId, out _).Should().BeFalse();
+
+        coordinator.ConfirmDispatch(firstRoomId, 7, 0).Should().BeTrue();
+        coordinator.TryGetActiveRequestId(firstRoomId, out uint requestId).Should().BeTrue();
+        requestId.Should().Be(7);
+
+        coordinator.ObserveResponse(firstRoomId, 7, ScannerRoomSnapshotApplyResult.Applied, 1, out _);
+        coordinator.TryGetActiveRequestId(firstRoomId, out _).Should().BeFalse();
+    }
+
     private static ScannerRoomRequestParameters Request(float range, string techType, float origin) =>
         new(range, new NitroxTechType(techType), new NitroxVector3(origin, 0, 0));
 }

@@ -45,6 +45,45 @@ public sealed class ScannerRoomSnapshotStoreTest
     }
 
     [TestMethod]
+    public void ProcessesEachOutOfOrderPagePayloadOnlyOnceBeforeAtomicReplacement()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, quartz);
+        CountingReadOnlyList<ScannerResourceTarget> firstPageTargets = new(
+            Enumerable.Range(1, 256).Select(index => Target((ushort)index)).ToList());
+        CountingReadOnlyList<ScannerResourceTarget> secondPageTargets = new([Target(257)]);
+
+        store.AcceptPage(Page(query.RequestId, 1, 2, [], secondPageTargets)).Should().Be(ScannerRoomSnapshotApplyResult.WaitingForPages);
+
+        secondPageTargets.EnumerationCount.Should().Be(1);
+        firstPageTargets.EnumerationCount.Should().Be(0);
+        store.TryGetSnapshot(roomId, out _).Should().BeFalse();
+
+        store.AcceptPage(Page(query.RequestId, 0, 2, [], firstPageTargets)).Should().Be(ScannerRoomSnapshotApplyResult.Applied);
+
+        firstPageTargets.EnumerationCount.Should().Be(1);
+        secondPageTargets.EnumerationCount.Should().Be(1);
+        store.TryGetSnapshot(roomId, out ScannerRoomSnapshot? snapshot).Should().BeTrue();
+        snapshot!.Targets.Should().HaveCount(257);
+        snapshot.Targets.Select(target => target.TrackerIndex).Should().Equal(Enumerable.Range(1, 257).Select(index => (ushort)index));
+    }
+
+    [TestMethod]
+    public void OutOfOrderDuplicateTargetsKeepTheFirstOccurrenceInPageOrder()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, quartz);
+        ScannerResourceTarget laterOccurrence = Target(1, new NitroxVector3(9, 0, 0));
+        ScannerResourceTarget earlierOccurrence = Target(1, new NitroxVector3(1, 0, 0));
+
+        store.AcceptPage(Page(query.RequestId, 1, 2, [], [laterOccurrence])).Should().Be(ScannerRoomSnapshotApplyResult.WaitingForPages);
+        store.AcceptPage(Page(query.RequestId, 0, 2, [], [earlierOccurrence])).Should().Be(ScannerRoomSnapshotApplyResult.Applied);
+
+        store.TryGetSnapshot(roomId, out ScannerRoomSnapshot? snapshot).Should().BeTrue();
+        snapshot!.Targets.Should().ContainSingle().Which.Position.Should().Be(new NitroxVector3(1, 0, 0));
+    }
+
+    [TestMethod]
     public void ReusesRevisionOnlyForMatchingRangeAndSelection()
     {
         ScannerRoomSnapshotStore store = new();
@@ -123,6 +162,25 @@ public sealed class ScannerRoomSnapshotStoreTest
         ScannerRoomQueryStatus status = ScannerRoomQueryStatus.Complete) =>
         new(roomId, requestId, status, 300, quartz, 42, pageIndex, pageCount, summaries, targets);
 
-    private ScannerResourceTarget Target(ushort trackerIndex) =>
-        new(new NitroxId($"00000000-0000-0000-0000-{trackerIndex:D12}"), trackerIndex, quartz, new NitroxVector3(trackerIndex, 0, 0));
+    private ScannerResourceTarget Target(ushort trackerIndex) => Target(trackerIndex, new NitroxVector3(trackerIndex, 0, 0));
+
+    private ScannerResourceTarget Target(ushort trackerIndex, NitroxVector3 position) =>
+        new(new NitroxId($"00000000-0000-0000-0000-{trackerIndex:D12}"), trackerIndex, quartz, position);
+
+    private sealed class CountingReadOnlyList<T>(IReadOnlyList<T> values) : IReadOnlyList<T>
+    {
+        public int EnumerationCount { get; private set; }
+
+        public int Count => values.Count;
+
+        public T this[int index] => values[index];
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            EnumerationCount++;
+            return values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 }

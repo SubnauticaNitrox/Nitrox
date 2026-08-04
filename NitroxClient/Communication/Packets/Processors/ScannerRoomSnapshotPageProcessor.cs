@@ -10,7 +10,7 @@ internal sealed class ScannerRoomSnapshotPageProcessor(ScannerRoomManager scanne
 
     public Task Process(ClientProcessorContext context, ScannerRoomSnapshotPage packet)
     {
-        scannerRoomManager.ProcessPage(packet);
+        scannerRoomManager.EnqueuePage(packet);
         return Task.CompletedTask;
     }
 }

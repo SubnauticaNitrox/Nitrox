@@ -9,6 +9,7 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
+using NitroxClient.GameLogic.ScannerRooms;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.InGame;
@@ -25,6 +26,8 @@ namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
+        private const int SCANNER_ROOM_PAGE_BUDGET_PER_FRAME = 1;
+
         public static Multiplayer Main;
         private ClientProcessorContext packetProcessorContext;
         private PacketProcessorsInvoker processorInvoker = null!;
@@ -32,6 +35,7 @@ namespace NitroxClient.MonoBehaviours
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
         private IPacketSender packetSender;
+        private ScannerRoomManager scannerRoomManager;
         private ThrottledPacketSender throttledPacketSender;
         private GameLogic.Terrain terrain;
 
@@ -53,6 +57,7 @@ namespace NitroxClient.MonoBehaviours
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
+            scannerRoomManager = NitroxServiceLocator.LocateService<ScannerRoomManager>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
             terrain = NitroxServiceLocator.LocateService<GameLogic.Terrain>();
             packetProcessorContext = new ClientProcessorContext(packetSender);
@@ -72,6 +77,7 @@ namespace NitroxClient.MonoBehaviours
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();
+                scannerRoomManager.ProcessQueuedPages(SCANNER_ROOM_PAGE_BUDGET_PER_FRAME);
                 throttledPacketSender.Update();
 
                 // Loading up shouldn't be bothered by entities spawning in the surroundings

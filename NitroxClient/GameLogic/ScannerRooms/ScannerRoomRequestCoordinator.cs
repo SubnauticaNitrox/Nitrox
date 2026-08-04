@@ -63,6 +63,21 @@ internal sealed class ScannerRoomRequestCoordinator
         }
     }
 
+    public bool TryGetActiveRequestId(NitroxId mapRoomId, out uint requestId)
+    {
+        lock (coordinatorLock)
+        {
+            if (rooms.TryGetValue(mapRoomId, out RoomRequestState? room) && room.ActiveRequestId is { } activeRequestId)
+            {
+                requestId = activeRequestId;
+                return true;
+            }
+
+            requestId = default;
+            return false;
+        }
+    }
+
     public bool ObserveResponse(
         NitroxId mapRoomId,
         uint requestId,

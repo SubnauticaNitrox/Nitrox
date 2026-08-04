@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -170,13 +170,16 @@ internal sealed class ScannerRoomSnapshotStore
 
     private sealed class PendingSnapshot(uint requestId, float requestedRange, NitroxTechType? requestedTechType)
     {
-        private readonly Dictionary<ushort, ScannerRoomSnapshotPageData> pages = [];
+        private readonly HashSet<ushort> receivedPageIndexes = [];
+        private readonly PagedAccumulator<NitroxTechType, ScannerResourceSummary> summaries = new(summary => summary.TechType);
+        private readonly PagedAccumulator<(NitroxId EntityId, ushort TrackerIndex), ScannerResourceTarget> targets =
+            new(target => (target.EntityId, target.TrackerIndex));
         private ushort? pageCount;
         private ulong? revision;
 
         public uint RequestId { get; } = requestId;
 
-        public bool IsComplete => pageCount is { } count && pages.Count == count;
+        public bool IsComplete => pageCount is { } count && receivedPageIndexes.Count == count;
 
         public bool Matches(ScannerRoomSnapshotPageData page) =>
             page.EffectiveRange.Equals(requestedRange) && TechTypesEqual(page.SelectedTechType, requestedTechType);
@@ -188,31 +191,115 @@ internal sealed class ScannerRoomSnapshotStore
             {
                 return false;
             }
-            if (pages.ContainsKey(page.PageIndex))
+            if (!receivedPageIndexes.Add(page.PageIndex))
             {
                 return false;
             }
 
             pageCount = page.PageCount;
             revision = page.Revision;
-            pages.Add(page.PageIndex, page);
+            summaries.AddPage(page.PageIndex, page.AvailableResources);
+            targets.AddPage(page.PageIndex, page.Targets);
             return true;
         }
 
-        public ScannerRoomSnapshot BuildSnapshot(NitroxId mapRoomId)
-        {
-            List<ScannerResourceSummary> summaries = pages.OrderBy(entry => entry.Key)
-                                                             .SelectMany(entry => entry.Value.AvailableResources)
-                                                             .GroupBy(summary => summary.TechType)
-                                                             .Select(group => group.First())
-                                                             .ToList();
-            List<ScannerResourceTarget> targets = pages.OrderBy(entry => entry.Key)
-                                                       .SelectMany(entry => entry.Value.Targets)
-                                                       .GroupBy(target => (target.EntityId, target.TrackerIndex))
-                                                       .Select(group => group.First())
-                                                       .ToList();
+        public ScannerRoomSnapshot BuildSnapshot(NitroxId mapRoomId) =>
+            new(mapRoomId, requestedRange, requestedTechType, revision!.Value, summaries.Build(), targets.Build());
+    }
 
-            return new ScannerRoomSnapshot(mapRoomId, requestedRange, requestedTechType, revision!.Value, summaries, targets);
+    /// <summary>
+    /// Accumulates each page independently while retaining page order and first-occurrence de-duplication. This avoids
+    /// re-walking every earlier target when the last page arrives, including when pages arrive out of order.
+    /// </summary>
+    private sealed class PagedAccumulator<TKey, TValue>(Func<TValue, TKey> getKey) where TKey : notnull
+    {
+        private readonly Dictionary<TKey, PagedItem<TValue>> includedItems = [];
+        private readonly SortedDictionary<ushort, List<PagedItem<TValue>>> itemsByPage = [];
+        private int includedCount;
+
+        public void AddPage(ushort pageIndex, IReadOnlyList<TValue> values)
+        {
+            List<PagedItem<TValue>> pageItems = new(values.Count);
+            foreach (TValue value in values)
+            {
+                TKey key = getKey(value);
+                if (includedItems.TryGetValue(key, out PagedItem<TValue>? existingItem))
+                {
+                    if (existingItem.PageIndex <= pageIndex)
+                    {
+                        continue;
+                    }
+
+                    existingItem.Included = false;
+                }
+                else
+                {
+                    includedCount++;
+                }
+
+                PagedItem<TValue> item = new(pageIndex, value);
+                includedItems[key] = item;
+                pageItems.Add(item);
+            }
+            itemsByPage.Add(pageIndex, pageItems);
         }
+
+        public IReadOnlyList<TValue> Build() => new PagedReadOnlyList<TValue>(itemsByPage, includedCount);
+    }
+
+    private sealed class PagedItem<TValue>(ushort pageIndex, TValue value)
+    {
+        public ushort PageIndex { get; } = pageIndex;
+        public TValue Value { get; } = value;
+        public bool Included { get; set; } = true;
+    }
+
+    private sealed class PagedReadOnlyList<TValue>(
+        SortedDictionary<ushort, List<PagedItem<TValue>>> itemsByPage,
+        int count) : IReadOnlyList<TValue>
+    {
+        public int Count { get; } = count;
+
+        public TValue this[int index]
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            foreach (List<PagedItem<TValue>> pageItems in itemsByPage.Values)
+            {
+                foreach (PagedItem<TValue> item in pageItems)
+                {
+                    if (!item.Included)
+                    {
+                        continue;
+                    }
+
+                    if (index-- == 0)
+                    {
+                        return item.Value;
+                    }
+                }
+            }
+
+            throw new InvalidOperationException("Scanner Room snapshot item count did not match its accumulated pages");
+        }
+
+        public IEnumerator<TValue> GetEnumerator()
+        {
+            foreach (List<PagedItem<TValue>> pageItems in itemsByPage.Values)
+            {
+                foreach (PagedItem<TValue> item in pageItems)
+                {
+                    if (item.Included)
+                    {
+                        yield return item.Value;
+                    }
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
