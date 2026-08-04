@@ -49,6 +49,20 @@ public sealed class ScannerResourceIndexTest
     }
 
     [TestMethod]
+    public void LateMovementAfterUntrackDoesNotResurrectResource()
+    {
+        ScannerResourceIndex index = CreateIndex();
+        WorldEntity entity = CreateEntity(NitroxVector3.Zero);
+
+        index.EntityTracked(entity);
+        index.EntityUntracked(entity);
+        entity.Transform.Position = new NitroxVector3(50, 0, 0);
+        index.EntityMoved(entity);
+
+        index.Query(BatchesFor(new NitroxVector3(52, 0, 0)), new NitroxVector3(50, 0, 0), 10).Should().BeEmpty();
+    }
+
+    [TestMethod]
     public void ExactRadiusBoundaryIsIncluded()
     {
         ScannerResourceIndex index = CreateIndex();

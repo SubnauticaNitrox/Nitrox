@@ -21,9 +21,9 @@ internal sealed class ScannerResourceIndex(IScannerRoomResourceCatalog resourceC
 
     public long Revision => Interlocked.Read(ref revision);
 
-    public void EntityTracked(WorldEntity entity) => AddOrReplace(entity);
+    public void EntityTracked(WorldEntity entity) => AddOrReplace(entity, false);
 
-    public void EntityMoved(WorldEntity entity) => AddOrReplace(entity);
+    public void EntityMoved(WorldEntity entity) => AddOrReplace(entity, true);
 
     /// <summary>
     /// Replaces the index contents with entities restored directly into the world services.
@@ -121,11 +121,21 @@ internal sealed class ScannerResourceIndex(IScannerRoomResourceCatalog resourceC
         return result;
     }
 
-    private void AddOrReplace(WorldEntity entity)
+    private void AddOrReplace(WorldEntity entity, bool requireTrackedEntity)
     {
-        List<ScannerResourceNode> nodes = CreateNodes(entity);
         lock (indexLock)
         {
+            // Movement notifications are published after the world mutation lock is released. A concurrent pickup or
+            // destruction can therefore untrack the entity before an older movement callback reaches this observer.
+            // Never let that late callback recreate an entity which is no longer part of the world index.
+            if (requireTrackedEntity && !keysByEntity.ContainsKey(entity.Id))
+            {
+                return;
+            }
+
+            // Read the transform under the index lock so overlapping movement callbacks always publish the entity's
+            // latest committed transform instead of a position captured before a newer callback acquired this lock.
+            List<ScannerResourceNode> nodes = CreateNodes(entity);
             bool changed = RemoveEntityUnsafe(entity.Id);
             if (nodes.Count > 0)
             {
