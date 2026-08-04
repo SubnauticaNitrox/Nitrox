@@ -18,6 +18,27 @@ internal sealed class ScannerRoomVirtualResourceCache<TResource>(NitroxId mapRoo
 {
     private readonly Dictionary<ScannerRoomVirtualResourceKey, TResource> resourcesByKey = [];
 
+    /// <summary>
+    /// Creates a resource for a shadow snapshot without mutating or reusing the currently published cache generation.
+    /// The stable unique id lets vanilla reconcile the resource when the owning room atomically publishes the snapshot.
+    /// </summary>
+    public ScannerRoomVirtualResource<TResource> CreateFresh(ScannerResourceTarget target) =>
+        new(
+            createResource(CreateUniqueId(mapRoomId, target.EntityId, target.TrackerIndex)),
+            target);
+
+    public ScannerRoomVirtualResource<TResource> GetOrCreate(ScannerResourceTarget target)
+    {
+        ScannerRoomVirtualResourceKey key = new(target.EntityId, target.TrackerIndex);
+        if (!resourcesByKey.TryGetValue(key, out TResource resource))
+        {
+            resource = createResource(CreateUniqueId(mapRoomId, key.EntityId, key.TrackerIndex));
+            resourcesByKey.Add(key, resource);
+        }
+
+        return new ScannerRoomVirtualResource<TResource>(resource, target);
+    }
+
     public IReadOnlyList<ScannerRoomVirtualResource<TResource>> Resolve(IReadOnlyList<ScannerResourceTarget> targets)
     {
         HashSet<ScannerRoomVirtualResourceKey> includedKeys = [];
@@ -31,13 +52,7 @@ internal sealed class ScannerRoomVirtualResourceCache<TResource>(NitroxId mapRoo
                 continue;
             }
 
-            if (!resourcesByKey.TryGetValue(key, out TResource resource))
-            {
-                resource = createResource(CreateUniqueId(mapRoomId, key.EntityId, key.TrackerIndex));
-                resourcesByKey.Add(key, resource);
-            }
-
-            resources.Add(new ScannerRoomVirtualResource<TResource>(resource, target));
+            resources.Add(GetOrCreate(target));
         }
 
         return resources;

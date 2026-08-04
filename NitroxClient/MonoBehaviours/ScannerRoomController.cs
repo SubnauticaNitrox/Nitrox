@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 using Nitrox.Model.Subnautica.Extensions;
@@ -19,15 +21,21 @@ namespace NitroxClient.MonoBehaviours;
 [DisallowMultipleComponent]
 public sealed class ScannerRoomController : MonoBehaviour
 {
+    private const int TARGET_PREPARATION_BUDGET_PER_FRAME = 256;
+    private static readonly FieldInfo RESOURCE_NODES_FIELD =
+        Reflect.Field((MapRoomFunctionality mapRoom) => mapRoom.resourceNodes);
+
     private readonly HashSet<TechType> authoritativeTechTypes = [];
     private readonly HashSet<Collider> localInteractionColliders = [];
     private readonly ScannerRoomRefreshScheduler refreshScheduler = new();
     private readonly ScannerRoomResourceAuthorityState resourceAuthority = new();
+    private List<ResourceTrackerDatabase.ResourceInfo> authoritativeResourceNodes = [];
     private MapRoomFunctionality mapRoom = null!;
     private NitroxId mapRoomId = null!;
     private ScannerRoomRequestTrigger? requestTrigger;
     private ScannerRoomManager scannerRoomManager = null!;
     private ScannerRoomSnapshot? authoritativeSnapshot;
+    private ScannerRoomTargetPreparation<ResourceTrackerDatabase.ResourceInfo>? pendingTargetPreparation;
     private ScannerRoomVirtualResourceCache<ResourceTrackerDatabase.ResourceInfo>? virtualResourceCache;
     private uGUI_ResourceTracker resourceTracker = null!;
     private volatile bool sessionJoined;
@@ -119,26 +127,12 @@ public sealed class ScannerRoomController : MonoBehaviour
 
         List<ResourceTrackerDatabase.ResourceInfo> replacementNodes = [];
         if (authoritativeSnapshot != null &&
-            virtualResourceCache != null &&
             SnapshotMatchesSelection(authoritativeSnapshot, requestedTechType))
         {
-            IReadOnlyList<ScannerRoomVirtualResource<ResourceTrackerDatabase.ResourceInfo>> virtualResources =
-                virtualResourceCache.Resolve(authoritativeSnapshot.Targets);
-            replacementNodes.Capacity = virtualResources.Count;
-
-            foreach (ScannerRoomVirtualResource<ResourceTrackerDatabase.ResourceInfo> virtualResource in virtualResources)
-            {
-                virtualResource.Resource.techType = requestedTechType;
-                virtualResource.Resource.position = virtualResource.Target.Position.ToUnity();
-                replacementNodes.Add(virtualResource.Resource);
-            }
+            replacementNodes = authoritativeResourceNodes;
         }
 
-        mapRoom.resourceNodes.Clear();
-        foreach (ResourceTrackerDatabase.ResourceInfo resourceNode in replacementNodes)
-        {
-            mapRoom.resourceNodes.Add(resourceNode);
-        }
+        ReplaceResourceNodes(replacementNodes);
 
         NotifyResourceTrackerChanged();
         return true;
@@ -167,7 +161,7 @@ public sealed class ScannerRoomController : MonoBehaviour
         if (scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
         {
             resourceAuthority.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete);
-            ApplySnapshot(snapshot!);
+            BeginSnapshotPreparation(snapshot!);
         }
         else
         {
@@ -200,6 +194,7 @@ public sealed class ScannerRoomController : MonoBehaviour
         {
             EnterPendingState();
         }
+        AdvanceSnapshotPreparation();
         if (sessionJoined)
         {
             scannerRoomManager.PumpRequests(mapRoomId);
@@ -289,18 +284,25 @@ public sealed class ScannerRoomController : MonoBehaviour
         resourceAuthority.ObserveAcceptedResponse(update.Result, update.AcceptedStatus);
         if (resourceAuthority.Mode == ScannerRoomResourceAuthorityMode.Rollback)
         {
+            CancelSnapshotPreparation();
             if (previousMode != ScannerRoomResourceAuthorityMode.Rollback || supersededPendingReset)
             {
                 RestoreVanillaResourceState();
             }
             return;
         }
+        if (ScannerRoomResourceAuthorityState.RequiresFallbackClear(previousMode, resourceAuthority.Mode))
+        {
+            // Rollback may have populated both the vanilla scanner list and local resource nodes. Once the server
+            // accepts authority again, hide that fallback immediately while the replacement is prepared in shadow.
+            ClearSynchronizedResourceState();
+        }
 
         if (resourceAuthority.Mode == ScannerRoomResourceAuthorityMode.Authoritative &&
             (update.Result is ScannerRoomSnapshotApplyResult.Applied or ScannerRoomSnapshotApplyResult.NotModified) &&
             scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
         {
-            ApplySnapshot(snapshot!);
+            BeginSnapshotPreparation(snapshot!);
         }
     }
 
@@ -319,6 +321,7 @@ public sealed class ScannerRoomController : MonoBehaviour
 
     private void EnterPendingState()
     {
+        CancelSnapshotPreparation();
         resourceAuthority.ResetToPending();
         ClearSynchronizedResourceState();
     }
@@ -326,8 +329,9 @@ public sealed class ScannerRoomController : MonoBehaviour
     private void ClearSynchronizedResourceState()
     {
         authoritativeSnapshot = null;
+        authoritativeResourceNodes = [];
         authoritativeTechTypes.Clear();
-        mapRoom.resourceNodes.Clear();
+        ReplaceResourceNodes([]);
 
         NotifyResourceTrackerChanged();
 
@@ -345,8 +349,9 @@ public sealed class ScannerRoomController : MonoBehaviour
     private void RestoreVanillaResourceState()
     {
         authoritativeSnapshot = null;
+        authoritativeResourceNodes = [];
         authoritativeTechTypes.Clear();
-        mapRoom.resourceNodes.Clear();
+        ReplaceResourceNodes([]);
 
         uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
         if (scanner)
@@ -374,12 +379,83 @@ public sealed class ScannerRoomController : MonoBehaviour
         }
     }
 
-    private void ApplySnapshot(ScannerRoomSnapshot snapshot)
+    /// <summary>
+    /// Vanilla declares this list readonly. Replacing its backing reference through the cached field metadata keeps
+    /// publication atomic: vanilla can observe either the old complete generation or the new complete generation,
+    /// never the shadow list while it is being populated over multiple frames.
+    /// </summary>
+    private void ReplaceResourceNodes(List<ResourceTrackerDatabase.ResourceInfo> resourceNodes) =>
+        RESOURCE_NODES_FIELD.SetValue(mapRoom, resourceNodes);
+
+    private void BeginSnapshotPreparation(ScannerRoomSnapshot snapshot)
+    {
+        if (ReferenceEquals(authoritativeSnapshot, snapshot) ||
+            pendingTargetPreparation != null && ReferenceEquals(pendingTargetPreparation.Snapshot, snapshot))
+        {
+            return;
+        }
+
+        CancelSnapshotPreparation();
+        pendingTargetPreparation = new ScannerRoomTargetPreparation<ResourceTrackerDatabase.ResourceInfo>(snapshot);
+    }
+
+    private void AdvanceSnapshotPreparation()
+    {
+        ScannerRoomTargetPreparation<ResourceTrackerDatabase.ResourceInfo>? preparation = pendingTargetPreparation;
+        if (preparation == null)
+        {
+            return;
+        }
+
+        try
+        {
+            TechType? selectedTechType = ParseSelectedTechType(preparation.Snapshot.SelectedTechType);
+            preparation.Advance(
+                TARGET_PREPARATION_BUDGET_PER_FRAME,
+                target => PrepareResourceNode(target, selectedTechType));
+
+            if (!preparation.TryTakeCompleted(out List<ResourceTrackerDatabase.ResourceInfo>? preparedResourceNodes))
+            {
+                return;
+            }
+
+            pendingTargetPreparation = null;
+            CommitPreparedSnapshot(preparation.Snapshot, preparedResourceNodes!);
+            preparation.Dispose();
+        }
+        catch (Exception ex)
+        {
+            if (ReferenceEquals(pendingTargetPreparation, preparation))
+            {
+                pendingTargetPreparation = null;
+            }
+            preparation.Dispose();
+            Log.Error(ex, $"Failed to prepare Scanner Room snapshot {preparation.Snapshot.Revision} for room {mapRoomId}");
+        }
+    }
+
+    private ResourceTrackerDatabase.ResourceInfo? PrepareResourceNode(ScannerResourceTarget target, TechType? selectedTechType)
+    {
+        if (selectedTechType is not { } techType || virtualResourceCache == null)
+        {
+            return null;
+        }
+
+        ScannerRoomVirtualResource<ResourceTrackerDatabase.ResourceInfo> virtualResource = virtualResourceCache.CreateFresh(target);
+        virtualResource.Resource.techType = techType;
+        virtualResource.Resource.position = target.Position.ToUnity();
+        return virtualResource.Resource;
+    }
+
+    private void CommitPreparedSnapshot(
+        ScannerRoomSnapshot snapshot,
+        List<ResourceTrackerDatabase.ResourceInfo> preparedResourceNodes)
     {
         HashSet<TechType> nextTechTypes = GetAvailableTechTypes(snapshot.AvailableResources);
         bool catalogChanged = authoritativeSnapshot == null || !authoritativeTechTypes.SetEquals(nextTechTypes);
 
         authoritativeSnapshot = snapshot;
+        authoritativeResourceNodes = preparedResourceNodes;
         authoritativeTechTypes.Clear();
         authoritativeTechTypes.UnionWith(nextTechTypes);
 
@@ -396,6 +472,12 @@ public sealed class ScannerRoomController : MonoBehaviour
         {
             RefreshBlipsWithoutAdvancingScan();
         }
+    }
+
+    private void CancelSnapshotPreparation()
+    {
+        pendingTargetPreparation?.Cancel();
+        pendingTargetPreparation = null;
     }
 
     private void RefreshBlipsWithoutAdvancingScan()
@@ -430,8 +512,14 @@ public sealed class ScannerRoomController : MonoBehaviour
             ? snapshot.SelectedTechType == null
             : snapshot.SelectedTechType?.Equals(requestedTechType.ToDto()) == true;
 
+    private static TechType? ParseSelectedTechType(NitroxTechType? selectedTechType) =>
+        selectedTechType != null && Enum.TryParse(selectedTechType.Name, out TechType techType) && techType != TechType.None
+            ? techType
+            : null;
+
     private void OnDestroy()
     {
+        CancelSnapshotPreparation();
         if (scannerRoomManager != null)
         {
             scannerRoomManager.SnapshotChanged -= OnSnapshotChanged;

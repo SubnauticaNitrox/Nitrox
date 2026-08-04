@@ -54,6 +54,10 @@ public sealed class ScannerRoomResourceAuthorityStateTest
 
         state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.NotModified, ScannerRoomQueryStatus.NotModified).Should().BeTrue();
         state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Authoritative);
+        ScannerRoomResourceAuthorityState.RequiresFallbackClear(
+                ScannerRoomResourceAuthorityMode.Rollback,
+                state.Mode)
+            .Should().BeTrue();
 
         state.ResetToPending().Should().BeTrue();
         state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Pending);

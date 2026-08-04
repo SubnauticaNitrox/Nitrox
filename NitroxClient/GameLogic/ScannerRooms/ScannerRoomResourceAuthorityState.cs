@@ -22,6 +22,12 @@ internal sealed class ScannerRoomResourceAuthorityState
     public static bool IsAuthorityDecision(ScannerRoomSnapshotApplyResult result, ScannerRoomQueryStatus? status) =>
         ResolveMode(result, status) != null;
 
+    public static bool RequiresFallbackClear(
+        ScannerRoomResourceAuthorityMode previousMode,
+        ScannerRoomResourceAuthorityMode currentMode) =>
+        previousMode == ScannerRoomResourceAuthorityMode.Rollback &&
+        currentMode == ScannerRoomResourceAuthorityMode.Authoritative;
+
     public bool ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult result, ScannerRoomQueryStatus? status)
     {
         ScannerRoomResourceAuthorityMode nextMode = ResolveMode(result, status) ?? Mode;

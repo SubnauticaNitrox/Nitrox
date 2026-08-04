@@ -39,8 +39,30 @@ public sealed class ScannerRoomVirtualResourceCacheTest
         second[0].Target.Position.Should().Be(new NitroxVector3(4, 5, 6));
     }
 
+    [TestMethod]
+    public void FreshShadowResourceDoesNotMutatePublishedGeneration()
+    {
+        ScannerRoomVirtualResourceCache<MutableVirtualResource> cache = new(mapRoomId, uniqueId => new MutableVirtualResource(uniqueId));
+        ScannerRoomVirtualResource<MutableVirtualResource> published = cache.GetOrCreate(Target(7, new NitroxVector3(1, 2, 3)));
+        published.Resource.Position = published.Target.Position;
+
+        ScannerRoomVirtualResource<MutableVirtualResource> shadow = cache.CreateFresh(Target(7, new NitroxVector3(4, 5, 6)));
+        shadow.Resource.Position = shadow.Target.Position;
+
+        shadow.Resource.Should().NotBeSameAs(published.Resource);
+        shadow.Resource.UniqueId.Should().Be(published.Resource.UniqueId);
+        published.Resource.Position.Should().Be(new NitroxVector3(1, 2, 3));
+        shadow.Resource.Position.Should().Be(new NitroxVector3(4, 5, 6));
+    }
+
     private ScannerResourceTarget Target(ushort trackerIndex, NitroxVector3 position) =>
         new(entityId, trackerIndex, quartz, position);
 
     private sealed record VirtualResource(string UniqueId);
+
+    private sealed class MutableVirtualResource(string uniqueId)
+    {
+        public string UniqueId { get; } = uniqueId;
+        public NitroxVector3 Position { get; set; }
+    }
 }
