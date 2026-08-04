@@ -34,6 +34,7 @@ internal sealed class WorldEntityManager
     private readonly Lock globalRootEntitiesLock = new();
     private readonly ILogger<WorldEntityManager> logger;
     private readonly PlayerManager playerManager;
+    private readonly IReadOnlyList<IWorldEntityLifecycleObserver> lifecycleObservers;
 
     private readonly Lock worldEntitiesLock = new();
     private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
@@ -43,12 +44,14 @@ internal sealed class WorldEntityManager
     /// </summary>
     internal Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell = [];
 
-    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager, ILogger<WorldEntityManager> logger)
+    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager,
+                              IEnumerable<IWorldEntityLifecycleObserver> lifecycleObservers, ILogger<WorldEntityManager> logger)
     {
         this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
         this.playerManager = playerManager;
+        this.lifecycleObservers = lifecycleObservers.ToList();
         this.logger = logger;
     }
 
@@ -114,28 +117,31 @@ internal sealed class WorldEntityManager
                 worldEntity.Transform.Position = position;
                 worldEntity.Transform.Rotation = rotation;
                 newCell = null;
-                return true;
             }
-
-            AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
-
-            worldEntity.Transform.Position = position;
-            worldEntity.Transform.Rotation = rotation;
-
-            newCell = worldEntity.AbsoluteEntityCell;
-
-            if (oldCell != newCell)
+            else
             {
-                EntitySwitchedCells(worldEntity, oldCell, newCell);
-            }
+                AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
 
-            return true;
+                worldEntity.Transform.Position = position;
+                worldEntity.Transform.Rotation = rotation;
+
+                newCell = worldEntity.AbsoluteEntityCell;
+
+                if (oldCell != newCell)
+                {
+                    EntitySwitchedCells(worldEntity, oldCell, newCell);
+                }
+            }
         }
+
+        NotifyEntityMoved(worldEntity);
+        return true;
     }
 
     public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
     {
         Optional<Entity> removedEntity = Optional.Empty;
+        GlobalRootEntity? removedGlobalRootEntity = null;
         lock (globalRootEntitiesLock)
         {
             if (removeFromRegistry)
@@ -148,7 +154,14 @@ internal sealed class WorldEntityManager
                 }
                 removedEntity = entityRegistry.RemoveEntity(entityId);
             }
-            globalRootEntitiesById.Remove(entityId);
+            if (globalRootEntitiesById.Remove(entityId, out GlobalRootEntity entity))
+            {
+                removedGlobalRootEntity = entity;
+            }
+        }
+        if (removedGlobalRootEntity != null)
+        {
+            NotifyEntityUntracked(removedGlobalRootEntity);
         }
         return removedEntity;
     }
@@ -187,6 +200,7 @@ internal sealed class WorldEntityManager
     public void RegisterWorldEntity(WorldEntity entity)
     {
         RegisterWorldEntityInCell(entity, entity.AbsoluteEntityCell);
+        NotifyEntityTracked(entity);
     }
 
     public void RegisterWorldEntityInCell(WorldEntity entity, AbsoluteEntityCell cell)
@@ -298,6 +312,7 @@ internal sealed class WorldEntityManager
         else
         {
             UnregisterWorldEntity(entity);
+            NotifyEntityUntracked(entity);
         }
     }
 
@@ -333,6 +348,52 @@ internal sealed class WorldEntityManager
                 entityRegistry.AddOrUpdate(entity);
             }
             globalRootEntitiesById[entity.Id] = entity;
+        }
+        NotifyEntityTracked(entity);
+    }
+
+    private void NotifyEntityTracked(WorldEntity entity)
+    {
+        foreach (IWorldEntityLifecycleObserver observer in lifecycleObservers)
+        {
+            try
+            {
+                observer.EntityTracked(entity);
+            }
+            catch (Exception ex)
+            {
+                logger.ZLogError(ex, $"World entity lifecycle observer {observer.GetType().Name} failed while tracking {entity.Id}");
+            }
+        }
+    }
+
+    private void NotifyEntityMoved(WorldEntity entity)
+    {
+        foreach (IWorldEntityLifecycleObserver observer in lifecycleObservers)
+        {
+            try
+            {
+                observer.EntityMoved(entity);
+            }
+            catch (Exception ex)
+            {
+                logger.ZLogError(ex, $"World entity lifecycle observer {observer.GetType().Name} failed while moving {entity.Id}");
+            }
+        }
+    }
+
+    private void NotifyEntityUntracked(WorldEntity entity)
+    {
+        foreach (IWorldEntityLifecycleObserver observer in lifecycleObservers)
+        {
+            try
+            {
+                observer.EntityUntracked(entity);
+            }
+            catch (Exception ex)
+            {
+                logger.ZLogError(ex, $"World entity lifecycle observer {observer.GetType().Name} failed while untracking {entity.Id}");
+            }
         }
     }
 
