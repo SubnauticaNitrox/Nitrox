@@ -24,6 +24,7 @@ public static class BuildingPostSpawner
         }
         else if (gameObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
         {
+            SetupScannerRoom(mapRoomFunctionality, objectId);
             // TODO: remove once scanner rooms are properly synced
             Log.InGame(Language.main.Get("Nitrox_ScannerRoomWarn"));
             return null;
@@ -107,5 +108,10 @@ public static class BuildingPostSpawner
         NitroxId planterId = waterParkId.Increment();
 
         NitroxEntity.SetNewId(waterPark.planter.gameObject, planterId);
+    }
+
+    public static void SetupScannerRoom(MapRoomFunctionality mapRoom, NitroxId mapRoomId)
+    {
+        ScannerRoomController.Attach(mapRoom, mapRoomId);
     }
 }
