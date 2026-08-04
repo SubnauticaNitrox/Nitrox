@@ -34,6 +34,21 @@ public sealed class ScannerRoomRequestTriggerTest
         trigger.TryRequestInitial(300, quartz, origin).Should().BeFalse();
     }
 
+    [TestMethod]
+    public void StateChangesAreDeduplicatedAfterNormalization()
+    {
+        List<Request> requests = [];
+        ScannerRoomRequestTrigger trigger = CreateTrigger(requests);
+
+        trigger.TryRequestIfChanged(349, NitroxTechType.None, origin).Should().BeTrue();
+        trigger.TryRequestIfChanged(300, null, origin).Should().BeFalse();
+        trigger.TryRequestIfChanged(350, null, origin).Should().BeTrue();
+        trigger.TryRequestIfChanged(350, quartz, origin).Should().BeTrue();
+        trigger.TryRequestIfChanged(399, new NitroxTechType("Quartz"), origin).Should().BeFalse();
+
+        requests.Should().HaveCount(3);
+    }
+
     private static ScannerRoomRequestTrigger CreateTrigger(ICollection<Request> requests) =>
         new((range, selectedTechType, observedOrigin) => requests.Add(new Request(range, selectedTechType, observedOrigin)));
 

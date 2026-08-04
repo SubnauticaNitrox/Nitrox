@@ -4,15 +4,33 @@ using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.GameLogic.ScannerRooms;
 
-internal sealed class ScannerRoomManager(IPacketSender packetSender, ScannerRoomSnapshotStore snapshotStore)
+internal sealed class ScannerRoomManager : IDisposable
 {
-    private readonly IPacketSender packetSender = packetSender;
-    private readonly ScannerRoomSnapshotStore snapshotStore = snapshotStore;
+    private readonly IPacketSender packetSender;
+    private readonly ScannerRoomSnapshotStore snapshotStore;
+    private readonly IMultiplayerSession multiplayerSession;
 
     public event Action<NitroxId, ScannerRoomSnapshotApplyResult>? SnapshotChanged;
+    public event Action? SessionJoined;
+    public event Action? StateCleared;
+
+    public bool IsSessionJoined => multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED;
+
+    public ScannerRoomManager(IPacketSender packetSender, ScannerRoomSnapshotStore snapshotStore, IMultiplayerSession multiplayerSession)
+    {
+        this.packetSender = packetSender;
+        this.snapshotStore = snapshotStore;
+        this.multiplayerSession = multiplayerSession;
+
+        multiplayerSession.ConnectionStateChanged += OnConnectionStateChanged;
+        Multiplayer.OnBeforeMultiplayerStart += Clear;
+        Multiplayer.OnAfterMultiplayerEnd += Clear;
+    }
 
     public uint RequestSnapshot(NitroxId mapRoomId, float range, NitroxTechType? selectedTechType, NitroxVector3? observedOrigin)
     {
@@ -47,5 +65,28 @@ internal sealed class ScannerRoomManager(IPacketSender packetSender, ScannerRoom
 
     public void RemoveRoom(NitroxId mapRoomId) => snapshotStore.RemoveRoom(mapRoomId);
 
-    public void Clear() => snapshotStore.Clear();
+    public void Clear()
+    {
+        snapshotStore.Clear();
+        StateCleared?.Invoke();
+    }
+
+    public void Dispose()
+    {
+        multiplayerSession.ConnectionStateChanged -= OnConnectionStateChanged;
+        Multiplayer.OnBeforeMultiplayerStart -= Clear;
+        Multiplayer.OnAfterMultiplayerEnd -= Clear;
+    }
+
+    private void OnConnectionStateChanged(IMultiplayerSessionConnectionState state)
+    {
+        if (state.CurrentStage == MultiplayerSessionConnectionStage.DISCONNECTED)
+        {
+            Clear();
+        }
+        else if (state.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+        {
+            SessionJoined?.Invoke();
+        }
+    }
 }

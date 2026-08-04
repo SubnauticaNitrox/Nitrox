@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -19,6 +20,8 @@ namespace NitroxClient.MonoBehaviours;
 public sealed class ScannerRoomController : MonoBehaviour
 {
     private readonly HashSet<TechType> authoritativeTechTypes = [];
+    private readonly HashSet<Collider> localInteractionColliders = [];
+    private readonly ScannerRoomRefreshScheduler refreshScheduler = new();
     private MapRoomFunctionality mapRoom = null!;
     private NitroxId mapRoomId = null!;
     private ScannerRoomRequestTrigger? requestTrigger;
@@ -26,6 +29,9 @@ public sealed class ScannerRoomController : MonoBehaviour
     private ScannerRoomSnapshot? authoritativeSnapshot;
     private ScannerRoomVirtualResourceCache<ResourceTrackerDatabase.ResourceInfo>? virtualResourceCache;
     private uGUI_ResourceTracker resourceTracker = null!;
+    private volatile bool sessionJoined;
+    private int reconnectRefreshPending;
+    private int stateClearPending;
 
     public bool HasAuthoritativeSnapshot => authoritativeSnapshot != null;
 
@@ -40,24 +46,34 @@ public sealed class ScannerRoomController : MonoBehaviour
         return controller;
     }
 
-    public void RequestInitialSnapshot()
+    public void RequestInitialSnapshot() => TryRequestSnapshot(SnapshotRequestMode.Initial);
+
+    public void RequestImmediateSnapshot() => TryRequestSnapshot(SnapshotRequestMode.Immediate);
+
+    public void RequestSnapshotIfStateChanged() => TryRequestSnapshot(SnapshotRequestMode.StateChanged);
+
+    public void OnLocalInteractionEntered(Collider interactionCollider)
     {
-        if (requestTrigger == null || !TryGetRequestParameters(out float range, out NitroxTechType? selectedTechType, out NitroxVector3? observedOrigin))
+        if (!interactionCollider || !localInteractionColliders.Add(interactionCollider) || localInteractionColliders.Count != 1)
         {
             return;
         }
 
-        requestTrigger.TryRequestInitial(range, selectedTechType, observedOrigin);
+        double now = Time.unscaledTime;
+        UpdateRefreshActivity(now);
+        if (!refreshScheduler.WasRefreshedRecently(now))
+        {
+            RequestImmediateSnapshot();
+        }
     }
 
-    public void RequestImmediateSnapshot()
+    public void OnLocalInteractionExited(Collider interactionCollider)
     {
-        if (requestTrigger == null || !TryGetRequestParameters(out float range, out NitroxTechType? selectedTechType, out NitroxVector3? observedOrigin))
+        if (interactionCollider)
         {
-            return;
+            localInteractionColliders.Remove(interactionCollider);
         }
-
-        requestTrigger.RequestImmediate(range, selectedTechType, observedOrigin);
+        UpdateRefreshActivity(Time.unscaledTime);
     }
 
     /// <summary>
@@ -145,6 +161,9 @@ public sealed class ScannerRoomController : MonoBehaviour
             mapRoomId,
             uniqueId => new ResourceTrackerDatabase.ResourceInfo { uniqueId = uniqueId });
         scannerRoomManager.SnapshotChanged += OnSnapshotChanged;
+        scannerRoomManager.SessionJoined += OnSessionJoined;
+        scannerRoomManager.StateCleared += OnStateCleared;
+        sessionJoined = scannerRoomManager.IsSessionJoined;
         requestTrigger = new ScannerRoomRequestTrigger(
             (range, selectedTechType, observedOrigin) => scannerRoomManager.RequestSnapshot(mapRoomId, range, selectedTechType, observedOrigin));
 
@@ -155,6 +174,68 @@ public sealed class ScannerRoomController : MonoBehaviour
     }
 
     private void Start() => RequestInitialSnapshot();
+
+    private void Update()
+    {
+        if (requestTrigger == null || !mapRoom)
+        {
+            return;
+        }
+
+        localInteractionColliders.RemoveWhere(collider => !collider);
+        double now = Time.unscaledTime;
+        UpdateRefreshActivity(now);
+
+        if (Interlocked.Exchange(ref stateClearPending, 0) != 0)
+        {
+            ClearAuthoritativeState();
+        }
+        if (sessionJoined && Interlocked.Exchange(ref reconnectRefreshPending, 0) != 0)
+        {
+            RequestImmediateSnapshot();
+            return;
+        }
+        if (sessionJoined && refreshScheduler.IsRefreshDue(now))
+        {
+            RequestImmediateSnapshot();
+        }
+    }
+
+    private void TryRequestSnapshot(SnapshotRequestMode requestMode)
+    {
+        if (!sessionJoined || requestTrigger == null ||
+            !TryGetRequestParameters(out float range, out NitroxTechType? selectedTechType, out NitroxVector3? observedOrigin))
+        {
+            return;
+        }
+
+        double now = Time.unscaledTime;
+        UpdateRefreshActivity(now);
+        bool requestIssued = requestMode switch
+        {
+            SnapshotRequestMode.Initial => requestTrigger.TryRequestInitial(range, selectedTechType, observedOrigin),
+            SnapshotRequestMode.StateChanged => requestTrigger.TryRequestIfChanged(range, selectedTechType, observedOrigin),
+            SnapshotRequestMode.Immediate => RequestImmediately(requestTrigger, range, selectedTechType, observedOrigin),
+            _ => false
+        };
+        if (requestIssued)
+        {
+            refreshScheduler.MarkRefreshed(now);
+        }
+    }
+
+    private static bool RequestImmediately(
+        ScannerRoomRequestTrigger trigger,
+        float range,
+        NitroxTechType? selectedTechType,
+        NitroxVector3? observedOrigin)
+    {
+        trigger.RequestImmediate(range, selectedTechType, observedOrigin);
+        return true;
+    }
+
+    private void UpdateRefreshActivity(double now) =>
+        refreshScheduler.SetActivity(mapRoom && mapRoom.typeToScan != TechType.None, localInteractionColliders.Count > 0, now);
 
     private bool TryGetRequestParameters(out float range, out NitroxTechType? selectedTechType, out NitroxVector3? observedOrigin)
     {
@@ -184,6 +265,47 @@ public sealed class ScannerRoomController : MonoBehaviour
         {
             ApplySnapshot(snapshot!);
         }
+    }
+
+    private void OnSessionJoined()
+    {
+        sessionJoined = true;
+        Interlocked.Exchange(ref reconnectRefreshPending, 1);
+    }
+
+    private void OnStateCleared()
+    {
+        Interlocked.Exchange(ref stateClearPending, 1);
+        if (!scannerRoomManager.IsSessionJoined)
+        {
+            sessionJoined = false;
+        }
+    }
+
+    private void ClearAuthoritativeState()
+    {
+        authoritativeSnapshot = null;
+        authoritativeTechTypes.Clear();
+        mapRoom.resourceNodes.Clear();
+
+        if (!resourceTracker)
+        {
+            resourceTracker = UnityEngine.Object.FindObjectOfType<uGUI_ResourceTracker>();
+        }
+        if (resourceTracker)
+        {
+            resourceTracker.gatherNextTick = true;
+        }
+
+        uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+        if (scanner)
+        {
+            scanner.availableTechTypes.Clear();
+            scanner.sortedTechTypes.Clear();
+            scanner.currentPage = 0;
+            scanner.RebuildResourceList();
+        }
+        RefreshBlipsWithoutAdvancingScan();
     }
 
     private void ApplySnapshot(ScannerRoomSnapshot snapshot)
@@ -247,6 +369,17 @@ public sealed class ScannerRoomController : MonoBehaviour
         if (scannerRoomManager != null)
         {
             scannerRoomManager.SnapshotChanged -= OnSnapshotChanged;
+            scannerRoomManager.SessionJoined -= OnSessionJoined;
+            scannerRoomManager.StateCleared -= OnStateCleared;
+            scannerRoomManager.RemoveRoom(mapRoomId);
         }
+        localInteractionColliders.Clear();
+    }
+
+    private enum SnapshotRequestMode
+    {
+        Initial,
+        StateChanged,
+        Immediate
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class uGUI_MapRoomScanner_OnTriggerEnter_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class uGUI_MapRoomScanner_OnTriggerExit_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_MapRoomScanner scanner) => scanner.OnTriggerEnter(default(Collider)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_MapRoomScanner scanner) => scanner.OnTriggerExit(default(Collider)));
 
     public static void Postfix(uGUI_MapRoomScanner __instance, Collider __0)
     {
@@ -18,7 +18,7 @@ public sealed partial class uGUI_MapRoomScanner_OnTriggerEnter_Patch : NitroxPat
 
         if (__instance.mapRoom && __instance.mapRoom.TryGetComponent(out ScannerRoomController controller))
         {
-            controller.OnLocalInteractionEntered(__0);
+            controller.OnLocalInteractionExited(__0);
         }
     }
 }
