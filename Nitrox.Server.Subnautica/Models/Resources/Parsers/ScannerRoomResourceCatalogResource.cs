@@ -225,9 +225,14 @@ internal sealed class ScannerRoomResourceCatalogResource(
         List<ScannerResourceTrackerData> trackers = [];
         foreach ((AssetsFileInstance _, AssetFileInfo _, AssetTypeValueField resourceTracker) in manager.GetMonoBehavioursFromGameObject(assetFile, gameObjectInfo, RESOURCE_TRACKER_CLASS_NAME))
         {
+            // ResourceTracker.techType is private and not marked [SerializeField], so Unity never writes it into
+            // the serialized MonoBehaviour and the lookup yields a dummy field. The game derives it in Start() as
+            // "overrideTechType != None ? overrideTechType : CraftData.GetTechType(gameObject)", and the TechTag
+            // based prefabTechType supplies that fallback in ScannerResourceDescriptorFactory.
+            AssetTypeValueField trackerTechType = resourceTracker["techType"];
             trackers.Add(new ScannerResourceTrackerData(
                 resourceTracker["m_Enabled"].AsBool,
-                resourceTracker["techType"].AsInt,
+                trackerTechType.IsDummy ? (int)TechType.None : trackerTechType.AsInt,
                 resourceTracker["overrideTechType"].AsInt));
         }
 
@@ -237,7 +242,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
         AssetTypeValueField transform = transformExternal.baseField;
 
         List<ScannerResourcePrefabNode> children = [];
-        foreach (AssetTypeValueField childTransformPtr in transform["m_Children"])
+        foreach (AssetTypeValueField childTransformPtr in transform["m_Children"]["Array"])
         {
             AssetExternal childTransformExternal = manager.GetExtAsset(transformExternal.file, childTransformPtr);
             AssetTypeValueField childTransform = childTransformExternal.baseField;
