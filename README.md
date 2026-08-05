@@ -14,7 +14,7 @@ An open-source, multiplayer modification for the game <a href="https://unknownwo
 ## FAQ
 
 ### What is the current status?
-The mod is in the very early stages of development; however, a solid foundation has been laid for the community to iterate on.
+The mod is in the very late stages of development; however, a solid foundation has been laid for the community to iterate on.
 The following milestones have been completed:
 
 * Client / Server Communication
