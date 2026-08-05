@@ -15,10 +15,15 @@ public sealed class ScannerRoomResourceAuthorityStateTest
         state.SuppressVanillaResources.Should().BeTrue();
     }
 
-    [DataTestMethod]
-    [DataRow(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete)]
-    [DataRow(ScannerRoomSnapshotApplyResult.NotModified, ScannerRoomQueryStatus.NotModified)]
-    public void ValidSnapshotResponseBecomesAuthoritative(
+    [TestMethod]
+    public void AppliedSnapshotResponseBecomesAuthoritative() =>
+        AssertValidSnapshotResponseBecomesAuthoritative(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete);
+
+    [TestMethod]
+    public void NotModifiedSnapshotResponseBecomesAuthoritative() =>
+        AssertValidSnapshotResponseBecomesAuthoritative(ScannerRoomSnapshotApplyResult.NotModified, ScannerRoomQueryStatus.NotModified);
+
+    private static void AssertValidSnapshotResponseBecomesAuthoritative(
         ScannerRoomSnapshotApplyResult result,
         ScannerRoomQueryStatus status)
     {

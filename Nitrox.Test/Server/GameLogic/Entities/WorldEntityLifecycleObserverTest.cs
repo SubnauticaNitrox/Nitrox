@@ -163,7 +163,7 @@ public sealed class WorldEntityLifecycleObserverTest
         registry.GetEntityById(parent.Id).HasValue.Should().BeFalse();
         registry.GetEntityById(child.Id).HasValue.Should().BeFalse();
         manager.GetEntities(parent.AbsoluteEntityCell).Should().NotContain(entity => entity.Id == parent.Id || entity.Id == child.Id);
-        observer.UntrackedEntityIds.Should().BeEquivalentTo(parent.Id, child.Id);
+        observer.UntrackedEntityIds.Should().BeEquivalentTo([parent.Id, child.Id]);
         observer.UntrackedEntityIds.Should().OnlyHaveUniqueItems();
     }
 
@@ -194,7 +194,7 @@ public sealed class WorldEntityLifecycleObserverTest
         registry.GetEntityById(child.Id).HasValue.Should().BeFalse();
         manager.globalRootEntitiesById.Should().NotContainKey(parent.Id);
         manager.GetEntities(child.AbsoluteEntityCell).Should().NotContain(entity => entity.Id == child.Id);
-        observer.UntrackedEntityIds.Should().BeEquivalentTo(parent.Id, child.Id);
+        observer.UntrackedEntityIds.Should().BeEquivalentTo([parent.Id, child.Id]);
         observer.UntrackedEntityIds.Should().OnlyHaveUniqueItems();
     }
 
@@ -257,7 +257,7 @@ public sealed class WorldEntityLifecycleObserverTest
         registry.GetEntityById(directWorldChild.Id).HasValue.Should().BeFalse();
         registry.GetEntityById(container.Id).HasValue.Should().BeFalse();
         registry.GetEntityById(nestedWorldChild.Id).HasValue.Should().BeFalse();
-        observer.UntrackedEntityIds.Should().BeEquivalentTo(directWorldChild.Id, nestedWorldChild.Id);
+        observer.UntrackedEntityIds.Should().BeEquivalentTo([directWorldChild.Id, nestedWorldChild.Id]);
         observer.UntrackedEntityIds.Should().OnlyHaveUniqueItems();
     }
 
