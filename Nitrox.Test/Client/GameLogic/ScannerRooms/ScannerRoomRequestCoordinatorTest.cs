@@ -45,11 +45,19 @@ public sealed class ScannerRoomRequestCoordinatorTest
         dispatch.Should().Be(new ScannerRoomDispatch(firstRoomId, latest));
     }
 
-    [DataTestMethod]
-    [DataRow(ScannerRoomSnapshotApplyResult.Applied)]
-    [DataRow(ScannerRoomSnapshotApplyResult.NotModified)]
-    [DataRow(ScannerRoomSnapshotApplyResult.Failed)]
-    public void DispatchesQueuedRequestAfterEveryTerminalResponse(ScannerRoomSnapshotApplyResult terminalResult)
+    [TestMethod]
+    public void DispatchesQueuedRequestAfterAppliedResponse() =>
+        AssertDispatchesQueuedRequestAfterTerminalResponse(ScannerRoomSnapshotApplyResult.Applied);
+
+    [TestMethod]
+    public void DispatchesQueuedRequestAfterNotModifiedResponse() =>
+        AssertDispatchesQueuedRequestAfterTerminalResponse(ScannerRoomSnapshotApplyResult.NotModified);
+
+    [TestMethod]
+    public void DispatchesQueuedRequestAfterFailedResponse() =>
+        AssertDispatchesQueuedRequestAfterTerminalResponse(ScannerRoomSnapshotApplyResult.Failed);
+
+    private void AssertDispatchesQueuedRequestAfterTerminalResponse(ScannerRoomSnapshotApplyResult terminalResult)
     {
         ScannerRoomRequestCoordinator coordinator = new();
         ScannerRoomRequestParameters first = Request(300, "Quartz", 1);

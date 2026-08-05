@@ -18,6 +18,9 @@ using NSubstitute;
 
 namespace Nitrox.Test.Server.GameLogic.ScannerRooms;
 
+// Disambiguates from Subnautica's global-namespace Player in Assembly-CSharp, which would otherwise win name resolution.
+using Player = Nitrox.Server.Subnautica.Models.Player;
+
 [TestClass]
 public sealed class ScannerRoomLegacyOriginRepairTest
 {

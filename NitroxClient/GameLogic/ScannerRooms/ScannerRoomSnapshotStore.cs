@@ -282,28 +282,31 @@ internal sealed class ScannerRoomSnapshotStore
 
         public TValue this[int index]
         {
-            if (index < 0 || index >= Count)
+            get
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            foreach (List<PagedItem<TValue>> pageItems in itemsByPage.Values)
-            {
-                foreach (PagedItem<TValue> item in pageItems)
+                if (index < 0 || index >= Count)
                 {
-                    if (!item.Included)
-                    {
-                        continue;
-                    }
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                }
 
-                    if (index-- == 0)
+                foreach (List<PagedItem<TValue>> pageItems in itemsByPage.Values)
+                {
+                    foreach (PagedItem<TValue> item in pageItems)
                     {
-                        return item.Value;
+                        if (!item.Included)
+                        {
+                            continue;
+                        }
+
+                        if (index-- == 0)
+                        {
+                            return item.Value;
+                        }
                     }
                 }
-            }
 
-            throw new InvalidOperationException("Scanner Room snapshot item count did not match its accumulated pages");
+                throw new InvalidOperationException("Scanner Room snapshot item count did not match its accumulated pages");
+            }
         }
 
         public IEnumerator<TValue> GetEnumerator()
