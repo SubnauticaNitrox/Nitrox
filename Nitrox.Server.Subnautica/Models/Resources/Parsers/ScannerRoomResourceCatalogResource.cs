@@ -14,6 +14,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
     SubnauticaAssetsManager assetsManager,
     PrefabAddressableCatalog prefabAddressableCatalog,
     IOptions<ServerStartOptions> options,
+    IOptions<SubnauticaServerOptions> serverOptions,
     ILogger<ScannerRoomResourceCatalogResource> logger) : IGameResource, IScannerRoomResourceCatalog
 {
     private const int CACHE_VERSION = 1;
@@ -23,6 +24,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
     private readonly SubnauticaAssetsManager assetsManager = assetsManager;
     private readonly PrefabAddressableCatalog prefabAddressableCatalog = prefabAddressableCatalog;
     private readonly IOptions<ServerStartOptions> options = options;
+    private readonly IOptions<SubnauticaServerOptions> serverOptions = serverOptions;
     private readonly ILogger<ScannerRoomResourceCatalogResource> logger = logger;
     private readonly JsonSerializer serializer = new() { TypeNameHandling = TypeNameHandling.Auto };
     private readonly TaskCompletionSource resourceLoadFinished = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -40,6 +42,16 @@ internal sealed class ScannerRoomResourceCatalogResource(
 
     public async Task LoadAsync(CancellationToken cancellationToken)
     {
+        // Scanner Room resource sync is the only consumer of this catalog and building it is expensive, so the
+        // rollback option must skip it entirely. The completion source is still signalled so that callers of
+        // MaximumRelativeOffset and TryGetDescriptors observe an empty catalog instead of blocking forever.
+        if (!serverOptions.Value.EnableScannerRoomResourceSync)
+        {
+            logger.ZLogInformation($"Skipping the Scanner Room resource catalog because {nameof(SubnauticaServerOptions.EnableScannerRoomResourceSync):@Option} is disabled");
+            resourceLoadFinished.TrySetResult();
+            return;
+        }
+
         try
         {
             descriptorsByClassId = await CreateOrLoadCacheAsync(cancellationToken);
