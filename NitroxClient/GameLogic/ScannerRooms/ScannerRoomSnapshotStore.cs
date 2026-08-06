@@ -22,17 +22,20 @@ internal enum ScannerRoomSnapshotApplyResult
 internal sealed record ScannerRoomSnapshot(
     NitroxId MapRoomId,
     float EffectiveRange,
-    NitroxTechType? SelectedTechType,
+    ScannerRoomScanState ScanState,
     ulong Revision,
     IReadOnlyList<ScannerResourceSummary> AvailableResources,
-    IReadOnlyList<ScannerResourceTarget> Targets);
+    IReadOnlyList<ScannerResourceTarget> Targets)
+{
+    public NitroxTechType? SelectedTechType => ScanState.SelectedTechType;
+}
 
 internal sealed record ScannerRoomSnapshotPageData(
     NitroxId MapRoomId,
     uint RequestId,
     ScannerRoomQueryStatus Status,
     float EffectiveRange,
-    NitroxTechType? SelectedTechType,
+    ScannerRoomScanState ScanState,
     ulong Revision,
     ushort PageIndex,
     ushort PageCount,
@@ -44,7 +47,7 @@ internal sealed class ScannerRoomSnapshotStore
     private readonly LockObject storeLock = new();
     private readonly Dictionary<NitroxId, RoomState> rooms = [];
 
-    public ScannerRoomQueryTicket BeginQuery(NitroxId mapRoomId, float range, NitroxTechType? selectedTechType)
+    public ScannerRoomQueryTicket BeginQuery(NitroxId mapRoomId, float range, ScannerRoomScanState expectedScanState)
     {
         lock (storeLock)
         {
@@ -57,11 +60,11 @@ internal sealed class ScannerRoomSnapshotStore
 
             ulong knownRevision = room.Snapshot is { } snapshot &&
                                   snapshot.EffectiveRange.Equals(range) &&
-                                  TechTypesEqual(snapshot.SelectedTechType, selectedTechType)
+                                  ScanStatesEqual(snapshot.ScanState, expectedScanState)
                                       ? snapshot.Revision
                                       : 0;
 
-            room.Pending = new PendingSnapshot(room.NextRequestId, range, selectedTechType);
+            room.Pending = new PendingSnapshot(room.NextRequestId, range, expectedScanState);
             return new ScannerRoomQueryTicket(room.NextRequestId, knownRevision);
         }
     }
@@ -96,7 +99,7 @@ internal sealed class ScannerRoomSnapshotStore
                     return room.Snapshot is { } snapshot &&
                            snapshot.Revision == page.Revision &&
                            snapshot.EffectiveRange.Equals(page.EffectiveRange) &&
-                           TechTypesEqual(snapshot.SelectedTechType, page.SelectedTechType)
+                           ScanStatesEqual(snapshot.ScanState, page.ScanState)
                                ? ScannerRoomSnapshotApplyResult.NotModified
                                : ScannerRoomSnapshotApplyResult.Failed;
                 }
@@ -147,6 +150,20 @@ internal sealed class ScannerRoomSnapshotStore
         }
     }
 
+    public bool CancelPendingQuery(NitroxId mapRoomId)
+    {
+        lock (storeLock)
+        {
+            if (!rooms.TryGetValue(mapRoomId, out RoomState? room) || room.Pending == null)
+            {
+                return false;
+            }
+
+            room.Pending = null;
+            return true;
+        }
+    }
+
     public void RemoveRoom(NitroxId mapRoomId)
     {
         lock (storeLock)
@@ -172,14 +189,17 @@ internal sealed class ScannerRoomSnapshotStore
         return room;
     }
 
-    private static bool TechTypesEqual(NitroxTechType? left, NitroxTechType? right) =>
-        ReferenceEquals(left, right) || left?.Equals(right) == true;
-
     private static bool IsValidStatusPage(ScannerRoomSnapshotPageData page) =>
         page.PageIndex == 0 &&
         page.PageCount == 1 &&
         page.AvailableResources.Count == 0 &&
         page.Targets.Count == 0;
+
+    private static bool ScanStatesEqual(ScannerRoomScanState left, ScannerRoomScanState right) =>
+        left.Version == right.Version &&
+        (ReferenceEquals(left.SelectedTechType, right.SelectedTechType) ||
+         left.SelectedTechType?.Equals(right.SelectedTechType) == true ||
+         left.SelectedTechType == null && right.SelectedTechType == null);
 
     private sealed class RoomState
     {
@@ -188,7 +208,7 @@ internal sealed class ScannerRoomSnapshotStore
         public ScannerRoomSnapshot? Snapshot;
     }
 
-    private sealed class PendingSnapshot(uint requestId, float requestedRange, NitroxTechType? requestedTechType)
+    private sealed class PendingSnapshot(uint requestId, float requestedRange, ScannerRoomScanState expectedScanState)
     {
         private readonly HashSet<ushort> receivedPageIndexes = [];
         private readonly PagedAccumulator<NitroxTechType, ScannerResourceSummary> summaries = new(summary => summary.TechType);
@@ -196,18 +216,25 @@ internal sealed class ScannerRoomSnapshotStore
             new(target => (target.EntityId, target.TrackerIndex));
         private ushort? pageCount;
         private ulong? revision;
+        private ScannerRoomScanState? scanState;
 
         public uint RequestId { get; } = requestId;
 
         public bool IsComplete => pageCount is { } count && receivedPageIndexes.Count == count;
 
         public bool Matches(ScannerRoomSnapshotPageData page) =>
-            page.EffectiveRange.Equals(requestedRange) && TechTypesEqual(page.SelectedTechType, requestedTechType);
+            page.EffectiveRange.Equals(requestedRange) &&
+            (page.Status is not (ScannerRoomQueryStatus.Complete or ScannerRoomQueryStatus.NotModified) ||
+             ScanStatesEqual(page.ScanState, expectedScanState));
 
         public bool TryAdd(ScannerRoomSnapshotPageData page)
         {
             if (pageCount is { } expectedPageCount && expectedPageCount != page.PageCount ||
                 revision is { } expectedRevision && expectedRevision != page.Revision)
+            {
+                return false;
+            }
+            if (scanState is { } expectedScanState && !ScanStatesEqual(expectedScanState, page.ScanState))
             {
                 return false;
             }
@@ -218,13 +245,15 @@ internal sealed class ScannerRoomSnapshotStore
 
             pageCount = page.PageCount;
             revision = page.Revision;
+            scanState = page.ScanState;
             summaries.AddPage(page.PageIndex, page.AvailableResources);
             targets.AddPage(page.PageIndex, page.Targets);
             return true;
         }
 
         public ScannerRoomSnapshot BuildSnapshot(NitroxId mapRoomId) =>
-            new(mapRoomId, requestedRange, requestedTechType, revision!.Value, summaries.Build(), targets.Build());
+            new(mapRoomId, requestedRange, scanState!, revision!.Value, summaries.Build(), targets.Build());
+
     }
 
     /// <summary>

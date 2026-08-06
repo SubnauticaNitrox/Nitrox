@@ -13,7 +13,7 @@ public sealed class ScannerResourcePrefabParserTest
     {
         ScannerResourcePrefabNode mineral = Node(trackers: [Tracker(techType: TechType.Quartz)]);
 
-        ScannerResourceDescriptor descriptor = ScannerResourcePrefabParser.Parse(mineral).Should().ContainSingle().Which;
+        ScannerResourceDescriptor descriptor = Parse(mineral, TechType.Titanium).Should().ContainSingle().Which;
 
         descriptor.TechType.Name.Should().Be(TechType.Quartz.ToString());
         descriptor.TrackerIndex.Should().Be(0);
@@ -26,7 +26,7 @@ public sealed class ScannerResourcePrefabParserTest
             prefabTechType: TechType.SeamothFragment,
             trackers: [Tracker()]);
 
-        ScannerResourceDescriptor descriptor = ScannerResourcePrefabParser.Parse(fragment).Should().ContainSingle().Which;
+        ScannerResourceDescriptor descriptor = Parse(fragment, TechType.Titanium).Should().ContainSingle().Which;
 
         descriptor.TechType.Name.Should().Be(TechType.SeamothFragment.ToString());
     }
@@ -38,7 +38,7 @@ public sealed class ScannerResourcePrefabParserTest
             prefabTechType: TechType.StalkerEgg,
             trackers: [Tracker()]);
 
-        ScannerResourceDescriptor descriptor = ScannerResourcePrefabParser.Parse(egg).Should().ContainSingle().Which;
+        ScannerResourceDescriptor descriptor = Parse(egg, TechType.Titanium).Should().ContainSingle().Which;
 
         descriptor.TechType.Name.Should().Be(TechType.StalkerEgg.ToString());
     }
@@ -50,9 +50,23 @@ public sealed class ScannerResourcePrefabParserTest
             prefabTechType: TechType.Titanium,
             trackers: [Tracker(techType: TechType.Quartz, overrideTechType: TechType.Copper)]);
 
-        ScannerResourceDescriptor descriptor = ScannerResourcePrefabParser.Parse(drillable).Should().ContainSingle().Which;
+        ScannerResourceDescriptor descriptor = Parse(drillable, TechType.Diamond).Should().ContainSingle().Which;
 
         descriptor.TechType.Name.Should().Be(TechType.Copper.ToString());
+    }
+
+    [DataTestMethod]
+    [DataRow(TechType.ScrapMetal)]
+    [DataRow(TechType.LimestoneChunk)]
+    [DataRow(TechType.SandstoneChunk)]
+    [DataRow(TechType.ShaleChunk)]
+    public void ClassTechTypeFallbackResolvesTrackedResource(TechType classTechType)
+    {
+        ScannerResourcePrefabNode resource = Node(trackers: [Tracker()]);
+
+        ScannerResourceDescriptor descriptor = Parse(resource, classTechType).Should().ContainSingle().Which;
+
+        descriptor.TechType.Name.Should().Be(classTechType.ToString());
     }
 
     [TestMethod]
@@ -60,14 +74,44 @@ public sealed class ScannerResourcePrefabParserTest
     {
         ScannerResourcePrefabNode disabled = Node(trackers: [Tracker(false, TechType.Quartz)]);
 
-        ScannerResourcePrefabParser.Parse(disabled).Should().BeEmpty();
+        Parse(disabled, TechType.ScrapMetal).Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void ClassTechTypeFallbackWithoutTrackerProducesNoDescriptor()
+    {
+        Parse(Node(), TechType.ScrapMetal).Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void UnresolvedTrackerProducesNoDescriptor()
+    {
+        Parse(Node(trackers: [Tracker()])).Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void InvalidClassTechTypeProducesNoDescriptor()
+    {
+        ScannerResourcePrefabNode resource = Node(trackers: [Tracker()]);
+
+        ScannerResourcePrefabParser.Parse(resource, int.MaxValue).Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void ChildTechTagOverridesClassTechTypeFallback()
+    {
+        ScannerResourcePrefabNode prefab = Node(
+            children: [Node(prefabTechType: TechType.Quartz, trackers: [Tracker()])]);
+
+        ScannerResourceDescriptor descriptor = Parse(prefab, TechType.ScrapMetal).Should().ContainSingle().Which;
+
+        descriptor.TechType.Name.Should().Be(TechType.Quartz.ToString());
     }
 
     [TestMethod]
     public void ChildFixtureComposesRelativeTransformAndPreservesTrackerOrdinal()
     {
         ScannerResourcePrefabNode prefab = Node(
-            prefabTechType: TechType.Quartz,
             trackers: [Tracker()],
             children:
             [
@@ -83,7 +127,7 @@ public sealed class ScannerResourcePrefabParserTest
                     ])
             ]);
 
-        ScannerResourceDescriptor[] descriptors = ScannerResourcePrefabParser.Parse(prefab);
+        ScannerResourceDescriptor[] descriptors = Parse(prefab, TechType.Quartz);
 
         descriptors.Should().HaveCount(2);
         descriptors[0].TrackerIndex.Should().Be(0);
@@ -91,6 +135,9 @@ public sealed class ScannerResourcePrefabParserTest
         descriptors[1].TechType.Name.Should().Be(TechType.Quartz.ToString());
         descriptors[1].RelativePosition.Should().Be(new NitroxVector3(12, 26, 42));
     }
+
+    private static ScannerResourceDescriptor[] Parse(ScannerResourcePrefabNode prefab, TechType classTechType = TechType.None) =>
+        ScannerResourcePrefabParser.Parse(prefab, (int)classTechType);
 
     private static ScannerResourcePrefabNode Node(
         TechType prefabTechType = TechType.None,

@@ -52,6 +52,18 @@ public sealed class ScannerRoomResourceAuthorityStateTest
     }
 
     [TestMethod]
+    public void StateOutdatedDoesNotEnableRollback()
+    {
+        ScannerRoomResourceAuthorityState state = new();
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete);
+
+        state.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Failed, ScannerRoomQueryStatus.StateOutdated).Should().BeFalse();
+
+        state.Mode.Should().Be(ScannerRoomResourceAuthorityMode.Authoritative);
+        state.SuppressVanillaResources.Should().BeTrue();
+    }
+
+    [TestMethod]
     public void AuthoritativeResponseRecoversFromRollbackAndReconnectResetsPending()
     {
         ScannerRoomResourceAuthorityState state = new();

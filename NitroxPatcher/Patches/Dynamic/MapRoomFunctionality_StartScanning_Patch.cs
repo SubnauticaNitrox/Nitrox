@@ -11,7 +11,7 @@ public sealed partial class MapRoomFunctionality_StartScanning_Patch : NitroxPat
     {
         if (__instance && __instance.TryGetComponent(out ScannerRoomController controller))
         {
-            controller.RequestSnapshotIfStateChanged();
+            controller.SubmitLocalScanStateIntent();
         }
     }
 }

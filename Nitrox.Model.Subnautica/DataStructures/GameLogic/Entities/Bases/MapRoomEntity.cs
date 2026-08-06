@@ -5,6 +5,7 @@ using BinaryPack.Attributes;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 
@@ -20,6 +21,12 @@ public class MapRoomEntity : GlobalRootEntity
     [DataMember(Order = 2, EmitDefaultValue = false)]
     public NitroxVector3? ScanOrigin { get; set; }
 
+    /// <summary>
+    /// The last server-authoritative resource selection. Saves created before shared Scanner Room selection omit this field.
+    /// </summary>
+    [DataMember(Order = 3, EmitDefaultValue = false)]
+    public ScannerRoomScanState ScanState { get; set; } = ScannerRoomScanState.Empty;
+
     [IgnoreConstructor]
     protected MapRoomEntity()
     {
@@ -32,11 +39,17 @@ public class MapRoomEntity : GlobalRootEntity
     }
 
     public MapRoomEntity(NitroxId id, NitroxId parentId, NitroxInt3 cell, NitroxVector3? scanOrigin)
+        : this(id, parentId, cell, scanOrigin, ScannerRoomScanState.Empty)
+    {
+    }
+
+    public MapRoomEntity(NitroxId id, NitroxId parentId, NitroxInt3 cell, NitroxVector3? scanOrigin, ScannerRoomScanState scanState)
     {
         Id = id;
         ParentId = parentId;
         Cell = cell;
         ScanOrigin = scanOrigin;
+        ScanState = scanState ?? ScannerRoomScanState.Empty;
 
         Transform = new();
     }
@@ -46,14 +59,24 @@ public class MapRoomEntity : GlobalRootEntity
     /// <see cref="WorldEntity.SpawnedByServer"/> is set to true because this entity is meant to receive simulation locks
     /// </remarks>
     public MapRoomEntity(NitroxInt3 cell, NitroxVector3? scanOrigin, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        this(cell, scanOrigin, ScannerRoomScanState.Empty, transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
+    {
+    }
+
+    /// <remarks>
+    /// Used for deserialization.
+    /// <see cref="WorldEntity.SpawnedByServer"/> is set to true because this entity is meant to receive simulation locks
+    /// </remarks>
+    public MapRoomEntity(NitroxInt3 cell, NitroxVector3? scanOrigin, ScannerRoomScanState scanState, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, true, id, techType, metadata, parentId, childEntities)
     {
         Cell = cell;
         ScanOrigin = scanOrigin;
+        ScanState = scanState ?? ScannerRoomScanState.Empty;
     }
 
     public override string ToString()
     {
-        return $"[MapRoomEntity Id: {Id}, Cell: {Cell}, ScanOrigin: {ScanOrigin}]";
+        return $"[MapRoomEntity Id: {Id}, Cell: {Cell}, ScanOrigin: {ScanOrigin}, ScanState: {ScanState}]";
     }
 }

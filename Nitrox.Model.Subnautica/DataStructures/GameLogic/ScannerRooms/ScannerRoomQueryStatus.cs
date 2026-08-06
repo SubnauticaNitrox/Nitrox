@@ -7,5 +7,6 @@ public enum ScannerRoomQueryStatus : byte
     InvalidRoom,
     OriginUnavailable,
     Rejected,
+    StateOutdated,
     Failed
 }

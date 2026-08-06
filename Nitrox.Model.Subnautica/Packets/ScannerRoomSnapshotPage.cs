@@ -13,7 +13,7 @@ public sealed class ScannerRoomSnapshotPage(
     uint requestId,
     ScannerRoomQueryStatus status,
     float effectiveRange,
-    NitroxTechType? selectedTechType,
+    ScannerRoomScanState scanState,
     ulong revision,
     ushort pageIndex,
     ushort pageCount,
@@ -24,7 +24,7 @@ public sealed class ScannerRoomSnapshotPage(
     public uint RequestId { get; } = requestId;
     public ScannerRoomQueryStatus Status { get; } = status;
     public float EffectiveRange { get; } = effectiveRange;
-    public NitroxTechType? SelectedTechType { get; } = selectedTechType;
+    public ScannerRoomScanState ScanState { get; } = scanState;
     public ulong Revision { get; } = revision;
     public ushort PageIndex { get; } = pageIndex;
     public ushort PageCount { get; } = pageCount;

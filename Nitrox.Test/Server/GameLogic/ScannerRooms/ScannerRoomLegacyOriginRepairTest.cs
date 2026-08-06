@@ -97,22 +97,29 @@ public sealed class ScannerRoomLegacyOriginRepairTest
             registry.AddEntity(MapRoom);
 
             SubnauticaServerOptions serverOptions = new() { EnableScannerRoomResourceSync = true };
+            IOptions<SubnauticaServerOptions> options = Options.Create(serverOptions);
             ScannerRoomDiagnostics diagnostics = new(
-                Options.Create(serverOptions),
+                options,
                 Substitute.For<ILogger<ScannerRoomDiagnostics>>());
+            ScannerRoomScanStateService scanStateService = new(
+                registry,
+                catalog,
+                options,
+                Substitute.For<ILogger<ScannerRoomScanStateService>>());
             service = new ScannerRoomQueryService(
                 registry,
                 new ScannerResourceIndex(catalog),
                 catalog,
                 BatchLoader,
+                scanStateService,
                 diagnostics,
-                Options.Create(serverOptions),
+                options,
                 Substitute.For<ILogger<ScannerRoomQueryService>>());
             player = CreatePlayer(playerPosition);
         }
 
         public Task<ScannerRoomQueryResult> Query(NitroxVector3? observedOrigin) =>
-            service.QueryAsync(player, MapRoom.Id, 300, null, 0, observedOrigin);
+            service.QueryAsync(player, MapRoom.Id, 300, MapRoom.ScanState.Version, 0, observedOrigin);
     }
 
     private static Player CreatePlayer(NitroxVector3 position) => new(
@@ -151,6 +158,8 @@ public sealed class ScannerRoomLegacyOriginRepairTest
     private sealed class EmptyCatalog : IScannerRoomResourceCatalog
     {
         public float MaximumRelativeOffset => 0;
+
+        public bool IsKnownTechType(NitroxTechType techType) => false;
 
         public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)
         {

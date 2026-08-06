@@ -13,7 +13,7 @@ public sealed class ScannerRoomDiagnosticsTest
     [TestMethod]
     public void SnapshotTracksLoadingWorkloadResponsesAndRollbackState()
     {
-        SubnauticaServerOptions options = new() { EnableScannerRoomResourceSync = true };
+        SubnauticaServerOptions options = new();
         ScannerRoomDiagnostics diagnostics = new(Options.Create(options), Substitute.For<ILogger<ScannerRoomDiagnostics>>());
 
         long completeQuery = diagnostics.QueryStarted();
@@ -70,6 +70,7 @@ public sealed class ScannerRoomDiagnosticsTest
                      ScannerRoomQueryStatus.InvalidRoom,
                      ScannerRoomQueryStatus.OriginUnavailable,
                      ScannerRoomQueryStatus.Rejected,
+                     ScannerRoomQueryStatus.StateOutdated,
                      ScannerRoomQueryStatus.Failed
                  })
         {
@@ -81,8 +82,9 @@ public sealed class ScannerRoomDiagnosticsTest
         snapshot.InvalidRoomResponses.Should().Be(1);
         snapshot.OriginUnavailableResponses.Should().Be(1);
         snapshot.RejectedResponses.Should().Be(1);
+        snapshot.StateOutdatedResponses.Should().Be(1);
         snapshot.FailedResponses.Should().Be(1);
-        snapshot.QueriesCompleted.Should().Be(4);
+        snapshot.QueriesCompleted.Should().Be(5);
         snapshot.QueriesInFlight.Should().Be(0);
     }
 }

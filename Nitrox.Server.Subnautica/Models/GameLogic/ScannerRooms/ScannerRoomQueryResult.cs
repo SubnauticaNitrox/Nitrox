@@ -7,11 +7,11 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.ScannerRooms;
 internal sealed record ScannerRoomQueryResult(
     ScannerRoomQueryStatus Status,
     float EffectiveRange,
-    NitroxTechType? SelectedTechType,
+    ScannerRoomScanState ScanState,
     ulong Revision,
     IReadOnlyList<ScannerResourceSummary> AvailableResources,
     IReadOnlyList<ScannerResourceTarget> Targets)
 {
-    public static ScannerRoomQueryResult Error(ScannerRoomQueryStatus status, float effectiveRange, NitroxTechType? selectedTechType) =>
-        new(status, effectiveRange, selectedTechType, 0, [], []);
+    public static ScannerRoomQueryResult Error(ScannerRoomQueryStatus status, float effectiveRange, ScannerRoomScanState scanState) =>
+        new(status, effectiveRange, scanState, 0, [], []);
 }

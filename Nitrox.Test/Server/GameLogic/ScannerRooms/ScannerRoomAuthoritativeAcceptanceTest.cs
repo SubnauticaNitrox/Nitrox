@@ -44,8 +44,8 @@ public sealed class ScannerRoomAuthoritativeAcceptanceTest
         secondPlayer.CanSee(fixture.QuartzResource).Should().BeFalse();
         secondPlayer.CanSee(fixture.CopperResource).Should().BeFalse();
 
-        ScannerRoomQueryResult first = await fixture.Service.QueryAsync(firstPlayer, fixture.MapRoom.Id, 300, quartz, 0, null);
-        ScannerRoomQueryResult second = await fixture.Service.QueryAsync(secondPlayer, fixture.MapRoom.Id, 300, quartz, 0, null);
+        ScannerRoomQueryResult first = await fixture.Service.QueryAsync(firstPlayer, fixture.MapRoom.Id, 300, fixture.MapRoom.ScanState.Version, 0, null);
+        ScannerRoomQueryResult second = await fixture.Service.QueryAsync(secondPlayer, fixture.MapRoom.Id, 300, fixture.MapRoom.ScanState.Version, 0, null);
 
         first.Status.Should().Be(ScannerRoomQueryStatus.Complete);
         first.AvailableResources.Should().HaveCount(2);
@@ -64,12 +64,12 @@ public sealed class ScannerRoomAuthoritativeAcceptanceTest
         TestFixture fixture = CreateFixture();
         Player player = CreatePlayer((PeerId)1, (SessionId)1, "Scanner tester", fixture.Origin + new NitroxVector3(10_000, 0, 0));
 
-        ScannerRoomQueryResult initial = await fixture.Service.QueryAsync(player, fixture.MapRoom.Id, 300, quartz, 0, null);
+        ScannerRoomQueryResult initial = await fixture.Service.QueryAsync(player, fixture.MapRoom.Id, 300, fixture.MapRoom.ScanState.Version, 0, null);
         initial.Status.Should().Be(ScannerRoomQueryStatus.Complete);
         initial.Targets.Should().ContainSingle(target => target.EntityId == fixture.QuartzResource.Id);
 
         fixture.Index.EntityUntracked(fixture.QuartzResource);
-        ScannerRoomQueryResult refreshed = await fixture.Service.QueryAsync(player, fixture.MapRoom.Id, 300, quartz, initial.Revision, null);
+        ScannerRoomQueryResult refreshed = await fixture.Service.QueryAsync(player, fixture.MapRoom.Id, 300, fixture.MapRoom.ScanState.Version, initial.Revision, null);
 
         refreshed.Status.Should().Be(ScannerRoomQueryStatus.Complete);
         refreshed.Revision.Should().NotBe(initial.Revision);
@@ -88,19 +88,31 @@ public sealed class ScannerRoomAuthoritativeAcceptanceTest
         index.Hydrate([quartzResource, copperResource]);
 
         EntityRegistry registry = new(Substitute.For<ILogger<EntityRegistry>>());
-        MapRoomEntity mapRoom = new(new NitroxId(), new NitroxId(), new NitroxInt3(1, 2, 3), origin);
+        MapRoomEntity mapRoom = new(
+            new NitroxId(),
+            new NitroxId(),
+            new NitroxInt3(1, 2, 3),
+            origin,
+            new ScannerRoomScanState(quartz, 3));
         registry.AddEntity(mapRoom);
 
         RecordingBatchLoader batchLoader = new();
         SubnauticaServerOptions serverOptions = new() { EnableScannerRoomResourceSync = true };
-        ScannerRoomDiagnostics diagnostics = new(Options.Create(serverOptions), Substitute.For<ILogger<ScannerRoomDiagnostics>>());
+        IOptions<SubnauticaServerOptions> options = Options.Create(serverOptions);
+        ScannerRoomDiagnostics diagnostics = new(options, Substitute.For<ILogger<ScannerRoomDiagnostics>>());
+        ScannerRoomScanStateService scanStateService = new(
+            registry,
+            catalog,
+            options,
+            Substitute.For<ILogger<ScannerRoomScanStateService>>());
         ScannerRoomQueryService service = new(
             registry,
             index,
             catalog,
             batchLoader,
+            scanStateService,
             diagnostics,
-            Options.Create(serverOptions),
+            options,
             Substitute.For<ILogger<ScannerRoomQueryService>>());
         return new TestFixture(origin, mapRoom, quartzResource, copperResource, index, batchLoader, service);
     }
@@ -142,7 +154,8 @@ public sealed class ScannerRoomAuthoritativeAcceptanceTest
     {
         actual.Status.Should().Be(expected.Status);
         actual.EffectiveRange.Should().Be(expected.EffectiveRange);
-        actual.SelectedTechType.Should().Be(expected.SelectedTechType);
+        actual.ScanState.SelectedTechType.Should().Be(expected.ScanState.SelectedTechType);
+        actual.ScanState.Version.Should().Be(expected.ScanState.Version);
         actual.Revision.Should().Be(expected.Revision);
         actual.AvailableResources.Should().HaveCount(expected.AvailableResources.Count);
         for (int i = 0; i < expected.AvailableResources.Count; i++)
@@ -187,6 +200,8 @@ public sealed class ScannerRoomAuthoritativeAcceptanceTest
         public const string CopperClassId = "authoritative-query-copper";
 
         public float MaximumRelativeOffset => 0;
+
+        public bool IsKnownTechType(NitroxTechType techType) => techType.Equals(quartz) || techType.Equals(copper);
 
         public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)
         {

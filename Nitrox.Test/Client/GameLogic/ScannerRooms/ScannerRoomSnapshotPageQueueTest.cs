@@ -82,7 +82,7 @@ public sealed class ScannerRoomSnapshotPageQueueTest
             7,
             ScannerRoomQueryStatus.Complete,
             300,
-            null,
+            ScannerRoomScanState.Empty,
             42,
             pageIndex,
             3,

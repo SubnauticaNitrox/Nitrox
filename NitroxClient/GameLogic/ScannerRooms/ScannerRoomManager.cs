@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 using Nitrox.Model.Subnautica.Packets;
@@ -16,6 +18,10 @@ internal readonly record struct ScannerRoomSnapshotUpdate(
     ScannerRoomSnapshotApplyResult Result,
     ScannerRoomQueryStatus? AcceptedStatus);
 
+internal readonly record struct ScannerRoomScanStateUpdate(
+    NitroxId MapRoomId,
+    ScannerRoomScanState ScanState);
+
 internal sealed class ScannerRoomManager : IDisposable
 {
     private readonly IPacketSender packetSender;
@@ -23,8 +29,11 @@ internal sealed class ScannerRoomManager : IDisposable
     private readonly IMultiplayerSession multiplayerSession;
     private readonly ScannerRoomRequestCoordinator requestCoordinator = new();
     private readonly ScannerRoomSnapshotPageQueue snapshotPageQueue = new();
+    private readonly LockObject scanStateLock = new();
+    private readonly Dictionary<NitroxId, ScannerRoomScanState> scanStates = [];
 
     public event Action<ScannerRoomSnapshotUpdate>? SnapshotChanged;
+    public event Action<ScannerRoomScanStateUpdate>? ScanStateChanged;
     public event Action? SessionJoined;
     public event Action? StateCleared;
 
@@ -41,14 +50,38 @@ internal sealed class ScannerRoomManager : IDisposable
         Multiplayer.OnAfterMultiplayerEnd += Clear;
     }
 
-    public void RequestSnapshot(NitroxId mapRoomId, float range, NitroxTechType? selectedTechType, NitroxVector3? observedOrigin)
+    public void RequestSnapshot(NitroxId mapRoomId, float range, ScannerRoomScanState expectedScanState, NitroxVector3? observedOrigin)
     {
         range = ScannerRoomQueryParameters.NormalizeRange(range);
-        selectedTechType = ScannerRoomQueryParameters.NormalizeSelection(selectedTechType);
-        ScannerRoomRequestParameters request = new(range, selectedTechType, observedOrigin);
+        ScannerRoomRequestParameters request = new(range, expectedScanState, observedOrigin);
         if (requestCoordinator.EnqueueOrReplace(mapRoomId, request, out ScannerRoomDispatch dispatch))
         {
             Dispatch(dispatch);
+        }
+    }
+
+    public bool RequestScanStateChange(NitroxId mapRoomId, NitroxTechType? desiredTechType) =>
+        packetSender.Send(new ScannerRoomScanStateChangeRequest(
+            mapRoomId,
+            ScannerRoomQueryParameters.NormalizeSelection(desiredTechType)));
+
+    /// <summary>
+    /// Seeds state restored with an entity without allowing an older spawn payload to replace a newer live packet.
+    /// </summary>
+    public void SeedScanState(NitroxId mapRoomId, ScannerRoomScanState scanState) =>
+        ObserveScanState(mapRoomId, scanState, publishEqualVersion: false, supersedeOlderQueries: true);
+
+    /// <summary>
+    /// Applies a server reply. Equal versions are deliberately published so a canonical reply can correct optimistic UI.
+    /// </summary>
+    public void ApplyScanState(NitroxId mapRoomId, ScannerRoomScanState scanState) =>
+        ObserveScanState(mapRoomId, scanState, publishEqualVersion: true, supersedeOlderQueries: true);
+
+    public bool TryGetScanState(NitroxId mapRoomId, out ScannerRoomScanState? scanState)
+    {
+        lock (scanStateLock)
+        {
+            return scanStates.TryGetValue(mapRoomId, out scanState);
         }
     }
 
@@ -75,7 +108,7 @@ internal sealed class ScannerRoomManager : IDisposable
             packet.RequestId,
             packet.Status,
             packet.EffectiveRange,
-            packet.SelectedTechType,
+            packet.ScanState,
             packet.Revision,
             packet.PageIndex,
             packet.PageCount,
@@ -88,6 +121,17 @@ internal sealed class ScannerRoomManager : IDisposable
             result,
             GetTimestampSeconds(),
             out ScannerRoomDispatch dispatch);
+
+        bool scanStateAdvanced = ObserveScanState(
+            packet.MapRoomId,
+            packet.ScanState,
+            publishEqualVersion: false,
+            supersedeOlderQueries: true);
+        if (scanStateAdvanced)
+        {
+            // ObserveScanState superseded the coordinator's promoted request. Do not dispatch the now-stale value.
+            shouldDispatch = false;
+        }
         try
         {
             if (result is ScannerRoomSnapshotApplyResult.Applied or
@@ -146,6 +190,10 @@ internal sealed class ScannerRoomManager : IDisposable
         snapshotPageQueue.Clear();
         requestCoordinator.Clear();
         snapshotStore.Clear();
+        lock (scanStateLock)
+        {
+            scanStates.Clear();
+        }
         StateCleared?.Invoke();
     }
 
@@ -172,7 +220,7 @@ internal sealed class ScannerRoomManager : IDisposable
     private void Dispatch(ScannerRoomDispatch dispatch)
     {
         ScannerRoomRequestParameters request = dispatch.Request;
-        ScannerRoomQueryTicket ticket = snapshotStore.BeginQuery(dispatch.MapRoomId, request.Range, request.SelectedTechType);
+        ScannerRoomQueryTicket ticket = snapshotStore.BeginQuery(dispatch.MapRoomId, request.Range, request.ExpectedScanState);
         double now = GetTimestampSeconds();
         if (!requestCoordinator.ConfirmDispatch(dispatch.MapRoomId, ticket.RequestId, now))
         {
@@ -184,7 +232,7 @@ internal sealed class ScannerRoomManager : IDisposable
             dispatch.MapRoomId,
             ticket.RequestId,
             request.Range,
-            request.SelectedTechType,
+            request.ExpectedScanState.Version,
             ticket.KnownRevision,
             request.ObservedOrigin));
         if (!sent)
@@ -196,6 +244,58 @@ internal sealed class ScannerRoomManager : IDisposable
             }
         }
     }
+
+    /// <returns>Whether this observation changed an already-known canonical state and invalidated older queries.</returns>
+    private bool ObserveScanState(
+        NitroxId mapRoomId,
+        ScannerRoomScanState scanState,
+        bool publishEqualVersion,
+        bool supersedeOlderQueries)
+    {
+        bool publish;
+        bool canonicalStateChanged;
+        lock (scanStateLock)
+        {
+            if (scanStates.TryGetValue(mapRoomId, out ScannerRoomScanState? currentState))
+            {
+                if (scanState.Version < currentState.Version)
+                {
+                    return false;
+                }
+                if (scanState.Version == currentState.Version && !publishEqualVersion)
+                {
+                    return false;
+                }
+
+                canonicalStateChanged = scanState.Version > currentState.Version ||
+                                        !SelectionsEqual(scanState.SelectedTechType, currentState.SelectedTechType);
+            }
+            else
+            {
+                // A cleared/missing cache is the implicit Empty/v0 state. A first non-zero observation therefore
+                // invalidates any v0 query which may already be in flight after reconnect.
+                canonicalStateChanged = scanState.Version > 0 || scanState.SelectedTechType != null;
+            }
+
+            scanStates[mapRoomId] = scanState;
+            publish = true;
+        }
+
+        if (canonicalStateChanged && supersedeOlderQueries)
+        {
+            snapshotPageQueue.RemoveRoom(mapRoomId);
+            requestCoordinator.RemoveRoom(mapRoomId);
+            snapshotStore.CancelPendingQuery(mapRoomId);
+        }
+        if (publish)
+        {
+            ScanStateChanged?.Invoke(new ScannerRoomScanStateUpdate(mapRoomId, scanState));
+        }
+        return canonicalStateChanged;
+    }
+
+    private static bool SelectionsEqual(NitroxTechType? left, NitroxTechType? right) =>
+        ReferenceEquals(left, right) || left?.Equals(right) == true || left == null && right == null;
 
     private static double GetTimestampSeconds() => Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency;
 }

@@ -16,11 +16,11 @@ internal sealed record ScannerResourcePrefabNode(
 
 internal static class ScannerResourcePrefabParser
 {
-    public static ScannerResourceDescriptor[] Parse(ScannerResourcePrefabNode root)
+    public static ScannerResourceDescriptor[] Parse(ScannerResourcePrefabNode root, int classTechType)
     {
         List<ScannerResourceDescriptor> descriptors = [];
         int trackerOrdinal = 0;
-        ParseNode(root, null, (int)TechType.None, descriptors, ref trackerOrdinal);
+        ParseNode(root, null, classTechType, descriptors, ref trackerOrdinal);
         return [.. descriptors];
     }
 

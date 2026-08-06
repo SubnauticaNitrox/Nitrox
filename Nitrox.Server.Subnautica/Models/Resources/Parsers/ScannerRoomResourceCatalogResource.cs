@@ -6,7 +6,9 @@ using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Newtonsoft.Json;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
+using WorldEntityInfo = UWE.WorldEntityInfo;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
@@ -17,7 +19,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
     IOptions<SubnauticaServerOptions> serverOptions,
     ILogger<ScannerRoomResourceCatalogResource> logger) : IGameResource, IScannerRoomResourceCatalog
 {
-    private const int CACHE_VERSION = 1;
+    private const int CACHE_VERSION = 2;
     private const string CACHE_FILENAME = "ScannerRoomResourceCatalogCache.json";
     private const string RESOURCE_TRACKER_CLASS_NAME = "ResourceTracker";
 
@@ -29,6 +31,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
     private readonly JsonSerializer serializer = new() { TypeNameHandling = TypeNameHandling.Auto };
     private readonly TaskCompletionSource resourceLoadFinished = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private Dictionary<string, ScannerResourceDescriptor[]> descriptorsByClassId = [];
+    private HashSet<NitroxTechType> knownTechTypes = [];
     private float maximumRelativeOffset;
 
     public float MaximumRelativeOffset
@@ -55,6 +58,11 @@ internal sealed class ScannerRoomResourceCatalogResource(
         try
         {
             descriptorsByClassId = await CreateOrLoadCacheAsync(cancellationToken);
+            knownTechTypes = descriptorsByClassId.Values
+                                                     .SelectMany(descriptors => descriptors)
+                                                     .Select(descriptor => descriptor.TechType)
+                                                     .Where(techType => !techType.Equals(NitroxTechType.None))
+                                                     .ToHashSet();
             maximumRelativeOffset = descriptorsByClassId.Values
                                                               .SelectMany(descriptors => descriptors)
                                                               .Select(descriptor => descriptor.RelativePosition.Magnitude)
@@ -75,6 +83,12 @@ internal sealed class ScannerRoomResourceCatalogResource(
         return Task.CompletedTask;
     }
 
+    public bool IsKnownTechType(NitroxTechType techType)
+    {
+        resourceLoadFinished.Task.GetAwaiter().GetResult();
+        return techType is { Name.Length: > 0 } && knownTechTypes.Contains(techType);
+    }
+
     public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)
     {
         resourceLoadFinished.Task.GetAwaiter().GetResult();
@@ -91,6 +105,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
     private async Task<Dictionary<string, ScannerResourceDescriptor[]>> CreateOrLoadCacheAsync(CancellationToken cancellationToken)
     {
         string cacheFilePath = Path.Combine(options.Value.GetServerCachePath(), CACHE_FILENAME);
+        string sourceFingerprint = $"{prefabAddressableCatalog.SourceFingerprint}:{WorldEntityDataParser.GetSourceFingerprint(options.Value)}";
         Cache? cache = null;
         try
         {
@@ -102,7 +117,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        if (cache is { } validCache && validCache.IsValid(CACHE_VERSION, prefabAddressableCatalog.SourceFingerprint))
+        if (cache is { } validCache && validCache.IsValid(CACHE_VERSION, sourceFingerprint))
         {
             logger.ZLogDebug($"Successfully loaded Scanner Room resource cache with {validCache.DescriptorsByClassId.Count:@PrefabCount} scannable prefabs and {validCache.DescriptorsByClassId.Sum(entry => entry.Value.Length):@TrackerCount} resource trackers.");
             return validCache.DescriptorsByClassId;
@@ -114,6 +129,10 @@ internal sealed class ScannerRoomResourceCatalogResource(
             {
                 logger.ZLogInformation($"Found outdated Scanner Room resource cache (is v{invalidCache.Version}, expected v{CACHE_VERSION})");
             }
+            else if (invalidCache.SourceFingerprint != sourceFingerprint)
+            {
+                logger.ZLogInformation($"Found Scanner Room resource cache for different game assets. Re-creating it.");
+            }
             else
             {
                 logger.ZLogWarning($"Found Scanner Room resource cache v{CACHE_VERSION} but it contains no data. Re-creating it.");
@@ -121,15 +140,18 @@ internal sealed class ScannerRoomResourceCatalogResource(
         }
 
         logger.ZLogInformation($"Building Scanner Room resource cache, this may take a while...");
-        Dictionary<string, ScannerResourceDescriptor[]> descriptors = BuildCatalog(cancellationToken);
+        Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = WorldEntityDataParser.Load(assetsManager, options.Value, cancellationToken);
+        Dictionary<string, ScannerResourceDescriptor[]> descriptors = BuildCatalog(worldEntitiesByClassId, cancellationToken);
         Validate.IsTrue(descriptors.Count > 0);
 
-        await Cache.SerializeAsync(serializer, new Cache(CACHE_VERSION, prefabAddressableCatalog.SourceFingerprint, descriptors), cacheFilePath);
+        await Cache.SerializeAsync(serializer, new Cache(CACHE_VERSION, sourceFingerprint, descriptors), cacheFilePath);
         logger.ZLogDebug($"Successfully built Scanner Room resource cache with {descriptors.Count:@PrefabCount} scannable prefabs and {descriptors.Sum(entry => entry.Value.Length):@TrackerCount} resource trackers. Future server starts will take less time.");
         return descriptors;
     }
 
-    private Dictionary<string, ScannerResourceDescriptor[]> BuildCatalog(CancellationToken cancellationToken)
+    private Dictionary<string, ScannerResourceDescriptor[]> BuildCatalog(
+        IReadOnlyDictionary<string, WorldEntityInfo> worldEntitiesByClassId,
+        CancellationToken cancellationToken)
     {
         byte[] resourceTrackerHash = FindMonoScriptPropertiesHash(RESOURCE_TRACKER_CLASS_NAME, cancellationToken);
         ConcurrentDictionary<string, ScannerResourceDescriptor[]> parsedDescriptors = [];
@@ -147,7 +169,10 @@ internal sealed class ScannerRoomResourceCatalogResource(
                 }
 
                 AssetFileInfo rootGameObject = manager.GetPrefabGameObjectInfoFromBundle(assetFile);
-                ScannerResourceDescriptor[] descriptors = ParsePrefab(manager, assetFile, rootGameObject);
+                int classTechType = worldEntitiesByClassId.TryGetValue(entry.Key, out WorldEntityInfo worldEntityInfo)
+                                        ? (int)worldEntityInfo.techType
+                                        : (int)TechType.None;
+                ScannerResourceDescriptor[] descriptors = ParsePrefab(manager, assetFile, rootGameObject, classTechType);
                 if (descriptors.Length > 0)
                 {
                     parsedDescriptors.TryAdd(entry.Key, descriptors);
@@ -203,7 +228,11 @@ internal sealed class ScannerRoomResourceCatalogResource(
             type.TypeId == (int)AssetClassID.MonoBehaviour &&
             type.TypeHash.data.SequenceEqual(typeHash));
 
-    private static ScannerResourceDescriptor[] ParsePrefab(SubnauticaAssetsManager manager, AssetsFileInstance assetFile, AssetFileInfo rootGameObject)
+    private static ScannerResourceDescriptor[] ParsePrefab(
+        SubnauticaAssetsManager manager,
+        AssetsFileInstance assetFile,
+        AssetFileInfo rootGameObject,
+        int classTechType)
     {
         ScannerResourcePrefabNode root = ReadGameObject(
             manager,
@@ -212,7 +241,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
             NitroxVector3.Zero,
             NitroxQuaternion.Identity,
             NitroxVector3.One);
-        return ScannerResourcePrefabParser.Parse(root);
+        return ScannerResourcePrefabParser.Parse(root, classTechType);
     }
 
     private static ScannerResourcePrefabNode ReadGameObject(
@@ -239,8 +268,8 @@ internal sealed class ScannerRoomResourceCatalogResource(
         {
             // ResourceTracker.techType is private and not marked [SerializeField], so Unity never writes it into
             // the serialized MonoBehaviour and the lookup yields a dummy field. The game derives it in Start() as
-            // "overrideTechType != None ? overrideTechType : CraftData.GetTechType(gameObject)", and the TechTag
-            // based prefabTechType supplies that fallback in ScannerResourceDescriptorFactory.
+            // "overrideTechType != None ? overrideTechType : CraftData.GetTechType(gameObject)". The nearest
+            // TechTag or the root PrefabIdentifier class-id mapping supplies that fallback in the prefab parser.
             AssetTypeValueField trackerTechType = resourceTracker["techType"];
             trackers.Add(new ScannerResourceTrackerData(
                 resourceTracker["m_Enabled"].AsBool,
