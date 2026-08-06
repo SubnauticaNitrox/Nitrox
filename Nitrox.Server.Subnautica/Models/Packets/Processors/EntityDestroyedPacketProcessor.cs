@@ -6,14 +6,24 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityDestroyedPacketProcessor(PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<EntityDestroyed>
+internal sealed class EntityDestroyedPacketProcessor(
+    PlayerManager playerManager,
+    EntitySimulation entitySimulation,
+    WorldEntityManager worldEntityManager,
+    SeamothPassengerService passengerService) : IAuthPacketProcessor<EntityDestroyed>
 {
     private readonly PlayerManager playerManager = playerManager;
     private readonly EntitySimulation entitySimulation = entitySimulation;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly SeamothPassengerService passengerService = passengerService;
 
     public async Task Process(AuthProcessorContext context, EntityDestroyed packet)
     {
+        foreach (SeamothPassengerStateChanged state in passengerService.ClearVehicle(packet.Id))
+        {
+            await context.SendToAllAsync(state);
+        }
+
         entitySimulation.EntityDestroyed(packet.Id);
 
         if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity? entity))

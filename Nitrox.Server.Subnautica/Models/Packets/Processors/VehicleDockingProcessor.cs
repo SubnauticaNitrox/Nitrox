@@ -1,4 +1,5 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
@@ -8,12 +9,14 @@ sealed class VehicleDockingProcessor : IAuthPacketProcessor<VehicleDocking>
 {
     private readonly IPacketSender packetSender;
     private readonly EntityRegistry entityRegistry;
+    private readonly SeamothPassengerService passengerService;
     private readonly ILogger<VehicleDockingProcessor> logger;
 
-    public VehicleDockingProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, ILogger<VehicleDockingProcessor> logger)
+    public VehicleDockingProcessor(IPacketSender packetSender, EntityRegistry entityRegistry, SeamothPassengerService passengerService, ILogger<VehicleDockingProcessor> logger)
     {
         this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
+        this.passengerService = passengerService;
         this.logger = logger;
     }
 
@@ -29,6 +32,11 @@ sealed class VehicleDockingProcessor : IAuthPacketProcessor<VehicleDocking>
         {
             logger.ZLogError($"Unable to find dock {packet.DockId} for docking vehicle {packet.VehicleId}");
             return;
+        }
+
+        foreach (SeamothPassengerStateChanged state in passengerService.ClearVehicle(packet.VehicleId))
+        {
+            await context.SendToAllAsync(state);
         }
 
         entityRegistry.ReparentEntity(vehicleEntity, dockEntity);
