@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FMOD;
 using FMODUnity;
@@ -18,16 +19,20 @@ public sealed class SeamothHornSound : IDisposable
     internal const string AUDIO_FILE_NAME = "seamoth_horn.wav";
     private const float MIN_AUDIBLE_DISTANCE = 1f;
 
+    private readonly Dictionary<int, Channel> activeChannelsByVehicle = new();
     private Sound sound;
 
     internal static string AudioFilePath => Path.Combine(NitroxUser.AssetsPath ?? string.Empty, "Resources", "Sounds", AUDIO_FILE_NAME);
 
-    public bool TryPlay(Vector3 position)
+    public bool TryPlay(GameObject vehicle)
     {
         if (!TryLoad())
         {
             return false;
         }
+
+        int vehicleInstanceId = vehicle.GetInstanceID();
+        StopActiveChannel(vehicleInstanceId);
 
         global::FMOD.System coreSystem = RuntimeManager.CoreSystem;
         RESULT result = coreSystem.playSound(sound, default, true, out Channel channel);
@@ -36,7 +41,7 @@ public sealed class SeamothHornSound : IDisposable
             return false;
         }
 
-        VECTOR fmodPosition = position.ToFMODVector();
+        VECTOR fmodPosition = vehicle.transform.position.ToFMODVector();
         VECTOR velocity = Vector3.zero.ToFMODVector();
         result = channel.set3DAttributes(ref fmodPosition, ref velocity);
         if (!CheckResult(result, "setting the 3D position"))
@@ -60,7 +65,20 @@ public sealed class SeamothHornSound : IDisposable
             return false;
         }
 
+        activeChannelsByVehicle[vehicleInstanceId] = channel;
         return true;
+    }
+
+    private void StopActiveChannel(int vehicleInstanceId)
+    {
+        if (!activeChannelsByVehicle.TryGetValue(vehicleInstanceId, out Channel activeChannel))
+        {
+            return;
+        }
+
+        // An already-finished FMOD channel reports an invalid handle here, which needs no action.
+        activeChannel.stop();
+        activeChannelsByVehicle.Remove(vehicleInstanceId);
     }
 
     private bool TryLoad()
@@ -107,6 +125,12 @@ public sealed class SeamothHornSound : IDisposable
 
     public void Dispose()
     {
+        foreach (Channel activeChannel in activeChannelsByVehicle.Values)
+        {
+            activeChannel.stop();
+        }
+        activeChannelsByVehicle.Clear();
+
         if (!sound.hasHandle())
         {
             return;

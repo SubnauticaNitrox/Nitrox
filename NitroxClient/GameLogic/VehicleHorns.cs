@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using FMOD.Studio;
+using StudioStopMode = global::FMOD.Studio.STOP_MODE;
+using FMODUnity;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
@@ -8,10 +13,11 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodWhitelist, SeamothHornSound seamothHornSound)
+public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodWhitelist, SeamothHornSound seamothHornSound) : IDisposable
 {
     internal const string HORN_SOUND_PATH = "event:/sub/cyclops/horn";
 
+    private readonly Dictionary<int, EventInstance> activeCyclopsFallbacksByVehicle = new();
     private readonly FMODWhitelist fmodWhitelist = fmodWhitelist;
     private readonly IPacketSender packetSender = packetSender;
     private readonly SeamothHornSound seamothHornSound = seamothHornSound;
@@ -82,14 +88,19 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
     {
         if (vehicle.GetComponent<SeaMoth>())
         {
-            seamothHornSound.TryPlay(vehicle.transform.position);
+            seamothHornSound.TryPlay(vehicle);
             return;
         }
 
         using (FMODSystem.SuppressSendingSounds())
         {
+            StopCyclopsFallback(vehicle);
+
             if (nativeEmitter)
             {
+                EventInstance hornEvent = nativeEmitter.GetEventInstance();
+                hornEvent.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, VehicleHorn.MAX_AUDIBLE_DISTANCE);
+                nativeEmitter.Stop();
                 nativeEmitter.Play();
                 return;
             }
@@ -100,9 +111,42 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
                 return;
             }
 
-            // A Cyclops without its native emitter can still use the shipped Cyclops horn event.
-            FMODEmitterController.PlayEventOneShot(HORN_SOUND_PATH, soundData.Radius, vehicle.transform.position);
+            PlayCyclopsFallback(vehicle);
         }
+    }
+
+    private void PlayCyclopsFallback(GameObject vehicle)
+    {
+        EventInstance evt = FMODUWE.GetEventImpl(HORN_SOUND_PATH);
+        evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, VehicleHorn.MAX_AUDIBLE_DISTANCE);
+        evt.set3DAttributes(vehicle.transform.To3DAttributes());
+        evt.start();
+
+        activeCyclopsFallbacksByVehicle[vehicle.GetInstanceID()] = evt;
+    }
+
+    private void StopCyclopsFallback(GameObject vehicle)
+    {
+        int vehicleInstanceId = vehicle.GetInstanceID();
+        if (!activeCyclopsFallbacksByVehicle.TryGetValue(vehicleInstanceId, out EventInstance activeHorn))
+        {
+            return;
+        }
+
+        activeHorn.stop(StudioStopMode.IMMEDIATE);
+        activeHorn.release();
+        activeCyclopsFallbacksByVehicle.Remove(vehicleInstanceId);
+    }
+
+    public void Dispose()
+    {
+        foreach (EventInstance activeHorn in activeCyclopsFallbacksByVehicle.Values)
+        {
+            activeHorn.stop(StudioStopMode.IMMEDIATE);
+            activeHorn.release();
+        }
+        activeCyclopsFallbacksByVehicle.Clear();
     }
 
     private static FMOD_CustomEmitter FindNativeHornEmitter(GameObject vehicle)

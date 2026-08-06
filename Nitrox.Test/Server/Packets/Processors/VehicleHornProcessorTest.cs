@@ -30,11 +30,12 @@ public sealed class VehicleHornProcessorTest
     public async Task ValidHornIsSentOnlyToNearbyPlayers()
     {
         Fixture fixture = new();
-        VehicleEntity seamoth = fixture.AddVehicle("Seamoth", new NitroxVector3(10, 0, 0));
-        Player pilot = fixture.AddPlayer("Pilot", new NitroxVector3(10, 0, 0));
-        Player nearby = fixture.AddPlayer("Nearby", new NitroxVector3(20, 0, 0));
-        fixture.AddPlayer("FarAway", new NitroxVector3(VehicleHorn.MAX_AUDIBLE_DISTANCE + 20, 0, 0));
+        VehicleEntity seamoth = fixture.AddVehicle("Seamoth", NitroxVector3.Zero);
+        Player pilot = fixture.AddPlayer("Pilot", NitroxVector3.Zero);
+        Player nearby = fixture.AddPlayer("Nearby", new NitroxVector3(VehicleHorn.MAX_AUDIBLE_DISTANCE - 1, 0, 0));
+        fixture.AddPlayer("FarAway", new NitroxVector3(VehicleHorn.MAX_AUDIBLE_DISTANCE + 1, 0, 0));
         pilot.PlayerContext!.DrivingVehicle = seamoth.Id;
+        VehicleHorn.MAX_AUDIBLE_DISTANCE.Should().Be(200f);
 
         await fixture.Process(pilot, new VehicleHorn(seamoth.Id));
 
