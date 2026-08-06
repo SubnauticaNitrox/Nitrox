@@ -11,6 +11,18 @@ public static class KeyBindingManager
     public static List<KeyBinding> KeyBindings =
     [
         new ChatKeyBindingAction(),
-        new DiscordFocusBindingAction()
+        new DiscordFocusBindingAction(),
+        new VehicleHornKeyBindingAction()
     ];
+
+    public static GameInput.Button GetButton<T>() where T : KeyBinding
+    {
+        int index = KeyBindings.FindIndex(binding => binding is T);
+        if (index < 0)
+        {
+            throw new System.InvalidOperationException($"No key binding is registered for {typeof(T).Name}");
+        }
+
+        return (GameInput.Button)(NITROX_BASE_ID + index);
+    }
 }

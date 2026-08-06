@@ -84,6 +84,7 @@
     "Nitrox_Settings_HigherForUnstable_Tooltip": "Give a higher value for unstable connections",
     "Nitrox_Settings_Keybind_FocusDiscord": "Focus on the Discord invite window",
     "Nitrox_Settings_Keybind_OpenChat": "Open chat",
+    "Nitrox_Settings_Keybind_VehicleHorn": "Vehicle horn",
     "Nitrox_Settings_LatencyUpdatePeriod": "Latency update period (s)",
     "Nitrox_Settings_OfflineClockSyncDuration": "Clock sync procedure duration (s)",
     "Nitrox_Settings_Privacy": "Privacy",
