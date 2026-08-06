@@ -80,8 +80,9 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
 
     private void PlayHorn(GameObject vehicle, FMOD_CustomEmitter nativeEmitter)
     {
-        if (vehicle.GetComponent<SeaMoth>() && seamothHornSound.TryPlay(vehicle.transform.position))
+        if (vehicle.GetComponent<SeaMoth>())
         {
+            seamothHornSound.TryPlay(vehicle.transform.position);
             return;
         }
 
@@ -99,7 +100,7 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
                 return;
             }
 
-            // Retain the shipped Cyclops event as a fallback if the bundled Seamoth WAV cannot load.
+            // A Cyclops without its native emitter can still use the shipped Cyclops horn event.
             FMODEmitterController.PlayEventOneShot(HORN_SOUND_PATH, soundData.Radius, vehicle.transform.position);
         }
     }
