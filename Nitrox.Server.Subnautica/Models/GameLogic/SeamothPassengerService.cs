@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
@@ -26,9 +27,10 @@ internal sealed class SeamothPassengerService(
     IPacketSender packetSender) : ISessionCleaner
 {
     internal const byte MAX_PASSENGERS = 3;
+    internal const float MAX_ENTRY_DISTANCE = 15f;
 
     private readonly Dictionary<SessionId, PassengerOccupancy> passengersBySession = [];
-    private readonly Dictionary<SessionId, NitroxId> drivenSeamothsBySession = [];
+    private readonly Dictionary<SessionId, DriverState> drivenSeamothsBySession = [];
     private readonly object stateLock = new();
 
     public SeamothPassengerChangeResult Change(Player player, Optional<NitroxId> requestedSeamothId)
@@ -91,15 +93,19 @@ internal sealed class SeamothPassengerService(
                     clearedStates.Add(passengerState);
                 }
 
-                if (drivenSeamothsBySession.TryGetValue(player.SessionId, out NitroxId? previousVehicle) && !previousVehicle.Equals(vehicleId))
+                if (drivenSeamothsBySession.TryGetValue(player.SessionId, out DriverState? previousDriverState) && !previousDriverState.VehicleId.Equals(vehicleId))
                 {
-                    ClearVehicleUnsafe(previousVehicle, clearedStates);
+                    ClearVehicleUnsafe(previousDriverState.VehicleId, clearedStates);
                 }
-                drivenSeamothsBySession[player.SessionId] = vehicleId;
+                drivenSeamothsBySession[player.SessionId] = new(player, vehicleId);
             }
             else
             {
-                bool wasKnownDriver = drivenSeamothsBySession.Remove(player.SessionId, out NitroxId? drivenVehicle) && drivenVehicle.Equals(vehicleId);
+                bool wasKnownDriver = drivenSeamothsBySession.TryGetValue(player.SessionId, out DriverState? driverState) && driverState.VehicleId.Equals(vehicleId);
+                if (wasKnownDriver)
+                {
+                    drivenSeamothsBySession.Remove(player.SessionId);
+                }
                 bool contextSaysDriver = player.PlayerContext?.DrivingVehicle?.Equals(vehicleId) == true;
                 if (wasKnownDriver || contextSaysDriver)
                 {
@@ -131,9 +137,9 @@ internal sealed class SeamothPassengerService(
             }
 
             NitroxId? drivenVehicle = null;
-            if (drivenSeamothsBySession.Remove(player.SessionId, out NitroxId? trackedVehicle))
+            if (drivenSeamothsBySession.Remove(player.SessionId, out DriverState? trackedDriverState))
             {
-                drivenVehicle = trackedVehicle;
+                drivenVehicle = trackedDriverState.VehicleId;
             }
             else if (player.PlayerContext?.DrivingVehicle is NitroxId contextVehicle)
             {
@@ -161,9 +167,9 @@ internal sealed class SeamothPassengerService(
             {
                 clearedStates.Add(passengerState);
             }
-            if (drivenSeamothsBySession.Remove(args.Session.Id, out NitroxId? drivenVehicle))
+            if (drivenSeamothsBySession.Remove(args.Session.Id, out DriverState? driverState))
             {
-                ClearVehicleUnsafe(drivenVehicle, clearedStates);
+                ClearVehicleUnsafe(driverState.VehicleId, clearedStates);
             }
         }
 
@@ -175,16 +181,33 @@ internal sealed class SeamothPassengerService(
 
     private bool IsPassengerEntryAllowed(Player passenger, NitroxId seamothId)
     {
-        if (!entityRegistry.TryGetEntityById(seamothId, out VehicleEntity? vehicleEntity) ||
-            !string.Equals(vehicleEntity.TechType.Name, "Seamoth", StringComparison.Ordinal))
+        if (!entityRegistry.TryGetEntityById(seamothId, out VehicleEntity? vehicleEntity))
         {
             return false;
         }
 
-        return simulationOwnershipData.TryGetLock(seamothId, out SimulationOwnershipData.PlayerLock playerLock) &&
-               playerLock.LockType == SimulationLockType.EXCLUSIVE &&
-               playerLock.Player != passenger &&
-               playerLock.Player.PlayerContext?.DrivingVehicle?.Equals(seamothId) == true;
+        float entryDistance = NitroxVector3.Distance(passenger.Position, vehicleEntity.Transform.Position);
+        if (
+            !string.Equals(vehicleEntity.TechType.Name, "Seamoth", StringComparison.Ordinal) ||
+            vehicleEntity.ParentId != null ||
+            !float.IsFinite(entryDistance) ||
+            entryDistance > MAX_ENTRY_DISTANCE)
+        {
+            return false;
+        }
+
+        if (!simulationOwnershipData.TryGetLock(seamothId, out SimulationOwnershipData.PlayerLock playerLock) ||
+            playerLock.LockType != SimulationLockType.EXCLUSIVE ||
+            playerLock.Player == passenger ||
+            !playerLock.Player.IsOnline ||
+            playerLock.Player.PlayerContext?.DrivingVehicle?.Equals(seamothId) != true)
+        {
+            return false;
+        }
+
+        return drivenSeamothsBySession.TryGetValue(playerLock.Player.SessionId, out DriverState? driverState) &&
+               ReferenceEquals(driverState.Player, playerLock.Player) &&
+               driverState.VehicleId.Equals(seamothId);
     }
 
     private bool TryGetAvailableSeatUnsafe(NitroxId seamothId, out byte seatIndex)
@@ -227,6 +250,23 @@ internal sealed class SeamothPassengerService(
                 clearedStates.Add(state);
             }
         }
+
+        List<SessionId> driversToClear = [];
+        foreach ((SessionId sessionId, DriverState driverState) in drivenSeamothsBySession)
+        {
+            if (driverState.VehicleId.Equals(vehicleId))
+            {
+                driversToClear.Add(sessionId);
+            }
+        }
+        foreach (SessionId sessionId in driversToClear)
+        {
+            if (drivenSeamothsBySession.Remove(sessionId, out DriverState? driverState) &&
+                driverState.Player.PlayerContext?.DrivingVehicle?.Equals(vehicleId) == true)
+            {
+                driverState.Player.PlayerContext.DrivingVehicle = null;
+            }
+        }
     }
 
     private bool RemovePassengerUnsafe(SessionId sessionId, out SeamothPassengerStateChanged? state)
@@ -255,4 +295,5 @@ internal sealed class SeamothPassengerService(
     private static SeamothPassengerStateChanged EmptyState(SessionId sessionId, bool accepted) => new(sessionId, Optional.Empty, 0, accepted);
 
     private sealed record PassengerOccupancy(Player Player, NitroxId SeamothId, byte SeatIndex);
+    private sealed record DriverState(Player Player, NitroxId VehicleId);
 }

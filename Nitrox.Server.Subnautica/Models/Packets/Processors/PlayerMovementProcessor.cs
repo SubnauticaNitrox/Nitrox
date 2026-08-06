@@ -11,6 +11,11 @@ internal sealed class PlayerMovementProcessor(EntityRegistry entityRegistry) : I
 
     public async Task Process(AuthProcessorContext context, PlayerMovement packet)
     {
+        if (context.Sender.PlayerContext.PassengerSeamoth != null)
+        {
+            return;
+        }
+
         Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(context.Sender.PlayerContext.PlayerNitroxId);
 
         if (playerEntity.HasValue)

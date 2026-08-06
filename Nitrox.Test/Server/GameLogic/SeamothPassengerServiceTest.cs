@@ -35,6 +35,7 @@ public sealed class SeamothPassengerServiceTest
         fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
 
         fixture.Ownership.TryToAcquire(seamoth.Id, driver, SimulationLockType.TRANSIENT).Should().BeTrue();
+        fixture.Service.HandlePilotModeChanged(driver, seamoth.Id, true).Should().BeEmpty();
         driver.PlayerContext!.DrivingVehicle = seamoth.Id;
         fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
 
@@ -64,6 +65,54 @@ public sealed class SeamothPassengerServiceTest
         result.Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
         result.State.Accepted.Should().BeFalse();
         passenger.PlayerContext!.PassengerSeamoth.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void RejectsUntrackedOfflineDockedAndDistantDriverState()
+    {
+        {
+            Fixture fixture = new();
+            Player driver = fixture.CreatePlayer("Untracked driver");
+            Player passenger = fixture.CreatePlayer("Passenger");
+            VehicleEntity seamoth = fixture.AddVehicle("Seamoth");
+            driver.PlayerContext!.DrivingVehicle = seamoth.Id;
+            fixture.Ownership.TryToAcquire(seamoth.Id, driver, SimulationLockType.EXCLUSIVE).Should().BeTrue();
+
+            fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
+        }
+
+        {
+            Fixture fixture = new();
+            Player driver = fixture.CreatePlayer("Offline driver");
+            Player passenger = fixture.CreatePlayer("Passenger");
+            VehicleEntity seamoth = fixture.AddVehicle("Seamoth");
+            fixture.EnableDriver(driver, seamoth);
+            driver.IsOnline = false;
+
+            fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
+        }
+
+        {
+            Fixture fixture = new();
+            Player driver = fixture.CreatePlayer("Docked driver");
+            Player passenger = fixture.CreatePlayer("Passenger");
+            VehicleEntity seamoth = fixture.AddVehicle("Seamoth");
+            seamoth.ParentId = new NitroxId();
+            fixture.EnableDriver(driver, seamoth);
+
+            fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
+        }
+
+        {
+            Fixture fixture = new();
+            Player driver = fixture.CreatePlayer("Distant driver");
+            Player passenger = fixture.CreatePlayer("Passenger");
+            VehicleEntity seamoth = fixture.AddVehicle("Seamoth");
+            passenger.Position = new NitroxVector3(SeamothPassengerService.MAX_ENTRY_DISTANCE + 1, 0, 0);
+            fixture.EnableDriver(driver, seamoth);
+
+            fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected);
+        }
     }
 
     [TestMethod]
@@ -113,17 +162,80 @@ public sealed class SeamothPassengerServiceTest
         Player secondPassenger = fixture.CreatePlayer("Second passenger");
         VehicleEntity seamoth = fixture.AddVehicle("Seamoth");
         fixture.EnableDriver(driver, seamoth);
-        fixture.Service.HandlePilotModeChanged(driver, seamoth.Id, true).Should().BeEmpty();
         fixture.Service.Change(firstPassenger, seamoth.Id);
         fixture.Service.Change(secondPassenger, seamoth.Id);
 
         IReadOnlyList<SeamothPassengerStateChanged> states = fixture.Service.HandlePilotModeChanged(driver, seamoth.Id, false);
 
         states.Should().HaveCount(2).And.OnlyContain(state => !state.SeamothId.HasValue && state.Accepted);
+        driver.PlayerContext!.DrivingVehicle.Should().Be(seamoth.Id, "the pilot processor clears this after the service handles the exit");
         firstPassenger.PlayerContext!.PassengerSeamoth.Should().BeNull();
         secondPassenger.PlayerContext!.PassengerSeamoth.Should().BeNull();
         fixture.Ownership.TryGetLock(seamoth.Id, out SimulationOwnershipData.PlayerLock playerLock).Should().BeTrue();
         playerLock.Player.Should().BeSameAs(driver);
+    }
+
+    [TestMethod]
+    public void VehicleLifecycleClearRemovesPassengerAndTrackedDriverButNotOwnership()
+    {
+        Fixture fixture = new();
+        Player driver = fixture.CreatePlayer("Driver");
+        Player passenger = fixture.CreatePlayer("Passenger");
+        Player laterPassenger = fixture.CreatePlayer("Later passenger");
+        VehicleEntity seamoth = fixture.AddVehicle("Seamoth");
+        fixture.EnableDriver(driver, seamoth);
+        fixture.Service.Change(passenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Changed);
+
+        IReadOnlyList<SeamothPassengerStateChanged> states = fixture.Service.ClearVehicle(seamoth.Id);
+
+        states.Should().ContainSingle(state => state.SessionId == passenger.SessionId && !state.SeamothId.HasValue && state.Accepted);
+        passenger.PlayerContext!.PassengerSeamoth.Should().BeNull();
+        driver.PlayerContext!.DrivingVehicle.Should().BeNull();
+        fixture.Ownership.TryGetLock(seamoth.Id, out SimulationOwnershipData.PlayerLock playerLock).Should().BeTrue();
+        playerLock.Player.Should().BeSameAs(driver);
+
+        driver.PlayerContext.DrivingVehicle = seamoth.Id;
+        fixture.Service.Change(laterPassenger, seamoth.Id).Status.Should().Be(SeamothPassengerChangeStatus.Rejected, "lifecycle cleanup removed the tracked active-driver state");
+    }
+
+    [TestMethod]
+    public async Task PassengerMovementPacketsAreIgnoredWithoutMutationOrRelay()
+    {
+        Fixture fixture = new();
+        Player passenger = fixture.CreatePlayer("Passenger");
+        passenger.PlayerContext!.PassengerSeamoth = new NitroxId();
+        NitroxVector3 entityPosition = new(1, 2, 3);
+        NitroxQuaternion entityRotation = new(0, 0, 0, 1);
+        PlayerEntity playerEntity = new(
+            new NitroxTransform(entityPosition, entityRotation, NitroxVector3.One),
+            GlobalRootEntity.GLOBAL_ROOT_LEVEL,
+            "player-class-id",
+            true,
+            passenger.PlayerContext.PlayerNitroxId,
+            new NitroxTechType("Player"),
+            null,
+            null,
+            []);
+        fixture.Registry.AddEntity(playerEntity);
+        PlayerMovementProcessor processor = new(fixture.Registry);
+        PlayerMovement movement = new(
+            passenger.SessionId,
+            new NitroxVector3(100, 200, 300),
+            NitroxVector3.One,
+            new NitroxQuaternion(1, 0, 0, 0),
+            NitroxQuaternion.Identity);
+
+        await processor.Process(new AuthProcessorContext(passenger, fixture.PacketSender), movement);
+        PlayerInCyclopsMovementProcessor cyclopsProcessor = new(fixture.Registry, Substitute.For<ILogger<PlayerInCyclopsMovementProcessor>>());
+        await cyclopsProcessor.Process(
+            new AuthProcessorContext(passenger, fixture.PacketSender),
+            new PlayerInCyclopsMovement(passenger.SessionId, new NitroxVector3(400, 500, 600), new NitroxQuaternion(1, 0, 0, 0)));
+
+        passenger.Position.Should().Be(NitroxVector3.Zero);
+        passenger.Rotation.Should().Be(NitroxQuaternion.Identity);
+        playerEntity.Transform.Position.Should().Be(entityPosition);
+        playerEntity.Transform.Rotation.Should().Be(entityRotation);
+        fixture.PacketSender.Others.Should().BeEmpty();
     }
 
     [TestMethod]
@@ -156,6 +268,7 @@ public sealed class SeamothPassengerServiceTest
         public SimulationOwnershipData Ownership { get; } = new();
         public RecordingPacketSender PacketSender { get; } = new();
         public SeamothPassengerService Service { get; }
+        public EntityRegistry Registry => registry;
 
         public Fixture()
         {
@@ -217,8 +330,9 @@ public sealed class SeamothPassengerServiceTest
 
         public void EnableDriver(Player player, VehicleEntity vehicle)
         {
-            player.PlayerContext!.DrivingVehicle = vehicle.Id;
             Ownership.TryToAcquire(vehicle.Id, player, SimulationLockType.EXCLUSIVE).Should().BeTrue();
+            Service.HandlePilotModeChanged(player, vehicle.Id, true).Should().BeEmpty();
+            player.PlayerContext!.DrivingVehicle = vehicle.Id;
         }
     }
 
@@ -226,6 +340,7 @@ public sealed class SeamothPassengerServiceTest
     {
         public List<Packet> Broadcasts { get; } = [];
         public List<(Packet Packet, SessionId SessionId)> Direct { get; } = [];
+        public List<(Packet Packet, SessionId ExcludedSessionId)> Others { get; } = [];
 
         public ValueTask SendPacketAsync<T>(T packet, SessionId sessionId) where T : Packet
         {
@@ -239,6 +354,10 @@ public sealed class SeamothPassengerServiceTest
             return ValueTask.CompletedTask;
         }
 
-        public ValueTask SendPacketToOthersAsync<T>(T packet, SessionId excludedSessionId) where T : Packet => ValueTask.CompletedTask;
+        public ValueTask SendPacketToOthersAsync<T>(T packet, SessionId excludedSessionId) where T : Packet
+        {
+            Others.Add((packet, excludedSessionId));
+            return ValueTask.CompletedTask;
+        }
     }
 }
