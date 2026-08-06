@@ -47,7 +47,7 @@
     "Nitrox_KickQuestion": "Kick {PLAYER}?",
     "Nitrox_LaunchGame": "Launching game…",
     "Nitrox_Loading": "Loading…",
-    "Nitrox_LoadingScreenWarn": "Expect game-breaking bugs",
+    "Nitrox_LoadingScreenWarn": "Expect game",
     "Nitrox_LostConnection": "Lost connection to game server",
     "Nitrox_LostConnectionWarn": "No longer connected to the server",
     "Nitrox_MissingPermission": "You don't have permission to execute this command [{PERMISSION}]",
