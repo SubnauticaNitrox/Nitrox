@@ -11,6 +11,11 @@ internal sealed class PlayerInCyclopsMovementProcessor(EntityRegistry entityRegi
 
     public async Task Process(AuthProcessorContext context, PlayerInCyclopsMovement packet)
     {
+        if (context.Sender.PlayerContext.PassengerSeamoth != null)
+        {
+            return;
+        }
+
         if (!entityRegistry.TryGetEntityById(context.Sender.PlayerContext.PlayerNitroxId, out PlayerEntity playerEntity))
         {
             logger.ZLogErrorOnce($"{nameof(PlayerEntity)} couldn't be found for player {context.Sender.Name}. It is advised the player reconnects before losing too much progression.");

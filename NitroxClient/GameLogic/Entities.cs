@@ -62,7 +62,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodEntity)] = new EscapePodEntitySpawner(localPlayer);
             entitySpawnersByType[typeof(PlayerEntity)] = new PlayerEntitySpawner(playerManager, localPlayer);
-            entitySpawnersByType[typeof(VehicleEntity)] = new VehicleEntitySpawner();
+            entitySpawnersByType[typeof(VehicleEntity)] = new VehicleEntitySpawner(playerManager);
             entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BaseLeakEntity)] = new BaseLeakEntitySpawner(liveMixinManager);

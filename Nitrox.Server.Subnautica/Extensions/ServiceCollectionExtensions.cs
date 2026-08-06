@@ -168,6 +168,7 @@ internal static partial class ServiceCollectionExtensions
                     .AddSingleton<StoryManager>()
                     .AddSingleton<StoryScheduler>()
                     .AddSingleton<SimulationOwnershipData>()
+                    .AddSingleton<SeamothPassengerService>()
                     .AddSingleton<WorldEntityManager>()
                     .AddSingleton<ScannerResourceIndex>()
                     .AddSingleton<IWorldEntityLifecycleObserver>(provider => provider.GetRequiredService<ScannerResourceIndex>())

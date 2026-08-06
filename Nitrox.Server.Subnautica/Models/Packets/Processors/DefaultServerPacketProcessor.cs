@@ -11,7 +11,8 @@ internal sealed class DefaultServerPacketProcessor(ILogger<DefaultServerPacketPr
     private readonly HashSet<Type> defaultPacketProcessorBlacklist =
     [
         typeof(GameModeChanged),
-        typeof(DropSimulationOwnership)
+        typeof(DropSimulationOwnership),
+        typeof(SeamothPassengerStateChanged)
     ];
 
     private readonly ILogger<DefaultServerPacketProcessor> logger = logger;

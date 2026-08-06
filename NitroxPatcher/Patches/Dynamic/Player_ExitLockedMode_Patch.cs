@@ -1,4 +1,5 @@
 using System.Reflection;
+using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -9,5 +10,9 @@ public sealed partial class Player_ExitLockedMode_Patch : NitroxPatch, IDynamicP
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.ExitLockedMode(default, default));
 
-    public static void Postfix(Player __instance) => Player_ExitPilotingMode_Patch.Postfix(__instance);
+    public static void Postfix(Player __instance)
+    {
+        Resolve<SeamothPassengers>().OnLockedModeExited(__instance);
+        Player_ExitPilotingMode_Patch.Postfix(__instance);
+    }
 }

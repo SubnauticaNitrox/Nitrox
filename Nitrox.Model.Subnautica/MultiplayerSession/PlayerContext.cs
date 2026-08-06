@@ -20,11 +20,17 @@ public class PlayerContext
     /// Not null if the player is currently driving a vehicle.
     /// </summary>
     public NitroxId? DrivingVehicle { get; set; }
+    /// <summary>
+    /// Not null if the player is currently occupying a Seamoth as a passenger. Passenger state never grants simulation ownership or pilot authority.
+    /// </summary>
+    public NitroxId? PassengerSeamoth { get; set; }
+    public byte SeamothPassengerSeat { get; set; }
     public IntroCinematicMode IntroCinematicMode { get; set; }
     public PlayerAnimation Animation { get; set; }
 
     public PlayerContext(string playerName, SessionId sessionId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
-                         SubnauticaGameMode gameMode, NitroxId? drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation)
+                         SubnauticaGameMode gameMode, NitroxId? drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation,
+                         NitroxId? passengerSeamoth = null, byte seamothPassengerSeat = 0)
     {
         PlayerName = playerName;
         SessionId = sessionId;
@@ -34,12 +40,14 @@ public class PlayerContext
         IsMuted = isMuted;
         GameMode = gameMode;
         DrivingVehicle = drivingVehicle;
+        PassengerSeamoth = passengerSeamoth;
+        SeamothPassengerSeat = seamothPassengerSeat;
         IntroCinematicMode = introCinematicMode;
         Animation = animation;
     }
 
     public override string ToString()
     {
-        return $"[{nameof(PlayerContext)} PlayerName: {PlayerName}, {nameof(SessionId)}: {SessionId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}, IntroCinematicMode: {IntroCinematicMode}, Animation: {Animation}]";
+        return $"[{nameof(PlayerContext)} PlayerName: {PlayerName}, {nameof(SessionId)}: {SessionId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}, PassengerSeamoth: {PassengerSeamoth}, SeamothPassengerSeat: {SeamothPassengerSeat}, IntroCinematicMode: {IntroCinematicMode}, Animation: {Animation}]";
     }
 }

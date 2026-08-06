@@ -2,6 +2,7 @@ using System.Collections;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -19,8 +20,16 @@ internal sealed class PlayerJoinedMultiplayerSessionProcessor(PlayerManager play
 
     private IEnumerator SpawnRemotePlayer(PlayerJoinedMultiplayerSession packet)
     {
-        playerManager.Create(packet.PlayerContext);
+        RemotePlayer remotePlayer = playerManager.Create(packet.PlayerContext);
         yield return entities.SpawnEntityAsync(packet.PlayerEntity, true, true);
+
+        if (packet.PlayerContext.DrivingVehicle == null &&
+            packet.PlayerContext.PassengerSeamoth != null &&
+            packet.PlayerContext.SeamothPassengerSeat < SeamothPassengerAnchors.MaxPassengers &&
+            NitroxEntity.TryGetComponentFrom(packet.PlayerContext.PassengerSeamoth, out SeaMoth seamoth))
+        {
+            remotePlayer.SetPassengerSeamoth(seamoth, packet.PlayerContext.SeamothPassengerSeat);
+        }
 
         Log.Info($"{packet.PlayerContext.PlayerName} joined the game");
         Log.InGame(Language.main.Get("Nitrox_PlayerJoined").Replace("{PLAYER}", packet.PlayerContext.PlayerName));

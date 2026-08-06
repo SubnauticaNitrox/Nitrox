@@ -7,15 +7,27 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketProcessor<EntityDestroyed>
+public sealed class EntityDestroyedProcessor(Entities entities, PlayerManager playerManager, SeamothPassengers seamothPassengers) : IClientPacketProcessor<EntityDestroyed>
 {
     public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
 
     private readonly Entities entities = entities;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly SeamothPassengers seamothPassengers = seamothPassengers;
 
     public Task Process(ClientProcessorContext context, EntityDestroyed packet)
     {
         entities.RemoveEntity(packet.Id);
+
+        // Clear canonical passenger state even when the Seamoth object has already disappeared locally. The normal
+        // hierarchy walk below remains as a fallback for remote bodies whose context predates passenger state.
+        foreach (RemotePlayer remotePlayer in playerManager.GetAll())
+        {
+            if (remotePlayer.PlayerContext.PassengerSeamoth == packet.Id)
+            {
+                remotePlayer.SetPassengerSeamoth(null);
+            }
+        }
 
         if (entities.SpawningEntities)
         {
@@ -53,6 +65,8 @@ public sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketP
 
     private void DestroyVehicle(Vehicle vehicle)
     {
+        seamothPassengers.OnVehicleUnavailable(vehicle, false);
+
         if (vehicle.GetPilotingMode()) //Check Local Object Have Player inside
         {
             vehicle.OnPilotModeEnd();
