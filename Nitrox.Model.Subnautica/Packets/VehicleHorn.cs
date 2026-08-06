@@ -7,7 +7,6 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public sealed class VehicleHorn : Packet
 {
-    public const float COOLDOWN_SECONDS = 1.5f;
     public const float MAX_AUDIBLE_DISTANCE = 500f;
 
     public NitroxId VehicleId { get; }

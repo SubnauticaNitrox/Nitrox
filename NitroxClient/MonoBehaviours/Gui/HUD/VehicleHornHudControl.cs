@@ -17,11 +17,9 @@ public sealed class VehicleHornHudControl : MonoBehaviour
 
     private static VehicleHornHudControl instance;
 
-    private CanvasGroup canvasGroup;
     private GameObject control;
     private TextMeshProUGUI label;
     private string lastLabelText;
-    private VehicleHorns vehicleHorns;
 
     public static void EnsureAttached(uGUI_SeamothHUD seamothHud)
     {
@@ -36,9 +34,7 @@ public sealed class VehicleHornHudControl : MonoBehaviour
 
     private void Initialize(uGUI_QuickSlots quickSlots, TextMeshProUGUI styleSource)
     {
-        vehicleHorns = this.Resolve<VehicleHorns>();
-
-        control = new GameObject("NitroxVehicleHornControl", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(CanvasGroup));
+        control = new GameObject("NitroxVehicleHornControl", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         control.transform.SetParent(quickSlots.rectTransform, false);
 
         RectTransform controlRect = (RectTransform)control.transform;
@@ -54,10 +50,6 @@ public sealed class VehicleHornHudControl : MonoBehaviour
         background.type = Image.Type.Sliced;
         background.color = BackgroundColor;
         background.raycastTarget = false;
-
-        canvasGroup = control.GetComponent<CanvasGroup>();
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.interactable = false;
 
         GameObject accent = new("Accent", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         accent.transform.SetParent(controlRect, false);
@@ -94,7 +86,7 @@ public sealed class VehicleHornHudControl : MonoBehaviour
 
     private void Update()
     {
-        if (!control || vehicleHorns == null)
+        if (!control)
         {
             return;
         }
@@ -109,8 +101,6 @@ public sealed class VehicleHornHudControl : MonoBehaviour
         {
             return;
         }
-
-        canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, vehicleHorns.IsCurrentVehicleReady() ? 1f : 0.45f, Time.unscaledDeltaTime * 5f);
 
         string labelText = $"{GameInput.FormatButton(HornButton)}  {Language.main.Get("CyclopsHorn")}";
         if (lastLabelText != labelText)

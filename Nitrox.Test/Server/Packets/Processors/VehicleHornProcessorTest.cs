@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -72,18 +71,23 @@ public sealed class VehicleHornProcessorTest
     }
 
     [TestMethod]
-    public void CooldownIsAppliedPerVehicle()
+    public async Task RepeatedHornsAreAllForwarded()
     {
         Fixture fixture = new();
-        NitroxId firstVehicle = new();
-        NitroxId secondVehicle = new();
-        long startedAt = Stopwatch.GetTimestamp();
-        long afterCooldown = startedAt + (long)(VehicleHorn.COOLDOWN_SECONDS * Stopwatch.Frequency);
+        VehicleEntity seamoth = fixture.AddVehicle("Seamoth", NitroxVector3.Zero);
+        Player pilot = fixture.AddPlayer("Pilot", NitroxVector3.Zero);
+        Player nearby = fixture.AddPlayer("Nearby", new NitroxVector3(10, 0, 0));
+        pilot.PlayerContext!.DrivingVehicle = seamoth.Id;
 
-        fixture.Processor.TryBeginCooldown(firstVehicle, startedAt).Should().BeTrue();
-        fixture.Processor.TryBeginCooldown(firstVehicle, startedAt).Should().BeFalse();
-        fixture.Processor.TryBeginCooldown(secondVehicle, startedAt).Should().BeTrue();
-        fixture.Processor.TryBeginCooldown(firstVehicle, afterCooldown).Should().BeTrue();
+        await fixture.Process(pilot, new VehicleHorn(seamoth.Id));
+        await fixture.Process(pilot, new VehicleHorn(seamoth.Id));
+
+        fixture.PacketSender.Direct.Should().HaveCount(2);
+        fixture.PacketSender.Direct.Should().AllSatisfy(delivery =>
+        {
+            delivery.Packet.Should().BeOfType<VehicleHorn>().Which.VehicleId.Should().Be(seamoth.Id);
+            delivery.SessionId.Should().Be(nearby.SessionId);
+        });
     }
 
     private sealed class Fixture

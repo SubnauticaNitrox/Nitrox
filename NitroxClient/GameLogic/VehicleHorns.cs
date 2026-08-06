@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
@@ -15,7 +13,6 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
     internal const string HORN_SOUND_PATH = "event:/sub/cyclops/horn";
 
     private readonly FMODWhitelist fmodWhitelist = fmodWhitelist;
-    private readonly Dictionary<NitroxId, float> nextHornTimes = [];
     private readonly IPacketSender packetSender = packetSender;
 
     public bool TryHonkCurrentVehicle()
@@ -25,7 +22,7 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
 
     /// <summary>
     /// Plays and broadcasts a horn if the local player is piloting <paramref name="vehicle"/>.
-    /// Returning true means the input was handled, including when it was ignored during cooldown.
+    /// Returning true means the input was handled.
     /// </summary>
     public bool HandleLocalHonk(GameObject vehicle, FMOD_CustomEmitter nativeEmitter = null)
     {
@@ -40,13 +37,6 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
             return true;
         }
 
-        float now = Time.unscaledTime;
-        if (nextHornTimes.TryGetValue(vehicleId, out float nextHornTime) && now < nextHornTime)
-        {
-            return true;
-        }
-
-        nextHornTimes[vehicleId] = now + VehicleHorn.COOLDOWN_SECONDS;
         PlayHorn(vehicle, nativeEmitter);
         packetSender.Send(new VehicleHorn(vehicleId));
         return true;
@@ -60,16 +50,6 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
         }
 
         PlayHorn(vehicle, FindNativeHornEmitter(vehicle));
-    }
-
-    public bool IsCurrentVehicleReady()
-    {
-        if (!TryGetPilotedVehicle(out GameObject vehicle) || !vehicle.TryGetNitroxId(out NitroxId vehicleId))
-        {
-            return true;
-        }
-
-        return !nextHornTimes.TryGetValue(vehicleId, out float nextHornTime) || Time.unscaledTime >= nextHornTime;
     }
 
     public static bool TryGetPilotedVehicle(out GameObject vehicle)
