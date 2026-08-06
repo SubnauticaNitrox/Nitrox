@@ -64,7 +64,7 @@ public sealed partial class SubnauticaServerOptions
     public bool CreateFullEntityCache { get; set; } = false;
 
     [PropertyDescription("Use the server world catalog for Scanner Room resource results. Disable to temporarily restore vanilla client-local scanning.")]
-    public bool EnableScannerRoomResourceSync { get; set; } = false;
+    public bool EnableScannerRoomResourceSync { get; set; } = true;
 
     [Required]
     [RegularExpression(@"\w+")]

@@ -32,6 +32,12 @@
         <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Reference Include="protobuf-net">
+            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
     <Target Name="MoveNitroxAssetsToTestOutput" AfterTargets="Build">
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />

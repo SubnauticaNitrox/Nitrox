@@ -13,7 +13,7 @@ public sealed class ScannerRoomDiagnosticsTest
     [TestMethod]
     public void SnapshotTracksLoadingWorkloadResponsesAndRollbackState()
     {
-        SubnauticaServerOptions options = new() { EnableScannerRoomResourceSync = true };
+        SubnauticaServerOptions options = new();
         ScannerRoomDiagnostics diagnostics = new(Options.Create(options), Substitute.For<ILogger<ScannerRoomDiagnostics>>());
 
         long completeQuery = diagnostics.QueryStarted();
