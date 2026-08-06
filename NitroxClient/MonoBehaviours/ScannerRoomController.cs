@@ -371,6 +371,7 @@ public sealed class ScannerRoomController : MonoBehaviour
     {
         TechType desiredTechType = ParseSelectedTechType(scanState.SelectedTechType) ?? TechType.None;
         bool selectionChanged = mapRoom.typeToScan != desiredTechType;
+        uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
 
         CancelSnapshotPreparation();
         if (authoritativeSnapshot == null || !ScanStatesEqual(authoritativeSnapshot.ScanState, scanState))
@@ -380,18 +381,19 @@ public sealed class ScannerRoomController : MonoBehaviour
             ReplaceResourceNodes([]);
         }
 
+        if (scanner && ShouldSuppressVanillaResources)
+        {
+            // Rebuild before applying the transition so OnStartScan sees the authoritative catalog. The transition
+            // itself is what changes an already-open scanner from the resource list to its scanning presentation.
+            TryApplyAuthoritativeResourceList(scanner);
+        }
+
         if (selectionChanged)
         {
-            ApplyVanillaScanSelection(desiredTechType);
+            ApplyVanillaScanSelection(desiredTechType, scanner);
         }
 
         NotifyResourceTrackerChanged();
-        uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
-        if (scanner && ShouldSuppressVanillaResources)
-        {
-            // Selection state affects the scanner controls even when the resource catalog itself is unchanged.
-            TryApplyAuthoritativeResourceList(scanner);
-        }
         RefreshBlipsWithoutAdvancingScan();
         UpdateRefreshActivity(Time.unscaledTime);
 
@@ -401,18 +403,26 @@ public sealed class ScannerRoomController : MonoBehaviour
         }
     }
 
-    private void ApplyVanillaScanSelection(TechType desiredTechType)
+    private void ApplyVanillaScanSelection(TechType desiredTechType, uGUI_MapRoomScanner? scanner = null)
     {
         applyingCanonicalScanState = true;
         try
         {
             if (desiredTechType != TechType.None)
             {
-                mapRoom.StartScanning(desiredTechType);
+                scanner = scanner ? scanner : mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+                if (scanner)
+                {
+                    StartScanningThroughUi(scanner, desiredTechType);
+                }
+                else
+                {
+                    mapRoom.StartScanning(desiredTechType);
+                }
                 return;
             }
 
-            uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+            scanner = scanner ? scanner : mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
             if (scanner)
             {
                 scanner.OnCancelScan();
@@ -424,6 +434,28 @@ public sealed class ScannerRoomController : MonoBehaviour
         finally
         {
             applyingCanonicalScanState = false;
+        }
+    }
+
+    private static void StartScanningThroughUi(uGUI_MapRoomScanner scanner, TechType desiredTechType)
+    {
+        // OnStartScan owns the list-to-scanning UI transition, but its integer is tied to the current page/list.
+        // Temporarily make the canonical selection the unambiguous first entry. This also handles a state packet
+        // arriving before the first authoritative resource catalog snapshot has populated the scanner list.
+        List<TechType> sortedTechTypes = [.. scanner.sortedTechTypes];
+        int currentPage = scanner.currentPage;
+        try
+        {
+            scanner.sortedTechTypes.Clear();
+            scanner.sortedTechTypes.Add(desiredTechType);
+            scanner.currentPage = 0;
+            scanner.OnStartScan(0);
+        }
+        finally
+        {
+            scanner.sortedTechTypes.Clear();
+            scanner.sortedTechTypes.AddRange(sortedTechTypes);
+            scanner.currentPage = currentPage;
         }
     }
 
