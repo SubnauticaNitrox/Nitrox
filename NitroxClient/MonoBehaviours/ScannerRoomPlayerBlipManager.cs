@@ -14,10 +14,12 @@ namespace NitroxClient.MonoBehaviours;
 public sealed class ScannerRoomPlayerBlipManager : MonoBehaviour
 {
     private readonly Dictionary<SessionId, PlayerBlipInstance> blipsBySessionId = [];
+    private readonly ScannerRoomPlayerBlipRefreshScheduler refreshScheduler = new();
     private MapRoomFunctionality mapRoom = null!;
+    private PlayerManager? playerManager;
     private bool blipPrefabIsInvalid;
 
-    public static ScannerRoomPlayerBlipManager GetOrCreate(MapRoomFunctionality mapRoom)
+    public static ScannerRoomPlayerBlipManager GetOrCreate(MapRoomFunctionality mapRoom, PlayerManager playerManager)
     {
         if (!mapRoom.TryGetComponent(out ScannerRoomPlayerBlipManager manager))
         {
@@ -25,10 +27,30 @@ public sealed class ScannerRoomPlayerBlipManager : MonoBehaviour
         }
 
         manager.mapRoom = mapRoom;
+        manager.playerManager = playerManager;
         return manager;
     }
 
-    public void Refresh(IEnumerable<RemotePlayer> remotePlayers)
+    public void RefreshNow()
+    {
+        if (playerManager == null || !mapRoom || !mapRoom.wireFrameWorld || !mapRoom.cameraBlipRoot)
+        {
+            return;
+        }
+
+        refreshScheduler.MarkRefreshed(Time.unscaledTime);
+        Refresh(playerManager.GetAll());
+    }
+
+    private void Update()
+    {
+        if (refreshScheduler.IsRefreshDue(Time.unscaledTime))
+        {
+            RefreshNow();
+        }
+    }
+
+    private void Refresh(IEnumerable<RemotePlayer> remotePlayers)
     {
         List<RemotePlayer> players = remotePlayers.ToList();
         HashSet<SessionId> connectedSessionIds = new(players.Select(player => player.SessionId));

@@ -9,6 +9,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 using Nitrox.Model.Subnautica.Extensions;
 using NitroxClient.Extensions;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ScannerRooms;
 using UnityEngine;
 
@@ -209,6 +210,7 @@ public sealed class ScannerRoomController : MonoBehaviour
         this.mapRoom = mapRoom;
         this.mapRoomId = mapRoomId;
         scannerRoomManager = this.Resolve<ScannerRoomManager>();
+        ScannerRoomPlayerBlipManager.GetOrCreate(mapRoom, this.Resolve<PlayerManager>());
         scannerRoomManager.SeedScanState(mapRoomId, persistedScanState);
         virtualResourceCache = new ScannerRoomVirtualResourceCache<ResourceTrackerDatabase.ResourceInfo>(
             mapRoomId,
