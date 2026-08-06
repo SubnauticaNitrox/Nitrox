@@ -34,6 +34,9 @@ public class RemotePlayer : INitroxPlayer
     private readonly PlayerVitalsManager playerVitalsManager;
     private readonly FMODWhitelist fmodWhitelist;
     private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers = [];
+    private bool passengerPoseActive;
+    private bool vehiclePoseActive;
+    private int passengerAnimationGeneration;
 
     public PlayerContext PlayerContext { get; }
     public GameObject? Body { get; private set; }
@@ -324,23 +327,33 @@ public class RemotePlayer : INitroxPlayer
             SetPassengerSeamoth(null);
         }
 
-        if (Vehicle != newVehicle)
+        if (Vehicle != newVehicle || vehiclePoseActive && !newVehicle)
         {
-            if (Vehicle)
+            if (Vehicle || vehiclePoseActive)
             {
-                Vehicle.mainAnimator.SetBool(animatorPlayerIn, false);
+                if (Vehicle)
+                {
+                    Vehicle.mainAnimator.SetBool(animatorPlayerIn, false);
+                }
 
                 Detach();
                 ArmsController.SetWorldIKTarget(null, null);
 
-                if (Vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
+                if (Vehicle && Vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
                 {
                     vehicleMovementReplicator.Exit();
                 }
+
+                vehiclePoseActive = false;
+                AnimationController.UpdatePlayerAnimations = true;
+                SeamothPassengers.CompleteSeatedAnimationExit(AnimationController);
             }
 
             if (newVehicle)
             {
+                passengerAnimationGeneration++;
+                passengerPoseActive = false;
+                SeamothPassengers.CompleteSeatedAnimationExit(AnimationController);
                 newVehicle.mainAnimator.SetBool(animatorPlayerIn, true);
 
                 Attach(newVehicle.playerPosition.transform);
@@ -361,6 +374,7 @@ public class RemotePlayer : INitroxPlayer
                 }
 
                 AnimationController.UpdatePlayerAnimations = false;
+                vehiclePoseActive = true;
             }
 
             bool isKinematic = newVehicle;
@@ -408,7 +422,7 @@ public class RemotePlayer : INitroxPlayer
             return;
         }
 
-        if (PassengerSeamoth == newPassengerSeamoth && !newPassengerSeamoth)
+        if (PassengerSeamoth == newPassengerSeamoth && !newPassengerSeamoth && !passengerPoseActive)
         {
             SeamothPassengerSeat = 0;
             PlayerContext.PassengerSeamoth = null;
@@ -424,7 +438,7 @@ public class RemotePlayer : INitroxPlayer
         }
 
         SeaMoth previousPassengerSeamoth = PassengerSeamoth;
-        if (previousPassengerSeamoth)
+        if (previousPassengerSeamoth || passengerPoseActive)
         {
             Transform previousPassengerAnchor = Body ? Body.transform.parent : null;
             Detach();
@@ -433,7 +447,7 @@ public class RemotePlayer : INitroxPlayer
             PlayerContext.PassengerSeamoth = null;
             PlayerContext.SeamothPassengerSeat = 0;
             AnimationController.UpdatePlayerAnimations = true;
-            SeamothPassengers.SetSeatedAnimation(AnimationController, false);
+            BeginPassengerAnimationExit();
             UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, false, true);
             SeamothPassengerAnchors.RemoveIfEmpty(previousPassengerAnchor);
         }
@@ -457,11 +471,35 @@ public class RemotePlayer : INitroxPlayer
 
         PassengerSeamoth = newPassengerSeamoth;
         SeamothPassengerSeat = seatIndex;
+        passengerAnimationGeneration++;
+        passengerPoseActive = true;
         if (newPassengerSeamoth.gameObject.TryGetIdOrWarn(out NitroxId seamothId))
         {
             PlayerContext.PassengerSeamoth = seamothId;
             PlayerContext.SeamothPassengerSeat = seatIndex;
         }
+    }
+
+    private void BeginPassengerAnimationExit()
+    {
+        int generation = ++passengerAnimationGeneration;
+        passengerPoseActive = false;
+        SeamothPassengers.BeginSeatedAnimationExit(AnimationController);
+        UWE.CoroutineUtils.StartCoroutineSmart(CompletePassengerAnimationExit(generation));
+    }
+
+    private System.Collections.IEnumerator CompletePassengerAnimationExit(int generation)
+    {
+        // The bench animator needs to observe its stand-up flag before all cinematic flags are cleared.
+        yield return null;
+        yield return null;
+
+        if (generation != passengerAnimationGeneration || passengerPoseActive || Vehicle || PilotingChair)
+        {
+            yield break;
+        }
+
+        SeamothPassengers.CompleteSeatedAnimationExit(AnimationController);
     }
 
     /// <summary>

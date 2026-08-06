@@ -21,6 +21,7 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
     private NitroxId currentSeamothId;
     private NitroxId pendingSeamothId;
     private bool passengerStateActive;
+    private int seatedAnimationGeneration;
 
     public SessionId? LocalSessionId => multiplayerSession.Reservation?.SessionId;
     public SeaMoth CurrentSeamoth => currentSeamoth;
@@ -144,7 +145,7 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
         Player player = Player.main;
         if (player && wasMountedPassenger)
         {
-            SetSeatedAnimation(player.playerAnimator, false);
+            BeginLocalSeatedAnimationExit(player.playerAnimator);
             player.inSeamoth = false;
             player.sitting = false;
 
@@ -216,6 +217,7 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
         currentSeamoth = seamoth;
         currentAnchor = anchor;
         currentSeamothId = seamothId;
+        seatedAnimationGeneration++;
 
         player.SetCurrentSub(null, false);
         player.playerController.UpdateController();
@@ -238,7 +240,10 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
 
         if (Player.main)
         {
-            SetSeatedAnimation(Player.main.playerAnimator, false);
+            if (wasMountedPassenger)
+            {
+                BeginLocalSeatedAnimationExit(Player.main.playerAnimator);
+            }
             Player.main.inSeamoth = false;
             Player.main.sitting = false;
 
@@ -295,6 +300,49 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
         animationController["cinematics_enabled"] = seated;
         animationController["bench_sit"] = seated;
         animationController["bench_stand_up"] = false;
+    }
+
+    internal static void BeginSeatedAnimationExit(AnimationController animationController)
+    {
+        animationController["in_seamoth"] = false;
+        animationController["cinematics_enabled"] = true;
+        animationController["bench_sit"] = false;
+        animationController["bench_stand_up"] = true;
+    }
+
+    internal static void CompleteSeatedAnimationExit(AnimationController animationController)
+    {
+        animationController["in_seamoth"] = false;
+        animationController["cinematics_enabled"] = false;
+        animationController["bench_sit"] = false;
+        animationController["bench_stand_up"] = false;
+    }
+
+    private void BeginLocalSeatedAnimationExit(Animator animator)
+    {
+        int generation = ++seatedAnimationGeneration;
+        SafeAnimator.SetBool(animator, "in_seamoth", false);
+        SafeAnimator.SetBool(animator, "cinematics_enabled", true);
+        SafeAnimator.SetBool(animator, "bench_sit", false);
+        SafeAnimator.SetBool(animator, "bench_stand_up", true);
+        UWE.CoroutineUtils.StartCoroutineSmart(CompleteLocalSeatedAnimationExit(animator, generation));
+    }
+
+    private System.Collections.IEnumerator CompleteLocalSeatedAnimationExit(Animator animator, int generation)
+    {
+        // Give the animator two updates to consume the stand-up transition before clearing its control flags.
+        yield return null;
+        yield return null;
+
+        if (generation != seatedAnimationGeneration || IsPassenger || !animator)
+        {
+            yield break;
+        }
+
+        SafeAnimator.SetBool(animator, "in_seamoth", false);
+        SafeAnimator.SetBool(animator, "cinematics_enabled", false);
+        SafeAnimator.SetBool(animator, "bench_sit", false);
+        SafeAnimator.SetBool(animator, "bench_stand_up", false);
     }
 
     private void RequestExit() => packetSender.Send(new SeamothPassengerStateChangeRequest(Optional.Empty));
