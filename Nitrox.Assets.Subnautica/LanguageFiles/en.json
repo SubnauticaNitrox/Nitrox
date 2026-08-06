@@ -91,7 +91,7 @@
     "Nitrox_Settings_Privacy": "Privacy",
     "Nitrox_Settings_SafetyLatencyMargin": "Safety latency margin (ms)",
     "Nitrox_Settings_SurfaceBreachMomentumRetention": "Surface breach momentum retention",
-    "Nitrox_Settings_SurfaceBreachMomentumRetention_Tooltip": "Fraction of upward speed retained once when an ordinary swimmer intentionally breaches the surface. Only used when enhanced breaches are enabled. 0.50 matches vanilla; Seaglide and vehicles are unaffected.",
+    "Nitrox_Settings_SurfaceBreachMomentumRetention_Tooltip": "Fraction of upward speed reached before the surface slowdown that is preserved for intentional ordinary-swim and Seaglide breaches. Only used when enhanced breaches are enabled; turning them off keeps vanilla behavior. Vehicles are unaffected.",
     "Nitrox_ShowPing": "Show Ping",
     "Nitrox_SilenceChat": "Mute chat",
     "Nitrox_SilencedChatNotif": "Chat is now muted",

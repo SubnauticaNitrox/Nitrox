@@ -25,8 +25,8 @@ namespace NitroxClient.GameLogic.Settings
         /// </summary>
         public static readonly NitroxPref<bool> EnableEnhancedSurfaceBreaches = new("Nitrox.enableEnhancedSurfaceBreaches", false);
         /// <summary>
-        /// Fraction of pre-transition upward velocity retained when enhanced surface breaches are enabled.
-        /// Vanilla retains approximately 0.5 during this transition.
+        /// Fraction of pre-surface upward velocity preserved through vanilla surface attenuation.
+        /// Applies to intentional ordinary-swim and Seaglide breaches only.
         /// </summary>
         public static readonly NitroxPref<float> SurfaceBreachMomentumRetention = new("Nitrox.surfaceBreachMomentumRetention", 1f);
         /// <summary>
