@@ -1,6 +1,7 @@
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 
 namespace NitroxClient.GameLogic.ScannerRooms;
 
@@ -186,5 +187,8 @@ public sealed class ScannerRoomRequestCoordinatorTest
     }
 
     private static ScannerRoomRequestParameters Request(float range, string techType, float origin) =>
-        new(range, new NitroxTechType(techType), new NitroxVector3(origin, 0, 0));
+        new(
+            range,
+            new ScannerRoomScanState(new NitroxTechType(techType), checked((ulong)origin)),
+            new NitroxVector3(origin, 0, 0));
 }

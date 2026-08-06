@@ -86,25 +86,35 @@ public sealed class ScannerRoomQueryServiceTest
         index.EntityTracked(resource);
 
         EntityRegistry registry = new(Substitute.For<ILogger<EntityRegistry>>());
-        MapRoomEntity mapRoom = new(new NitroxId(), new NitroxId(), new NitroxInt3(1, 2, 3), origin);
+        ScannerRoomScanState scanState = new(quartz, 7);
+        MapRoomEntity mapRoom = new(new NitroxId(), new NitroxId(), new NitroxInt3(1, 2, 3), origin, scanState);
         registry.AddEntity(mapRoom);
         RecordingBatchLoader batchLoader = new();
         SubnauticaServerOptions serverOptions = new() { EnableScannerRoomResourceSync = true };
+        IOptions<SubnauticaServerOptions> options = Options.Create(serverOptions);
         ScannerRoomDiagnostics diagnostics = new(Options.Create(serverOptions), Substitute.For<ILogger<ScannerRoomDiagnostics>>());
+        ScannerRoomScanStateService scanStateService = new(
+            registry,
+            catalog,
+            options,
+            Substitute.For<ILogger<ScannerRoomScanStateService>>());
         ScannerRoomQueryService service = new(
             registry,
             index,
             catalog,
             batchLoader,
+            scanStateService,
             diagnostics,
-            Options.Create(serverOptions),
+            options,
             Substitute.For<ILogger<ScannerRoomQueryService>>());
         Player player = CreatePlayer(origin);
 
-        ScannerRoomQueryResult first = await service.QueryAsync(player, mapRoom.Id, 300, quartz, 0, null);
-        ScannerRoomQueryResult unchanged = await service.QueryAsync(player, mapRoom.Id, 300, quartz, first.Revision, null);
+        ScannerRoomQueryResult first = await service.QueryAsync(player, mapRoom.Id, 300, scanState.Version, 0, null);
+        ScannerRoomQueryResult unchanged = await service.QueryAsync(player, mapRoom.Id, 300, scanState.Version, first.Revision, null);
 
         first.Status.Should().Be(ScannerRoomQueryStatus.Complete);
+        first.ScanState.SelectedTechType.Should().Be(quartz);
+        first.ScanState.Version.Should().Be(7);
         first.AvailableResources.Should().ContainSingle(summary => summary.TechType.Equals(quartz) && summary.Count == 1);
         first.Targets.Should().ContainSingle(target => target.EntityId == resource.Id);
         batchLoader.LastBatchCount.Should().BeGreaterThan(0);
@@ -122,6 +132,94 @@ public sealed class ScannerRoomQueryServiceTest
         metrics.TargetsMatched.Should().Be(2);
         metrics.CompleteResponses.Should().Be(1);
         metrics.NotModifiedResponses.Should().Be(1);
+    }
+
+    [TestMethod]
+    public async Task OutdatedExpectedStateReturnsCanonicalStateWithoutLoadingBatches()
+    {
+        NitroxVector3 origin = new(100, -50, 200);
+        NitroxTechType quartz = new("Quartz");
+        TestCatalog catalog = new(quartz);
+        EntityRegistry registry = new(Substitute.For<ILogger<EntityRegistry>>());
+        MapRoomEntity mapRoom = new(
+            new NitroxId(),
+            new NitroxId(),
+            new NitroxInt3(1, 2, 3),
+            origin,
+            new ScannerRoomScanState(quartz, 2));
+        registry.AddEntity(mapRoom);
+        RecordingBatchLoader batchLoader = new();
+        SubnauticaServerOptions serverOptions = new() { EnableScannerRoomResourceSync = true };
+        IOptions<SubnauticaServerOptions> options = Options.Create(serverOptions);
+        ScannerRoomDiagnostics diagnostics = new(options, Substitute.For<ILogger<ScannerRoomDiagnostics>>());
+        ScannerRoomScanStateService scanStateService = new(
+            registry,
+            catalog,
+            options,
+            Substitute.For<ILogger<ScannerRoomScanStateService>>());
+        ScannerRoomQueryService service = new(
+            registry,
+            new ScannerResourceIndex(catalog),
+            catalog,
+            batchLoader,
+            scanStateService,
+            diagnostics,
+            options,
+            Substitute.For<ILogger<ScannerRoomQueryService>>());
+
+        ScannerRoomQueryResult result = await service.QueryAsync(CreatePlayer(origin), mapRoom.Id, 300, 1, 0, null);
+
+        result.Status.Should().Be(ScannerRoomQueryStatus.StateOutdated);
+        result.ScanState.Should().BeSameAs(mapRoom.ScanState);
+        result.ScanState.SelectedTechType.Should().Be(quartz);
+        result.ScanState.Version.Should().Be(2);
+        result.AvailableResources.Should().BeEmpty();
+        result.Targets.Should().BeEmpty();
+        batchLoader.LastBatchCount.Should().Be(0);
+        diagnostics.GetSnapshot().StateOutdatedResponses.Should().Be(1);
+    }
+
+    [TestMethod]
+    public async Task StateChangeDuringBatchLoadSupersedesQueryResults()
+    {
+        NitroxVector3 origin = new(100, -50, 200);
+        NitroxTechType quartz = new("Quartz");
+        TestCatalog catalog = new(quartz);
+        EntityRegistry registry = new(Substitute.For<ILogger<EntityRegistry>>());
+        MapRoomEntity mapRoom = new(new NitroxId(), new NitroxId(), new NitroxInt3(1, 2, 3), origin);
+        registry.AddEntity(mapRoom);
+        BlockingBatchLoader batchLoader = new();
+        SubnauticaServerOptions serverOptions = new() { EnableScannerRoomResourceSync = true };
+        IOptions<SubnauticaServerOptions> options = Options.Create(serverOptions);
+        ScannerRoomDiagnostics diagnostics = new(options, Substitute.For<ILogger<ScannerRoomDiagnostics>>());
+        ScannerRoomScanStateService scanStateService = new(
+            registry,
+            catalog,
+            options,
+            Substitute.For<ILogger<ScannerRoomScanStateService>>());
+        ScannerRoomQueryService service = new(
+            registry,
+            new ScannerResourceIndex(catalog),
+            catalog,
+            batchLoader,
+            scanStateService,
+            diagnostics,
+            options,
+            Substitute.For<ILogger<ScannerRoomQueryService>>());
+
+        Task<ScannerRoomQueryResult> query = service.QueryAsync(CreatePlayer(origin), mapRoom.Id, 300, 0, 0, null);
+        await batchLoader.Started.WaitAsync(TimeSpan.FromSeconds(5));
+        ScannerRoomScanStateChangeResult change = scanStateService.Change(mapRoom.Id, quartz);
+        batchLoader.Release();
+        ScannerRoomQueryResult result = await query;
+
+        change.Status.Should().Be(ScannerRoomScanStateChangeStatus.Changed);
+        result.Status.Should().Be(ScannerRoomQueryStatus.StateOutdated);
+        result.ScanState.Should().BeSameAs(change.State);
+        result.ScanState.Version.Should().Be(1);
+        result.AvailableResources.Should().BeEmpty();
+        result.Targets.Should().BeEmpty();
+        diagnostics.GetSnapshot().StateOutdatedResponses.Should().Be(1);
     }
 
     private static Player CreatePlayer(NitroxVector3 position) => new(
@@ -157,10 +255,28 @@ public sealed class ScannerRoomQueryServiceTest
         }
     }
 
+    private sealed class BlockingBatchLoader : IScannerRoomBatchLoader
+    {
+        private readonly TaskCompletionSource release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task Started => started.Task;
+
+        public async Task LoadAsync(IReadOnlyList<NitroxInt3> batchIds, CancellationToken cancellationToken)
+        {
+            started.TrySetResult();
+            await release.Task.WaitAsync(cancellationToken);
+        }
+
+        public void Release() => release.TrySetResult();
+    }
+
     private sealed class TestCatalog(NitroxTechType techType) : IScannerRoomResourceCatalog
     {
         public const string ClassId = "query-service-quartz";
         public float MaximumRelativeOffset => 0;
+
+        public bool IsKnownTechType(NitroxTechType candidate) => candidate.Equals(techType);
 
         public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)
         {

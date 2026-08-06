@@ -22,6 +22,7 @@ internal sealed record ScannerRoomDiagnosticsSnapshot(
     long InvalidRoomResponses,
     long OriginUnavailableResponses,
     long RejectedResponses,
+    long StateOutdatedResponses,
     long FailedResponses,
     double TotalQueryDurationMilliseconds,
     double MaximumQueryDurationMilliseconds)
@@ -118,6 +119,7 @@ internal sealed class ScannerRoomDiagnostics(
             ReadStatus(ScannerRoomQueryStatus.InvalidRoom),
             ReadStatus(ScannerRoomQueryStatus.OriginUnavailable),
             ReadStatus(ScannerRoomQueryStatus.Rejected),
+            ReadStatus(ScannerRoomQueryStatus.StateOutdated),
             ReadStatus(ScannerRoomQueryStatus.Failed),
             ToMilliseconds(totalDuration),
             ToMilliseconds(maximumDuration));
@@ -129,7 +131,7 @@ internal sealed class ScannerRoomDiagnostics(
         string featureState = snapshot.ResourceSyncEnabled ? "ENABLED" : "DISABLED";
         logger.ZLogInformation($"Scanner Room resource sync: {featureState:@State} (rollback option: {nameof(SubnauticaServerOptions.EnableScannerRoomResourceSync):@Option})");
         logger.ZLogInformation($"Scanner Room queries: {snapshot.RequestsReceived:@Received} received, {snapshot.QueriesCompleted:@Completed} completed, {snapshot.QueriesInFlight:@InFlight} in flight, {snapshot.PeakQueriesInFlight:@PeakInFlight} peak, {snapshot.ThrottledRequests:@Throttled} throttled");
-        logger.ZLogInformation($"Scanner Room responses: {snapshot.CompleteResponses:@Complete} complete, {snapshot.NotModifiedResponses:@NotModified} unchanged, {snapshot.InvalidRoomResponses:@InvalidRoom} invalid room, {snapshot.OriginUnavailableResponses:@OriginUnavailable} missing origin, {snapshot.RejectedResponses:@Rejected} rejected, {snapshot.FailedResponses:@Failed} failed");
+        logger.ZLogInformation($"Scanner Room responses: {snapshot.CompleteResponses:@Complete} complete, {snapshot.NotModifiedResponses:@NotModified} unchanged, {snapshot.InvalidRoomResponses:@InvalidRoom} invalid room, {snapshot.OriginUnavailableResponses:@OriginUnavailable} missing origin, {snapshot.RejectedResponses:@Rejected} rejected, {snapshot.StateOutdatedResponses:@StateOutdated} stale state, {snapshot.FailedResponses:@Failed} failed");
         logger.ZLogInformation($"Scanner Room loading: {snapshot.BatchLoadsInFlight:@ActiveLoads} active loads, {snapshot.BatchesRequested:@Batches} batches requested, {snapshot.ResourceTypesMatched:@ResourceTypes} resource types, {snapshot.TargetsMatched:@Targets} targets, {snapshot.PagesSent:@Pages} pages, {double.Round(snapshot.AverageQueryDurationMilliseconds, 2):@AverageMs} ms average, {double.Round(snapshot.MaximumQueryDurationMilliseconds, 2):@MaximumMs} ms maximum");
         return Task.CompletedTask;
     }

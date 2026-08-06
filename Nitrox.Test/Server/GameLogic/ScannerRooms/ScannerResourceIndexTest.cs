@@ -137,6 +137,8 @@ public sealed class ScannerResourceIndexTest
         public const string ClassId = "scanner-test-quartz";
         public float MaximumRelativeOffset => 2f;
 
+        public bool IsKnownTechType(NitroxTechType techType) => techType.Equals(quartz);
+
         public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)
         {
             if (classId == ClassId)

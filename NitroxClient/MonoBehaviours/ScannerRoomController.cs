@@ -9,6 +9,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 using Nitrox.Model.Subnautica.Extensions;
 using NitroxClient.Extensions;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ScannerRooms;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public sealed class ScannerRoomController : MonoBehaviour
 
     private readonly HashSet<TechType> authoritativeTechTypes = [];
     private readonly HashSet<Collider> localInteractionColliders = [];
+    private readonly ScannerRoomLocalIntentTracker localIntentTracker = new();
     private readonly ScannerRoomRefreshScheduler refreshScheduler = new();
     private readonly ScannerRoomResourceAuthorityState resourceAuthority = new();
     private List<ResourceTrackerDatabase.ResourceInfo> authoritativeResourceNodes = [];
@@ -34,25 +36,37 @@ public sealed class ScannerRoomController : MonoBehaviour
     private NitroxId mapRoomId = null!;
     private ScannerRoomRequestTrigger? requestTrigger;
     private ScannerRoomManager scannerRoomManager = null!;
+    private ScannerRoomScanState canonicalScanState = ScannerRoomScanState.Empty;
     private ScannerRoomSnapshot? authoritativeSnapshot;
     private ScannerRoomTargetPreparation<ResourceTrackerDatabase.ResourceInfo>? pendingTargetPreparation;
     private ScannerRoomVirtualResourceCache<ResourceTrackerDatabase.ResourceInfo>? virtualResourceCache;
     private uGUI_ResourceTracker resourceTracker = null!;
     private volatile bool sessionJoined;
+    private bool authorityProbePending;
+    private bool applyingCanonicalScanState;
+    private bool hasRollbackLocalIntent;
+    private int rollbackLocalScanProgress;
+    private TechType rollbackLocalSelection;
     private int reconnectRefreshPending;
     private int stateClearPending;
 
     public bool ShouldSuppressVanillaResources =>
         Volatile.Read(ref stateClearPending) != 0 || resourceAuthority.SuppressVanillaResources;
 
-    public static ScannerRoomController Attach(MapRoomFunctionality mapRoom, NitroxId mapRoomId)
+    public static ScannerRoomController Attach(MapRoomFunctionality mapRoom, NitroxId mapRoomId) =>
+        Attach(mapRoom, mapRoomId, ScannerRoomScanState.Empty);
+
+    public static ScannerRoomController Attach(
+        MapRoomFunctionality mapRoom,
+        NitroxId mapRoomId,
+        ScannerRoomScanState persistedScanState)
     {
         if (!mapRoom.TryGetComponent(out ScannerRoomController controller))
         {
             controller = mapRoom.gameObject.AddComponent<ScannerRoomController>();
         }
 
-        controller.Initialize(mapRoom, mapRoomId);
+        controller.Initialize(mapRoom, mapRoomId, persistedScanState ?? ScannerRoomScanState.Empty);
         return controller;
     }
 
@@ -61,6 +75,53 @@ public sealed class ScannerRoomController : MonoBehaviour
     public void RequestImmediateSnapshot() => TryRequestSnapshot(SnapshotRequestMode.Immediate);
 
     public void RequestSnapshotIfStateChanged() => TryRequestSnapshot(SnapshotRequestMode.StateChanged);
+
+    /// <summary>
+    /// Publishes the vanilla transition which just happened as an optimistic shared-selection intent. Both the
+    /// scanner UI and MapRoomFunctionality hooks route here, so nested vanilla calls are de-duplicated.
+    /// </summary>
+    public void SubmitLocalScanStateIntent()
+    {
+        if (applyingCanonicalScanState || !mapRoom || scannerRoomManager == null)
+        {
+            return;
+        }
+        if (resourceAuthority.Mode == ScannerRoomResourceAuthorityMode.Rollback)
+        {
+            localIntentTracker.Clear();
+            return;
+        }
+
+        NitroxTechType? desiredTechType = mapRoom.typeToScan == TechType.None ? null : mapRoom.typeToScan.ToDto();
+        if (SelectionsEqual(canonicalScanState.SelectedTechType, desiredTechType))
+        {
+            localIntentTracker.Clear();
+            RequestSnapshotIfStateChanged();
+            return;
+        }
+        if (!localIntentTracker.TryBegin(desiredTechType))
+        {
+            return;
+        }
+
+        CaptureRollbackLocalState();
+        DiscardTargetsForMismatchedSelection(mapRoom.typeToScan);
+
+        if (!sessionJoined)
+        {
+            localIntentTracker.Clear();
+            return;
+        }
+
+        if (!scannerRoomManager.RequestScanStateChange(mapRoomId, desiredTechType))
+        {
+            localIntentTracker.Clear();
+            if (resourceAuthority.Mode != ScannerRoomResourceAuthorityMode.Rollback)
+            {
+                ApplyCanonicalScanState(canonicalScanState, requestSnapshot: true);
+            }
+        }
+    }
 
     public void OnLocalInteractionEntered(Collider interactionCollider)
     {
@@ -138,29 +199,44 @@ public sealed class ScannerRoomController : MonoBehaviour
         return true;
     }
 
-    private void Initialize(MapRoomFunctionality mapRoom, NitroxId mapRoomId)
+    private void Initialize(MapRoomFunctionality mapRoom, NitroxId mapRoomId, ScannerRoomScanState persistedScanState)
     {
         if (requestTrigger != null)
         {
+            scannerRoomManager.SeedScanState(mapRoomId, persistedScanState);
             return;
         }
 
         this.mapRoom = mapRoom;
         this.mapRoomId = mapRoomId;
         scannerRoomManager = this.Resolve<ScannerRoomManager>();
+        ScannerRoomPlayerBlipManager.GetOrCreate(mapRoom, this.Resolve<PlayerManager>());
+        scannerRoomManager.SeedScanState(mapRoomId, persistedScanState);
         virtualResourceCache = new ScannerRoomVirtualResourceCache<ResourceTrackerDatabase.ResourceInfo>(
             mapRoomId,
             uniqueId => new ResourceTrackerDatabase.ResourceInfo { uniqueId = uniqueId });
         scannerRoomManager.SnapshotChanged += OnSnapshotChanged;
+        scannerRoomManager.ScanStateChanged += OnScanStateChanged;
         scannerRoomManager.SessionJoined += OnSessionJoined;
         scannerRoomManager.StateCleared += OnStateCleared;
         sessionJoined = scannerRoomManager.IsSessionJoined;
         requestTrigger = new ScannerRoomRequestTrigger(
-            (range, selectedTechType, observedOrigin) => scannerRoomManager.RequestSnapshot(mapRoomId, range, selectedTechType, observedOrigin));
+            (range, expectedScanState, observedOrigin) => scannerRoomManager.RequestSnapshot(mapRoomId, range, expectedScanState, observedOrigin));
+
+        if (scannerRoomManager.TryGetScanState(mapRoomId, out ScannerRoomScanState? scanState))
+        {
+            // The server's rollback flag is discovered through the first query response. Preserve the vanilla value
+            // so a disabled server can reject authority without a persisted shared state permanently replacing it.
+            CaptureRollbackLocalState();
+            canonicalScanState = scanState!;
+            authorityProbePending = mapRoom.typeToScan != (ParseSelectedTechType(canonicalScanState.SelectedTechType) ?? TechType.None);
+            ApplyCanonicalScanState(canonicalScanState, requestSnapshot: false);
+        }
 
         if (scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
         {
             resourceAuthority.ObserveAcceptedResponse(ScannerRoomSnapshotApplyResult.Applied, ScannerRoomQueryStatus.Complete);
+            hasRollbackLocalIntent = false;
             BeginSnapshotPreparation(snapshot!);
         }
         else
@@ -173,9 +249,13 @@ public sealed class ScannerRoomController : MonoBehaviour
     private void Start()
     {
         UpdateRefreshActivity(Time.unscaledTime);
-        if (refreshScheduler.HasRefreshActivity)
+        if (refreshScheduler.HasRefreshActivity || authorityProbePending)
         {
             RequestInitialSnapshot();
+            if (sessionJoined)
+            {
+                authorityProbePending = false;
+            }
         }
     }
 
@@ -195,6 +275,11 @@ public sealed class ScannerRoomController : MonoBehaviour
             EnterPendingState();
         }
         AdvanceSnapshotPreparation();
+        if (sessionJoined && authorityProbePending)
+        {
+            authorityProbePending = false;
+            RequestInitialSnapshot();
+        }
         if (sessionJoined)
         {
             scannerRoomManager.PumpRequests(mapRoomId);
@@ -216,7 +301,7 @@ public sealed class ScannerRoomController : MonoBehaviour
     private void TryRequestSnapshot(SnapshotRequestMode requestMode)
     {
         if (!sessionJoined || requestTrigger == null ||
-            !TryGetRequestParameters(out float range, out NitroxTechType? selectedTechType, out NitroxVector3? observedOrigin))
+            !TryGetRequestParameters(out float range, out ScannerRoomScanState expectedScanState, out NitroxVector3? observedOrigin))
         {
             return;
         }
@@ -225,9 +310,9 @@ public sealed class ScannerRoomController : MonoBehaviour
         UpdateRefreshActivity(now);
         bool requestIssued = requestMode switch
         {
-            SnapshotRequestMode.Initial => requestTrigger.TryRequestInitial(range, selectedTechType, observedOrigin),
-            SnapshotRequestMode.StateChanged => requestTrigger.TryRequestIfChanged(range, selectedTechType, observedOrigin),
-            SnapshotRequestMode.Immediate => RequestImmediately(requestTrigger, range, selectedTechType, observedOrigin),
+            SnapshotRequestMode.Initial => requestTrigger.TryRequestInitial(range, expectedScanState, observedOrigin),
+            SnapshotRequestMode.StateChanged => requestTrigger.TryRequestIfChanged(range, expectedScanState, observedOrigin),
+            SnapshotRequestMode.Immediate => RequestImmediately(requestTrigger, range, expectedScanState, observedOrigin),
             _ => false
         };
         if (requestIssued)
@@ -239,20 +324,20 @@ public sealed class ScannerRoomController : MonoBehaviour
     private static bool RequestImmediately(
         ScannerRoomRequestTrigger trigger,
         float range,
-        NitroxTechType? selectedTechType,
+        ScannerRoomScanState expectedScanState,
         NitroxVector3? observedOrigin)
     {
-        trigger.RequestImmediate(range, selectedTechType, observedOrigin);
+        trigger.RequestImmediate(range, expectedScanState, observedOrigin);
         return true;
     }
 
     private void UpdateRefreshActivity(double now) =>
         refreshScheduler.SetActivity(mapRoom && mapRoom.typeToScan != TechType.None, localInteractionColliders.Count > 0, now);
 
-    private bool TryGetRequestParameters(out float range, out NitroxTechType? selectedTechType, out NitroxVector3? observedOrigin)
+    private bool TryGetRequestParameters(out float range, out ScannerRoomScanState expectedScanState, out NitroxVector3? observedOrigin)
     {
         range = default;
-        selectedTechType = null;
+        expectedScanState = ScannerRoomScanState.Empty;
         observedOrigin = null;
 
         if (!mapRoom)
@@ -261,9 +346,134 @@ public sealed class ScannerRoomController : MonoBehaviour
         }
 
         range = mapRoom.GetScanRange();
-        selectedTechType = mapRoom.typeToScan == TechType.None ? null : mapRoom.typeToScan.ToDto();
+        if (scannerRoomManager.TryGetScanState(mapRoomId, out ScannerRoomScanState? scanState))
+        {
+            expectedScanState = scanState!;
+        }
         observedOrigin = mapRoom.wireFrameWorld ? mapRoom.wireFrameWorld.position.ToDto() : null;
         return true;
+    }
+
+    private void OnScanStateChanged(ScannerRoomScanStateUpdate update)
+    {
+        if (!mapRoomId.Equals(update.MapRoomId))
+        {
+            return;
+        }
+
+        canonicalScanState = update.ScanState;
+        localIntentTracker.Clear();
+        if (resourceAuthority.Mode != ScannerRoomResourceAuthorityMode.Rollback)
+        {
+            ApplyCanonicalScanState(update.ScanState, requestSnapshot: true);
+        }
+    }
+
+    private void ApplyCanonicalScanState(ScannerRoomScanState scanState, bool requestSnapshot)
+    {
+        TechType desiredTechType = ParseSelectedTechType(scanState.SelectedTechType) ?? TechType.None;
+        bool selectionChanged = mapRoom.typeToScan != desiredTechType;
+        uGUI_MapRoomScanner scanner = mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+
+        CancelSnapshotPreparation();
+        if (authoritativeSnapshot == null || !ScanStatesEqual(authoritativeSnapshot.ScanState, scanState))
+        {
+            authoritativeSnapshot = null;
+            authoritativeResourceNodes = [];
+            ReplaceResourceNodes([]);
+        }
+
+        if (scanner && ShouldSuppressVanillaResources)
+        {
+            // Rebuild before applying the transition so OnStartScan sees the authoritative catalog. The transition
+            // itself is what changes an already-open scanner from the resource list to its scanning presentation.
+            TryApplyAuthoritativeResourceList(scanner);
+        }
+
+        if (selectionChanged)
+        {
+            ApplyVanillaScanSelection(desiredTechType, scanner);
+        }
+
+        NotifyResourceTrackerChanged();
+        RefreshBlipsWithoutAdvancingScan();
+        UpdateRefreshActivity(Time.unscaledTime);
+
+        if (requestSnapshot && sessionJoined)
+        {
+            RequestImmediateSnapshot();
+        }
+    }
+
+    private void ApplyVanillaScanSelection(TechType desiredTechType, uGUI_MapRoomScanner? scanner = null)
+    {
+        applyingCanonicalScanState = true;
+        try
+        {
+            if (desiredTechType != TechType.None)
+            {
+                scanner = scanner ? scanner : mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+                if (scanner)
+                {
+                    StartScanningThroughUi(scanner, desiredTechType);
+                }
+                else
+                {
+                    mapRoom.StartScanning(desiredTechType);
+                }
+                return;
+            }
+
+            scanner = scanner ? scanner : mapRoom.GetComponentInChildren<uGUI_MapRoomScanner>(true);
+            if (scanner)
+            {
+                scanner.OnCancelScan();
+            }
+            // Keep the room canonical even if its UI is currently inactive and vanilla's cancel handler did nothing.
+            mapRoom.typeToScan = TechType.None;
+            ReplaceResourceNodes([]);
+        }
+        finally
+        {
+            applyingCanonicalScanState = false;
+        }
+    }
+
+    private static void StartScanningThroughUi(uGUI_MapRoomScanner scanner, TechType desiredTechType)
+    {
+        // OnStartScan owns the list-to-scanning UI transition, but its integer is tied to the current page/list.
+        // Temporarily make the canonical selection the unambiguous first entry. This also handles a state packet
+        // arriving before the first authoritative resource catalog snapshot has populated the scanner list.
+        List<TechType> sortedTechTypes = [.. scanner.sortedTechTypes];
+        int currentPage = scanner.currentPage;
+        try
+        {
+            scanner.sortedTechTypes.Clear();
+            scanner.sortedTechTypes.Add(desiredTechType);
+            scanner.currentPage = 0;
+            scanner.OnStartScan(0);
+        }
+        finally
+        {
+            scanner.sortedTechTypes.Clear();
+            scanner.sortedTechTypes.AddRange(sortedTechTypes);
+            scanner.currentPage = currentPage;
+        }
+    }
+
+    private void DiscardTargetsForMismatchedSelection(TechType selectedTechType)
+    {
+        CancelSnapshotPreparation();
+        if (authoritativeSnapshot != null && SnapshotMatchesSelection(authoritativeSnapshot, selectedTechType))
+        {
+            return;
+        }
+
+        authoritativeSnapshot = null;
+        authoritativeResourceNodes = [];
+        ReplaceResourceNodes([]);
+        NotifyResourceTrackerChanged();
+        RefreshBlipsWithoutAdvancingScan();
     }
 
     private void OnSnapshotChanged(ScannerRoomSnapshotUpdate update)
@@ -302,6 +512,14 @@ public sealed class ScannerRoomController : MonoBehaviour
             (update.Result is ScannerRoomSnapshotApplyResult.Applied or ScannerRoomSnapshotApplyResult.NotModified) &&
             scannerRoomManager.TryGetSnapshot(mapRoomId, out ScannerRoomSnapshot? snapshot))
         {
+            hasRollbackLocalIntent = false;
+            if (previousMode == ScannerRoomResourceAuthorityMode.Rollback)
+            {
+                // A reconnect can move from a disabled server/session back to an authoritative one after an equal
+                // state packet was deliberately ignored during rollback. Re-apply the accepted snapshot selection.
+                canonicalScanState = snapshot!.ScanState;
+                ApplyCanonicalScanState(canonicalScanState, requestSnapshot: false);
+            }
             BeginSnapshotPreparation(snapshot!);
         }
     }
@@ -315,12 +533,21 @@ public sealed class ScannerRoomController : MonoBehaviour
 
     private void OnStateCleared()
     {
+        localIntentTracker.Clear();
+        if (mapRoom)
+        {
+            CaptureRollbackLocalState();
+        }
         Interlocked.Exchange(ref stateClearPending, 1);
         sessionJoined = false;
     }
 
     private void EnterPendingState()
     {
+        if (!hasRollbackLocalIntent)
+        {
+            CaptureRollbackLocalState();
+        }
         CancelSnapshotPreparation();
         resourceAuthority.ResetToPending();
         ClearSynchronizedResourceState();
@@ -348,6 +575,15 @@ public sealed class ScannerRoomController : MonoBehaviour
 
     private void RestoreVanillaResourceState()
     {
+        bool restoreScanProgress = hasRollbackLocalIntent;
+        if (hasRollbackLocalIntent)
+        {
+            if (mapRoom.typeToScan != rollbackLocalSelection)
+            {
+                ApplyVanillaScanSelection(rollbackLocalSelection);
+            }
+            hasRollbackLocalIntent = false;
+        }
         authoritativeSnapshot = null;
         authoritativeResourceNodes = [];
         authoritativeTechTypes.Clear();
@@ -362,9 +598,20 @@ public sealed class ScannerRoomController : MonoBehaviour
         {
             mapRoom.ObtainResourceNodes(mapRoom.typeToScan);
         }
+        if (restoreScanProgress)
+        {
+            mapRoom.numNodesScanned = rollbackLocalScanProgress;
+        }
 
         NotifyResourceTrackerChanged();
         RefreshBlipsWithoutAdvancingScan();
+    }
+
+    private void CaptureRollbackLocalState()
+    {
+        hasRollbackLocalIntent = true;
+        rollbackLocalSelection = mapRoom.typeToScan;
+        rollbackLocalScanProgress = mapRoom.numNodesScanned;
     }
 
     private void NotifyResourceTrackerChanged()
@@ -512,6 +759,12 @@ public sealed class ScannerRoomController : MonoBehaviour
             ? snapshot.SelectedTechType == null
             : snapshot.SelectedTechType?.Equals(requestedTechType.ToDto()) == true;
 
+    private static bool ScanStatesEqual(ScannerRoomScanState left, ScannerRoomScanState right) =>
+        left.Version == right.Version && SelectionsEqual(left.SelectedTechType, right.SelectedTechType);
+
+    private static bool SelectionsEqual(NitroxTechType? left, NitroxTechType? right) =>
+        ReferenceEquals(left, right) || left?.Equals(right) == true || left == null && right == null;
+
     private static TechType? ParseSelectedTechType(NitroxTechType? selectedTechType) =>
         selectedTechType != null && Enum.TryParse(selectedTechType.Name, out TechType techType) && techType != TechType.None
             ? techType
@@ -523,6 +776,7 @@ public sealed class ScannerRoomController : MonoBehaviour
         if (scannerRoomManager != null)
         {
             scannerRoomManager.SnapshotChanged -= OnSnapshotChanged;
+            scannerRoomManager.ScanStateChanged -= OnScanStateChanged;
             scannerRoomManager.SessionJoined -= OnSessionJoined;
             scannerRoomManager.StateCleared -= OnStateCleared;
             scannerRoomManager.RemoveRoom(mapRoomId);

@@ -15,7 +15,7 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void AppliesPagesAtomicallyWhenTheyArriveOutOfOrder()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, State(quartz));
 
         ScannerRoomSnapshotApplyResult secondResult = store.AcceptPage(Page(query.RequestId, 1, 2, [], [Target(2)]));
 
@@ -37,8 +37,8 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void IgnoresDuplicateAndStalePages()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket stale = store.BeginQuery(roomId, 300, quartz);
-        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket stale = store.BeginQuery(roomId, 300, State(quartz));
+        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, State(quartz));
         ScannerRoomSnapshotPageData currentPage = Page(current.RequestId, 0, 2, [new ScannerResourceSummary(quartz, 2)], [Target(1)]);
 
         store.AcceptPage(Page(stale.RequestId, 0, 1, [], [])).Should().Be(ScannerRoomSnapshotApplyResult.Ignored);
@@ -48,10 +48,33 @@ public sealed class ScannerRoomSnapshotStoreTest
     }
 
     [TestMethod]
+    public void RejectsPagesWhoseCanonicalStateChangesMidSnapshot()
+    {
+        ScannerRoomSnapshotStore store = new();
+        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, State(quartz));
+
+        store.AcceptPage(Page(query.RequestId, 0, 2, [], [Target(1)])).Should().Be(ScannerRoomSnapshotApplyResult.WaitingForPages);
+        ScannerRoomSnapshotPageData advancedStatePage = new(
+            roomId,
+            query.RequestId,
+            ScannerRoomQueryStatus.Complete,
+            300,
+            State(quartz, 8),
+            42,
+            1,
+            2,
+            [],
+            [Target(2)]);
+
+        store.AcceptPage(advancedStatePage).Should().Be(ScannerRoomSnapshotApplyResult.Ignored);
+        store.TryGetSnapshot(roomId, out _).Should().BeFalse();
+    }
+
+    [TestMethod]
     public void ProcessesEachOutOfOrderPagePayloadOnlyOnceBeforeAtomicReplacement()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, State(quartz));
         CountingReadOnlyList<ScannerResourceTarget> firstPageTargets = new(
             Enumerable.Range(1, 256).Select(index => Target((ushort)index)).ToList());
         CountingReadOnlyList<ScannerResourceTarget> secondPageTargets = new([Target(257)]);
@@ -75,7 +98,7 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void OutOfOrderDuplicateTargetsKeepTheFirstOccurrenceInPageOrder()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket query = store.BeginQuery(roomId, 300, State(quartz));
         ScannerResourceTarget laterOccurrence = Target(1, new NitroxVector3(9, 0, 0));
         ScannerResourceTarget earlierOccurrence = Target(1, new NitroxVector3(1, 0, 0));
 
@@ -87,24 +110,25 @@ public sealed class ScannerRoomSnapshotStoreTest
     }
 
     [TestMethod]
-    public void ReusesRevisionOnlyForMatchingRangeAndSelection()
+    public void ReusesRevisionOnlyForMatchingRangeAndScanState()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, State(quartz));
         store.AcceptPage(Page(first.RequestId, 0, 1, [new ScannerResourceSummary(quartz, 1)], [Target(1)])).Should().Be(ScannerRoomSnapshotApplyResult.Applied);
 
-        store.BeginQuery(roomId, 300, quartz).KnownRevision.Should().Be(42);
-        store.BeginQuery(roomId, 350, quartz).KnownRevision.Should().Be(0);
-        store.BeginQuery(roomId, 300, new NitroxTechType("Copper")).KnownRevision.Should().Be(0);
+        store.BeginQuery(roomId, 300, State(quartz)).KnownRevision.Should().Be(42);
+        store.BeginQuery(roomId, 350, State(quartz)).KnownRevision.Should().Be(0);
+        store.BeginQuery(roomId, 300, State(new NitroxTechType("Copper"))).KnownRevision.Should().Be(0);
+        store.BeginQuery(roomId, 300, State(quartz, 8)).KnownRevision.Should().Be(0);
     }
 
     [TestMethod]
     public void NotModifiedLeavesCurrentSnapshotInPlace()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, State(quartz));
         store.AcceptPage(Page(first.RequestId, 0, 1, [new ScannerResourceSummary(quartz, 1)], [Target(1)]));
-        ScannerRoomQueryTicket refresh = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket refresh = store.BeginQuery(roomId, 300, State(quartz));
 
         ScannerRoomSnapshotPageData notModified = Page(refresh.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.NotModified);
         store.AcceptPage(notModified, out ScannerRoomQueryStatus? acceptedStatus).Should().Be(ScannerRoomSnapshotApplyResult.NotModified);
@@ -117,7 +141,7 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void InvalidNotModifiedResponseTerminatesPendingRequestAsFailure()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket refresh = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket refresh = store.BeginQuery(roomId, 300, State(quartz));
 
         ScannerRoomSnapshotPageData notModified = Page(refresh.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.NotModified);
 
@@ -128,15 +152,15 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void NotModifiedCannotReuseSnapshotFromDifferentQueryParameters()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket first = store.BeginQuery(roomId, 300, State(quartz));
         store.AcceptPage(Page(first.RequestId, 0, 1, [new ScannerResourceSummary(quartz, 1)], [Target(1)]));
-        ScannerRoomQueryTicket changedRange = store.BeginQuery(roomId, 350, quartz);
+        ScannerRoomQueryTicket changedRange = store.BeginQuery(roomId, 350, State(quartz));
         ScannerRoomSnapshotPageData notModified = new(
             roomId,
             changedRange.RequestId,
             ScannerRoomQueryStatus.NotModified,
             350,
-            quartz,
+            State(quartz),
             42,
             0,
             1,
@@ -150,8 +174,8 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void ExposesRejectedStatusOnlyForWellFormedCurrentResponse()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket stale = store.BeginQuery(roomId, 300, quartz);
-        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket stale = store.BeginQuery(roomId, 300, State(quartz));
+        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, State(quartz));
 
         store.AcceptPage(
                 Page(stale.RequestId, 0, 1, [], [], ScannerRoomQueryStatus.Rejected),
@@ -170,7 +194,7 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void DoesNotExposeRejectedStatusFromMalformedEnvelope()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket current = store.BeginQuery(roomId, 300, State(quartz));
 
         store.AcceptPage(
                 Page(current.RequestId, 1, 2, [], [], ScannerRoomQueryStatus.Rejected),
@@ -184,7 +208,7 @@ public sealed class ScannerRoomSnapshotStoreTest
     public void CancelsOnlyTheMatchingTimedOutRequest()
     {
         ScannerRoomSnapshotStore store = new();
-        ScannerRoomQueryTicket timedOut = store.BeginQuery(roomId, 300, quartz);
+        ScannerRoomQueryTicket timedOut = store.BeginQuery(roomId, 300, State(quartz));
 
         store.CancelQuery(roomId, timedOut.RequestId + 1).Should().BeFalse();
         store.CancelQuery(roomId, timedOut.RequestId).Should().BeTrue();
@@ -198,7 +222,10 @@ public sealed class ScannerRoomSnapshotStoreTest
         IReadOnlyList<ScannerResourceSummary> summaries,
         IReadOnlyList<ScannerResourceTarget> targets,
         ScannerRoomQueryStatus status = ScannerRoomQueryStatus.Complete) =>
-        new(roomId, requestId, status, 300, quartz, 42, pageIndex, pageCount, summaries, targets);
+        new(roomId, requestId, status, 300, State(quartz), 42, pageIndex, pageCount, summaries, targets);
+
+    private static ScannerRoomScanState State(NitroxTechType? selectedTechType, ulong version = 7) =>
+        new(selectedTechType, version);
 
     private ScannerResourceTarget Target(ushort trackerIndex) => Target(trackerIndex, new NitroxVector3(trackerIndex, 0, 0));
 

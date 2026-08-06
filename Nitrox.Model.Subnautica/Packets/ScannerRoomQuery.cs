@@ -11,14 +11,14 @@ public sealed class ScannerRoomQuery(
     NitroxId mapRoomId,
     uint requestId,
     float reportedRange,
-    NitroxTechType? selectedTechType,
+    ulong expectedScanStateVersion,
     ulong knownRevision,
     NitroxVector3? observedOrigin) : Packet
 {
     public NitroxId MapRoomId { get; } = mapRoomId;
     public uint RequestId { get; } = requestId;
     public float ReportedRange { get; } = reportedRange;
-    public NitroxTechType? SelectedTechType { get; } = selectedTechType;
+    public ulong ExpectedScanStateVersion { get; } = expectedScanStateVersion;
     public ulong KnownRevision { get; } = knownRevision;
     public NitroxVector3? ObservedOrigin { get; } = observedOrigin;
 }

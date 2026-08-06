@@ -16,6 +16,7 @@ internal sealed class ScannerRoomQueryService(
     ScannerResourceIndex resourceIndex,
     IScannerRoomResourceCatalog resourceCatalog,
     IScannerRoomBatchLoader batchLoader,
+    ScannerRoomScanStateService scanStateService,
     ScannerRoomDiagnostics diagnostics,
     IOptions<SubnauticaServerOptions> options,
     ILogger<ScannerRoomQueryService> logger)
@@ -26,6 +27,7 @@ internal sealed class ScannerRoomQueryService(
     private readonly ScannerResourceIndex resourceIndex = resourceIndex;
     private readonly IScannerRoomResourceCatalog resourceCatalog = resourceCatalog;
     private readonly IScannerRoomBatchLoader batchLoader = batchLoader;
+    private readonly ScannerRoomScanStateService scanStateService = scanStateService;
     private readonly ScannerRoomDiagnostics diagnostics = diagnostics;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<ScannerRoomQueryService> logger = logger;
@@ -35,7 +37,7 @@ internal sealed class ScannerRoomQueryService(
         Player player,
         NitroxId mapRoomId,
         float reportedRange,
-        NitroxTechType? selectedTechType,
+        ulong expectedScanStateVersion,
         ulong knownRevision,
         NitroxVector3? observedOrigin,
         CancellationToken cancellationToken = default)
@@ -45,23 +47,28 @@ internal sealed class ScannerRoomQueryService(
         try
         {
             float effectiveRange = ScannerRoomQueryParameters.NormalizeRange(reportedRange);
-            selectedTechType = ScannerRoomQueryParameters.NormalizeSelection(selectedTechType);
             if (!options.Value.EnableScannerRoomResourceSync)
             {
                 finalStatus = ScannerRoomQueryStatus.Rejected;
-                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.Rejected, effectiveRange, selectedTechType);
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.Rejected, effectiveRange, scanStateService.GetStateOrEmpty(mapRoomId));
             }
             if (!entityRegistry.TryGetEntityById(mapRoomId, out MapRoomEntity? mapRoom))
             {
                 finalStatus = ScannerRoomQueryStatus.InvalidRoom;
-                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.InvalidRoom, effectiveRange, selectedTechType);
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.InvalidRoom, effectiveRange, ScannerRoomScanState.Empty);
+            }
+
+            if (!scanStateService.TryGetState(mapRoomId, out ScannerRoomScanState scanState) || scanState.Version != expectedScanStateVersion)
+            {
+                finalStatus = ScannerRoomQueryStatus.StateOutdated;
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.StateOutdated, effectiveRange, scanState);
             }
 
             NitroxVector3? origin = ResolveOrigin(player, mapRoom, observedOrigin);
             if (origin == null)
             {
                 finalStatus = ScannerRoomQueryStatus.OriginUnavailable;
-                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.OriginUnavailable, effectiveRange, selectedTechType);
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.OriginUnavailable, effectiveRange, scanState);
             }
 
             float loadRadius = effectiveRange + resourceCatalog.MaximumRelativeOffset;
@@ -76,15 +83,23 @@ internal sealed class ScannerRoomQueryService(
                 diagnostics.BatchLoadCompleted();
             }
 
+            if (!scanStateService.TryGetState(mapRoomId, out ScannerRoomScanState latestScanState) ||
+                latestScanState.Version != scanState.Version ||
+                !Equals(latestScanState.SelectedTechType, scanState.SelectedTechType))
+            {
+                finalStatus = ScannerRoomQueryStatus.StateOutdated;
+                return ScannerRoomQueryResult.Error(ScannerRoomQueryStatus.StateOutdated, effectiveRange, latestScanState);
+            }
+
             IReadOnlyList<ScannerResourceNode> nodes = resourceIndex.Query(batchIds, origin.Value, effectiveRange);
             List<ScannerResourceSummary> summaries = nodes.GroupBy(node => node.TechType)
                                                                  .OrderBy(group => group.Key.Name, StringComparer.Ordinal)
                                                                  .Select(group => new ScannerResourceSummary(group.Key, group.Count()))
                                                                  .ToList();
 
-            List<ScannerResourceTarget> targets = selectedTechType == null
+            List<ScannerResourceTarget> targets = scanState.SelectedTechType == null
                 ? []
-                : nodes.Where(node => node.TechType.Equals(selectedTechType))
+                : nodes.Where(node => node.TechType.Equals(scanState.SelectedTechType))
                        .OrderBy(node => SquaredDistance(node.Position, origin.Value))
                        .ThenBy(node => node.Key.EntityId)
                        .ThenBy(node => node.Key.TrackerIndex)
@@ -92,7 +107,7 @@ internal sealed class ScannerRoomQueryService(
                        .ToList();
             diagnostics.ResultMatched(summaries.Count, targets.Count);
 
-            ulong revision = ScannerRoomSnapshotRevision.Compute(effectiveRange, selectedTechType, summaries, targets);
+            ulong revision = ScannerRoomSnapshotRevision.Compute(effectiveRange, scanState.SelectedTechType, summaries, targets);
             ScannerRoomQueryStatus status = knownRevision != 0 && knownRevision == revision
                                                 ? ScannerRoomQueryStatus.NotModified
                                                 : ScannerRoomQueryStatus.Complete;
@@ -100,8 +115,8 @@ internal sealed class ScannerRoomQueryService(
 
             logger.ZLogDebug($"Scanner Room {mapRoomId} query for {player.Name} returned {summaries.Count:@ResourceTypes} resource types and {targets.Count:@Targets} selected targets across {batchIds.Count:@Batches} batches.");
             return status == ScannerRoomQueryStatus.NotModified
-                       ? new(status, effectiveRange, selectedTechType, revision, [], [])
-                       : new(status, effectiveRange, selectedTechType, revision, summaries, targets);
+                       ? new(status, effectiveRange, scanState, revision, [], [])
+                       : new(status, effectiveRange, scanState, revision, summaries, targets);
         }
         finally
         {

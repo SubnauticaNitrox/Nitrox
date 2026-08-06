@@ -18,7 +18,7 @@ public sealed class MapRoomFunctionality_UpdateCameraBlips_Patch : NitroxPatch, 
         }
 
         PlayerManager playerManager = Resolve<PlayerManager>();
-        ScannerRoomPlayerBlipManager.GetOrCreate(__instance).Refresh(playerManager.GetAll());
+        ScannerRoomPlayerBlipManager.GetOrCreate(__instance, playerManager).RefreshNow();
     }
 
     public override void Patch(Harmony harmony)

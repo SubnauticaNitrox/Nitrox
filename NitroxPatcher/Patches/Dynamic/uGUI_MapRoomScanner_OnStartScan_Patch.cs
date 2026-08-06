@@ -11,7 +11,7 @@ public sealed partial class uGUI_MapRoomScanner_OnStartScan_Patch : NitroxPatch,
     {
         if (__instance.mapRoom && __instance.mapRoom.TryGetComponent(out ScannerRoomController controller))
         {
-            controller.RequestSnapshotIfStateChanged();
+            controller.SubmitLocalScanStateIntent();
         }
     }
 }

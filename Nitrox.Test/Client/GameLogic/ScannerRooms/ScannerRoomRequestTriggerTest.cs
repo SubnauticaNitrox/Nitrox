@@ -1,5 +1,6 @@
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 
 namespace NitroxClient.GameLogic.ScannerRooms;
 
@@ -14,11 +15,12 @@ public sealed class ScannerRoomRequestTriggerTest
     {
         List<Request> requests = [];
         ScannerRoomRequestTrigger trigger = CreateTrigger(requests);
+        ScannerRoomScanState scanState = new(quartz, 1);
 
-        trigger.TryRequestInitial(300, quartz, origin).Should().BeTrue();
-        trigger.TryRequestInitial(300, quartz, origin).Should().BeFalse();
+        trigger.TryRequestInitial(300, scanState, origin).Should().BeTrue();
+        trigger.TryRequestInitial(300, scanState, origin).Should().BeFalse();
 
-        requests.Should().ContainSingle().Which.Should().Be(new Request(300, quartz, origin));
+        requests.Should().ContainSingle().Which.Should().Be(new Request(300, scanState, origin));
     }
 
     [TestMethod]
@@ -26,12 +28,13 @@ public sealed class ScannerRoomRequestTriggerTest
     {
         List<Request> requests = [];
         ScannerRoomRequestTrigger trigger = CreateTrigger(requests);
+        ScannerRoomScanState scanState = new(quartz, 1);
 
-        trigger.RequestImmediate(300, quartz, origin);
-        trigger.RequestImmediate(300, quartz, origin);
+        trigger.RequestImmediate(300, scanState, origin);
+        trigger.RequestImmediate(300, scanState, origin);
 
         requests.Should().HaveCount(2);
-        trigger.TryRequestInitial(300, quartz, origin).Should().BeFalse();
+        trigger.TryRequestInitial(300, scanState, origin).Should().BeFalse();
     }
 
     [TestMethod]
@@ -40,17 +43,18 @@ public sealed class ScannerRoomRequestTriggerTest
         List<Request> requests = [];
         ScannerRoomRequestTrigger trigger = CreateTrigger(requests);
 
-        trigger.TryRequestIfChanged(349, NitroxTechType.None, origin).Should().BeTrue();
-        trigger.TryRequestIfChanged(300, null, origin).Should().BeFalse();
-        trigger.TryRequestIfChanged(350, null, origin).Should().BeTrue();
-        trigger.TryRequestIfChanged(350, quartz, origin).Should().BeTrue();
-        trigger.TryRequestIfChanged(399, new NitroxTechType("Quartz"), origin).Should().BeFalse();
+        trigger.TryRequestIfChanged(349, new ScannerRoomScanState(NitroxTechType.None, 0), origin).Should().BeTrue();
+        trigger.TryRequestIfChanged(300, new ScannerRoomScanState(null, 0), origin).Should().BeFalse();
+        trigger.TryRequestIfChanged(350, ScannerRoomScanState.Empty, origin).Should().BeTrue();
+        trigger.TryRequestIfChanged(350, new ScannerRoomScanState(quartz, 1), origin).Should().BeTrue();
+        trigger.TryRequestIfChanged(399, new ScannerRoomScanState(new NitroxTechType("Quartz"), 1), origin).Should().BeFalse();
+        trigger.TryRequestIfChanged(399, new ScannerRoomScanState(quartz, 2), origin).Should().BeTrue();
 
-        requests.Should().HaveCount(3);
+        requests.Should().HaveCount(4);
     }
 
     private static ScannerRoomRequestTrigger CreateTrigger(ICollection<Request> requests) =>
-        new((range, selectedTechType, observedOrigin) => requests.Add(new Request(range, selectedTechType, observedOrigin)));
+        new((range, scanState, observedOrigin) => requests.Add(new Request(range, scanState, observedOrigin)));
 
-    private sealed record Request(float Range, NitroxTechType? SelectedTechType, NitroxVector3? ObservedOrigin);
+    private sealed record Request(float Range, ScannerRoomScanState ScanState, NitroxVector3? ObservedOrigin);
 }

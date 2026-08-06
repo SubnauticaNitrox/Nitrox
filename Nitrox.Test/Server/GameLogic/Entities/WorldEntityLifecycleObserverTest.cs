@@ -362,6 +362,8 @@ public sealed class WorldEntityLifecycleObserverTest
         public const string ClassId = "scanner-lifecycle-quartz";
         public float MaximumRelativeOffset => 0;
 
+        public bool IsKnownTechType(NitroxTechType techType) => techType.Equals(new NitroxTechType("Quartz"));
+
         public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)
         {
             if (classId == ClassId)
