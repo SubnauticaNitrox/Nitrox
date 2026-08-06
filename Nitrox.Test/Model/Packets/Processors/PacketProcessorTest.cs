@@ -72,6 +72,7 @@ namespace Nitrox.Model.Packets.Processors
             }
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new TestAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
+            NitroxServiceLocator.LocateService<PacketProcessorsInvoker>();
 
             foreach (Type packet in typeof(Packet).Assembly.GetTypes().Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract).ToList())
             {

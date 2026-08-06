@@ -90,6 +90,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothPassengers>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SeamothHornSound>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<VehicleHorns>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
