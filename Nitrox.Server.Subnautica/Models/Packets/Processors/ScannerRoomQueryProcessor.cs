@@ -9,12 +9,14 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 internal sealed class ScannerRoomQueryProcessor(
     ScannerRoomQueryService queryService,
+    ScannerRoomScanStateService scanStateService,
     ScannerRoomQueryLimiter queryLimiter,
     ScannerRoomDiagnostics diagnostics,
     ILogger<ScannerRoomQueryProcessor> logger) : IAuthPacketProcessor<ScannerRoomQuery>
 {
     private const int TARGETS_PER_PAGE = 256;
     private readonly ScannerRoomQueryService queryService = queryService;
+    private readonly ScannerRoomScanStateService scanStateService = scanStateService;
     private readonly ScannerRoomQueryLimiter queryLimiter = queryLimiter;
     private readonly ScannerRoomDiagnostics diagnostics = diagnostics;
     private readonly ILogger<ScannerRoomQueryProcessor> logger = logger;
@@ -31,14 +33,19 @@ internal sealed class ScannerRoomQueryProcessor(
                     context.Sender,
                     packet.MapRoomId,
                     packet.ReportedRange,
-                    packet.SelectedTechType,
+                    packet.ExpectedScanStateVersion,
                     packet.KnownRevision,
                     packet.ObservedOrigin);
             }
             catch (Exception ex)
             {
                 logger.ZLogError(ex, $"Failed Scanner Room query {packet.RequestId} for room {packet.MapRoomId} from {context.Sender.Name}");
-                await ReplyWithStatus(context, packet, ScannerRoomQueryStatus.Failed, ScannerRoomQueryParameters.NormalizeRange(packet.ReportedRange));
+                await ReplyWithStatus(
+                    context,
+                    packet,
+                    ScannerRoomQueryStatus.Failed,
+                    ScannerRoomQueryParameters.NormalizeRange(packet.ReportedRange),
+                    scanStateService.GetStateOrEmpty(packet.MapRoomId));
                 diagnostics.PagesSent(1);
                 return;
             }
@@ -78,15 +85,20 @@ internal sealed class ScannerRoomQueryProcessor(
         ushort pageCount,
         List<ScannerResourceSummary> summaries,
         List<ScannerResourceTarget> targets) =>
-        new(packet.MapRoomId, packet.RequestId, result.Status, result.EffectiveRange, result.SelectedTechType, result.Revision, pageIndex, pageCount, summaries, targets);
+        new(packet.MapRoomId, packet.RequestId, result.Status, result.EffectiveRange, result.ScanState, result.Revision, pageIndex, pageCount, summaries, targets);
 
-    private static Task ReplyWithStatus(AuthProcessorContext context, ScannerRoomQuery packet, ScannerRoomQueryStatus status, float effectiveRange) =>
+    private static Task ReplyWithStatus(
+        AuthProcessorContext context,
+        ScannerRoomQuery packet,
+        ScannerRoomQueryStatus status,
+        float effectiveRange,
+        ScannerRoomScanState scanState) =>
         context.ReplyAsync(new ScannerRoomSnapshotPage(
             packet.MapRoomId,
             packet.RequestId,
             status,
             effectiveRange,
-            ScannerRoomQueryParameters.NormalizeSelection(packet.SelectedTechType),
+            scanState,
             0,
             0,
             1,

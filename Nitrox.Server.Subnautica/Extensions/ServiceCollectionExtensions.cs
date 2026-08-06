@@ -172,6 +172,7 @@ internal static partial class ServiceCollectionExtensions
                     .AddSingleton<ScannerResourceIndex>()
                     .AddSingleton<IWorldEntityLifecycleObserver>(provider => provider.GetRequiredService<ScannerResourceIndex>())
                     .AddSingleton<IScannerRoomBatchLoader, ScannerRoomBatchLoader>()
+                    .AddSingleton<ScannerRoomScanStateService>()
                     .AddSingleton<ScannerRoomQueryService>()
                     .AddSingleton<ScannerRoomQueryLimiter>()
                     .AddSingleton<ScannerRoomDiagnostics>()

@@ -17,16 +17,53 @@ public sealed class ScannerRoomPacketSerializationTest
     public void QueryRoundTripsEveryField()
     {
         Packet.InitSerializer();
-        ScannerRoomQuery packet = new(roomId, 17, 450, quartz, 123456, new NitroxVector3(1, 2, 3));
+        ScannerRoomQuery packet = new(roomId, 17, 450, 42, 123456, new NitroxVector3(1, 2, 3));
 
         ScannerRoomQuery deserialized = Packet.Deserialize(packet.Serialize()).Should().BeOfType<ScannerRoomQuery>().Which;
 
         deserialized.MapRoomId.Should().Be(roomId);
         deserialized.RequestId.Should().Be(17);
         deserialized.ReportedRange.Should().Be(450);
-        deserialized.SelectedTechType.Should().Be(quartz);
+        deserialized.ExpectedScanStateVersion.Should().Be(42);
         deserialized.KnownRevision.Should().Be(123456);
         deserialized.ObservedOrigin.Should().Be(new NitroxVector3(1, 2, 3));
+    }
+
+    [TestMethod]
+    public void ScanStateChangeRequestRoundTripsEveryField()
+    {
+        Packet.InitSerializer();
+        ScannerRoomScanStateChangeRequest packet = new(roomId, quartz);
+
+        ScannerRoomScanStateChangeRequest deserialized = Packet.Deserialize(packet.Serialize()).Should().BeOfType<ScannerRoomScanStateChangeRequest>().Which;
+
+        deserialized.MapRoomId.Should().Be(roomId);
+        deserialized.DesiredTechType.Should().Be(quartz);
+    }
+
+    [TestMethod]
+    public void ScanStateChangeRequestRoundTripsCancellation()
+    {
+        Packet.InitSerializer();
+        ScannerRoomScanStateChangeRequest packet = new(roomId, null);
+
+        ScannerRoomScanStateChangeRequest deserialized = Packet.Deserialize(packet.Serialize()).Should().BeOfType<ScannerRoomScanStateChangeRequest>().Which;
+
+        deserialized.MapRoomId.Should().Be(roomId);
+        deserialized.DesiredTechType.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ScanStateChangedRoundTripsEveryField()
+    {
+        Packet.InitSerializer();
+        ScannerRoomScanStateChanged packet = new(roomId, new ScannerRoomScanState(quartz, 42));
+
+        ScannerRoomScanStateChanged deserialized = Packet.Deserialize(packet.Serialize()).Should().BeOfType<ScannerRoomScanStateChanged>().Which;
+
+        deserialized.MapRoomId.Should().Be(roomId);
+        deserialized.CanonicalState.SelectedTechType.Should().Be(quartz);
+        deserialized.CanonicalState.Version.Should().Be(42);
     }
 
     [TestMethod]
@@ -34,12 +71,13 @@ public sealed class ScannerRoomPacketSerializationTest
     {
         Packet.InitSerializer();
         NitroxId entityId = new("07e8b483-9cca-43b5-aa61-45b51f109881");
+        ScannerRoomScanState scanState = new(quartz, 42);
         ScannerRoomSnapshotPage packet = new(
             roomId,
             23,
             ScannerRoomQueryStatus.Complete,
             500,
-            quartz,
+            scanState,
             987654,
             1,
             3,
@@ -52,7 +90,8 @@ public sealed class ScannerRoomPacketSerializationTest
         deserialized.RequestId.Should().Be(23);
         deserialized.Status.Should().Be(ScannerRoomQueryStatus.Complete);
         deserialized.EffectiveRange.Should().Be(500);
-        deserialized.SelectedTechType.Should().Be(quartz);
+        deserialized.ScanState.SelectedTechType.Should().Be(quartz);
+        deserialized.ScanState.Version.Should().Be(42);
         deserialized.Revision.Should().Be(987654);
         deserialized.PageIndex.Should().Be(1);
         deserialized.PageCount.Should().Be(3);

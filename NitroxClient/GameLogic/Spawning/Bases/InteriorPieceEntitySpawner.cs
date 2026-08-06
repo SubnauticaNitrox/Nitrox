@@ -181,7 +181,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 
         CompleteMapRoomRestore(
             () => NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id),
-            () => BuildingPostSpawner.SetupScannerRoom(mapRoomFunctionality, mapRoomEntity.Id));
+            () => BuildingPostSpawner.SetupScannerRoom(mapRoomFunctionality, mapRoomEntity.Id, mapRoomEntity.ScanState));
     }
 
     internal static void CompleteMapRoomRestore(Action assignId, Action setupScannerRoom)

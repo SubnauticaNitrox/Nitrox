@@ -6,6 +6,7 @@ using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Newtonsoft.Json;
 using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
@@ -29,6 +30,7 @@ internal sealed class ScannerRoomResourceCatalogResource(
     private readonly JsonSerializer serializer = new() { TypeNameHandling = TypeNameHandling.Auto };
     private readonly TaskCompletionSource resourceLoadFinished = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private Dictionary<string, ScannerResourceDescriptor[]> descriptorsByClassId = [];
+    private HashSet<NitroxTechType> knownTechTypes = [];
     private float maximumRelativeOffset;
 
     public float MaximumRelativeOffset
@@ -55,6 +57,11 @@ internal sealed class ScannerRoomResourceCatalogResource(
         try
         {
             descriptorsByClassId = await CreateOrLoadCacheAsync(cancellationToken);
+            knownTechTypes = descriptorsByClassId.Values
+                                                     .SelectMany(descriptors => descriptors)
+                                                     .Select(descriptor => descriptor.TechType)
+                                                     .Where(techType => !techType.Equals(NitroxTechType.None))
+                                                     .ToHashSet();
             maximumRelativeOffset = descriptorsByClassId.Values
                                                               .SelectMany(descriptors => descriptors)
                                                               .Select(descriptor => descriptor.RelativePosition.Magnitude)
@@ -73,6 +80,12 @@ internal sealed class ScannerRoomResourceCatalogResource(
     {
         assetsManager.Dispose();
         return Task.CompletedTask;
+    }
+
+    public bool IsKnownTechType(NitroxTechType techType)
+    {
+        resourceLoadFinished.Task.GetAwaiter().GetResult();
+        return techType is { Name.Length: > 0 } && knownTechTypes.Contains(techType);
     }
 
     public bool TryGetDescriptors(string classId, out IReadOnlyList<ScannerResourceDescriptor> descriptors)

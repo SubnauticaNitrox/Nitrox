@@ -58,7 +58,7 @@ public sealed class ScannerRoomTargetPreparationTest
     public void DuplicateTargetsConsumeBudgetButProduceOnePreparedResource()
     {
         ScannerResourceTarget target = Target(1);
-        ScannerRoomSnapshot snapshot = new(roomId, 300, quartz, 1, [], [target, target]);
+        ScannerRoomSnapshot snapshot = new(roomId, 300, new ScannerRoomScanState(quartz, 1), 1, [], [target, target]);
         using ScannerRoomTargetPreparation<string> preparation = new(snapshot);
 
         preparation.Advance(1, _ => "first").Should().Be(1);
@@ -84,7 +84,7 @@ public sealed class ScannerRoomTargetPreparationTest
         new(
             roomId,
             300,
-            quartz,
+            new ScannerRoomScanState(quartz, 1),
             revision,
             [new ScannerResourceSummary(quartz, targetCount)],
             Enumerable.Range(1, targetCount).Select(index => Target((ushort)index)).ToList());

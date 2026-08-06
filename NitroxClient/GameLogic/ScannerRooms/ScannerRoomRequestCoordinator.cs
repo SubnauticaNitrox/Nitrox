@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Helper;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 
 namespace NitroxClient.GameLogic.ScannerRooms;
 
 internal readonly record struct ScannerRoomRequestParameters(
     float Range,
-    NitroxTechType? SelectedTechType,
+    ScannerRoomScanState ExpectedScanState,
     NitroxVector3? ObservedOrigin);
 
 internal readonly record struct ScannerRoomDispatch(NitroxId MapRoomId, ScannerRoomRequestParameters Request);

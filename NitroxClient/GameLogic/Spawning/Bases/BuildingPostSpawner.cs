@@ -3,6 +3,7 @@ using System.Collections;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.ScannerRooms;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -113,8 +114,11 @@ public static class BuildingPostSpawner
 
     public static void SetupScannerRoom(MapRoomFunctionality mapRoom, NitroxId mapRoomId)
     {
-        ScannerRoomController.Attach(mapRoom, mapRoomId);
+        SetupScannerRoom(mapRoom, mapRoomId, ScannerRoomScanState.Empty);
     }
+
+    public static void SetupScannerRoom(MapRoomFunctionality mapRoom, NitroxId mapRoomId, ScannerRoomScanState scanState) =>
+        ScannerRoomController.Attach(mapRoom, mapRoomId, scanState);
 
     internal static NitroxId ResolveScannerRoomId(NitroxId fallbackId, NitroxId? assignedMapRoomId) =>
         assignedMapRoomId ?? fallbackId;
