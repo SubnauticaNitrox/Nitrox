@@ -8,12 +8,13 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodWhitelist)
+public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodWhitelist, SeamothHornSound seamothHornSound)
 {
     internal const string HORN_SOUND_PATH = "event:/sub/cyclops/horn";
 
     private readonly FMODWhitelist fmodWhitelist = fmodWhitelist;
     private readonly IPacketSender packetSender = packetSender;
+    private readonly SeamothHornSound seamothHornSound = seamothHornSound;
 
     public bool TryHonkCurrentVehicle()
     {
@@ -79,6 +80,11 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
 
     private void PlayHorn(GameObject vehicle, FMOD_CustomEmitter nativeEmitter)
     {
+        if (vehicle.GetComponent<SeaMoth>() && seamothHornSound.TryPlay(vehicle.transform.position))
+        {
+            return;
+        }
+
         using (FMODSystem.SuppressSendingSounds())
         {
             if (nativeEmitter)
@@ -93,7 +99,7 @@ public sealed class VehicleHorns(IPacketSender packetSender, FMODWhitelist fmodW
                 return;
             }
 
-            // Subnautica has no Seamoth horn event. Reuse its shipped Cyclops horn as a safe placeholder.
+            // Retain the shipped Cyclops event as a fallback if the bundled Seamoth WAV cannot load.
             FMODEmitterController.PlayEventOneShot(HORN_SOUND_PATH, soundData.Radius, vehicle.transform.position);
         }
     }
