@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -50,6 +51,8 @@ public class RemotePlayer : INitroxPlayer
     public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
     public Vehicle Vehicle { get; private set; }
+    public SeaMoth PassengerSeamoth { get; private set; }
+    public byte SeamothPassengerSeat { get; private set; }
     public SubRoot SubRoot { get; private set; }
     public EscapePod? EscapePod { get; private set; }
     public PilotingChair PilotingChair { get; private set; }
@@ -153,6 +156,12 @@ public class RemotePlayer : INitroxPlayer
 
         Body.SetActive(true);
 
+        // Canonical passenger state wins over movement packets that were already in flight when the player entered.
+        if (PassengerSeamoth || PlayerContext.PassengerSeamoth != null)
+        {
+            return;
+        }
+
         // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
         SetVehicle(null);
         SetPilotingChair(null);
@@ -177,6 +186,11 @@ public class RemotePlayer : INitroxPlayer
 
     public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)
     {
+        if (PassengerSeamoth || PlayerContext.PassengerSeamoth != null)
+        {
+            return;
+        }
+
         if (Pawn == null || PilotingChair)
         {
             return;
@@ -194,6 +208,11 @@ public class RemotePlayer : INitroxPlayer
 
     public void SetPilotingChair(PilotingChair newPilotingChair)
     {
+        if (newPilotingChair)
+        {
+            SetPassengerSeamoth(null);
+        }
+
         if (PilotingChair != newPilotingChair)
         {
             PilotingChair = newPilotingChair;
@@ -246,6 +265,11 @@ public class RemotePlayer : INitroxPlayer
 
     public void SetSubRoot(SubRoot newSubRoot, bool force = false)
     {
+        if (newSubRoot)
+        {
+            SetPassengerSeamoth(null);
+        }
+
         if (SubRoot != newSubRoot || force)
         {
             // Unregister from previous cyclops
@@ -273,6 +297,11 @@ public class RemotePlayer : INitroxPlayer
 
     public void SetEscapePod(EscapePod? newEscapePod)
     {
+        if (newEscapePod)
+        {
+            SetPassengerSeamoth(null);
+        }
+
         if (EscapePod != newEscapePod)
         {
             if (newEscapePod)
@@ -290,6 +319,11 @@ public class RemotePlayer : INitroxPlayer
 
     public void SetVehicle(Vehicle newVehicle)
     {
+        if (newVehicle)
+        {
+            SetPassengerSeamoth(null);
+        }
+
         if (Vehicle != newVehicle)
         {
             if (Vehicle)
@@ -347,10 +381,95 @@ public class RemotePlayer : INitroxPlayer
     }
 
     /// <summary>
+    /// Displays this player as a fixed Seamoth passenger without granting any pilot-side state.
+    /// </summary>
+    /// <remarks>
+    /// Passenger anchors are deliberately distinct from <see cref="Vehicle.playerPosition"/>. This method must not
+    /// manipulate the vehicle animator, IK plugs, or a <see cref="VehicleMovementReplicator"/> because those belong
+    /// exclusively to the driver.
+    /// </remarks>
+    public void SetPassengerSeamoth(SeaMoth newPassengerSeamoth, byte seatIndex = 0)
+    {
+        if (newPassengerSeamoth)
+        {
+            PlayerContext.DrivingVehicle = null;
+        }
+
+        if (!Body)
+        {
+            PassengerSeamoth = newPassengerSeamoth;
+            SeamothPassengerSeat = newPassengerSeamoth ? seatIndex : (byte)0;
+            PlayerContext.PassengerSeamoth = null;
+            PlayerContext.SeamothPassengerSeat = SeamothPassengerSeat;
+            if (newPassengerSeamoth && newPassengerSeamoth.gameObject.TryGetIdOrWarn(out NitroxId pendingSeamothId))
+            {
+                PlayerContext.PassengerSeamoth = pendingSeamothId;
+            }
+            return;
+        }
+
+        if (PassengerSeamoth == newPassengerSeamoth && !newPassengerSeamoth)
+        {
+            SeamothPassengerSeat = 0;
+            PlayerContext.PassengerSeamoth = null;
+            PlayerContext.SeamothPassengerSeat = 0;
+            return;
+        }
+
+        if (PassengerSeamoth == newPassengerSeamoth &&
+            SeamothPassengerSeat == seatIndex &&
+            Body.transform.parent == SeamothPassengerAnchors.GetOrCreate(newPassengerSeamoth, seatIndex))
+        {
+            return;
+        }
+
+        SeaMoth previousPassengerSeamoth = PassengerSeamoth;
+        if (previousPassengerSeamoth)
+        {
+            Transform previousPassengerAnchor = Body ? Body.transform.parent : null;
+            Detach();
+            PassengerSeamoth = null;
+            SeamothPassengerSeat = 0;
+            PlayerContext.PassengerSeamoth = null;
+            PlayerContext.SeamothPassengerSeat = 0;
+            AnimationController.UpdatePlayerAnimations = true;
+            AnimationController["in_seamoth"] = false;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, false, true);
+            SeamothPassengerAnchors.RemoveIfEmpty(previousPassengerAnchor);
+        }
+
+        if (!newPassengerSeamoth)
+        {
+            return;
+        }
+
+        // An authoritative passenger state supersedes stale local representations of every other role.
+        SetVehicle(null);
+        SetPilotingChair(null);
+        SetSubRoot(null);
+        SetEscapePod(null);
+
+        Transform passengerAnchor = SeamothPassengerAnchors.GetOrCreate(newPassengerSeamoth, seatIndex);
+        Attach(passengerAnchor);
+        UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, true, true);
+        AnimationController.UpdatePlayerAnimations = false;
+        AnimationController["in_seamoth"] = true;
+
+        PassengerSeamoth = newPassengerSeamoth;
+        SeamothPassengerSeat = seatIndex;
+        if (newPassengerSeamoth.gameObject.TryGetIdOrWarn(out NitroxId seamothId))
+        {
+            PlayerContext.PassengerSeamoth = seamothId;
+            PlayerContext.SeamothPassengerSeat = seatIndex;
+        }
+    }
+
+    /// <summary>
     /// Drops the remote player, swimming where he is. Resets its animator.
     /// </summary>
     public void ResetStates()
     {
+        SetPassengerSeamoth(null);
         SetPilotingChair(null);
         SetVehicle(null);
         SetSubRoot(null);
@@ -552,6 +671,6 @@ public class RemotePlayer : INitroxPlayer
     /// </summary>
     public bool CanBeAttacked()
     {
-        return !SubRoot && !EscapePod && PlayerContext.GameMode != SubnauticaGameMode.CREATIVE;
+        return !SubRoot && !EscapePod && !PassengerSeamoth && PlayerContext.PassengerSeamoth == null && PlayerContext.GameMode != SubnauticaGameMode.CREATIVE;
     }
 }

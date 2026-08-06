@@ -89,6 +89,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SeamothPassengers>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();

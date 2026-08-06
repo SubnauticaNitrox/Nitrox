@@ -50,6 +50,11 @@ public sealed partial class Vehicle_OnHandClick_Patch : NitroxPatch, IDynamicPat
         }
         else
         {
+            if (vehicle is SeaMoth seamoth && Resolve<SeamothPassengers>().RequestEnter(seamoth))
+            {
+                return;
+            }
+
             vehicle.gameObject.AddComponent<DenyOwnershipHand>();
             vehicle.isValidHandTarget = false;
         }

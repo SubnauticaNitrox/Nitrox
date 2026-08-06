@@ -1,6 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.Subnautica.MultiplayerSession;
@@ -41,6 +42,7 @@ public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
         AddStep(WorldSettledForBuildings);
         AddStep(SpawnEntities);
         AddStep(RestoreDrivers);
+        AddStep(RestoreSeamothPassengers);
     }
 
     public IEnumerator WorldSettledForBuildings(InitialPlayerSync packet)
@@ -77,6 +79,25 @@ public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
                     // isn't going to send a packet. Therefore we need to set this by hand
                     remotePlayer.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
                 }
+            }
+        }
+    }
+
+    public void RestoreSeamothPassengers(InitialPlayerSync packet)
+    {
+        foreach (PlayerContext playerContext in packet.OtherPlayers)
+        {
+            if (playerContext.DrivingVehicle != null ||
+                playerContext.PassengerSeamoth == null ||
+                playerContext.SeamothPassengerSeat >= SeamothPassengerAnchors.MaxPassengers)
+            {
+                continue;
+            }
+
+            if (playerManager.TryFind(playerContext.SessionId, out RemotePlayer remotePlayer) &&
+                NitroxEntity.TryGetComponentFrom(playerContext.PassengerSeamoth, out SeaMoth seamoth))
+            {
+                remotePlayer.SetPassengerSeamoth(seamoth, playerContext.SeamothPassengerSeat);
             }
         }
     }

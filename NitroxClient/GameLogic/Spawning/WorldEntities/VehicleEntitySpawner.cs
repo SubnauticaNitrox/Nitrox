@@ -18,6 +18,13 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
     // distance - anything more will simply use world spawning (no need to play the animation anyways).
     private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
 
+    private readonly PlayerManager playerManager;
+
+    public VehicleEntitySpawner(PlayerManager playerManager)
+    {
+        this.playerManager = playerManager;
+    }
+
     protected override IEnumerator SpawnAsync(VehicleEntity vehicleEntity, TaskResult<Optional<GameObject>> result)
     {
         bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < GetCraftDuration(vehicleEntity.TechType.ToUnity());
@@ -113,6 +120,7 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
             vehicle.constructionFallOverride = false;
         }
 
+        RestoreWaitingSeamothPassengers(vehicleEntity, gameObject);
         result.Set(gameObject);
     }
 
@@ -136,8 +144,31 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
 
         AddCinematicControllers(constructedObject);
 
+        RestoreWaitingSeamothPassengers(vehicleEntity, constructedObject);
         result.Set(constructedObject);
         yield break;
+    }
+
+    private void RestoreWaitingSeamothPassengers(VehicleEntity vehicleEntity, GameObject gameObject)
+    {
+        if (!gameObject.TryGetComponent(out SeaMoth seamoth))
+        {
+            return;
+        }
+
+        foreach (RemotePlayer remotePlayer in playerManager.GetAll())
+        {
+            if (!remotePlayer.Body ||
+                remotePlayer.Vehicle ||
+                remotePlayer.PlayerContext.DrivingVehicle != null ||
+                remotePlayer.PlayerContext.PassengerSeamoth != vehicleEntity.Id ||
+                remotePlayer.PlayerContext.SeamothPassengerSeat >= SeamothPassengerAnchors.MaxPassengers)
+            {
+                continue;
+            }
+
+            remotePlayer.SetPassengerSeamoth(seamoth, remotePlayer.PlayerContext.SeamothPassengerSeat);
+        }
     }
 
     /// <summary>

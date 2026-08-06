@@ -11,10 +11,12 @@ namespace NitroxClient.MonoBehaviours;
 public class PlayerMovementBroadcaster : MonoBehaviour
 {
     private LocalPlayer localPlayer;
+    private SeamothPassengers seamothPassengers;
 
     public void Awake()
     {
         localPlayer = this.Resolve<LocalPlayer>();
+        seamothPassengers = this.Resolve<SeamothPassengers>();
     }
 
     public void Update()
@@ -30,6 +32,11 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
         if (!MainCameraControl.main.isActiveAndEnabled &&
             !uGUI_CameraCyclops.main.content.activeSelf)
+        {
+            return;
+        }
+
+        if (seamothPassengers.UpdatePassenger())
         {
             return;
         }

@@ -11,6 +11,8 @@ public sealed partial class Player_OnPlayerPositionCheat_Patch : NitroxPatch, ID
 
     public static void Prefix(Player __instance)
     {
+        Resolve<SeamothPassengers>().ExitLocal(true, false);
+
         if (__instance.GetCurrentSub())
         {
             Resolve<LocalPlayer>().BroadcastSubrootChange(Optional.Empty);
