@@ -101,7 +101,9 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
             return false;
         }
 
-        HandReticle.main.SetText(HandReticle.TextType.Hand, "PressToExit", true, GameInput.Button.Exit);
+        string exitText = LanguageCache.GetButtonFormat("PressToExit", GameInput.Button.Exit);
+        HandReticle.main.SetTextRaw(HandReticle.TextType.Hand, exitText);
+        HandReticle.main.SetTextRaw(HandReticle.TextType.HandSubscript, string.Empty);
         HandReticle.main.SetIcon(HandReticle.IconType.None, 1f);
         if (GameInput.GetButtonDown(GameInput.Button.Exit))
         {
