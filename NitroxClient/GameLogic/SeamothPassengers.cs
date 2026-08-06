@@ -144,6 +144,7 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
         Player player = Player.main;
         if (player && wasMountedPassenger)
         {
+            SetSeatedAnimation(player.playerAnimator, false);
             player.inSeamoth = false;
             player.sitting = false;
 
@@ -220,6 +221,7 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
         player.playerController.UpdateController();
         player.inSeamoth = true;
         player.sitting = seamoth.playerSits;
+        SetSeatedAnimation(player.playerAnimator, true);
         player.EnterLockedMode(anchor, true);
     }
 
@@ -236,6 +238,7 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
 
         if (Player.main)
         {
+            SetSeatedAnimation(Player.main.playerAnimator, false);
             Player.main.inSeamoth = false;
             Player.main.sitting = false;
 
@@ -258,6 +261,40 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
         {
             RequestExit();
         }
+    }
+
+    /// <summary>
+    /// Replaces the Seamoth pilot pose with the same seated pose used by in-world benches.
+    /// Called after <see cref="ArmsController.Update"/> for the local player because vanilla continuously mirrors
+    /// <see cref="Player.inSeamoth"/> to the pilot animation parameter while the passenger remains hull-protected.
+    /// </summary>
+    public void MaintainLocalSeatedAnimation(ArmsController armsController)
+    {
+        if (IsPassenger && armsController && armsController.player == Player.main)
+        {
+            SetSeatedAnimation(armsController.animator, true);
+        }
+    }
+
+    internal static void SetSeatedAnimation(Animator animator, bool seated)
+    {
+        if (!animator)
+        {
+            return;
+        }
+
+        SafeAnimator.SetBool(animator, "in_seamoth", false);
+        SafeAnimator.SetBool(animator, "cinematics_enabled", seated);
+        SafeAnimator.SetBool(animator, "bench_sit", seated);
+        SafeAnimator.SetBool(animator, "bench_stand_up", false);
+    }
+
+    internal static void SetSeatedAnimation(AnimationController animationController, bool seated)
+    {
+        animationController["in_seamoth"] = false;
+        animationController["cinematics_enabled"] = seated;
+        animationController["bench_sit"] = seated;
+        animationController["bench_stand_up"] = false;
     }
 
     private void RequestExit() => packetSender.Send(new SeamothPassengerStateChangeRequest(Optional.Empty));

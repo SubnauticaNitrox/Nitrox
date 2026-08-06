@@ -433,7 +433,7 @@ public class RemotePlayer : INitroxPlayer
             PlayerContext.PassengerSeamoth = null;
             PlayerContext.SeamothPassengerSeat = 0;
             AnimationController.UpdatePlayerAnimations = true;
-            AnimationController["in_seamoth"] = false;
+            SeamothPassengers.SetSeatedAnimation(AnimationController, false);
             UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, false, true);
             SeamothPassengerAnchors.RemoveIfEmpty(previousPassengerAnchor);
         }
@@ -453,7 +453,7 @@ public class RemotePlayer : INitroxPlayer
         Attach(passengerAnchor);
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, true, true);
         AnimationController.UpdatePlayerAnimations = false;
-        AnimationController["in_seamoth"] = true;
+        SeamothPassengers.SetSeatedAnimation(AnimationController, true);
 
         PassengerSeamoth = newPassengerSeamoth;
         SeamothPassengerSeat = seatIndex;
