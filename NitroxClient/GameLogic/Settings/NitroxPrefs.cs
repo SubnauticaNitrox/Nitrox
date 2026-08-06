@@ -20,6 +20,16 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
         public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);
         /// <summary>
+        /// Whether intentional upward swimming retains extra momentum during the surface motor transition.
+        /// Disabled by default to preserve vanilla behavior.
+        /// </summary>
+        public static readonly NitroxPref<bool> EnableEnhancedSurfaceBreaches = new("Nitrox.enableEnhancedSurfaceBreaches", false);
+        /// <summary>
+        /// Fraction of pre-transition upward velocity retained when enhanced surface breaches are enabled.
+        /// Vanilla retains approximately 0.5 during this transition.
+        /// </summary>
+        public static readonly NitroxPref<float> SurfaceBreachMomentumRetention = new("Nitrox.surfaceBreachMomentumRetention", 1f);
+        /// <summary>
         /// In seconds. <see cref="MovementReplicator"/>
         /// </summary>
         public static readonly NitroxPref<float> LatencyUpdatePeriod = new("Nitrox.latencyUpdatePeriod", 10);

@@ -52,6 +52,11 @@ public class NitroxSettingsManager
             }
         }));
 
+        AddSetting("Nitrox_Settings_Gameplay", new Setting("Nitrox_Settings_EnableEnhancedSurfaceBreaches", NitroxPrefs.EnableEnhancedSurfaceBreaches, enabled => NitroxPrefs.EnableEnhancedSurfaceBreaches.Value = enabled));
+        AddSetting("Nitrox_Settings_Gameplay", new Setting("Nitrox_Settings_SurfaceBreachMomentumRetention", NitroxPrefs.SurfaceBreachMomentumRetention,
+                   retention => NitroxPrefs.SurfaceBreachMomentumRetention.Value = retention, 0.5f, 1.25f, NitroxPrefs.SurfaceBreachMomentumRetention.DefaultValue,
+                   0.05f, SliderLabelMode.Float, "0.00", "Nitrox_Settings_SurfaceBreachMomentumRetention_Tooltip"));
+
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_LatencyUpdatePeriod", NitroxPrefs.LatencyUpdatePeriod, latencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value = (int)latencyUpdatePeriod, 1, 60, NitroxPrefs.LatencyUpdatePeriod.DefaultValue, 1, SliderLabelMode.Int, tooltip: "Nitrox_Settings_HigherForUnstable_Tooltip"));
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_SafetyLatencyMargin", NitroxPrefs.SafetyLatencyMargin, safetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value = safetyLatencyMargin, 0.01f, 0.5f, NitroxPrefs.SafetyLatencyMargin.DefaultValue, 0.01f, SliderLabelMode.Float, "0.00", "Nitrox_Settings_HigherForUnstable_Tooltip"));
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_OfflineClockSyncDuration", NitroxPrefs.OfflineClockSyncDuration, offlineClockSyncDuration => NitroxPrefs.OfflineClockSyncDuration.Value = (int)offlineClockSyncDuration, 3, 15, NitroxPrefs.OfflineClockSyncDuration.DefaultValue, 1, SliderLabelMode.Int, tooltip: "Nitrox_Settings_HigherForUnstable_Tooltip"));
