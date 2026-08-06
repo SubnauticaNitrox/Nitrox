@@ -275,7 +275,10 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
     /// </summary>
     public void MaintainLocalSeatedAnimation(ArmsController armsController)
     {
-        if (IsPassenger && armsController && armsController.player == Player.main)
+        // Remote player bodies are cloned from the local body prototype, so their ArmsController.player reference
+        // still points at Player.main. The animator reference is remapped to each clone and uniquely identifies the
+        // local first-person model, preventing the passenger pose from contaminating remote players (including the driver).
+        if (IsPassenger && armsController && Player.main && armsController.animator == Player.main.playerAnimator)
         {
             SetSeatedAnimation(armsController.animator, true);
         }
