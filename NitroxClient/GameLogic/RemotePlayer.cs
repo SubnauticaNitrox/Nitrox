@@ -11,6 +11,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.MonoBehaviours.Vehicles;
+using NitroxClient.Unity.Helper;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -490,9 +491,8 @@ public class RemotePlayer : INitroxPlayer
 
     private System.Collections.IEnumerator CompletePassengerAnimationExit(int generation)
     {
-        // The bench animator needs to observe its stand-up flag before all cinematic flags are cleared.
-        yield return null;
-        yield return null;
+        // Match the ordinary bench lifecycle by keeping the stand-up state active for its cinematic transition.
+        yield return Yielders.WaitForHalfSecond;
 
         if (generation != passengerAnimationGeneration || passengerPoseActive || Vehicle || PilotingChair)
         {

@@ -16,7 +16,11 @@ public sealed class VehicleHornKeyBindingAction : KeyBinding
         {
             // KeyBindingManager owns these actions statically, outside the dependency injection container.
 #pragma warning disable DIMA001
-            NitroxServiceLocator.LocateService<VehicleHorns>().TryHonkCurrentVehicle();
+            VehicleHorns vehicleHorns = NitroxServiceLocator.LocateService<VehicleHorns>();
+            if (!vehicleHorns.TryHonkCurrentVehicle())
+            {
+                NitroxServiceLocator.LocateService<PlayerYells>().TryYell();
+            }
 #pragma warning restore DIMA001
         }
     }

@@ -20,6 +20,7 @@ public sealed class SeamothHornSound : IDisposable
     private const float MIN_AUDIBLE_DISTANCE = 1f;
 
     private readonly Dictionary<int, Channel> activeChannelsByVehicle = new();
+    private readonly UnderwaterAudioFilter underwaterFilter = new("Nitrox Seamoth Horn Underwater", nameof(SeamothHornSound));
     private Sound sound;
 
     internal static string AudioFilePath => Path.Combine(NitroxUser.AssetsPath ?? string.Empty, "Resources", "Sounds", AUDIO_FILE_NAME);
@@ -35,7 +36,8 @@ public sealed class SeamothHornSound : IDisposable
         StopActiveChannel(vehicleInstanceId);
 
         global::FMOD.System coreSystem = RuntimeManager.CoreSystem;
-        RESULT result = coreSystem.playSound(sound, default, true, out Channel channel);
+        ChannelGroup playbackChannelGroup = underwaterFilter.GetPlaybackChannelGroup(coreSystem);
+        RESULT result = coreSystem.playSound(sound, playbackChannelGroup, true, out Channel channel);
         if (!CheckResult(result, "starting playback"))
         {
             return false;
@@ -130,6 +132,7 @@ public sealed class SeamothHornSound : IDisposable
             activeChannel.stop();
         }
         activeChannelsByVehicle.Clear();
+        underwaterFilter.Dispose();
 
         if (!sound.hasHandle())
         {

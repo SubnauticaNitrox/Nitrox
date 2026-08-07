@@ -157,8 +157,15 @@ internal sealed class BuildingResyncProcessor(Entities entities, EntityMetadataM
             switch (childEntity)
             {
                 case MapRoomEntity mapRoomEntity:
-                    yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+                {
+                    TaskResult<Optional<GameObject>> mapRoomResult = new();
+                    yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity, mapRoomResult);
+                    if (mapRoomResult.Get().HasValue)
+                    {
+                        yield return entities.SpawnBatchAsync(mapRoomEntity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
+                    }
                     break;
+                }
                 case BaseLeakEntity baseLeakEntity:
                     yield return entities.SpawnEntityAsync(baseLeakEntity, true);
                     break;

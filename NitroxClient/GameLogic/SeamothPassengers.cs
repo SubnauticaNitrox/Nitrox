@@ -3,6 +3,7 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -333,16 +334,16 @@ public sealed class SeamothPassengers(IPacketSender packetSender, IMultiplayerSe
 
     private System.Collections.IEnumerator CompleteLocalSeatedAnimationExit(Animator animator, int generation)
     {
-        // Give the animator two updates to consume the stand-up transition before clearing its control flags.
-        yield return null;
-        yield return null;
+        // Match the ordinary bench lifecycle by keeping the stand-up state active for its cinematic transition.
+        yield return Yielders.WaitForHalfSecond;
 
         if (generation != seatedAnimationGeneration || IsPassenger || !animator)
         {
             yield break;
         }
 
-        SafeAnimator.SetBool(animator, "in_seamoth", false);
+        // A fast role change can put the player in a driver's seat before this delayed cleanup completes.
+        SafeAnimator.SetBool(animator, "in_seamoth", Player.main && Player.main.inSeamoth);
         SafeAnimator.SetBool(animator, "cinematics_enabled", false);
         SafeAnimator.SetBool(animator, "bench_sit", false);
         SafeAnimator.SetBool(animator, "bench_stand_up", false);
