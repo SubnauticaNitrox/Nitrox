@@ -91,6 +91,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothPassengers>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothHornSound>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerPingSound>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerYellSound>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<VehicleHorns>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerYells>().InstancePerLifetimeScope();

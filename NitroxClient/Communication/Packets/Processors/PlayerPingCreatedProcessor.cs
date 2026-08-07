@@ -14,7 +14,7 @@ internal sealed class PlayerPingCreatedProcessor(LocalPlayer localPlayer) : ICli
             return Task.CompletedTask;
         }
 
-        PlayerPingManager.CreateRemotePing(packet.SessionId, packet.Text, packet.Position, packet.PingId);
+        PlayerPingManager.CreateRemotePing(packet.SessionId, packet.Text, packet.Position, packet.PingId, packet.VoiceLineIndex);
         
         return Task.CompletedTask;
     }

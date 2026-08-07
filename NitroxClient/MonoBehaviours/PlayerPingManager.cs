@@ -6,6 +6,7 @@ using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using UnityEngine;
@@ -25,6 +26,7 @@ internal sealed class PlayerPingManager : MonoBehaviour
     private RaycastHit? queuedRaycastHit;
     private IPacketSender packetSender = null!;
     private LocalPlayer localPlayer = null!;
+    private PlayerPingSound playerPingSound = null!;
     private float lastPingTime;
     private readonly Dictionary<SessionId, List<PlayerPing>> playerPings = [];
     private readonly List<PlayerPing> localPlayerPings = new(MAX_ACTIVE_PINGS);
@@ -40,6 +42,7 @@ internal sealed class PlayerPingManager : MonoBehaviour
         instance = this;
         packetSender = this.Resolve<IPacketSender>();
         localPlayer = this.Resolve<LocalPlayer>();
+        playerPingSound = this.Resolve<PlayerPingSound>();
     }
 
     private void Update()
@@ -100,6 +103,7 @@ internal sealed class PlayerPingManager : MonoBehaviour
 
         NitroxId pingId = new();
         SessionId sessionId = localPlayer.SessionId.Value;
+        byte voiceLineIndex = (byte)UnityEngine.Random.Range(0, PlayerPingCreated.VOICE_LINE_COUNT);
         Color playerColor = localPlayer.PlayerSettings.PlayerColor.ToUnity();
         string label = $"{localPlayer.PlayerName} pinged {entityHit.GetFriendlyName()}";
 
@@ -109,20 +113,22 @@ internal sealed class PlayerPingManager : MonoBehaviour
             localPlayerPings.Add(newPing);
         }
 
-        packetSender.Send(new PlayerPingCreated(sessionId, label, position.ToDto(), pingId));
+        GameObject voiceSource = Player.mainObject ? Player.mainObject : Player.main.gameObject;
+        playerPingSound.TryPlay(sessionId, voiceSource, voiceLineIndex);
+        packetSender.Send(new PlayerPingCreated(sessionId, label, position.ToDto(), pingId, voiceLineIndex));
     }
 
-    public static void CreateRemotePing(SessionId sessionId, string labelText, NitroxVector3 position, NitroxId pingId)
+    public static void CreateRemotePing(SessionId sessionId, string labelText, NitroxVector3 position, NitroxId pingId, byte voiceLineIndex)
     {
         if (!instance)
         {
             return;
         }
         
-        instance.CreateRemotePingInternal(sessionId, labelText, position, pingId);
+        instance.CreateRemotePingInternal(sessionId, labelText, position, pingId, voiceLineIndex);
     }
     
-    private void CreateRemotePingInternal(SessionId sessionId, string labelText, NitroxVector3 position, NitroxId pingId)
+    private void CreateRemotePingInternal(SessionId sessionId, string labelText, NitroxVector3 position, NitroxId pingId, byte voiceLineIndex)
     {
         if (!playerPings.TryGetValue(sessionId, out List<PlayerPing> pings))
         {
@@ -148,6 +154,11 @@ internal sealed class PlayerPingManager : MonoBehaviour
         Color playerColor = remotePlayerOptional.HasValue 
             ? remotePlayerOptional.Value.PlayerSettings.PlayerColor.ToUnity() 
             : Color.yellow;
+
+        if (remotePlayerOptional.HasValue && remotePlayerOptional.Value.Body)
+        {
+            playerPingSound.TryPlay(sessionId, remotePlayerOptional.Value.Body, voiceLineIndex);
+        }
         
         PlayerPing newPing = PlayerPing.SpawnPlayerPing(position, labelText, pingId, playerColor);
         if (newPing)
