@@ -8,5 +8,9 @@ public abstract class KeyBinding(string buttonLabel, string defaultKeyboardKey, 
     public string DefaultKeyboardKey { get; init; } = defaultKeyboardKey;
     public string DefaultControllerKey { get; init; } = defaultControllerKey;
 
-    public abstract void Execute(InputAction.CallbackContext callbackContext);
+    public abstract void OnStarted(InputAction.CallbackContext callbackContext);
+
+    public virtual void OnCanceled(InputAction.CallbackContext callbackContext)
+    {
+    }
 }

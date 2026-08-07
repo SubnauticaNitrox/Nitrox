@@ -19,7 +19,19 @@ public sealed class PlayerYells(
     private readonly PlayerYellSound playerYellSound = playerYellSound;
     private readonly SeamothPassengers seamothPassengers = seamothPassengers;
 
-    public bool TryYell()
+    public PlayerEmoteGroup RecentGroup { get; private set; } = PlayerEmoteGroup.Yes;
+
+    public bool CanYell()
+    {
+        Player player = Player.main;
+        return player && localPlayer.SessionId.HasValue && TryGetYellContext(player, out _);
+    }
+
+    public bool TryYell() => TryYellRecent();
+
+    public bool TryYellRecent() => TryYell(RecentGroup);
+
+    public bool TryYell(PlayerEmoteGroup group)
     {
         Player player = Player.main;
         if (!player || !localPlayer.SessionId.HasValue || !TryGetYellContext(player, out bool isInsideVehicle))
@@ -27,12 +39,14 @@ public sealed class PlayerYells(
             return false;
         }
 
+        PlayerEmoteDefinition definition = PlayerEmoteCatalog.Get(group);
         SessionId sessionId = localPlayer.SessionId.Value;
-        byte soundIndex = (byte)UnityEngine.Random.Range(0, PlayerYell.SOUND_COUNT);
+        byte soundIndex = definition.SoundIndices[UnityEngine.Random.Range(0, definition.SoundIndices.Count)];
         GameObject source = Player.mainObject ? Player.mainObject : player.gameObject;
 
         playerYellSound.TryPlay(sessionId, source, soundIndex, !isInsideVehicle);
         packetSender.Send(new PlayerYell(sessionId, soundIndex, isInsideVehicle));
+        RecentGroup = group;
         return true;
     }
 

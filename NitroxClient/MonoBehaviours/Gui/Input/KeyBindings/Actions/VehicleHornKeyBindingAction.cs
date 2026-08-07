@@ -1,5 +1,6 @@
 using Nitrox.Model.Core;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using UnityEngine.InputSystem;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
@@ -10,7 +11,7 @@ public sealed class VehicleHornKeyBindingAction : KeyBinding
     {
     }
 
-    public override void Execute(InputAction.CallbackContext _)
+    public override void OnStarted(InputAction.CallbackContext _)
     {
         if (Multiplayer.Joined)
         {
@@ -19,9 +20,14 @@ public sealed class VehicleHornKeyBindingAction : KeyBinding
             VehicleHorns vehicleHorns = NitroxServiceLocator.LocateService<VehicleHorns>();
             if (!vehicleHorns.TryHonkCurrentVehicle())
             {
-                NitroxServiceLocator.LocateService<PlayerYells>().TryYell();
+                EmoteWheelManager.BeginHold();
             }
 #pragma warning restore DIMA001
         }
+    }
+
+    public override void OnCanceled(InputAction.CallbackContext _)
+    {
+        EmoteWheelManager.EndHold();
     }
 }

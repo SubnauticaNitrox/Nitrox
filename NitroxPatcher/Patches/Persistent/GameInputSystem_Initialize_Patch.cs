@@ -68,7 +68,8 @@ public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistent
         foreach (KeyBinding keyBinding in KeyBindingManager.KeyBindings)
         {
             GameInput.Button button = (GameInput.Button)buttonId++;
-            gameInputSystem.actions[button].started += keyBinding.Execute;
+            gameInputSystem.actions[button].started += keyBinding.OnStarted;
+            gameInputSystem.actions[button].canceled += keyBinding.OnCanceled;
         }
     }
 }
