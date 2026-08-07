@@ -18,9 +18,13 @@ public sealed class SeamothHornSound : IDisposable
 {
     internal const string AUDIO_FILE_NAME = "seamoth_horn.wav";
     private const float MIN_AUDIBLE_DISTANCE = 1f;
+    private const float UNDERWATER_LOWPASS_CUTOFF = 1200f;
+    private const float UNDERWATER_LOWPASS_RESONANCE = 1f;
 
     private readonly Dictionary<int, Channel> activeChannelsByVehicle = new();
     private Sound sound;
+    private ChannelGroup underwaterChannelGroup;
+    private DSP underwaterLowPass;
 
     internal static string AudioFilePath => Path.Combine(NitroxUser.AssetsPath ?? string.Empty, "Resources", "Sounds", AUDIO_FILE_NAME);
 
@@ -35,7 +39,8 @@ public sealed class SeamothHornSound : IDisposable
         StopActiveChannel(vehicleInstanceId);
 
         global::FMOD.System coreSystem = RuntimeManager.CoreSystem;
-        RESULT result = coreSystem.playSound(sound, default, true, out Channel channel);
+        ChannelGroup playbackChannelGroup = GetPlaybackChannelGroup(coreSystem);
+        RESULT result = coreSystem.playSound(sound, playbackChannelGroup, true, out Channel channel);
         if (!CheckResult(result, "starting playback"))
         {
             return false;
@@ -66,6 +71,65 @@ public sealed class SeamothHornSound : IDisposable
         }
 
         activeChannelsByVehicle[vehicleInstanceId] = channel;
+        return true;
+    }
+
+    private ChannelGroup GetPlaybackChannelGroup(global::FMOD.System coreSystem)
+    {
+        if (!Player.main || !Player.main.IsUnderwater())
+        {
+            return default;
+        }
+
+        return TryCreateUnderwaterChannelGroup(coreSystem) ? underwaterChannelGroup : default;
+    }
+
+    private bool TryCreateUnderwaterChannelGroup(global::FMOD.System coreSystem)
+    {
+        if (underwaterChannelGroup.hasHandle())
+        {
+            return true;
+        }
+
+        RESULT result = coreSystem.createChannelGroup("Nitrox Seamoth Horn Underwater", out ChannelGroup channelGroup);
+        if (!CheckResult(result, "creating the underwater channel group"))
+        {
+            return false;
+        }
+
+        result = coreSystem.createDSPByType(DSP_TYPE.LOWPASS, out DSP lowPass);
+        if (!CheckResult(result, "creating the underwater low-pass filter"))
+        {
+            channelGroup.release();
+            return false;
+        }
+
+        result = lowPass.setParameterFloat((int)DSP_LOWPASS.CUTOFF, UNDERWATER_LOWPASS_CUTOFF);
+        if (!CheckResult(result, "setting the underwater low-pass cutoff"))
+        {
+            lowPass.release();
+            channelGroup.release();
+            return false;
+        }
+
+        result = lowPass.setParameterFloat((int)DSP_LOWPASS.RESONANCE, UNDERWATER_LOWPASS_RESONANCE);
+        if (!CheckResult(result, "setting the underwater low-pass resonance"))
+        {
+            lowPass.release();
+            channelGroup.release();
+            return false;
+        }
+
+        result = channelGroup.addDSP(CHANNELCONTROL_DSP_INDEX.TAIL, lowPass);
+        if (!CheckResult(result, "attaching the underwater low-pass filter"))
+        {
+            lowPass.release();
+            channelGroup.release();
+            return false;
+        }
+
+        underwaterChannelGroup = channelGroup;
+        underwaterLowPass = lowPass;
         return true;
     }
 
@@ -130,6 +194,23 @@ public sealed class SeamothHornSound : IDisposable
             activeChannel.stop();
         }
         activeChannelsByVehicle.Clear();
+
+        if (underwaterLowPass.hasHandle())
+        {
+            if (underwaterChannelGroup.hasHandle())
+            {
+                CheckResult(underwaterChannelGroup.removeDSP(underwaterLowPass), "detaching the underwater low-pass filter");
+            }
+
+            CheckResult(underwaterLowPass.release(), "releasing the underwater low-pass filter");
+            underwaterLowPass.clearHandle();
+        }
+
+        if (underwaterChannelGroup.hasHandle())
+        {
+            CheckResult(underwaterChannelGroup.release(), "releasing the underwater channel group");
+            underwaterChannelGroup.clearHandle();
+        }
 
         if (!sound.hasHandle())
         {
