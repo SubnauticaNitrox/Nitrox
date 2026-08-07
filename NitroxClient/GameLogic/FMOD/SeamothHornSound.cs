@@ -76,12 +76,36 @@ public sealed class SeamothHornSound : IDisposable
 
     private ChannelGroup GetPlaybackChannelGroup(global::FMOD.System coreSystem)
     {
-        if (!Player.main || !Player.main.IsUnderwater())
+        if (!IsListenerUnderwater())
         {
             return default;
         }
 
         return TryCreateUnderwaterChannelGroup(coreSystem) ? underwaterChannelGroup : default;
+    }
+
+    private static bool IsListenerUnderwater()
+    {
+        Player player = Player.main;
+        if (!player)
+        {
+            return false;
+        }
+
+        if (player.IsUnderwater())
+        {
+            return true;
+        }
+
+        // Subnautica forces Player.IsUnderwater() off while the player is locked into a vehicle.
+        // Use the listener position for a Seamoth pilot so diving below the surface still filters the horn.
+        if (player.currentMountedVehicle is not SeaMoth)
+        {
+            return false;
+        }
+
+        Transform listener = MainCamera.camera ? MainCamera.camera.transform : player.transform;
+        return listener.position.y < Ocean.GetOceanLevel();
     }
 
     private bool TryCreateUnderwaterChannelGroup(global::FMOD.System coreSystem)
