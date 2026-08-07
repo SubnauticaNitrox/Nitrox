@@ -179,6 +179,7 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<BuildingHandler>();
             gameObject.AddComponent<MovementBroadcaster>();
             gameObject.AddComponent<PlayerPingManager>();
+            gameObject.AddComponent<EmoteWheelManager>();
             VirtualCyclops.Initialize();
         }
 

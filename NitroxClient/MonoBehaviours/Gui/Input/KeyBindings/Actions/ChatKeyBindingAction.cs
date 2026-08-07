@@ -7,7 +7,7 @@ public class ChatKeyBindingAction : KeyBinding
 {
     public ChatKeyBindingAction() : base("Nitrox_Settings_Keybind_OpenChat", "y") { }
 
-    public override void Execute(InputAction.CallbackContext _)
+    public override void OnStarted(InputAction.CallbackContext _)
     {
         // If no other UWE input field is currently active then allow chat to open.
         if (FPSInputModule.current.lastGroup == null && Multiplayer.Joined)

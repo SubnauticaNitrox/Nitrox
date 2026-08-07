@@ -8,7 +8,7 @@ public class DiscordFocusBindingAction : KeyBinding
 {
     public DiscordFocusBindingAction() : base("Nitrox_Settings_Keybind_FocusDiscord", "i") { }
 
-    public override void Execute(InputAction.CallbackContext _)
+    public override void OnStarted(InputAction.CallbackContext _)
     {
         if (UnityEngine.Input.GetKey(KeyCode.LeftAlt))
         {
