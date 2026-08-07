@@ -16,6 +16,8 @@ namespace NitroxClient.GameLogic.Spawning.Bases;
 
 public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 {
+    private const int MAP_ROOM_RESTORE_ATTEMPTS = 30;
+
     private readonly Entities entities;
     private readonly EntityMetadataManager entityMetadataManager;
 
@@ -170,18 +172,32 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         return interiorPiece;
     }
 
-    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
+    public static IEnumerator RestoreMapRoom(
+        Base @base,
+        MapRoomEntity mapRoomEntity,
+        TaskResult<Optional<GameObject>>? result = null)
     {
-        MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
-        if (!mapRoomFunctionality)
+        for (int attempt = 0; attempt < MAP_ROOM_RESTORE_ATTEMPTS && @base; attempt++)
         {
-            Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
-            yield break;
+            MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
+            if (mapRoomFunctionality)
+            {
+                if (attempt > 0)
+                {
+                    Log.Debug($"Found MapRoomFunctionality for restored room {mapRoomEntity.Id} after {attempt + 1} attempts");
+                }
+                CompleteMapRoomRestore(
+                    () => NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id),
+                    () => BuildingPostSpawner.SetupScannerRoom(mapRoomFunctionality, mapRoomEntity.Id, mapRoomEntity.ScanState));
+                result?.Set(Optional.Of(mapRoomFunctionality.gameObject));
+                yield break;
+            }
+
+            yield return null;
         }
 
-        CompleteMapRoomRestore(
-            () => NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id),
-            () => BuildingPostSpawner.SetupScannerRoom(mapRoomFunctionality, mapRoomEntity.Id, mapRoomEntity.ScanState));
+        Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell} after {MAP_ROOM_RESTORE_ATTEMPTS} attempts");
+        result?.Set(Optional.Empty);
     }
 
     internal static void CompleteMapRoomRestore(Action assignId, Action setupScannerRoom)

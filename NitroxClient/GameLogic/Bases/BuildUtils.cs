@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -15,6 +16,8 @@ namespace NitroxClient.GameLogic.Bases;
 
 public static class BuildUtils
 {
+    private const int MAP_ROOM_ID_TRANSFER_ATTEMPTS = 30;
+
     public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell? baseCell = null, Base.Face? baseFace = null)
     {
         // It is unimaginable to have a BaseDeconstructable that is not child of a BaseCell
@@ -197,6 +200,50 @@ public static class BuildUtils
 
         moduleObject = null;
         return false;
+    }
+
+    /// <summary>
+    /// Transfers a completed construction ghost's id to the module it created. Scanner Room geometry can become
+    /// discoverable several frames after construction completes, so its binding is retried before the operation is
+    /// allowed to finish.
+    /// </summary>
+    public static IEnumerator TransferIdFromGhostToModuleAsync(
+        BaseGhost baseGhost,
+        NitroxId id,
+        ConstructableBase constructableBase,
+        TaskResult<Optional<GameObject>> result)
+    {
+        bool isMapRoom = baseGhost is BaseAddMapRoomGhost || constructableBase.techType == TechType.BaseMapRoom;
+        if (!isMapRoom)
+        {
+            bool transferred = TryTransferIdFromGhostToModule(baseGhost, id, constructableBase, out GameObject? moduleObject);
+            result.Set(transferred ? Optional.Of(moduleObject!) : Optional.Empty);
+            yield break;
+        }
+
+        Base targetBase = baseGhost.targetBase;
+        Int3 mapRoomCell = GetMapRoomFunctionalityCell(baseGhost);
+        NitroxId mapRoomId = constructableBase.GetComponentInParent<Base>(true) ? id : id.Increment();
+
+        for (int attempt = 0; attempt < MAP_ROOM_ID_TRANSFER_ATTEMPTS && targetBase; attempt++)
+        {
+            MapRoomFunctionality mapRoomFunctionality = targetBase.GetMapRoomFunctionalityForCell(mapRoomCell);
+            if (mapRoomFunctionality)
+            {
+                if (attempt > 0)
+                {
+                    Log.Debug($"Found MapRoomFunctionality for room {mapRoomId} after {attempt + 1} attempts");
+                }
+                NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomId);
+                result.Set(Optional.Of(mapRoomFunctionality.gameObject));
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {mapRoomCell}) after {MAP_ROOM_ID_TRANSFER_ATTEMPTS} attempts");
+        result.Set(Optional.Empty);
     }
 
     /// <remarks>

@@ -211,10 +211,14 @@ public partial class BuildingHandler : MonoBehaviour
         BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
         constructableBase.SetState(true, true);
         BasesCooldown[updateBase.BaseId] = DateTimeOffset.UtcNow;
-        // In the case the built piece was an interior piece, we'll want to transfer the id to it.
-        if (BuildUtils.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
+        // In the case the built piece was an interior piece, we'll want to transfer the id to it. Scanner Room
+        // geometry may not be discoverable until a later frame, so wait for the transfer to finish.
+        TaskResult<Optional<GameObject>> moduleResult = new();
+        yield return BuildUtils.TransferIdFromGhostToModuleAsync(baseGhost, updateBase.FormerGhostId, constructableBase, moduleResult);
+        Optional<GameObject> optionalModuleObject = moduleResult.Get();
+        if (optionalModuleObject.HasValue)
         {
-            yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
+            yield return BuildingPostSpawner.ApplyPostSpawner(optionalModuleObject.Value, updateBase.FormerGhostId);
         }
     }
 

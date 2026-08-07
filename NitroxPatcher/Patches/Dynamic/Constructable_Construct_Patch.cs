@@ -130,8 +130,12 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
             parentBase = constructableBase.GetComponentInParent<Base>(true);
         }
 
-        // If a module was spawned we need to transfer the ghost id to it for further recognition
-        BuildUtils.TryTransferIdFromGhostToModule(baseGhost, entityId, constructableBase, out GameObject moduleObject);
+        // If a module was spawned we need to transfer the ghost id to it for further recognition. Scanner Room
+        // geometry may not be discoverable until a later frame, so wait for the transfer to finish.
+        TaskResult<Optional<GameObject>> moduleResult = new();
+        yield return BuildUtils.TransferIdFromGhostToModuleAsync(baseGhost, entityId, constructableBase, moduleResult);
+        Optional<GameObject> optionalModuleObject = moduleResult.Get();
+        GameObject moduleObject = optionalModuleObject.HasValue ? optionalModuleObject.Value : null;
 
         // Have a delay for baseGhost to be actually destroyed
         yield return null;
