@@ -20,10 +20,17 @@ public class RemotePlayerVitals : MonoBehaviour
     private Bar foodBar;
     private Bar healthBar;
     private Bar oxygenBar;
+    private bool hasReceivedHealth;
+    private bool hasReceivedOxygen;
 
     private string playerName;
 
     private Bar waterBar;
+
+    internal bool HasReceivedVitals => hasReceivedHealth && hasReceivedOxygen;
+    internal float CurrentHealth { get; private set; }
+    internal float CurrentOxygen { get; private set; }
+    internal float MaximumOxygen { get; private set; }
 
     /// <summary>
     ///     Creates a player vitals UI elements for the player id.
@@ -61,6 +68,9 @@ public class RemotePlayerVitals : MonoBehaviour
     public void SetOxygen(float oxygen, float maxOxygen)
     {
         EnsureBars();
+        CurrentOxygen = oxygen;
+        MaximumOxygen = maxOxygen;
+        hasReceivedOxygen = true;
         oxygenBar.SetTargetValue(oxygen);
         oxygenBar.SetMaxValue(maxOxygen);
     }
@@ -68,6 +78,8 @@ public class RemotePlayerVitals : MonoBehaviour
     public void SetHealth(float health)
     {
         EnsureBars();
+        CurrentHealth = health;
+        hasReceivedHealth = true;
         healthBar.SetTargetValue(health);
     }
 

@@ -15,8 +15,11 @@ public sealed class uGUI_Pings_OnAdd_Patch : NitroxPatch, IDynamicPatch
 
     private static readonly Type remotePlayerPingIdentifierType = RequireClientType("NitroxClient.GameLogic.PlayerLogic.PlayerModel.RemotePlayerPingIdentifier");
     private static readonly Type remotePlayerPingChevronType = RequireClientType("NitroxClient.MonoBehaviours.Gui.InGame.RemotePlayerPingChevron");
+    private static readonly MethodInfo configureRemotePlayerPingChevronMethod = RequireClientMethod(remotePlayerPingChevronType, "Configure");
 
     private static Type RequireClientType(string fullName) => typeof(Multiplayer).Assembly.GetType(fullName) ?? throw new TypeLoadException(fullName);
+    private static MethodInfo RequireClientMethod(Type type, string methodName) =>
+        type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) ?? throw new MissingMethodException(type.FullName, methodName);
 
     public static void Postfix(uGUI_Pings __instance, PingInstance __0)
     {
@@ -25,7 +28,8 @@ public sealed class uGUI_Pings_OnAdd_Patch : NitroxPatch, IDynamicPatch
             return;
         }
 
-        bool isRemotePlayer = __0.GetComponent(remotePlayerPingIdentifierType);
+        Component remotePlayerIdentifier = __0.GetComponent(remotePlayerPingIdentifierType);
+        bool isRemotePlayer = remotePlayerIdentifier;
         Behaviour chevron = hudPing.GetComponent(remotePlayerPingChevronType) as Behaviour;
         if (!chevron)
         {
@@ -37,6 +41,7 @@ public sealed class uGUI_Pings_OnAdd_Patch : NitroxPatch, IDynamicPatch
             chevron = (Behaviour)hudPing.gameObject.AddComponent(remotePlayerPingChevronType);
         }
 
+        configureRemotePlayerPingChevronMethod.Invoke(chevron, [remotePlayerIdentifier]);
         chevron.enabled = isRemotePlayer;
     }
 
