@@ -4,28 +4,33 @@ using UnityEngine;
 namespace NitroxClient.MonoBehaviours.Gui.InGame;
 
 /// <summary>
-/// Makes a remote player's native off-screen chevron larger and fully opaque while preserving vanilla positioning and rotation.
+/// Makes a remote player's native off-screen icon and chevron larger and fully opaque while preserving vanilla positioning and rotation.
 /// </summary>
 internal sealed class RemotePlayerPingChevron : MonoBehaviour
 {
-    internal const float MinimumScale = 1.75f;
-    internal const float MaximumScale = 2.25f;
+    internal const float ChevronScale = 2f;
+    internal const float MinimumIconScale = 2f;
+    internal const float MaximumIconScale = 2.5f;
     internal const float PulsePeriodSeconds = 1.5f;
 
     private uGUI_Ping ping = null!;
     private RectTransform arrowTransform = null!;
+    private RectTransform iconTransform = null!;
     private Vector3 originalArrowScale;
+    private Vector3 originalIconScale;
     private bool initialized;
 
     private void Awake()
     {
         ping = GetComponent<uGUI_Ping>();
         arrowTransform = ping.arrow.rectTransform;
+        iconTransform = ping.icon.rectTransform;
         originalArrowScale = arrowTransform.localScale;
+        originalIconScale = iconTransform.localScale;
         initialized = true;
     }
 
-    internal static float CalculateScale(float unscaledTime)
+    internal static float CalculateIconScale(float unscaledTime)
     {
         float cycleTime = unscaledTime % PulsePeriodSeconds;
         if (cycleTime < 0f)
@@ -35,7 +40,7 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
         double angle = cycleTime / PulsePeriodSeconds * Math.PI * 2d - Math.PI / 2d;
         float progress = (float)((Math.Sin(angle) + 1d) * 0.5d);
-        return MinimumScale + (MaximumScale - MinimumScale) * progress;
+        return MinimumIconScale + (MaximumIconScale - MinimumIconScale) * progress;
     }
 
     private void OnEnable()
@@ -48,7 +53,7 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
     private void ApplyChevronAppearance()
     {
-        if (!initialized || !ping || !ping.arrow)
+        if (!initialized || !ping || !ping.arrow || !ping.icon)
         {
             enabled = false;
             return;
@@ -56,14 +61,13 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
         if (!ping.arrow.enabled)
         {
-            RestoreArrowScale();
+            RestoreIndicatorScale();
             return;
         }
 
         ping.SetIconAlpha(1f);
-
-        float scale = CalculateScale(Time.unscaledTime);
-        arrowTransform.localScale = new Vector3(originalArrowScale.x * scale, originalArrowScale.y * scale, originalArrowScale.z);
+        arrowTransform.localScale = Scale2D(originalArrowScale, ChevronScale);
+        iconTransform.localScale = Scale2D(originalIconScale, CalculateIconScale(Time.unscaledTime));
     }
 
     private void OnDisable()
@@ -73,14 +77,22 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
             ManagedUpdate.Unsubscribe(ManagedUpdate.Queue.PreCanvasLast, ApplyChevronAppearance);
         }
 
-        RestoreArrowScale();
+        RestoreIndicatorScale();
     }
 
-    private void RestoreArrowScale()
+    private void RestoreIndicatorScale()
     {
         if (initialized && arrowTransform)
         {
             arrowTransform.localScale = originalArrowScale;
         }
+
+        if (initialized && iconTransform)
+        {
+            iconTransform.localScale = originalIconScale;
+        }
     }
+
+    private static Vector3 Scale2D(Vector3 originalScale, float scale) =>
+        new(originalScale.x * scale, originalScale.y * scale, originalScale.z);
 }
