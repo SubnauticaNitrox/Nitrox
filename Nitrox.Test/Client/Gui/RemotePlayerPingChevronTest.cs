@@ -18,6 +18,34 @@ public sealed class RemotePlayerPingChevronTest
         RemotePlayerPingChevron.CalculateIconScale(unscaledTime).Should().BeApproximately(expectedScale, 0.0001f);
     }
 
+    [DataTestMethod]
+    [DataRow(0f, RemotePlayerPingChevron.MinimumIconScale)]
+    [DataRow(RemotePlayerPingChevron.DangerPulsePeriodSeconds * 0.25f, 2.375f)]
+    [DataRow(RemotePlayerPingChevron.DangerPulsePeriodSeconds * 0.5f, RemotePlayerPingChevron.DangerMaximumIconScale)]
+    [DataRow(RemotePlayerPingChevron.DangerPulsePeriodSeconds * 0.75f, 2.375f)]
+    [DataRow(RemotePlayerPingChevron.DangerPulsePeriodSeconds, RemotePlayerPingChevron.MinimumIconScale)]
+    public void CalculateDangerIconScaleUsesFasterStrongerPulse(float unscaledTime, float expectedScale)
+    {
+        RemotePlayerPingChevron.CalculateDangerIconScale(unscaledTime).Should().BeApproximately(expectedScale, 0.0001f);
+    }
+
+    [DataTestMethod]
+    [DataRow(false, 0f, 100f, 0f, 45f, false)]
+    [DataRow(true, 25f, 100f, 45f, 45f, true)]
+    [DataRow(true, 100f, 100f, 9f, 45f, true)]
+    [DataRow(true, 25.01f, 100f, 9.01f, 45f, false)]
+    [DataRow(true, 0f, 0f, 0f, 0f, false)]
+    public void DangerRequiresSyncedCriticalHealthOrOxygen(
+        bool hasReceivedVitals,
+        float health,
+        float maximumHealth,
+        float oxygen,
+        float maximumOxygen,
+        bool expected)
+    {
+        RemotePlayerPingChevron.IsDangerous(hasReceivedVitals, health, maximumHealth, oxygen, maximumOxygen).Should().Be(expected);
+    }
+
     [TestMethod]
     public void ChevronUsesFixedDoubleScale()
     {

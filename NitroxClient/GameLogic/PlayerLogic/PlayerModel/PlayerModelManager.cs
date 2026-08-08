@@ -72,7 +72,8 @@ public class PlayerModelManager
 
         GameObject signalBase = Object.Instantiate(result.value, player.PlayerModel.transform, false);
         signalBase.name = $"signal_{player.PlayerName}";
-        signalBase.AddComponent<RemotePlayerPingIdentifier>();
+        RemotePlayerPingIdentifier pingIdentifier = signalBase.AddComponent<RemotePlayerPingIdentifier>();
+        pingIdentifier.Initialize(player);
         signalBase.SetActive(true);
 
         PingInstance ping = signalBase.GetComponent<PingInstance>();
