@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NitroxClient.MonoBehaviours.Gui.InGame;
 
 /// <summary>
-/// Makes a remote player's native off-screen icon and chevron larger and fully opaque while preserving vanilla positioning and rotation.
+/// Enhances a remote player's native off-screen indicator while preserving vanilla positioning, rotation, and color.
 /// </summary>
 internal sealed class RemotePlayerPingChevron : MonoBehaviour
 {
@@ -28,6 +28,7 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
     private Vector3 originalArrowScale;
     private Vector3 originalIconScale;
     private bool initialized;
+    private bool distanceTextOverridden;
 
     private void Awake()
     {
@@ -58,8 +59,14 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
     internal void Configure(Component identifier)
     {
-        RestoreIndicatorScale();
+        RestoreEnhancedAppearance();
         remotePlayerIdentifier = identifier as RemotePlayerPingIdentifier;
+    }
+
+    internal static Color WithFullAlpha(Color color)
+    {
+        color.a = 1f;
+        return color;
     }
 
     private static float CalculatePulseScale(float unscaledTime, float period, float minimumScale, float maximumScale)
@@ -93,11 +100,12 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
         if (!ping.arrow.enabled)
         {
-            RestoreIndicatorScale();
+            RestoreEnhancedAppearance();
             return;
         }
 
         ping.SetIconAlpha(1f);
+        ShowDistanceText();
         arrowTransform.localScale = Scale2D(originalArrowScale, ChevronScale);
         float iconScale = IsRemotePlayerInDanger()
             ? CalculateDangerIconScale(Time.unscaledTime)
@@ -112,7 +120,13 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
             ManagedUpdate.Unsubscribe(ManagedUpdate.Queue.PreCanvasLast, ApplyChevronAppearance);
         }
 
+        RestoreEnhancedAppearance();
+    }
+
+    private void RestoreEnhancedAppearance()
+    {
         RestoreIndicatorScale();
+        RestoreDistanceText();
     }
 
     private void RestoreIndicatorScale()
@@ -130,6 +144,29 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
     private static Vector3 Scale2D(Vector3 originalScale, float scale) =>
         new(originalScale.x * scale, originalScale.y * scale, originalScale.z);
+
+    private void ShowDistanceText()
+    {
+        if (!ping.distanceText || !ping.suffixText)
+        {
+            return;
+        }
+
+        distanceTextOverridden = true;
+        ping.distanceText.color = WithFullAlpha(ping.distanceText.color);
+        ping.suffixText.color = WithFullAlpha(ping.suffixText.color);
+    }
+
+    private void RestoreDistanceText()
+    {
+        if (!distanceTextOverridden || !ping)
+        {
+            return;
+        }
+
+        distanceTextOverridden = false;
+        ping.SetTextAlpha(ping.GetTextAlpha());
+    }
 
     private bool IsRemotePlayerInDanger()
     {

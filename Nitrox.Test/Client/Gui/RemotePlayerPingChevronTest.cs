@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxPatcher.Patches.Dynamic;
+using UnityEngine;
 
 namespace Nitrox.Test.Client.Gui;
 
@@ -50,6 +51,14 @@ public sealed class RemotePlayerPingChevronTest
     public void ChevronUsesFixedDoubleScale()
     {
         RemotePlayerPingChevron.ChevronScale.Should().Be(2f);
+    }
+
+    [TestMethod]
+    public void FullAlphaPreservesNativeTextColor()
+    {
+        Color nativeColor = new(0.1f, 0.2f, 0.3f, 0.4f);
+
+        RemotePlayerPingChevron.WithFullAlpha(nativeColor).Should().Be(new Color(0.1f, 0.2f, 0.3f, 1f));
     }
 
     [TestMethod]
