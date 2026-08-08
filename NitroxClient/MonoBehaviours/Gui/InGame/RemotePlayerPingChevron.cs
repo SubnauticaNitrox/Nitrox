@@ -19,19 +19,17 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
     internal const float DangerPulsePeriodSeconds = 0.6f;
     internal const float CriticalHealthFraction = 0.25f;
     internal const float CriticalOxygenFraction = 0.2f;
-    internal const float DistanceTextScale = 2f;
+    internal const float DistanceTextSizeMultiplier = 2f;
     private const float PlayerMaximumHealth = 100f;
 
     private uGUI_Ping ping = null!;
     private RemotePlayerPingIdentifier remotePlayerIdentifier = null!;
     private RectTransform arrowTransform = null!;
     private RectTransform iconTransform = null!;
-    private RectTransform distanceTextTransform = null!;
-    private RectTransform suffixTextTransform = null!;
     private Vector3 originalArrowScale;
     private Vector3 originalIconScale;
-    private Vector3 originalDistanceTextScale;
-    private Vector3 originalSuffixTextScale;
+    private float originalDistanceTextFontSize;
+    private float originalSuffixTextFontSize;
     private bool initialized;
     private bool distanceTextOverridden;
 
@@ -40,12 +38,10 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
         ping = GetComponent<uGUI_Ping>();
         arrowTransform = ping.arrow.rectTransform;
         iconTransform = ping.icon.rectTransform;
-        distanceTextTransform = ping.distanceText.rectTransform;
-        suffixTextTransform = ping.suffixText.rectTransform;
         originalArrowScale = arrowTransform.localScale;
         originalIconScale = iconTransform.localScale;
-        originalDistanceTextScale = distanceTextTransform.localScale;
-        originalSuffixTextScale = suffixTextTransform.localScale;
+        originalDistanceTextFontSize = ping.distanceText.fontSize;
+        originalSuffixTextFontSize = ping.suffixText.fontSize;
         initialized = true;
     }
 
@@ -164,8 +160,8 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
         distanceTextOverridden = true;
         ping.distanceText.color = WithFullAlpha(ping.distanceText.color);
         ping.suffixText.color = WithFullAlpha(ping.suffixText.color);
-        distanceTextTransform.localScale = Scale2D(originalDistanceTextScale, DistanceTextScale);
-        suffixTextTransform.localScale = Scale2D(originalSuffixTextScale, DistanceTextScale);
+        ping.distanceText.fontSize = originalDistanceTextFontSize * DistanceTextSizeMultiplier;
+        ping.suffixText.fontSize = originalSuffixTextFontSize * DistanceTextSizeMultiplier;
     }
 
     private void RestoreDistanceText()
@@ -177,8 +173,8 @@ internal sealed class RemotePlayerPingChevron : MonoBehaviour
 
         distanceTextOverridden = false;
         ping.SetTextAlpha(ping.GetTextAlpha());
-        distanceTextTransform.localScale = originalDistanceTextScale;
-        suffixTextTransform.localScale = originalSuffixTextScale;
+        ping.distanceText.fontSize = originalDistanceTextFontSize;
+        ping.suffixText.fontSize = originalSuffixTextFontSize;
     }
 
     private bool IsRemotePlayerInDanger()

@@ -48,10 +48,10 @@ public sealed class RemotePlayerPingChevronTest
     }
 
     [TestMethod]
-    public void ChevronUsesFixedDoubleScale()
+    public void ChevronAndDistanceUseFixedDoubleSize()
     {
         RemotePlayerPingChevron.ChevronScale.Should().Be(2f);
-        RemotePlayerPingChevron.DistanceTextScale.Should().Be(2f);
+        RemotePlayerPingChevron.DistanceTextSizeMultiplier.Should().Be(2f);
     }
 
     [TestMethod]
