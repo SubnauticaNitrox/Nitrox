@@ -51,6 +51,7 @@ public sealed class RemotePlayerPingChevronTest
     public void ChevronUsesFixedDoubleScale()
     {
         RemotePlayerPingChevron.ChevronScale.Should().Be(2f);
+        RemotePlayerPingChevron.DistanceTextScale.Should().Be(2f);
     }
 
     [TestMethod]
