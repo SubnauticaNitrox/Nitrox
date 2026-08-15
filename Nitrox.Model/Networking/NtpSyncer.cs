@@ -38,6 +38,10 @@ public sealed class NtpSyncer
         {
             logger = optionalLogger;
         }
+
+        IsComplete = false;
+        OnlineMode = false;
+        CorrectionOffset = TimeSpan.Zero;
         DisposeCallback = finishCallback;
 
         ntp = new(TreatPacket);
