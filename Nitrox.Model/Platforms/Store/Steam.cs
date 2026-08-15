@@ -347,16 +347,11 @@ public sealed class Steam : IGamePlatform
 
         return result;
 
-        static string JoinPaths(params IEnumerable<string?> paths)
-        {
-            paths = paths.Where(path => path != null).Distinct().ToList();
-            string? invalidPath = paths.FirstOrDefault(path => path != null && path.Contains(':'));
-            if (invalidPath != null)
-            {
-                throw new Exception($"Path '{invalidPath}' contains invalid character ':'");
-            }
-            return string.Join(":", paths);
-        }
+        static string JoinPaths(params IEnumerable<string?> paths) =>
+            string.Join(":", paths
+                             .Where(path => path != null)
+                             .Distinct()
+                             .Select(path => !path.Contains(':') ? path : throw new Exception($"Path '{path}' contains invalid character ':'")));
 
         static string? GetProtonVersionOfSteamApp(string configVdfFile, string appId)
         {
@@ -429,13 +424,12 @@ public sealed class Steam : IGamePlatform
         /// <summary>
         ///     Tries to get the Steam library path of a game from the provided Steam root path.
         /// </summary>
-        /// <param name="steamPath">The root to where Steam is installed (has the Steam executable file)</param>
         /// <param name="gameId">The Steam App ID to return the library path of.</param>
-        /// <param name="gameLibraryPath">The resulting path if found or empty string</param>
+        /// <param name="appLibraryPath">The resulting path if found or empty string</param>
         /// <returns>True if the Steam has a known library path of the given game id</returns>
-        public bool TryGetSteamAppLibraryPath(string gameId, out string gameLibraryPath)
+        public bool TryGetSteamAppLibraryPath(string gameId, out string appLibraryPath)
         {
-            gameLibraryPath = "";
+            appLibraryPath = "";
 
             // Regex to match library folder entries
             Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
@@ -447,7 +441,7 @@ public sealed class Steam : IGamePlatform
                 // Check if the gameId exists in the apps section
                 if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
                 {
-                    gameLibraryPath = path;
+                    appLibraryPath = path;
                     return true;
                 }
             }

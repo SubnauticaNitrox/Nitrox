@@ -5,7 +5,7 @@ namespace Nitrox.Server.Subnautica.Extensions;
 
 public static class AssetsFileMetadataExtension
 {
-    public static AssetFileInfo GetAssetInfo(this AssetsFile assetsFile, AssetsManager assetsManager, string assetName, AssetClassID classID)
+    public static AssetFileInfo? GetAssetInfo(this AssetsFile assetsFile, AssetsManager assetsManager, string assetName, AssetClassID classID)
     {
         foreach (AssetFileInfo assetInfo in assetsFile.GetAssetsOfType(classID))
         {
