@@ -1,15 +1,12 @@
 <Project>
-    
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
     </PropertyGroup>
-    
     <PropertyGroup>
         <AvaloniaVersion>11.3.18</AvaloniaVersion>
-        <NetSdkVersion>10.0.9</NetSdkVersion>
+        <NetSdkVersion>10.0.11</NetSdkVersion>
     </PropertyGroup>
-    
     <ItemGroup>
         <PackageVersion Include="AssetsTools.NET" Version="3.0.0-preview1" />
         <PackageVersion Include="Autofac" Version="[4.9.4]" />
@@ -24,7 +21,7 @@
         <PackageVersion Include="Bogus" Version="35.6.5" />
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageVersion Include="CompareNETObjects" Version="4.84.0" />
-        <PackageVersion Include="ConsoleAppFramework" Version="5.6.1" />
+        <PackageVersion Include="ConsoleAppFramework" Version="5.7.13" />
         <PackageVersion Include="coverlet.collector" Version="10.0.1" />
         <PackageVersion Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
         <PackageVersion Include="dnlib" Version="4.5.0" />
@@ -57,7 +54,7 @@
         <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
         <PackageVersion Include="Serilog.Sinks.Map" Version="2.0.0" />
         <PackageVersion Include="Serilog" Version="4.2.0" />
-        <PackageVersion Include="ServiceScan.SourceGenerator" Version="2.4.1" />
+        <PackageVersion Include="ServiceScan.SourceGenerator" Version="3.2.2" />
         <PackageVersion Include="SixLabors.ImageSharp" Version="[2.1.11]" />
         <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
         <PackageVersion Include="System.Buffers" Version="4.6.1" />
@@ -71,5 +68,4 @@
         <PackageVersion Include="System.ValueTuple" Version="4.6.1" />
         <PackageVersion Include="ZLogger" Version="2.5.10" />
     </ItemGroup>
-    
 </Project>

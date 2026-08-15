@@ -477,7 +477,7 @@ public class SceneDebugger : AbstractDebugger
         }
 
         SelectedObject = item;
-        selectedComponentID = default;
+        selectedComponentID = 0;
     }
 
     public void JumpToComponent(Component item)
