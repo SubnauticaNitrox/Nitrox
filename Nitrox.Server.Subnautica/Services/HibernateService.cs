@@ -30,7 +30,7 @@ internal sealed class HibernateService(IHibernate.SleepTrigger sleepTrigger, IHi
     }
 
     /// <summary>
-    ///     Wakes up the server which will enable and simulate all features. If not sleeping, this call won't do anything.
+    ///     Wakes up the server which will simulate all enabled features. Does nothing if server isn't sleeping.
     /// </summary>
     public async Task WakeAsync()
     {

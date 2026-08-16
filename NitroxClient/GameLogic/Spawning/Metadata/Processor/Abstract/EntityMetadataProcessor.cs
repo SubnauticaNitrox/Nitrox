@@ -1,4 +1,3 @@
-using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
@@ -11,10 +10,5 @@ public abstract class EntityMetadataProcessor<TMetadata> : IEntityMetadataProces
     public void ProcessMetadata(GameObject gameObject, EntityMetadata metadata)
     {
         ProcessMetadata(gameObject, (TMetadata)metadata);
-    }
-
-    protected TService Resolve<TService>() where TService : class
-    {
-        return NitroxServiceLocator.Cache<TService>.Value;
     }
 }

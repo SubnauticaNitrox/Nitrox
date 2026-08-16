@@ -6,6 +6,8 @@ using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Modals;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Services;
+using NitroxClient.Services.Game;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -14,13 +16,13 @@ internal sealed class ClockSyncInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly TimeManager timeManager;
     private readonly NtpSyncer ntpSyncer;
-    private readonly LiteNetLibClient liteNetLibClient;
+    private readonly LiteNetLibClientService liteNetLibClient;
 
     public ClockSyncInitialSyncProcessor(TimeManager timeManager, NtpSyncer ntpSyncer, IClient client)
     {
         this.timeManager = timeManager;
         this.ntpSyncer = ntpSyncer;
-        liteNetLibClient = (LiteNetLibClient)client;
+        liteNetLibClient = (LiteNetLibClientService)client;
 
         AddStep(initialSync => NtpSync(initialSync.TimeData.TimePacket));
     }

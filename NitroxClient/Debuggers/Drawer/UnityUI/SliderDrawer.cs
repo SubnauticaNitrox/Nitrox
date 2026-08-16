@@ -1,10 +1,9 @@
-﻿using Nitrox.Model.Helper;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class SliderDrawer : IDrawer<Slider>
+internal sealed class SliderDrawer : IDrawer<Slider>
 {
     private readonly SceneDebugger sceneDebugger;
     private readonly SelectableDrawer selectableDrawer;

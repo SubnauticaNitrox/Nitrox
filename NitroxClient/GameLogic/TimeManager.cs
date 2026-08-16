@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public partial class TimeManager
+internal partial class TimeManager
 {
     /// <summary>
     ///     When first player connects to the server, time will resume when time will be resumed on server-side.

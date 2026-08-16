@@ -12,20 +12,12 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class ItemContainers
+internal sealed class ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager, Items items, Entities entities)
 {
-    private readonly IPacketSender packetSender;
-    private readonly EntityMetadataManager entityMetadataManager;
-    private readonly Items items;
-    private readonly Entities entities;
-
-    public ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager, Items items, Entities entities)
-    {
-        this.packetSender = packetSender;
-        this.entityMetadataManager = entityMetadataManager;
-        this.items = items;
-        this.entities = entities;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
+    private readonly Items items = items;
+    private readonly Entities entities = entities;
 
     public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform, ItemsContainer container)
     {

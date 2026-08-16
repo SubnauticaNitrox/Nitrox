@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class BaseLeakManager : MonoBehaviour
+internal sealed class BaseLeakManager : MonoBehaviour
 {
     private Dictionary<Int3, NitroxId> idByRelativeCell;
     private Base @base;
@@ -33,7 +31,7 @@ public class BaseLeakManager : MonoBehaviour
     /// Either creates or updates existing leaks by modifying the base cell's health.
     /// Also registers the leak's id for further use.
     /// </summary>
-    public void EnsureLeak(Int3 relativeCell, NitroxId cellId, float health)
+    public void EnsureLeak(Int3 relativeCell, NitroxId cellId, float health, LiveMixinManager liveMixinManager)
     {
         Int3 absoluteCell = Absolute(relativeCell);
         Transform cellObject = @base.GetCellObject(absoluteCell);
@@ -48,10 +46,10 @@ public class BaseLeakManager : MonoBehaviour
         {
             // Health goes from 0 to 100
             float deltaHealth = health - cellLiveMixin.health;
-            if (Mathf.Abs(deltaHealth) > 1)
+            if (UnityMathf.Abs(deltaHealth) > 1)
             {
                 // Useful part of BaseHullStrength.CrushDamageUpdate
-                this.Resolve<LiveMixinManager>().SyncRemoteHealth(cellLiveMixin, health, cellObject.position, DamageType.Pressure);
+                liveMixinManager.SyncRemoteHealth(cellLiveMixin, health, cellObject.position, DamageType.Pressure);
                 
                 // Only play noise if the leak lost health
                 if (deltaHealth >= 0)
@@ -84,12 +82,12 @@ public class BaseLeakManager : MonoBehaviour
         }
     }
 
-    public void HealLeakToMax(Int3 relativeCell)
+    public void HealLeakToMax(Int3 relativeCell, LiveMixinManager liveMixinManager)
     {
         Transform cellObject = @base.GetCellObject(Absolute(relativeCell));
         if (cellObject && cellObject.TryGetComponent(out LiveMixin liveMixin))
         {
-            this.Resolve<LiveMixinManager>().SyncRemoteHealth(liveMixin, liveMixin.maxHealth);
+            liveMixinManager.SyncRemoteHealth(liveMixin, liveMixin.maxHealth);
             idByRelativeCell.Remove(relativeCell);
         }
     }
@@ -104,7 +102,7 @@ public class BaseLeakManager : MonoBehaviour
         return absoluteCell - @base.anchor;
     }
 
-    public LeakRepaired RemoveLeakByAbsoluteCell(Int3 absoluteCell)
+    public LeakRepaired? RemoveLeakByAbsoluteCell(Int3 absoluteCell)
     {
         Int3 relativeCell = Relative(absoluteCell);
         if (idByRelativeCell.TryGetValue(relativeCell, out NitroxId cellId))

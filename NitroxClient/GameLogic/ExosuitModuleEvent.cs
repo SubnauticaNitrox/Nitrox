@@ -5,19 +5,13 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class ExosuitModuleEvent
+internal sealed class ExosuitModuleEvent(IPacketSender packetSender, SimulationOwnership simulationOwnership)
 {
     public static readonly int UseToolAnimation = Animator.StringToHash("use_tool");
     public static readonly int BashAnimation = Animator.StringToHash("bash");
 
-    private readonly IPacketSender packetSender;
-    private readonly SimulationOwnership simulationOwnership;
-
-    public ExosuitModuleEvent(IPacketSender packetSender, SimulationOwnership simulationOwnership)
-    {
-        this.packetSender = packetSender;
-        this.simulationOwnership = simulationOwnership;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
 
     public void BroadcastArmAction(TechType techType, Exosuit exosuit, IExosuitArm exosuitArm, ExosuitArmAction armAction)
     {

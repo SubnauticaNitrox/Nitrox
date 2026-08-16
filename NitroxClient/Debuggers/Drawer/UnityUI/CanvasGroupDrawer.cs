@@ -2,7 +2,7 @@
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class CanvasGroupDrawer : IDrawer<CanvasGroup>
+internal sealed class CanvasGroupDrawer : IDrawer<CanvasGroup>
 {
     public void Draw(CanvasGroup canvasGroup)
     {

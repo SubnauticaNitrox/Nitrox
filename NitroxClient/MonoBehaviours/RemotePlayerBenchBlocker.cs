@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class RemotePlayerBenchBlocker : MonoBehaviour, IConstructable
+internal sealed class RemotePlayerBenchBlocker : MonoBehaviour, IConstructable
 {
     private readonly List<RemotePlayer> remoteSittingPlayer = [];
 

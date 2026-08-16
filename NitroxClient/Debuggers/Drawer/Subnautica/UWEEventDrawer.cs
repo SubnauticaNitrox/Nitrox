@@ -4,7 +4,7 @@ using UWE;
 
 namespace NitroxClient.Debuggers.Drawer.Subnautica;
 
-public class UWEEventDrawer : IDrawer<Event<float>>, IDrawer<Event<PowerRelay>>
+internal sealed class UWEEventDrawer : IDrawer<Event<float>>, IDrawer<Event<PowerRelay>>
 {
     private const float LABEL_WIDTH = 250;
 

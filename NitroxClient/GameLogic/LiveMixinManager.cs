@@ -5,20 +5,15 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class LiveMixinManager
+internal sealed class LiveMixinManager(SimulationOwnership simulationOwnership)
 {
-    private readonly SimulationOwnership simulationOwnership;
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
     private static readonly HashSet<string> broadcastDeathClassIdWhitelist = new()
     {
         "7d307502-46b7-4f86-afb0-65fe8867f893" // Crash (fish)
     };
 
     public bool IsRemoteHealthChanging { get; private set; }
-
-    public LiveMixinManager(SimulationOwnership simulationOwnership)
-    {
-        this.simulationOwnership = simulationOwnership;
-    }
 
     // Currently, we only apply live mixin updates to vehicles as there is more work to implement
     // damage for regular entities like fish.

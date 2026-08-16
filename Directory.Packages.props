@@ -9,7 +9,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="AssetsTools.NET" Version="3.0.0-preview1" />
-        <PackageVersion Include="Autofac" Version="[4.9.4]" />
         <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
         <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
         <PackageVersion Include="Avalonia.Svg.Skia" Version="11.3.0" />
@@ -38,6 +37,7 @@
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="$(NetSdkVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Options" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Http" Version="$(NetSdkVersion)" />
@@ -65,7 +65,7 @@
         <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
         <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
         <PackageVersion Include="System.Text.Json" Version="$(NetSdkVersion)" />
-        <PackageVersion Include="System.ValueTuple" Version="4.6.1" />
+        <PackageVersion Include="System.ValueTuple" Version="4.6.2" />
         <PackageVersion Include="ZLogger" Version="2.5.10" />
     </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.CinematicController;
 
-public class MultiplayerCinematicReference : MonoBehaviour
+internal sealed class MultiplayerCinematicReference : MonoBehaviour
 {
     private readonly Dictionary<string, Dictionary<int, MultiplayerCinematicController>> controllerByKey = [];
 
@@ -18,9 +18,12 @@ public class MultiplayerCinematicReference : MonoBehaviour
         isEscapePod = gameObject == EscapePod.main.gameObject;
     }
 
-    public void CallStartCinematicMode(string key, int identifier, RemotePlayer player)
+    public void CallStartCinematicMode(string key, int identifier, RemotePlayer player, LocalPlayer localPlayer)
     {
-        if(isEscapePod && this.Resolve<LocalPlayer>().IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER) return;
+        if (isEscapePod && localPlayer.IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER)
+        {
+            return;
+        }
 
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
@@ -35,9 +38,12 @@ public class MultiplayerCinematicReference : MonoBehaviour
         controller.CallStartCinematicMode(player);
     }
 
-    public void CallCinematicModeEnd(string key, int identifier, RemotePlayer player)
+    public void CallCinematicModeEnd(string key, int identifier, RemotePlayer player, LocalPlayer localPlayer)
     {
-        if(isEscapePod && this.Resolve<LocalPlayer>().IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER) return;
+        if (isEscapePod && localPlayer.IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER)
+        {
+            return;
+        }
 
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {

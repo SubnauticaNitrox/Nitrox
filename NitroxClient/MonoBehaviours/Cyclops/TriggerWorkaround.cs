@@ -10,7 +10,7 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// <remarks>
 /// Works for <see cref="CyclopsLightingPanel"/> and <see cref="CyclopsSubNameScreen"/>.
 /// </remarks>
-public class TriggerWorkaround : MonoBehaviour
+internal sealed class TriggerWorkaround : MonoBehaviour
 {
     private const float DETECTION_RANGE = 5f;
     private const string ANIMATOR_PARAM = "PanelActive";

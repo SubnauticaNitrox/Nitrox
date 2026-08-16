@@ -89,7 +89,7 @@ namespace Nitrox.Model.Packets
             BinaryConverter.Serialize(new Wrapper(this), stream);
         }
 
-        public static Packet? Deserialize(byte[] data) => BinaryConverter.Deserialize<Wrapper>(data).Packet;
+        public static Packet Deserialize(byte[] data) => BinaryConverter.Deserialize<Wrapper>(data).Packet;
 
         public override string ToString()
         {
@@ -139,7 +139,7 @@ namespace Nitrox.Model.Packets
         /// </summary>
         public readonly struct Wrapper(Packet packet)
         {
-            public Packet? Packet { get; init; } = packet;
+            public Packet Packet { get; init; } = packet;
         }
 
         public enum UdpChannelId : byte

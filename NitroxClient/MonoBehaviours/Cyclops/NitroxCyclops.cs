@@ -9,7 +9,7 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// <summary>
 /// Script responsible for managing all player movement-related interactions.
 /// </summary>
-public class NitroxCyclops : MonoBehaviour
+internal sealed class NitroxCyclops : MonoBehaviour
 {
     public VirtualCyclops Virtual;
     private CyclopsMotor cyclopsMotor;

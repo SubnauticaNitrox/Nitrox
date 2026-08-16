@@ -1,0 +1,31 @@
+using System.Reflection;
+using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+/// <summary>
+/// Drops simulation on simulated crafters after crafting is complete
+/// </summary>
+public sealed partial class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
+{
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GhostCrafter t) => t.OnCraftingEnd());
+
+    public static bool Prefix(GhostCrafter __instance)
+    {
+        // The OnCraftingEnd patch is executed when crafting is complete and the item is about to be automatically
+        // picked up by the nearest player.  We don't want all players to attempt to pick up the item.  Instead,
+        // the crafting player will intiate a lock request when pushing the craft button - OnCraftingStart().
+
+        // See GhostCrafter_OnCraftingBegin_Patch.Postfix to know why we get NitroxId on CrafterLogic
+        if (__instance._logic.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasExclusiveLock(id))
+        {
+            // once an item is crafted, we no longer require an exclusive lock.
+            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+
+            return true;
+        }
+
+        return false;
+    }
+}

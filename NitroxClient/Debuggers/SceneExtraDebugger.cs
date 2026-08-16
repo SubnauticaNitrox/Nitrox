@@ -8,12 +8,11 @@ using Nitrox.Model.Subnautica.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
-using Mathf = UnityEngine.Mathf;
 
 namespace NitroxClient.Debuggers;
 
 [ExcludeFromCodeCoverage]
-public sealed class SceneExtraDebugger : AbstractDebugger
+internal sealed class SceneExtraDebugger : AbstractDebugger
 {
     private const int WINDOW_ID = 424;
     private const int RESULTS_PER_PAGE = 30;
@@ -346,9 +345,9 @@ public sealed class SceneExtraDebugger : AbstractDebugger
             Vector3 screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2f;
             Vector3 originPos = screenPos - screenCenter;
 
-            float angle = Mathf.Atan2(originPos.y, originPos.x) - (90 * Mathf.Deg2Rad);
-            float cos = Mathf.Cos(angle);
-            float sin = Mathf.Sin(angle);
+            float angle = UnityMathf.Atan2(originPos.y, originPos.x) - (90 * UnityMathf.Deg2Rad);
+            float cos = UnityMathf.Cos(angle);
+            float sin = UnityMathf.Sin(angle);
             float m = cos / -sin;
 
             Vector3 screenBounds = screenCenter * 0.9f;
@@ -368,7 +367,7 @@ public sealed class SceneExtraDebugger : AbstractDebugger
 
             markerX = screenPos.x;
             markerY = Screen.height - screenPos.y;
-            markerRot = -angle * Mathf.Rad2Deg;
+            markerRot = -angle * UnityMathf.Rad2Deg;
         }
 
         float markerSizeX = currentTexture.width;

@@ -9,18 +9,11 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class EquipmentSlots
+internal sealed class EquipmentSlots(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
 {
-    private readonly IPacketSender packetSender;
-    private readonly Entities entities;
-    private readonly EntityMetadataManager entityMetadataManager;
-
-    public EquipmentSlots(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
-    {
-        this.packetSender = packetSender;
-        this.entities = entities;
-        this.entityMetadataManager = entityMetadataManager;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly Entities entities = entities;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
 
     public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
     {

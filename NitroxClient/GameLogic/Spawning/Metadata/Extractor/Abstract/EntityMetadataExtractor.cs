@@ -14,9 +14,4 @@ public abstract class EntityMetadataExtractor<I, O> : IEntityMetadataExtractor w
 
         return Optional.OfNullable(result);
     }
-
-    protected T Resolve<T>() where T : class
-    {
-        return NitroxServiceLocator.Cache<T>.Value;
-    }
 }

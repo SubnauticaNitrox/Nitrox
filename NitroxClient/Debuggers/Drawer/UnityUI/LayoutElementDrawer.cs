@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class LayoutElementDrawer : IDrawer<LayoutElement>
+internal sealed class LayoutElementDrawer : IDrawer<LayoutElement>
 {
     private const float LABEL_WIDTH = 100;
 

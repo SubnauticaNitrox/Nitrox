@@ -1,0 +1,28 @@
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
+using HarmonyLib;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+public sealed partial class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
+{
+    private static readonly MethodInfo targetMethod = Reflect.Method((IngameMenu t) => t.QuitSubscreen());
+
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        bool foundRet = false;
+        foreach (CodeInstruction instruction in instructions)
+        {
+            if (foundRet)
+            {
+                yield return instruction;
+            }
+
+            if (instruction.opcode == OpCodes.Ret)
+            {
+                foundRet = true;
+            }
+        }
+    }
+}

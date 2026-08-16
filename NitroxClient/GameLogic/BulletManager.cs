@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic;
 /// Registers one stasis sphere per connected remote player, and syncs their behaviour.<br/>
 /// Also syncs remote torpedo (of all types) shots and hits.
 /// </summary>
-public class BulletManager
+internal sealed class BulletManager
 {
     private readonly PlayerManager playerManager;
 

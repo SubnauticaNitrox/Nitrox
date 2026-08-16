@@ -2,7 +2,7 @@
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class RectDrawer : IEditorDrawer<Rect, RectDrawer.DrawOptions>, IEditorDrawer<RectOffset>
+internal sealed class RectDrawer : IEditorDrawer<Rect, RectDrawer.DrawOptions>, IEditorDrawer<RectOffset>
 {
     private const float MAX_WIDTH = 400;
 

@@ -16,5 +16,4 @@
   <Project Path="Nitrox.Server.Subnautica/Nitrox.Server.Subnautica.csproj" />
   <Project Path="Nitrox.Test/Nitrox.Test.csproj" />
   <Project Path="NitroxClient/NitroxClient.csproj" />
-  <Project Path="NitroxPatcher/NitroxPatcher.csproj" />
 </Solution>

@@ -2,17 +2,11 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class FixedJointDrawer : IDrawer<FixedJoint>
+internal sealed class FixedJointDrawer(SceneDebugger sceneDebugger, VectorDrawer vectorDrawer) : IDrawer<FixedJoint>
 {
-    private readonly SceneDebugger sceneDebugger;
-    private readonly VectorDrawer vectorDrawer;
+    private readonly SceneDebugger sceneDebugger = sceneDebugger;
+    private readonly VectorDrawer vectorDrawer = vectorDrawer;
     private const float LABEL_WIDTH = 175;
-
-    public FixedJointDrawer(SceneDebugger sceneDebugger, VectorDrawer vectorDrawer)
-    {
-        this.sceneDebugger = sceneDebugger;
-        this.vectorDrawer = vectorDrawer;
-    }
 
     public void Draw(FixedJoint fixedJoint)
     {

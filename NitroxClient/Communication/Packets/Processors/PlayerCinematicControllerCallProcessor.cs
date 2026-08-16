@@ -1,5 +1,4 @@
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
@@ -9,8 +8,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playerManager) : IClientPacketProcessor<PlayerCinematicControllerCall>
+internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playerManager, LocalPlayer localPlayer) : IClientPacketProcessor<PlayerCinematicControllerCall>
 {
+    private readonly LocalPlayer localPlayer = localPlayer;
     private readonly PlayerManager playerManager = playerManager;
 
     public Task Process(ClientProcessorContext context, PlayerCinematicControllerCall packet)
@@ -31,11 +31,11 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
 
         if (packet.StartPlaying)
         {
-            reference.CallStartCinematicMode(packet.Key, packet.ControllerNameHash, opPlayer.Value);
+            reference.CallStartCinematicMode(packet.Key, packet.ControllerNameHash, opPlayer.Value, localPlayer);
         }
         else
         {
-            reference.CallCinematicModeEnd(packet.Key, packet.ControllerNameHash, opPlayer.Value);
+            reference.CallCinematicModeEnd(packet.Key, packet.ControllerNameHash, opPlayer.Value, localPlayer);
         }
         return Task.CompletedTask;
     }

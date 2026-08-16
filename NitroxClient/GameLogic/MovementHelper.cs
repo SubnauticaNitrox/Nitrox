@@ -77,7 +77,7 @@ namespace NitroxClient.GameLogic
             // Here I drop down to 0.9f times the desired movement,
             // since we'd rather undershoot and ease into the correct angle
             // than overshoot and oscillate around it in the event of errors.
-            return (.9f * Mathf.Deg2Rad * angle / correctionTime) * axis + angularVelocty;
+            return (.9f * UnityMathf.Deg2Rad * angle / correctionTime) * axis + angularVelocty;
         }
     }
 }

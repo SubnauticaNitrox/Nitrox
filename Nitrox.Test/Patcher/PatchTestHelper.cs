@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Reflection.Emit;
 using HarmonyLib;
 using Nitrox.Model.Helper;
-using NitroxPatcher.PatternMatching;
+using NitroxClient.Patching.PatternMatching;
 
 namespace NitroxTest.Patcher
 {

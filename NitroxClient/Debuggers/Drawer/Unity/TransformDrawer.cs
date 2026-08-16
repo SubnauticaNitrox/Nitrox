@@ -1,9 +1,8 @@
-using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class TransformDrawer : IDrawer<Transform>
+internal sealed class TransformDrawer : IDrawer<Transform>
 {
     private readonly SceneDebugger sceneDebugger;
     private readonly VectorDrawer vectorDrawer;

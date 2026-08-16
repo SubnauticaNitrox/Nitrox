@@ -4,14 +4,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 
-public abstract class VehicleMetadataProcessor<T> : EntityMetadataProcessor<T> where T : VehicleMetadata
+internal abstract class VehicleMetadataProcessor<T>(LiveMixinManager liveMixinManager) : EntityMetadataProcessor<T>
+    where T : VehicleMetadata
 {
-    private readonly LiveMixinManager liveMixinManager;
-
-    public VehicleMetadataProcessor(LiveMixinManager liveMixinManager)
-    {
-        this.liveMixinManager = liveMixinManager;
-    }
+    private readonly LiveMixinManager liveMixinManager = liveMixinManager;
 
     protected void SetHealth(GameObject gameObject, float health)
     {

@@ -6,8 +6,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
-public class RadiationMetadataProcessor : EntityMetadataProcessor<RadiationMetadata>
+internal sealed class RadiationMetadataProcessor(LiveMixinManager liveMixinManager) : EntityMetadataProcessor<RadiationMetadata>
 {
+    private readonly LiveMixinManager liveMixinManager = liveMixinManager;
+
     public override void ProcessMetadata(GameObject gameObject, RadiationMetadata metadata)
     {
         if (!gameObject.TryGetComponent(out LiveMixin liveMixin))
@@ -17,7 +19,7 @@ public class RadiationMetadataProcessor : EntityMetadataProcessor<RadiationMetad
         }
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
-            Resolve<LiveMixinManager>().SyncRemoteHealth(liveMixin, metadata.Health);
+            liveMixinManager.SyncRemoteHealth(liveMixin, metadata.Health);
         }
     }
 }

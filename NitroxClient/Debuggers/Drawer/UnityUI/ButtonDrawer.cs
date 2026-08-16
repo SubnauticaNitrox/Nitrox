@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ButtonDrawer : IDrawer<Button>
+internal sealed class ButtonDrawer : IDrawer<Button>
 {
     private readonly SelectableDrawer selectableDrawer;
     private readonly UnityEventDrawer unityEventDrawer;

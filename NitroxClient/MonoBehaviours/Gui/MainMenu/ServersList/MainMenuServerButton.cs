@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using Nitrox.Model.Serialization;
+using NitroxClient.GameLogic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,11 +27,11 @@ public class MainMenuServerButton : MonoBehaviour
     private int joinPort;
     private string joinServerName;
 
-    public static void Setup(MainMenuLoadButton _loadButtonRef)
+    public static void Setup(MainMenuLoadButton loadButtonRef)
     {
-        loadButtonRef = _loadButtonRef;
-        confirmButtonLegendData = _loadButtonRef.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration;
-        deleteButtonRef = _loadButtonRef.deleteButton;
+        MainMenuServerButton.loadButtonRef = loadButtonRef;
+        confirmButtonLegendData = loadButtonRef.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration;
+        deleteButtonRef = loadButtonRef.deleteButton;
     }
 
     public void Init(string serverName, string ip, int port, bool isReadOnly)
@@ -172,7 +173,7 @@ public class MainMenuServerButton : MonoBehaviour
             return;
         }
 
-        IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
+        IPEndPoint? endpoint = ResolveIPEndPoint(serverIp, serverPort);
         if (endpoint == null)
         {
             Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")}: {serverIp}:{serverPort}");
@@ -183,10 +184,10 @@ public class MainMenuServerButton : MonoBehaviour
         await JoinServerBackend.StartMultiplayerClientAsync(endpoint.Address, endpoint.Port);
     }
 
-    private static IPEndPoint ResolveIPEndPoint(string serverIp, int serverPort)
+    private static IPEndPoint? ResolveIPEndPoint(string serverIp, int serverPort)
     {
         UriHostNameType hostType = Uri.CheckHostName(serverIp);
-        IPAddress address;
+        IPAddress? address;
         switch (hostType)
         {
             case UriHostNameType.IPv4:
@@ -202,7 +203,7 @@ public class MainMenuServerButton : MonoBehaviour
 
         return address != null ? new IPEndPoint(address, serverPort) : null;
 
-        static IPAddress ResolveHostName(string hostname, int serverPort)
+        static IPAddress? ResolveHostName(string hostname, int serverPort)
         {
             try
             {

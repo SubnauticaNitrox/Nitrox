@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net472;net10.0</TargetFrameworks>
+        <TargetFramework>net472</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,10 +14,29 @@
             <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
             <Private>false</Private>
         </Reference>
+        <!-- TODO: Use System.ValueTuple from NuGET (Targeting .NET framework 4.7.0+ version). Ensure this dll is copied to build output to be used by the modded game! See: https://github.com/dotnet/maintenance-packages/issues/243#issuecomment-3778861594 -->
+        <Reference Include="System.ValueTuple">
+            <HintPath>..\Nitrox.Assets.Subnautica\System.ValueTuple.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="HarmonyX" />
         <PackageReference Include="DiscordGameSDKWrapper" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="ServiceScan.SourceGenerator" />
     </ItemGroup>
+
+    <Target Name="IncludeGameReferences" AfterTargets="FindGameAndIncludeReferences">
+        <ItemGroup>
+            <Reference Include="FMODUnity">
+                <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
+            </Reference>
+            <Reference Include="Sentry">
+                <HintPath>$(GameManagedDir)\Sentry.dll</HintPath>
+            </Reference>
+        </ItemGroup>
+    </Target>
 
 </Project>

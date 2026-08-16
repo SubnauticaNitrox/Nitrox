@@ -4,24 +4,20 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
-using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
-public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
+internal sealed class ModuleEntitySpawner(Entities entities) : EntitySpawner<ModuleEntity>
 {
-    private readonly Entities entities;
-
-    public ModuleEntitySpawner(Entities entities)
-    {
-        this.entities = entities;
-    }
+    private readonly Entities entities = entities;
 
     protected override IEnumerator SpawnAsync(ModuleEntity entity, TaskResult<Optional<GameObject>> result)
     {
@@ -30,7 +26,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             Log.Error("Trying to respawn an already spawned module without a proper resync process.");
             yield break;
         }
-        Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
+        Transform parent = BuildingService.GetParentOrGlobalRoot(entity.ParentId);
 
         yield return RestoreModule(parent, entity, result);
 

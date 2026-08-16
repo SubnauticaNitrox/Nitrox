@@ -1,0 +1,24 @@
+using System.Reflection;
+using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+/// <summary>
+/// Prevents non simulating players from running locally <see cref="SeaDragonMeleeAttack.OnTouchRight"/>.
+/// </summary>
+public sealed partial class SeaDragonMeleeAttack_OnTouchRight_Patch : NitroxPatch, IDynamicPatch
+{
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaDragonMeleeAttack t) => t.OnTouchRight(default));
+
+    public static bool Prefix(SeaDragonMeleeAttack __instance)
+    {
+        if (!__instance.TryGetNitroxId(out NitroxId creatureId) ||
+            Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+        {
+            return true;
+        }
+
+        return false;
+    }
+}

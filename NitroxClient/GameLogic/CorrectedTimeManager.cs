@@ -4,7 +4,7 @@ using Nitrox.Model.Networking;
 
 namespace NitroxClient.GameLogic;
 
-public partial class TimeManager
+internal sealed partial class TimeManager
 {
     private readonly NtpSyncer ntpSyncer;
 

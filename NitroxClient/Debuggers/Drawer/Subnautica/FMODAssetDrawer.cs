@@ -2,7 +2,7 @@
 
 namespace NitroxClient.Debuggers.Drawer.Subnautica;
 
-public class FMODAssetDrawer : IDrawer<FMODAsset>
+internal sealed class FMODAssetDrawer : IDrawer<FMODAsset>
 {
     public void Draw(FMODAsset asset)
     {

@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Nitrox;
 
-public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
+internal sealed class NitroxEntityDrawer(SimulationOwnership simulationOwnership) : IDrawer<NitroxEntity>, IDrawer<NitroxId>
 {
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
+
     public void Draw(NitroxEntity nitroxEntity)
     {
         DrawNitroxIdField(nitroxEntity.Id);
@@ -46,13 +48,13 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
         }
     }
 
-    private static void DrawSimulatingStateField(NitroxId nitroxId)
+    private void DrawSimulatingStateField(NitroxId nitroxId)
     {
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Simulating state", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            if (NitroxServiceLocator.Cache<SimulationOwnership>.Value.TryGetLockType(nitroxId, out SimulationLockType simulationLockType))
+            if (simulationOwnership.TryGetLockType(nitroxId, out SimulationLockType simulationLockType))
             {
                 GUILayout.TextField(simulationLockType.ToString());
                 return;

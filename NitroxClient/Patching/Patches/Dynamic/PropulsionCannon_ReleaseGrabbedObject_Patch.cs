@@ -1,0 +1,28 @@
+﻿using System.Reflection;
+using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
+using UnityEngine;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+public sealed partial class PropulsionCannon_ReleaseGrabbedObject_Patch : NitroxPatch, IDynamicPatch
+{
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.ReleaseGrabbedObject());
+
+    public static bool Prefix(PropulsionCannon __instance)
+    {
+        GameObject grabbed = __instance.grabbedObject;
+        if (!grabbed)
+        {
+            return false;
+        }
+
+        if (grabbed.TryGetIdOrWarn(out NitroxId id))
+        {
+            // Request to be downgraded to a transient lock so we can still simulate the positioning.
+            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+        }
+
+        return true;
+    }
+}

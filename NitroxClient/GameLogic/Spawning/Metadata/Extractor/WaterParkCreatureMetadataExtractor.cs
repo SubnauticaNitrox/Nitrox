@@ -3,7 +3,7 @@ using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class WaterParkCreatureMetadataExtractor : EntityMetadataExtractor<WaterParkCreature, WaterParkCreatureMetadata>
+internal sealed class WaterParkCreatureMetadataExtractor : EntityMetadataExtractor<WaterParkCreature, WaterParkCreatureMetadata>
 {
     public override WaterParkCreatureMetadata Extract(WaterParkCreature entity)
     {

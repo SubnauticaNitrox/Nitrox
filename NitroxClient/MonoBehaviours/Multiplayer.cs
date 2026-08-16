@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Nitrox.Model.Packets.Core;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
@@ -13,10 +15,7 @@ using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
-using Nitrox.Model.Core;
-using Nitrox.Model.Packets.Core;
-using Nitrox.Model.Subnautica.Packets;
-using NitroxClient.Communication.Packets.Processors.Core;
+using NitroxClient.Services.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -26,14 +25,13 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-        private ClientProcessorContext packetProcessorContext;
-        private PacketProcessorsInvoker processorInvoker = null!;
-        private IClient client;
         private IMultiplayerSession multiplayerSession;
+        private ClientProcessorContext packetProcessorContext;
         private PacketReceiver packetReceiver;
         private IPacketSender packetSender;
-        private ThrottledPacketSender throttledPacketSender;
+        private PacketProcessorsInvoker processorInvoker = null!;
         private GameLogic.Terrain terrain;
+        private ThrottledPacketSender throttledPacketSender;
 
         public bool InitialSyncCompleted { get; set; }
 
@@ -49,7 +47,6 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
@@ -67,8 +64,6 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            client.PollEvents();
-
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();
@@ -164,13 +159,9 @@ namespace NitroxClient.MonoBehaviours
         public void InitMonoBehaviours()
         {
             // Gameplay.
-            gameObject.AddComponent<UnderwaterStateTracker>();
-            gameObject.AddComponent<PrecursorTracker>();
             gameObject.AddComponent<PlayerMovementBroadcaster>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
-            gameObject.AddComponent<EntityPositionBroadcaster>();
-            gameObject.AddComponent<BuildingHandler>();
             gameObject.AddComponent<MovementBroadcaster>();
             gameObject.AddComponent<PlayerPingManager>();
             VirtualCyclops.Initialize();
@@ -194,7 +185,7 @@ namespace NitroxClient.MonoBehaviours
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
             TopRightWatermarkText.ApplyChangesForInGame();
-            DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
+            DiscordClientService.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
             CoroutineHost.StartCoroutine(PlayerChatManager.Instance.LoadChatKeyHint());
         }
 

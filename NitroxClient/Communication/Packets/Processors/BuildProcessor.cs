@@ -1,33 +1,36 @@
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
-using NitroxClient.GameLogic.Bases;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal abstract class BuildProcessor<T> : IClientPacketProcessor<T> where T : Packet
+internal abstract class BuildProcessor<T>(BuildingService buildingService) : IClientPacketProcessor<T> where T : Packet
 {
+    private readonly BuildingService buildingService = buildingService;
+
     public Task Process(ClientProcessorContext context, T packet)
     {
-        BuildingHandler.Main.BuildQueue.Enqueue(packet);
+        buildingService.BuildQueue.Enqueue(packet);
         return Task.CompletedTask;
     }
 }
 
-internal class PlaceGhostProcessor : BuildProcessor<PlaceGhost>;
+internal class PlaceGhostProcessor(BuildingService buildingService) : BuildProcessor<PlaceGhost>(buildingService);
 
-internal class PlaceModuleProcessor : BuildProcessor<PlaceModule>;
+internal class PlaceModuleProcessor(BuildingService buildingService) : BuildProcessor<PlaceModule>(buildingService);
 
-internal class ModifyConstructedAmountProcessor : BuildProcessor<ModifyConstructedAmount>;
+internal class ModifyConstructedAmountProcessor(BuildingService buildingService) : BuildProcessor<ModifyConstructedAmount>(buildingService);
 
-internal class PlaceBaseProcessor : BuildProcessor<PlaceBase>;
+internal class PlaceBaseProcessor(BuildingService buildingService) : BuildProcessor<PlaceBase>(buildingService);
 
-internal class UpdateBaseProcessor : BuildProcessor<UpdateBase>;
+internal class UpdateBaseProcessor(BuildingService buildingService) : BuildProcessor<UpdateBase>(buildingService);
 
-internal class BaseDeconstructedProcessor : BuildProcessor<BaseDeconstructed>;
+internal class BaseDeconstructedProcessor(BuildingService buildingService) : BuildProcessor<BaseDeconstructed>(buildingService);
 
-internal class PieceDeconstructedProcessor : BuildProcessor<PieceDeconstructed>;
+internal class PieceDeconstructedProcessor(BuildingService buildingService) : BuildProcessor<PieceDeconstructed>(buildingService);
 
-internal class WaterParkDeconstructedProcessor : BuildProcessor<WaterParkDeconstructed>;
+internal class WaterParkDeconstructedProcessor(BuildingService buildingService) : BuildProcessor<WaterParkDeconstructed>(buildingService);
 
-internal class LargeWaterParkDeconstructedProcessor : BuildProcessor<LargeWaterParkDeconstructed>;
+internal class LargeWaterParkDeconstructedProcessor(BuildingService buildingService) : BuildProcessor<LargeWaterParkDeconstructed>(buildingService);

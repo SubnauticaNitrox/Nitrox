@@ -7,77 +7,71 @@ using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic
+namespace NitroxClient.GameLogic;
+
+internal sealed class NitroxConsole(IPacketSender packetSender, Items items, Vehicles vehicles)
 {
-    public class NitroxConsole
+    public static bool DisableConsole { get; set; } = true;
+
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly Items items = items;
+    private readonly Vehicles vehicles = vehicles;
+
+    //List of things that can be spawned : https://subnauticacommands.com/items
+    public void Spawn(GameObject gameObject)
     {
-        public static bool DisableConsole { get; set; } = true;
+        TechType techType = GetObjectTechType(gameObject);
 
-        private readonly IPacketSender packetSender;
-        private readonly Items items;
-
-        public NitroxConsole(IPacketSender packetSender, Items items)
+        try
         {
-            this.packetSender = packetSender;
-            this.items = items;
-        }
-
-        //List of things that can be spawned : https://subnauticacommands.com/items
-        public void Spawn(GameObject gameObject)
-        {
-            TechType techType = GetObjectTechType(gameObject);
-
-            try
+            if (VehicleHelper.IsVehicle(techType))
             {
-                if (VehicleHelper.IsVehicle(techType))
-                {
-                    SpawnVehicle(gameObject, techType);
-                }
-                else
-                {
-                    DefaultSpawn(gameObject);
-                }
+                SpawnVehicle(gameObject, techType);
             }
-            catch (Exception ex)
+            else
             {
-                Log.Error(ex, $"Error while trying to spawn {techType} from devconsole");
+                DefaultSpawn(gameObject);
             }
         }
-
-        /// <summary>
-        /// Spawns Seamoth, Exosuit or Cyclops
-        /// </summary>
-        private void SpawnVehicle(GameObject gameObject, TechType techType)
+        catch (Exception ex)
         {
-            NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
+            Log.Error(ex, $"Error while trying to spawn {techType} from devconsole");
+        }
+    }
 
-            VehicleEntity vehicleEntity = Vehicles.BuildVehicleEntity(gameObject, id, techType);
-            
-            packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
+    /// <summary>
+    /// Spawns Seamoth, Exosuit or Cyclops
+    /// </summary>
+    private void SpawnVehicle(GameObject gameObject, TechType techType)
+    {
+        NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
 
-            Log.Debug($"Spawning vehicle {techType} with id {id} at {gameObject.transform.position}");
+        VehicleEntity vehicleEntity = vehicles.BuildVehicleEntity(gameObject, id, techType);
+
+        packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
+
+        Log.Debug($"Spawning vehicle {techType} with id {id} at {gameObject.transform.position}");
+    }
+
+    private void DefaultSpawn(GameObject gameObject)
+    {
+        items.Dropped(gameObject);
+    }
+
+    private static TechType GetObjectTechType(GameObject gameObject)
+    {
+        TechType techType = CraftData.GetTechType(gameObject);
+        if (techType != TechType.None)
+        {
+            return techType;
         }
 
-        private void DefaultSpawn(GameObject gameObject)
+        // Cyclops' GameObject doesn't have a way to give its a TechType so we detect it differently
+        if (gameObject.TryGetComponent(out SubRoot subRoot) && subRoot.isCyclops)
         {
-            items.Dropped(gameObject);
+            return TechType.Cyclops;
         }
 
-        private static TechType GetObjectTechType(GameObject gameObject)
-        {
-            TechType techType = CraftData.GetTechType(gameObject);
-            if (techType != TechType.None)
-            {
-                return techType;
-            }
-
-            // Cyclops' GameObject doesn't have a way to give its a TechType so we detect it differently
-            if (gameObject.TryGetComponent(out SubRoot subRoot) && subRoot.isCyclops)
-            {
-                return TechType.Cyclops;
-            }
-
-            return TechType.None;
-        }
+        return TechType.None;
     }
 }

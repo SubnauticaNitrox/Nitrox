@@ -8,26 +8,20 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Subnautica.MultiplayerSession;
+using NitroxClient.Services.Game;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class PlayerManager
+internal sealed class PlayerManager(PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
 {
-    private readonly PlayerModelManager playerModelManager;
-    private readonly PlayerVitalsManager playerVitalsManager;
-    private readonly FMODWhitelist fmodWhitelist;
+    private readonly PlayerModelManager playerModelManager = playerModelManager;
+    private readonly PlayerVitalsManager playerVitalsManager = playerVitalsManager;
+    private readonly FMODWhitelist fmodWhitelist = fmodWhitelist;
     private readonly Dictionary<SessionId, RemotePlayer> sessionsById = new();
 
     public OnCreateDelegate OnCreate;
     public OnRemoveDelegate OnRemove;
-
-    public PlayerManager(PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
-    {
-        this.playerModelManager = playerModelManager;
-        this.playerVitalsManager = playerVitalsManager;
-        this.fmodWhitelist = fmodWhitelist;
-    }
 
     public Optional<RemotePlayer> Find(SessionId sessionId)
     {
@@ -78,7 +72,7 @@ public class PlayerManager
         sessionsById.Add(remotePlayer.SessionId, remotePlayer);
         OnCreate(remotePlayer.SessionId, remotePlayer);
 
-        DiscordClient.UpdatePartySize(GetTotalPlayerCount());
+        DiscordClientService.UpdatePartySize(GetTotalPlayerCount());
 
         return remotePlayer;
     }
@@ -90,7 +84,7 @@ public class PlayerManager
             player.Destroy();
             sessionsById.Remove(sessionId);
             OnRemove(sessionId, player);
-            DiscordClient.UpdatePartySize(GetTotalPlayerCount());
+            DiscordClientService.UpdatePartySize(GetTotalPlayerCount());
         }
     }
 

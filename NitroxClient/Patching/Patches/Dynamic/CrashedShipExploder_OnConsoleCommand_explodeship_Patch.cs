@@ -1,0 +1,58 @@
+using System;
+using System.Reflection;
+using HarmonyLib;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+/// <remarks>
+///     We just want to disable all these commands on client-side and redirect them as ConsoleCommand
+///     TODO: Remove this file when we'll have the command system
+/// </remarks>
+public sealed class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
+{
+    private static readonly MethodInfo TARGET_METHOD_COUNTDOWNSHIP = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_countdownship());
+    private static readonly MethodInfo TARGET_METHOD_EXPLODEFORCE = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_explodeforce());
+    private static readonly MethodInfo TARGET_METHOD_EXPLODESHIP = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_explodeship());
+    private static readonly MethodInfo TARGET_METHOD_RESTORESHIP = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_restoreship());
+
+    private static IPacketSender packetSender;
+
+    public CrashedShipExploder_OnConsoleCommand_Patch(IPacketSender ps)
+    {
+        packetSender = ps ?? throw new ArgumentNullException(nameof(ps));
+    }
+
+    public static bool PrefixCountdownShip()
+    {
+        packetSender.Send(new ServerCommand("aurora countdown"));
+        return false;
+    }
+
+    // This command's purpose is just to show FX, we don't need to sync it
+    public static bool PrefixExplodeForce()
+    {
+        return true;
+    }
+
+    public static bool PrefixExplodeShip()
+    {
+        packetSender.Send(new ServerCommand("aurora explode"));
+        return false;
+    }
+
+    public static bool PrefixRestoreShip()
+    {
+        packetSender.Send(new ServerCommand("aurora restore"));
+        return false;
+    }
+
+    public override void Patch(Harmony harmony)
+    {
+        PatchPrefix(harmony, TARGET_METHOD_COUNTDOWNSHIP, ((Func<bool>)PrefixCountdownShip).Method);
+        PatchPrefix(harmony, TARGET_METHOD_EXPLODEFORCE, ((Func<bool>)PrefixExplodeForce).Method);
+        PatchPrefix(harmony, TARGET_METHOD_EXPLODESHIP, ((Func<bool>)PrefixExplodeShip).Method);
+        PatchPrefix(harmony, TARGET_METHOD_RESTORESHIP, ((Func<bool>)PrefixRestoreShip).Method);
+    }
+}

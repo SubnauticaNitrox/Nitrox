@@ -4,8 +4,6 @@ using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Vehicles;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -57,7 +55,7 @@ public abstract class MovementReplicator : MonoBehaviour
         }
         else
         {
-            maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
+            maxLatencyDetectedRecently = UnityMathf.Max(latency, maxLatencyDetectedRecently);
 
             if (currentTime - latestLatencyBumpTime >= LatencyUpdatePeriod)
             {

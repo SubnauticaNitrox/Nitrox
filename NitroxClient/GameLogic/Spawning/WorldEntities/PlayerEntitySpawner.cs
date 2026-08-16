@@ -8,18 +8,12 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
+internal sealed class PlayerEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer) : SyncEntitySpawner<PlayerEntity>
 {
-    private readonly PlayerManager playerManager;
-    private readonly ILocalNitroxPlayer localPlayer;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly ILocalNitroxPlayer localPlayer = localPlayer;
 
-    public PlayerEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
-    {
-        this.playerManager = playerManager;
-        this.localPlayer = localPlayer;
-    }
-
-    protected override IEnumerator SpawnAsync(PlayerEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator? SpawnAsync(PlayerEntity entity, TaskResult<Optional<GameObject>> result)
     {
         SpawnSync(entity, result);
         return null;

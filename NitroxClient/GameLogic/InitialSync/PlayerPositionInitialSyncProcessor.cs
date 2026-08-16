@@ -10,7 +10,7 @@ using Math = System.Math;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
+internal sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 {
     private static readonly Vector3 spawnRelativeToEscapePod = new(0.9f, 2.1f, 0);
     private readonly Entities entities;

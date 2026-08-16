@@ -10,7 +10,7 @@ namespace NitroxClient.GameLogic;
 /// A virtual entity responsible for one player's movement in the cyclops.
 /// It simulates the local player's movements by creating a fake player in a <see cref="VirtualCyclops"/>'s instance and then giving data about the real movement.
 /// </summary>
-public class CyclopsPawn
+internal sealed class CyclopsPawn
 {
     private static readonly List<CharacterController> controllers = [];
     public static readonly int PLAYER_LAYER = 1 << LayerMask.NameToLayer("Player");
@@ -145,7 +145,7 @@ public class CyclopsPawn
     }
 }
 
-public class CyclopsPawnIdentifier : MonoBehaviour
+internal sealed class CyclopsPawnIdentifier : MonoBehaviour
 {
     public CyclopsPawn Pawn;
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class MovementBroadcaster : MonoBehaviour
+internal sealed class MovementBroadcaster : MonoBehaviour
 {
     public const int BROADCAST_FREQUENCY = 30;
     public const float BROADCAST_PERIOD = 1f / BROADCAST_FREQUENCY;

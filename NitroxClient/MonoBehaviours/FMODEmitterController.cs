@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
+// TODO: Turn into MSDI service
 [DisallowMultipleComponent]
 public class FMODEmitterController : MonoBehaviour
 {

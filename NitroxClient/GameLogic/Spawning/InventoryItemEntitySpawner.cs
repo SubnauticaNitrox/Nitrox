@@ -16,7 +16,7 @@ using UWE;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataManager) : SyncEntitySpawner<InventoryItemEntity>
+internal sealed class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataManager) : SyncEntitySpawner<InventoryItemEntity>
 {
     private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
 

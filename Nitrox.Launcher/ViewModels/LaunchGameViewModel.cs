@@ -126,9 +126,8 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                 // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
                 try
                 {
-                    const string PATCHER_DLL_NAME = "NitroxPatcher.dll";
 
-                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath, "lib", "net472", PATCHER_DLL_NAME);
+                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath, "lib", "net472", NitroxConstants.NITROX_CLIENT_DLL_NAME);
                     if (!File.Exists(patcherDllPath))
                     {
                         LauncherNotifier.Error("Launcher files seems corrupted, please contact us");
@@ -137,7 +136,7 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
 
                     File.Copy(
                         patcherDllPath,
-                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
+                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", NitroxConstants.NITROX_CLIENT_DLL_NAME),
                         true
                     );
                 }

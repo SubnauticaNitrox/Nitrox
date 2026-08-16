@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata;
 
-public class EntityMetadataManager
+internal sealed class EntityMetadataManager
 {
     private readonly Dictionary<Type, IEntityMetadataExtractor> extractors;
     private readonly Dictionary<Type, IEntityMetadataProcessor> processors;
@@ -62,7 +62,7 @@ public class EntityMetadataManager
 
     public Optional<IEntityMetadataProcessor> FromMetaData(EntityMetadata metadata)
     {
-        if (metadata != null && processors.TryGetValue(metadata.GetType(), out IEntityMetadataProcessor processor))
+        if (processors.TryGetValue(metadata.GetType(), out IEntityMetadataProcessor processor))
         {
             return Optional.Of(processor);
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Debuggers.Drawer.Nitrox;
 using NitroxClient.Debuggers.Drawer.Subnautica;
 using NitroxClient.Debuggers.Drawer.Unity;
@@ -19,78 +20,15 @@ namespace NitroxClient.Debuggers.Drawer;
 ///     Registers known drawers into lookup dictionaries that are searched when <see cref="TryDraw{T}" /> and
 ///     <see cref="TryDrawEditor{T}" /> are called.
 /// </summary>
-public class DrawerManager
+internal sealed class DrawerManager
 {
-    private readonly Dictionary<Type, IDrawer<object>> drawers = [];
-    private readonly Dictionary<Type, IEditorDrawer<object>> editorDrawers = [];
+    private readonly Dictionary<Type, IDrawer<object>> drawers;
+    private readonly Dictionary<Type, IEditorDrawer<object>> editorDrawers;
 
-    public DrawerManager(SceneDebugger sceneDebugger)
+    public DrawerManager(IEnumerable<IDrawer<object>> drawers, IEnumerable<IEditorDrawer<object>> editorDrawers)
     {
-        Validate.NotNull(sceneDebugger);
-
-        ColorDrawer colorDrawer = new();
-        UnityEventDrawer unityEventDrawer = new();
-        SelectableDrawer selectableDrawer = new(sceneDebugger, colorDrawer);
-        VectorDrawer vectorDrawer = new();
-        RectDrawer rectDrawer = new();
-        LayoutGroupDrawer layoutGroupDrawer = new(rectDrawer);
-        MaterialDrawer materialDrawer = new();
-        ImageDrawer imageDrawer = new(colorDrawer, materialDrawer, rectDrawer);
-        NitroxEntityDrawer nitroxEntityDrawer = new();
-        RigidbodyDrawer rigidbodyDrawer = new(vectorDrawer);
-
-        AddDrawer<NitroxEntityDrawer, NitroxEntity>(nitroxEntityDrawer);
-        AddDrawer<NitroxEntityDrawer, NitroxId>(nitroxEntityDrawer);
-        AddDrawer<FMODAssetDrawer, FMODAsset>();
-        AddDrawer<UWEEventDrawer, UWE.Event<float>>();
-        AddDrawer<UWEEventDrawer, UWE.Event<PowerRelay>>();
-        AddDrawer<AspectRatioFitterDrawer, AspectRatioFitter>();
-        AddDrawer<ButtonDrawer, Button>(new(selectableDrawer, unityEventDrawer));
-        AddDrawer<CanvasDrawer, Canvas>(new(sceneDebugger));
-        AddDrawer<CanvasGroupDrawer, CanvasGroup>();
-        AddDrawer<CanvasRendererDrawer, CanvasRenderer>();
-        AddDrawer<CanvasScalerDrawer, CanvasScaler>(new(vectorDrawer));
-        AddDrawer<ContentSizeFitterDrawer, ContentSizeFitter>();
-        AddDrawer<DropdownDrawer, Dropdown>(new(sceneDebugger, selectableDrawer));
-        AddDrawer<EventTriggerDrawer, EventTrigger>(new(sceneDebugger));
-        AddDrawer<FixedJointDrawer, FixedJoint>(new(sceneDebugger, vectorDrawer));
-        AddDrawer<GraphicRaycasterDrawer, GraphicRaycaster>();
-        AddDrawer<GridLayoutGroupDrawer, GridLayoutGroup>(new(vectorDrawer, rectDrawer));
-        AddDrawer<LayoutGroupDrawer, HorizontalLayoutGroup>(layoutGroupDrawer);
-        AddDrawer<ImageDrawer, Image>(imageDrawer);
-        AddDrawer<ImageDrawer, RawImage>(imageDrawer);
-        AddDrawer<LayoutGroupDrawer, VerticalLayoutGroup>(layoutGroupDrawer);
-        AddDrawer<MaskDrawer, Mask>();
-        AddDrawer<RectTransformDrawer, RectTransform>(new(vectorDrawer));
-        AddDrawer<ScrollbarDrawer, Scrollbar>(new(sceneDebugger, selectableDrawer));
-        AddDrawer<ScrollRectDrawer, ScrollRect>(new(sceneDebugger));
-        AddDrawer<SelectableDrawer, Selectable>(selectableDrawer);
-        AddDrawer<SliderDrawer, Slider>(new(sceneDebugger, selectableDrawer));
-        AddDrawer<TextDrawer, Text>(new(colorDrawer, materialDrawer));
-        AddDrawer<ToggleDrawer, Toggle>(new(sceneDebugger, selectableDrawer, unityEventDrawer));
-        AddDrawer<ToggleGroupDrawer, ToggleGroup>();
-        AddDrawer<RigidbodyDrawer, Rigidbody>(rigidbodyDrawer);
-        AddDrawer<TransformDrawer, Transform>(new(sceneDebugger, vectorDrawer));
-        AddDrawer<UnityEventDrawer, UnityEvent>(unityEventDrawer);
-        AddDrawer<UnityEventDrawer, UnityEvent<bool>>(unityEventDrawer);
-        AddDrawer<VFXControllerDrawer, VFXController>(new(vectorDrawer, sceneDebugger));
-        AddDrawer<AnimatorDrawer, Animator>();
-        AddDrawer<CharacterControllerDrawer, CharacterController>(new(vectorDrawer));
-        AddDrawer<BoxColliderDrawer, BoxCollider>(new(vectorDrawer, rigidbodyDrawer));
-
-        AddEditor<VectorDrawer, Vector2>(vectorDrawer);
-        AddEditor<VectorDrawer, Vector3>(vectorDrawer);
-        AddEditor<VectorDrawer, Vector4>(vectorDrawer);
-        AddEditor<VectorDrawer, Quaternion>(vectorDrawer);
-        AddEditor<VectorDrawer, Int3>(vectorDrawer);
-        AddEditor<VectorDrawer, NitroxVector3>(vectorDrawer);
-        AddEditor<VectorDrawer, NitroxVector4>(vectorDrawer);
-        AddEditor<ColorDrawer, Color>(colorDrawer);
-        AddEditor<ColorDrawer, Color32>(colorDrawer);
-        AddEditor<MaterialDrawer, Material>(materialDrawer);
-        AddEditor<MaterialDrawer, PhysicMaterial>(materialDrawer);
-        AddEditor<RectDrawer, Rect>(rectDrawer);
-        AddEditor<RectDrawer, RectOffset>(rectDrawer);
+        this.drawers = drawers.ToDictionary(drawer => drawer.GetType(), drawer => drawer);
+        this.editorDrawers = editorDrawers.ToDictionary(drawer => drawer.GetType(), drawer => drawer);
     }
 
     /// <summary>
@@ -131,30 +69,5 @@ public class DrawerManager
         }
         result = (T)drawer.Draw(item);
         return true;
-    }
-
-    private void AddDrawer<TDrawer, TDrawable>(TDrawer drawer) where TDrawer : IDrawer<TDrawable>
-    {
-        drawers.Add(typeof(TDrawable), new DrawerWrapper<TDrawable>(drawer));
-    }
-
-    private void AddDrawer<TDrawer, TDrawable>() where TDrawer : IDrawer<TDrawable>, new()
-    {
-        drawers.Add(typeof(TDrawable), new DrawerWrapper<TDrawable>(new TDrawer()));
-    }
-
-    private void AddEditor<TDrawer, TDrawable>(TDrawer drawer) where TDrawer : IEditorDrawer<TDrawable>
-    {
-        editorDrawers.Add(typeof(TDrawable), new EditorDrawerWrapper<TDrawable>(drawer));
-    }
-
-    private class DrawerWrapper<T>(IDrawer<T> inner) : IDrawer<object>
-    {
-        public void Draw(object target) => inner.Draw((T)target);
-    }
-
-    private class EditorDrawerWrapper<T>(IEditorDrawer<T> inner) : IEditorDrawer<object>
-    {
-        public object Draw(object target) => inner.Draw((T)target);
     }
 }

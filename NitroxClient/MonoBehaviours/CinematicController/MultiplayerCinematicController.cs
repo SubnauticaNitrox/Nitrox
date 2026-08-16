@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.CinematicController;
 
-public class MultiplayerCinematicController : MonoBehaviour
+internal sealed class MultiplayerCinematicController : MonoBehaviour
 {
     private readonly Dictionary<SessionId, RemotePlayerCinematicController> controllerBySessionId = new();
 
@@ -100,7 +100,7 @@ public class MultiplayerCinematicController : MonoBehaviour
     }
 }
 
-public readonly struct CinematicControllerPrefab
+internal readonly struct CinematicControllerPrefab
 {
     private readonly Transform animatedTransform;
     private readonly Transform endTransform;

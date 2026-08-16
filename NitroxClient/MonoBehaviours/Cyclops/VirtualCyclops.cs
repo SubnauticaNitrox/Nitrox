@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// Script responsible for creating a virtual counterpart of every cyclops, which will always be horizontal and motionless so that simulated movement is always clear.
 /// Contains a pawn for each player entering the regular cyclops.
 /// </summary>
-public class VirtualCyclops : MonoBehaviour
+internal sealed class VirtualCyclops : MonoBehaviour
 {
     public static VirtualCyclops Instance;
     public const string NAME = "VirtualCyclops";

@@ -1,0 +1,24 @@
+using System.Reflection;
+using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+public sealed partial class CyclopsLightingPanel_ToggleFloodlights_Patch : NitroxPatch, IDynamicPatch
+{
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsLightingPanel t) => t.ToggleFloodlights());
+
+    public static bool Prefix(CyclopsLightingPanel __instance, out bool __state)
+    {
+        __state = __instance.floodlightsOn;
+        return true;
+    }
+
+    public static void Postfix(CyclopsLightingPanel __instance, bool __state)
+    {
+        if (__state != __instance.floodlightsOn && __instance.TryGetIdOrWarn(out NitroxId id))
+        {
+            Resolve<Entities>().EntityMetadataChanged(__instance, id);
+        }
+    }
+}

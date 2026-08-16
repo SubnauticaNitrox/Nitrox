@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class VectorDrawer : IEditorDrawer<Vector2, VectorDrawer.DrawOptions>, IEditorDrawer<Vector3, VectorDrawer.DrawOptions>, IEditorDrawer<NitroxVector3>, IEditorDrawer<Vector4>, IEditorDrawer<NitroxVector4>, IEditorDrawer<Quaternion>,
+internal sealed class VectorDrawer : IEditorDrawer<Vector2, VectorDrawer.DrawOptions>, IEditorDrawer<Vector3, VectorDrawer.DrawOptions>, IEditorDrawer<NitroxVector3>, IEditorDrawer<Vector4>, IEditorDrawer<NitroxVector4>, IEditorDrawer<Quaternion>,
                             IEditorDrawer<Int3>
 {
     private const float MAX_WIDTH = 400;

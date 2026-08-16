@@ -1,4 +1,6 @@
 using NitroxClient.GameLogic;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using NitroxClient.Unity.Smoothing;
 using UnityEngine;
 
@@ -31,8 +33,8 @@ public class RemotelyControlled : MonoBehaviour
         smoothRotation.FixedUpdate();
 
         rigidbody.isKinematic = false;
-        rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
-        rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+        rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcastService.BROADCAST_INTERVAL);
+        rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcastService.BROADCAST_INTERVAL);
     }
 
     public void UpdateOrientation(Vector3 position, Quaternion rotation)
