@@ -18,7 +18,7 @@ public sealed partial class GhostCrafter_OnCraftingBegin_Patch : NitroxPatch, ID
         // on the CrafterLogic only. On every other crafter type, both CrafterLogic and GhostCrafter are on the same object.
 
         // Also for base upgrade console module, crafterLogic is nullified and never updated, so we use _logic instead for every crafter
-        if (__instance._logic.TryGetIdOrWarn(out NitroxId crafterLogicId))
+        if (TryGetCrafterSyncId(__instance._logic, out NitroxId crafterLogicId))
         {
             Resolve<Entities>().BroadcastMetadataUpdate(crafterLogicId, new CrafterMetadata(techType.ToDto(), DayNightCycle.main.timePassedAsFloat, duration, __instance._logic.numCrafted, __instance._logic.linkedIndex));
 
@@ -26,5 +26,16 @@ public sealed partial class GhostCrafter_OnCraftingBegin_Patch : NitroxPatch, ID
             // but will require redoing our hooks.
             Resolve<SimulationOwnership>().RequestSimulationLock(crafterLogicId, SimulationLockType.EXCLUSIVE);
         }
+    }
+
+    private static bool TryGetCrafterSyncId(CrafterLogic crafterLogic, out NitroxId crafterId)
+    {
+        MapRoomFunctionality mapRoomFunctionality = crafterLogic.GetComponentInParent<MapRoomFunctionality>(true);
+        if (mapRoomFunctionality && mapRoomFunctionality.TryGetNitroxId(out crafterId))
+        {
+            return true;
+        }
+
+        return crafterLogic.TryGetIdOrWarn(out crafterId);
     }
 }
