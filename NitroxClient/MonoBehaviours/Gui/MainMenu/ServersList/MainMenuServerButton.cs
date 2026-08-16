@@ -175,7 +175,7 @@ public class MainMenuServerButton : MonoBehaviour
         IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
         if (endpoint == null)
         {
-            Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")}: {serverIp}:{serverPort}");
+            Log.InGame($"{Language.main.Get("Nitrox_ServerNotFound")}: {serverIp}:{serverPort}");
             return;
         }
 
