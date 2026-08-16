@@ -52,6 +52,25 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
         return CompletedTask;
     }
 
+    public ValueTask SetLoadingProgress(string stage, float progress)
+    {
+        try
+        {
+            ServerEntry? entry = serverService.GetServerEntryByAnyOf(processId, saveName);
+            if (entry != null)
+            {
+                entry.LoadingStage = stage;
+                entry.LoadingProgress = progress;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+            throw;
+        }
+        return CompletedTask;
+    }
+
     protected override async ValueTask OnConnected()
     {
         Metadata headers = Context.CallContext.RequestHeaders;
