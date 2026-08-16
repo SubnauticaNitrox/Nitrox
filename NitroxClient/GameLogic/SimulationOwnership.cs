@@ -149,8 +149,9 @@ namespace NitroxClient.GameLogic
             {
                 return false;
             }
-            
+
             MovementReplicator movementReplicator = gameObject.GetComponent<MovementReplicator>();
+
             if (isLocalPlayerNewOwner)
             {
                 if (movementReplicator)
@@ -164,8 +165,13 @@ namespace NitroxClient.GameLogic
             {
                 if (!movementReplicator)
                 {
-                    MovementReplicator.AddReplicatorToObject(gameObject);
+                    movementReplicator = MovementReplicator.AddReplicatorToObject(gameObject);
                 }
+                else
+                {
+                    movementReplicator.ClearBuffer();
+                }
+
                 MovementBroadcaster.UnregisterWatched(entityId);
                 StopSimulatingEntity(entityId);
             }
