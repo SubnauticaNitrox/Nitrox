@@ -1,6 +1,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Server.Subnautica.Models.Serialization.Json;
 
@@ -8,8 +9,6 @@ namespace Nitrox.Server.Subnautica.Models.Serialization;
 
 public sealed class ServerJsonSerializer : IServerSerializer
 {
-    public const string FILE_ENDING = ".json";
-
     private readonly JsonSerializer serializer;
 
     public ServerJsonSerializer(ILogger<ServerJsonSerializer> logger)
@@ -31,7 +30,7 @@ public sealed class ServerJsonSerializer : IServerSerializer
         serializer.Converters.Add(new StringEnumConverter());
     }
 
-    public string FileEnding => FILE_ENDING;
+    public string FileEnding => NitroxConstants.SAVE_FILE_ENDING;
 
     public void Serialize(Stream stream, object o)
     {

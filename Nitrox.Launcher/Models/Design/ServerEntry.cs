@@ -17,14 +17,13 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
 using Nitrox.Model.Configuration;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Platforms.OS.Shared;
 using Nitrox.Model.Serialization;
-using Nitrox.Model.Server;
-using Nitrox.Server.Subnautica.Models.Serialization;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -162,14 +161,8 @@ internal sealed partial class ServerEntry : ObservableObject
         Directory.CreateDirectory(saveDir);
 
         SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
-        string fileEnding = config.SerializerMode switch
-        {
-            ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
-            ServerSerializerMode.PROTOBUF => ServerProtoBufSerializer.FILE_ENDING,
-            _ => throw new NotImplementedException()
-        };
 
-        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{fileEnding}"), (string?)null);
+        await File.WriteAllTextAsync(Path.Combine(saveDir, $"Version{NitroxConstants.SAVE_FILE_ENDING}"), (string?)null);
         config.GameMode = saveGameMode;
         NitroxConfig.CreateFile(saveDir, config);
 
@@ -217,14 +210,8 @@ internal sealed partial class ServerEntry : ObservableObject
         }
 
         SubnauticaServerOptions config = NitroxConfig.Load<SubnauticaServerOptions>(saveDir);
-        string fileEnding = config.SerializerMode switch
-        {
-            ServerSerializerMode.JSON => ServerJsonSerializer.FILE_ENDING,
-            ServerSerializerMode.PROTOBUF => ServerProtoBufSerializer.FILE_ENDING,
-            _ => throw new NotImplementedException()
-        };
 
-        string saveFileVersion = Path.Combine(saveDir, $"Version{fileEnding}");
+        string saveFileVersion = Path.Combine(saveDir, $"Version{NitroxConstants.SAVE_FILE_ENDING}");
         if (!File.Exists(saveFileVersion))
         {
             Log.Warn($"Tried loading invalid save directory at '{saveDir}', Version file is missing");
@@ -234,26 +221,16 @@ internal sealed partial class ServerEntry : ObservableObject
         Version serverVersion;
         await using (FileStream stream = new(saveFileVersion, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            switch (config.SerializerMode)
+            SaveFileVersion versionModel;
+            try
             {
-                case ServerSerializerMode.JSON:
-                    SaveFileVersion versionModel;
-                    try
-                    {
-                        versionModel = JsonSerializer.Deserialize<SaveFileVersion>(stream);
-                    }
-                    catch (Exception)
-                    {
-                        versionModel = new SaveFileVersion(NitroxEnvironment.Version);
-                    }
-                    serverVersion = versionModel.Version;
-                    break;
-                case ServerSerializerMode.PROTOBUF:
-                    serverVersion = new ServerProtoBufSerializer(null).Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
-                    break;
-                default:
-                    throw new NotImplementedException();
+                versionModel = JsonSerializer.Deserialize<SaveFileVersion>(stream);
             }
+            catch (Exception)
+            {
+                versionModel = new SaveFileVersion(NitroxEnvironment.Version);
+            }
+            serverVersion = versionModel.Version;
         }
 
         string prevName = Name;
@@ -275,15 +252,15 @@ internal sealed partial class ServerEntry : ObservableObject
         AllowCommands = !config.DisableConsole;
         AllowPvP = config.PvpEnabled;
         AllowKeepInventory = config.KeepInventoryOnDeath;
-        IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"));
+        IsNewServer = !File.Exists(Path.Combine(saveDir, $"PlayerData{NitroxConstants.SAVE_FILE_ENDING}"));
         Version = serverVersion;
-        LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{fileEnding}"))
+        LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"PlayerData{NitroxConstants.SAVE_FILE_ENDING}"))
                                                      ?
                                                      // This file is affected by server saving
-                                                     Path.Combine(saveDir, $"PlayerData{fileEnding}")
+                                                     Path.Combine(saveDir, $"PlayerData{NitroxConstants.SAVE_FILE_ENDING}")
                                                      :
                                                      // If the above file doesn't exist (server was never ran), use the Version file instead
-                                                     Path.Combine(saveDir, $"Version{fileEnding}"));
+                                                     Path.Combine(saveDir, $"Version{NitroxConstants.SAVE_FILE_ENDING}"));
         return true;
     }
 
