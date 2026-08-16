@@ -75,7 +75,7 @@ internal static class Program
 
                 try
                 {
-                    return Assembly.LoadFile(dllPath);
+                    return Assembly.LoadFrom(dllPath);
                 }
                 catch
                 {
@@ -88,7 +88,14 @@ internal static class Program
                 cache[args.Name] = assembly = ResolveFromLib(args.Name);
                 if (assembly == null && !args.Name.Contains(".resources"))
                 {
-                    cache[args.Name] = assembly = Assembly.Load(args.Name);
+                    try
+                    {
+                        cache[args.Name] = assembly = Assembly.Load(args.Name);
+                    }
+                    catch
+                    {
+                        cache[args.Name] = assembly = null;
+                    }
                 }
             }
 
