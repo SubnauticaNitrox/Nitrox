@@ -40,6 +40,12 @@ public sealed class NtpSyncer
         }
         DisposeCallback = finishCallback;
 
+        // Reset completion state so the syncer can be reused for retry rounds. Without this, a previous
+        // Complete() leaves IsComplete latched true, so subsequent Complete() calls become no-ops and never
+        // invoke the finish callback (and the old 'ntp' NetManager would leak instead of being disposed).
+        IsComplete = false;
+        OnlineMode = false;
+
         ntp = new(TreatPacket);
 
         timer = new(TIMEOUT_INTERVAL) { AutoReset = false };
@@ -69,7 +75,8 @@ public sealed class NtpSyncer
         }
         catch (Exception ex)
         {
-            logger.LogError($"An error occurred during NTP sync sequence with '{ntp.LatestUsedService}', retrying with another one... ({ex.GetType()}: {ex.Message})");
+            // Failing over to the next service is normal (e.g. offline/LAN servers), so this is not an error.
+            logger.LogDebug($"An error occurred during NTP sync sequence with '{ntp.LatestUsedService}', retrying with another one... ({ex.GetType()}: {ex.Message})");
             timer.Stop();
             RequestNtpService();
         }
@@ -110,7 +117,8 @@ public sealed class NtpSyncer
         }
         else
         {
-            logger.LogError($"NTP request error at {ntp.LatestUsedService}, retrying with another service...");
+            // Failing over to the next service is normal (e.g. offline/LAN servers), so this is not an error.
+            logger.LogDebug($"NTP request error at {ntp.LatestUsedService}, retrying with another service...");
             RequestNtpService();
         }
     }
