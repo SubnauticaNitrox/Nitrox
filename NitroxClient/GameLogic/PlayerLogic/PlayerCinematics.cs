@@ -19,8 +19,9 @@ public class PlayerCinematics
 
     /// <summary>
     /// Some cinematics should not be played. Example the intro as it's completely handled by a dedicated system.
+    /// Bench and chair cinematics are handled by the BenchChanged packet system instead.
     /// </summary>
-    private readonly HashSet<string> blacklistedKeys = ["escapepod_intro", "reaper_attack"];
+    private readonly HashSet<string> blacklistedKeys = ["escapepod_intro", "reaper_attack", "bench_sit", "bench_stand_up", "chair_sit", "chair_stand_up"];
 
     public PlayerCinematics(IPacketSender packetSender, LocalPlayer localPlayer)
     {
@@ -28,11 +29,15 @@ public class PlayerCinematics
         this.localPlayer = localPlayer;
     }
 
-    public void StartCinematicMode(SessionId sessionId, NitroxId controllerID, int controllerNameHash, string key)
+    public void StartCinematicMode(SessionId sessionId, NitroxId controllerID, int controllerNameHash, string key, Dictionary<string, bool> animationParameters = null)
     {
         if (!blacklistedKeys.Contains(key))
         {
-            packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, true));
+            packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, true, animationParameters));
+        }
+        else
+        {
+            Log.Debug($"[PlayerCinematics] Skipping blacklisted cinematic: {key}");
         }
     }
 
@@ -41,6 +46,10 @@ public class PlayerCinematics
         if (!blacklistedKeys.Contains(key))
         {
             packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, false));
+        }
+        else
+        {
+            Log.Debug($"[PlayerCinematics] Skipping blacklisted cinematic end: {key}");
         }
     }
 

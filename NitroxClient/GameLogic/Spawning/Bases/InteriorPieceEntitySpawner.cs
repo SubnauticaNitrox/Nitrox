@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.BedSync;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
@@ -105,6 +106,13 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         if (moduleObject)
         {
             NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
+            
+            // Add RemoteBedController for beds to enable animation sync
+            if (moduleObject.GetComponent<Bed>() && !moduleObject.GetComponent<RemoteBedController>())
+            {
+                moduleObject.AddComponent<RemoteBedController>();
+            }
+            
             yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
             entityMetadataManager.ApplyMetadata(moduleObject, interiorPiece.Metadata);
             result.Set(moduleObject);

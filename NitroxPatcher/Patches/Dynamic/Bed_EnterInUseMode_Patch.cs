@@ -6,29 +6,29 @@ using Nitrox.Model.Subnautica.Packets;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Intercepts bed entry to send a packet and register with SleepManager.
-/// Uses Prefix instead of Transpiler because we need to prevent the original method from
-/// starting the sleep animation - in multiplayer we wait for all players before sleeping.
+/// Sends sleep coordination packet when entering bed sleep mode.
+/// The bed animation packet is sent from Bed_OnHandClick_Patch.
+/// Prevents the black fade from starting until all players are ready to sleep.
 /// </summary>
 public sealed partial class Bed_EnterInUseMode_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bed t) => t.EnterInUseMode(default(Player)));
 
-    public static bool Prefix(Bed __instance, Player player)
+    public static void Prefix(Bed __instance)
     {
-        if (__instance.inUseMode != Bed.InUseMode.None)
-        {
-            return false;
-        }
-
-        player.FreezeStats();
-        player.cinematicModeActive = true;
-        MainCameraControl.main.viewModel.localRotation = UnityEngine.Quaternion.identity;
-        __instance.inUseMode = Bed.InUseMode.Sleeping;
-
+        // Send sleep coordination packet
         Resolve<IPacketSender>().Send(new BedEnter());
         Resolve<SleepManager>().EnterBed(__instance);
+    }
 
-        return false;
+    public static void Postfix()
+    {
+        // Stop the sleep screen that the game just started
+        // We'll start it later when all players are ready (in SleepManager.OnAllPlayersSleeping)
+        if (uGUI_PlayerSleep.main)
+        {
+            uGUI_PlayerSleep.main.StopSleepScreen();
+        }
     }
 }
+

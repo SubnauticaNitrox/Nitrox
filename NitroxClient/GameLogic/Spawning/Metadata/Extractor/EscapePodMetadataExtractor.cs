@@ -8,6 +8,11 @@ public class EscapePodMetadataExtractor : EntityMetadataExtractor<EscapePod, Esc
     public override EscapePodMetadata Extract(EscapePod entity)
     {
         Radio radio = entity.radioSpawner.spawnedObj.RequireComponent<Radio>();
-        return new EscapePodMetadata(entity.liveMixin.IsFullHealth(), radio.liveMixin.IsFullHealth());
+        return new EscapePodMetadata(
+            entity.liveMixin.IsFullHealth(), 
+            radio.liveMixin.IsFullHealth(),
+            entity.bottomHatchUsed,
+            entity.topHatchUsed
+        );
     }
 }

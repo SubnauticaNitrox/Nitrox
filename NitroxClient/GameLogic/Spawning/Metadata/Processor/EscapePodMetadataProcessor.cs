@@ -41,6 +41,29 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
     /// </summary>
     public static void ProcessInitialSyncMetadata(EscapePod pod, Radio radio, EscapePodMetadata metadata)
     {
+        // Sync hatch usage state
+        pod.bottomHatchUsed = metadata.BottomHatchUsed;
+        pod.topHatchUsed = metadata.TopHatchUsed;
+
+        // Manually activate/deactivate cinematic targets based on hatch usage
+        // We can't call Initialize() because it's private, so we replicate its logic
+        if (pod.TryGetComponent(out EscapePodFirstUseCinematicsController cinematicsController))
+        {
+            // Bottom hatch: if used, activate normal target and deactivate first-use target
+            if (cinematicsController.bottomCinematicTarget && cinematicsController.bottomFirstUseCinematicTarget)
+            {
+                cinematicsController.bottomCinematicTarget.gameObject.SetActive(metadata.BottomHatchUsed);
+                cinematicsController.bottomFirstUseCinematicTarget.gameObject.SetActive(!metadata.BottomHatchUsed);
+            }
+
+            // Top hatch: if used, activate normal target and deactivate first-use target
+            if (cinematicsController.topCinematicTarget && cinematicsController.topFirstUseCinematicTarget)
+            {
+                cinematicsController.topCinematicTarget.gameObject.SetActive(metadata.TopHatchUsed);
+                cinematicsController.topFirstUseCinematicTarget.gameObject.SetActive(!metadata.TopHatchUsed);
+            }
+        }
+
         if (metadata.PodRepaired)
         {
             pod.liveMixin.health = pod.liveMixin.maxHealth;
