@@ -1,3 +1,4 @@
+using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.GameLogic;
@@ -6,10 +7,11 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger) : IAuthPacketProcessor<EntityMetadataUpdate>
+internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, IOptions<SubnauticaServerOptions> options, ILogger<EntityMetadataUpdateProcessor> logger) : IAuthPacketProcessor<EntityMetadataUpdate>
 {
     private readonly PlayerManager playerManager = playerManager;
     private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<EntityMetadataUpdateProcessor> logger = logger;
 
     public async Task Process(AuthProcessorContext context, EntityMetadataUpdate packet)
@@ -44,6 +46,7 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager,
         return metadata switch
         {
             PlayerMetadata playerMetadata => ProcessPlayerMetadata(sendingPlayer, entity, playerMetadata),
+            PictureFrameMetadata => options.Value.PictureFrameSync != PictureFrameSyncMode.OFF,
 
             // Allow metadata updates from any player by default
             _ => true
