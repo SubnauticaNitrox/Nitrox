@@ -12,7 +12,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 public class PictureFrameMetadata : EntityMetadata
 {
     /// <summary>
-    ///     SHA-256 hex digest of the synced JPEG bytes. Null/empty means no picture is set.
+    /// SHA-256 hex digest of the synced JPEG bytes. Null/empty means no picture is set.
     /// </summary>
     [DataMember(Order = 1)]
     public string? ContentHash { get; }
