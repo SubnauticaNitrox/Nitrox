@@ -21,7 +21,7 @@ public class PictureFrameCache
     public PictureFrameCache(IPacketSender packetSender, LocalPlayer localPlayer)
     {
         this.packetSender = packetSender;
-        downloadBudget = new(() => (long)(localPlayer.PictureFrameSessionDownloadCapMbOverride ?? NitroxPrefs.PictureFrameSessionDownloadCapMb.Value) * 1024L * 1024L);
+        downloadBudget = new(() => SessionByteBudget.MbToBytes(localPlayer.PictureFrameSessionDownloadCapMbOverride ?? NitroxPrefs.PictureFrameSessionDownloadCapMb.Value));
     }
 
     public void Seed(string contentHash, Texture2D texture)
@@ -45,10 +45,16 @@ public class PictureFrameCache
             }
             return;
         }
-        if (!pendingRequests.TryAdd(contentHash, 0))
+        if (pendingRequests.ContainsKey(contentHash))
         {
             return;
         }
+        // Sizes are unknown until a response arrives, so we have to do one at a time to stop a burst blowing the budget
+        if (!pendingRequests.IsEmpty)
+        {
+            return;
+        }
+        pendingRequests.TryAdd(contentHash, 0);
         packetSender.Send(new PictureFrameDataRequest(frameId, contentHash));
     }
 

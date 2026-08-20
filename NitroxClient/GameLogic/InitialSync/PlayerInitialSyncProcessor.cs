@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.GameLogic.PictureFrames;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.Modals;
@@ -193,7 +194,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
             yield break;
         }
 
-        long capBytes = (long)NitroxPrefs.PictureFrameSessionDownloadCapMb.Value * 1024L * 1024L;
+        long capBytes = SessionByteBudget.MbToBytes(NitroxPrefs.PictureFrameSessionDownloadCapMb.Value);
         if (totalBytes <= capBytes)
         {
             yield break;
