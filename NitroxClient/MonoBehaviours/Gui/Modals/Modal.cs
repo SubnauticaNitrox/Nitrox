@@ -37,6 +37,8 @@ public abstract class Modal
 
     public string YesButtonText { get; init; }
     public string NoButtonText { get; init; }
+    public bool HasThirdButton { get; init; }
+    public string ThirdButtonText { get; init; }
 
     public bool FreezeGame { get; init; }
 
@@ -47,7 +49,7 @@ public abstract class Modal
     // Is useful for calling IngameMenu::OnDeselect() from a modal class (in Hide() for example)
     public bool IsAvoidableBypass = false;
 
-    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false, float transparency = 0.392f, float height = 195f)
+    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", bool hasThirdButton = false, string thirdButtonText = "", string modalText = "", bool isAvoidable = false, bool freezeGame = false, float transparency = 0.392f, float height = 195f)
     {
         Type type = GetType();
         if (Modals.ContainsKey(type))
@@ -59,6 +61,8 @@ public abstract class Modal
         YesButtonText = yesButtonText;
         HideNoButton = hideNoButton;
         NoButtonText = noButtonText;
+        HasThirdButton = hasThirdButton;
+        ThirdButtonText = thirdButtonText;
         ModalText = modalText;
         IsAvoidable = isAvoidable;
         FreezeGame = freezeGame;
@@ -157,15 +161,15 @@ public abstract class Modal
         // We need to reinitialize onClick to avoid keeping Persisted Events (which are set manually inside Unity's Editor)
         yesButton.onClick = new Button.ButtonClickedEvent();
         yesButton.onClick.AddListener(ClickYes);
-        buttonYesObject.GetComponentInChildren<TextMeshProUGUI>().text = YesButtonText;
+        SetButtonText(buttonYesObject, YesButtonText);
         RectTransform yesButtonTransform = buttonYesObject.GetComponent<RectTransform>();
-        yesButtonTransform.anchoredPosition = new Vector2(yesButtonTransform.anchoredPosition.x, 50f - Height);
 
 
         // TODO: fix yes and no button positions
         if (HideNoButton)
         {
             UnityEngine.Object.Destroy(buttonNoObject);
+            yesButtonTransform.anchoredPosition = new Vector2(0f, 50f - Height);
             buttonYesObject.transform.position = new Vector3(modalSubWindow.transform.position.x / 2, buttonYesObject.transform.position.y, buttonYesObject.transform.position.z); // Center Button
             return;
         }
@@ -175,14 +179,51 @@ public abstract class Modal
             Button noButton = buttonNoObject.GetComponent<Button>();
             noButton.onClick = new Button.ButtonClickedEvent();
             noButton.onClick.AddListener(ClickNo);
-            buttonNoObject.GetComponentInChildren<TextMeshProUGUI>().text = NoButtonText;
+            SetButtonText(buttonNoObject, NoButtonText);
             RectTransform noButtonTransform = buttonNoObject.GetComponent<RectTransform>();
-            noButtonTransform.anchoredPosition = new Vector2(noButtonTransform.anchoredPosition.x, 50f - Height);
+
+            if (HasThirdButton)
+            {
+                // Spread three buttons across the window instead of the native prefab's two-button layout.
+                yesButtonTransform.anchoredPosition = new Vector2(-220f, 50f - Height);
+                noButtonTransform.anchoredPosition = new Vector2(220f, 50f - Height);
+
+                GameObject buttonThirdObject = modalSubWindow.FindChild("ButtonThird");
+                if (!buttonThirdObject)
+                {
+                    buttonThirdObject = UnityEngine.Object.Instantiate(buttonNoObject, modalSubWindow.transform, false);
+                    buttonThirdObject.name = "ButtonThird";
+                }
+                Button thirdButton = buttonThirdObject.GetComponent<Button>();
+                thirdButton.onClick = new Button.ButtonClickedEvent();
+                thirdButton.onClick.AddListener(ClickThird);
+                SetButtonText(buttonThirdObject, ThirdButtonText);
+                buttonThirdObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 50f - Height);
+            }
+            else
+            {
+                yesButtonTransform.anchoredPosition = new Vector2(yesButtonTransform.anchoredPosition.x, 50f - Height);
+                noButtonTransform.anchoredPosition = new Vector2(noButtonTransform.anchoredPosition.x, 50f - Height);
+            }
         }
     }
 
     public virtual void ClickYes() { }
     public virtual void ClickNo() { }
+    public virtual void ClickThird() { }
+
+    /// <summary>
+    /// Button width is fixed but label length varies per translation, so we should shrink
+    /// </summary>
+    private static void SetButtonText(GameObject buttonObject, string text)
+    {
+        TextMeshProUGUI label = buttonObject.GetComponentInChildren<TextMeshProUGUI>();
+        float designFontSize = label.fontSize;
+        label.text = text;
+        label.enableAutoSizing = true;
+        label.fontSizeMax = designFontSize;
+        label.fontSizeMin = designFontSize * 0.5f;
+    }
 
     private IEnumerator ShowImplementation()
     {

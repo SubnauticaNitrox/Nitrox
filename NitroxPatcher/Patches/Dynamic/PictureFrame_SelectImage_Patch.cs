@@ -1,7 +1,6 @@
 using System.IO;
 using System.Reflection;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication;
@@ -29,7 +28,7 @@ public sealed partial class PictureFrame_SelectImage_Patch : NitroxPatch, IDynam
         }
 
         LocalPlayer localPlayer = Resolve<LocalPlayer>();
-        if (localPlayer.PictureFrameSync == PictureFrameSyncMode.OFF)
+        if (!localPlayer.PictureFrameSyncActive)
         {
             return true;
         }

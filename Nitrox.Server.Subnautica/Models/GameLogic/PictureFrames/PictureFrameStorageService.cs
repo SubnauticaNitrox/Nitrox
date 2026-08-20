@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using Nitrox.Model.Core;
 using Nitrox.Model.Server;
@@ -76,6 +77,19 @@ internal sealed class PictureFrameStorageService(IOptions<SubnauticaServerOption
         File.WriteAllBytes(path, AesGcmFileCipher.Encrypt(jpegBytes, keyProvider.GetOrCreateKey()));
     }
     
+    /// <summary>
+    /// PERSISTED is all on disk blobs, SESSION is a sum of all the uploaded blobs since the server started
+    /// </summary>
+    /// <returns>Total bytes of blobs</returns>
+    public long GetTotalBytes() => options.Value.PictureFrameSync switch
+    {
+        PictureFrameSyncMode.PERSISTED => Directory.Exists(startOptions.Value.GetServerPictureFramesPath())
+            ? new DirectoryInfo(startOptions.Value.GetServerPictureFramesPath()).EnumerateFiles().Sum(f => f.Length)
+            : 0,
+        PictureFrameSyncMode.SESSION => cache.Values.Sum(b => (long)b.Length),
+        _ => 0,
+    };
+
     public bool TryConsumeUploadToken(SessionId sessionId) => TryConsume(uploadRateLimits, sessionId, MaxUploadsPerWindow);
     
     public bool TryConsumeRequestToken(SessionId sessionId) => TryConsume(requestRateLimits, sessionId, MaxRequestsPerWindow);
