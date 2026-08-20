@@ -7,6 +7,7 @@ using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.GameLogic.PlayerAnimation;
+using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
@@ -41,6 +42,10 @@ public class LocalPlayer : ILocalNitroxPlayer
     public IntroCinematicMode IntroCinematicMode { get; set; }
     public bool KeepInventoryOnDeath { get; set; }
     public bool MarkDeathPointsWithBeacon { get; set; }
+    public PictureFrameSyncMode PictureFrameSync { get; set; }
+    public int PictureFrameMaxDimension { get; set; } = 3840;
+    public int PictureFrameMaxBytes { get; set; } = 4 * 1024 * 1024;
+    public int PictureFrameJpegQuality { get; set; } = 85;
 
     public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
     {
@@ -54,6 +59,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         IntroCinematicMode = IntroCinematicMode.NONE;
         KeepInventoryOnDeath = false;
         MarkDeathPointsWithBeacon = false;
+        PictureFrameSync = PictureFrameSyncMode.OFF;
     }
 
     public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
