@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Server;
@@ -39,6 +42,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => SetUsedItems(sync.UsedItems));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
         AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow, sync.MarkDeathPointsWithBeacon, sync.PictureFrameSync, sync.PictureFrameMaxDimension, sync.PictureFrameMaxBytes, sync.PictureFrameJpegQuality));
+        AddStep(sync => CheckPictureFrameBudget(sync.PictureFrameTotalBytes));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -180,5 +184,36 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
     private void SetPlayerMarkDeathPointsWithBeacon(bool markDeathPointsWithBeacon)
     {
         localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
+    }
+
+    private IEnumerator CheckPictureFrameBudget(long totalBytes)
+    {
+        if (!localPlayer.PictureFrameSyncActive)
+        {
+            yield break;
+        }
+
+        long capBytes = (long)NitroxPrefs.PictureFrameSessionDownloadCapMb.Value * 1024L * 1024L;
+        if (totalBytes <= capBytes)
+        {
+            yield break;
+        }
+
+        PictureFrameBudgetModal modal = Modal.Get<PictureFrameBudgetModal>();
+        string message = Language.main.Get("Nitrox_PictureFrameBudgetWarning")
+            .Replace("{TOTAL}", $"{totalBytes / 1024f / 1024f:F2}")
+            .Replace("{CAP}", $"{NitroxPrefs.PictureFrameSessionDownloadCapMb.Value:F2}");
+        modal.Show(message);
+        yield return new WaitUntil(() => modal.Choice.HasValue);
+
+        switch (modal.Choice)
+        {
+            case PictureFrameBudgetChoice.RaiseCapForSession:
+                localPlayer.PictureFrameSessionDownloadCapMbOverride = Mathf.CeilToInt(totalBytes / 1024f / 1024f);
+                break;
+            case PictureFrameBudgetChoice.Disable:
+                NitroxPrefs.PictureFrameSyncDisabled.Value = true;
+                break;
+        }
     }
 }

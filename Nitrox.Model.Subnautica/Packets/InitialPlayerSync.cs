@@ -45,6 +45,7 @@ namespace Nitrox.Model.Subnautica.Packets
         public int PictureFrameMaxDimension { get; }
         public int PictureFrameMaxBytes { get; }
         public int PictureFrameJpegQuality { get; }
+        public long PictureFrameTotalBytes { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -76,7 +77,8 @@ namespace Nitrox.Model.Subnautica.Packets
             PictureFrameSyncMode pictureFrameSync,
             int pictureFrameMaxDimension,
             int pictureFrameMaxBytes,
-            int pictureFrameJpegQuality)
+            int pictureFrameJpegQuality,
+            long pictureFrameTotalBytes)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -109,6 +111,7 @@ namespace Nitrox.Model.Subnautica.Packets
             PictureFrameMaxDimension = pictureFrameMaxDimension;
             PictureFrameMaxBytes = pictureFrameMaxBytes;
             PictureFrameJpegQuality = pictureFrameJpegQuality;
+            PictureFrameTotalBytes = pictureFrameTotalBytes;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -143,7 +146,8 @@ namespace Nitrox.Model.Subnautica.Packets
             PictureFrameSyncMode pictureFrameSync,
             int pictureFrameMaxDimension,
             int pictureFrameMaxBytes,
-            int pictureFrameJpegQuality)
+            int pictureFrameJpegQuality,
+            long pictureFrameTotalBytes)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -176,6 +180,7 @@ namespace Nitrox.Model.Subnautica.Packets
             PictureFrameMaxDimension = pictureFrameMaxDimension;
             PictureFrameMaxBytes = pictureFrameMaxBytes;
             PictureFrameJpegQuality = pictureFrameJpegQuality;
+            PictureFrameTotalBytes = pictureFrameTotalBytes;
         }
     }
 }

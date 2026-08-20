@@ -114,6 +114,51 @@ public class PictureFrameStorageServiceTest
     }
 
     [TestMethod]
+    public void GetTotalBytes_Session_SumsCache()
+    {
+        PictureFrameStorageService storage = CreateService(PictureFrameSyncMode.SESSION);
+        byte[] bytesA = [.. "picture A bytes"u8];
+        byte[] bytesB = [.. "picture B bytes, a bit longer"u8];
+
+        storage.Store(PictureFrameStorageService.ComputeHash(bytesA), bytesA);
+        storage.Store(PictureFrameStorageService.ComputeHash(bytesB), bytesB);
+
+        storage.GetTotalBytes().Should().Be(bytesA.Length + bytesB.Length);
+    }
+
+    [TestMethod]
+    public void GetTotalBytes_Persisted_SumsOnDiskFileSizes()
+    {
+        PictureFrameStorageService storage = CreateService(PictureFrameSyncMode.PERSISTED);
+        byte[] bytesA = [.. "picture A bytes"u8];
+        byte[] bytesB = [.. "picture B bytes, a bit longer"u8];
+        storage.Store(PictureFrameStorageService.ComputeHash(bytesA), bytesA);
+        storage.Store(PictureFrameStorageService.ComputeHash(bytesB), bytesB);
+
+        long expectedTotal = new DirectoryInfo(startOptions.GetServerPictureFramesPath()).EnumerateFiles().Sum(f => f.Length);
+
+        storage.GetTotalBytes().Should().Be(expectedTotal).And.BeGreaterThan(bytesA.Length + bytesB.Length, "the on-disk blobs include the AES-GCM nonce/tag overhead");
+    }
+
+    [TestMethod]
+    public void GetTotalBytes_Persisted_NoFilesYet_ReturnsZero()
+    {
+        PictureFrameStorageService storage = CreateService(PictureFrameSyncMode.PERSISTED);
+
+        storage.GetTotalBytes().Should().Be(0);
+    }
+
+    [TestMethod]
+    public void GetTotalBytes_Off_ReturnsZero()
+    {
+        PictureFrameStorageService storage = CreateService(PictureFrameSyncMode.OFF);
+        byte[] bytes = [.. "picture bytes"u8];
+        storage.Store(PictureFrameStorageService.ComputeHash(bytes), bytes);
+
+        storage.GetTotalBytes().Should().Be(0);
+    }
+
+    [TestMethod]
     public void RateLimiter_UploadTokens_AllowsUpToLimitThenRejects()
     {
         PictureFrameStorageService storage = CreateService(PictureFrameSyncMode.SESSION);

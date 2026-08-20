@@ -3,6 +3,7 @@ using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -43,9 +44,17 @@ public class LocalPlayer : ILocalNitroxPlayer
     public bool KeepInventoryOnDeath { get; set; }
     public bool MarkDeathPointsWithBeacon { get; set; }
     public PictureFrameSyncMode PictureFrameSync { get; set; }
+    /// <summary>
+    /// Check this, not <see cref="PictureFrameSync"/> directly as it also accounts for the local opt-out preference.
+    /// </summary>
+    public bool PictureFrameSyncActive => PictureFrameSync != PictureFrameSyncMode.OFF && !NitroxPrefs.PictureFrameSyncDisabled.Value;
     public int PictureFrameMaxDimension { get; set; } = 3840;
     public int PictureFrameMaxBytes { get; set; } = 4 * 1024 * 1024;
     public int PictureFrameJpegQuality { get; set; } = 85;
+    /// <summary>
+    /// Set from the join-time budget prompt. This is never persisted.
+    /// </summary>
+    public int? PictureFrameSessionDownloadCapMbOverride { get; set; }
 
     public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
     {
