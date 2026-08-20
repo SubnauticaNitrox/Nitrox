@@ -11,6 +11,7 @@ using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.GameLogic.PictureFrames;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
@@ -29,7 +30,8 @@ internal sealed class JoiningManager(
     EntityRegistry entityRegistry,
     SessionSettings sessionSettings,
     IOptions<SubnauticaServerOptions> options,
-    ILogger<JoiningManager> logger)
+    ILogger<JoiningManager> logger,
+    PictureFrameStorageService pictureFrameStorageService)
     : ISessionCleaner
 {
     private readonly IPacketSender packetSender = packetSender;
@@ -45,6 +47,7 @@ internal sealed class JoiningManager(
     private readonly EscapePodManager escapePodManager = escapePodManager;
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly SessionSettings sessionSettings = sessionSettings;
+    private readonly PictureFrameStorageService pictureFrameStorageService = pictureFrameStorageService;
 
     private readonly ThreadSafeQueue<SessionId> joinQueue = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
@@ -212,7 +215,8 @@ internal sealed class JoiningManager(
             options.Value.PictureFrameSync,
             options.Value.PictureFrameMaxDimension,
             options.Value.PictureFrameMaxBytes,
-            options.Value.PictureFrameJpegQuality
+            options.Value.PictureFrameJpegQuality,
+            pictureFrameStorageService.GetTotalBytes()
         );
 
         await packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);

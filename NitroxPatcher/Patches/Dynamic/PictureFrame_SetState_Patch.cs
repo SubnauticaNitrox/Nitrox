@@ -1,6 +1,5 @@
 using System.Reflection;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Server;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PictureFrames;
 using UnityEngine;
@@ -17,7 +16,7 @@ public sealed partial class PictureFrame_SetState_Patch : NitroxPatch, IDynamicP
 
     public static bool Prefix(PictureFrame __instance, PictureFrame.State newState)
     {
-        if (Resolve<LocalPlayer>().PictureFrameSync == PictureFrameSyncMode.OFF)
+        if (!Resolve<LocalPlayer>().PictureFrameSyncActive)
         {
             return true;
         }
