@@ -67,5 +67,17 @@ namespace NitroxClient.GameLogic.PictureFrames
 
             budget.HasBudget.Should().BeFalse();
         }
+
+        [TestMethod]
+        public void MbToBytes_SubOneMegabyte_DoesNotTruncateToZero()
+        {
+            SessionByteBudget.MbToBytes(0.256f).Should().Be(268435);
+        }
+
+        [TestMethod]
+        public void MbToBytes_WholeMegabytes_ConvertsExactly()
+        {
+            SessionByteBudget.MbToBytes(256f).Should().Be(256L * 1024 * 1024);
+        }
     }
 }
