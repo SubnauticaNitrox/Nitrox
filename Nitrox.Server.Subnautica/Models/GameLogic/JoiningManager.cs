@@ -208,7 +208,11 @@ internal sealed class JoiningManager(
             sessionSettings,
             player.InPrecursor,
             player.DisplaySurfaceWater,
-            options.Value.MarkDeathPointsWithBeacon
+            options.Value.MarkDeathPointsWithBeacon,
+            options.Value.PictureFrameSync,
+            options.Value.PictureFrameMaxDimension,
+            options.Value.PictureFrameMaxBytes,
+            options.Value.PictureFrameJpegQuality
         );
 
         await packetSender.SendPacketAsync(initialPlayerSync, player.SessionId);

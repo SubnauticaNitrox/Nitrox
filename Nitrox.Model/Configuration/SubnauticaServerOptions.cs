@@ -85,6 +85,21 @@ public sealed partial class SubnauticaServerOptions
     [PropertyDescription("Command to run following a successful world save (e.g. .exe, .bat, or PowerShell script). ")]
     public string PostSaveCommandPath { get; set; } = "";
 
+    [PropertyDescription("Controls whether picture frames sync between players. Without this, picture frames only ever show a player's own local screenshots. \nPossible values:", typeof(PictureFrameSyncMode))]
+    public PictureFrameSyncMode PictureFrameSync { get; set; } = PictureFrameSyncMode.SESSION;
+
+    [PropertyDescription("Maximum width/height in pixels a picture is resized to before it's synced.")]
+    [Range(256, 3840)]
+    public int PictureFrameMaxDimension { get; set; } = 3840;
+
+    [PropertyDescription("Maximum size in bytes of a picture after it has been re-encoded for syncing.")]
+    [Range(65536, 8_388_608)]
+    public int PictureFrameMaxBytes { get; set; } = 4 * 1024 * 1024;
+
+    [PropertyDescription("JPEG quality (1-100) used when re-encoding pictures for syncing.")]
+    [Range(1, 100)]
+    public int PictureFrameJpegQuality { get; set; } = 85;
+
     [OptionsValidator]
     public partial class Validator : IValidateOptions<SubnauticaServerOptions>;
 }
