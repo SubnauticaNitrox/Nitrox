@@ -11,6 +11,7 @@ public static class KeyBindingManager
     public static List<KeyBinding> KeyBindings =
     [
         new ChatKeyBindingAction(),
-        new DiscordFocusBindingAction()
+        new DiscordFocusBindingAction(),
+        new PingKeyBindingAction()
     ];
 }
