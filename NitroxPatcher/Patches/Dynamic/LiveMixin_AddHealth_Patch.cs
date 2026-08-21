@@ -91,8 +91,13 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
 
     private static void HandleGenericEntity(LiveMixin victim)
     {
-        // Let others know if we have a lock on this entity
-        if (!CanBroadcast || !victim.TryGetIdOrWarn(out NitroxId id) || !Resolve<SimulationOwnership>().HasAnyLockType(id))
+        if (!CanBroadcast || !victim.TryGetIdOrWarn(out NitroxId id))
+        {
+            return;
+        }
+        
+        //same vibe as LiveMixin_TakeDamage_Patch.BroadcastDefaultTookDamage
+        if (Resolve<LiveMixinManager>().IsWhitelistedUpdateType(victim) && !Resolve<SimulationOwnership>().HasAnyLockType(id))
         {
             return;
         }

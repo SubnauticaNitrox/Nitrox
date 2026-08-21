@@ -90,9 +90,16 @@ public class LiveMixinManager
         // We catch the exceptions here because we don't want IsRemoteHealthChanging to be stuck to true
         try
         {
-            if (difference < 0)
+            if (remoteHealth <= 0f)
             {
-                liveMixin.TakeDamage(difference, position, damageType);
+                // it seems that going through TakeDamage to reach 0 isn't reliable all the time
+                // so we can just call Kill() directly
+                liveMixin.Kill(damageType);
+            }
+            else if (difference < 0)
+            {
+                // TakeDamage expects a positive magnitude to subtract
+                liveMixin.TakeDamage(Math.Abs(difference), position, damageType);
             }
             else
             {
