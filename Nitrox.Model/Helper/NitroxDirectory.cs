@@ -300,11 +300,10 @@ public static class NitroxDirectory
             }
 
             string? xdgPath = Environment.GetEnvironmentVariable(GetXdgName(directory));
-            if (!string.IsNullOrWhiteSpace(xdgPath) && Path.IsPathRooted(xdgPath))
+            if (string.IsNullOrWhiteSpace(xdgPath) || !Path.IsPathRooted(xdgPath))
             {
-                return xdgPath;
+                xdgPath = GetXdgDefaultPath(directory);
             }
-            xdgPath = GetXdgDefaultPath(directory);
             xdgPath = Path.Combine([GetAsNitroxPath(xdgPath), ..folderNames]);
             Directory.CreateDirectory(xdgPath);
             return xdgPath;
