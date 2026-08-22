@@ -9,6 +9,7 @@ using Nitrox.Model.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.MultiplayerSession;
+using Nitrox.Model.Subnautica.Packets;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
@@ -21,18 +22,20 @@ public sealed class JoiningManager
     private readonly SubnauticaServerConfig serverConfig;
     private readonly World world;
     private readonly SessionSettings sessionSettings;
+    private readonly DiveReelNodeTracker diveReelNodeTracker;
 
     private readonly ThreadSafeQueue<(INitroxConnection, string)> joinQueue = new();
     private readonly Lock queueLocker = new(); // Necessary to avoid race conditions between JoinQueueLoop and AddToJoinQueue
     private bool queueActive;
     public Action? SyncFinishedCallback { get; private set; }
 
-    public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world, SessionSettings sessionSettings)
+    public JoiningManager(PlayerManager playerManager, SubnauticaServerConfig serverConfig, World world, SessionSettings sessionSettings, DiveReelNodeTracker diveReelNodeTracker)
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
         this.world = world;
         this.sessionSettings = sessionSettings;
+        this.diveReelNodeTracker = diveReelNodeTracker;
     }
 
     private async Task JoinQueueLoop()
@@ -190,6 +193,16 @@ public sealed class JoiningManager
 
         player.SendPacket(initialPlayerSync);
 
+        // Must stay after the InitialPlayerSync send above: the client can't usefully process DiveReel
+        // node positions before it knows who the other connected players are (InitialPlayerSync.OtherPlayers,
+        // consumed client-side by RemotePlayerInitialSyncProcessor) -- don't let a future refactor reorder these.
+        Dictionary<ushort, List<NitroxVector3>> otherPlayersNodes = diveReelNodeTracker.GetAllExcept(player.Id);
+        Log.Info($"SendInitialSync to {player.Name} ({player.Id}): tracker has nodes for {otherPlayersNodes.Count} other player(s) ({string.Join(", ", otherPlayersNodes.Select(kvp => $"{kvp.Key}:{kvp.Value.Count}"))})");
+        if (otherPlayersNodes.Count > 0)
+        {
+            player.SendPacket(new DiveReelNodesInitialSync(otherPlayersNodes));
+        }
+
         IEnumerable<PlayerContext> GetOtherPlayers(Player player)
         {
             return playerManager.GetConnectedPlayers().Where(p => p != player).Select(p => p.PlayerContext);
@@ -226,5 +239,16 @@ public sealed class JoiningManager
     {
         PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
         playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
+
+        // A rejoining player may already have tracked DiveReel nodes from before their earlier disconnect
+        // (the tracker is never cleared on disconnect). Already-connected clients cleared this player's
+        // markers on that disconnect and have no other path to get them back -- PlayerJoinedMultiplayerSession
+        // carries no DiveReel data -- so re-broadcast this player's own current entry to everyone else now.
+        Dictionary<ushort, List<NitroxVector3>> rejoiningPlayerNodes = diveReelNodeTracker.GetForPlayer(player.Id);
+        Log.Info($"BroadcastPlayerJoined for {player.Name} ({player.Id}): tracker has {(rejoiningPlayerNodes.TryGetValue(player.Id, out List<NitroxVector3> ownNodes) ? ownNodes.Count : 0)} of their own node(s) to re-broadcast to others");
+        if (rejoiningPlayerNodes.Count > 0)
+        {
+            playerManager.SendPacketToOtherPlayers(new DiveReelNodesInitialSync(rejoiningPlayerNodes), player);
+        }
     }
 }
