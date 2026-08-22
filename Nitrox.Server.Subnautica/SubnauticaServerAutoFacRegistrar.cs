@@ -46,6 +46,7 @@ namespace Nitrox.Server.Subnautica
                             .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
+            containerBuilder.RegisterType<DiveReelNodeTracker>().SingleInstance();
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
 
