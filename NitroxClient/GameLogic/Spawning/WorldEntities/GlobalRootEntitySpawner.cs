@@ -75,6 +75,23 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         {
             PlacedWorldEntitySpawner.AdditionalSpawningSteps(gameObject);
         }
+
+        // PipeSurfaceFloater (Floating Air Pump) is in SubnauticaMap.GLOBAL_ROOT_TECH_TYPES, so it always
+        // spawns through this generic path -- but "deployed" is a purely client-local runtime flag vanilla
+        // only ever sets via the original placer's own OnToolUseAnim() tool-use callback (PipeSurfaceFloater
+        // doesn't derive from PlaceTool, so the block above never covers it). PipeSurfaceFloater.GetProvidesOxygen()
+        // returns false unconditionally while !deployed, and the entire OxygenPipe chain rooted at this floater
+        // (OxygenPipe.GetProvidesOxygen() ultimately asks GetRoot().GetProvidesOxygen()) silently stops
+        // providing oxygen as a result -- for every client except the original placer's own still-running
+        // session, i.e. any reconnect, and even the original placer after this GameObject's cell unloads and
+        // reloads. deployed also gates WorldForces.handleGravity, so an undeployed floater drifts instead of
+        // staying anchored. Any GlobalRootEntity of this TechType reaching this spawner is, by construction
+        // (Items.cs.Dropped()), already placed -- so it's always correct to force this here.
+        if (gameObject.TryGetComponent(out PipeSurfaceFloater pipeSurfaceFloater))
+        {
+            pipeSurfaceFloater.deployed = true;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(pipeSurfaceFloater.rigidBody, true, false);
+        }
     }
 
     public static void SetupObjectInWaterPark(GameObject gameObject, LargeWorldEntity largeWorldEntity, WaterPark waterPark)
