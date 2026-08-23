@@ -239,14 +239,10 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
 
         bool skipSteam = ShouldSkipSteam(launchArguments);
-        if (NitroxUser.GamePlatform is Steam && Steam.GetProtonMisconfigurationWarning(gameInfo.SteamAppId, skipSteam) is { } protonWarning)
-        {
-            LauncherNotifier.Warning(protonWarning);
-        }
 
         ProcessEx game = NitroxUser.GamePlatform switch
         {
-            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, skipSteam, keyValueStore.GetUseBigPictureMode()),
+            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, skipSteam, keyValueStore.GetUseBigPictureMode(), LauncherNotifier.Warning),
             EpicGames => await EpicGames.StartGameAsync(gameExePath, launchArguments),
             HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
             MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),

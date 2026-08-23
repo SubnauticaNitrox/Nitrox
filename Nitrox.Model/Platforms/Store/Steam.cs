@@ -99,7 +99,8 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
+    /// <param name="onWarning">Invoked with a user facing message if a Proton misconfig is detected</param>
+    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode, Action<string>? onWarning = null)
     {
         bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
         try
@@ -125,17 +126,35 @@ public sealed class Steam : IGamePlatform
             await LaunchSteamBigPictureModeAsync();
         }
 
-        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
+        if (!skipSteam)
+        {
+            // Steam resolves Proton itself for applaunch, so we can only warn here
+            if (GetProtonMisconfigurationWarning(steamAppId) is { } warning)
+            {
+                Log.Warn(warning);
+                onWarning?.Invoke(warning);
+            }
+            return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
+        }
+
+        try
+        {
+            return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
+        }
+        catch (ProtonMisconfiguredException ex)
+        {
+            string warning = $"""Proton "{ex.ProtonVersion}" is not installed. Nitrox will try another installed version.""";
+            Log.Warn(warning);
+            onWarning?.Invoke(warning);
+            return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode, forceFallbackProton: true));
+        }
     }
 
     /// <summary>
     /// Checks if the proton version in the config.vdf on steam is actually installed on the system
     /// </summary>
-    /// <param name="willUseNitroxFallback">
-    /// When true we will attempt to use a fallback proton version in place of the misconfigured one
-    /// </param>
     /// <returns>A warning message if the configured tool is missing, otherwise null.</returns>
-    public static string? GetProtonMisconfigurationWarning(int steamAppId, bool willUseNitroxFallback)
+    private static string? GetProtonMisconfigurationWarning(int steamAppId)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -170,9 +189,7 @@ public sealed class Steam : IGamePlatform
             return null;
         }
 
-        string resolution = willUseNitroxFallback ? "Nitrox will try another installed version." : "The game may fail to start.";
-        Log.Warn($"Steam's configured compatibility tool \"{protonVersion}\" for Subnautica is not installed. Check Steam > Subnautica > Properties > Compatibility. {resolution}");
-        return $"Proton \"{protonVersion}\" is not installed. {resolution}";
+        return $"""Proton "{protonVersion}" is not installed. The game may fail to start. Check Steam > Subnautica > Properties > Compatibility.""";
     }
 
     public bool OwnsGame(string gameRootPath)
@@ -298,7 +315,7 @@ public sealed class Steam : IGamePlatform
         await Task.Delay(1000);
     }
 
-    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false)
+    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false, bool forceFallbackProton = false)
     {
         if (steamExe == null)
         {
@@ -373,13 +390,16 @@ public sealed class Steam : IGamePlatform
             }
             string steamRuntimePath = Path.Combine(steamRuntimeLibraryPath, "steamapps", "common", "SteamLinuxRuntime_sniper");
 
-            string? protonVersion = GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
-            string? protonPath = protonVersion != null ? steamLibraries.GetProtonPathByVersion(protonVersion) : null;
-            if (protonPath == null && protonVersion != null)
+            string? protonVersion = forceFallbackProton ? null : GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
+            string? protonPath;
+            if (protonVersion != null)
             {
-                Log.Warn($"""Configured compatibility tool "{protonVersion}" for Subnautica could not be found, falling back to another installed Proton version.""");
+                protonPath = steamLibraries.GetProtonPathByVersion(protonVersion) ?? throw new ProtonMisconfiguredException(protonVersion);
             }
-            protonPath ??= steamLibraries.GetBestFallbackProtonPath();
+            else
+            {
+                protonPath = steamLibraries.GetBestFallbackProtonPath();
+            }
             if (protonPath == null)
             {
                 throw new Exception("Steam Proton is unavailable. Please try change game properties in Steam to use the Proton compatibility layer.");
