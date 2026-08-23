@@ -55,7 +55,7 @@ public static partial class ServiceCollectionExtensions
 
     private static IServiceCollection AddHostedSingletonService<T>(this IServiceCollection services) where T : class, IHostedService => services.AddSingleton<T>().AddHostedService(provider => provider.GetRequiredService<T>());
 
-    [GenerateServiceRegistrations(AttributeFilter = typeof(ModalForViewModelAttribute), CustomHandler = nameof(AddDialog))]
+    [ScanForTypes(AttributeFilter = typeof(ModalForViewModelAttribute), Handler = nameof(AddDialog))]
     private static partial IServiceCollection AddDialogs(this IServiceCollection services);
 
     [GenerateServiceRegistrations(AssignableTo = typeof(RoutableViewBase<>), ExcludeAssignableTo = typeof(MainWindow), AsSelf = true)]
@@ -68,7 +68,7 @@ public static partial class ServiceCollectionExtensions
     [GenerateServiceRegistrations(AssignableTo = typeof(DelegatingHandler), AsSelf = true)]
     private static partial IServiceCollection AddHttpClientDelegatingHandlers(this IServiceCollection services);
 
-    [GenerateServiceRegistrations(AttributeFilter = typeof(HttpServiceAttribute), CustomHandler = nameof(InternalAddHttpClient))]
+    [ScanForTypes(AttributeFilter = typeof(HttpServiceAttribute), Handler = nameof(InternalAddHttpClient))]
     private static partial IServiceCollection AddHttpClients(this IServiceCollection services);
 
     private static IServiceCollection AddMagicOnionApis(this IServiceCollection services) =>
