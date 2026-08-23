@@ -128,6 +128,53 @@ public sealed class Steam : IGamePlatform
         return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
     }
 
+    /// <summary>
+    /// Checks if the proton version in the config.vdf on steam is actually installed on the system
+    /// </summary>
+    /// <param name="willUseNitroxFallback">
+    /// When true we will attempt to use a fallback proton version in place of the misconfigured one
+    /// </param>
+    /// <returns>A warning message if the configured tool is missing, otherwise null.</returns>
+    public static string? GetProtonMisconfigurationWarning(int steamAppId, bool willUseNitroxFallback)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return null;
+        }
+
+        string? steamPath = GetExeFile() is { } steamExe ? Path.GetDirectoryName(steamExe) : null;
+        if (steamPath == null)
+        {
+            return null;
+        }
+
+        string? protonVersion = GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
+        if (protonVersion == null)
+        {
+            return null;
+        }
+
+        SteamLibrariesVdf steamLibraries;
+        try
+        {
+            steamLibraries = SteamLibrariesVdf.Load(steamPath);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to read Steam library configuration while checking Proton setup");
+            return null;
+        }
+
+        if (steamLibraries.GetProtonPathByVersion(protonVersion) != null)
+        {
+            return null;
+        }
+
+        string resolution = willUseNitroxFallback ? "Nitrox will try another installed version." : "The game may fail to start.";
+        Log.Warn($"Steam's configured compatibility tool \"{protonVersion}\" for Subnautica is not installed. Check Steam > Subnautica > Properties > Compatibility. {resolution}");
+        return $"Proton \"{protonVersion}\" is not installed. {resolution}";
+    }
+
     public bool OwnsGame(string gameRootPath)
     {
         if (GetExeFile() == null)
@@ -328,6 +375,10 @@ public sealed class Steam : IGamePlatform
 
             string? protonVersion = GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
             string? protonPath = protonVersion != null ? steamLibraries.GetProtonPathByVersion(protonVersion) : null;
+            if (protonPath == null && protonVersion != null)
+            {
+                Log.Warn($"""Configured compatibility tool "{protonVersion}" for Subnautica could not be found, falling back to another installed Proton version.""");
+            }
             protonPath ??= steamLibraries.GetBestFallbackProtonPath();
             if (protonPath == null)
             {
@@ -352,40 +403,40 @@ public sealed class Steam : IGamePlatform
                              .Where(path => path != null)
                              .Distinct()
                              .Select(path => !path.Contains(':') ? path : throw new Exception($"Path '{path}' contains invalid character ':'")));
+    }
 
-        static string? GetProtonVersionOfSteamApp(string configVdfFile, string appId)
+    private static string? GetProtonVersionOfSteamApp(string configVdfFile, string appId)
+    {
+        try
         {
-            try
+            string fileContent = File.ReadAllText(configVdfFile);
+            Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
+
+            if (compatToolMatch.Success)
             {
-                string fileContent = File.ReadAllText(configVdfFile);
-                Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
+                string compatToolMapping = compatToolMatch.Groups[1].Value;
+                string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
+                Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
 
-                if (compatToolMatch.Success)
+                if (appIdMatch.Success)
                 {
-                    string compatToolMapping = compatToolMatch.Groups[1].Value;
-                    string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
-                    Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
-
-                    if (appIdMatch.Success)
-                    {
-                        return appIdMatch.Groups[1].Value;
-                    }
-
-                    const string DEFAULT_PATTERN = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
-                    Match defaultMatch = Regex.Match(compatToolMapping, DEFAULT_PATTERN);
-                    if (defaultMatch.Success)
-                    {
-                        return defaultMatch.Groups[1].Value;
-                    }
+                    return appIdMatch.Groups[1].Value;
                 }
 
-                return null;
+                const string DEFAULT_PATTERN = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
+                Match defaultMatch = Regex.Match(compatToolMapping, DEFAULT_PATTERN);
+                if (defaultMatch.Success)
+                {
+                    return defaultMatch.Groups[1].Value;
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                return null;
-            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+            return null;
         }
     }
 
