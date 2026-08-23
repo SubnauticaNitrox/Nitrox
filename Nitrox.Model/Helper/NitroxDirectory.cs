@@ -204,7 +204,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.CONFIG);
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.CONFIG);
             }
         }
 
@@ -216,7 +216,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.CACHE);
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.CACHE);
             }
         }
 
@@ -228,7 +228,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.DATA, "screenshots");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.DATA, "screenshots");
             }
         }
 
@@ -240,7 +240,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.STATE, "crashes");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.STATE, "crashes");
             }
         }
 
@@ -252,7 +252,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.STATE, "logs");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.STATE, "logs");
             }
         }
 
@@ -264,7 +264,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.DATA, "saves");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.DATA, "saves");
             }
         }
 
@@ -276,7 +276,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.DATA, "backups");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.DATA, "backups");
             }
         }
 
@@ -290,7 +290,7 @@ public static class NitroxDirectory
                 _ => NitroxDirectory.ConfigPath
             };
 
-        private string GetXdgPathIfNotWineOrUserGiven(XdgDirectory directory, params string[] folderNames)
+        private string GetXdgPathIfNotUserGiven(XdgDirectory directory, params string[] folderNames)
         {
             if (UserSpecifiedDataPath is { } userPath)
             {
@@ -300,11 +300,10 @@ public static class NitroxDirectory
             }
 
             string? xdgPath = Environment.GetEnvironmentVariable(GetXdgName(directory));
-            if (!string.IsNullOrWhiteSpace(xdgPath) && Path.IsPathRooted(xdgPath))
+            if (string.IsNullOrWhiteSpace(xdgPath) || !Path.IsPathRooted(xdgPath))
             {
-                return xdgPath;
+                xdgPath = GetXdgDefaultPath(directory);
             }
-            xdgPath = GetXdgDefaultPath(directory);
             xdgPath = Path.Combine([GetAsNitroxPath(xdgPath), ..folderNames]);
             Directory.CreateDirectory(xdgPath);
             return xdgPath;
