@@ -1,4 +1,4 @@
-﻿namespace Nitrox.Model.DataStructures.Unity
+namespace Nitrox.Model.DataStructures.Unity
 {
     [TestClass]
     public class NitroxTransformTest
@@ -12,7 +12,7 @@
         private static readonly NitroxTransform grandchild2 = new NitroxTransform(new NitroxVector3(3, 18, -5), NitroxQuaternion.FromEuler(-5, 15, 1), new NitroxVector3(10, 10, 10));
 
         [ClassInitialize]
-        public static void Setup(TestContext testContext)
+        public static void Setup(TestContext context)
         {
             child1.SetParent(root, false);
             child2.SetParent(root, false);
