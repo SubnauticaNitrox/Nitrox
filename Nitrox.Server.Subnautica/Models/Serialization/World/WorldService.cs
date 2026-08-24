@@ -23,14 +23,12 @@ internal class WorldService : IHostedService
     private readonly BatchEntitySpawner batchEntitySpawner;
     private readonly EntityRegistry entityRegistry;
     private readonly EscapePodManager escapePodManager;
-    private readonly ServerJsonSerializer jsonSerializer;
     private readonly ILogger<WorldService> logger;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly PdaManager pdaManager;
     private readonly PlayerManager playerManager;
 
     private readonly TaskCompletionSource<bool> hasFinishedLoadingTcs = new();
-    private readonly SubnauticaServerProtoBufSerializer protoBufSerializer;
     private readonly SaveService saveService;
     private readonly IOptions<ServerStartOptions> startOptions;
     private readonly StoryManager storyManager;
@@ -42,7 +40,6 @@ internal class WorldService : IHostedService
     private string FileEnding => Serializer?.FileEnding ?? "";
 
     public WorldService(
-        SubnauticaServerProtoBufSerializer protoBufSerializer,
         ServerJsonSerializer jsonSerializer,
         IOptions<SubnauticaServerOptions> options,
         IEnumerable<SaveDataUpgrade> upgrades,
@@ -59,8 +56,6 @@ internal class WorldService : IHostedService
         IOptions<ServerStartOptions> startOptions,
         ILogger<WorldService> logger)
     {
-        this.protoBufSerializer = protoBufSerializer;
-        this.jsonSerializer = jsonSerializer;
         this.options = options;
         this.upgrades = upgrades.ToArray();
         this.batchEntitySpawner = batchEntitySpawner;
@@ -76,7 +71,7 @@ internal class WorldService : IHostedService
         this.startOptions = startOptions;
         this.logger = logger;
 
-        UpdateSerializer(options.Value.SerializerMode);
+        Serializer = jsonSerializer;
     }
 
     public async Task<bool> SaveAsync(string saveDir, CancellationToken cancellationToken)
@@ -152,8 +147,6 @@ internal class WorldService : IHostedService
         Validate.NotNull(serverSerializer, "Serializer cannot be null");
         Serializer = serverSerializer;
     }
-
-    internal void UpdateSerializer(ServerSerializerMode mode) => Serializer = mode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer;
 
     internal bool Save(PersistedWorldData persistedData, string saveDir)
     {
@@ -434,30 +427,23 @@ internal class WorldService : IHostedService
             return;
         }
 
-        if (options.Value.SerializerMode == ServerSerializerMode.PROTOBUF)
+        try
         {
-            logger.ZLogInformation($"Can't upgrade while using ProtoBuf as serializer");
-        }
-        else
-        {
-            try
+            foreach (SaveDataUpgrade upgrade in upgrades)
             {
-                foreach (SaveDataUpgrade upgrade in upgrades)
+                if (upgrade.TargetVersion > saveFileVersion.Version)
                 {
-                    if (upgrade.TargetVersion > saveFileVersion.Version)
-                    {
-                        upgrade.UpgradeSaveFiles(saveDir, FileEnding);
-                    }
+                    upgrade.UpgradeSaveFiles(saveDir, FileEnding);
                 }
             }
-            catch (Exception ex)
-            {
-                logger.ZLogError(ex, $"Error while upgrading save file.");
-                return;
-            }
-
-            Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-            logger.ZLogInformation($"Save file was upgraded to {NitroxEnvironment.Version:@Version}");
         }
+        catch (Exception ex)
+        {
+            logger.ZLogError(ex, $"Error while upgrading save file.");
+            return;
+        }
+
+        Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
+        logger.ZLogInformation($"Save file was upgraded to {NitroxEnvironment.Version:@Version}");
     }
 }
