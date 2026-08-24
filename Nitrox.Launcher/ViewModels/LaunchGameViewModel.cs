@@ -238,11 +238,14 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
             launchArguments = $"{launchArguments} {DiscordConstants.ENABLE_ARG}";
         }
 
-        bool skipSteam = ShouldSkipSteam(launchArguments);
-
         ProcessEx game = NitroxUser.GamePlatform switch
         {
-            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, skipSteam, keyValueStore.GetUseBigPictureMode(), LauncherNotifier.Warning),
+            // TODO: Pass ILogger instead of "onWarning" Action<string>.
+            Steam => await Steam.StartGameAsync(gameExePath, launchArguments, gameInfo.SteamAppId, ShouldSkipSteam(launchArguments), keyValueStore.GetUseBigPictureMode(), message =>
+            {
+                Log.Warn(message);
+                LauncherNotifier.Warning(message);
+            }),
             EpicGames => await EpicGames.StartGameAsync(gameExePath, launchArguments),
             HeroicGames => await HeroicGames.StartGameAsync(gameInfo.EgsNamespace, launchArguments),
             MSStore => await MSStore.StartGameAsync(gameExePath, launchArguments),
