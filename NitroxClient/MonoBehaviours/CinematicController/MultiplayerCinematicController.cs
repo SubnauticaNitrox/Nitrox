@@ -17,6 +17,8 @@ public class MultiplayerCinematicController : MonoBehaviour
     private CinematicControllerPrefab controllerPrefab;
     private PlayerCinematicController playerController;
 
+    internal PlayerCinematicController PlayerController => playerController;
+
     public void CallStartCinematicMode(RemotePlayer player)
     {
         GetController(player).StartCinematicMode(player);

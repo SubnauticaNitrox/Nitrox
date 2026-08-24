@@ -21,7 +21,7 @@ public sealed partial class UseableDiveHatch_OnHandClick_Patch : NitroxPatch, ID
         }
 
         // Only intercept cinematic interactions (when cinematicController is set)
-        PlayerCinematicController cinematicController = null;
+        PlayerCinematicController cinematicController;
         bool isInside = Player.main.IsInsideWalkable() && Player.main.currentWaterPark == null;
         
         if (isInside && !__instance.enterOnly)
@@ -52,7 +52,7 @@ public sealed partial class UseableDiveHatch_OnHandClick_Patch : NitroxPatch, ID
         }
 
         // Request exclusive lock to prevent multiple players from using the same hatch simultaneously
-        HatchInteraction context = new(__instance, hand, cinematicController, entity);
+        HatchInteraction context = new(__instance, hand, cinematicController);
         LockRequest<HatchInteraction> lockRequest = new(entity.Id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
         Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
 
@@ -70,15 +70,14 @@ public sealed partial class UseableDiveHatch_OnHandClick_Patch : NitroxPatch, ID
         else
         {
             context.Hatch.gameObject.AddComponent<DenyOwnershipHand>();
-            ErrorMessage.AddMessage("Another player is using this");
+            ErrorMessage.AddMessage(Language.main.Get("Nitrox_DenyOwnershipHand"));
         }
     }
 
-    private readonly struct HatchInteraction(UseableDiveHatch hatch, GUIHand hand, PlayerCinematicController controller, NitroxEntity entity) : LockRequestContext
+    private readonly struct HatchInteraction(UseableDiveHatch hatch, GUIHand hand, PlayerCinematicController controller) : LockRequestContext
     {
         public UseableDiveHatch Hatch { get; } = hatch;
         public GUIHand Hand { get; } = hand;
         public PlayerCinematicController Controller { get; } = controller;
-        public NitroxEntity Entity { get; } = entity;
     }
 }

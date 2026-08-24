@@ -25,18 +25,13 @@ public sealed partial class PlayerCinematicController_OnPlayerCinematicModeEnd_P
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            return;
-        }
-
-        // Skip beds - they use custom bed animation packets instead of cinematic packets
-        if (entity.gameObject.GetComponent<Bed>())
-        {
+            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
             return;
         }
 
         int identifier = __instance.gameObject.GetHierarchyPath(entity.gameObject).GetHashCode();
         
         Resolve<PlayerCinematics>().EndCinematicMode(Resolve<LocalPlayer>().SessionId.Value, entity.Id, identifier, __instance.playerViewAnimationName);
-        Resolve<SimulationOwnership>().RequestSimulationLock(entity.Id, SimulationLockType.TRANSIENT);
+        Resolve<SimulationOwnership>().RequestSimulationLock(BedLockId.Resolve(entity, __instance), SimulationLockType.TRANSIENT);
     }
 }

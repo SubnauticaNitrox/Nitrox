@@ -8,8 +8,6 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 internal sealed class BenchChangedProcessor(PlayerManager remotePlayerManager) : IClientPacketProcessor<BenchChanged>
 {
-    private readonly PlayerManager remotePlayerManager = remotePlayerManager;
-
     public Task Process(ClientProcessorContext context, BenchChanged benchChanged)
     {
         if (!remotePlayerManager.TryFind(benchChanged.SessionId, out RemotePlayer remotePlayer))
@@ -43,10 +41,14 @@ internal sealed class BenchChangedProcessor(PlayerManager remotePlayerManager) :
 
         bool isCinematicActive = benchChanged.ChangeState != BenchChanged.BenchChangeState.UNSET;
 
-        // Set InCinematic flag to prevent movement packets from overriding animation state
-        remotePlayer.InCinematic = isCinematicActive;
-        // Disable velocity-based animations during cinematics to prevent interference
-        remotePlayer.AnimationController.UpdatePlayerAnimations = !isCinematicActive;
+        if (isCinematicActive)
+        {
+            remotePlayer.SetInCinematic(benchChanged.BenchId);
+        }
+        else
+        {
+            remotePlayer.ClearInCinematic();
+        }
         remotePlayer.AnimationController["cinematics_enabled"] = isCinematicActive;
         remotePlayer.AnimationController[sitAnimation] = benchChanged.ChangeState == BenchChanged.BenchChangeState.SITTING_DOWN;
         remotePlayer.AnimationController[standAnimation] = benchChanged.ChangeState == BenchChanged.BenchChangeState.STANDING_UP;

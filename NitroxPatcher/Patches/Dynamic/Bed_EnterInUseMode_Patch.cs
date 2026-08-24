@@ -7,7 +7,6 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// Sends sleep coordination packet when entering bed sleep mode.
-/// The bed animation packet is sent from Bed_OnHandClick_Patch.
 /// Prevents the black fade from starting until all players are ready to sleep.
 /// </summary>
 public sealed partial class Bed_EnterInUseMode_Patch : NitroxPatch, IDynamicPatch

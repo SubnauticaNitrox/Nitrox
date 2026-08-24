@@ -1,3 +1,4 @@
+using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using UnityEngine;
@@ -39,11 +40,12 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
     /// <summary>
     /// Applies repaired state without animations and minimal audio playback
     /// </summary>
-    public static void ProcessInitialSyncMetadata(EscapePod pod, Radio radio, EscapePodMetadata metadata)
+    public static void ProcessInitialSyncMetadata(EscapePod pod, Radio radio, EscapePodMetadata metadata, SessionId localSessionId)
     {
-        // Sync hatch usage state
-        pod.bottomHatchUsed = metadata.BottomHatchUsed;
-        pod.topHatchUsed = metadata.TopHatchUsed;
+        bool bottomHatchUsedByLocalPlayer = metadata.PlayersWithBottomHatchUsed.Contains(localSessionId);
+        bool topHatchUsedByLocalPlayer = metadata.PlayersWithTopHatchUsed.Contains(localSessionId);
+        pod.bottomHatchUsed = bottomHatchUsedByLocalPlayer;
+        pod.topHatchUsed = topHatchUsedByLocalPlayer;
 
         // Manually activate/deactivate cinematic targets based on hatch usage
         // We can't call Initialize() because it's private, so we replicate its logic
@@ -52,15 +54,15 @@ public class EscapePodMetadataProcessor : EntityMetadataProcessor<EscapePodMetad
             // Bottom hatch: if used, activate normal target and deactivate first-use target
             if (cinematicsController.bottomCinematicTarget && cinematicsController.bottomFirstUseCinematicTarget)
             {
-                cinematicsController.bottomCinematicTarget.gameObject.SetActive(metadata.BottomHatchUsed);
-                cinematicsController.bottomFirstUseCinematicTarget.gameObject.SetActive(!metadata.BottomHatchUsed);
+                cinematicsController.bottomCinematicTarget.gameObject.SetActive(bottomHatchUsedByLocalPlayer);
+                cinematicsController.bottomFirstUseCinematicTarget.gameObject.SetActive(!bottomHatchUsedByLocalPlayer);
             }
 
             // Top hatch: if used, activate normal target and deactivate first-use target
             if (cinematicsController.topCinematicTarget && cinematicsController.topFirstUseCinematicTarget)
             {
-                cinematicsController.topCinematicTarget.gameObject.SetActive(metadata.TopHatchUsed);
-                cinematicsController.topFirstUseCinematicTarget.gameObject.SetActive(!metadata.TopHatchUsed);
+                cinematicsController.topCinematicTarget.gameObject.SetActive(topHatchUsedByLocalPlayer);
+                cinematicsController.topFirstUseCinematicTarget.gameObject.SetActive(!topHatchUsedByLocalPlayer);
             }
         }
 

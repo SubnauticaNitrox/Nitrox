@@ -5,7 +5,6 @@ using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.BedSync;
 using NitroxClient.MonoBehaviours.CinematicController;
 using UnityEngine;
 
@@ -23,43 +22,6 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             return Task.CompletedTask;
         }
 
-        // Check if this is a bed - beds need special handling
-        if (entity.TryGetComponent(out RemoteBedController bedController))
-        {
-            if (!playerManager.TryFind(packet.SessionId, out RemotePlayer bedRemotePlayer))
-            {
-                return Task.CompletedTask;
-            }
-
-            // Defensive check for remote player initialization
-            if (!bedRemotePlayer.Body || !bedRemotePlayer.Body.activeInHierarchy)
-            {
-                return Task.CompletedTask;
-            }
-
-            if (packet.StartPlaying)
-            {
-                bedRemotePlayer.InCinematic = true;
-                if (bedRemotePlayer.AnimationController)
-                {
-                    bedRemotePlayer.AnimationController.UpdatePlayerAnimations = false;
-                }
-                bedController.StartBedAnimation(bedRemotePlayer, packet.Key);
-            }
-            else
-            {
-                bedController.EndBedAnimation(bedRemotePlayer, packet.Key);
-                bedRemotePlayer.InCinematic = false;
-                if (bedRemotePlayer.AnimationController)
-                {
-                    bedRemotePlayer.AnimationController.UpdatePlayerAnimations = true;
-                }
-            }
-
-            return Task.CompletedTask;
-        }
-
-        // Standard cinematic handling for non-bed objects
         if (!entity.TryGetComponent(out MultiplayerCinematicReference reference))
         {
             return Task.CompletedTask;
@@ -76,6 +38,15 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             return Task.CompletedTask;
         }
 
+        if (entity.TryGetComponent(out Bed bed))
+        {
+            ProcessBed(bed, reference, remotePlayer, packet);
+            return Task.CompletedTask;
+        }
+
+        // Without this the remote player's position moves but their pose never leaves the locomotion blend tree (looks like floating).
+        remotePlayer.AnimationController["cinematics_enabled"] = packet.StartPlaying;
+
         if (packet.StartPlaying)
         {
             // Apply animation parameters before starting cinematic
@@ -83,18 +54,53 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
             {
                 ApplyAnimationParameters(reference, packet.Key, packet.ControllerNameHash, remotePlayer, packet.AnimationParameters);
             }
-            
-            remotePlayer.InCinematic = true;
-            remotePlayer.AnimationController.UpdatePlayerAnimations = false;
+
+            remotePlayer.SetInCinematic(packet.ControllerID);
             reference.CallStartCinematicMode(packet.Key, packet.ControllerNameHash, remotePlayer);
         }
         else
         {
             reference.CallCinematicModeEnd(packet.Key, packet.ControllerNameHash, remotePlayer);
-            remotePlayer.InCinematic = false;
-            remotePlayer.AnimationController.UpdatePlayerAnimations = true;
+            remotePlayer.ClearInCinematic();
         }
         return Task.CompletedTask;
+    }
+
+    // Bed's rig is shared by both sides, so the generic path would mean multiple occupants would mess up each other's animator state.
+    private static void ProcessBed(Bed bed, MultiplayerCinematicReference reference, RemotePlayer remotePlayer, PlayerCinematicControllerCall packet)
+    {
+        if (!packet.StartPlaying && !packet.Key.StartsWith("bed_up"))
+        {
+            return;
+        }
+
+        remotePlayer.AnimationController["cinematics_enabled"] = packet.StartPlaying;
+
+        if (!packet.StartPlaying)
+        {
+            remotePlayer.AnimationController[packet.Key] = false;
+            if (bed.gameObject.TryGetComponent(out BedRemotePositioner positioner))
+            {
+                positioner.End(remotePlayer);
+            }
+            remotePlayer.ClearInCinematic();
+            return;
+        }
+
+        if (!bed.gameObject.TryGetComponent(out NitroxEntity bedEntity) ||
+            !TryGetCinematicController(reference, packet.Key, packet.ControllerNameHash, out PlayerCinematicController controller))
+        {
+            return;
+        }
+
+        if (packet.Key.StartsWith("bed_up"))
+        {
+            remotePlayer.AnimationController[packet.Key.Replace("bed_up", "bed_down")] = false;
+        }
+        remotePlayer.AnimationController[packet.Key] = true;
+
+        remotePlayer.SetInCinematic(BedLockId.Resolve(bedEntity, controller));
+        bed.gameObject.EnsureComponent<BedRemotePositioner>().Begin(remotePlayer, controller);
     }
 
     /// <summary>
@@ -133,34 +139,9 @@ internal sealed class PlayerCinematicControllerCallProcessor(PlayerManager playe
         }
     }
 
-    /// <summary>
-    /// Gets the PlayerCinematicController from the MultiplayerCinematicReference using reflection.
-    /// </summary>
     private static bool TryGetCinematicController(MultiplayerCinematicReference reference, string key, int controllerNameHash, out PlayerCinematicController cinematicController)
     {
-        cinematicController = null;
-
-        // Access private controllerByKey field
-        var controllerByKeyField = typeof(MultiplayerCinematicReference).GetField("controllerByKey", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (controllerByKeyField == null)
-        {
-            return false;
-        }
-
-        var controllerByKey = controllerByKeyField.GetValue(reference) as Dictionary<string, Dictionary<int, MultiplayerCinematicController>>;
-        if (controllerByKey == null || !controllerByKey.TryGetValue(key, out var controllers) || !controllers.TryGetValue(controllerNameHash, out var multiplayerController))
-        {
-            return false;
-        }
-
-        // Access private playerController field
-        var playerControllerField = typeof(MultiplayerCinematicController).GetField("playerController", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (playerControllerField == null)
-        {
-            return false;
-        }
-
-        cinematicController = playerControllerField.GetValue(multiplayerController) as PlayerCinematicController;
+        cinematicController = reference.TryGetController(key, controllerNameHash, out MultiplayerCinematicController multiplayerController) ? multiplayerController.PlayerController : null;
         return cinematicController != null;
     }
 }

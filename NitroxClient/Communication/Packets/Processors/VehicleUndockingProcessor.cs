@@ -51,7 +51,7 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
             // It can happen that the player turns in circles around himself in the vehicle. This stops it.
             player.RigidBody.angularVelocity = Vector3.zero;
             // Set InCinematic to prevent movement packets from clearing vehicle state during undocking
-            player.InCinematic = true;
+            player.SetInCinematic(packet.VehicleId);
             // Set enterAnimation to false to prevent the enter animation from playing when player_in is set
             // Then set player_in to true so that when FinishVehicleUndocking calls SetVehicle,
             // it won't trigger the enter animation (since player_in is already true)
@@ -81,7 +81,7 @@ internal sealed class VehicleUndockingProcessor(Vehicles vehicles, PlayerManager
         if (remotePlayerManager.TryFind(packet.SessionId, out RemotePlayer player))
         {
             // Clear InCinematic flag now that undocking is complete
-            player.InCinematic = false;
+            player.ClearInCinematic();
             // Sometimes the player is not set accordingly which stretches the player's model instead of putting them in place
             // after undocking. This fixes it (the player rigid body seems to not be set right sometimes)
             player.SetSubRoot(null);

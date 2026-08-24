@@ -56,6 +56,13 @@ public class MultiplayerCinematicReference : MonoBehaviour
         controller.CallCinematicModeEnd(player);
     }
 
+    internal bool TryGetController(string key, int identifier, out MultiplayerCinematicController controller)
+    {
+        controller = null;
+        return controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers) &&
+               controllers.TryGetValue(identifier, out controller);
+    }
+
     private static int GetCinematicControllerIdentifier(GameObject controller, GameObject reference) => controller.gameObject.GetHierarchyPath(reference).GetHashCode();
 
     public void AddController(PlayerCinematicController playerController)

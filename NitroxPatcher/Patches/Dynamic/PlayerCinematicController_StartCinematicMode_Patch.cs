@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Reflection;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.MonoBehaviours.Gui.HUD;
-using NitroxClient.Unity.Helper;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Helper;
 using Story;
 using UnityEngine;
 
@@ -42,20 +39,16 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
             return true;
         }
 
-        // Skip beds - they use custom bed animation packets instead of cinematic packets
-        if (__instance.GetComponentInParent<Bed>())
-        {
-            return true;
-        }
-
         // Get or find the NitroxEntity from the cinematic controller's parent hierarchy
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
             return true;
         }
 
+        NitroxId lockId = BedLockId.Resolve(entity, __instance);
+
         // Check if we already have the lock
-        if (Resolve<SimulationOwnership>().HasExclusiveLock(entity.Id))
+        if (Resolve<SimulationOwnership>().HasExclusiveLock(lockId))
         {
             multiplayerCinematicController.CallAllCinematicModeEnd();
             int identifier = __instance.gameObject.GetHierarchyPath(entity.gameObject).GetHashCode();
@@ -66,7 +59,7 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
 
         // Request exclusive lock to prevent multiple players from using the same cinematic simultaneously
         CinematicInteraction context = new(__instance, entity, multiplayerCinematicController);
-        LockRequest<CinematicInteraction> lockRequest = new(entity.Id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+        LockRequest<CinematicInteraction> lockRequest = new(lockId, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
         Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
 
         return false;
@@ -84,12 +77,12 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
             context.Controller.StartCinematicMode(Player.main);
             skipPrefix = false;
             
-            Resolve<PlayerCinematics>().StartCinematicMode(Resolve<LocalPlayer>().SessionId.Value, id, identifier, context.Controller.playerViewAnimationName, animationParameters);
+            Resolve<PlayerCinematics>().StartCinematicMode(Resolve<LocalPlayer>().SessionId.Value, context.Entity.Id, identifier, context.Controller.playerViewAnimationName, animationParameters);
         }
         else
         {
             context.Controller.gameObject.AddComponent<DenyOwnershipHand>();
-            ErrorMessage.AddMessage("Another player is using this");
+            ErrorMessage.AddMessage(Language.main.Get("Nitrox_DenyOwnershipHand"));
         }
     }
 
@@ -102,21 +95,18 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
         Dictionary<string, bool> parameters = new();
 
         // Gun terminal: needs firstUse and cured parameters for correct animation selection
-        if (cinematicController.playerViewAnimationName == "precursor_deactivate_gun")
+        if (cinematicController.playerViewAnimationName == "precursor_deactivate_gun" &&
+            TryFindTerminalComponent(entityRoot, cinematicController, out PrecursorDisableGunTerminal terminal))
         {
-            PrecursorDisableGunTerminal terminal = FindTerminalComponent(entityRoot, cinematicController);
-            if (terminal)
-            {
-                bool playerCured = StoryGoalManager.main != null && 
-                                   terminal.onPlayerCuredGoal != null && 
-                                   StoryGoalManager.main.IsGoalComplete(terminal.onPlayerCuredGoal.key);
+            bool playerCured = StoryGoalManager.main != null &&
+                               terminal.onPlayerCuredGoal != null &&
+                               StoryGoalManager.main.IsGoalComplete(terminal.onPlayerCuredGoal.key);
 
-                // Terminal animator parameters
-                parameters["first_use"] = terminal.firstUse;
-                parameters["cured"] = playerCured;
-                // Player animator parameters
-                parameters["using_tool_first"] = terminal.firstUse;
-            }
+            // Terminal animator parameters
+            parameters["first_use"] = terminal.firstUse;
+            parameters["cured"] = playerCured;
+            // Player animator parameters
+            parameters["using_tool_first"] = terminal.firstUse;
         }
 
         return parameters;
@@ -125,22 +115,23 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
     /// <summary>
     /// Finds the PrecursorDisableGunTerminal component using multiple search strategies.
     /// </summary>
-    private static PrecursorDisableGunTerminal FindTerminalComponent(GameObject entityRoot, PlayerCinematicController cinematicController)
+    private static bool TryFindTerminalComponent(GameObject entityRoot, PlayerCinematicController cinematicController, out PrecursorDisableGunTerminal terminal)
     {
-        // Try entity root first
-        PrecursorDisableGunTerminal terminal = entityRoot.GetComponent<PrecursorDisableGunTerminal>();
-        if (terminal) return terminal;
-
-        // Try children of entity root
-        terminal = entityRoot.GetComponentInChildren<PrecursorDisableGunTerminal>();
-        if (terminal) return terminal;
-
-        // Try parent hierarchy from controller
-        terminal = cinematicController.GetComponentInParent<PrecursorDisableGunTerminal>();
-        if (terminal) return terminal;
-
-        Log.Warn($"Could not find PrecursorDisableGunTerminal component for gun terminal cinematic");
-        return null;
+        // Try entity root first, then its children, then the controller's parent
+        terminal = entityRoot.GetComponent<PrecursorDisableGunTerminal>();
+        if (!terminal)
+        {
+            terminal = entityRoot.GetComponentInChildren<PrecursorDisableGunTerminal>();
+        }
+        if (!terminal)
+        {
+            terminal = cinematicController.GetComponentInParent<PrecursorDisableGunTerminal>();
+        }
+        if (!terminal)
+        {
+            Log.Warn("Could not find PrecursorDisableGunTerminal component for gun terminal cinematic");
+        }
+        return terminal;
     }
 
     private readonly struct CinematicInteraction(PlayerCinematicController controller, NitroxEntity entity, MultiplayerCinematicController multiplayerController) : LockRequestContext

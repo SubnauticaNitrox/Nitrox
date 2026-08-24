@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -56,11 +57,21 @@ public class RemotePlayer : INitroxPlayer
     public InfectedMixin InfectedMixin { get; private set; }
     public LiveMixin LiveMixin { get; private set; }
 
-    /// <summary>
-    /// When true, movement packets should not override <see cref="AnimationController.UpdatePlayerAnimations"/>.
-    /// This prevents race conditions where movement packets arrive during cinematic animations (e.g., sitting on a bench).
-    /// </summary>
-    public bool InCinematic { get; set; }
+    public NitroxId? InCinematicEntityId { get; private set; }
+
+    public bool InCinematic => InCinematicEntityId != null;
+
+    public void SetInCinematic(NitroxId entityId)
+    {
+        InCinematicEntityId = entityId;
+        AnimationController.UpdatePlayerAnimations = false;
+    }
+
+    public void ClearInCinematic()
+    {
+        InCinematicEntityId = null;
+        AnimationController.UpdatePlayerAnimations = true;
+    }
 
     public readonly Event<RemotePlayer> PlayerDeathEvent = new();
 
@@ -162,7 +173,6 @@ public class RemotePlayer : INitroxPlayer
         // Skip position updates during cinematics - the cinematic controller handles positioning
         if (InCinematic)
         {
-            Log.Debug($"[Movement] Skipping position update for {PlayerName} - InCinematic: true");
             return;
         }
 
@@ -376,8 +386,7 @@ public class RemotePlayer : INitroxPlayer
         SetPilotingChair(null);
         SetVehicle(null);
         SetSubRoot(null);
-        InCinematic = false;
-        AnimationController.UpdatePlayerAnimations = true;
+        ClearInCinematic();
         AnimationController.Reset();
         ArmsController.SetWorldIKTarget(null, null);
     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.BedSync;
 using NitroxClient.MonoBehaviours.Overrides;
 using Nitrox.Model.DataStructures;
 using UnityEngine;
@@ -29,12 +28,6 @@ public static class BuildingPostSpawner
             Log.InGame(Language.main.Get("Nitrox_ScannerRoomWarn"));
             return null;
         }
-        else if (gameObject.TryGetComponent(out Bed bed))
-        {
-            SetupBed(bed.gameObject);
-            return null;
-        }
-
         return null;
     }
 
@@ -113,20 +106,5 @@ public static class BuildingPostSpawner
         NitroxId planterId = waterParkId.Increment();
 
         NitroxEntity.SetNewId(waterPark.planter.gameObject, planterId);
-    }
-
-    /// <summary>
-    /// Adds RemoteBedController component to beds to enable animation sync for remote players.
-    /// Beds use a separate animator from the player, so they need custom handling.
-    /// </summary>
-    public static void SetupBed(GameObject bedObject)
-    {
-        if (bedObject.GetComponent<RemoteBedController>())
-        {
-            return; // Already has the component
-        }
-
-        bedObject.AddComponent<RemoteBedController>();
-        Log.Debug($"[{nameof(BuildingPostSpawner)}] Added RemoteBedController to bed {bedObject.name}");
     }
 }

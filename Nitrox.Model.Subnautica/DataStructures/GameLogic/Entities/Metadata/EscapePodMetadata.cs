@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using Nitrox.Model.Core;
 
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 
@@ -15,10 +17,10 @@ public class EscapePodMetadata : EntityMetadata
     public bool RadioRepaired { get; }
 
     [DataMember(Order = 3)]
-    public bool BottomHatchUsed { get; }
+    public List<SessionId> PlayersWithBottomHatchUsed { get; } = [];
 
     [DataMember(Order = 4)]
-    public bool TopHatchUsed { get; }
+    public List<SessionId> PlayersWithTopHatchUsed { get; } = [];
 
     [IgnoreConstructor]
     protected EscapePodMetadata()
@@ -26,16 +28,16 @@ public class EscapePodMetadata : EntityMetadata
         //Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public EscapePodMetadata(bool podRepaired, bool radioRepaired, bool bottomHatchUsed, bool topHatchUsed)
+    public EscapePodMetadata(bool podRepaired, bool radioRepaired, List<SessionId> playersWithBottomHatchUsed, List<SessionId> playersWithTopHatchUsed)
     {
         PodRepaired = podRepaired;
         RadioRepaired = radioRepaired;
-        BottomHatchUsed = bottomHatchUsed;
-        TopHatchUsed = topHatchUsed;
+        PlayersWithBottomHatchUsed = playersWithBottomHatchUsed;
+        PlayersWithTopHatchUsed = playersWithTopHatchUsed;
     }
 
     public override string ToString()
     {
-        return $"[{nameof(EscapePodMetadata)} - PodRepaired: {PodRepaired}, RadioRepaired: {RadioRepaired}, BottomHatchUsed: {BottomHatchUsed}, TopHatchUsed: {TopHatchUsed}]";
+        return $"[{nameof(EscapePodMetadata)} - PodRepaired: {PodRepaired}, RadioRepaired: {RadioRepaired}, PlayersWithBottomHatchUsed: {PlayersWithBottomHatchUsed.Count}, PlayersWithTopHatchUsed: {PlayersWithTopHatchUsed.Count}]";
     }
 }

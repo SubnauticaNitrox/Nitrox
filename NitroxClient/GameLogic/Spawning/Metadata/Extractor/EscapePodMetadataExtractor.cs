@@ -3,16 +3,16 @@ using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class EscapePodMetadataExtractor : EntityMetadataExtractor<EscapePod, EscapePodMetadata>
+public class EscapePodMetadataExtractor(LocalPlayer localPlayer) : EntityMetadataExtractor<EscapePod, EscapePodMetadata>
 {
     public override EscapePodMetadata Extract(EscapePod entity)
     {
         Radio radio = entity.radioSpawner.spawnedObj.RequireComponent<Radio>();
         return new EscapePodMetadata(
-            entity.liveMixin.IsFullHealth(), 
+            entity.liveMixin.IsFullHealth(),
             radio.liveMixin.IsFullHealth(),
-            entity.bottomHatchUsed,
-            entity.topHatchUsed
+            entity.bottomHatchUsed && localPlayer.SessionId.HasValue ? [localPlayer.SessionId.Value] : [],
+            entity.topHatchUsed && localPlayer.SessionId.HasValue ? [localPlayer.SessionId.Value] : []
         );
     }
 }

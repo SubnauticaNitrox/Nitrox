@@ -214,6 +214,8 @@ internal sealed class WorldServiceTest
             case EscapePodMetadata metadata when entityAfter.Metadata is EscapePodMetadata metadataAfter:
                 Assert.AreEqual(metadata.PodRepaired, metadataAfter.PodRepaired);
                 Assert.AreEqual(metadata.RadioRepaired, metadataAfter.RadioRepaired);
+                Assert.IsTrue(metadata.PlayersWithBottomHatchUsed.SequenceEqual(metadataAfter.PlayersWithBottomHatchUsed));
+                Assert.IsTrue(metadata.PlayersWithTopHatchUsed.SequenceEqual(metadataAfter.PlayersWithTopHatchUsed));
                 break;
             case CrafterMetadata metadata when entityAfter.Metadata is CrafterMetadata metadataAfter:
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);

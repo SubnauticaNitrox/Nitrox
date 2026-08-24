@@ -2,6 +2,7 @@ using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using Nitrox.Model.DataStructures;
 
@@ -37,15 +38,17 @@ public sealed partial class CinematicModeTriggerBase_OnHandClick_Patch : NitroxP
             return true;
         }
 
+        NitroxId lockId = BedLockId.Resolve(entity, __instance.cinematicController);
+
         // Check if we already have the lock
-        if (Resolve<SimulationOwnership>().HasExclusiveLock(entity.Id))
+        if (Resolve<SimulationOwnership>().HasExclusiveLock(lockId))
         {
             return true;
         }
 
         // Request exclusive lock to prevent multiple players from using the same cinematic simultaneously
-        CinematicTriggerInteraction context = new(__instance, hand, entity);
-        LockRequest<CinematicTriggerInteraction> lockRequest = new(entity.Id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+        CinematicTriggerInteraction context = new(__instance, hand);
+        LockRequest<CinematicTriggerInteraction> lockRequest = new(lockId, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
         Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
 
         return false;
@@ -62,14 +65,13 @@ public sealed partial class CinematicModeTriggerBase_OnHandClick_Patch : NitroxP
         else
         {
             context.Trigger.gameObject.AddComponent<DenyOwnershipHand>();
-            ErrorMessage.AddMessage("Another player is using this");
+            ErrorMessage.AddMessage(Language.main.Get("Nitrox_DenyOwnershipHand"));
         }
     }
 
-    private readonly struct CinematicTriggerInteraction(CinematicModeTriggerBase trigger, GUIHand hand, NitroxEntity entity) : LockRequestContext
+    private readonly struct CinematicTriggerInteraction(CinematicModeTriggerBase trigger, GUIHand hand) : LockRequestContext
     {
         public CinematicModeTriggerBase Trigger { get; } = trigger;
         public GUIHand Hand { get; } = hand;
-        public NitroxEntity Entity { get; } = entity;
     }
 }

@@ -1,8 +1,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Cyclops;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -29,7 +27,6 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         // Don't broadcast movement during cinematics - the cinematic controller handles positioning
         if (Player.main.cinematicModeActive)
         {
-            Log.Debug($"[Movement] Skipping movement broadcast - cinematicModeActive: true");
             return;
         }
 

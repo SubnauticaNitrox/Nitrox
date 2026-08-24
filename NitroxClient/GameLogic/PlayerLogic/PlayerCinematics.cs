@@ -35,10 +35,6 @@ public class PlayerCinematics
         {
             packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, true, animationParameters));
         }
-        else
-        {
-            Log.Debug($"[PlayerCinematics] Skipping blacklisted cinematic: {key}");
-        }
     }
 
     public void EndCinematicMode(SessionId sessionId, NitroxId controllerID, int controllerNameHash, string key)
@@ -46,10 +42,6 @@ public class PlayerCinematics
         if (!blacklistedKeys.Contains(key))
         {
             packetSender.Send(new PlayerCinematicControllerCall(sessionId, controllerID, controllerNameHash, key, false));
-        }
-        else
-        {
-            Log.Debug($"[PlayerCinematics] Skipping blacklisted cinematic end: {key}");
         }
     }
 
