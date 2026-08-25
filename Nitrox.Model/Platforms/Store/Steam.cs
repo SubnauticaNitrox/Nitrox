@@ -99,7 +99,7 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    /// <param name="onWarning">Invoked with a user facing message if a Proton misconfigured is detected</param>
+    /// <param name="onWarning">Invoked with a user-facing message if a Proton misconfiguration is detected.</param>
     public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode, Action<string>? onWarning = null)
     {
         bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
