@@ -590,6 +590,7 @@ public sealed class Steam : IGamePlatform
                 catch (Exception ex)
                 {
                     Log.Error(ex, $"Failed to read toolmanifest.vdf for proton at '{protonPath}'");
+                    return null;
                 }
             }
 
