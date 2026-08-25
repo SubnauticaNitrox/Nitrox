@@ -40,10 +40,7 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
             if (entry != null)
             {
                 // First output received, server is no longer starting
-                if (entry.IsServerStarting)
-                {
-                    entry.IsServerStarting = false;
-                }
+                entry.IsServerStarting = false;
                 entry.Output.Add(new OutputLine
                 {
                     LogText = message,
