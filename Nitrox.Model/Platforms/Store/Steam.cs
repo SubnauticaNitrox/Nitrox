@@ -99,7 +99,8 @@ public sealed class Steam : IGamePlatform
         return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
-    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode)
+    /// <param name="onWarning">Invoked with a user-facing message if a Proton misconfiguration is detected.</param>
+    public static async Task<ProcessEx?> StartGameAsync(string pathToGameExe, string launchArguments, int steamAppId, bool skipSteam, bool bigPictureMode, Action<string>? onWarning = null)
     {
         bool isPlatformStartingUp = !ProcessEx.ProcessExists(SteamProcessName);
         try
@@ -125,7 +126,7 @@ public sealed class Steam : IGamePlatform
             await LaunchSteamBigPictureModeAsync();
         }
 
-        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode));
+        return ProcessEx.From(CreateSteamGameStartInfo(pathToGameExe, GetExeFile(), launchArguments, steamAppId, skipSteam, bigPictureMode, onWarning));
     }
 
     public bool OwnsGame(string gameRootPath)
@@ -251,7 +252,7 @@ public sealed class Steam : IGamePlatform
         await Task.Delay(1000);
     }
 
-    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false)
+    private static ProcessStartInfo CreateSteamGameStartInfo(string gameFilePath, string? steamExe, string args, int steamAppId, bool skipSteam, bool bigPictureMode = false, Action<string>? onWarning = null)
     {
         if (steamExe == null)
         {
@@ -321,7 +322,15 @@ public sealed class Steam : IGamePlatform
             SteamLibrariesVdf steamLibraries = SteamLibrariesVdf.Load(steamPath);
 
             string? protonVersion = GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
-            string? protonPath = protonVersion != null ? steamLibraries.GetProtonPathByVersion(protonVersion) : null;
+            string? protonPath = null;
+            if (protonVersion != null)
+            {
+                protonPath = steamLibraries.GetProtonPathByVersion(protonVersion);
+                if (protonPath == null)
+                {
+                    onWarning?.Invoke($"""Proton "{protonVersion}" is not installed. Nitrox will try another installed version.""");
+                }
+            }
             protonPath ??= steamLibraries.GetBestFallbackProtonPath();
             if (protonPath == null)
             {
@@ -353,40 +362,40 @@ public sealed class Steam : IGamePlatform
                              .Where(path => path != null)
                              .Distinct()
                              .Select(path => !path.Contains(':') ? path : throw new Exception($"Path '{path}' contains invalid character ':'")));
+    }
 
-        static string? GetProtonVersionOfSteamApp(string configVdfFile, string appId)
+    private static string? GetProtonVersionOfSteamApp(string configVdfFile, string appId)
+    {
+        try
         {
-            try
+            string fileContent = File.ReadAllText(configVdfFile);
+            Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
+
+            if (compatToolMatch.Success)
             {
-                string fileContent = File.ReadAllText(configVdfFile);
-                Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
+                string compatToolMapping = compatToolMatch.Groups[1].Value;
+                string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
+                Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
 
-                if (compatToolMatch.Success)
+                if (appIdMatch.Success)
                 {
-                    string compatToolMapping = compatToolMatch.Groups[1].Value;
-                    string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
-                    Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
-
-                    if (appIdMatch.Success)
-                    {
-                        return appIdMatch.Groups[1].Value;
-                    }
-
-                    const string DEFAULT_PATTERN = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
-                    Match defaultMatch = Regex.Match(compatToolMapping, DEFAULT_PATTERN);
-                    if (defaultMatch.Success)
-                    {
-                        return defaultMatch.Groups[1].Value;
-                    }
+                    return appIdMatch.Groups[1].Value;
                 }
 
-                return null;
+                const string DEFAULT_PATTERN = @"""0""[^{]*\{[^}]*""name""\s*""([^""]+)""";
+                Match defaultMatch = Regex.Match(compatToolMapping, DEFAULT_PATTERN);
+                if (defaultMatch.Success)
+                {
+                    return defaultMatch.Groups[1].Value;
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                return null;
-            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+            return null;
         }
     }
 
