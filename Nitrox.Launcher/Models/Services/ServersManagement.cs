@@ -37,12 +37,20 @@ internal sealed class ServersManagement(ServerService serverService) : Streaming
         try
         {
             ServerEntry? entry = serverService.GetServerEntryByAnyOf(processId, saveName);
-            entry?.Output.Add(new OutputLine
+            if (entry != null)
             {
-                LogText = message,
-                LocalTime = localTime,
-                Type = (OutputLineType)level
-            });
+                // First output received, server is no longer starting
+                if (entry.IsServerStarting)
+                {
+                    entry.IsServerStarting = false;
+                }
+                entry.Output.Add(new OutputLine
+                {
+                    LogText = message,
+                    LocalTime = localTime,
+                    Type = (OutputLineType)level
+                });
+            }
         }
         catch (Exception ex)
         {
