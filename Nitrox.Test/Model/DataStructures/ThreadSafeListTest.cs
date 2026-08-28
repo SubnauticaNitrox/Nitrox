@@ -8,7 +8,7 @@ public class ThreadSafeListTest
     [TestInitialize]
     public void Setup()
     {
-        list = new ThreadSafeList<string>();
+        list = [];
         for (int i = 0; i < 10; i++)
         {
             list.Add($"test {i}");
@@ -67,10 +67,10 @@ public class ThreadSafeListTest
         int iterations = 500000;
 
         ThreadSafeList<int> comeGetMe = new(iterations);
-        List<long> countsRead = new();
+        List<long> countsRead = [];
         long addCount = 0;
 
-        Random r = new Random();
+        Random r = new();
         DoReaderWriter(() =>
             {
                 countsRead.Add(Interlocked.Read(ref addCount));
@@ -83,9 +83,9 @@ public class ThreadSafeListTest
             iterations);
 
         addCount.Should().Be(iterations);
-        countsRead.Count.Should().BeGreaterThan(0);
+        countsRead.Count.Should().BePositive();
         countsRead.Last().Should().Be(iterations);
-        comeGetMe.Count.Should().Be(iterations);
+        comeGetMe.Should().HaveCount(iterations);
     }
 
     [TestMethod]
@@ -97,7 +97,7 @@ public class ThreadSafeListTest
         long addCount = 0;
         long iterationsReadMany = 0;
 
-        Random r = new Random();
+        Random r = new();
         DoReaderWriter(() =>
             {
                 foreach (int unused in comeGetMe)
@@ -119,10 +119,10 @@ public class ThreadSafeListTest
     [TestMethod]
     public void IterateAndAdd()
     {
-        ThreadSafeList<int> nums = new()
-        {
+        ThreadSafeList<int> nums =
+        [
             1,2,3,4,5
-        };
+        ];
 
         foreach (int num in nums)
         {
@@ -132,7 +132,7 @@ public class ThreadSafeListTest
             }
         }
 
-        nums.Count.Should().Be(6);
+        nums.Should().HaveCount(6);
         nums.Last().Should().Be(10);
     }
 
