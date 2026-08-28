@@ -13,7 +13,7 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
     static NitroxAbstractFaker()
     {
         Assembly[] assemblies = [typeof(Packet).Assembly, typeof(SubnauticaInGameLogger).Assembly, typeof(ConsoleUnhandledErrorHandler).Assembly];
-        HashSet<Type> blacklistedTypes = [typeof(Packet), typeof(CorrelatedPacket), typeof(ICommandHandler), typeof(IPacketProcessor)];
+        HashSet<Type> blacklistedTypes = [typeof(Packet), typeof(ICommandHandler), typeof(IPacketProcessor)];
 
         List<Type> types = new();
         foreach (Assembly assembly in assemblies)

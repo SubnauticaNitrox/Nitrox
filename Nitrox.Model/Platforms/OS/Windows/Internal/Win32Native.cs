@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Nitrox.Model.Platforms.OS.Windows.Internal;
 
-internal static class Win32Native
+internal static partial class Win32Native
 {
     /// <summary>
-    /// https://learn.microsoft.com/en-us/windows/win32/shell/assocf_str
+    ///     https://learn.microsoft.com/en-us/windows/win32/shell/assocf_str
     /// </summary>
     [Flags]
     public enum AssocF : uint
@@ -99,6 +99,18 @@ internal static class Win32Native
     public static bool IsTrusted(string fileName)
     {
         return WinVerifyTrust(fileName) == 0;
+    }
+
+    public static string GetWineVersion()
+    {
+        try
+        {
+            return WineGetVersion();
+        }
+        catch (Exception)
+        {
+            return "";
+        }
     }
 
     private static uint WinVerifyTrust(string fileName)
@@ -237,6 +249,15 @@ internal static class Win32Native
     [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
     internal static extern IntPtr SetWindowLongPtr64(HandleRef hWnd, int nIndex, long dwNewLong);
 
+    [return: MarshalAs(UnmanagedType.LPTStr)]
+#if NET
+    [LibraryImport("ntdll.dll", EntryPoint = "wine_get_version")]
+    private static partial string WineGetVersion();
+#else
+    [DllImport("ntdll.dll", EntryPoint = "wine_get_version")]
+    private static extern string WineGetVersion();
+#endif
+
     [Flags]
     public enum WS : long
     {
@@ -359,10 +380,7 @@ internal static class Win32Native
 
         public static implicit operator IntPtr(UnmanagedPointer ptr) => ptr.m_ptr;
 
-        ~UnmanagedPointer()
-        {
-            Dispose(false);
-        }
+        public void Dispose() => Dispose(true);
 
         private void Dispose(bool disposing)
         {
@@ -387,6 +405,9 @@ internal static class Win32Native
             }
         }
 
-        public void Dispose() => Dispose(true);
+        ~UnmanagedPointer()
+        {
+            Dispose(false);
+        }
     }
 }

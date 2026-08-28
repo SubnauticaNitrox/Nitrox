@@ -4,20 +4,22 @@ namespace Nitrox.Server.Subnautica.Models.Logging.Middleware;
 
 internal sealed class ConditionalGroupLoggerMiddleware : ILoggerMiddleware
 {
-    public required Func<ILoggerMiddleware.Context, bool> Condition { get; init; } = _ => true;
-    public required ILoggerMiddleware[] Group { get; init; } = [];
+    public required Func<ILoggerMiddleware.Context, bool> Condition { get; init; }
+    public required ILoggerMiddleware[] TrueGroup { get; init; }
+    public ILoggerMiddleware[] FalseGroup { get; init; } = [];
 
     public void ExecuteLogMiddleware(ref ILoggerMiddleware.Context context, ILoggerMiddleware.NextCall next)
     {
-        if (Condition(context))
+        ILoggerMiddleware[] selectedGroup = Condition(context) ? TrueGroup : FalseGroup;
+        if (selectedGroup.Length > 0)
         {
             ILoggerMiddleware[] originalMiddleware = context.Middleware;
             int originalCursor = context.Cursor;
-            context.Middleware = Group;
+            context.Middleware = selectedGroup;
             context.Cursor = 0;
             try
             {
-                ExecuteNext(ref context);
+                ILoggerMiddleware.ExecuteNext(ref context);
             }
             finally
             {
@@ -26,28 +28,5 @@ internal sealed class ConditionalGroupLoggerMiddleware : ILoggerMiddleware
             }
         }
         next(ref context);
-    }
-
-    private static void ExecuteNext(ref ILoggerMiddleware.Context context)
-    {
-        if (GetNextMiddleware(ref context) is not { } middleware)
-        {
-            return;
-        }
-
-        middleware.ExecuteLogMiddleware(ref context, ExecuteNext);
-    }
-
-    private static ILoggerMiddleware? GetNextMiddleware(ref ILoggerMiddleware.Context context)
-    {
-        if (context.Middleware.Length < 1)
-        {
-            return null;
-        }
-        if (context.Cursor >= context.Middleware.Length)
-        {
-            return null;
-        }
-        return context.Middleware[context.Cursor++];
     }
 }

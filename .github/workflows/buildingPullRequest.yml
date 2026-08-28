@@ -8,26 +8,27 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
     - name: Checking out repository
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
   build:
     needs: setup
     runs-on: [self-hosted, linux]
     strategy:
       matrix:
-        runtime: [win-x64, linux-x64, linux-arm64]
+        runtime: [win-x64, win-arm64, linux-x64, linux-arm64, osx-x64, osx-arm64]
     steps:
     - name: Declare env variables
+      id: vars
       shell: bash
       run: |
-        echo "COMMIT_SHA_SHORT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c 1-7)" >> $GITHUB_ENV &&
-        echo "PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')" >> $GITHUB_ENV
+        echo "commit_sha_short=$(echo ${{ github.event.pull_request.head.sha }} | cut -c 1-7)" >> $GITHUB_OUTPUT &&
+        echo "pr_number=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')" >> $GITHUB_OUTPUT
     - name: Build
       run: dotnet build Nitrox.Launcher/Nitrox.Launcher.csproj -c Debug -r ${{ matrix.runtime }}
 
     - name: Upload Launcher
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       if: success()
       with:
-        name: "Launcher_${{ matrix.runtime }}_#${{ env.PR_NUMBER }}_${{ env.COMMIT_SHA_SHORT }}"
-        path: 'Nitrox.Launcher/bin/Debug/net9.0/'
+        name: "Launcher_${{ matrix.runtime }}_#${{ steps.vars.outputs.pr_number }}_${{ steps.vars.outputs.commit_sha_short }}"
+        path: 'Nitrox.Launcher/bin/Debug/net10.0/'

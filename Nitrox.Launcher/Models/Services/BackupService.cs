@@ -20,7 +20,7 @@ public class BackupService(IKeyValueStore keyValueStore)
 {
     private readonly IKeyValueStore keyValueStore = keyValueStore;
 
-    public static string BackupsDirectory => Path.Combine(NitroxUser.AppDataPath, "backups");
+    public static string BackupsDirectory => NitroxDirectory.BackupsPath;
 
     /// <summary>
     ///     Creates a backup of the current Nitrox installation and optionally save files.
@@ -59,7 +59,7 @@ public class BackupService(IKeyValueStore keyValueStore)
             if (includeSaves)
             {
                 progress?.Report((50, "Backing up save files..."));
-                string savesDir = keyValueStore.GetSavesFolderDir();
+                string savesDir = keyValueStore.GetSavesPath();
                 await AddDirectoryToArchiveAsync(archive, savesDir, "saves", cancellationToken);
             }
 
@@ -74,7 +74,7 @@ public class BackupService(IKeyValueStore keyValueStore)
                     BackupDate = DateTime.Now,
                     IncludesSaves = includeSaves,
                     InstallationPath = launcherPath,
-                    SavesPath = keyValueStore.GetSavesFolderDir()
+                    SavesPath = keyValueStore.GetSavesPath()
                 };
                 await JsonSerializer.SerializeAsync(entryStream, metadata, JsonSerializerOptions.Default, cancellationToken);
             }
@@ -223,7 +223,7 @@ public class BackupService(IKeyValueStore keyValueStore)
                 throw new ArgumentException("Launcher path must be an absolute path", nameof(launcherPath));
             }
 
-            string savesDir = keyValueStore.GetSavesFolderDir();
+            string savesDir = keyValueStore.GetSavesPath();
             if (!Path.IsPathRooted(savesDir))
             {
                 throw new ArgumentException("Saves directory must be an absolute path", nameof(savesDir));

@@ -9,6 +9,7 @@
     "Nitrox_AddServer_NamePlaceholder": "Introduceți un nume pentru server",
     "Nitrox_AddServer_PortDescription": "Port:",
     "Nitrox_AddServer_PortPlaceholder": "Introduceți portul numeric al serverului",
+    "Nitrox_BedGetUp": "Scoală-te",
     "Nitrox_BuildingDesyncDetected": "Serverul a detectat o desincronizare cu construcțile clientului local (accesați setările Nitrox pentru a solicita o resincronizare)",
     "Nitrox_BuildingSettings": "Construirea bazei",
     "Nitrox_Cancel": "Anulare",

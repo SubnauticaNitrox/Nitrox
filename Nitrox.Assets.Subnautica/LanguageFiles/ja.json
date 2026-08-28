@@ -1,5 +1,8 @@
 {
     "Nitrox_AddServer": "サーバーを追加する",
+    "Nitrox_AddServer_AddressDescription": "ホスト",
+    "Nitrox_AddServer_AddressPlaceholder": "サーバーアドレスを入力してください",
+    "Nitrox_AddServer_Confirm": "サーバーを作る",
     "Nitrox_BuildingDesyncDetected": "サーバーがローカルクライアントの建物との非同期を検出しました(Nitroxの設定で再同期をしてください)",
     "Nitrox_Cancel": "キャンセル",
     "Nitrox_CommandNotAvailable": "Nitroxではこのコマンドは使用できません",

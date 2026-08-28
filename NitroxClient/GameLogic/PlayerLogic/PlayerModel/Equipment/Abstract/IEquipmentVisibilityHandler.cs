@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
 namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
 {
     public interface IEquipmentVisibilityHandler
     {
-        void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment);
+        void UpdateEquipmentVisibility(IReadOnlyList<TechType> currentEquipment);
     }
 }

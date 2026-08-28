@@ -106,7 +106,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
         {
             server.Version = NitroxEnvironment.Version;
             bool preferEmbedded = keyValueStore.GetPreferEmbedded();
-            await server.StartAsync(keyValueStore.GetSavesFolderDir(), preferEmbedded);
+            await server.StartAsync(keyValueStore.GetSavesPath(), preferEmbedded);
             if (preferEmbedded)
             {
                 await screenProvider().ShowAsync(new EmbeddedServerViewModel(server));
@@ -148,10 +148,10 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         try
         {
-            Directory.CreateDirectory(keyValueStore.GetSavesFolderDir());
+            Directory.CreateDirectory(keyValueStore.GetSavesPath());
 
             Dictionary<string, (ServerEntry Data, bool HasFiles)> serversOnDisk = Servers.ToDictionary(entry => entry.Name, entry => (entry, false));
-            foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
+            foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesPath()))
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 try
@@ -195,7 +195,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     {
         watcher = new FileSystemWatcher
         {
-            Path = keyValueStore.GetSavesFolderDir(),
+            Path = keyValueStore.GetSavesPath(),
             NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size,
             Filter = "*.*",
             IncludeSubdirectories = true
@@ -306,7 +306,7 @@ internal sealed class ServerService : IMessageReceiver, INotifyPropertyChanged
     public async Task<ServerEntry?> GetOrCreateServerAsync(string saveName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(saveName);
-        string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), saveName);
+        string serverPath = Path.Combine(keyValueStore.GetSavesPath(), saveName);
         return (await GetServersAsync()).FirstOrDefault(s => s.Name == saveName) ?? await ServerEntry.FromDirectoryAsync(serverPath) ?? await ServerEntry.CreateNew(serverPath, SubnauticaGameMode.SURVIVAL);
     }
 }

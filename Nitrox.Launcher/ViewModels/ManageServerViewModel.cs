@@ -32,7 +32,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     private readonly string[] advancedSettingsDeniedFields =
     [
         "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.PortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
-        nameof(Config.LanDiscovery), nameof(Config.DefaultPlayerPerm), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvpEnabled), nameof(Config.SerializerMode)
+        nameof(Config.LanDiscovery), nameof(Config.DefaultPlayerPerm), nameof(Config.KeepInventoryOnDeath), nameof(Config.PvpEnabled)
     ];
 
     private readonly DialogService dialogService;
@@ -126,11 +126,11 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
     public partial string? ServerSeed { get; set; }
-    public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
+    public static Array PlayerPerms => Enum.GetValues(typeof(Perms)).OfType<Perms>().Distinct().ToArray();
     public string? OriginalServerName => Server?.Name;
 
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server?.Name ?? throw new Exception($"{nameof(Server)} is not set"));
-    private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
+    private string SavesFolderDir => keyValueStore.GetSavesPath();
 
     public ManageServerViewModel(DialogService dialogService, StorageService storageService, IKeyValueStore keyValueStore, ServerService serverService)
     {
@@ -176,7 +176,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     [MemberNotNull(nameof(Server))]
     public async Task RefreshAndLoadFromAsync(ServerEntry entry, string? savePath = null)
     {
-        savePath ??= entry.Name != null ? Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), entry.Name) : null;
+        savePath ??= entry.Name != null ? Path.Combine(KeyValueStore.Instance.GetSavesPath(), entry.Name) : null;
         if (savePath != null)
         {
             await entry.RefreshFromDirectoryAsync(savePath);
@@ -386,7 +386,7 @@ internal partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void OpenWorldFolder() => OpenDirectory(SaveFolderDirectory);
+    private void OpenWorldFolder() => OpenPath(SaveFolderDirectory);
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
     private async Task RestoreBackup()

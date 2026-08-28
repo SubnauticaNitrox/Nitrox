@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Nitrox.Model.Platforms.OS.Windows.Internal;
 
 namespace Nitrox.Model.Core;
 
@@ -13,11 +14,8 @@ public static class NitroxEnvironment
 {
     private static bool hasSet;
     private static Assembly? executingAssembly;
-
-    private static string[]? commandLineArgs;
-
     private static string? appName;
-
+    private static bool? isWine;
     private static Assembly ExecutingAssembly => executingAssembly ??= Assembly.GetExecutingAssembly();
     public static string ReleasePhase => IsReleaseMode ? "Alpha" : "InDev";
     public static Version Version => ExecutingAssembly.GetName().Version ?? new Version(1, 0);
@@ -127,9 +125,9 @@ public static class NitroxEnvironment
     {
         get
         {
-            if (commandLineArgs != null)
+            if (field != null)
             {
-                return commandLineArgs;
+                return field;
             }
 
             IEnumerable<string> args = Environment.GetCommandLineArgs().Skip(1);
@@ -138,11 +136,33 @@ public static class NitroxEnvironment
             {
                 args = args.Select(p => p.Trim('\''));
             }
-            return commandLineArgs ??= args.ToArray();
+            return field = args.ToArray();
         }
     }
 
     public static string AppName => appName ??= (Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetCallingAssembly().GetName().Name)?.Replace(".", " ") ?? "Nitrox Program";
+
+    /// <summary>
+    ///     Returns true if executing in a Wine environment.
+    /// </summary>
+    public static bool IsWine
+    {
+        get
+        {
+            if (isWine.HasValue)
+            {
+                return isWine.Value;
+            }
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                isWine = false;
+                return false;
+            }
+
+            isWine = !string.IsNullOrWhiteSpace(Win32Native.GetWineVersion());
+            return isWine.Value;
+        }
+    }
 
     public static string DotnetEnvironment
     {

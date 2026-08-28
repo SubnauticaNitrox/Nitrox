@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
@@ -32,6 +32,7 @@ public class RemotePlayer : INitroxPlayer
     private readonly PlayerModelManager playerModelManager;
     private readonly PlayerVitalsManager playerVitalsManager;
     private readonly FMODWhitelist fmodWhitelist;
+    private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers = [];
 
     public PlayerContext PlayerContext { get; }
     public GameObject? Body { get; private set; }
@@ -100,7 +101,7 @@ public class RemotePlayer : INitroxPlayer
 
         CoroutineUtils.StartCoroutineSmart(playerModelManager.AttachPing(this));
         playerModelManager.BeginApplyPlayerColor(this);
-        playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
+        equipmentVisibilityHandlers = playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
         SetupBody();
         SetupSkyAppliers();
         SetupPlayerSounds();
@@ -382,19 +383,19 @@ public class RemotePlayer : INitroxPlayer
         // Rough estimation for different collider boxes in different animation stages
         if (AnimationController["is_underwater"])
         {
-            Collider.center = new(0f, -0.3f, 0f);
+            Collider.center = new Vector3(0f, -0.3f, 0f);
             Collider.height = 0.5f;
         }
         else
         {
-            Collider.center = new(0f, -0.8f, 0f);
+            Collider.center = new Vector3(0f, -0.8f, 0f);
             Collider.height = 1.5f;
         }
     }
 
     public void UpdateEquipmentVisibility(List<TechType> equippedItems)
     {
-        playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equippedItems));
+        PlayerModelManager.UpdateEquipmentVisibility(equipmentVisibilityHandlers, equippedItems);
     }
 
     /// <summary>
@@ -422,6 +423,7 @@ public class RemotePlayer : INitroxPlayer
             Collider = Body.AddComponent<CapsuleCollider>();
 
             Collider.center = Vector3.zero;
+            Collider.height = refCollider.height;
             Collider.radius = refCollider.radius;
             Collider.direction = refCollider.direction;
             Collider.contactOffset = refCollider.contactOffset;

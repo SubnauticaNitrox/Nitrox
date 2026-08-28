@@ -19,8 +19,8 @@ internal sealed class SummaryCommand(StatusService statusService, ILogger<Summar
         using (CaptureScope scope = logger.BeginCaptureScope())
         {
             await statusService.LogServerSummary(context.Permissions);
-            summary = string.Join("", scope.Logs);
+            summary = scope.ToString();
         }
-        await context.ReplyAsync(summary.TrimEnd('\n'));
+        await context.ReplyAsync(summary);
     }
 }

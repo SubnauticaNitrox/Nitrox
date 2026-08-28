@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
             hands = playerModel.transform.Find(PlayerEquipmentConstants.NORMAL_HANDS_GAME_OBJECT_NAME).gameObject;
         }
 
-        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
+        public void UpdateEquipmentVisibility(IReadOnlyList<TechType> currentEquipment)
         {
             bool headVisible = !currentEquipment.Contains(TechType.RadiationHelmet) && !currentEquipment.Contains(TechType.Rebreather);
             bool bodyVisible = !currentEquipment.Contains(TechType.RadiationSuit) &&

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
             gloves = playerModel.transform.Find(PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME).gameObject;
             suit = playerModel.transform.Find(PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME).gameObject;
         }
-        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
+        public void UpdateEquipmentVisibility(IReadOnlyList<TechType> currentEquipment)
         {
             bool glovesVisible = currentEquipment.Contains(TechType.ReinforcedGloves);
             bool bodyVisible = currentEquipment.Contains(TechType.ReinforcedDiveSuit);

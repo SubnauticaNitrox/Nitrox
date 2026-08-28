@@ -14,4 +14,9 @@ public sealed class UnixFileSystem : FileSystem
     {
         return PosixFileSystemPermissions.SetFullAccessToCurrentUser(directory);
     }
+
+    public bool IsRootDirectory(string directory)
+    {
+        return PosixFileSystemPermissions.IsRootDirectory(directory);
+    }
 }

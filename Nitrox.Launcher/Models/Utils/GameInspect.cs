@@ -16,13 +16,13 @@ internal static class GameInspect
     /// <summary>
     ///     Check to ensure the Subnautica is not in legacy.
     /// </summary>
-    public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallDir, DialogService? dialogService = null)
+    public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallPath, DialogService? dialogService = null)
     {
         try
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallDir);
+            ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallPath);
 
-            string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+            string gameVersionFile = Path.Combine(gameInstallPath, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
             if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion < NitroxEnvironment.GameMinimumVersion)
             {
                 if (dialogService != null)
@@ -62,13 +62,13 @@ internal static class GameInspect
         return true;
     }
 
-    public static void WarnIfBepInExMods(string gameDir)
+    public static void WarnIfBepInExMods(string gamePath)
     {
-        if (string.IsNullOrWhiteSpace(gameDir) || !Directory.Exists(gameDir))
+        if (string.IsNullOrWhiteSpace(gamePath) || !Directory.Exists(gamePath))
         {
             return;
         }
-        string bepRoot = Path.Combine(gameDir, "BepInEx");
+        string bepRoot = Path.Combine(gamePath, "BepInEx");
         if (!Directory.Exists(bepRoot))
         {
             return;

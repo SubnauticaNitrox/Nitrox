@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -48,17 +49,20 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     public partial bool ShowResetArgsBtn { get; set; }
 
     [ObservableProperty]
-    public partial bool LightModeEnabled { get; set; }
+    public partial bool IsLightModeEnabled { get; set; }
 
     [ObservableProperty]
     public partial bool AllowMultipleGameInstances { get; set; }
 
     [ObservableProperty]
-    public partial bool UseBigPictureMode { get; set; }    
+    public partial bool UseBigPictureMode { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsDiscordEnabled { get; set; }
 
     [ObservableProperty]
     public partial bool IsInReleaseMode { get; set; }
-    
+
     private static string DefaultLaunchArg => "-vrmode none";
     private bool isResettingArgs;
 
@@ -66,18 +70,19 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetLaunchArguments(GameInfo.Subnautica, DefaultLaunchArg);
-        ProgramDataPath = NitroxUser.AppDataPath;
-        ScreenshotsPath = NitroxUser.ScreenshotsPath;
-        SavesPath = keyValueStore.GetSavesFolderDir();
+        ProgramDataPath = NitroxDirectory.ConfigPath;
+        ScreenshotsPath = NitroxDirectory.ScreenshotsPath;
+        SavesPath = keyValueStore.GetSavesPath();
         LogsPath = Model.Logger.Log.LogDirectory;
-        LightModeEnabled = keyValueStore.GetIsLightModeEnabled();
+        IsLightModeEnabled = keyValueStore.GetIsLightModeEnabled();
         AllowMultipleGameInstances = keyValueStore.GetIsMultipleGameInstancesAllowed();
         UseBigPictureMode = keyValueStore.GetUseBigPictureMode();
+        IsDiscordEnabled = keyValueStore.GetIsDiscordEnabled();
         IsInReleaseMode = NitroxEnvironment.IsReleaseMode;
         await Task.Run(() => SetTargetedSubnauticaPath(SelectedGame.PathToGame), cancellationToken).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
-    private void SetTargetedSubnauticaPath(string path)
+    private static void SetTargetedSubnauticaPath(string path)
     {
         if (!Directory.Exists(path))
         {
@@ -85,12 +90,18 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
 
         PirateDetection.TriggerOnDirectory(path);
-        if (!FileSystem.Instance.IsWritable(Directory.GetCurrentDirectory()) || !FileSystem.Instance.IsWritable(path))
+
+        if (!FileSystem.Instance.IsWritable(path))
         {
-            // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
-            if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
+            // Targeted game directory needs to be writable (Nitrox patches files into it)
+            if (!FileSystem.Instance.SetFullAccessToCurrentUser(path))
             {
-                LauncherNotifier.Error("Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.");
+                LauncherNotifier.Error(
+                    RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                        ? "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once."
+                        : $"Unable to set permissions on the directories at '{path}'. Please grant read and write permissions so Nitrox can work properly."
+                );
+
                 return;
             }
         }
@@ -162,7 +173,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
     {
         try
         {
-            if (!OpenDirectory(dir))
+            if (!OpenPath(dir))
             {
                 LauncherNotifier.Error("Can't open. Directory does not exist.");
             }
@@ -173,7 +184,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
     }
 
-    partial void OnLightModeEnabledChanged(bool value)
+    partial void OnIsLightModeEnabledChanged(bool value)
     {
         keyValueStore.SetIsLightModeEnabled(value);
         Dispatcher.UIThread.Invoke(() => Application.Current!.RequestedThemeVariant = value ? ThemeVariant.Light : ThemeVariant.Dark);
@@ -187,7 +198,7 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
         }
         keyValueStore.SetIsMultipleGameInstancesAllowed(value);
     }
-    
+
     partial void OnUseBigPictureModeChanged(bool value)
     {
         if (value)
@@ -195,5 +206,10 @@ internal partial class OptionsViewModel(IKeyValueStore keyValueStore, StorageSer
             AllowMultipleGameInstances = false;
         }
         keyValueStore.SetBigPictureMode(value);
+    }
+
+    partial void OnIsDiscordEnabledChanged(bool value)
+    {
+        keyValueStore.SetIsDiscordEnabled(value);
     }
 }

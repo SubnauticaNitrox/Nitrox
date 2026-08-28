@@ -16,8 +16,8 @@ internal static class GlobalStatic
     /// <inheritdoc cref="ProcessEx.OpenUri" />
     public static void OpenUri(string url) => ProcessEx.OpenUri(url);
 
-    /// <inheritdoc cref="ProcessEx.OpenDirectory" />
-    public static bool OpenDirectory(string? directory) => ProcessEx.OpenDirectory(directory);
+    /// <inheritdoc cref="ProcessEx.OpenPath" />
+    public static bool OpenPath(string? directory) => ProcessEx.OpenPath(directory);
 
     public static bool TryDeleteFile(string filePath)
     {

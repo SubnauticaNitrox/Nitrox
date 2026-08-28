@@ -54,7 +54,7 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
             return false;
         }
 
-        Log.Error($"Undefined behaviour occured inside {nameof(uGUI_SceneIntro_HandleInput_Patch)}");
+        Log.Error($"Undefined behaviour occurred inside {nameof(uGUI_SceneIntro_HandleInput_Patch)}");
         return false;
     }
 

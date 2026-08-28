@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
 
         }
 
-        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
+        public void UpdateEquipmentVisibility(IReadOnlyList<TechType> currentEquipment)
         {
             bool tankEquipped = currentEquipment.Contains(TechType.Tank) ||
                                 currentEquipment.Contains(TechType.DoubleTank) ||

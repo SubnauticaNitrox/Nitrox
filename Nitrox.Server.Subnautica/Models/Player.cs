@@ -12,14 +12,37 @@ namespace Nitrox.Server.Subnautica.Models
 {
     internal sealed class Player
     {
+        private const ushort OFFLINE_SESSION_ID = 0;
+
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
+
+        private ushort sessionId;
 
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; }
 
         public PlayerContext? PlayerContext { get; set; }
         public PeerId Id { get; init; }
-        public SessionId SessionId { get; set; }
+
+        public SessionId SessionId
+        {
+            get => Interlocked.CompareExchange(ref sessionId, OFFLINE_SESSION_ID, OFFLINE_SESSION_ID);
+            set => Interlocked.Exchange(ref sessionId, value);
+        }
+
+        public bool IsOnline
+        {
+            get => SessionId != OFFLINE_SESSION_ID;
+            set
+            {
+                if (value)
+                {
+                    throw new InvalidOperationException($"{nameof(Player)} cannot be put in an online state without a {nameof(SessionId)}!");
+                }
+                SessionId = OFFLINE_SESSION_ID;
+            }
+        }
+
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
@@ -156,11 +179,6 @@ namespace Nitrox.Server.Subnautica.Models
             return $"[Player - SessionId: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
         }
 
-        private bool Equals(Player other)
-        {
-            return Id == other.Id;
-        }
-
         /// <summary>
         ///     Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells" />,
         ///     <see cref="RemoveCells" /> and <see cref="HasCellLoaded" />.
@@ -168,6 +186,11 @@ namespace Nitrox.Server.Subnautica.Models
         internal List<AbsoluteEntityCell> GetVisibleCells()
         {
             return [.. visibleCells];
+        }
+
+        private bool Equals(Player other)
+        {
+            return Id == other.Id;
         }
     }
 }

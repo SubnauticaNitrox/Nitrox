@@ -10,19 +10,21 @@ namespace Nitrox.Server.Subnautica.Models.Commands.Core;
 /// <summary>
 ///     Aggregates known commands into a read-optimized and sorted lookup.
 /// </summary>
-internal sealed class CommandRegistry
+internal sealed class CommandRegistryService(IEnumerable<CommandHandlerEntry> diHandlers, IEnumerable<IArgConverter> argConverters, ILogger<CommandRegistryService> logger) : IHostedService
 {
+    private readonly CommandHandlerEntry[] commandHandlers = [..diHandlers];
+    private readonly IArgConverter[] argConverters = [..argConverters];
+    private readonly ILogger<CommandRegistryService> logger = logger;
+
     private static readonly Type[] specificToGeneralizingTypeOrder =
         [typeof(bool), typeof(char), typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(object), typeof(string)];
-
-    private readonly ILogger<CommandRegistry> logger;
 
     /// <summary>
     ///     Lookup for command name -> list of known handlers. Each with different arg types or count.
     /// </summary>
     private Dictionary<string, List<CommandHandlerEntry>> HandlerLookup { get; } = new(StringComparer.OrdinalIgnoreCase);
 
-    private Dictionary<string, List<CommandHandlerEntry>>.AlternateLookup<ReadOnlySpan<char>> SpanHandlerLookup { get; }
+    private Dictionary<string, List<CommandHandlerEntry>>.AlternateLookup<ReadOnlySpan<char>> SpanHandlerLookup { get; set; }
 
     /// <summary>
     ///     Lookup of converters that can convert to a type.
@@ -32,70 +34,6 @@ internal sealed class CommandRegistry
     public IEnumerable<CommandHandlerEntry> Handlers => HandlerLookup
                                                         .DistinctBy(p => p.Value)
                                                         .SelectMany(p => p.Value);
-
-    public CommandRegistry(IEnumerable<CommandHandlerEntry> handlers, IEnumerable<IArgConverter> argConverters, ILogger<CommandRegistry> logger)
-    {
-        this.logger = logger;
-        CommandHandlerEntry[] commandHandlers = [.. handlers];
-        foreach (CommandHandlerEntry handler in commandHandlers
-                                                .SelectMany(h =>
-                                                {
-                                                    // Split handlers with optional parameters into separate handlers.
-                                                    List<CommandHandlerEntry> result = [h];
-                                                    List<object> defaultValues = [];
-                                                    for (int i = h.Parameters.Length - 1; i >= 0; i--)
-                                                    {
-                                                        ParameterInfo current = h.Parameters[i];
-                                                        if (current.IsOptional)
-                                                        {
-                                                            defaultValues.Insert(0, current.DefaultValue);
-                                                            result.Add(new CommandHandlerEntry(h, h.Parameters.Take(i).ToArray(), [..defaultValues]));
-                                                        }
-                                                    }
-                                                    return result;
-                                                })
-                                                .OrderByDescending(h => h.Parameters.Length)
-                                                .ThenBy(h => h.ParameterTypes.Length == 0
-                                                            ? 0
-                                                            : h.ParameterTypes.Max(t =>
-                                                            {
-                                                                // More specific handler parameters should be prioritized over generalizing handlers (i.e. try handlers in this order: bool -> int -> float -> Player -> object -> string).
-                                                                int index = specificToGeneralizingTypeOrder.GetIndex(t);
-                                                                // String is a catch-all type and comes last. This is because command input is string-based. Anything assignable to object but not string comes before string.
-                                                                return index == -1 ? specificToGeneralizingTypeOrder.GetIndex(typeof(object)) : index;
-                                                            }))
-                                                .ThenBy(h => h.ParameterTypes.Any(o => o == typeof(object)) ? 1 : 0))
-        {
-            RegisterHandler(handler);
-        }
-        SpanHandlerLookup = HandlerLookup.GetAlternateLookup<ReadOnlySpan<char>>();
-        logger.ZLogDebug($"{commandHandlers.Length:@CommandCount} commands found and registered");
-
-        IArgConverter[] converters = [.. argConverters];
-        foreach (IArgConverter converter in converters)
-        {
-            Type[] converterInterfaces = converter.GetType().GetInterfaces();
-            foreach (Type converterInterface in converterInterfaces)
-            {
-                if (!converterInterface.IsAssignableTo(typeof(IArgConverter)))
-                {
-                    continue;
-                }
-                Type[] genericArgsOnConverter = converterInterface.GetGenericArguments();
-                if (genericArgsOnConverter is not { Length: 2 })
-                {
-                    continue;
-                }
-                Type toType = genericArgsOnConverter[1];
-                if (!ArgConverterLookup.TryGetValue(toType, out List<ArgConverterInfo> registeredConverters))
-                {
-                    registeredConverters = [];
-                }
-                registeredConverters.Add(new ArgConverterInfo(converter, genericArgsOnConverter[0], toType));
-                ArgConverterLookup[toType] = registeredConverters;
-            }
-        }
-    }
 
     /// <summary>
     ///     Gets the command handlers if command exists. Returns false if context origin (or permissions) are not
@@ -262,4 +200,68 @@ internal sealed class CommandRegistry
     }
 
     private record ArgConverterInfo(IArgConverter Converter, Type From, Type To);
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        foreach (CommandHandlerEntry handler in commandHandlers
+                                                .SelectMany(h =>
+                                                {
+                                                    // Split handlers with optional parameters into separate handlers.
+                                                    List<CommandHandlerEntry> result = [h];
+                                                    List<object> defaultValues = [];
+                                                    for (int i = h.Parameters.Length - 1; i >= 0; i--)
+                                                    {
+                                                        ParameterInfo current = h.Parameters[i];
+                                                        if (current.IsOptional)
+                                                        {
+                                                            defaultValues.Insert(0, current.DefaultValue);
+                                                            result.Add(new CommandHandlerEntry(h, h.Parameters.Take(i).ToArray(), [..defaultValues]));
+                                                        }
+                                                    }
+                                                    return result;
+                                                })
+                                                .OrderByDescending(h => h.Parameters.Length)
+                                                .ThenBy(h => h.ParameterTypes.Length == 0
+                                                            ? 0
+                                                            : h.ParameterTypes.Max(t =>
+                                                            {
+                                                                // More specific handler parameters should be prioritized over generalizing handlers (i.e. try handlers in this order: bool -> int -> float -> Player -> object -> string).
+                                                                int index = specificToGeneralizingTypeOrder.GetIndex(t);
+                                                                // String is a catch-all type and comes last. This is because command input is string-based. Anything assignable to object but not string comes before string.
+                                                                return index == -1 ? specificToGeneralizingTypeOrder.GetIndex(typeof(object)) : index;
+                                                            }))
+                                                .ThenBy(h => h.ParameterTypes.Any(o => o == typeof(object)) ? 1 : 0))
+        {
+            RegisterHandler(handler);
+        }
+        SpanHandlerLookup = HandlerLookup.GetAlternateLookup<ReadOnlySpan<char>>();
+        logger.ZLogDebug($"{commandHandlers.Length:@CommandCount} commands found and registered");
+
+        foreach (IArgConverter converter in argConverters)
+        {
+            Type[] converterInterfaces = converter.GetType().GetInterfaces();
+            foreach (Type converterInterface in converterInterfaces)
+            {
+                if (!converterInterface.IsAssignableTo(typeof(IArgConverter)))
+                {
+                    continue;
+                }
+                Type[] genericArgsOnConverter = converterInterface.GetGenericArguments();
+                if (genericArgsOnConverter is not { Length: 2 })
+                {
+                    continue;
+                }
+                Type toType = genericArgsOnConverter[1];
+                if (!ArgConverterLookup.TryGetValue(toType, out List<ArgConverterInfo> registeredConverters))
+                {
+                    registeredConverters = [];
+                }
+                registeredConverters.Add(new ArgConverterInfo(converter, genericArgsOnConverter[0], toType));
+                ArgConverterLookup[toType] = registeredConverters;
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

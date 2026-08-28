@@ -68,20 +68,53 @@ public static class Main
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-        Console.WriteLine("Checking if Nitrox should run...");
-        if (string.IsNullOrEmpty(nitroxLauncherDir.Value))
+        Console.WriteLine("[Nitrox] [INFO] Checking if it should run...");
+        if (!ShouldRun())
         {
-            Console.WriteLine($"Nitrox will not load because launcher path was not provided");
-            return;
-        }
-        if (!Directory.Exists(nitroxLauncherDir.Value))
-        {
-            Console.WriteLine($"Nitrox will not load because launcher path does not exist or is inaccessible: '{nitroxLauncherDir.Value}'");
             return;
         }
 
-        Console.WriteLine("Now initializing Nitrox...");
+        Console.WriteLine("[Nitrox] [INFO] Now initializing...");
         InitWithDependencies();
+
+        static bool ShouldRun()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(nitroxLauncherDir.Value))
+                {
+                    Console.WriteLine($"[Nitrox] [WARNING] will not load because launcher path was not provided: '{nitroxLauncherDir.Value}'");
+                    return false;
+                }
+                if (!Directory.Exists(nitroxLauncherDir.Value))
+                {
+                    Console.WriteLine($"[Nitrox] [WARNING] will not load because launcher path does not exist or is inaccessible: '{nitroxLauncherDir.Value}'");
+                    string lastPath = "";
+                    string? currentFolder = nitroxLauncherDir.Value;
+                    do
+                    {
+                        if (!Directory.Exists(currentFolder))
+                        {
+                            lastPath = currentFolder;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[Nitrox] [WARNING] Path '{lastPath}' is inaccessible, however '{currentFolder}' is.");
+                            Console.WriteLine("[Nitrox] [WARNING] To fix, please move Nitrox closer to the game so that the game can access Nitrox files.");
+                            return false;
+                        }
+                        currentFolder = Path.GetDirectoryName(currentFolder);
+                    } while (currentFolder != null);
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Nitrox] [ERROR] {ex}");
+                return false;
+            }
+        }
     }
 
     /// <summary>
@@ -118,8 +151,8 @@ public static class Main
             }
         };
 
-        Log.Info($"Using Nitrox {NitroxEnvironment.VersionInfo} built on {NitroxEnvironment.BuildDate:F}");
-        Log.Info($"Game version: {Application.version}");
+        Log.Info($"[Nitrox] [INFO] Using {NitroxEnvironment.VersionInfo} built on {NitroxEnvironment.BuildDate:F}");
+        Log.Info($"[Nitrox] [INFO] Game version: {Application.version}");
         // Log if other mods are loaded
         Task.Run(async () =>
         {
@@ -168,14 +201,14 @@ public static class Main
         string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", "net472", dllFileName);
         if (!File.Exists(dllPath))
         {
-            Console.Write($"Did not find '{dllFileName}' at '{dllPath}'");
+            Console.Write($"[Nitrox] [WARNING] Did not find '{dllFileName}' at '{dllPath}'");
             dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, dllFileName);
             Console.WriteLine($", looking at {dllPath}");
         }
 
         if (!File.Exists(dllPath))
         {
-            Console.WriteLine($"Nitrox dll missing: {dllPath}");
+            Console.WriteLine($"[Nitrox] [WARNING] dll missing: {dllPath}");
         }
 
         return Assembly.LoadFile(dllPath);

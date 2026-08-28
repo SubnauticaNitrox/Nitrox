@@ -27,7 +27,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [ObservableProperty]
     public partial SubnauticaGameMode SelectedGameMode { get; set; } = SubnauticaGameMode.SURVIVAL;
 
-    private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
+    private string SavesFolderDir => keyValueStore.GetSavesPath();
 
     public CreateServerViewModel()
     {

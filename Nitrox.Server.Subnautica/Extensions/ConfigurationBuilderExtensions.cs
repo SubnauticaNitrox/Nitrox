@@ -34,11 +34,6 @@ internal static class ConfigurationBuilderExtensions
     /// <summary>
     ///     Adds the first JSON file matching the file name in any parent directory of <see cref="AppContext.BaseDirectory" />.
     /// </summary>
-    /// <remarks>
-    ///     This function creates a symbolic link for the first parent JSON file. A symbolic link is required because change
-    ///     detection does not work with
-    ///     parent files.
-    /// </remarks>
     public static IConfigurationBuilder AddConditionalUpstreamJsonFile(this IConfigurationBuilder builder, bool enabled, string fileName, bool optional = false, bool reloadOnChange = false)
     {
         if (!enabled)
@@ -86,6 +81,9 @@ internal static class ConfigurationBuilderExtensions
         return builder;
     }
 
+    /// <summary>
+    ///     Adds a JSON file that's located in the root of a CSPROJ-based project.
+    /// </summary>
     public static IConfigurationBuilder AddConditionalCsharpProjectJsonFile(this IConfigurationBuilder builder, bool enabled, string fileName, string? projectName = null, bool optional = false, bool reloadOnChange = false)
     {
         if (!enabled || projectName == null)

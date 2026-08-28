@@ -1,30 +1,23 @@
-using System.Runtime.Serialization;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Players;
 
-namespace Nitrox.Server.Subnautica.Models.Serialization.World
+namespace Nitrox.Server.Subnautica.Models.Serialization.World;
+
+internal class PersistedWorldData
 {
-    [DataContract]
-    internal class PersistedWorldData
+    public WorldData? WorldData { get; set; }
+
+    public PlayerData? PlayerData { get; set; }
+
+    public GlobalRootData? GlobalRootData { get; set; }
+
+    public EntityData? EntityData { get; set; }
+
+    public bool IsValid()
     {
-        [DataMember(Order = 1)]
-        public WorldData? WorldData { get; set; }
-
-        [DataMember(Order = 2)]
-        public PlayerData? PlayerData { get; set; }
-
-        [DataMember(Order = 3)]
-        public GlobalRootData? GlobalRootData { get; set; }
-
-        [DataMember(Order = 4)]
-        public EntityData? EntityData { get; set; }
-
-        public bool IsValid()
-        {
-            return WorldData?.IsValid() == true &&
-                   PlayerData != null &&
-                   GlobalRootData != null &&
-                   EntityData != null;
-        }
+        return WorldData?.IsValid() == true &&
+               PlayerData != null &&
+               GlobalRootData != null &&
+               EntityData != null;
     }
 }

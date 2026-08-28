@@ -35,13 +35,12 @@ The following milestones have been completed:
 * Published on the <a href="https://nitrox.rux.gg">Nitrox website</a>
 
 ### How can I play this mod?
-Please do keep in mind that this mod is still in progressional development. 
+Please do keep in mind that this mod is still in progressional development.
 
-We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing a launcher to use on each reoccurring update.
+You can download the latest release of the mod on the <a href="https://nitrox.rux.gg">Nitrox website</a>. 
+For read-only Linux distros like SteamOS <a href="https://github.com/SubnauticaNitrox/Linux-Setup-Script">see this install script</a>.
 
 If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://subnauticanitrox.github.io/Documentation/">docs</a> to set up a development environment where pushed updates will be synchronized automatically.
-
-You can download the latest release of the mod on the <a href="https://nitrox.rux.gg">Nitrox website</a>.
 
 ### Problems/bugs/issues
 Due to the huge influx of new players for Subnautica the Issue tracker turned into a forum instead of its actual purpose. Please join the <a href="https://discord.gg/E8B4X9s">Nitrox Discord</a> to discuss any and all issues you have with Nitrox. From there we'll pick up on new issues to track.

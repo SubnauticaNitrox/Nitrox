@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 
 namespace Nitrox.Model.Platforms.OS.Shared;
 
@@ -9,22 +10,62 @@ internal static class PosixFileSystemPermissions
 {
     public static bool SetFullAccessToCurrentUser(string directory)
     {
+        if (string.IsNullOrWhiteSpace(directory))
+        {
+            return false;
+        }
+
+        // Don't try to execute anything on root folder ("/")
+        if (IsRootDirectory(directory))
+        {
+            Log.Error($"Tried to set full access to current user on root directory '{directory}'");
+            return false;
+        }
+
         try
         {
-            string escapedPath = directory.Replace("\"", "\\\"");
-            using Process process = Process.Start(new ProcessStartInfo
+            string path = Path.GetFullPath(directory);
+            string escapedPath = path.Replace("\"", "\\\"");
+
+            using Process? process = Process.Start(new ProcessStartInfo
             {
                 FileName = "chmod",
                 Arguments = $"-R u+rwX \"{escapedPath}\"",
                 RedirectStandardError = true,
                 UseShellExecute = false,
-            })!;
-            process.WaitForExit();
+            });
+
+            if (process is null)
+            {
+                return false;
+            }
+
+            if (!process.HasExited)
+            {
+                process.WaitForExit();
+            }
+
             return process.ExitCode == 0;
         }
         catch
         {
+            Log.Warn($"Failed to set full access of '{directory}' to current user");
             return false;
         }
+    }
+
+    public static bool IsRootDirectory(string path)
+    {
+        string? root = Path.GetPathRoot(path);
+        if (string.IsNullOrWhiteSpace(root))
+        {
+            return false;
+        }
+
+        return string.Equals(
+            path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+            root.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+            System.StringComparison.Ordinal
+            );
     }
 }
