@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -85,7 +85,7 @@ internal sealed class CyclopsDamageProcessor(Fires fires) : IClientPacketProcess
                         // Copied from CyclopsExternalDamageManager.CreatePoint(), except without the random index pick.
                         damageManager.damagePoints[damagePointsIndex].gameObject.SetActive(true);
                         damageManager.damagePoints[damagePointsIndex].RestoreHealth();
-                        GameObject prefabGo = damageManager.fxPrefabs[Random.Range(0, damageManager.fxPrefabs.Length - 1)];
+                        GameObject prefabGo = damageManager.fxPrefabs[Random.Range(0, damageManager.fxPrefabs.Length)];
                         damageManager.damagePoints[damagePointsIndex].SpawnFx(prefabGo);
                         unusedDamagePoints.Remove(damageManager.damagePoints[damagePointsIndex]);
                     }
