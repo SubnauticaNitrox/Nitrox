@@ -136,7 +136,7 @@ public class ThreadSafeListTest
         nums.Last().Should().Be(10);
     }
 
-    private void DoReaderWriter(Action reader, Action<int> writer, int iterators)
+    private static void DoReaderWriter(Action reader, Action<int> writer, int iterators)
     {
         ManualResetEventSlim barrier = new(false);
         Thread readerThread = new(() =>
@@ -162,5 +162,7 @@ public class ThreadSafeListTest
         readerThread.Start();
         writerThread.Start();
         barrier.Wait();
+        writerThread.Join();
+        readerThread.Join();
     }
 }
