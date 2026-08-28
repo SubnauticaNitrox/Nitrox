@@ -1,7 +1,7 @@
 using FMOD.Studio;
-using NitroxClient.GameLogic;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
@@ -24,8 +24,9 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     private RemotePlayer? drivingPlayer;
 
-    public void Awake()
+    public new void Awake()
     {
+        base.Awake();
         exosuit = GetComponent<Exosuit>();
         SetupSound();
     }

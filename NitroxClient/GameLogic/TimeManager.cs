@@ -15,11 +15,11 @@ public partial class TimeManager
     private bool freezeTime = true;
 
     /// <summary>
-    ///     Latest moment at which we updated the time
+    ///     Latest moment at which we updated the time (server-side value)
     /// </summary>
     private DateTimeOffset latestRegistrationTime;
     /// <summary>
-    ///     Latest registered value of the time
+    ///     Latest registered value of the time (server-side value)
     /// </summary>
     private double latestRegisteredTime;
 
@@ -101,6 +101,16 @@ public partial class TimeManager
     /// </remarks>
     public float DeltaTime = 0;
 
+    /// <summary>
+    /// Difference between the new <see cref="CurrentTime"/> after receiving a <see cref="TimeChange"/> packet, and right before treating it.
+    /// </summary>
+    public double TimeChangeDelta;
+
+    /// <summary>
+    /// Delay during which we consider that effects from a recent <see cref="TimeChange"/> packet might affect some systems.
+    /// </summary>
+    public static readonly TimeSpan RECENTLY_PROCESSED_DELAY = TimeSpan.FromSeconds(3);
+
     public TimeManager(NtpSyncer ntpSyncer)
     {
         this.ntpSyncer = ntpSyncer;
@@ -108,6 +118,8 @@ public partial class TimeManager
 
     public void ProcessUpdate(TimeChange packet)
     {
+        double previousTime = CurrentTime;
+
         if (freezeTime && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
         {
             freezeTime = false;
@@ -115,7 +127,7 @@ public partial class TimeManager
         realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(packet.UpdateTime);
         realTimeElapsed = packet.RealTimeElapsed;
 
-        latestRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(packet.UpdateTime);
+        latestRegistrationTime = realTimeElapsedRegistrationTime;
         latestRegisteredTime = packet.CurrentTime;
 
         // No need to re-initialize the fields with the same data
@@ -124,7 +136,7 @@ public partial class TimeManager
             SetServerCorrectionData(packet.OnlineMode, packet.UtcCorrectionTicks);
         }
 
-        // If the server is in online mode, the server should try to get to online mode too
+        // If the server is in online mode, the client should try to get to online mode too
         if (!clientOnlineMode && serverOnlineMode)
         {
             AttemptNtpSync();
@@ -136,6 +148,8 @@ public partial class TimeManager
         DeltaTime = deltaTimeBefore;
 
         DayNightCycle.main.StopSkipTimeMode();
+
+        TimeChangeDelta = CurrentTime - previousTime;
     }
 
     /// <remarks>
@@ -147,9 +161,9 @@ public partial class TimeManager
         double currentTime = CurrentTime;
         DeltaTime = (float)(currentTime - DayNightCycle.main.timePassedAsDouble);
         // DeltaTime = 0 might end up causing a divide by 0 => NaN in some scripts
-        if (DeltaTime == 0f)
+        if (Mathf.Approximately(DeltaTime, 0f))
         {
-            DeltaTime = 0.00001f;
+            DeltaTime = Mathf.Max(Time.deltaTime, 0.0001f);
         }
         return currentTime;
     }
@@ -159,5 +173,11 @@ public partial class TimeManager
         this.realTimeElapsed = realTimeElapsed;
         realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(registrationTime);
         freezeTime = isFirstPlayer;
+    }
+
+    public bool RecentlyProcessedTimeChange()
+    {
+        // TODO: move this to constant
+        return (ServerUtcNow() - latestRegistrationTime) < RECENTLY_PROCESSED_DELAY;
     }
 }

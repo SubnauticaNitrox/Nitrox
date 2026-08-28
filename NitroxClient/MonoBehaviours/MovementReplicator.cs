@@ -13,6 +13,8 @@ public abstract class MovementReplicator : MonoBehaviour
     public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.BROADCAST_PERIOD;
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
 
+    private TimeManager timeManager;
+
     private readonly RingBuffer<Snapshot> buffer = new();
     /// <summary>
     /// To ensure a smooth experience, we need a max allowed latency value which should top the incoming latencies at all times.
@@ -39,32 +41,29 @@ public abstract class MovementReplicator : MonoBehaviour
     /// <summary>
     /// Current time must be based on real time to avoid effects from time changes/speed.
     /// </summary>
-    private float CurrentTime => (float)this.Resolve<TimeManager>().RealTimeElapsed;
+    private float CurrentTime => (float)timeManager.RealTimeElapsed;
+
+    public void Awake()
+    {
+        timeManager = this.Resolve<TimeManager>();
+    }
 
     public void AddSnapshot(MovementData movementData, float time)
     {
         float currentTime = CurrentTime;
         float latency = currentTime - time;
 
-        if (latency > MaxAllowedLatency)
+        // If a Time Change happens (e.g. "day" command), we might still be receiving movement packets from before that time change (sent by players before
+        // they received the time change themselves) which means the latency will become huge.
+        // In this case, we can compare it to the time skip to detect the issue.
+        if (timeManager.RecentlyProcessedTimeChange() && latency >= timeManager.TimeChangeDelta)
         {
-            MaxAllowedLatency = latency + SafetyLatencyMargin;
-            latestLatencyBumpTime = currentTime;
-            maxLatencyDetectedRecently = 0;
+            // we adjust the value so this packet can still be used
+            time += (float)timeManager.TimeChangeDelta;
         }
         else
         {
-            maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
-
-            if (currentTime - latestLatencyBumpTime >= LatencyUpdatePeriod)
-            {
-                if (maxLatencyDetectedRecently < MaxAllowedLatency - 2 * SafetyLatencyMargin)
-                {
-                    MaxAllowedLatency = maxLatencyDetectedRecently + SafetyLatencyMargin; // regular gameplay latency variation
-                }
-                latestLatencyBumpTime = currentTime;
-                maxLatencyDetectedRecently = 0;
-            }
+            RecalculateMaxAllowedLatency(latency, currentTime);
         }
 
         float occurrenceTime = time + INTERPOLATION_TIME + MaxAllowedLatency;
@@ -83,6 +82,31 @@ public abstract class MovementReplicator : MonoBehaviour
         }
 
         buffer.Add(new Snapshot(movementData, occurrenceTime));
+    }
+
+    private void RecalculateMaxAllowedLatency(float latency, float currentTime)
+    {
+        if (latency > MaxAllowedLatency)
+        {
+            MaxAllowedLatency = latency + SafetyLatencyMargin;
+            latestLatencyBumpTime = currentTime;
+            maxLatencyDetectedRecently = 0;
+            return;
+        }
+
+        maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
+
+        if (currentTime - latestLatencyBumpTime < LatencyUpdatePeriod)
+        {
+            return;
+        }
+
+        if (maxLatencyDetectedRecently < MaxAllowedLatency - 2 * SafetyLatencyMargin)
+        {
+            MaxAllowedLatency = maxLatencyDetectedRecently + SafetyLatencyMargin; // regular gameplay latency variation
+        }
+        latestLatencyBumpTime = currentTime;
+        maxLatencyDetectedRecently = 0;
     }
 
     public void ClearBuffer() => buffer.Clear();
