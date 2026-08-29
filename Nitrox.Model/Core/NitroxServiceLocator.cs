@@ -138,7 +138,7 @@ public static class NitroxServiceLocator
     /// <typeparam name="T">Type in the cache, should be singleton.</typeparam>
     public static class Cache<T> where T : class
     {
-        private static T value;
+        private static T? value;
         public static T Value => value ??= LocateServiceAndRegister();
         public static T ValuePreLifetime => value ??= LocateServicePreLifetimeAndRegister();
 

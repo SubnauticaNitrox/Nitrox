@@ -46,7 +46,7 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
         }
     }
 
-    private static void DrawSimulatingStateField(NitroxId? nitroxId)
+    private static void DrawSimulatingStateField(NitroxId nitroxId)
     {
         using (new GUILayout.HorizontalScope())
         {

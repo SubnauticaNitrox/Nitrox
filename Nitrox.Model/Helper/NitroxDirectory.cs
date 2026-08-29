@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 
 namespace Nitrox.Model.Helper;
@@ -33,7 +34,7 @@ public static class NitroxDirectory
 
     static NitroxDirectory()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || NitroxEnvironment.IsWine)
         {
             implementation = new NitroxDirectoryUnix();
         }
@@ -61,10 +62,11 @@ public static class NitroxDirectory
                     return field;
                 }
 
-                string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                if (string.IsNullOrWhiteSpace(homePath))
+                // Environment variable is checked first in case user wants to override for the current process.
+                string homePath = Environment.GetEnvironmentVariable("HOME");
+                if (!Directory.Exists(homePath) || !Path.IsPathRooted(homePath))
                 {
-                    homePath = Environment.GetEnvironmentVariable("HOME");
+                    homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 }
                 if (!Directory.Exists(homePath))
                 {
@@ -78,31 +80,6 @@ public static class NitroxDirectory
             }
         }
 
-        protected string? WineHomePath
-        {
-            get
-            {
-                if (field != null)
-                {
-                    return field;
-                }
-
-                // On Linux + Wine: Environment.SpecialFolder.ApplicationData returns the Windows version, this bypasses that behaviour
-                string homeInWineEnv = Environment.GetEnvironmentVariable("WINEHOMEDIR");
-                if (homeInWineEnv is { Length: > 4 })
-                {
-                    string homeInWine = homeInWineEnv[4..]; // WINEHOMEDIR is prefixed with \??\
-                    if (Directory.Exists(homeInWine))
-                    {
-                        homeInWine = Path.Combine(homeInWine, ".config", "Nitrox");
-                        Directory.CreateDirectory(homeInWine); // Create it if it's not there (which should not happen in normal setups)
-                        return field = homeInWine;
-                    }
-                }
-                return field = null;
-            }
-        }
-
         /// <summary>
         ///     User specified data path by giving --data-path argument to the running executable.
         /// </summary>
@@ -110,9 +87,15 @@ public static class NitroxDirectory
         {
             get
             {
-                if (field == "")
+                // Empty string is special value to indicate no --data-path is set. Always return null.
+                if (field is "")
                 {
                     return null;
+                }
+                // ... otherwise if value is not null it can only be a valid path.
+                if (field is not null)
+                {
+                    return field;
                 }
 
                 // If user specified a path, use it as is.
@@ -140,11 +123,6 @@ public static class NitroxDirectory
                     return field;
                 }
 
-                if (WineHomePath is { } winePath)
-                {
-                    Directory.CreateDirectory(winePath);
-                    return field = GetAsNitroxPath(WineHomePath);
-                }
                 if (UserSpecifiedDataPath is { } userPath)
                 {
                     Directory.CreateDirectory(userPath);
@@ -152,7 +130,6 @@ public static class NitroxDirectory
                 }
 
                 string? applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
                 // Finalize path to end with "Nitrox".
                 applicationData = GetAsNitroxPath(applicationData);
                 Directory.CreateDirectory(applicationData);
@@ -184,6 +161,41 @@ public static class NitroxDirectory
     /// </summary>
     private class NitroxDirectoryUnix : NitroxDirectoryShared
     {
+        public override string HomePath
+        {
+            get
+            {
+                if (field != null)
+                {
+                    return field;
+                }
+
+                if (NitroxEnvironment.IsWine)
+                {
+                    string? result = Environment.GetEnvironmentVariable(NitroxConstants.HOST_HOME_ENV_VAR_NAME);
+                    result ??= NitroxEnvironment.CommandLineArgs.GetCommandArgs($"--{NitroxConstants.HOST_HOME_ENV_VAR_NAME.ToLower().Replace('_', '-')}").FirstOrDefault();
+                    result = result?.Replace('/', '\\');
+                    if (result is { Length: >= 2 })
+                    {
+                        if (char.IsLetter(result[0]) && result[1] == ':')
+                        {
+                            result = $"Z{result[1..]}";
+                        }
+                        else
+                        {
+                            result = $"Z:{result}";
+                        }
+                    }
+                    if (Directory.Exists(result) && Path.IsPathRooted(result))
+                    {
+                        return field = result;
+                    }
+                }
+
+                return field = base.HomePath;
+            }
+    }
+
         public override string ConfigPath
         {
             get
@@ -192,7 +204,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.CONFIG);
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.CONFIG);
             }
         }
 
@@ -204,7 +216,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.CACHE);
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.CACHE);
             }
         }
 
@@ -216,7 +228,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.DATA, "screenshots");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.DATA, "screenshots");
             }
         }
 
@@ -228,7 +240,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.STATE, "crashes");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.STATE, "crashes");
             }
         }
 
@@ -240,7 +252,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.STATE, "logs");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.STATE, "logs");
             }
         }
 
@@ -252,7 +264,7 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.DATA, "saves");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.DATA, "saves");
             }
         }
 
@@ -264,11 +276,11 @@ public static class NitroxDirectory
                 {
                     return field;
                 }
-                return field = GetXdgPathIfNotWineOrUserGiven(XdgDirectory.DATA, "backups");
+                return field = GetXdgPathIfNotUserGiven(XdgDirectory.DATA, "backups");
             }
         }
 
-        protected virtual string GetXdgPath(XdgDirectory directory) =>
+        protected virtual string GetXdgDefaultPath(XdgDirectory directory) =>
             directory switch
             {
                 XdgDirectory.DATA => Path.Combine(HomePath, ".local", "share"),
@@ -278,14 +290,8 @@ public static class NitroxDirectory
                 _ => NitroxDirectory.ConfigPath
             };
 
-        private string GetXdgPathIfNotWineOrUserGiven(XdgDirectory directory, params string[] folderNames)
+        private string GetXdgPathIfNotUserGiven(XdgDirectory directory, params string[] folderNames)
         {
-            if (WineHomePath is { } winePath)
-            {
-                winePath = Path.Combine([GetAsNitroxPath(winePath), ..folderNames]);
-                Directory.CreateDirectory(winePath);
-                return winePath;
-            }
             if (UserSpecifiedDataPath is { } userPath)
             {
                 userPath = Path.Combine([userPath, ..folderNames]);
@@ -294,11 +300,10 @@ public static class NitroxDirectory
             }
 
             string? xdgPath = Environment.GetEnvironmentVariable(GetXdgName(directory));
-            if (!string.IsNullOrWhiteSpace(xdgPath) && Path.IsPathRooted(xdgPath))
+            if (string.IsNullOrWhiteSpace(xdgPath) || !Path.IsPathRooted(xdgPath))
             {
-                return xdgPath;
+                xdgPath = GetXdgDefaultPath(directory);
             }
-            xdgPath = GetXdgPath(directory);
             xdgPath = Path.Combine([GetAsNitroxPath(xdgPath), ..folderNames]);
             Directory.CreateDirectory(xdgPath);
             return xdgPath;
@@ -325,7 +330,7 @@ public static class NitroxDirectory
 
     private class NitroxDirectoryMacOS : NitroxDirectoryUnix
     {
-        protected override string GetXdgPath(XdgDirectory directory) =>
+        protected override string GetXdgDefaultPath(XdgDirectory directory) =>
             directory switch
             {
                 XdgDirectory.DATA => Path.Combine(HomePath, "Library", "Application Support"),

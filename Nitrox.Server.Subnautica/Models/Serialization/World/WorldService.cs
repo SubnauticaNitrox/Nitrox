@@ -13,7 +13,6 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.GameLogic.Players;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
-using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 using Nitrox.Server.Subnautica.Services;
 
@@ -24,13 +23,12 @@ internal class WorldService : IHostedService
     private readonly BatchEntitySpawner batchEntitySpawner;
     private readonly EntityRegistry entityRegistry;
     private readonly EscapePodManager escapePodManager;
-    private readonly ServerJsonSerializer jsonSerializer;
     private readonly ILogger<WorldService> logger;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly PdaManager pdaManager;
     private readonly PlayerManager playerManager;
 
-    private readonly SubnauticaServerProtoBufSerializer protoBufSerializer;
+    private readonly TaskCompletionSource<bool> hasFinishedLoadingTcs = new();
     private readonly SaveService saveService;
     private readonly IOptions<ServerStartOptions> startOptions;
     private readonly StoryManager storyManager;
@@ -42,7 +40,6 @@ internal class WorldService : IHostedService
     private string FileEnding => Serializer?.FileEnding ?? "";
 
     public WorldService(
-        SubnauticaServerProtoBufSerializer protoBufSerializer,
         ServerJsonSerializer jsonSerializer,
         IOptions<SubnauticaServerOptions> options,
         IEnumerable<SaveDataUpgrade> upgrades,
@@ -59,8 +56,6 @@ internal class WorldService : IHostedService
         IOptions<ServerStartOptions> startOptions,
         ILogger<WorldService> logger)
     {
-        this.protoBufSerializer = protoBufSerializer;
-        this.jsonSerializer = jsonSerializer;
         this.options = options;
         this.upgrades = upgrades.ToArray();
         this.batchEntitySpawner = batchEntitySpawner;
@@ -76,11 +71,21 @@ internal class WorldService : IHostedService
         this.startOptions = startOptions;
         this.logger = logger;
 
-        UpdateSerializer(options.Value.SerializerMode);
+        Serializer = jsonSerializer;
     }
 
-    public bool Save(string saveDir)
+    public async Task<bool> SaveAsync(string saveDir, CancellationToken cancellationToken)
     {
+        // Save data is collected from services so they must have finished loading at least once.
+        try
+        {
+            await hasFinishedLoadingTcs.Task.WaitAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return false;
+        }
+
         PersistedWorldData persistedWorld = new()
         {
             WorldData = new()
@@ -143,16 +148,11 @@ internal class WorldService : IHostedService
         Serializer = serverSerializer;
     }
 
-    internal void UpdateSerializer(ServerSerializerMode mode) => Serializer = mode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer;
-
     internal bool Save(PersistedWorldData persistedData, string saveDir)
     {
         try
         {
-            if (!Directory.Exists(saveDir))
-            {
-                Directory.CreateDirectory(saveDir);
-            }
+            Directory.CreateDirectory(saveDir);
 
             Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
             Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
@@ -313,38 +313,45 @@ internal class WorldService : IHostedService
     // TODO: This method should be removed. Each service should load its own data instead of centralizing it here.
     private async Task LoadPersistedWorldIntoServicesAsync(PersistedWorldData pWorldData)
     {
-        string seed = options.Value.Seed;
-        logger.ZLogInformation($"Loading world with seed {seed}");
-
-        // Time
-        timeService.ActiveTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
-        // Entities
-        entityRegistry.AddEntities(pWorldData.EntityData.Entities);
-        entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
-        await escapePodManager.AddKnownPodsAsync(entityRegistry.GetEntities<EscapePodEntity>());
-
-        // TODO: hacky code - see WorldEntityManager for more information.
-        List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
-        worldEntityManager.globalRootEntitiesById = entityRegistry.GetEntities<GlobalRootEntity>().ToDictionary(entity => entity.Id);
-        worldEntityManager.worldEntitiesByCell = worldEntities.Where(entity => entity is not GlobalRootEntity)
-                                                              .GroupBy(entity => entity.AbsoluteEntityCell)
-                                                              .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
-
-        foreach (Player player in pWorldData.PlayerData.GetPlayers())
+        try
         {
-            playerManager.AddSavedPlayer(player);
+            string seed = options.Value.Seed;
+            logger.ZLogInformation($"Loading world with seed {seed}");
+
+            // Time
+            timeService.ActiveTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
+            // Entities
+            entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+            entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
+            await escapePodManager.AddKnownPodsAsync(entityRegistry.GetEntities<EscapePodEntity>());
+
+            // TODO: hacky code - see WorldEntityManager for more information.
+            List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
+            worldEntityManager.globalRootEntitiesById = entityRegistry.GetEntities<GlobalRootEntity>().ToDictionary(entity => entity.Id);
+            worldEntityManager.worldEntitiesByCell = worldEntities.Where(entity => entity is not GlobalRootEntity)
+                                                                  .GroupBy(entity => entity.AbsoluteEntityCell)
+                                                                  .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
+
+            foreach (Player player in pWorldData.PlayerData.GetPlayers())
+            {
+                playerManager.AddSavedPlayer(player);
+            }
+            batchEntitySpawner.SerializableParsedBatches = pWorldData.WorldData.ParsedBatchCells;
+            // Pda
+            pdaManager.PdaState = pWorldData.WorldData.GameData.PDAState;
+            // Story progression
+            storyManager.StoryGoalData = pWorldData.WorldData.GameData.StoryGoals;
+            storyScheduler.ScheduleStoriesIfNotInPast(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals);
+            // Global story timed events
+            storyManager.AuroraCountdownTimeMs = pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime ?? storyManager.GenerateDeterministicAuroraTime(seed);
+            storyManager.AuroraWarningTimeMs = pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime ?? timeService.GameTime.TotalMilliseconds;
+            // +27 is from CrashedShipExploder.IsExploded, -480 is from the default time (see TimeService)
+            storyManager.AuroraRealExplosionTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime ?? storyManager.AuroraCountdownTimeMs * 0.001 + 27 - TimeService.DEFAULT_STARTING_GAME_TIME_SECONDS);
         }
-        batchEntitySpawner.SerializableParsedBatches = pWorldData.WorldData.ParsedBatchCells;
-        // Pda
-        pdaManager.PdaState = pWorldData.WorldData.GameData.PDAState;
-        // Story progression
-        storyManager.StoryGoalData = pWorldData.WorldData.GameData.StoryGoals;
-        storyScheduler.ScheduleStoriesIfNotInPast(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals);
-        // Global story timed events
-        storyManager.AuroraCountdownTimeMs = pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime ?? storyManager.GenerateDeterministicAuroraTime(seed);
-        storyManager.AuroraWarningTimeMs = pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime ?? timeService.GameTime.TotalMilliseconds;
-        // +27 is from CrashedShipExploder.IsExploded, -480 is from the default time (see TimeService)
-        storyManager.AuroraRealExplosionTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime ?? storyManager.AuroraCountdownTimeMs * 0.001 + 27 - TimeService.DEFAULT_STARTING_GAME_TIME_SECONDS);
+        finally
+        {
+            hasFinishedLoadingTcs.TrySetResult(true);
+        }
 
         logger.ZLogInformation($"World finished loading");
     }
@@ -420,30 +427,23 @@ internal class WorldService : IHostedService
             return;
         }
 
-        if (options.Value.SerializerMode == ServerSerializerMode.PROTOBUF)
+        try
         {
-            logger.ZLogInformation($"Can't upgrade while using ProtoBuf as serializer");
-        }
-        else
-        {
-            try
+            foreach (SaveDataUpgrade upgrade in upgrades)
             {
-                foreach (SaveDataUpgrade upgrade in upgrades)
+                if (upgrade.TargetVersion > saveFileVersion.Version)
                 {
-                    if (upgrade.TargetVersion > saveFileVersion.Version)
-                    {
-                        upgrade.UpgradeSaveFiles(saveDir, FileEnding);
-                    }
+                    upgrade.UpgradeSaveFiles(saveDir, FileEnding);
                 }
             }
-            catch (Exception ex)
-            {
-                logger.ZLogError(ex, $"Error while upgrading save file.");
-                return;
-            }
-
-            Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-            logger.ZLogInformation($"Save file was upgraded to {NitroxEnvironment.Version:@Version}");
         }
+        catch (Exception ex)
+        {
+            logger.ZLogError(ex, $"Error while upgrading save file.");
+            return;
+        }
+
+        Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
+        logger.ZLogInformation($"Save file was upgraded to {NitroxEnvironment.Version:@Version}");
     }
 }

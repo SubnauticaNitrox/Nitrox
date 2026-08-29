@@ -1,5 +1,4 @@
 using System.Runtime.Versioning;
-using Nitrox.Model.Platforms.OS.Unix;
 using Nitrox.Test.Model.Platforms;
 
 namespace Nitrox.Model.Platforms.OS.Unix;
@@ -33,5 +32,35 @@ public class UnixFileSystemTest
         bool result = fileSystem.SetFullAccessToCurrentUser(fakePath);
 
         result.Should().BeFalse();
+    }
+
+    [OSTestMethod(OperatingSystems.Linux)]
+    public void SetFullAccessToCurrentUser_ShouldReturnFalseForRootDirectory()
+    {
+        // Arrange
+        UnixFileSystem fileSystem = new();
+
+        // Act
+        bool result = fileSystem.SetFullAccessToCurrentUser("/");
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [OSTestMethod(OperatingSystems.Linux)]
+    public void IsRootDirectory_SanityCheck()
+    {
+        // Arrange
+        UnixFileSystem fileSystem = new();
+
+        // Act & Assert
+        fileSystem.IsRootDirectory(null!).Should().BeFalse();
+        fileSystem.IsRootDirectory("").Should().BeFalse();
+        fileSystem.IsRootDirectory(" ").Should().BeFalse();
+        fileSystem.IsRootDirectory("/").Should().BeTrue();
+        fileSystem.IsRootDirectory("//").Should().BeTrue();
+        fileSystem.IsRootDirectory("///").Should().BeTrue();
+        fileSystem.IsRootDirectory("/tmp/").Should().BeFalse();
+        fileSystem.IsRootDirectory("/Users/").Should().BeFalse();
     }
 }

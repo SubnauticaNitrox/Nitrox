@@ -106,7 +106,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         float steeringWheelPitch = exosuitMovementData.SteeringWheelPitch;
 
         // See Vehicle.Update (reverse operation for vehicle.steeringWheel... = ...)
-        exosuit.steeringWheelYaw = steeringWheelPitch / 70f;
+        exosuit.steeringWheelYaw = steeringWheelYaw / 70f;
         exosuit.steeringWheelPitch = steeringWheelPitch / 45f;
 
         if (exosuit.mainAnimator)

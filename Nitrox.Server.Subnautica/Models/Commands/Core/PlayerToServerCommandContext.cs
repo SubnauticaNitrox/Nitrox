@@ -37,8 +37,11 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
             case Packet packet:
                 await packetSender.SendPacketAsync(packet, sessionId);
                 break;
-            case string message when !string.IsNullOrWhiteSpace(message):
-                await packetSender.SendPacketAsync(new ChatMessage(SessionId.SERVER_ID, message), sessionId);
+            case string message:
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    await packetSender.SendPacketAsync(new ChatMessage(SessionId.SERVER_ID, message), sessionId);
+                }
                 break;
             default:
                 ICommandContext.ThrowNotSupportedData(data);
@@ -53,8 +56,11 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
             case Packet packet:
                 await packetSender.SendPacketToAllAsync(packet);
                 break;
-            case string message when !string.IsNullOrWhiteSpace(message):
-                await packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, message));
+            case string message:
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    await packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, message));
+                }
                 break;
             default:
                 ICommandContext.ThrowNotSupportedData(data);
@@ -69,8 +75,11 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
             case Packet packet:
                 await packetSender.SendPacketToOthersAsync(packet, OriginId);
                 break;
-            case string message when !string.IsNullOrWhiteSpace(message):
-                await packetSender.SendPacketToOthersAsync(new ChatMessage(SessionId.SERVER_ID, message), OriginId);
+            case string message:
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    await packetSender.SendPacketToOthersAsync(new ChatMessage(SessionId.SERVER_ID, message), OriginId);
+                }
                 break;
             default:
                 ICommandContext.ThrowNotSupportedData(data);
