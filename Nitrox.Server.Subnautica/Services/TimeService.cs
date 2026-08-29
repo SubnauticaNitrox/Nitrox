@@ -2,11 +2,11 @@ using System.Diagnostics;
 using Nitrox.Model.Networking;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Nitrox.Server.Subnautica.Services;
 using Timer = System.Timers.Timer;
 
-namespace Nitrox.Server.Subnautica.Models.GameLogic;
+namespace Nitrox.Server.Subnautica.Services;
 
 internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSyncer, ILoggerFactory loggerFactory, ILogger<TimeService> logger)
     : BackgroundService, ISummarize, IHibernate
