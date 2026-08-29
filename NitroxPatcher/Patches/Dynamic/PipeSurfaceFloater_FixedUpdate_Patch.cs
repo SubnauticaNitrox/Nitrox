@@ -35,7 +35,7 @@ public sealed partial class PipeSurfaceFloater_FixedUpdate_Patch : NitroxPatch, 
         if (pipeSurfaceFloater.TryGetIdOrWarn(out NitroxId pipeFloaterId) && Resolve<SimulationOwnership>().HasAnyLockType(pipeFloaterId))
         {
             Resolve<SimulationOwnership>().StopSimulatingEntity(pipeFloaterId);
-            EntityPositionBroadcaster.StopWatchingEntity(pipeFloaterId);
+            EntityPositionBroadcaster.Instance.StopWatchingEntity(pipeFloaterId);
         }
     }
 }
