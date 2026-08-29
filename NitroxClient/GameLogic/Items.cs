@@ -246,7 +246,7 @@ public class Items
 
         // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
         RemoveAnyRemoteControl(gameObject);
-        EntityPositionBroadcaster.StopWatchingEntity(inventoryItemEntity.Id);
+        EntityPositionBroadcaster.Instance.StopWatchingEntity(inventoryItemEntity.Id);
 
         return inventoryItemEntity;
     }

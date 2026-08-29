@@ -94,7 +94,7 @@ public class SimulationOwnership
         {
             if (simulatedEntity.ChangesPosition)
             {
-                EntityPositionBroadcaster.WatchEntity(simulatedEntity.Id);
+                EntityPositionBroadcaster.Instance.WatchEntity(simulatedEntity.Id);
             }
 
             SimulateEntity(simulatedEntity.Id, simulatedEntity.LockType);
@@ -113,7 +113,7 @@ public class SimulationOwnership
             }
 
             StopSimulatingEntity(simulatedEntity.Id);
-            EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Id);
+            EntityPositionBroadcaster.Instance.StopWatchingEntity(simulatedEntity.Id);
         }
 
         // Avoid keeping artifacts of the entity's previous ChangesPosition state
@@ -126,7 +126,7 @@ public class SimulationOwnership
     public void DropSimulationFrom(NitroxId entityId)
     {
         StopSimulatingEntity(entityId);
-        EntityPositionBroadcaster.StopWatchingEntity(entityId);
+        EntityPositionBroadcaster.Instance.StopWatchingEntity(entityId);
         if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject))
         {
             return;

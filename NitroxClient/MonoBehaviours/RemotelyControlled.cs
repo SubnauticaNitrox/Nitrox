@@ -12,17 +12,38 @@ public class RemotelyControlled : MonoBehaviour
     private SwimBehaviour swimBehaviour;
     private WalkBehaviour walkBehaviour;
     private Rigidbody rigidbody;
+    private WorldForces worldForces;
 
     public void Awake()
     {
         swimBehaviour = gameObject.GetComponent<SwimBehaviour>();
         walkBehaviour = gameObject.GetComponent<WalkBehaviour>();
         rigidbody = gameObject.GetComponent<Rigidbody>();
+        worldForces = gameObject.GetComponent<WorldForces>();
+
+        if (rigidbody)
+        {
+            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+        }
+
+        if (worldForces)
+        {
+            worldForces.enabled = false;
+        }
+    }
+
+    public void OnDestroy()
+    {
+        if (worldForces)
+        {
+            worldForces.enabled = true;
+        }
     }
 
     public void FixedUpdate()
     {
-        if (swimBehaviour || walkBehaviour || !rigidbody)
+        // (WalkBehaviour inherits from SwimBehaviour)
+        if (swimBehaviour && swimBehaviour.enabled)
         {
             return;
         }
@@ -30,25 +51,40 @@ public class RemotelyControlled : MonoBehaviour
         smoothPosition.FixedUpdate();
         smoothRotation.FixedUpdate();
 
-        rigidbody.isKinematic = false;
-        rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
-        rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+        if (rigidbody)
+        {
+            if (rigidbody.isKinematic)
+            {
+                rigidbody.isKinematic = false;
+            }
+            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+        }
+        else
+        {
+            transform.position = smoothPosition.Current;
+            transform.rotation = smoothRotation.Current;
+        }
     }
 
     public void UpdateOrientation(Vector3 position, Quaternion rotation)
     {
-        TeleportIfTooFar(position, rotation);
+        bool teleported = TeleportIfTooFar(position, rotation);
 
-        if (swimBehaviour)
+        if (swimBehaviour && swimBehaviour.enabled)
         {
             swimBehaviour.SwimTo(position, 3f);
+
+            smoothPosition.Current = transform.position;
+            smoothRotation.Current = transform.rotation;
+        }
+        else if (teleported)
+        {
+            smoothPosition.Current = position;
+            smoothRotation.Current = rotation;
         }
 
-        Transform selfTransform = transform;
-
         // Entities can lose their swimBehavior (such as if they get killed).  Keep these up-to-date incase that happens.
-        smoothPosition.Current = selfTransform.position;
-        smoothRotation.Current = selfTransform.rotation;
         smoothPosition.Target = position;
         smoothRotation.Target = rotation;
     }
@@ -57,7 +93,7 @@ public class RemotelyControlled : MonoBehaviour
     {
         TeleportIfTooFar(currentPosition, currentRotation);
 
-        if (swimBehaviour)
+        if (swimBehaviour && swimBehaviour.enabled)
         {
             // First lines of SwimBehaviour.SwimToInternal
             swimBehaviour.originalTargetPosition = destination;
@@ -67,21 +103,30 @@ public class RemotelyControlled : MonoBehaviour
             swimBehaviour.splineFollowing.GoTo(destination, destinationDirection, velocity);
         }
 
-        if (walkBehaviour)
+        if (walkBehaviour && walkBehaviour.enabled)
         {
             walkBehaviour.GoToInternal(destination, destinationDirection, velocity);
         }
     }
 
-    private void TeleportIfTooFar(Vector3 position, Quaternion rotation)
+    private bool TeleportIfTooFar(Vector3 position, Quaternion rotation)
     {
-        Transform selfTransform = transform;
-
-        if ((selfTransform.position - position).sqrMagnitude > 25) // Optimized 5m distance test
+        if ((transform.position - position).sqrMagnitude <= 25) // Optimized 5m distance test
         {
-            selfTransform.position = position;
-            selfTransform.rotation = rotation;
+            return false;
         }
+
+        if (rigidbody)
+        {
+            rigidbody.position = position;
+            rigidbody.rotation = rotation;
+        }
+        else
+        {
+            transform.position = position;
+            transform.rotation = rotation;
+        }
+        return true;
     }
 
     public static RemotelyControlled Ensure(GameObject gameObject)
