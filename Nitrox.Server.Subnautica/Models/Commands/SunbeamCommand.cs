@@ -15,10 +15,8 @@ internal sealed class SunbeamCommand(StoryManager storyManager) : ICommandHandle
     private readonly StoryManager storyManager = storyManager;
 
     [Description("Start sunbeam events")]
-    public Task Execute(ICommandContext context, [Description("Which Sunbeam event to start")] PlaySunbeamEvent.SunbeamEvent sunbeamEvent)
+    public async Task Execute(ICommandContext context, [Description("Which Sunbeam event to start")] PlaySunbeamEvent.SunbeamEvent sunbeamEvent)
     {
-        storyManager.StartSunbeamEvent(sunbeamEvent.ToStoryKey());
-
-        return Task.CompletedTask;
+        await storyManager.StartSunbeamEvent(sunbeamEvent.ToStoryKey());
     }
 }

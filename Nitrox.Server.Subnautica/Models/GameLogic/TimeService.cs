@@ -92,7 +92,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     ///     commands for more information).
     /// </summary>
     /// <param name="type">Time to which you want to get to.</param>
-    public void ChangeTime(StoryManager.TimeModification type)
+    public async Task ChangeTime(StoryManager.TimeModification type)
     {
         TimeSpan skippedTime = TimeSpan.Zero;
         switch (type)
@@ -113,7 +113,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
             GameTime += skippedTime;
             TimeSkipped?.Invoke(skippedTime);
 
-            packetSender.SendPacketToAllAsync(MakeTimePacket());
+            await packetSender.SendPacketToAllAsync(MakeTimePacket());
         }
     }
 
@@ -125,7 +125,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     /// <summary>
     ///     Skips time by the specified amount and broadcasts the update to all players.
     /// </summary>
-    public void SkipTime(TimeSpan skipAmount)
+    public async Task SkipTime(TimeSpan skipAmount)
     {
         if (skipAmount <= TimeSpan.Zero)
         {
@@ -134,7 +134,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
         GameTime += skipAmount;
         TimeSkipped?.Invoke(skipAmount);
-        packetSender.SendPacketToAllAsync(MakeTimePacket());
+        await packetSender.SendPacketToAllAsync(MakeTimePacket());
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

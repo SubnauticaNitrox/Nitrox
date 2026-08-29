@@ -341,7 +341,7 @@ internal class WorldService : IHostedService
             pdaManager.PdaState = pWorldData.WorldData.GameData.PDAState;
             // Story progression
             storyManager.StoryGoalData = pWorldData.WorldData.GameData.StoryGoals;
-            storyScheduler.ScheduleStoriesIfNotInPast(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals);
+            await storyScheduler.ScheduleStoriesIfNotInPast(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals);
             // Global story timed events
             storyManager.AuroraCountdownTimeMs = pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime ?? storyManager.GenerateDeterministicAuroraTime(seed);
             storyManager.AuroraWarningTimeMs = pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime ?? timeService.GameTime.TotalMilliseconds;
