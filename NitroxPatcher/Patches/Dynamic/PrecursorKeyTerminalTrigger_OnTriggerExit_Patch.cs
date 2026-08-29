@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Reflection;
-using NitroxClient.GameLogic.PlayerLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -33,10 +32,7 @@ public sealed partial class PrecursorKeyTerminalTrigger_OnTriggerExit_Patch : Ni
 
     public static bool Prefix(PrecursorKeyTerminalTrigger __instance, Collider col)
     {
-        bool isLocalPlayer = col.gameObject.Equals(Player.main.gameObject);
-        bool isRemotePlayer = col.GetComponentInParent<RemotePlayerIdentifier>() != null;
-
-        if (!isLocalPlayer && !isRemotePlayer)
+        if (col.gameObject.AliveOrNull() is { IsPlayer: false })
         {
             return false;
         }

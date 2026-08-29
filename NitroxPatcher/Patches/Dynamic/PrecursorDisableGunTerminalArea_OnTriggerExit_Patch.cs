@@ -30,11 +30,7 @@ public sealed partial class PrecursorDisableGunTerminalArea_OnTriggerExit_Patch 
         {
             entityRoot = other.gameObject;
         }
-
-        bool isLocalPlayer = entityRoot.GetComponent<Player>() != null;
-        bool isRemotePlayer = entityRoot.GetComponent<RemotePlayerIdentifier>() != null;
-
-        return isLocalPlayer || isRemotePlayer;
+        return entityRoot.IsPlayer;
     }
 
     public static void IncrementPlayerCount(PrecursorDisableGunTerminalArea trigger)

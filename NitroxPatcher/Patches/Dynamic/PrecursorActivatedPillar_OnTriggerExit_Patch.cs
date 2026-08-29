@@ -32,11 +32,7 @@ public sealed partial class PrecursorActivatedPillar_OnTriggerExit_Patch : Nitro
         {
             entityRoot = col.gameObject;
         }
-
-        bool isLocalPlayer = entityRoot.GetComponentInChildren<Player>() != null;
-        bool isRemotePlayer = entityRoot.GetComponentInChildren<RemotePlayerIdentifier>() != null;
-
-        if (!isLocalPlayer && !isRemotePlayer)
+        if (!entityRoot.IsPlayer)
         {
             return false;
         }

@@ -1,5 +1,4 @@
 using System.Reflection;
-using NitroxClient.GameLogic.PlayerLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -13,6 +12,6 @@ public sealed partial class StasisSphere_Freeze_Patch : NitroxPatch, IDynamicPat
 
     public static bool Prefix(Collider other, ref bool __result)
     {
-        return !other.GetComponentInParent<RemotePlayerIdentifier>(true);
+        return !other.gameObject.IsRemotePlayer;
     }
 }
