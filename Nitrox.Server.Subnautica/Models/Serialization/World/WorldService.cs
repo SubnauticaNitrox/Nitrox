@@ -320,6 +320,7 @@ internal class WorldService : IHostedService
 
             // Time
             timeService.ActiveTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
+            timeService.GameTime = TimeSpan.FromSeconds(pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds);
             // Entities
             entityRegistry.AddEntities(pWorldData.EntityData.Entities);
             entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());

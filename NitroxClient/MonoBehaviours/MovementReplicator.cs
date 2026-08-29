@@ -39,34 +39,24 @@ public abstract class MovementReplicator : MonoBehaviour
     public NitroxId objectId { get; private set; }
 
     /// <summary>
-    /// Current time must be based on real time to avoid effects from time changes/speed.
+    /// Used time must be based on real time to avoid effects from time changes/speed.
     /// </summary>
-    private float CurrentTime => (float)timeManager.RealTimeElapsed;
+    private float RealTime => (float)timeManager.RealTimeElapsed;
 
     public void Awake()
     {
         timeManager = this.Resolve<TimeManager>();
     }
 
-    public void AddSnapshot(MovementData movementData, float time)
+    public void AddSnapshot(MovementData movementData, float snapshotRealTime)
     {
-        float currentTime = CurrentTime;
-        float latency = currentTime - time;
+        float realTime = RealTime;
+        float latency = realTime - snapshotRealTime;
 
-        // If a Time Change happens (e.g. "day" command), we might still be receiving movement packets from before that time change (sent by players before
-        // they received the time change themselves) which means the latency will become huge.
-        // In this case, we can compare it to the time skip to detect the issue.
-        if (timeManager.RecentlyProcessedTimeChange() && latency >= timeManager.TimeChangeDelta)
-        {
-            // we adjust the value so this packet can still be used
-            time += (float)timeManager.TimeChangeDelta;
-        }
-        else
-        {
-            RecalculateMaxAllowedLatency(latency, currentTime);
-        }
 
-        float occurrenceTime = time + INTERPOLATION_TIME + MaxAllowedLatency;
+        RecalculateMaxAllowedLatency(latency, realTime);
+
+        float occurrenceTime = snapshotRealTime + INTERPOLATION_TIME + MaxAllowedLatency;
 
         // Cleaning any previous value change that would occur later than the newly received snapshot
         while (buffer.Count > 0)
@@ -84,19 +74,19 @@ public abstract class MovementReplicator : MonoBehaviour
         buffer.Add(new Snapshot(movementData, occurrenceTime));
     }
 
-    private void RecalculateMaxAllowedLatency(float latency, float currentTime)
+    private void RecalculateMaxAllowedLatency(float latency, float realTime)
     {
         if (latency > MaxAllowedLatency)
         {
             MaxAllowedLatency = latency + SafetyLatencyMargin;
-            latestLatencyBumpTime = currentTime;
+            latestLatencyBumpTime = realTime;
             maxLatencyDetectedRecently = 0;
             return;
         }
 
         maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
 
-        if (currentTime - latestLatencyBumpTime < LatencyUpdatePeriod)
+        if (realTime - latestLatencyBumpTime < LatencyUpdatePeriod)
         {
             return;
         }
@@ -105,7 +95,7 @@ public abstract class MovementReplicator : MonoBehaviour
         {
             MaxAllowedLatency = maxLatencyDetectedRecently + SafetyLatencyMargin; // regular gameplay latency variation
         }
-        latestLatencyBumpTime = currentTime;
+        latestLatencyBumpTime = realTime;
         maxLatencyDetectedRecently = 0;
     }
 
@@ -162,10 +152,10 @@ public abstract class MovementReplicator : MonoBehaviour
             return;
         }
 
-        float currentTime = CurrentTime;
+        float realTime = RealTime;
 
         // Sorting out expired nodes
-        while (buffer.Count > 0 && buffer.First.IsExpired(currentTime))
+        while (buffer.Count > 0 && buffer.First.IsExpired(realTime))
         {
             buffer.RemoveFirst();
         }
@@ -177,7 +167,7 @@ public abstract class MovementReplicator : MonoBehaviour
         }
 
         // Current node is not useable yet
-        if (buffer.First.IsSnapshotNewer(currentTime))
+        if (buffer.First.IsSnapshotNewer(realTime))
         {
             return;
         }
@@ -185,7 +175,7 @@ public abstract class MovementReplicator : MonoBehaviour
         // Purging the next nodes if they should have already happened
         while (buffer.Count > 1)
         {
-            if (!buffer[buffer.Head + 1].IsSnapshotNewer(currentTime))
+            if (!buffer[buffer.Head + 1].IsSnapshotNewer(realTime))
             {
                 buffer.RemoveFirst();
             }
@@ -205,7 +195,7 @@ public abstract class MovementReplicator : MonoBehaviour
         Snapshot previousSnapshot = buffer.First;
         Snapshot nextSnapshot = buffer[buffer.Head + 1];
 
-        float t = (currentTime - previousSnapshot.Time) / (nextSnapshot.Time - previousSnapshot.Time);
+        float t = (realTime - previousSnapshot.Time) / (nextSnapshot.Time - previousSnapshot.Time);
 
         transform.position = Vector3.Lerp(previousSnapshot.Data.Position.ToUnity(), nextSnapshot.Data.Position.ToUnity(), t);
         
@@ -220,9 +210,9 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public record struct Snapshot(MovementData Data, float Time)
     {
-        public bool IsSnapshotNewer(float currentTime) => currentTime < Time;
+        public bool IsSnapshotNewer(float comparedTime) => comparedTime < Time;
 
-        public bool IsExpired(float currentTime) => currentTime > Time + SNAPSHOT_EXPIRATION_TIME;
+        public bool IsExpired(float comparedTime) => comparedTime > Time + SNAPSHOT_EXPIRATION_TIME;
     }
 
     public static MovementReplicator AddReplicatorToObject(GameObject gameObject)

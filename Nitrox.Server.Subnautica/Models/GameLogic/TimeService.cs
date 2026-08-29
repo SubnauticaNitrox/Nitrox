@@ -41,28 +41,28 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     private readonly Stopwatch stopWatch = new();
 
     private double activeRealTimeSeconds;
+    private double gameTimeSeconds;
 
     public TimeSkippedEventHandler? TimeSkipped;
 
     /// <summary>
-    ///     Gets the total game time the server was actively simulating the game. See
-    ///     <see cref="HibernateService.IsSleeping" /> for more information.
+    ///     Gets the total game time. Includes time skips but excludes time during <see cref="HibernateService.IsSleeping" />.
     /// </summary>
     /// <remarks>
     ///     Initial value is <see cref="DEFAULT_STARTING_GAME_TIME_SECONDS" /> for fresh worlds.
     /// </remarks>
     public TimeSpan GameTime
     {
-        get => ActiveTime + TimeSpan.FromSeconds(DEFAULT_STARTING_GAME_TIME_SECONDS);
+        get => TimeSpan.FromSeconds(stopWatch.Elapsed.TotalSeconds + gameTimeSeconds + DEFAULT_STARTING_GAME_TIME_SECONDS);
         internal set
         {
             value -= TimeSpan.FromSeconds(DEFAULT_STARTING_GAME_TIME_SECONDS);
-            activeRealTimeSeconds = double.Max(0, value.TotalSeconds - stopWatch.Elapsed.TotalSeconds);
+            gameTimeSeconds = double.Max(0, value.TotalSeconds - stopWatch.Elapsed.TotalSeconds);
         }
     }
 
     /// <summary>
-    ///     Gets the total time the server was actively simulating the game. This excludes time during
+    ///     Gets the total time the server was actively simulating the game. Excludes game time skips and time during
     ///     <see cref="HibernateService.IsSleeping" />.
     /// </summary>
     /// <remarks>
@@ -81,11 +81,6 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     ///     Uses ceiling because days count start at 1 and not 0.
     /// </remarks>
     public int GameDay => (int)Math.Ceiling(GameTime / TimeSpan.FromMinutes(20));
-
-    public void ResetCount()
-    {
-        stopWatch.Reset();
-    }
 
     /// <summary>
     ///     Set current time depending on the current time in the day (replication of SN's system, see DayNightCycle.cs
@@ -160,7 +155,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     Task IEvent<IHibernate.SleepArgs>.OnEventAsync(IHibernate.SleepArgs args)
     {
         stopWatch.Stop();
-        resyncTimer.Period = TimeSpan.FromMicroseconds(uint.MaxValue); // uint.MaxValue removes internal .NET timer from ever ticking.
+        resyncTimer.Period = Timeout.InfiniteTimeSpan;
         return Task.CompletedTask;
     }
 
@@ -173,6 +168,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
     Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
     {
+        logger.ZLogInformation($"Play time: {ActiveTime.ToString(@"h\h\ m\m\ s\s")}");
         logger.ZLogInformation($"Current time: day {GameDay} ({Math.Floor(GameTime.TotalSeconds)}s)");
         return Task.CompletedTask;
     }
