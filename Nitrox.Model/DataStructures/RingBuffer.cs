@@ -29,6 +29,11 @@ public class RingBuffer<T>
 
     public RingBuffer(int initialCapacity = 64)
     {
+        if (initialCapacity <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(initialCapacity), initialCapacity, "Initial capacity must be greater than zero.");
+        }
+
         capacity = initialCapacity;
         buffer = new T[capacity];
     }
