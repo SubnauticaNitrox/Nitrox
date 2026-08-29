@@ -1,4 +1,5 @@
 using System.Reflection;
+using Nitrox.Model.DataStructures;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
@@ -15,11 +16,9 @@ public sealed partial class SplineFollowing_GoTo_Patch : NitroxPatch, IDynamicPa
 
     public static void Prefix(SplineFollowing __instance, Vector3 targetPos, Vector3 targetDir, float velocity)
     {
-        NitroxEntity nitroxEntity = __instance.GetComponent<NitroxEntity>();
-
-        if (nitroxEntity)
+        if (__instance.TryGetIdOrWarn(out NitroxId nitroxId))
         {
-            EntityPositionBroadcaster.RegisterSplineMovementChange(nitroxEntity.Id, __instance.gameObject, targetPos, targetDir, velocity);
+            EntityPositionBroadcaster.Instance.RegisterSplineMovementChange(nitroxId, __instance.gameObject, targetPos, targetDir, velocity);
         }
     }
 }

@@ -1,12 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using Nitrox.Model.Core;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using static Nitrox.Model.Subnautica.Packets.EntityTransformUpdates;
 
@@ -14,19 +10,51 @@ namespace NitroxClient.MonoBehaviours;
 
 public class EntityPositionBroadcaster : MonoBehaviour
 {
+    public static EntityPositionBroadcaster Instance;
+
     public static readonly float BROADCAST_INTERVAL = 0.25f;
 
-    private static HashSet<NitroxId> watchingEntityIds = new();
-
-    private static Dictionary<NitroxId, SplineTransformUpdate> splineUpdatesById = new();
+    /// <summary>
+    /// Dictionary of watched entities that don't follow spline movements.
+    /// </summary>
+    private readonly Dictionary<NitroxId, GameObject> regularEntities = [];
+    /// <summary>
+    /// Dictionary of watched entities that follow spline movements.
+    /// </summary>
+    private readonly Dictionary<NitroxId, SwimBehaviour> splineEntities = [];
+    /// <summary>
+    /// Set of watched entities that weren't spawned yet.
+    /// </summary>
+    private readonly HashSet<NitroxId> notSpawnedEntityIds = [];
+    /// <summary>
+    /// Latest registered spline updates from SplineFollowing.GoTo
+    /// </summary>
+    private readonly Dictionary<NitroxId, SplineTransformUpdate> splineUpdatesById = [];
+    /// <summary>
+    /// Reusable list of <see cref="EntityTransformUpdate"/>s to avoid reallocating a new list at each broadcast.
+    /// </summary>
+    /// <remarks>
+    /// This only works because <see cref="LiteNetLibClient.Send"/> immediately serialiazes the list.
+    /// </remarks>
+    private readonly List<EntityTransformUpdate> updates = new(50);
 
     private IPacketSender packetSender;
+    private SimulationOwnership simulationOwnership;
 
     private float time;
 
     public void Awake()
     {
-        packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
+        if (Instance)
+        {
+            Log.Error($"There's already a {nameof(EntityPositionBroadcaster)} Instance alive, destroying the new one.");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+
+        packetSender = this.Resolve<IPacketSender>();
+        simulationOwnership = this.Resolve<SimulationOwnership>();
     }
 
     public void Update()
@@ -38,73 +66,132 @@ public class EntityPositionBroadcaster : MonoBehaviour
         {
             time = 0;
 
-            if (watchingEntityIds.Count > 0)
-            {
-                Dictionary<NitroxId, GameObject> nonSplineEntitiesById = NitroxEntity.GetObjectsFrom(watchingEntityIds)
-                                                                                     .Where(item => !item.Value.GetComponent<SwimBehaviour>() && 
-                                                                                                    !item.Value.GetComponent<WalkBehaviour>())
-                                                                                     .ToDictionary(item => item.Key, item => item.Value);
-                
-                List<EntityTransformUpdate> updates = BuildUpdates(nonSplineEntitiesById);
+            CheckEntities();
+            BuildUpdates();
 
-                if (updates.Count > 0)
-                {
-                    packetSender.Send(new EntityTransformUpdates(updates));
-                }
+            if (updates.Count > 0)
+            {
+                packetSender.Send(new EntityTransformUpdates(updates));
             }
         }
     }
 
-    private List<EntityTransformUpdate> BuildUpdates(Dictionary<NitroxId, GameObject> nonSplineEntitiesById)
+    private void BuildUpdates()
     {
-        List<EntityTransformUpdate> updates = new();
+        // Avoid any GC allocation
+        updates.Clear();
 
-        foreach (KeyValuePair<NitroxId, GameObject> gameObjectWithId in nonSplineEntitiesById)
+        foreach (KeyValuePair<NitroxId, GameObject> entityPair in regularEntities)
         {
-            if (gameObjectWithId.Value)
-            {
-                updates.Add(new RawTransformUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position.ToDto(), gameObjectWithId.Value.transform.rotation.ToDto()));
-            }
+            Transform entityTransform = entityPair.Value.transform;
+            updates.Add(new RawTransformUpdate(entityPair.Key, entityTransform.position.ToDto(), entityTransform.rotation.ToDto()));
         }
 
         // Only send data for entities still simulated by the local player
-        updates.AddRange(splineUpdatesById.Values.Where(
-            splineUpdate => this.Resolve<SimulationOwnership>().HasAnyLockType(splineUpdate.Id)
-        ));
+        foreach (SplineTransformUpdate splineUpdate in splineUpdatesById.Values)
+        {
+            if (simulationOwnership.HasAnyLockType(splineUpdate.Id))
+            {
+                updates.Add(splineUpdate);
+            }
+        }
         
         splineUpdatesById.Clear();
-
-        return updates;
     }
 
-    public static void WatchEntity(NitroxId id)
+    public void WatchEntity(NitroxId id)
     {
-        watchingEntityIds.Add(id);
-
         // The game object may not exist at this very moment (due to being spawned in async). This is OK as we will
         // automatically start sending updates when we finally get it in the world. This behavior will also allow us
         // to resync or respawn entities while still have broadcasting enabled without doing anything extra.
-        
-        if (NitroxEntity.TryGetComponentFrom(id, out RemotelyControlled remotelyControlled))
+     
+        if (NitroxEntity.TryGetObjectFrom(id, out GameObject entityObject))
+        {
+            SortEntity(id, entityObject);
+        }
+        else
+        {
+            notSpawnedEntityIds.Add(id);
+        }
+    }
+
+    private void SortEntity(NitroxId nitroxId, GameObject entityObject)
+    {
+        if (entityObject.TryGetComponent(out SwimBehaviour swimBehaviour) && swimBehaviour.enabled)
+        {
+            splineEntities[nitroxId] = swimBehaviour;
+        }
+        else
+        {
+            regularEntities[nitroxId] = entityObject;
+        }
+
+        if (entityObject.TryGetComponent(out RemotelyControlled remotelyControlled))
         {
             Object.Destroy(remotelyControlled);
         }
     }
 
-    public static void StopWatchingEntity(NitroxId id)
+    private void CheckEntities()
     {
-        watchingEntityIds.Remove(id);
+        // when fishes die, they're only a corpse and their swim behaviour stops functioning
+        splineEntities.RemoveWhere(pair =>
+        {
+            SwimBehaviour swimBehaviour = pair.Value;
+
+            if (!swimBehaviour)
+            {
+                notSpawnedEntityIds.Add(pair.Key);
+                return true;
+            }
+
+            if (!swimBehaviour.enabled)
+            {
+                regularEntities[pair.Key] = swimBehaviour.gameObject;
+                return true;
+            }
+            return false;
+        });
+
+        regularEntities.RemoveWhere(pair =>
+        {
+            if (!pair.Value)
+            {
+                notSpawnedEntityIds.Add(pair.Key);
+                return true;
+            }
+            return false;
+        });
+
+        // in case a fish was removed from splineEntities (from the above loop), it can be added back in here as a regular entity if required
+        // NB: keep this section below the other RemoveWhere sections so it can eventually collect fresh references from the NitroxIds
+        notSpawnedEntityIds.RemoveWhere(id =>
+        {
+            if (NitroxEntity.TryGetObjectFrom(id, out GameObject entityObject))
+            {
+                SortEntity(id, entityObject);
+                return true;
+            }
+            return false;
+        });
     }
 
-    public static void RegisterSplineMovementChange(NitroxId id, GameObject gameObject, Vector3 targetPos, Vector3 targetDir, float velocity)
+    public void StopWatchingEntity(NitroxId id)
     {
-        if (watchingEntityIds.Contains(id))
+        splineEntities.Remove(id);
+        regularEntities.Remove(id);
+        notSpawnedEntityIds.Remove(id);
+    }
+
+    public void RegisterSplineMovementChange(NitroxId id, GameObject gameObject, Vector3 targetPos, Vector3 targetDir, float velocity)
+    {
+        if (splineEntities.ContainsKey(id))
         {
             splineUpdatesById[id] = new(id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), targetPos.ToDto(), targetDir.ToDto(), velocity);
         }
     }
 
-    public static void RemoveEntityMovementControl(GameObject gameObject, NitroxId entityId)
+    public void RemoveEntityMovementControl(GameObject gameObject, NitroxId entityId)
     {
         if (gameObject.TryGetComponent(out RemotelyControlled remotelyControlled))
         {
