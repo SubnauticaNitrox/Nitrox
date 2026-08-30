@@ -13,7 +13,7 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
             Log.Error($"[{nameof(FlareMetadataProcessor)}] Can't apply metadata to {gameObject} because it doesn't have a {nameof(Flare)} component");
             return;
         }
-        flare.energyLeft = metadata.EnergyLeft;
+        
         flare.hasBeenThrown = metadata.HasBeenThrown;
 
         if (metadata.FlareActivateTime.HasValue)
@@ -22,8 +22,11 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
             flare.flareActiveState = true;
             // From Flare.OnDrop
             flare.useRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            // Subtract the passed time to get to the current real amount of energy
-            flare.energyLeft -= DayNightCycle.main.timePassedAsFloat - metadata.FlareActivateTime.Value;
+            // Calculate current energy accounting for time elapsed since extraction
+            float currentTime = DayNightCycle.main.timePassedAsFloat;
+            float timeSinceActivation = currentTime - metadata.FlareActivateTime.Value;
+            flare.energyLeft = Mathf.Max(metadata.EnergyLeft - timeSinceActivation, 0f);
+            
             flare.GetComponent<WorldForces>().enabled = true;
 
             // From Flare.Awake but without the part disabling the light
@@ -34,6 +37,10 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
                 flare.fxIsPlaying = true;
                 flare.light.enabled = true;
             }
+        }
+        else
+        {
+            flare.energyLeft = metadata.EnergyLeft;
         }
     }
 }
