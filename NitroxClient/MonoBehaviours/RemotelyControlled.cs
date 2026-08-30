@@ -6,43 +6,43 @@ namespace NitroxClient.MonoBehaviours;
 
 public class RemotelyControlled : MonoBehaviour
 {
-    private readonly SmoothVector smoothPosition = new SmoothVector();
-    private readonly SmoothRotation smoothRotation = new SmoothRotation();
+    protected SmoothVector smoothPosition;
+    protected SmoothRotation smoothRotation;
 
     private SwimBehaviour swimBehaviour;
-    private WalkBehaviour walkBehaviour;
-    private Rigidbody rigidbody;
+    protected Rigidbody rigidbody;
     private WorldForces worldForces;
+
+    private bool disabledWorldForces;
 
     public void Awake()
     {
         swimBehaviour = gameObject.GetComponent<SwimBehaviour>();
-        walkBehaviour = gameObject.GetComponent<WalkBehaviour>();
         rigidbody = gameObject.GetComponent<Rigidbody>();
         worldForces = gameObject.GetComponent<WorldForces>();
 
+        bool followsSpline = swimBehaviour && swimBehaviour.enabled;
         if (rigidbody)
         {
             rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            if (followsSpline)
+            {
+                rigidbody.isKinematic = false;
+            }
         }
 
-        if (worldForces)
+        if (worldForces && !followsSpline)
         {
+            disabledWorldForces = worldForces.enabled;
             worldForces.enabled = false;
         }
-    }
 
-    public void OnDestroy()
-    {
-        if (worldForces)
-        {
-            worldForces.enabled = true;
-        }
+        smoothPosition = new(transform.position);
+        smoothRotation = new(transform.rotation);
     }
 
     public void FixedUpdate()
     {
-        // (WalkBehaviour inherits from SwimBehaviour)
         if (swimBehaviour && swimBehaviour.enabled)
         {
             return;
@@ -67,9 +67,20 @@ public class RemotelyControlled : MonoBehaviour
         }
     }
 
+    public void OnDestroy()
+    {
+        // there might be other instances calling worldForces.enabled = false during its lifetime but we can't really detect those easily
+        // so we just hope nothing major breaks
+        if (worldForces && disabledWorldForces)
+        {
+            worldForces.enabled = true;
+        }
+    }
+
     public void UpdateOrientation(Vector3 position, Quaternion rotation)
     {
-        bool teleported = TeleportIfTooFar(position, rotation);
+        float velocity = rigidbody ? rigidbody.velocity.magnitude : 0f;
+        bool teleported = TeleportIfTooFar(position, rotation, GetTeleportThreshold(velocity));
 
         if (swimBehaviour && swimBehaviour.enabled)
         {
@@ -91,27 +102,41 @@ public class RemotelyControlled : MonoBehaviour
 
     public void UpdateKnownSplineUser(Vector3 currentPosition, Quaternion currentRotation, Vector3 destination, Vector3 destinationDirection, float velocity)
     {
-        TeleportIfTooFar(currentPosition, currentRotation);
+        bool teleported = TeleportIfTooFar(currentPosition, currentRotation, GetTeleportThreshold(velocity));
 
+        // SwimBehaviour and WalkBehaviour will act the exact same
         if (swimBehaviour && swimBehaviour.enabled)
         {
-            // First lines of SwimBehaviour.SwimToInternal
+            float adjustedVelocity = velocity;
+
+            if (!teleported)
+            {
+                float distance = Vector3.Distance(currentPosition, destination);
+
+                // avoid too short paths
+                if (distance > 0.1f)
+                {
+                    float localDistance = Vector3.Distance(transform.position, destination);
+
+                    adjustedVelocity *= localDistance / distance;
+
+                    adjustedVelocity = Mathf.Clamp(adjustedVelocity, velocity * 0.5f, velocity * 1.5f);
+                }
+            }
+
+            // Adjust the target data and velocity
             swimBehaviour.originalTargetPosition = destination;
             swimBehaviour.originalTargetDirection = destinationDirection;
-            swimBehaviour.originalVelocity = velocity;
-            // Only the useful part of the methods called in SwimBehaviour.SwimToInternal
-            swimBehaviour.splineFollowing.GoTo(destination, destinationDirection, velocity);
-        }
+            swimBehaviour.originalVelocity = adjustedVelocity;
 
-        if (walkBehaviour && walkBehaviour.enabled)
-        {
-            walkBehaviour.GoToInternal(destination, destinationDirection, velocity);
+            // Trigger either SwimBehaviour.GoToInternal or WalkBehaviour.GoToInternal so they use their own way to pass the data to the SplineFollowing
+            swimBehaviour.GoToInternal(destination, destinationDirection, adjustedVelocity);
         }
     }
 
-    private bool TeleportIfTooFar(Vector3 position, Quaternion rotation)
+    private bool TeleportIfTooFar(Vector3 position, Quaternion rotation, float teleportThreshold)
     {
-        if ((transform.position - position).sqrMagnitude <= 25) // Optimized 5m distance test
+        if ((transform.position - position).sqrMagnitude <= teleportThreshold * teleportThreshold)
         {
             return false;
         }
@@ -120,6 +145,8 @@ public class RemotelyControlled : MonoBehaviour
         {
             rigidbody.position = position;
             rigidbody.rotation = rotation;
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
         }
         else
         {
@@ -127,6 +154,11 @@ public class RemotelyControlled : MonoBehaviour
             transform.rotation = rotation;
         }
         return true;
+    }
+
+    private static float GetTeleportThreshold(float velocity)
+    {
+        return Mathf.Max(5f, velocity * 1.5f);
     }
 
     public static RemotelyControlled Ensure(GameObject gameObject)
