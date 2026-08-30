@@ -30,7 +30,7 @@ public sealed partial class Flare_UpdateLight_Patch : NitroxPatch, IDynamicPatch
                    new CodeMatch(OpCodes.Ldsfld, Reflect.Field(() => DayNightCycle.main)),
                    new CodeMatch(OpCodes.Callvirt, Reflect.Property((DayNightCycle t) => t.timePassed).GetGetMethod())
                ])
-               .SetOperandAndAdvance(Reflect.Method(() => Resolve<TimeManager>()))
+               .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Call, Reflect.Method(() => Resolve<TimeManager>())))
                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Callvirt, Reflect.Property((TimeManager t) => t.RealTimeElapsed).GetGetMethod()));
 
         return matcher.InstructionEnumeration();
