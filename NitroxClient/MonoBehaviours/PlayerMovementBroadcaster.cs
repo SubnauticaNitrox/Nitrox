@@ -104,10 +104,11 @@ public class PlayerMovementBroadcaster : MonoBehaviour
     /// Rate limiter which prevents non-moving players from spamming movement packets following some rules:
     /// - packets are never sent more often than <see cref="MovementBroadcaster.BROADCAST_PERIOD"/> allows
     /// - position changes less than <see cref="MINIMAL_MOVEMENT_THRESHOLD"/> and rotation changes less than <see cref="MINIMAL_ROTATION_THRESHOLD"/> are ignored
-    /// - once the player comes to a full stop (velocity below <see cref="MINIMAL_VELOCITY_THRESHOLD"/>), exactly one final packet is sent so remote
-    /// machines settle on the stopped state, after which broadcasting stops completely until the player moves again
-    /// - if the player has velocity but hasn't moved past the position/rotation threshold yet (e.g. oscillating in place), a periodic resync every
-    /// <see cref="MAX_TIME_WITHOUT_BROADCAST"/> (with a <see cref="SAFETY_BROADCAST_WINDOW"/> grace period) corrects any drift accumulating remotely
+    /// - once the player comes to a full stop (velocity below <see cref="MINIMAL_VELOCITY_THRESHOLD"/>), one packet is sent immediately so remote
+    /// machines settle on the stopped state
+    /// - after that, whether the player is fully stopped or just oscillating in place without net displacement, a low-rate resync every
+    /// <see cref="MAX_TIME_WITHOUT_BROADCAST"/> (with a <see cref="SAFETY_BROADCAST_WINDOW"/> grace period) keeps correcting any drift that
+    /// accumulates on remote machines (e.g. their local physics nudging the idle body). This mirrors <see cref="Vehicles.WatchedEntry"/>.
     /// </summary>
     private bool ShouldBroadcastMovement(Vector3 currentPosition, Quaternion bodyRotation, Vector3 velocity)
     {
@@ -127,17 +128,17 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         }
 
         bool isStandingStill = velocity.sqrMagnitude < MINIMAL_VELOCITY_THRESHOLD * MINIMAL_VELOCITY_THRESHOLD;
-        if (isStandingStill)
+        if (isStandingStill && !hasSentStoppedPacket)
         {
-            if (hasSentStoppedPacket)
-            {
-                return false;
-            }
+            // Send one packet the moment the player stops so remote machines settle on the stopped state right away
             latestBroadcastTime = currentTime;
             hasSentStoppedPacket = true;
             return true;
         }
 
+        // Low-rate resync while the player isn't making net progress (fully stopped or oscillating in place): re-send every
+        // MAX_TIME_WITHOUT_BROADCAST (+ SAFETY_BROADCAST_WINDOW grace) so drift accumulated on remote machines still gets
+        // corrected even while idle, without going back to per-frame broadcasting. Mirrors WatchedEntry.
         if (currentTime > latestBroadcastTime + MAX_TIME_WITHOUT_BROADCAST)
         {
             if (currentTime > latestBroadcastTime + MAX_TIME_WITHOUT_BROADCAST + SAFETY_BROADCAST_WINDOW)
