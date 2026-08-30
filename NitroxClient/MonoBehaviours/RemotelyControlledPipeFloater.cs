@@ -11,6 +11,7 @@ public class RemotelyControlledPipeFloater : RemotelyControlled
     {
         positioned = true;
         rigidbody.isKinematic = true;
+        rigidbody.interpolation = UnityEngine.RigidbodyInterpolation.None;
     }
 
     public new void FixedUpdate()
