@@ -1,4 +1,7 @@
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -120,7 +123,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         }
 
         // Skipping intro if creative like in normal SN or in debug configuration
-        if (!NitroxEnvironment.IsReleaseMode ||
+        if (ShouldSkipIntroForDebug() ||
             GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
         {
             SkipLocalCinematic(uGuiSceneIntro, true);
@@ -151,6 +154,12 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         }
 
         return false;
+    }
+
+    private static bool ShouldSkipIntroForDebug()
+    {
+        return !NitroxEnvironment.IsReleaseMode && !NitroxEnvironment.CommandLineArgs.Any(
+            x => x.Equals("--noskipintro", StringComparison.OrdinalIgnoreCase));
     }
 
     public static void EnqueueStartCinematic(uGUI_SceneIntro uGuiSceneIntro)
@@ -184,7 +193,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             IntroCinematicUpdater introCinematicUpdater = partner.Body.GetComponent<IntroCinematicUpdater>();
             if (introCinematicUpdater)
             {
-                Object.DestroyImmediate(introCinematicUpdater);
+                UnityEngine.Object.DestroyImmediate(introCinematicUpdater);
                 IntroCinematicUpdater.Partner = null;
             }
 
@@ -215,24 +224,24 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
         if (radioLiveMixin.IsFullHealth())
         {
-            Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
+            UnityEngine.Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
         }
 
         Transform introFireHolder = EscapePod.main.transform.Find("Intro");
         if (introFireHolder) // Can be null if called very early
         {
             introFireHolder.GetComponentInChildren<FMOD_CustomEmitter>(true).ReleaseEvent(); // Not releasing it before destroying results in infinite unstoppable pain
-            Object.DestroyImmediate(introFireHolder.gameObject); // Like in Fire.Extinguished() but without delay
+            UnityEngine.Object.DestroyImmediate(introFireHolder.gameObject); // Like in Fire.Extinguished() but without delay
         }
 
         // From uGUI_SceneIntro.IntroSequence() after "if (XRSettings.enabled && VROptions.skipIntro)"
         if (UnityObjectExtensions.TryFind("fire_extinguisher_01_tp", out GameObject gameObject1))
         {
-            Object.Destroy(gameObject1);
+            UnityEngine.Object.Destroy(gameObject1);
         }
         if (UnityObjectExtensions.TryFind("IntroFireExtinugisherPickup", out GameObject gameObject2))
         {
-            Object.Destroy(gameObject2);
+            UnityEngine.Object.Destroy(gameObject2);
         }
 
         Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
