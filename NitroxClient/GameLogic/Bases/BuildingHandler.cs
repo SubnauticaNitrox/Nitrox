@@ -130,7 +130,7 @@ public partial class BuildingHandler : MonoBehaviour
         yield return ModuleEntitySpawner.RestoreModule(parent, moduleEntity, result);
         if (result.value.HasValue)
         {
-            this.Resolve<EntityMetadataManager>().ApplyMetadata(result.value.Value.gameObject, moduleEntity.Metadata);
+            this.Resolve<EntityMetadataManager>().ApplyMetadata(result.value.Value.gameObject, moduleEntity);
         }
         BasesCooldown[moduleEntity.ParentId ?? moduleEntity.Id] = DateTimeOffset.UtcNow;
     }

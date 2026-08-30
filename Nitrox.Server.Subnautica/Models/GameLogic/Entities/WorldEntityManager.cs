@@ -74,7 +74,7 @@ internal sealed class WorldEntityManager
         // TODO: refactor if there are more entities that should not be persisted
         return GetGlobalRootEntities(true).Where(entity =>
         {
-            if (entity.Metadata is CyclopsMetadata cyclopsMetadata)
+            if (entity.TryGetMetadata(out CyclopsMetadata cyclopsMetadata))
             {
                 // Do not save cyclops wrecks
                 return !cyclopsMetadata.IsDestroyed;

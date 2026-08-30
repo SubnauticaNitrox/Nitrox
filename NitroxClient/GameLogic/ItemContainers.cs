@@ -124,7 +124,7 @@ public class ItemContainers
 
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(battery);
 
-        InstalledBatteryEntity installedBattery = new(componentIndex, id, techType.ToDto(), metadata.OrNull(), parent.Id, []);
+        InstalledBatteryEntity installedBattery = new(componentIndex, id, techType.ToDto(), metadata.HasValue ? [metadata.Value] : null, parent.Id, []);
 
         EntitySpawnedByClient spawnedPacket = new(installedBattery);
         packetSender.Send(spawnedPacket);

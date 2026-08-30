@@ -21,7 +21,7 @@ public class InstalledBatteryEntity : Entity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InstalledBatteryEntity(int componentIndex, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InstalledBatteryEntity(int componentIndex, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities)
     {
         ComponentIndex = componentIndex;
         Id = id;

@@ -124,7 +124,7 @@ public class Items
         {
             // We cast it to an entity type that is always seeable by clients
             // therefore, the packet will be redirected to everyone
-            droppedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), level, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), parentId, childrenEntities);
+            droppedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), level, classId, true, id, techType.Value.ToDto(), (metadata.HasValue ? [metadata.Value] : null), parentId, childrenEntities);
         }
         else if (gameObject.TryGetComponent(out OxygenPipe oxygenPipe))
         {
@@ -149,13 +149,13 @@ public class Items
             oxygenPipe.rootPipeUID = rootPipeId.ToString();
             oxygenPipe.parentPipeUID = parentPipeId.ToString();
 
-            droppedItem = new OxygenPipeEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), null,
+            droppedItem = new OxygenPipeEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.Value.ToDto(), (metadata.HasValue ? [metadata.Value] : null), null,
                                               childrenEntities, parentPipeId, rootPipeId, parentConnection.GetAttachPoint().ToDto());
         }
         else
         {
             // Generic case
-            droppedItem = new(gameObject.transform.ToWorldDto(), level, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
+            droppedItem = new(gameObject.transform.ToWorldDto(), level, classId, false, id, techType.Value.ToDto(), (metadata.HasValue ? [metadata.Value] : null), null, childrenEntities);
         }
 
         if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true)))
@@ -185,14 +185,14 @@ public class Items
         switch (gameObject.AliveOrNull())
         {
             case not null when IsGlobalRootObject(gameObject):
-                placedItem = new GlobalRootEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+                placedItem = new GlobalRootEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.ToDto(), (metadata.HasValue ? [metadata.Value] : null), null, childrenEntities);
                 break;
             case not null when Player.main.AliveOrNull()?.GetCurrentSub().AliveOrNull()?.TryGetNitroxId(out NitroxId parentId) == true:
-                placedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), level, classId, true, id, techType.ToDto(), metadata.OrNull(), parentId, childrenEntities);
+                placedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), level, classId, true, id, techType.ToDto(), (metadata.HasValue ? [metadata.Value] : null), parentId, childrenEntities);
                 break;
             default:
                 // If the object is not under a SubRoot nor in GlobalRoot, it'll be under a CellRoot but we still want to remember its state
-                placedItem = new PlacedWorldEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+                placedItem = new PlacedWorldEntity(gameObject.transform.ToWorldDto(), level, classId, true, id, techType.ToDto(), (metadata.HasValue ? [metadata.Value] : null), null, childrenEntities);
                 break;
         }
 
@@ -223,7 +223,7 @@ public class Items
                     TechTag techTag = prefab.gameObject.GetComponent<TechTag>();
                     TechType techType = techTag ? techTag.type : TechType.None;
 
-                    yield return new PrefabChildEntity(id, prefab.classId, techType.ToDto(), indexInGroup, metadata.Value, parentId);
+                    yield return new PrefabChildEntity(id, prefab.classId, techType.ToDto(), indexInGroup, [metadata.Value], parentId);
 
                     indexInGroup++;
                 }
@@ -259,7 +259,7 @@ public class Items
         Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         List<Entity> children = GetPrefabChildren(gameObject, itemId, entityMetadataManager).ToList();
 
-        InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), parentId, children);
+        InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), (metadata.HasValue ? [metadata.Value] : null), parentId, children);
         BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
 
         return inventoryItemEntity;
@@ -315,7 +315,7 @@ public class Items
                 Optional<EntityMetadata> metadata = entityMetadataManager.Extract(pickupable.gameObject);
                 List<Entity> children = GetPrefabChildren(pickupable.gameObject, itemId, entityMetadataManager).ToList();
 
-                entities.Add(new(itemEntry.Key, classId, itemId, pickupable.GetTechType().ToDto(), metadata.OrNull(), equipmentId, children));
+                entities.Add(new(itemEntry.Key, classId, itemId, pickupable.GetTechType().ToDto(), (metadata.HasValue ? [metadata.Value] : null), equipmentId, children));
             }
         }
         return entities;

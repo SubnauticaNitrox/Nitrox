@@ -31,7 +31,7 @@ public class BaseLeakEntity : Entity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public BaseLeakEntity(float health, NitroxInt3 relativeCell, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public BaseLeakEntity(float health, NitroxInt3 relativeCell, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Health = health;
         RelativeCell = relativeCell;

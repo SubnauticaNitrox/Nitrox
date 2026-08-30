@@ -163,73 +163,73 @@ internal sealed class WorldServiceTest
         Assert.AreEqual(entity.TechType, entityAfter.TechType);
         Assert.AreEqual(entity.ParentId, entityAfter.ParentId);
 
-        switch (entity.Metadata)
+        switch (entity.GetMetadata<EntityMetadata>())
         {
-            case KeypadMetadata metadata when entityAfter.Metadata is KeypadMetadata metadataAfter:
+            case KeypadMetadata metadata when entityAfter.TryGetMetadata(out KeypadMetadata metadataAfter):
                 Assert.AreEqual(metadata.Unlocked, metadataAfter.Unlocked);
                 break;
-            case SealedDoorMetadata metadata when entityAfter.Metadata is SealedDoorMetadata metadataAfter:
+            case SealedDoorMetadata metadata when entityAfter.TryGetMetadata(out SealedDoorMetadata metadataAfter):
                 Assert.AreEqual(metadata.Sealed, metadataAfter.Sealed);
                 Assert.AreEqual(metadata.OpenedAmount, metadataAfter.OpenedAmount);
                 break;
-            case PrecursorDoorwayMetadata metadata when entityAfter.Metadata is PrecursorDoorwayMetadata metadataAfter:
+            case PrecursorDoorwayMetadata metadata when entityAfter.TryGetMetadata(out PrecursorDoorwayMetadata metadataAfter):
                 Assert.AreEqual(metadata.IsOpen, metadataAfter.IsOpen);
                 break;
-            case PrecursorTeleporterMetadata metadata when entityAfter.Metadata is PrecursorTeleporterMetadata metadataAfter:
+            case PrecursorTeleporterMetadata metadata when entityAfter.TryGetMetadata(out PrecursorTeleporterMetadata metadataAfter):
                 Assert.AreEqual(metadata.IsOpen, metadataAfter.IsOpen);
                 break;
-            case PrecursorKeyTerminalMetadata metadata when entityAfter.Metadata is PrecursorKeyTerminalMetadata metadataAfter:
+            case PrecursorKeyTerminalMetadata metadata when entityAfter.TryGetMetadata(out PrecursorKeyTerminalMetadata metadataAfter):
                 Assert.AreEqual(metadata.Slotted, metadataAfter.Slotted);
                 break;
-            case PrecursorTeleporterActivationTerminalMetadata metadata when entityAfter.Metadata is PrecursorTeleporterActivationTerminalMetadata metadataAfter:
+            case PrecursorTeleporterActivationTerminalMetadata metadata when entityAfter.TryGetMetadata(out PrecursorTeleporterActivationTerminalMetadata metadataAfter):
                 Assert.AreEqual(metadata.Unlocked, metadataAfter.Unlocked);
                 break;
-            case StarshipDoorMetadata metadata when entityAfter.Metadata is StarshipDoorMetadata metadataAfter:
+            case StarshipDoorMetadata metadata when entityAfter.TryGetMetadata(out StarshipDoorMetadata metadataAfter):
                 Assert.AreEqual(metadata.DoorLocked, metadataAfter.DoorLocked);
                 Assert.AreEqual(metadata.DoorOpen, metadataAfter.DoorOpen);
                 break;
-            case WeldableWallPanelGenericMetadata metadata when entityAfter.Metadata is WeldableWallPanelGenericMetadata metadataAfter:
+            case WeldableWallPanelGenericMetadata metadata when entityAfter.TryGetMetadata(out WeldableWallPanelGenericMetadata metadataAfter):
                 Assert.AreEqual(metadata.LiveMixInHealth, metadataAfter.LiveMixInHealth);
                 break;
-            case IncubatorMetadata metadata when entityAfter.Metadata is IncubatorMetadata metadataAfter:
+            case IncubatorMetadata metadata when entityAfter.TryGetMetadata(out IncubatorMetadata metadataAfter):
                 Assert.AreEqual(metadata.Powered, metadataAfter.Powered);
                 Assert.AreEqual(metadata.Hatched, metadataAfter.Hatched);
                 break;
-            case EntitySignMetadata metadata when entityAfter.Metadata is EntitySignMetadata metadataAfter:
+            case EntitySignMetadata metadata when entityAfter.TryGetMetadata(out EntitySignMetadata metadataAfter):
                 Assert.AreEqual(metadata.Text, metadataAfter.Text);
                 Assert.AreEqual(metadata.ColorIndex, metadataAfter.ColorIndex);
                 Assert.AreEqual(metadata.ScaleIndex, metadataAfter.ScaleIndex);
                 Assert.IsTrue(metadata.Elements.SequenceEqual(metadataAfter.Elements));
                 Assert.AreEqual(metadata.Background, metadataAfter.Background);
                 break;
-            case ConstructorMetadata metadata when entityAfter.Metadata is ConstructorMetadata metadataAfter:
+            case ConstructorMetadata metadata when entityAfter.TryGetMetadata(out ConstructorMetadata metadataAfter):
                 Assert.AreEqual(metadata.Deployed, metadataAfter.Deployed);
                 break;
-            case FlashlightMetadata metadata when entityAfter.Metadata is FlashlightMetadata metadataAfter:
+            case FlashlightMetadata metadata when entityAfter.TryGetMetadata(out FlashlightMetadata metadataAfter):
                 Assert.AreEqual(metadata.On, metadataAfter.On);
                 break;
-            case BatteryMetadata metadata when entityAfter.Metadata is BatteryMetadata metadataAfter:
+            case BatteryMetadata metadata when entityAfter.TryGetMetadata(out BatteryMetadata metadataAfter):
                 Assert.AreEqual(metadata.Charge, metadataAfter.Charge);
                 break;
-            case EscapePodMetadata metadata when entityAfter.Metadata is EscapePodMetadata metadataAfter:
+            case EscapePodMetadata metadata when entityAfter.TryGetMetadata(out EscapePodMetadata metadataAfter):
                 Assert.AreEqual(metadata.PodRepaired, metadataAfter.PodRepaired);
                 Assert.AreEqual(metadata.RadioRepaired, metadataAfter.RadioRepaired);
                 break;
-            case CrafterMetadata metadata when entityAfter.Metadata is CrafterMetadata metadataAfter:
+            case CrafterMetadata metadata when entityAfter.TryGetMetadata(out CrafterMetadata metadataAfter):
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
                 Assert.AreEqual(metadata.StartTime, metadataAfter.StartTime);
                 Assert.AreEqual(metadata.Duration, metadataAfter.Duration);
                 break;
-            case PlantableMetadata metadata when entityAfter.Metadata is PlantableMetadata metadataAfter:
+            case PlantableMetadata metadata when entityAfter.TryGetMetadata(out PlantableMetadata metadataAfter):
                 Assert.AreEqual(metadata.TimeStartGrowth, metadataAfter.TimeStartGrowth);
                 Assert.AreEqual(metadata.SlotID, metadataAfter.SlotID);
                 // FruitPlantMetadata field is not checked before it's only temporary
                 break;
-            case FruitPlantMetadata metadata when entityAfter.Metadata is FruitPlantMetadata metadataAfter:
+            case FruitPlantMetadata metadata when entityAfter.TryGetMetadata(out FruitPlantMetadata metadataAfter):
                 Assert.IsTrue(metadata.PickedStates.SequenceEqual(metadataAfter.PickedStates));
                 Assert.AreEqual(metadata.TimeNextFruit, metadataAfter.TimeNextFruit);
                 break;
-            case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
+            case CyclopsMetadata metadata when entityAfter.TryGetMetadata(out CyclopsMetadata metadataAfter):
                 Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
                 Assert.AreEqual(metadata.ShieldOn, metadataAfter.ShieldOn);
                 Assert.AreEqual(metadata.SonarOn, metadataAfter.SonarOn);
@@ -237,37 +237,37 @@ internal sealed class WorldServiceTest
                 Assert.AreEqual(metadata.EngineMode, metadataAfter.EngineMode);
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 break;
-            case SeamothMetadata metadata when entityAfter.Metadata is SeamothMetadata metadataAfter:
+            case SeamothMetadata metadata when entityAfter.TryGetMetadata(out SeamothMetadata metadataAfter):
                 Assert.AreEqual(metadata.LightsOn, metadataAfter.LightsOn);
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 Assert.AreEqual(metadata.Name, metadataAfter.Name);
                 Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
                 break;
-            case ExosuitMetadata metadata when entityAfter.Metadata is ExosuitMetadata metadataAfter:
+            case ExosuitMetadata metadata when entityAfter.TryGetMetadata(out ExosuitMetadata metadataAfter):
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 Assert.AreEqual(metadata.Name, metadataAfter.Name);
                 Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
                 break;
-            case SubNameInputMetadata metadata when entityAfter.Metadata is SubNameInputMetadata metadataAfter:
+            case SubNameInputMetadata metadata when entityAfter.TryGetMetadata(out SubNameInputMetadata metadataAfter):
                 Assert.AreEqual(metadata.Name, metadataAfter.Name);
                 Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
                 break;
-            case RocketMetadata metadata when entityAfter.Metadata is RocketMetadata metadataAfter:
+            case RocketMetadata metadata when entityAfter.TryGetMetadata(out RocketMetadata metadataAfter):
                 Assert.AreEqual(metadata.CurrentStage, metadataAfter.CurrentStage);
                 Assert.AreEqual(metadata.LastStageTransitionTime, metadataAfter.LastStageTransitionTime);
                 Assert.AreEqual(metadata.ElevatorState, metadataAfter.ElevatorState);
                 Assert.AreEqual(metadata.ElevatorPosition, metadataAfter.ElevatorPosition);
                 Assert.IsTrue(metadata.PreflightChecks.SequenceEqual(metadataAfter.PreflightChecks));
                 break;
-            case CyclopsLightingMetadata metadata when entityAfter.Metadata is CyclopsLightingMetadata metadataAfter:
+            case CyclopsLightingMetadata metadata when entityAfter.TryGetMetadata(out CyclopsLightingMetadata metadataAfter):
                 Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
                 Assert.AreEqual(metadata.InternalLightsOn, metadataAfter.InternalLightsOn);
                 break;
-            case FireExtinguisherHolderMetadata metadata when entityAfter.Metadata is FireExtinguisherHolderMetadata metadataAfter:
+            case FireExtinguisherHolderMetadata metadata when entityAfter.TryGetMetadata(out FireExtinguisherHolderMetadata metadataAfter):
                 Assert.AreEqual(metadata.HasExtinguisher, metadataAfter.HasExtinguisher);
                 Assert.AreEqual(metadata.Fuel, metadataAfter.Fuel);
                 break;
-            case PlayerMetadata metadata when entityAfter.Metadata is PlayerMetadata metadataAfter:
+            case PlayerMetadata metadata when entityAfter.TryGetMetadata(out PlayerMetadata metadataAfter):
                 AssertHelper.IsListEqual(metadata.EquippedItems.OrderBy(x => x.Id), metadataAfter.EquippedItems.OrderBy(x => x.Id), (equippedItem, equippedItemAfter) =>
                 {
                     Assert.AreEqual(equippedItem.Id, equippedItemAfter.Id);
@@ -275,7 +275,7 @@ internal sealed class WorldServiceTest
                     Assert.AreEqual(equippedItem.TechType, equippedItemAfter.TechType);
                 });
                 break;
-            case GhostMetadata ghostMetadata when entityAfter.Metadata is GhostMetadata ghostMetadataAfter:
+            case GhostMetadata ghostMetadata when entityAfter.TryGetMetadata(out GhostMetadata ghostMetadataAfter):
                 Assert.AreEqual(ghostMetadata.TargetOffset, ghostMetadataAfter.TargetOffset);
 
                 if (ghostMetadata.GetType() != ghostMetadataAfter.GetType())
@@ -298,66 +298,66 @@ internal sealed class WorldServiceTest
                 }
 
                 break;
-            case WaterParkCreatureMetadata metadata when entityAfter.Metadata is WaterParkCreatureMetadata metadataAfter:
+            case WaterParkCreatureMetadata metadata when entityAfter.TryGetMetadata(out WaterParkCreatureMetadata metadataAfter):
                 Assert.AreEqual(metadata.Age, metadataAfter.Age);
                 Assert.AreEqual(metadata.MatureTime, metadataAfter.MatureTime);
                 Assert.AreEqual(metadata.TimeNextBreed, metadataAfter.TimeNextBreed);
                 Assert.AreEqual(metadata.BornInside, metadataAfter.BornInside);
                 break;
-            case FlareMetadata metadata when entityAfter.Metadata is FlareMetadata metadataAfter:
+            case FlareMetadata metadata when entityAfter.TryGetMetadata(out FlareMetadata metadataAfter):
                 Assert.AreEqual(metadata.EnergyLeft, metadataAfter.EnergyLeft);
                 Assert.AreEqual(metadata.HasBeenThrown, metadataAfter.HasBeenThrown);
                 Assert.AreEqual(metadata.FlareActivateTime, metadataAfter.FlareActivateTime);
                 break;
-            case BeaconMetadata metadata when entityAfter.Metadata is BeaconMetadata metadataAfter:
+            case BeaconMetadata metadata when entityAfter.TryGetMetadata(out BeaconMetadata metadataAfter):
                 Assert.AreEqual(metadata.Label, metadataAfter.Label);
                 break;
-            case RadiationMetadata metadata when entityAfter.Metadata is RadiationMetadata metadataAfter:
+            case RadiationMetadata metadata when entityAfter.TryGetMetadata(out RadiationMetadata metadataAfter):
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 Assert.AreEqual(metadata.FixRealTime, metadataAfter.FixRealTime);
                 break;
-            case CrashHomeMetadata metadata when entityAfter.Metadata is CrashHomeMetadata metadataAfter:
+            case CrashHomeMetadata metadata when entityAfter.TryGetMetadata(out CrashHomeMetadata metadataAfter):
                 Assert.AreEqual(metadata.SpawnTime, metadataAfter.SpawnTime);
                 break;
-            case EatableMetadata metadata when entityAfter.Metadata is EatableMetadata metadataAfter:
+            case EatableMetadata metadata when entityAfter.TryGetMetadata(out EatableMetadata metadataAfter):
                 Assert.AreEqual(metadata.TimeDecayStart, metadataAfter.TimeDecayStart);
                 break;
-            case SeaTreaderMetadata metadata when entityAfter.Metadata is SeaTreaderMetadata metadataAfter:
+            case SeaTreaderMetadata metadata when entityAfter.TryGetMetadata(out SeaTreaderMetadata metadataAfter):
                 Assert.AreEqual(metadata.ReverseDirection, metadataAfter.ReverseDirection);
                 Assert.AreEqual(metadata.GrazingEndTime, metadataAfter.GrazingEndTime);
                 Assert.AreEqual(metadata.LeashPosition, metadataAfter.LeashPosition);
                 break;
-            case StayAtLeashPositionMetadata metadata when entityAfter.Metadata is StayAtLeashPositionMetadata metadataAfter:
+            case StayAtLeashPositionMetadata metadata when entityAfter.TryGetMetadata(out StayAtLeashPositionMetadata metadataAfter):
                 Assert.AreEqual(metadata.LeashPosition, metadataAfter.LeashPosition);
                 break;
-            case EggMetadata metadata when entityAfter.Metadata is EggMetadata metadataAfter:
+            case EggMetadata metadata when entityAfter.TryGetMetadata(out EggMetadata metadataAfter):
                 Assert.AreEqual(metadata.TimeStartHatching, metadataAfter.TimeStartHatching);
                 Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
                 break;
-            case DrillableMetadata metadata when entityAfter.Metadata is DrillableMetadata metadataAfter:
+            case DrillableMetadata metadata when entityAfter.TryGetMetadata(out DrillableMetadata metadataAfter):
                 Assert.IsTrue(metadata.ChunkHealth.SequenceEqual(metadataAfter.ChunkHealth));
                 Assert.AreEqual(metadata.TimeLastDrilled, metadataAfter.TimeLastDrilled);
                 break;
-            case PrecursorComputerTerminalMetadata metadata when entityAfter.Metadata is PrecursorComputerTerminalMetadata metadataAfter:
+            case PrecursorComputerTerminalMetadata metadata when entityAfter.TryGetMetadata(out PrecursorComputerTerminalMetadata metadataAfter):
                 Assert.AreEqual(metadata.Used, metadataAfter.Used);
                 break;
-            case GenericConsoleMetadata metadata when entityAfter.Metadata is GenericConsoleMetadata metadataAfter:
+            case GenericConsoleMetadata metadata when entityAfter.TryGetMetadata(out GenericConsoleMetadata metadataAfter):
                 Assert.AreEqual(metadata.GotUsed, metadataAfter.GotUsed);
                 break;
-            case BlueprintHandTargetMetadata metadata when entityAfter.Metadata is BlueprintHandTargetMetadata metadataAfter:
+            case BlueprintHandTargetMetadata metadata when entityAfter.TryGetMetadata(out BlueprintHandTargetMetadata metadataAfter):
                 Assert.AreEqual(metadata.Used, metadataAfter.Used);
                 break;
-            case PrecursorDisableGunTerminalMetadata metadata when entityAfter.Metadata is PrecursorDisableGunTerminalMetadata metadataAfter:
+            case PrecursorDisableGunTerminalMetadata metadata when entityAfter.TryGetMetadata(out PrecursorDisableGunTerminalMetadata metadataAfter):
                 Assert.AreEqual(metadata.FirstUse, metadataAfter.FirstUse);
                 break;
-            case OxygenMetadata metadata when entityAfter.Metadata is OxygenMetadata metadataAfter:
+            case OxygenMetadata metadata when entityAfter.TryGetMetadata(out OxygenMetadata metadataAfter):
                 Assert.AreEqual(metadata.OxygenAvailable, metadataAfter.OxygenAvailable);
                 break;
-            case BulkheadDoorMetadata metadata when entityAfter.Metadata is BulkheadDoorMetadata metadataAfter:
+            case BulkheadDoorMetadata metadata when entityAfter.TryGetMetadata(out BulkheadDoorMetadata metadataAfter):
                 Assert.AreEqual(metadata.Opened, metadataAfter.Opened);
                 break;
             default:
-                Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
+                Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.GetMetadata<EntityMetadata>()?.GetType().Name} - {entityAfter.GetMetadata<EntityMetadata>()?.GetType().Name}");
                 break;
         }
 

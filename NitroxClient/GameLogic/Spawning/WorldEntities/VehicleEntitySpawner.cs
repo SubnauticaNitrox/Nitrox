@@ -94,7 +94,7 @@ public class VehicleEntitySpawner : EntitySpawner<VehicleEntity>
 
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
 
-        if (vehicleEntity.Metadata is CyclopsMetadata cyclopsMetadata && cyclopsMetadata.IsDestroyed)
+        if (vehicleEntity.TryGetMetadata(out CyclopsMetadata cyclopsMetadata) && cyclopsMetadata.IsDestroyed)
         {
             // Swap to destroyed look without triggering animations / effects
             gameObject.BroadcastMessage("SwapToDamagedModels");

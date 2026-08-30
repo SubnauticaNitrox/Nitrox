@@ -33,7 +33,7 @@ public class RadiationLeakEntitySpawner : SyncEntitySpawner<RadiationLeakEntity>
         // This script is located under (Aurora Scene) //Aurora-Main/Aurora so it's a good starting point to search through the GameObjects
         CrashedShipExploder crashedShipExploder = CrashedShipExploder.main;
         LeakingRadiation leakingRadiation = LeakingRadiation.main;
-        if (!crashedShipExploder || !leakingRadiation || entity.Metadata is not RadiationMetadata metadata)
+        if (!crashedShipExploder || !leakingRadiation || !entity.TryGetMetadata(out RadiationMetadata metadata))
         {
             return true;
         }

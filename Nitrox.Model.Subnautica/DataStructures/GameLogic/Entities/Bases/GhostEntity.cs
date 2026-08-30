@@ -30,7 +30,7 @@ public class GhostEntity : ModuleEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GhostEntity(NitroxBaseFace baseFace, BaseData baseData, float constructedAmount, bool isInside, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public GhostEntity(NitroxBaseFace baseFace, BaseData baseData, float constructedAmount, bool isInside, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities) :
         base(constructedAmount, isInside, transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         BaseFace = baseFace;

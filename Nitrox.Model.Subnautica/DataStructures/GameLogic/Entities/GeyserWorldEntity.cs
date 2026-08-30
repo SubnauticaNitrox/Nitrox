@@ -24,7 +24,7 @@ public class GeyserWorldEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GeyserWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, float randomIntervalVarianceMultiplier, float startEruptTime) :
+    public GeyserWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities, float randomIntervalVarianceMultiplier, float startEruptTime) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         RandomIntervalVarianceMultiplier = randomIntervalVarianceMultiplier;

@@ -31,7 +31,7 @@ public class CellRootEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public CellRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public CellRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Id = id;
         TechType = techType;

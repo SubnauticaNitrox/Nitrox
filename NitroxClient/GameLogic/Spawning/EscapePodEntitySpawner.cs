@@ -76,7 +76,7 @@ public class EscapePodEntitySpawner : SyncEntitySpawner<EscapePodEntity>
         pod.escapePodCinematicControl.StopAll();
 
         // Player is not new and has completed the intro cinematic. If not EscapePod repair status is handled by the intro cinematic.
-        if (escapePodEntity.Metadata is EscapePodMetadata metadata && localPlayer.IntroCinematicMode == IntroCinematicMode.COMPLETED)
+        if (escapePodEntity.TryGetMetadata(out EscapePodMetadata metadata) && localPlayer.IntroCinematicMode == IntroCinematicMode.COMPLETED)
         {
             using FMODSoundSuppressor soundSuppressor = FMODSystem.SuppressSubnauticaSounds();
             using PacketSuppressor<EntityMetadataUpdate> packetSuppressor = PacketSuppressor<EntityMetadataUpdate>.Suppress();

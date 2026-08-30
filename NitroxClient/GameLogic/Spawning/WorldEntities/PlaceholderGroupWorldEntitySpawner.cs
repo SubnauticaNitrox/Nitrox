@@ -106,7 +106,7 @@ internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             GameObject childObject = childResult.value.Value;
             entities.MarkAsSpawned(current);
             parentById[current.Id] = childObject;
-            entityMetadataManager.ApplyMetadata(childObject, current.Metadata);
+            entityMetadataManager.ApplyMetadata(childObject, current);
 
             // PlaceholderGroupWorldEntity's children spawning is already handled by this function which is called recursively
             if (current is not PlaceholderGroupWorldEntity)

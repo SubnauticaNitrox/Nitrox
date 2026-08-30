@@ -29,7 +29,7 @@ public class ReefbackChildEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public ReefbackChildEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, ReefbackChildType type) :
+    public ReefbackChildEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities, ReefbackChildType type) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         Type = type;

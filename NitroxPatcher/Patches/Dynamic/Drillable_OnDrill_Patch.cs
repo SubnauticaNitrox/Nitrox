@@ -37,7 +37,7 @@ public sealed partial class Drillable_OnDrill_Patch : NitroxPatch, IDynamicPatch
             Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(__instance.gameObject);
             Validate.IsPresent(metadata);
 
-            PathBasedChildEntity entity = new(__instance.name, id, NitroxTechType.None, metadata.Value, parentId, []);
+            PathBasedChildEntity entity = new(__instance.name, id, NitroxTechType.None, [metadata.Value], parentId, []);
             Resolve<IPacketSender>().Send(new EntitySpawnedByClient(entity));
         }
     }
