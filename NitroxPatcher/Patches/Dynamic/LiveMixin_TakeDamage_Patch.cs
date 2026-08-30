@@ -88,15 +88,23 @@ public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPa
 
     private static void BroadcastDefaultTookDamage(LiveMixin liveMixin)
     {
-        // Let others know if we have a lock on this entity
-        if (liveMixin.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
+        if (!liveMixin.TryGetIdOrWarn(out NitroxId id))
         {
-            Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(liveMixin.gameObject);
+            return;
+        }
 
-            if (metadata.HasValue)
-            {
-                Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
-            }
+        // Unlike vehicles (gated by ShouldApplyNextHealthUpdate above), creatures apply every attacker's damage locally with no lock check
+        // so every attacker should also broadcast the result.
+        if (Resolve<LiveMixinManager>().IsWhitelistedUpdateType(liveMixin) && !Resolve<SimulationOwnership>().HasAnyLockType(id))
+        {
+            return;
+        }
+
+        Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(liveMixin.gameObject);
+
+        if (metadata.HasValue)
+        {
+            Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
         }
     }
 }
