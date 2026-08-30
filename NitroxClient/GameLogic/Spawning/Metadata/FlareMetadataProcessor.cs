@@ -1,4 +1,5 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using UnityEngine;
 
@@ -6,6 +7,13 @@ namespace NitroxClient.GameLogic.Spawning.Metadata;
 
 public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
 {
+    private readonly TimeManager timeManager;
+
+    public FlareMetadataProcessor(TimeManager timeManager)
+    {
+        this.timeManager = timeManager;
+    }
+
     public override void ProcessMetadata(GameObject gameObject, FlareMetadata metadata)
     {
         if (!gameObject.TryGetComponent(out Flare flare))
@@ -13,7 +21,7 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
             Log.Error($"[{nameof(FlareMetadataProcessor)}] Can't apply metadata to {gameObject} because it doesn't have a {nameof(Flare)} component");
             return;
         }
-        
+
         flare.hasBeenThrown = metadata.HasBeenThrown;
 
         if (metadata.FlareActivateTime.HasValue)
@@ -22,9 +30,10 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
             flare.flareActiveState = true;
             // From Flare.OnDrop
             flare.useRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            // Calculate current energy accounting for time elapsed since extraction
-            float currentTime = DayNightCycle.main.timePassedAsFloat;
-            float timeSinceActivation = currentTime - metadata.FlareActivateTime.Value;
+            
+            // Calculate energy based on real-time elapsed since activation
+            float realTimeElapsed = (float)timeManager.RealTimeElapsed;
+            float timeSinceActivation = realTimeElapsed - metadata.FlareActivateTime.Value;
             flare.energyLeft = Mathf.Max(metadata.EnergyLeft - timeSinceActivation, 0f);
             
             flare.GetComponent<WorldForces>().enabled = true;
