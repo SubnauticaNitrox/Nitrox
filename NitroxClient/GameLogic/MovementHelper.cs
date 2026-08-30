@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -32,22 +32,13 @@ namespace NitroxClient.GameLogic
         public static Vector3 GetCorrectedVelocity(Vector3 remotePosition, Vector3 remoteVelocity, GameObject gameObject, float correctionTime)
         {
             Vector3 difference = remotePosition - gameObject.transform.position;
-            Vector3 velocityToMakeUpDifference = difference / correctionTime;
 
-            float distance = difference.magnitude;
-
-            // NaN guard to recover if distance becomes invalid 
-            if (float.IsNaN(distance) || distance > 20f)
+            if (float.IsNaN(difference.x) || float.IsNaN(difference.y) || float.IsNaN(difference.z) || correctionTime == 0f)
             {
-                // This should be a one-off teleport.
-                gameObject.transform.position = remotePosition;
-            }
-            else
-            {
-                remoteVelocity = velocityToMakeUpDifference;
+                return Vector3.zero;
             }
 
-            return remoteVelocity;
+            return difference / correctionTime;
         }
 
         public static Vector3 GetCorrectedAngularVelocity(Quaternion remoteRotation, Vector3 angularVelocty, GameObject gameObject, float correctionTime)
@@ -63,9 +54,8 @@ namespace NitroxClient.GameLogic
             }
 
             // Guard for NaN when remoteRotation and gameobjects rotation are parallel (witnessed during macOS habitat transition)
-            if (float.IsNaN(angle) || float.IsNaN(axis.x))
+            if (float.IsNaN(angle) || float.IsNaN(axis.x) || float.IsNaN(axis.y) || float.IsNaN(axis.z))
             {
-                gameObject.transform.rotation = remoteRotation;
                 return angularVelocty;
             }
 

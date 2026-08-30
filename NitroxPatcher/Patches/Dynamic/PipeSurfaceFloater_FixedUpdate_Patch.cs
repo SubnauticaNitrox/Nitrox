@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
 using Nitrox.Model.DataStructures;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -9,33 +6,28 @@ using NitroxClient.MonoBehaviours;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Stops broadcasting position of a pipe surface floater when it has been deployed because it will no longer move.
+/// Prevents non simulating player from applying upwards forces to PipeSurfaceFloater. Instead, detect when it reaches the surface and then
+/// notify <see cref="RemotelyControlledPipeFloater"/>.
 /// </summary>
 public sealed partial class PipeSurfaceFloater_FixedUpdate_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((PipeSurfaceFloater t) => t.FixedUpdate());
 
-    /*
-     *     this.deployed = true;
-     *     PipeSurfaceFloater_FixedUpdate_Patch.StopWatching(this); <--- [INSERTED LINE]
-     * }
-     */
-    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static bool Prefix(PipeSurfaceFloater __instance)
     {
-        // Insert an instruction right before the Ret
-        return new CodeMatcher(instructions).End()
-                                            .InsertAndAdvance([
-                                                new CodeInstruction(OpCodes.Ldarg_0),
-                                                new CodeInstruction(OpCodes.Call, Reflect.Method(() => StopWatching(default)))
-                                            ]).InstructionEnumeration();
-    }
+        bool isSimulated = __instance.TryGetIdOrWarn(out NitroxId pipeFloaterId) && Resolve<SimulationOwnership>().HasAnyLockType(pipeFloaterId);
 
-    public static void StopWatching(PipeSurfaceFloater pipeSurfaceFloater)
-    {
-        if (pipeSurfaceFloater.TryGetIdOrWarn(out NitroxId pipeFloaterId) && Resolve<SimulationOwnership>().HasAnyLockType(pipeFloaterId))
+        if (!isSimulated)
         {
-            Resolve<SimulationOwnership>().StopSimulatingEntity(pipeFloaterId);
-            EntityPositionBroadcaster.Instance.StopWatchingEntity(pipeFloaterId);
+            __instance.deployed = true;
+
+            if (!__instance.rigidBody.isKinematic && __instance.transform.position.y >= -0.1f &&
+                __instance.TryGetComponent(out RemotelyControlledPipeFloater remotelyControlledPipeFloater))
+            {
+                remotelyControlledPipeFloater.SetPositioned();
+            }
         }
+
+        return isSimulated;
     }
 }

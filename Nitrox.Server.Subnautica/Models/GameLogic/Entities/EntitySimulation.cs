@@ -130,6 +130,17 @@ internal sealed class EntitySimulation : ISessionCleaner
         return false;
     }
 
+    /// <summary>
+    /// Forcefully assign an entity to a player, revoking any previous ownership.
+    /// </summary>
+    public SimulatedEntity AssignEntityToPlayer(Entity entity, Player player, bool shouldEntityMove)
+    {
+        simulationOwnershipData.RevokeOwnerOfId(entity.Id);
+        simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+        bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
+        return new(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+    }
+
     public List<SimulatedEntity> AssignGlobalRootEntitiesAndGetData(Player player)
     {
         List<SimulatedEntity> simulatedEntities = new();
