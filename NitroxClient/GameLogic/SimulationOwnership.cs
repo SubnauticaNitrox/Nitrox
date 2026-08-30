@@ -17,9 +17,9 @@ public class SimulationOwnership
 
     private readonly Dictionary<NitroxId, SimulatedEntity> newerSimulationById = [];
 
-    public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
+    public SimulationOwnership(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
     {
-        this.multiplayerSession = muliplayerSession;
+        this.multiplayerSession = multiplayerSession;
         this.packetSender = packetSender;
     }
     public bool PlayerHasMinLockType(NitroxId id, SimulationLockType lockType)
@@ -92,12 +92,7 @@ public class SimulationOwnership
 
         if (isLocalPlayerNewOwner)
         {
-            if (simulatedEntity.ChangesPosition)
-            {
-                EntityPositionBroadcaster.Instance.WatchEntity(simulatedEntity.Id);
-            }
-
-            SimulateEntity(simulatedEntity.Id, simulatedEntity.LockType);
+            TakeOwnership(simulatedEntity.Id, simulatedEntity.LockType, simulatedEntity.ChangesPosition);
         }
         else if (HasAnyLockType(simulatedEntity.Id))
         {
@@ -121,6 +116,20 @@ public class SimulationOwnership
         {
             Object.Destroy(remotelyControlled);
         }
+    }
+
+    /// <summary>
+    /// Call this when the Local player is absolutely sure of taking ownership of an entity.
+    /// For example, when spawning an entity, you know it's "yours" so you can take ownership of it.
+    /// </summary>
+    public void TakeOwnership(NitroxId entityId, SimulationLockType lockType, bool changesPosition)
+    {
+        if (changesPosition)
+        {
+            EntityPositionBroadcaster.Instance.WatchEntity(entityId);
+        }
+
+        SimulateEntity(entityId, lockType);
     }
 
     public void DropSimulationFrom(NitroxId entityId)
