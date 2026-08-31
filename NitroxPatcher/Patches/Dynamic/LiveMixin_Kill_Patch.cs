@@ -29,8 +29,6 @@ public sealed partial class LiveMixin_Kill_Patch : NitroxPatch, IDynamicPatch
         }
 
         if (__instance.destroyOnDeath || 
-            __instance.broadcastKillOnDeath || 
-            __instance.passDamageDataOnDeath || 
             Resolve<LiveMixinManager>().ShouldBroadcastDeath(__instance))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(objectId));
