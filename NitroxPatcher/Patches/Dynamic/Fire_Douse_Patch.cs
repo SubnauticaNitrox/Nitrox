@@ -11,7 +11,7 @@ public sealed partial class Fire_Douse_Patch : NitroxPatch, IDynamicPatch
     {
         if (!__instance.livemixin.IsAlive() || __instance.IsExtinguished())
         {
-            Resolve<Fires>().OnDouse(__instance, 10000);
+            Resolve<Fires>().OnExtinguish(__instance);
         }
         else
         {

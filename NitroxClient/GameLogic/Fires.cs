@@ -67,21 +67,34 @@ namespace NitroxClient.GameLogic
             // Temporary packet limiter
             if (!fireDouseAmount.ContainsKey(fireId))
             {
-                fireDouseAmount.Add(fireId, douseAmount);
+                fireDouseAmount.Add(fireId, 0);
             }
-            else
+
+            float summedDouseAmount = fireDouseAmount[fireId] + douseAmount;
+            fireDouseAmount[fireId] = summedDouseAmount;
+
+            // This system is not perfectly accurate. It might be better to send the health directly,
+            // but this already works well enough that any desync isn't noticeable.
+            if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER)
             {
-                float summedDouseAmount = fireDouseAmount[fireId] + douseAmount;
+                fireDouseAmount[fireId] = 0;
 
-                if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER)
-                {
-                    // It is significantly faster to keep the key as a 0 value than to remove it and re-add it later.
-                    fireDouseAmount[fireId] = 0;
-
-                    FireDoused packet = new FireDoused(fireId, douseAmount);
-                    packetSender.Send(packet);
-                }
+                FireDoused packet = new(fireId, summedDouseAmount);
+                packetSender.Send(packet);
             }
+        }
+
+        public void OnExtinguish(Fire fire)
+        {
+            if (!fire.TryGetIdOrWarn(out NitroxId fireId))
+            {
+                return;
+            }
+
+            fireDouseAmount.Remove(fireId);
+
+            FireDoused packet = new(fireId, 10000);
+            packetSender.Send(packet);
         }
 
         /// <summary>
