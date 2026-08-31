@@ -356,6 +356,9 @@ internal sealed class WorldServiceTest
             case BulkheadDoorMetadata metadata when entityAfter.Metadata is BulkheadDoorMetadata metadataAfter:
                 Assert.AreEqual(metadata.Opened, metadataAfter.Opened);
                 break;
+            case ThermalPlantMetadata metadata when entityAfter.Metadata is ThermalPlantMetadata metadataAfter:
+                Assert.AreEqual(metadata.Temperature, metadataAfter.Temperature);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
