@@ -28,7 +28,6 @@ public static class BuildingPostSpawner
             Log.InGame(Language.main.Get("Nitrox_ScannerRoomWarn"));
             return null;
         }
-
         return null;
     }
 

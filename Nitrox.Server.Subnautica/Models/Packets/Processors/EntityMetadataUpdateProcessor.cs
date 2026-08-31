@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.GameLogic;
@@ -20,11 +22,14 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager,
             return;
         }
 
-        if (TryProcessMetadata(context.Sender, entity, packet.NewValue))
+        if (!TryProcessMetadata(context.Sender, entity, packet.NewValue, out EntityMetadata metadataToApply))
         {
-            entity.Metadata = packet.NewValue;
-            await SendUpdateToVisiblePlayersAsync(context, packet, entity);
+            return;
         }
+
+        entity.Metadata = metadataToApply;
+        EntityMetadataUpdate updateToForward = ReferenceEquals(metadataToApply, packet.NewValue) ? packet : new EntityMetadataUpdate(packet.Id, metadataToApply);
+        await SendUpdateToVisiblePlayersAsync(context, updateToForward, entity);
     }
 
     private async Task SendUpdateToVisiblePlayersAsync(AuthProcessorContext context, EntityMetadataUpdate packet, Entity entity)
@@ -39,15 +44,36 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager,
         }
     }
 
-    private bool TryProcessMetadata(Player sendingPlayer, Entity entity, EntityMetadata metadata)
+    private bool TryProcessMetadata(Player sendingPlayer, Entity entity, EntityMetadata incoming, out EntityMetadata metadataToApply)
     {
-        return metadata switch
+        switch (incoming)
         {
-            PlayerMetadata playerMetadata => ProcessPlayerMetadata(sendingPlayer, entity, playerMetadata),
+            case PlayerMetadata playerMetadata:
+                metadataToApply = incoming;
+                return ProcessPlayerMetadata(sendingPlayer, entity, playerMetadata);
 
-            // Allow metadata updates from any player by default
-            _ => true
-        };
+            // Merge so each client reports only their own hatch usage.
+            case EscapePodMetadata escapePodMetadata:
+                metadataToApply = MergeEscapePodMetadata(entity, escapePodMetadata);
+                return true;
+
+            default:
+                // Allow metadata updates from any player by default
+                metadataToApply = incoming;
+                return true;
+        }
+    }
+
+    private static EscapePodMetadata MergeEscapePodMetadata(Entity entity, EscapePodMetadata incoming)
+    {
+        if (entity.Metadata is not EscapePodMetadata existing)
+        {
+            return incoming;
+        }
+
+        HashSet<SessionId> bottomHatchUsedBy = [.. existing.PlayersWithBottomHatchUsed, .. incoming.PlayersWithBottomHatchUsed];
+        HashSet<SessionId> topHatchUsedBy = [.. existing.PlayersWithTopHatchUsed, .. incoming.PlayersWithTopHatchUsed];
+        return new EscapePodMetadata(incoming.PodRepaired, incoming.RadioRepaired, [.. bottomHatchUsedBy], [.. topHatchUsedBy]);
     }
 
     private bool ProcessPlayerMetadata(Player sendingPlayer, Entity entity, PlayerMetadata metadata)
