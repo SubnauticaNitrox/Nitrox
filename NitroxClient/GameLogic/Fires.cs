@@ -1,43 +1,38 @@
 ﻿using System.Collections.Generic;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     /// <summary>
-    /// Handles all of the <see cref="Fire"/>s in the game. Currently, the only known Fire spawning is in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. The
-    /// fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic outside of Cyclops fires, it should be
-    /// added to <see cref="Fires.Create(CyclopsFireData)"/>. Fire dousing goes by Id and does not need to be
-    /// modified
+    ///     Handles all of the <see cref="Fire" />s in the game. Currently, the only known Fire spawning is in
+    ///     <see cref="SubFire.CreateFire(SubFire.RoomFire)" />. The
+    ///     fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic
+    ///     outside of Cyclops fires, it should be
+    ///     added to <see cref="Fires.Create(CyclopsFireData)" />. Fire dousing goes by Id and does not need to be
+    ///     modified
     /// </summary>
     public class Fires
     {
+        private readonly Entities entities;
         private readonly IPacketSender packetSender;
+        private readonly ThrottledPacketSender throttledPacketSender;
 
-        /// <summary>
-        /// Used to reduce the <see cref="FireDoused"/> packet spam as fires are being doused. A packet is only sent after
-        /// the douse amount surpasses <see cref="FIRE_DOUSE_AMOUNT_TRIGGER"/>
-        /// </summary>
-        private readonly Dictionary<NitroxId, float> fireDouseAmount = new Dictionary<NitroxId, float>();
-
-        /// <summary>
-        /// Each extinguisher hit is from 0.15 to 0.25. 5 is a bit less than half a second of full extinguishing
-        /// </summary>
-        private const float FIRE_DOUSE_AMOUNT_TRIGGER = 5f;
-
-        public Fires(IPacketSender packetSender)
+        public Fires(Entities entities, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
         {
+            this.entities = entities;
             this.packetSender = packetSender;
+            this.throttledPacketSender = throttledPacketSender;
         }
 
         /// <summary>
-        /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually,
-        /// call <see cref="Create(CyclopsFireData)"/>
+        ///     Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)" /> is executed. To create a new fire manually,
+        ///     call <see cref="Create(CyclopsFireData)" />
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
@@ -55,7 +50,8 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Triggered when <see cref="Fire.Douse(float)"/> is executed. To Douse a fire manually, retrieve the <see cref="Fire"/> call the Douse method
+        ///     Triggered when <see cref="Fire.Douse(float)" /> is executed. To Douse a fire manually, retrieve the
+        ///     <see cref="Fire" /> call the Douse method
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
@@ -64,41 +60,20 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            // Temporary packet limiter
-            if (!fireDouseAmount.ContainsKey(fireId))
+            bool extinguished = !fire.livemixin.IsAlive() || fire.isExtinguished;
+
+            if (extinguished)
             {
-                fireDouseAmount.Add(fireId, 0);
+                entities.RemoveEntity(fireId);
             }
 
-            float summedDouseAmount = fireDouseAmount[fireId] + douseAmount;
-            fireDouseAmount[fireId] = summedDouseAmount;
-
-            // This system is not perfectly accurate. It might be better to send the health directly,
-            // but this already works well enough that any desync isn't noticeable.
-            if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER)
-            {
-                fireDouseAmount[fireId] = 0;
-
-                FireDoused packet = new(fireId, summedDouseAmount);
-                packetSender.Send(packet);
-            }
-        }
-
-        public void OnExtinguish(Fire fire)
-        {
-            if (!fire.TryGetIdOrWarn(out NitroxId fireId))
-            {
-                return;
-            }
-
-            fireDouseAmount.Remove(fireId);
-
-            FireDoused packet = new(fireId, 10000);
-            packetSender.Send(packet);
+            FireDoused packet = new(fireId, fire.livemixin.health, extinguished);
+            throttledPacketSender.SendThrottled(packet, x => x.Id);
         }
 
         /// <summary>
-        /// Create a new <see cref="Fire"/>. Majority of code copied from <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. Currently does not support Fires created outside of a Cyclops
+        ///     Create a new <see cref="Fire" />. Majority of code copied from <see cref="SubFire.CreateFire(SubFire.RoomFire)" />.
+        ///     Currently does not support Fires created outside of a Cyclops
         /// </summary>
         public void Create(CyclopsFireData fireData)
         {
@@ -138,11 +113,8 @@ namespace NitroxClient.GameLogic
             {
                 return;
             }
-            else
-            {
-                Log.Error(
-                    $"[{nameof(CyclopsFireCreatedProcessor)} Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}]");
-            }
+            Log.Error(
+                $"[{nameof(CyclopsFireCreatedProcessor)} Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}]");
 
             component.SpawnManual(delegate(GameObject fireGO)
             {

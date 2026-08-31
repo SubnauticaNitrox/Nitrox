@@ -11,15 +11,17 @@ namespace Nitrox.Model.Subnautica.Packets
     public class FireDoused : Packet
     {
         public NitroxId Id { get; }
-        public float DouseAmount { get; }
+        public float Health { get; }
+        public bool Extinguished { get; }
 
         /// <param name="id">The Fire id</param>
-        /// <param name="douseAmount">The amount to douse the fire by. A large number will extinguish the fire. A large number still calls the same 
-        ///     method, <see cref="Fire.Douse(float)"/>, which will call <see cref="Fire.Extinguish"/> if the douse amount would extinguish it.</param>
-        public FireDoused(NitroxId id, float douseAmount)
+        /// <param name="health">The new health of the fire</param>
+        /// <param name="extinguished">Whether the fire was completely extinguished</param>
+        public FireDoused(NitroxId id, float health, bool extinguished)
         {
             Id = id;
-            DouseAmount = douseAmount;
+            Health = health;
+            Extinguished = extinguished;
         }
     }
 }
