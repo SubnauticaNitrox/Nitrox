@@ -1,6 +1,6 @@
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -17,6 +17,12 @@ namespace NitroxPatcher.Patches.Dynamic;
 public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo targetMethod = AccessTools.EnumeratorMoveNext(Reflect.Method((uGUI_SceneIntro si) => si.IntroSequence()));
+
+    private static RemotePlayer? partner;
+    private static bool callbackRun;
+    private static bool packetSend;
+
+    public static bool IsWaitingForPartner { get; private set; }
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -81,11 +87,52 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                .InstructionEnumeration();
     }
 
-    public static bool IsWaitingForPartner { get; private set; }
+    public static void EnqueueStartCinematic(uGUI_SceneIntro uGuiSceneIntro)
+    {
+        IsWaitingForPartner = false;
+        uGuiSceneIntro.skipHintStartTime = -1;
+        uGuiSceneIntro.moveNext = false;
+        uGuiSceneIntro.mainText.FadeOut(0.2f, uGuiSceneIntro.Callback);
+        callbackRun = true;
+    }
 
-    private static RemotePlayer partner;
-    private static bool callbackRun;
-    private static bool packetSend;
+    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro, bool wasNewPlayer)
+    {
+        LiveMixin radioLiveMixin = EscapePod.main.radioSpawner.spawnedObj.GetComponent<Radio>().liveMixin;
+        float radioHealthBefore = radioLiveMixin.health;
+
+        uGuiSceneIntro.Stop(true);
+
+        if (!wasNewPlayer)
+        {
+            // EscapePod.DamageRadio() is called by GuiSceneIntro.Stop(true) but is undesired. We revert it here
+            radioLiveMixin.health = radioHealthBefore;
+        }
+
+        if (radioLiveMixin.IsFullHealth())
+        {
+            Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
+        }
+
+        Transform introFireHolder = EscapePod.main.transform.Find("Intro");
+        if (introFireHolder) // Can be null if called very early
+        {
+            introFireHolder.GetComponentInChildren<FMOD_CustomEmitter>(true).ReleaseEvent(); // Not releasing it before destroying results in infinite unstoppable pain
+            Object.DestroyImmediate(introFireHolder.gameObject); // Like in Fire.Extinguished() but without delay
+        }
+
+        // From uGUI_SceneIntro.IntroSequence() after "if (XRSettings.enabled && VROptions.skipIntro)"
+        if (UnityObjectExtensions.TryFind("fire_extinguisher_01_tp", out GameObject gameObject1))
+        {
+            Object.Destroy(gameObject1);
+        }
+        if (UnityObjectExtensions.TryFind("IntroFireExtinugisherPickup", out GameObject gameObject2))
+        {
+            Object.Destroy(gameObject2);
+        }
+
+        Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
+    }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
     private static bool IsWorldSettledAndInitialSyncCompleted()
@@ -156,20 +203,9 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         return false;
     }
 
-    private static bool ShouldSkipIntroForDebug()
-    {
-        return !NitroxEnvironment.IsReleaseMode && !NitroxEnvironment.CommandLineArgs.Any(
-            x => x.Equals("--noskipintro", StringComparison.OrdinalIgnoreCase));
-    }
-
-    public static void EnqueueStartCinematic(uGUI_SceneIntro uGuiSceneIntro)
-    {
-        IsWaitingForPartner = false;
-        uGuiSceneIntro.skipHintStartTime = -1;
-        uGuiSceneIntro.moveNext = false;
-        uGuiSceneIntro.mainText.FadeOut(0.2f, uGuiSceneIntro.Callback);
-        callbackRun = true;
-    }
+    private static bool ShouldSkipIntroForDebug() =>
+        !NitroxEnvironment.IsReleaseMode &&
+        !NitroxEnvironment.CommandLineArgs.Any(x => x.Equals("--noskipintro", StringComparison.OrdinalIgnoreCase));
 
     private static void StartRemoteCinematic()
     {
@@ -193,7 +229,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             IntroCinematicUpdater introCinematicUpdater = partner.Body.GetComponent<IntroCinematicUpdater>();
             if (introCinematicUpdater)
             {
-                UnityEngine.Object.DestroyImmediate(introCinematicUpdater);
+                Object.DestroyImmediate(introCinematicUpdater);
                 IntroCinematicUpdater.Partner = null;
             }
 
@@ -207,43 +243,6 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 
+    [MemberNotNullWhen(true, nameof(partner))]
     private static bool IsPartnerValid() => partner != null && Resolve<PlayerManager>().Find(partner.SessionId).HasValue;
-
-    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro, bool wasNewPlayer)
-    {
-        LiveMixin radioLiveMixin = EscapePod.main.radioSpawner.spawnedObj.GetComponent<Radio>().liveMixin;
-        float radioHealthBefore = radioLiveMixin.health;
-
-        uGuiSceneIntro.Stop(true);
-
-        if (!wasNewPlayer)
-        {
-            // EscapePod.DamageRadio() is called by GuiSceneIntro.Stop(true) but is undesired. We revert it here
-            radioLiveMixin.health = radioHealthBefore;
-        }
-
-        if (radioLiveMixin.IsFullHealth())
-        {
-            UnityEngine.Object.Destroy(radioLiveMixin.loopingDamageEffectObj);
-        }
-
-        Transform introFireHolder = EscapePod.main.transform.Find("Intro");
-        if (introFireHolder) // Can be null if called very early
-        {
-            introFireHolder.GetComponentInChildren<FMOD_CustomEmitter>(true).ReleaseEvent(); // Not releasing it before destroying results in infinite unstoppable pain
-            UnityEngine.Object.DestroyImmediate(introFireHolder.gameObject); // Like in Fire.Extinguished() but without delay
-        }
-
-        // From uGUI_SceneIntro.IntroSequence() after "if (XRSettings.enabled && VROptions.skipIntro)"
-        if (UnityObjectExtensions.TryFind("fire_extinguisher_01_tp", out GameObject gameObject1))
-        {
-            UnityEngine.Object.Destroy(gameObject1);
-        }
-        if (UnityObjectExtensions.TryFind("IntroFireExtinugisherPickup", out GameObject gameObject2))
-        {
-            UnityEngine.Object.Destroy(gameObject2);
-        }
-
-        Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
-    }
 }
