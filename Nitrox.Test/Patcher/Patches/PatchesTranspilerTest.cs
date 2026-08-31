@@ -51,7 +51,7 @@ public class PatchesTranspilerTest
         [typeof(EscapePod_Start_Patch), 43],
         [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],
         [typeof(FireExtinguisherHolder_TryStoreTank_Patch), 3],
-        [typeof(Flare_Update_Patch), 2],
+        [typeof(Flare_Update_Patch), -4],
         [typeof(Flare_UpdateLight_Patch), 0],
         [typeof(FootstepSounds_OnStep_Patch), 6],
         [typeof(GrowingPlant_SpawnGrownModelAsync_Patch), -1],
