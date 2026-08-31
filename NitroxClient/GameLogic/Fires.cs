@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using Nitrox.Model.DataStructures;
+﻿using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
@@ -36,16 +34,14 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            if (!fire.TryGetIdOrWarn(out NitroxId fireId))
-            {
-                return;
-            }
             if (!fire.fireSubRoot.TryGetIdOrWarn(out NitroxId subRootId))
             {
                 return;
             }
 
-            CyclopsFireCreated packet = new CyclopsFireCreated(fireId, subRootId, room.roomLinks.room, nodeIndex);
+            NitroxId fireId = NitroxEntity.GenerateNewId(fire.gameObject);
+
+            CyclopsFireCreated packet = new(fireId, subRootId, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
 
@@ -78,18 +74,17 @@ namespace NitroxClient.GameLogic
         public void Create(CyclopsFireData fireData)
         {
             SubFire subFire = NitroxEntity.RequireObjectFrom(fireData.CyclopsId).GetComponent<SubRoot>().damageManager.subFire;
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
-            // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
-            Transform transform2 = roomFiresDict[fireData.Room].spawnNodes[fireData.NodeIndex];
+            SubFire.RoomFire roomFire = subFire.roomFires[fireData.Room];
+            Transform spawnNode = roomFire.spawnNodes[fireData.NodeIndex];
 
             // If a fire already exists at the node, replace the old Id with the new one
-            if (transform2.childCount > 0)
+            if (spawnNode.childCount > 0)
             {
-                Fire existingFire = transform2.GetComponentInChildren<Fire>();
+                Fire existingFire = spawnNode.GetComponentInChildren<Fire>();
 
-                if (existingFire.TryGetNitroxId(out NitroxId existingFireId) && existingFireId != fireData.CyclopsId)
+                if (existingFire.TryGetNitroxId(out NitroxId existingFireId) && existingFireId != fireData.FireId)
                 {
-                    Log.Error($"[Fires.Create Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {existingFireId} with Id {fireData.CyclopsId}]");
+                    Log.Warn($"Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {existingFireId} with Id {fireData.CyclopsId}");
 
                     NitroxEntity.SetNewId(existingFire.gameObject, fireData.CyclopsId);
                 }
@@ -97,37 +92,25 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            List<Transform> availableNodes = subFire.availableNodes;
-            availableNodes.Clear();
-            foreach (Transform transform in roomFiresDict[fireData.Room].spawnNodes)
-            {
-                if (transform.childCount == 0)
-                {
-                    availableNodes.Add(transform);
-                }
-            }
+            roomFire.fireValue++;
 
-            roomFiresDict[fireData.Room].fireValue++;
-            PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
+            PrefabSpawn component = spawnNode.GetComponent<PrefabSpawn>();
             if (!component)
             {
+                Log.Error(
+                    $"Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}");
                 return;
             }
-            Log.Error(
-                $"[{nameof(CyclopsFireCreatedProcessor)} Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}]");
 
-            component.SpawnManual(delegate(GameObject fireGO)
+            component.SpawnManual(gameObject =>
             {
-                Fire componentInChildren = fireGO.GetComponentInChildren<Fire>();
-                if (componentInChildren)
+                Fire fire = gameObject.GetComponentInChildren<Fire>();
+                if (fire)
                 {
-                    componentInChildren.fireSubRoot = subFire.subRoot;
-                    NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
+                    fire.fireSubRoot = subFire.subRoot;
+                    NitroxEntity.SetNewId(fire.gameObject, fireData.FireId);
                 }
             });
-
-            subFire.roomFires = roomFiresDict;
-            subFire.availableNodes = availableNodes;
         }
     }
 }
