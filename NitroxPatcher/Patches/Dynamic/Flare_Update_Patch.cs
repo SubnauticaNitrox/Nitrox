@@ -4,7 +4,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxPatcher.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -23,7 +22,7 @@ public sealed partial class Flare_Update_Patch : NitroxPatch, IDynamicPatch
          * this.energyLeft = Mathf.Max(this.energyLeft - Time.deltaTime, 0f);
          * 
          * WITH:
-         * this.energyLeft = 1800f - ((float)Resolve<TimeManager>().RealTimeElapsed - this.flareActivateTime);
+         * Flare_Update_Patch.UpdateEnergyLeft(this);
          */
 
         CodeMatcher matcher = new(instructions);
@@ -31,7 +30,7 @@ public sealed partial class Flare_Update_Patch : NitroxPatch, IDynamicPatch
         matcher.MatchEndForward([
                    new CodeMatch(OpCodes.Ldarg_0),
                    new CodeMatch(OpCodes.Ldfld, Reflect.Field((Flare t) => t.energyLeft)),
-                   new CodeMatch(OpCodes.Call, Reflect.Property(() => Time.deltaTime).GetGetMethod()),
+                   new CodeMatch(OpCodes.Call, Reflect.Property(() => UnityEngine.Time.deltaTime).GetGetMethod()),
                    new CodeMatch(OpCodes.Sub),
                    new CodeMatch(OpCodes.Ldc_R4, 0f),
                    new CodeMatch(OpCodes.Call, Reflect.Method(() => UnityEngine.Mathf.Max(default(float), default(float))))
@@ -39,16 +38,15 @@ public sealed partial class Flare_Update_Patch : NitroxPatch, IDynamicPatch
                .Advance(-5)
                .RemoveInstructions(6)
                .Insert([
-                   new CodeInstruction(OpCodes.Ldc_R4, 1800f), // Max energy
-                   new CodeInstruction(OpCodes.Call, Reflect.Method(() => Resolve<TimeManager>())),
-                   new CodeInstruction(OpCodes.Callvirt, Reflect.Property((TimeManager t) => t.RealTimeElapsed).GetGetMethod()),
-                   new CodeInstruction(OpCodes.Conv_R4),
                    new CodeInstruction(OpCodes.Ldarg_0),
-                   new CodeInstruction(OpCodes.Ldfld, Reflect.Field((Flare t) => t.flareActivateTime)),
-                   new CodeInstruction(OpCodes.Sub),
-                   new CodeInstruction(OpCodes.Sub)
+                   new CodeInstruction(OpCodes.Call, Reflect.Method(() => UpdateEnergyLeft(default)))
                ]);
 
         return matcher.InstructionEnumeration();
+    }
+
+    public static void UpdateEnergyLeft(Flare flare)
+    {
+        flare.energyLeft = 1800f - ((float)Resolve<TimeManager>().RealTimeElapsed - flare.flareActivateTime);
     }
 }
