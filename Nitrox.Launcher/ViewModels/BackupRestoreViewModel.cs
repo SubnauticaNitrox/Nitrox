@@ -77,7 +77,7 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
         {
             yield break;
         }
-        string backupDir = Path.Combine(saveDirectory, "Backups");
+        string backupDir = Path.Combine(saveDirectory, "backups");
         if (!Directory.Exists(backupDir))
         {
             yield break;
