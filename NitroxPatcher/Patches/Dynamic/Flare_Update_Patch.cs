@@ -36,9 +36,8 @@ public sealed partial class Flare_Update_Patch : NitroxPatch, IDynamicPatch
                    new CodeMatch(OpCodes.Call, Reflect.Method(() => UnityEngine.Mathf.Max(default(float), default(float))))
                ])
                .Advance(-5)
-               .RemoveInstructions(6)
+               .RemoveInstructions(7)
                .Insert([
-                   new CodeInstruction(OpCodes.Ldarg_0),
                    new CodeInstruction(OpCodes.Call, Reflect.Method(() => UpdateEnergyLeft(default)))
                ]);
 
