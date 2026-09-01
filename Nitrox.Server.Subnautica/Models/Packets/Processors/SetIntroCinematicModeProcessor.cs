@@ -5,9 +5,10 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager, ILogger<SetIntroCinematicModeProcessor> logger) : IAuthPacketProcessor<SetIntroCinematicMode>
+internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager, EscapePodManager escapePodManager, ILogger<SetIntroCinematicModeProcessor> logger) : IAuthPacketProcessor<SetIntroCinematicMode>
 {
     private readonly PlayerManager playerManager = playerManager;
+    private readonly EscapePodManager escapePodManager = escapePodManager;
     private readonly ILogger<SetIntroCinematicModeProcessor> logger = logger;
 
     public async Task Process(AuthProcessorContext context, SetIntroCinematicMode packet)
@@ -32,6 +33,8 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager
 
             await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[0].SessionId, IntroCinematicMode.START, allWaitingPlayers[1].SessionId));
             await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[1].SessionId, IntroCinematicMode.START, allWaitingPlayers[0].SessionId));
+
+            await escapePodManager.SetupIntroSequenceAsync(allWaitingPlayers[0], allWaitingPlayers[1]);
         }
     }
 }
