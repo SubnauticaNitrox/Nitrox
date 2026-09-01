@@ -12,7 +12,7 @@ internal sealed class CyclopsDamagePointRepairedProcessor : IClientPacketProcess
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
         SubRoot cyclops = gameObject.RequireComponent<SubRoot>();
 
-        using (PacketSuppressor<CyclopsDamage>.Suppress())
+        using (PacketSuppressor<CyclopsDamagePointCreated>.Suppress())
         using (PacketSuppressor<CyclopsDamagePointRepaired>.Suppress())
         {
             cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
