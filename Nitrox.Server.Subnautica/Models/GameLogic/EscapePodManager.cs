@@ -161,7 +161,7 @@ internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry enti
 
         // This entity only needs to exist for the players in the escape pod for a moment, so we forget it,
         // both on the server-side and on the client-side when the intro sequence finishes.
-        Entity fireEntity = new PathBasedChildEntity("Intro/FireVolume", new NitroxId(), NitroxTechType.None, null, escapePod.Id, []);
+        Entity fireEntity = new PathBasedChildEntity("Intro", new NitroxId(), NitroxTechType.None, null, escapePod.Id, []);
 
         SpawnEntities spawnEntities = new(fireEntity);
         await packetSender.SendPacketAsync(spawnEntities, playerA.SessionId);

@@ -18,7 +18,7 @@ internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProc
     public Task Process(ClientProcessorContext context, FireDoused packet)
     {
         GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-        Fire fire = fireGameObject.RequireComponent<Fire>();
+        Fire fire = fireGameObject.RequireComponentInChildren<Fire>();
 
         float douseAmount = fire.livemixin.health - packet.Health;
         if (!packet.Extinguished)

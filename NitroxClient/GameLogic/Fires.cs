@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId fireId = NitroxEntity.GenerateNewId(fire.gameObject);
+            NitroxId fireId = NitroxEntity.GenerateNewId(fire.transform.parent.gameObject);
 
             CyclopsFireCreated packet = new(fireId, subRootId, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
-            if (!fire.TryGetIdOrWarn(out NitroxId fireId))
+            if (!fire.transform.parent.TryGetIdOrWarn(out NitroxId fireId))
             {
                 return;
             }
@@ -80,7 +80,7 @@ namespace NitroxClient.GameLogic
             // If a fire already exists at the node, replace the old Id with the new one
             if (spawnNode.childCount > 0)
             {
-                Fire existingFire = spawnNode.GetComponentInChildren<Fire>();
+                Transform existingFire = spawnNode.GetComponentInChildren<Fire>().transform.parent;
 
                 if (existingFire.TryGetNitroxId(out NitroxId existingFireId) && existingFireId != fireData.FireId)
                 {
@@ -108,7 +108,7 @@ namespace NitroxClient.GameLogic
                 if (fire)
                 {
                     fire.fireSubRoot = subFire.subRoot;
-                    NitroxEntity.SetNewId(fire.gameObject, fireData.FireId);
+                    NitroxEntity.SetNewId(fire.transform.parent.gameObject, fireData.FireId);
                 }
             });
         }
