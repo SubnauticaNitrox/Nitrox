@@ -1,16 +1,15 @@
 using FMOD.Studio;
 using NitroxClient.GameLogic;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
 
-public class CyclopsMovementReplicator : VehicleMovementReplicator
+internal sealed class CyclopsMovementReplicator : VehicleMovementReplicator
 {
-    protected static readonly int CYCLOPS_YAW = Animator.StringToHash("cyclops_yaw");
-    protected static readonly int CYCLOPS_PITCH = Animator.StringToHash("cyclops_pitch");
+    private static readonly int CYCLOPS_YAW = Animator.StringToHash("cyclops_yaw");
+    private static readonly int CYCLOPS_PITCH = Animator.StringToHash("cyclops_pitch");
 
     private SubControl subControl;
 
@@ -47,7 +46,7 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
             }
         }
 
-        if (Mathf.Abs(steeringWheelYaw) > 0.1f)
+        if (UnityMathf.Abs(steeringWheelYaw) > 0.1f)
         {
             ShipSide shipSide = steeringWheelYaw > 0 ? ShipSide.Port : ShipSide.Starboard;
             for (int i = 0; i < subControl.turnHandlers.Length; i++)

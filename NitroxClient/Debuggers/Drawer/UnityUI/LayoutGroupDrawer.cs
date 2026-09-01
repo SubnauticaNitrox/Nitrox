@@ -1,11 +1,10 @@
 ﻿using NitroxClient.Debuggers.Drawer.Unity;
-using Nitrox.Model.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class LayoutGroupDrawer : IDrawer<HorizontalLayoutGroup>, IDrawer<VerticalLayoutGroup>
+internal sealed class LayoutGroupDrawer : IDrawer<HorizontalLayoutGroup>, IDrawer<VerticalLayoutGroup>
 {
     private readonly RectDrawer rectDrawer;
 

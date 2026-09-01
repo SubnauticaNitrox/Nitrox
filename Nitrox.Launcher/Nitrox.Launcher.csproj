@@ -70,7 +70,7 @@
         <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" >
             <IsWeakReference>true</IsWeakReference>
         </ProjectReference>
-        <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
+        <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
             <Name>NitroxPatcher472</Name>
             <SetTargetFramework>TargetFramework=net472</SetTargetFramework>
             <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
@@ -88,10 +88,10 @@
                  Text="Running _FixBuildInsideVisualStudio on $(MSBuildProjectName)" />
 
         <ItemGroup>
-            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\NitroxPatcher\bin\$(Configuration)\net472\*" />
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\NitroxClient\bin\$(Configuration)\net472\*" />
         </ItemGroup>
 
-        <Error Text="Unable to find NitroxPatcher files from _NitroxFixBuildInsideVisualStudio"
+        <Error Text="Unable to find NitroxClient files from _NitroxFixBuildInsideVisualStudio"
                Condition="@(_FilesToCopy->Count()) == 0" />
 
         <Copy SourceFiles="@(_FilesToCopy)"

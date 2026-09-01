@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DiscordGameSDKWrapper;
+using NitroxClient.Services.Game;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.MonoBehaviours.Discord;
 
-public class DiscordJoinRequestGui : uGUI_InputGroup
+internal sealed class DiscordJoinRequestGui : uGUI_InputGroup
 {
     private readonly WaitForSeconds expireTimeYielder = new(45);
 
@@ -64,7 +65,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
 
     private void CloseWindow(ActivityJoinRequestReply reply)
     {
-        DiscordClient.RespondJoinRequest(user.Id, reply);
+        DiscordClientService.RespondJoinRequest(user.Id, reply);
         DestroyImmediate(gameObject);
     }
 

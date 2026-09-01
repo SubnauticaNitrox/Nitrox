@@ -6,7 +6,7 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// <remarks>
 /// Ground detection adapted from <see href="https://github.com/Unity-Technologies/Standard-Assets-Characters/blob/master/Assets/_Standard%20Assets/Characters/Scripts/Physics/OpenCharacterController.cs"/>
 /// </remarks>
-public partial class CyclopsMotor
+internal partial class CyclopsMotor
 {
     private const float CAST_DISTANCE = 0.001f;
     private const float CAST_EXTRA_DISTANCE = 0.001f;
@@ -52,13 +52,13 @@ public partial class CyclopsMotor
             if (SphereCast(-Up, SkinWidth + CAST_DISTANCE, out RaycastHit hitInfo, lowerPoint, false))
             {
                 grounded = true;
-                hitInfo.distance = Mathf.Max(0f, hitInfo.distance - SkinWidth);
+                hitInfo.distance = UnityMathf.Max(0f, hitInfo.distance - SkinWidth);
             }
 
             if (!grounded && SphereCast(-Up, CAST_DISTANCE + CAST_EXTRA_DISTANCE, out hitInfo, lowerPoint + Up * CAST_EXTRA_DISTANCE, true))
             {
                 grounded = true;
-                hitInfo.distance = Mathf.Max(0f, hitInfo.distance - SkinWidth);
+                hitInfo.distance = UnityMathf.Max(0f, hitInfo.distance - SkinWidth);
             }
 
             groundNormal = hitInfo.normal;

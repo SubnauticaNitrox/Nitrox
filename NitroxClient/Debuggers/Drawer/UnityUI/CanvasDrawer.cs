@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class CanvasDrawer : IDrawer<Canvas>
+internal sealed class CanvasDrawer : IDrawer<Canvas>
 {
     private readonly SceneDebugger sceneDebugger;
 

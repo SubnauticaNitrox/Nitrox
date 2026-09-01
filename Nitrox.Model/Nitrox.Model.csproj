@@ -5,7 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" />
         <PackageReference Include="LiteNetLib" />
         <PackageReference Include="MagicOnion.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />

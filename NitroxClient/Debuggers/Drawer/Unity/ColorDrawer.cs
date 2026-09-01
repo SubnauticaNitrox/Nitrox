@@ -2,7 +2,7 @@
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class ColorDrawer : IEditorDrawer<Color>, IEditorDrawer<Color32>
+internal sealed class ColorDrawer : IEditorDrawer<Color>, IEditorDrawer<Color32>
 {
     private static readonly Texture2D tex = new((int)NitroxGUILayout.VALUE_WIDTH, 25);
     private static Color lastColor;

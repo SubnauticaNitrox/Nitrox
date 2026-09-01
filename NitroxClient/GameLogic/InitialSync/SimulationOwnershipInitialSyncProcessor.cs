@@ -5,7 +5,7 @@ using Nitrox.Model.Subnautica.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public sealed class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
+internal sealed class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly SimulationOwnership simulationOwnership;
 

@@ -11,16 +11,19 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class Items
+internal class Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager, BatteryChildEntities batteryEntities)
 {
-    private readonly IPacketSender packetSender;
-    private readonly Entities entities;
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly Entities entities = entities;
     public static GameObject? PickingUpObject { get; private set; }
-    private readonly EntityMetadataManager entityMetadataManager;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
+    private readonly BatteryChildEntities batteryEntities = batteryEntities;
 
     /// <summary>
     /// Whether or not <see cref="Inventory.Pickup"/> or a similar method is running (if greater than 0).
@@ -28,13 +31,6 @@ public class Items
     /// </summary>
 
     public int PickingUpCount;
-
-    public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
-    {
-        this.packetSender = packetSender;
-        this.entities = entities;
-        this.entityMetadataManager = entityMetadataManager;
-    }
 
     public void PickedUpByPlayer(GameObject gameObject, TechType techType)
     {
@@ -236,7 +232,7 @@ public class Items
     /// </summary>
     private InventoryItemEntity ConvertToInventoryEntityUntracked(GameObject gameObject, NitroxId parentId)
     {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, parentId, entityMetadataManager);
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, parentId);
 
         // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
         // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
@@ -246,12 +242,12 @@ public class Items
 
         // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
         RemoveAnyRemoteControl(gameObject);
-        EntityPositionBroadcaster.StopWatchingEntity(inventoryItemEntity.Id);
+        EntityPositionBroadcastService.StopWatchingEntity(inventoryItemEntity.Id);
 
         return inventoryItemEntity;
     }
 
-    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, NitroxId parentId, EntityMetadataManager entityMetadataManager)
+    public InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, NitroxId parentId)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
@@ -260,7 +256,7 @@ public class Items
         List<Entity> children = GetPrefabChildren(gameObject, itemId, entityMetadataManager).ToList();
 
         InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), parentId, children);
-        BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
+        batteryEntities.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
 
         return inventoryItemEntity;
     }

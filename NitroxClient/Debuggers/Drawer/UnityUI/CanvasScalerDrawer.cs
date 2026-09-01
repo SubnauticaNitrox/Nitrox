@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class CanvasScalerDrawer : IDrawer<CanvasScaler>
+internal sealed class CanvasScalerDrawer : IDrawer<CanvasScaler>
 {
     private readonly VectorDrawer vectorDrawer;
 

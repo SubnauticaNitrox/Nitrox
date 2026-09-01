@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Services;
+using NitroxClient.Services.Game;
 
 namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 
-public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDisposable
+internal sealed class ClockSyncProcedure(LiteNetLibClientService liteNetLibClient) : IDisposable
 {
-    private readonly LiteNetLibClient liteNetLibClient = liteNetLibClient;
+    private readonly LiteNetLibClientService liteNetLibClient = liteNetLibClient;
     private readonly int previousPingInterval = liteNetLibClient.PingInterval;
     private readonly List<long> deltas = [];
 
-    public static ClockSyncProcedure Start(LiteNetLibClient liteNetLibClient, int procedureDuration)
+    public static ClockSyncProcedure Start(LiteNetLibClientService liteNetLibClient, int procedureDuration)
     {
         ClockSyncProcedure clockSyncProcedure = new(liteNetLibClient);
         liteNetLibClient.PingInterval = (int)TimeSpan.FromSeconds(procedureDuration).TotalMilliseconds;

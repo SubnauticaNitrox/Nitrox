@@ -7,7 +7,7 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// <summary>
 ///     A replacement for <see cref="GroundMotor" /> while Local Player is in a Cyclops.
 /// </summary>
-public partial class CyclopsMotor : GroundMotor
+internal sealed partial class CyclopsMotor : GroundMotor
 {
     private Transform? body;
     private NitroxCyclops? cyclops;
@@ -164,7 +164,7 @@ public partial class CyclopsMotor : GroundMotor
         Vector3 velocity = new(horizontalVelocity.x, verticalVelocity.y, horizontalVelocity.z);
         Vector3 movementThisFrame = velocity * DeltaTime;
 
-        float step = Mathf.Max(Pawn.Controller.stepOffset, Mathf.Sqrt(movementThisFrame.x * movementThisFrame.x + movementThisFrame.z * movementThisFrame.z));
+        float step = UnityMathf.Max(Pawn.Controller.stepOffset, Mathf.Sqrt(movementThisFrame.x * movementThisFrame.x + movementThisFrame.z * movementThisFrame.z));
         if (grounded)
         {
             movementThisFrame -= step * Up;
@@ -259,7 +259,7 @@ public partial class CyclopsMotor : GroundMotor
         if (!grounded)
         {
             verticalMove = -gravity * Up * DeltaTime;
-            verticalMove.y = Mathf.Max(verticalMove.y, -movement.maxFallSpeed);
+            verticalMove.y = UnityMathf.Max(verticalMove.y, -movement.maxFallSpeed);
         }
         if (grounded || allowMidAirJumping || flyCheatEnabled)
         {
@@ -289,7 +289,7 @@ public partial class CyclopsMotor : GroundMotor
     private Vector3 CalculateInputVelocity()
     {
         // Project the movement input to the right rotation
-        float moveMinMagnitude = Mathf.Min(1f, movementInputDirection.magnitude);
+        float moveMinMagnitude = UnityMathf.Min(1f, movementInputDirection.magnitude);
 
         // We rotate the input in the right basis
         Vector3 input = movementInputDirection._X0Z();
@@ -354,7 +354,7 @@ public partial class CyclopsMotor : GroundMotor
 
         if (grounded)
         {
-            latestVelocity.y = Mathf.Min(latestVelocity.y, 0f);
+            latestVelocity.y = UnityMathf.Min(latestVelocity.y, 0f);
         }
 
         return latestVelocity;
@@ -368,6 +368,6 @@ public partial class CyclopsMotor : GroundMotor
     private new bool TooSteep()
     {
         float dotUp = Vector3.Dot(groundNormal, Up);
-        return dotUp <= Mathf.Cos(controller.slopeLimit * Mathf.Deg2Rad);
+        return dotUp <= UnityMathf.Cos(controller.slopeLimit * UnityMathf.Deg2Rad);
     }
 }

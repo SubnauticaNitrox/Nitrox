@@ -16,24 +16,16 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class Vehicles
+internal sealed class Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, PlayerManager playerManager, EntityMetadataManager entityMetadataManager, Entities entities, VehicleChildEntityHelper vehicleChildEntityHelper)
 {
-    private readonly IPacketSender packetSender;
-    private readonly IMultiplayerSession multiplayerSession;
-    private readonly PlayerManager playerManager;
-    private readonly EntityMetadataManager entityMetadataManager;
-    private readonly Entities entities;
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly IMultiplayerSession multiplayerSession = multiplayerSession;
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
+    private readonly Entities entities = entities;
+    private readonly VehicleChildEntityHelper vehicleChildEntityHelper = vehicleChildEntityHelper;
 
     private readonly Dictionary<TechType, string> pilotingChairByTechType = [];
-
-    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, PlayerManager playerManager, EntityMetadataManager entityMetadataManager, Entities entities)
-    {
-        this.packetSender = packetSender;
-        this.multiplayerSession = multiplayerSession;
-        this.playerManager = playerManager;
-        this.entityMetadataManager = entityMetadataManager;
-        this.entities = entities;
-    }
 
     private PilotingChair FindPilotingChairWithCache(GameObject parent, TechType techType)
     {
@@ -164,10 +156,10 @@ public class Vehicles
         }
     }
 
-    public static VehicleEntity BuildVehicleEntity(GameObject constructedObject, NitroxId constructedObjectId, TechType techType, NitroxId constructorId = null)
+    public VehicleEntity BuildVehicleEntity(GameObject constructedObject, NitroxId constructedObjectId, TechType techType, NitroxId constructorId = null)
     {
         VehicleEntity vehicleEntity = new(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), string.Empty, false, constructedObjectId, techType.ToDto(), null);
-        VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
+        vehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
         return vehicleEntity;
     }
 }

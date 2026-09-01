@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-public sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketProcessor<EntityDestroyed>
+internal sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketProcessor<EntityDestroyed>
 {
     public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
 

@@ -1,8 +1,7 @@
-﻿namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+﻿namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
+
+internal interface IPreferenceStateProvider
 {
-    public interface IPreferenceStateProvider
-    {
-        PlayerPreferenceState GetPreferenceState();
-        void SavePreferenceState(PlayerPreferenceState preferenceState);
-    }
+    PlayerPreferenceState GetPreferenceState();
+    void SavePreferenceState(PlayerPreferenceState preferenceState);
 }

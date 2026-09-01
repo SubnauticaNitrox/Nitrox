@@ -10,17 +10,12 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class RadiationLeakEntitySpawner : SyncEntitySpawner<RadiationLeakEntity>
+internal sealed class RadiationLeakEntitySpawner(TimeManager timeManager) : SyncEntitySpawner<RadiationLeakEntity>
 {
     // This constant is defined by Subnautica and should never be modified (same as for SubnauticaWorldModifier)
     private const int TOTAL_LEAKS = 11;
-    private readonly TimeManager timeManager;
+    private readonly TimeManager timeManager = timeManager;
     private readonly List<float> registeredLeaksFixTime = new();
-
-    public RadiationLeakEntitySpawner(TimeManager timeManager)
-    {
-        this.timeManager = timeManager;
-    }
 
     protected override IEnumerator SpawnAsync(RadiationLeakEntity entity, TaskResult<Optional<GameObject>> result)
     {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Logger;
 using Nitrox.Model.Platforms.OS.Shared;
 
@@ -13,7 +14,6 @@ namespace Nitrox.Launcher.Models.Utils;
 public static class NitroxEntryPatch
 {
     public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
-    public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
     public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
 
     private const string NITROX_ENTRY_TYPE_NAME = "Main";
@@ -22,18 +22,18 @@ public static class NitroxEntryPatch
     private const string TARGET_TYPE_NAME = "PlatformUtils";
     private const string TARGET_METHOD_NAME = "Awake";
 
-    private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
+    private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxClient.Main::Execute()";
 
     /// <summary>
     /// Inject Nitrox entry point into Subnautica's Assembly-CSharp.dll
     /// </summary>
     public static async Task Apply(string subnauticaBasePath)
     {
-        ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath, nameof(subnauticaBasePath));
+        ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath);
 
         string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-        string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
+        string patcherFilePath = Path.Combine(subnauticaManagedPath, NitroxConstants.NITROX_CLIENT_DLL_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
         Log.Debug("Checking Subnautica code exists");
@@ -70,7 +70,7 @@ public static class NitroxEntryPatch
         /*
          * private void Awake()
          * {
-         *     NitroxPatcher.Main.Execute(); <--- [INSERTED LINE]
+         *     NitroxClient.Main.Execute(); <--- [INSERTED LINE]
          *     if (PlatformUtils._main != null)
          *     {
          *         Debug.LogError("Multiple PlatformUtils instances found in scene!", this);
@@ -85,9 +85,9 @@ public static class NitroxEntryPatch
         */
         // TODO: Find a better way to inject Nitrox entrypoint instead of using file swapping
         using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
-        using (ModuleDefMD nitroxPatcherAssembly = ModuleDefMD.Load(nitroxPatcherPath))
+        using (ModuleDefMD patcherAssembly = ModuleDefMD.Load(patcherFilePath))
         {
-            TypeDef nitroxMainDefinition = nitroxPatcherAssembly.GetTypes().FirstOrDefault(x => x.Name == NITROX_ENTRY_TYPE_NAME);
+            TypeDef nitroxMainDefinition = patcherAssembly.GetTypes().FirstOrDefault(x => x.Name == NITROX_ENTRY_TYPE_NAME);
             MethodDef executeMethodDefinition = nitroxMainDefinition.Methods.FirstOrDefault(x => x.Name == NITROX_ENTRY_METHOD_NAME);
 
             MemberRef executeMethodReference = module.Import(executeMethodDefinition);

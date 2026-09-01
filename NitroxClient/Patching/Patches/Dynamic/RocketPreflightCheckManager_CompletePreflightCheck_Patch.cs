@@ -1,0 +1,20 @@
+using System.Reflection;
+using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+public sealed partial class RocketPreflightCheckManager_CompletePreflightCheck_Patch : NitroxPatch, IDynamicPatch
+{
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((RocketPreflightCheckManager t) => t.CompletePreflightCheck(default(PreflightCheck)));
+
+    public static void Postfix(RocketPreflightCheckManager __instance)
+    {
+        Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
+
+        if (rocket.TryGetIdOrWarn(out NitroxId id))
+        {
+            Resolve<Entities>().EntityMetadataChanged(rocket, id);
+        }
+    }
+}

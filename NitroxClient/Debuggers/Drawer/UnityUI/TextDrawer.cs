@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class TextDrawer : IDrawer<Text>
+internal sealed class TextDrawer : IDrawer<Text>
 {
     private readonly ColorDrawer colorDrawer;
     private readonly MaterialDrawer materialDrawer;

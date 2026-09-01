@@ -7,19 +7,13 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class MobileVehicleBay
+internal sealed class MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
 {
     public static bool TransmitLocalSpawns { get; set; } = true;
     public static GameObject MostRecentlyCrafted { get; set; }
 
-    private readonly IPacketSender packetSender;
-    private readonly Vehicles vehicles;
-
-    public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
-    {
-        this.packetSender = packetSender;
-        this.vehicles = vehicles;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly Vehicles vehicles = vehicles;
 
     public void BeginCrafting(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
     {
@@ -40,7 +34,7 @@ public class MobileVehicleBay
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
-        VehicleEntity vehicleEntity = Vehicles.BuildVehicleEntity(constructedObject, constructedObjectId, techType, constructorId);
+        VehicleEntity vehicleEntity = vehicles.BuildVehicleEntity(constructedObject, constructedObjectId, techType, constructorId);
 
         packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
         // TODO: Fix remote players treating the SimulationOwnership change on the vehicle (they can't find it) even tho they're still in the

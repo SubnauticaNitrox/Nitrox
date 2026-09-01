@@ -4,16 +4,11 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class RectTransformDrawer : IDrawer<RectTransform>
+internal sealed class RectTransformDrawer(VectorDrawer vectorDrawer) : IDrawer<RectTransform>
 {
-    private readonly VectorDrawer vectorDrawer;
+    private readonly VectorDrawer vectorDrawer = vectorDrawer;
     private const float LABEL_WIDTH = 120;
     private const float VECTOR_MAX_WIDTH = 405;
-
-    public RectTransformDrawer(VectorDrawer vectorDrawer)
-    {
-        this.vectorDrawer = vectorDrawer;
-    }
 
     public void Draw(RectTransform rectTransform)
     {

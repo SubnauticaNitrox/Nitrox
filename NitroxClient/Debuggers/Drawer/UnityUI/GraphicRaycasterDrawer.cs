@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class GraphicRaycasterDrawer : IDrawer<GraphicRaycaster>
+internal sealed class GraphicRaycasterDrawer : IDrawer<GraphicRaycaster>
 {
     public void Draw(GraphicRaycaster graphicRaycaster)
     {

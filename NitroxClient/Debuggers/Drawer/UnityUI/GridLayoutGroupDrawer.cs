@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class GridLayoutGroupDrawer : IDrawer<GridLayoutGroup>
+internal sealed class GridLayoutGroupDrawer : IDrawer<GridLayoutGroup>
 {
     private readonly VectorDrawer vectorDrawer;
     private readonly RectDrawer rectDrawer;

@@ -8,11 +8,12 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using NitroxClient.Services.Multiplayer;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;
 
-public static class BuildUtils
+internal static class BuildUtils
 {
     public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell? baseCell = null, Base.Face? baseFace = null)
     {
@@ -303,19 +304,5 @@ public static class BuildUtils
     public static Component? AliveOrNull(this IBaseModule baseModule)
     {
         return (baseModule as Component).AliveOrNull();
-    }
-
-    public static void DeconstructionAllowed(NitroxId baseId, ref bool result, ref string reason)
-    {
-        if (BuildingHandler.Main.BasesCooldown.ContainsKey(baseId))
-        {
-            result = false;
-            reason = Language.main.Get("Nitrox_ErrorRecentBuildUpdate");
-        }
-        else if (BuildingHandler.Main.EnsureTracker(baseId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
-        {
-            result = false;
-            reason = Language.main.Get("Nitrox_ErrorDesyncDetected");
-        }
     }
 }

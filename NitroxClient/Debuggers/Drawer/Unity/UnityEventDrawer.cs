@@ -7,7 +7,7 @@ public class UnityEventDrawer : IDrawer<UnityEvent, UnityEventDrawer.DrawOptions
 {
     private const float LABEL_WIDTH = 250;
 
-    public void Draw(UnityEvent unityEvent, DrawOptions options)
+    public void Draw(UnityEvent unityEvent, DrawOptions? options)
     {
         options ??= new DrawOptions();
 
@@ -24,7 +24,7 @@ public class UnityEventDrawer : IDrawer<UnityEvent, UnityEventDrawer.DrawOptions
         DrawUnityEventBase(unityEvent);
     }
 
-    public void Draw(UnityEvent<bool> unityEvent, DrawOptions options)
+    public void Draw(UnityEvent<bool> unityEvent, DrawOptions? options)
     {
         options ??= new DrawOptions();
 

@@ -13,16 +13,11 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
-public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
+internal class InteriorPieceEntitySpawner(Entities entities, EntityMetadataManager entityMetadataManager, Items items) : EntitySpawner<InteriorPieceEntity>
 {
-    private readonly Entities entities;
-    private readonly EntityMetadataManager entityMetadataManager;
-
-    public InteriorPieceEntitySpawner(Entities entities, EntityMetadataManager entityMetadataManager)
-    {
-        this.entities = entities;
-        this.entityMetadataManager = entityMetadataManager;
-    }
+    private readonly Entities entities = entities;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
+    private readonly Items items = items;
 
     protected override IEnumerator SpawnAsync(InteriorPieceEntity entity, TaskResult<Optional<GameObject>> result)
     {
@@ -154,7 +149,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
                 {
                     foreach (InventoryItem item in itemGroup.items)
                     {
-                        interiorPiece.ChildEntities.Add(Items.ConvertToInventoryItemEntity(item.item.gameObject, interiorPiece.Id, entityMetadataManager));
+                        interiorPiece.ChildEntities.Add(items.ConvertToInventoryItemEntity(item.item.gameObject, interiorPiece.Id, entityMetadataManager));
                     }
                 }
                 break;

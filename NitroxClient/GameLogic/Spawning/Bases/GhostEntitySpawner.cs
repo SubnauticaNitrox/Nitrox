@@ -6,6 +6,8 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -23,7 +25,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             }
             GameObject.Destroy(gameObject);
         }
-        Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
+        Transform parent = BuildingService.GetParentOrGlobalRoot(entity.ParentId);
         yield return RestoreGhost(parent, entity, result);
     }
 

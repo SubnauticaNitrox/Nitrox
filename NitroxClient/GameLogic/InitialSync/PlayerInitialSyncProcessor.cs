@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///     This allows the player to:<br/>
 ///      - use equipment
 /// </remarks>
-public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
+internal sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Items item;
     private readonly ItemContainers itemContainers;
@@ -111,7 +111,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         {
             Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
             // Spawning a player with 0 health makes them invincible so we'd rather set it to 1 HP
-            Player.main.liveMixin.health = Mathf.Max(1f, statsData.Health);
+            Player.main.liveMixin.health = UnityMathf.Max(1f, statsData.Health);
             Survival survivalComponent = Player.main.GetComponent<Survival>();
             survivalComponent.food = statsData.Food;
             survivalComponent.water = statsData.Water;

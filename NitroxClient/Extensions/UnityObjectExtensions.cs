@@ -8,22 +8,6 @@ namespace NitroxClient.Extensions;
 public static class UnityObjectExtensions
 {
     /// <summary>
-    ///     Resolves a type using <see cref="NitroxServiceLocator.LocateService{T}" />. If the result is not null it will cache and return the same type on future calls.
-    /// </summary>
-    /// <remarks>
-    ///     Dependency Injection should be limited to UnityEngine object types as in other cases it should be injected as constructor parameter.
-    ///     This is the reason for having UnityEngine.Object as first parameter.
-    /// </remarks>
-    /// <typeparam name="T">Type to get and cache from <see cref="NitroxServiceLocator" /></typeparam>
-    /// <returns>The requested type or null if not available.</returns>
-    public static T Resolve<T>(this UnityEngine.Object _, bool prelifeTime = false) where T : class
-    {
-#pragma warning disable DIMA001 // TODO: Consider refactoring how patches are done so that services can be supplied via constructor parameters (i.e. normal DI workflow)
-        return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
-#pragma warning restore DIMA001
-    }
-
-    /// <summary>
     /// Copies a whole component by using reflection. Please note this takes considerable time and every use of this should be thoughtful.
     /// </summary>
     public static Component CopyComponent(this Component original, GameObject destination)

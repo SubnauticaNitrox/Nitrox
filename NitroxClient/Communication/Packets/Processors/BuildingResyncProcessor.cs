@@ -14,24 +14,21 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal sealed class BuildingResyncProcessor(Entities entities, EntityMetadataManager entityMetadataManager) : IClientPacketProcessor<BuildingResync>
+internal sealed class BuildingResyncProcessor(Entities entities, BuildingService buildingService, EntityMetadataManager entityMetadataManager) : IClientPacketProcessor<BuildingResync>
 {
     private readonly Entities entities = entities;
     private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
 
     public Task Process(ClientProcessorContext context, BuildingResync packet)
     {
-        if (!BuildingHandler.Main)
-        {
-            return Task.CompletedTask;
-        }
-
-        BuildingHandler.Main.StartCoroutine(ResyncBuildingEntities(packet.BuildEntities, packet.ModuleEntities));
+        StartCoroutineMultiplayer(ResyncBuildingEntities(packet.BuildEntities, packet.ModuleEntities));
         return Task.CompletedTask;
     }
 
@@ -66,12 +63,12 @@ internal sealed class BuildingResyncProcessor(Entities entities, EntityMetadataM
     private IEnumerator ResyncBuildingEntities(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
-        BuildingHandler.Main.StartResync(buildEntities);
+        buildingService.StartResync(buildEntities);
         yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, "Encountered an exception while resyncing BuildEntities"));
 
-        BuildingHandler.Main.StartResync(moduleEntities);
+        buildingService.StartResync(moduleEntities);
         yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, "Encountered an exception while resyncing ModuleEntities"));
-        BuildingHandler.Main.StopResync();
+        buildingService.StopResync();
 
         stopwatch.Stop();
 

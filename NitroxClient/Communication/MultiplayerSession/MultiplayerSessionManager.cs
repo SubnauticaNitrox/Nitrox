@@ -1,152 +1,140 @@
 using System;
-using System.Threading.Tasks;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Helper;
 using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets;
-using Nitrox.Model.Serialization;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
 
-namespace NitroxClient.Communication.MultiplayerSession
+namespace NitroxClient.Communication.MultiplayerSession;
+
+internal sealed class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
 {
-    public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
+    public IClient Client { get; }
+    public string? IpAddress { get; private set; }
+    public int ServerPort { get; private set; }
+    public MultiplayerSessionPolicy? SessionPolicy { get; private set; }
+    public PlayerSettings? PlayerSettings { get; private set; }
+    public AuthenticationContext? AuthenticationContext { get; private set; }
+    public IMultiplayerSessionConnectionState CurrentState { get; private set; }
+    public MultiplayerSessionReservation? Reservation { get; private set; }
+
+    public MultiplayerSessionManager(IClient client)
     {
-        private static readonly Task initSerializerTask;
+        Log.Info("Initializing MultiplayerSessionManager...");
+        Client = client;
+        CurrentState = new Disconnected();
+    }
 
-        static MultiplayerSessionManager()
+    // Testing entry point
+    internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
+    {
+        Client = client;
+        CurrentState = initialState;
+    }
+
+    public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
+
+    public async Task ConnectAsync(string ipAddress, int port)
+    {
+        IpAddress = ipAddress;
+        ServerPort = port;
+        await CurrentState.NegotiateReservationAsync(this);
+    }
+
+    public void ProcessSessionPolicy(MultiplayerSessionPolicy policy)
+    {
+        SessionPolicy = policy;
+        NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
+        Version localVersion = NitroxEnvironment.Version;
+        NitroxVersion nitroxVersion = new(localVersion.Major, localVersion.Minor);
+        switch (nitroxVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
         {
-            initSerializerTask = Task.Run(Packet.InitSerializer);
-        }
-
-        public IClient Client { get; }
-        public string IpAddress { get; private set; }
-        public int ServerPort { get; private set; }
-        public MultiplayerSessionPolicy SessionPolicy { get; private set; }
-        public PlayerSettings PlayerSettings { get; private set; }
-        public AuthenticationContext AuthenticationContext { get; private set; }
-        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
-        public MultiplayerSessionReservation Reservation { get; private set; }
-
-        public MultiplayerSessionManager(IClient client)
-        {
-            Log.Info("Initializing MultiplayerSessionManager...");
-            Client = client;
-            CurrentState = new Disconnected();
-        }
-
-        // Testing entry point
-        internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
-        {
-            Client = client;
-            CurrentState = initialState;
-        }
-
-        public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
-
-        public async Task ConnectAsync(string ipAddress, int port)
-        {
-            IpAddress = ipAddress;
-            ServerPort = port;
-            await initSerializerTask;
-            await CurrentState.NegotiateReservationAsync(this);
-        }
-
-        public void ProcessSessionPolicy(MultiplayerSessionPolicy policy)
-        {
-            SessionPolicy = policy;
-            NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
-            Version localVersion = NitroxEnvironment.Version;
-            NitroxVersion nitroxVersion = new(localVersion.Major, localVersion.Minor);
-            switch (nitroxVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
-            {
-                case -1:
-                    Log.Error($"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
-                    Log.InGame(Language.main.Get("Nitrox_OutOfDateClient")
-                                           .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
-                                           .Replace("{localVersion}", localVersion.ToString()));
-                    CurrentState.Disconnect(this);
-                    return;
-                case 1:
-                    Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
-                    Log.InGame(Language.main.Get("Nitrox_OutOfDateServer")
-                                           .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
-                                           .Replace("{localVersion}", localVersion.ToString()));
-                    CurrentState.Disconnect(this);
-                    return;
-            }
-
-            CurrentState.NegotiateReservationAsync(this);
-        }
-
-        public void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext)
-        {
-            PlayerSettings = playerSettings;
-            AuthenticationContext = authenticationContext;
-            CurrentState.NegotiateReservationAsync(this);
-        }
-
-        public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
-        {
-            Reservation = reservation;
-            CurrentState.NegotiateReservationAsync(this);
-        }
-
-        public void JoinSession()
-        {
-            CurrentState.JoinSession(this);
-        }
-
-        public void Disconnect()
-        {
-            if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
-            {
+            case -1:
+                Log.Error($"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
+                Log.InGame(Language.main.Get("Nitrox_OutOfDateClient")
+                                   .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
+                                   .Replace("{localVersion}", localVersion.ToString()));
                 CurrentState.Disconnect(this);
-            }
+                return;
+            case 1:
+                Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
+                Log.InGame(Language.main.Get("Nitrox_OutOfDateServer")
+                                   .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
+                                   .Replace("{localVersion}", localVersion.ToString()));
+                CurrentState.Disconnect(this);
+                return;
         }
 
-        public bool Send<T>(T packet) where T : Packet
+        CurrentState.NegotiateReservationAsync(this);
+    }
+
+    public void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext)
+    {
+        PlayerSettings = playerSettings;
+        AuthenticationContext = authenticationContext;
+        CurrentState.NegotiateReservationAsync(this);
+    }
+
+    public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
+    {
+        Reservation = reservation;
+        CurrentState.NegotiateReservationAsync(this);
+    }
+
+    public void JoinSession()
+    {
+        CurrentState.JoinSession(this);
+    }
+
+    public void Disconnect()
+    {
+        if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
         {
-            if (Client.IsConnected && !PacketSuppressor<T>.IsSuppressed)
-            {
-                Client.Send(packet);
-                return true;
-            }
-            return false;
+            CurrentState.Disconnect(this);
         }
+    }
 
-        public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
+    public bool Send<T>(T packet) where T : Packet
+    {
+        if (Client.IsConnected && !PacketSuppressor<T>.IsSuppressed)
         {
-            Validate.NotNull(sessionConnectionState);
-
-            string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
-            string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
-            Log.Debug($"Updating session stage from '{fromStage}' to '{sessionConnectionState.CurrentStage}' for '{username}'");
-
-            CurrentState = sessionConnectionState;
-
-            // Last connection state changed will not have any handlers
-            ConnectionStateChanged?.Invoke(CurrentState);
-
-            if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_RESERVED)
-            {
-                Log.PlayerName = username;
-            }
+            Client.Send(packet);
+            return true;
         }
+        return false;
+    }
 
-        public void ClearSessionState()
+    public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
+    {
+        Validate.NotNull(sessionConnectionState);
+
+        string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
+        string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
+        Log.Debug($"Updating session stage from '{fromStage}' to '{sessionConnectionState.CurrentStage}' for '{username}'");
+
+        CurrentState = sessionConnectionState;
+
+        // Last connection state changed will not have any handlers
+        ConnectionStateChanged?.Invoke(CurrentState);
+
+        if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_RESERVED)
         {
-            IpAddress = null;
-            ServerPort = SubnauticaServerConstants.DEFAULT_PORT;
-            SessionPolicy = null;
-            PlayerSettings = null;
-            AuthenticationContext = null;
-            Reservation = null;
+            Log.PlayerName = username;
         }
+    }
+
+    public void ClearSessionState()
+    {
+        IpAddress = null;
+        ServerPort = SubnauticaServerConstants.DEFAULT_PORT;
+        SessionPolicy = null;
+        PlayerSettings = null;
+        AuthenticationContext = null;
+        Reservation = null;
     }
 }

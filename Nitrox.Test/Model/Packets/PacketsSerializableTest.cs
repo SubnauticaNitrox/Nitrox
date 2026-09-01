@@ -54,12 +54,12 @@ public class PacketsSerializableTest
                 } while (result == null || result.AreEqual);
             }
 
-            generatedPackets.Add(new ValueTuple<Packet, Packet>(packet, packet2));
+            generatedPackets.Add(new (packet, packet2));
         }
 
         Packet.InitSerializer();
 
-        foreach (ValueTuple<Packet, Packet> packet in generatedPackets)
+        foreach ((Packet, Packet) packet in generatedPackets)
         {
             Packet? deserialized = Packet.Deserialize(packet.Item1.Serialize());
 

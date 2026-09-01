@@ -7,11 +7,8 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
-public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata>
+internal sealed class SeamothMetadataProcessor(LiveMixinManager liveMixinManager) : VehicleMetadataProcessor<SeamothMetadata>(liveMixinManager)
 {
-    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager) : base(liveMixinManager)
-    { }
-
     public override void ProcessMetadata(GameObject gameObject, SeamothMetadata metadata)
     {
         if (!gameObject.TryGetComponent(out SeaMoth seamoth))

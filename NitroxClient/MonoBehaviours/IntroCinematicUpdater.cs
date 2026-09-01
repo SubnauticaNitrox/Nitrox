@@ -1,11 +1,10 @@
 using System.Collections;
 using NitroxClient.GameLogic;
-using Nitrox.Model.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class IntroCinematicUpdater : MonoBehaviour
+internal sealed class IntroCinematicUpdater : MonoBehaviour
 {
     public static RemotePlayer? Partner;
     private static Transform modelRoot;

@@ -1,10 +1,11 @@
 using System.Collections;
-using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours.Cyclops;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -17,18 +18,20 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///      - vehicles to use equipment
 ///      - other players to be set as drivers of some vehicle
 /// </remarks>
-public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
+internal sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Entities entities;
     private readonly Vehicles vehicles;
     private readonly PlayerManager playerManager;
+    private readonly BuildingService buildingService;
     private readonly BulletManager bulletManager;
 
-    public GlobalRootInitialSyncProcessor(Entities entities, Vehicles vehicles, PlayerManager playerManager, BulletManager bulletManager)
+    public GlobalRootInitialSyncProcessor(Entities entities, Vehicles vehicles, PlayerManager playerManager, BuildingService buildingService, BulletManager bulletManager)
     {
         this.entities = entities;
         this.vehicles = vehicles;
         this.playerManager = playerManager;
+        this.buildingService = buildingService;
         this.bulletManager = bulletManager;
 
         // As we migrate systems over to entities, we want to ensure the required components are in place to spawn these entities.
@@ -53,7 +56,7 @@ public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
         yield return VirtualCyclops.InitializeConstructablesCache();
         yield return bulletManager.Initialize();
 
-        BuildingHandler.Main.InitializeOperations(packet.BuildOperationIds);
+        buildingService.InitializeOperations(packet.BuildOperationIds);
     }
 
     public IEnumerator SpawnEntities(InitialPlayerSync packet)

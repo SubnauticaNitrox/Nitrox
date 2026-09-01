@@ -7,14 +7,9 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class CreatureRespawnEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
+internal sealed class CreatureRespawnEntitySpawner(SimulationOwnership simulationOwnership) : IWorldEntitySpawner, IWorldEntitySyncSpawner
 {
-    private readonly SimulationOwnership simulationOwnership;
-
-    public CreatureRespawnEntitySpawner(SimulationOwnership simulationOwnership)
-    {
-        this.simulationOwnership = simulationOwnership;
-    }
+    private readonly SimulationOwnership simulationOwnership = simulationOwnership;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {

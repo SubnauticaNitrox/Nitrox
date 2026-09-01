@@ -12,14 +12,9 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///     This allows for the remote player to:<br/>
 ///      - use equipment
 /// </remarks>
-public sealed class RemotePlayerInitialSyncProcessor : InitialSyncProcessor
+internal sealed class RemotePlayerInitialSyncProcessor(PlayerManager remotePlayerManager) : InitialSyncProcessor
 {
-    private readonly PlayerManager remotePlayerManager;
-
-    public RemotePlayerInitialSyncProcessor(PlayerManager remotePlayerManager)
-    {
-        this.remotePlayerManager = remotePlayerManager;
-    }
+    private readonly PlayerManager remotePlayerManager = remotePlayerManager;
 
     public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
     {

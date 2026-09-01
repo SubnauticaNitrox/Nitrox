@@ -1,71 +1,62 @@
-﻿using Nitrox.Model.Helper;
-using Nitrox.Model.MultiplayerSession;
+﻿using Nitrox.Model.MultiplayerSession;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
+
+internal sealed class PlayerPreferenceManager(IPreferenceStateProvider stateProvider)
 {
-    public class PlayerPreferenceManager
+    private readonly PlayerPreferenceState state = stateProvider.GetPreferenceState();
+    private readonly IPreferenceStateProvider stateProvider = stateProvider;
+
+    public void SetPreference(string ipAddress, PlayerPreference playerPreference)
     {
-        private readonly PlayerPreferenceState state;
-        private readonly IPreferenceStateProvider stateProvider;
+        Validate.NotNull(ipAddress);
+        Validate.NotNull(playerPreference);
 
-        public PlayerPreferenceManager(IPreferenceStateProvider stateProvider)
+        if (state.Preferences.ContainsKey(ipAddress))
         {
-            this.stateProvider = stateProvider;
+            PlayerPreference currentPreference = state.Preferences[ipAddress];
 
-            state = stateProvider.GetPreferenceState();
-        }
-
-        public void SetPreference(string ipAddress, PlayerPreference playerPreference)
-        {
-            Validate.NotNull(ipAddress);
-            Validate.NotNull(playerPreference);
-
-            if (state.Preferences.ContainsKey(ipAddress))
+            if (currentPreference.Equals(playerPreference))
             {
-                PlayerPreference currentPreference = state.Preferences[ipAddress];
-
-                if (currentPreference.Equals(playerPreference))
-                {
-                    return;
-                }
-
-                state.Preferences[ipAddress] = playerPreference;
-                state.LastSetPlayerPreference = playerPreference;
-
                 return;
             }
 
-            state.Preferences.Add(ipAddress, playerPreference);
+            state.Preferences[ipAddress] = playerPreference;
             state.LastSetPlayerPreference = playerPreference;
+
+            return;
         }
 
-        public PlayerPreference GetPreference(string ipAddress)
+        state.Preferences.Add(ipAddress, playerPreference);
+        state.LastSetPlayerPreference = playerPreference;
+    }
+
+    public PlayerPreference GetPreference(string ipAddress)
+    {
+        Validate.NotNull(ipAddress);
+
+
+        if (state.Preferences.TryGetValue(ipAddress, out PlayerPreference preference))
         {
-            Validate.NotNull(ipAddress);
-
-
-            if (state.Preferences.TryGetValue(ipAddress, out PlayerPreference preference))
-            {
-                return preference.Clone();
-            }
-
-            if (state.LastSetPlayerPreference != null)
-            {
-                return state.LastSetPlayerPreference.Clone();
-            }
-
-            Color playerColor = RandomColorGenerator.GenerateColor().ToUnity();
-            PlayerPreference defaultPlayerPreference = new PlayerPreference(playerColor);
-
-            state.LastSetPlayerPreference = defaultPlayerPreference;
-
-            return defaultPlayerPreference;
+            return preference with {};
         }
 
-        public void Save()
+        if (state.LastSetPlayerPreference != null)
         {
-            stateProvider.SavePreferenceState(state);
+            return state.LastSetPlayerPreference with {};
         }
+
+        Color playerColor = RandomColorGenerator.GenerateColor().ToUnity();
+        PlayerPreference defaultPlayerPreference = new(playerColor);
+
+        state.LastSetPlayerPreference = defaultPlayerPreference;
+
+        return defaultPlayerPreference;
+    }
+
+    public void Save()
+    {
+        stateProvider.SavePreferenceState(state);
     }
 }

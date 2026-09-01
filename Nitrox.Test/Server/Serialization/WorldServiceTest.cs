@@ -1,16 +1,28 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Nitrox.Model;
-using Nitrox.Test;
-using Nitrox.Test.Helper.Faker;
-using Nitrox.Model.Core;
+using Nitrox.Model.Configuration;
+using Nitrox.Model.Networking;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
+using Nitrox.Server.Subnautica.Models.AppEvents;
+using Nitrox.Server.Subnautica.Models.Communication;
+using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.Resources.Core;
+using Nitrox.Server.Subnautica.Models.Resources.Parsers;
+using Nitrox.Server.Subnautica.Services;
+using Nitrox.Test.Helper.Faker;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.World;
 
@@ -22,6 +34,7 @@ internal sealed class WorldServiceTest
 {
     private static readonly string tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
     private static PersistedWorldData worldData;
+    private static WorldService? worldServiceInstance;
     public static PersistedWorldData[]? WorldsDataAfter { get; private set; }
     public static IServerSerializer[] ServerSerializers { get; private set; }
 
@@ -32,11 +45,30 @@ internal sealed class WorldServiceTest
         {
             throw new DirectoryNotFoundException("Could not find Subnautica installation.");
         }
-        NitroxServiceLocator.InitializeDependencyContainer(new TestAutoFacRegistrar());
-        NitroxServiceLocator.BeginNewLifetimeScope();
 
-        WorldService worldService = NitroxServiceLocator.LocateService<WorldService>();
-        ServerSerializers = NitroxServiceLocator.LocateService<IServerSerializer[]>();
+        // TODO: Fix world tests
+        OptionsWrapper<ServerStartOptions> startOptions = new(new ServerStartOptions());
+        OptionsWrapper<SubnauticaServerOptions> serverOptions = new(new SubnauticaServerOptions());
+        SubnauticaAssetsManager subnauticaAssetsManager = new(startOptions, new ThreadSafeMonoCecilTempGenerator(startOptions), NullLogger<SubnauticaAssetsManager>.Instance);
+        RandomFactory randomFactory = new(serverOptions);
+        SubnauticaServerProtoBufSerializer protobufSerializer = new(NullLogger<SubnauticaServerProtoBufSerializer>.Instance);
+        PdaManager pdaManager = new(NullLogger<PdaManager>.Instance);
+        BatchEntitySpawner batchEntitySpawner = new(randomFactory, new SubnauticaUweWorldEntityFactory(new WorldEntitiesResource(subnauticaAssetsManager, startOptions)),
+                                                    new SubnauticaUwePrefabFactory(new EntityDistributionsResource(subnauticaAssetsManager, startOptions)), new SubnauticaEntityBootstrapperManager(randomFactory),
+                                                    pdaManager, new PrefabPlaceholderGroupsResource(subnauticaAssetsManager, randomFactory, startOptions, NullLogger<PrefabPlaceholderGroupsResource>.Instance),
+                                                    new BatchCellsParser(new SubnauticaEntitySpawnPointFactory(), protobufSerializer, startOptions), serverOptions, NullLogger<BatchEntitySpawner>.Instance);
+        TimeService timeService = new(new NopPacketSender(), new NtpSyncer(), new LoggerFactory(), NullLogger<TimeService>.Instance);
+        SessionManager sessionManager = new(new ISessionCleaner.Trigger(() => []), NullLogger<SessionManager>.Instance);
+        EntityRegistry entityRegistry = new(NullLogger<EntityRegistry>.Instance);
+        WorldService worldService = new(new ServerJsonSerializer(NullLogger<ServerJsonSerializer>.Instance), serverOptions, [], batchEntitySpawner, entityRegistry,
+                                        new PlayerManager(sessionManager, serverOptions, NullLogger<PlayerManager>.Instance),
+                                        new StoryScheduler(new NopPacketSender(), pdaManager, new StoryManager(new NopPacketSender(), pdaManager, timeService, serverOptions, NullLogger<StoryManager>.Instance), timeService),
+                                        new StoryManager(new NopPacketSender(), pdaManager, timeService, serverOptions, NullLogger<StoryManager>.Instance),
+                                        new WorldEntityManager(new NopPacketSender(), entityRegistry, batchEntitySpawner, new PlayerManager(sessionManager, serverOptions, NullLogger<PlayerManager>.Instance), NullLogger<WorldEntityManager>.Instance),
+                                        timeService, pdaManager, new EscapePodManager(randomFactory, entityRegistry, new RandomStartResource(subnauticaAssetsManager, startOptions), serverOptions),
+                                        new SaveService(WorldProvider, new ISaveState.Trigger(() => []), serverOptions, startOptions, NullLogger<SaveService>.Instance), startOptions, NullLogger<WorldService>.Instance);
+        worldServiceInstance = worldService;
+        ServerSerializers = [new ServerJsonSerializer(NullLogger<ServerJsonSerializer>.Instance), protobufSerializer];
         WorldsDataAfter = new PersistedWorldData[ServerSerializers.Length];
 
         worldData = new NitroxAutoFaker<PersistedWorldData>().Generate();
@@ -51,9 +83,20 @@ internal sealed class WorldServiceTest
             WorldsDataAfter[index] = worldService.LoadPersistedWorld(tempSaveFilePath);
             Assert.IsNotNull(WorldsDataAfter[index], $"Loading saved world failed while using {ServerSerializers[index]}.");
         }
+
+        WorldService WorldProvider() => worldServiceInstance;
     }
 
-    [DataTestMethod, DynamicWorldDataAfter]
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        if (Directory.Exists(tempSaveFilePath))
+        {
+            Directory.Delete(tempSaveFilePath, true);
+        }
+    }
+
+    [DataTestMethod] [DynamicWorldDataAfter]
     public void WorldDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         Assert.IsTrue(worldData.WorldData.ParsedBatchCells.SequenceEqual(worldDataAfter.WorldData.ParsedBatchCells));
@@ -63,46 +106,7 @@ internal sealed class WorldServiceTest
         StoryTimingTest(worldData.WorldData.GameData.StoryTiming, worldDataAfter.WorldData.GameData.StoryTiming);
     }
 
-    private static void PDAStateTest(PdaStateData pdaState, PdaStateData pdaStateAfter)
-    {
-        Assert.IsTrue(pdaState.KnownTechTypes.SequenceEqual(pdaStateAfter.KnownTechTypes));
-        Assert.IsTrue(pdaState.AnalyzedTechTypes.SequenceEqual(pdaStateAfter.AnalyzedTechTypes));
-        AssertHelper.IsListEqual(pdaState.PdaLog.OrderBy(x => x.Key), pdaStateAfter.PdaLog.OrderBy(x => x.Key), (entry, entryAfter) =>
-        {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
-        });
-        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
-        Assert.IsTrue(pdaState.ScannerFragments.SetEquals(pdaStateAfter.ScannerFragments));
-        AssertHelper.IsListEqual(pdaState.ScannerPartial.OrderBy(x => x.TechType.Name), pdaStateAfter.ScannerPartial.OrderBy(x => x.TechType.Name), (entry, entryAfter) =>
-        {
-            Assert.AreEqual(entry.TechType, entryAfter.TechType);
-            Assert.AreEqual(entry.Unlocked, entryAfter.Unlocked);
-        });
-
-        Assert.IsTrue(pdaState.ScannerComplete.SetEquals(pdaStateAfter.ScannerComplete));
-    }
-
-    private static void StoryGoalTest(StoryGoalData storyGoal, StoryGoalData storyGoalAfter)
-    {
-        Assert.IsTrue(storyGoal.CompletedGoals.SequenceEqual(storyGoalAfter.CompletedGoals));
-        Assert.IsTrue(storyGoal.RadioQueue.SequenceEqual(storyGoalAfter.RadioQueue));
-        AssertHelper.IsListEqual(storyGoal.ScheduledGoals.OrderBy(x => x.GoalKey), storyGoalAfter.ScheduledGoals.OrderBy(x => x.GoalKey), (scheduledGoal, scheduledGoalAfter) =>
-        {
-            Assert.AreEqual(scheduledGoal.TimeExecute, scheduledGoalAfter.TimeExecute);
-            Assert.AreEqual(scheduledGoal.GoalKey, scheduledGoalAfter.GoalKey);
-            Assert.AreEqual(scheduledGoal.GoalType, scheduledGoalAfter.GoalType);
-        });
-    }
-
-    private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
-    {
-        Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
-        Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
-        Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
+    [DataTestMethod] [DynamicWorldDataAfter]
     public void PlayerDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         AssertHelper.IsListEqual(worldData.PlayerData.Players.OrderBy(x => x.Id), worldDataAfter.PlayerData.Players.OrderBy(x => x.Id), (playerData, playerDataAfter) =>
@@ -145,16 +149,55 @@ internal sealed class WorldServiceTest
         });
     }
 
-    [DataTestMethod, DynamicWorldDataAfter]
+    [DataTestMethod] [DynamicWorldDataAfter]
     public void EntityDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         AssertHelper.IsListEqual(worldData.EntityData.Entities.OrderBy(x => x.Id), worldDataAfter.EntityData.Entities.OrderBy(x => x.Id), EntityTest);
     }
 
-    [DataTestMethod, DynamicWorldDataAfter]
+    [DataTestMethod] [DynamicWorldDataAfter]
     public void GlobalRootDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         AssertHelper.IsListEqual(worldData.GlobalRootData.Entities.OrderBy(x => x.Id), worldDataAfter.GlobalRootData.Entities.OrderBy(x => x.Id), EntityTest);
+    }
+
+    private static void PDAStateTest(PdaStateData pdaState, PdaStateData pdaStateAfter)
+    {
+        Assert.IsTrue(pdaState.KnownTechTypes.SequenceEqual(pdaStateAfter.KnownTechTypes));
+        Assert.IsTrue(pdaState.AnalyzedTechTypes.SequenceEqual(pdaStateAfter.AnalyzedTechTypes));
+        AssertHelper.IsListEqual(pdaState.PdaLog.OrderBy(x => x.Key), pdaStateAfter.PdaLog.OrderBy(x => x.Key), (entry, entryAfter) =>
+        {
+            Assert.AreEqual(entry.Key, entryAfter.Key);
+            Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
+        });
+        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
+        Assert.IsTrue(pdaState.ScannerFragments.SetEquals(pdaStateAfter.ScannerFragments));
+        AssertHelper.IsListEqual(pdaState.ScannerPartial.OrderBy(x => x.TechType.Name), pdaStateAfter.ScannerPartial.OrderBy(x => x.TechType.Name), (entry, entryAfter) =>
+        {
+            Assert.AreEqual(entry.TechType, entryAfter.TechType);
+            Assert.AreEqual(entry.Unlocked, entryAfter.Unlocked);
+        });
+
+        Assert.IsTrue(pdaState.ScannerComplete.SetEquals(pdaStateAfter.ScannerComplete));
+    }
+
+    private static void StoryGoalTest(StoryGoalData storyGoal, StoryGoalData storyGoalAfter)
+    {
+        Assert.IsTrue(storyGoal.CompletedGoals.SequenceEqual(storyGoalAfter.CompletedGoals));
+        Assert.IsTrue(storyGoal.RadioQueue.SequenceEqual(storyGoalAfter.RadioQueue));
+        AssertHelper.IsListEqual(storyGoal.ScheduledGoals.OrderBy(x => x.GoalKey), storyGoalAfter.ScheduledGoals.OrderBy(x => x.GoalKey), (scheduledGoal, scheduledGoalAfter) =>
+        {
+            Assert.AreEqual(scheduledGoal.TimeExecute, scheduledGoalAfter.TimeExecute);
+            Assert.AreEqual(scheduledGoal.GoalKey, scheduledGoalAfter.GoalKey);
+            Assert.AreEqual(scheduledGoal.GoalType, scheduledGoalAfter.GoalType);
+        });
+    }
+
+    private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
+    {
+        Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
+        Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
+        Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
     }
 
     private static void EntityTest(Entity entity, Entity entityAfter)
@@ -513,16 +556,6 @@ internal sealed class WorldServiceTest
         }
 
         AssertHelper.IsListEqual(entity.ChildEntities.OrderBy(x => x.Id), entityAfter.ChildEntities.OrderBy(x => x.Id), EntityTest);
-    }
-
-    [ClassCleanup]
-    public static void ClassCleanup()
-    {
-        NitroxServiceLocator.EndCurrentLifetimeScope();
-        if (Directory.Exists(tempSaveFilePath))
-        {
-            Directory.Delete(tempSaveFilePath, true);
-        }
     }
 }
 

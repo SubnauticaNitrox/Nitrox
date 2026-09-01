@@ -27,7 +27,7 @@ internal sealed class SeedNearPositionCommand(RandomStartResource randomStart) :
         Lock bestLock = new();
         Parallel.For<LoopState>(0,
                                 iterations,
-                                () => new(0, null, RandomFactory.GetCsFilePathFromType(typeof(EscapePodManager))),
+                                () => new(0, null, typeof(EscapePodManager).GetCsFilePath()),
                                 (i, _, state) =>
                                 {
                                     NitroxVector3 currentPos = randomResource.GenerateAllStartPositions(new Random(RandomFactory.CreateSeedInt32(i.ToString(), state.CsFilePathForSeed))).FirstOrDefault();

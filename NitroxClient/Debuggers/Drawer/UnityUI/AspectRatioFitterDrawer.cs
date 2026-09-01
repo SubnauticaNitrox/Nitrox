@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class AspectRatioFitterDrawer : IDrawer<AspectRatioFitter>
+internal sealed class AspectRatioFitterDrawer : IDrawer<AspectRatioFitter>
 {
     public void Draw(AspectRatioFitter aspectRatioFitter)
     {

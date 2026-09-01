@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
 
-public class SeamothMovementReplicator : VehicleMovementReplicator
+internal sealed class SeamothMovementReplicator : VehicleMovementReplicator
 {
     private SeaMoth seaMoth;
 

@@ -1,0 +1,22 @@
+﻿using System.Reflection;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+public sealed partial class VehicleDockingBay_OnUndockingComplete_Patch : NitroxPatch, IDynamicPatch
+{
+    private static readonly MethodInfo targetMethod = Reflect.Method((VehicleDockingBay t) => t.OnUndockingComplete(default(Player)));
+
+    public static void Prefix(VehicleDockingBay __instance)
+    {
+        if (!__instance.TryGetIdOrWarn(out NitroxId dockId) ||
+            !__instance.GetDockedVehicle().TryGetIdOrWarn(out NitroxId vehicleId))
+        {
+            return;
+        }
+
+        Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.SessionId, false));
+    }
+}

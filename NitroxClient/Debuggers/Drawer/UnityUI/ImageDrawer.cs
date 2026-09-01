@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ImageDrawer : IDrawer<Image>, IDrawer<RawImage>
+internal sealed class ImageDrawer : IDrawer<Image>, IDrawer<RawImage>
 {
     private readonly ColorDrawer colorDrawer;
     private readonly MaterialDrawer materialDrawer;

@@ -2,6 +2,7 @@
 using Nitrox.Model.Subnautica.Packets;
 using Nitrox.Test.Client.Communication.MultiplayerSession;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Services;
 using NSubstitute;
 
 namespace NitroxClient.Communication.MultiplayerSession
@@ -16,7 +17,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             IClient client = Substitute.For<IClient>();
 
             // Act
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client);
 
             // Assert
             multiplayerSession.CurrentState.CurrentStage.Should().Be(MultiplayerSessionConnectionStage.DISCONNECTED);
@@ -29,7 +30,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             IClient client = Substitute.For<IClient>();
 
             // Act
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client);
 
             // Assert
             multiplayerSession.Client.Should().Be(client);
@@ -40,7 +41,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.ConnectAsync(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_SERVER_PORT);
@@ -55,7 +56,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.ProcessSessionPolicy(TestConstants.TEST_SESSION_POLICY);
@@ -69,7 +70,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.RequestSessionReservation(TestConstants.TEST_PLAYER_SETTINGS, TestConstants.TEST_AUTHENTICATION_CONTEXT);
@@ -86,7 +87,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             MultiplayerSessionReservation successfulReservation = new(TestConstants.TestSessionId);
 
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.ProcessReservationResponsePacket(successfulReservation);
@@ -100,7 +101,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new JoinServerService.MultiplayerSessionManager(client);
             IMultiplayerSessionConnectionContext connectionContext = (IMultiplayerSessionConnectionContext)multiplayerSession;
             IMonitor<IMultiplayerSession> monitor = multiplayerSession.Monitor();
 

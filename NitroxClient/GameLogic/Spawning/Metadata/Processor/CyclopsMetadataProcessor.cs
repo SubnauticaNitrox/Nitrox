@@ -7,16 +7,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
-public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
+internal sealed class CyclopsMetadataProcessor(IPacketSender packetSender, LiveMixinManager liveMixinManager) : EntityMetadataProcessor<CyclopsMetadata>
 {
-    private readonly IPacketSender packetSender;
-    private readonly LiveMixinManager liveMixinManager;
-
-    public CyclopsMetadataProcessor(IPacketSender packetSender, LiveMixinManager liveMixinManager)
-    {
-        this.packetSender = packetSender;
-        this.liveMixinManager = liveMixinManager;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly LiveMixinManager liveMixinManager = liveMixinManager;
 
     public override void ProcessMetadata(GameObject cyclops, CyclopsMetadata metadata)
     {

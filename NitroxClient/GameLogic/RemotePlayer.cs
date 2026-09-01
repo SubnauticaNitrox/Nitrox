@@ -19,7 +19,8 @@ using UWE;
 
 namespace NitroxClient.GameLogic;
 
-public class RemotePlayer : INitroxPlayer
+internal sealed class RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
+    : INitroxPlayer
 {
     /// <summary>
     /// Marks <see cref="Player.mainObject"/> and every <see cref="Body"/> so they can be precisely queried (e.g. by sea dragons).
@@ -29,12 +30,12 @@ public class RemotePlayer : INitroxPlayer
 
     private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
-    private readonly PlayerModelManager playerModelManager;
-    private readonly PlayerVitalsManager playerVitalsManager;
-    private readonly FMODWhitelist fmodWhitelist;
+    private readonly PlayerModelManager playerModelManager = playerModelManager;
+    private readonly PlayerVitalsManager playerVitalsManager = playerVitalsManager;
+    private readonly FMODWhitelist fmodWhitelist = fmodWhitelist;
     private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers = [];
 
-    public PlayerContext PlayerContext { get; }
+    public PlayerContext PlayerContext { get; } = playerContext;
     public GameObject? Body { get; private set; }
     public GameObject PlayerModel { get; private set; }
     public Rigidbody RigidBody { get; private set; }
@@ -60,15 +61,7 @@ public class RemotePlayer : INitroxPlayer
 
     public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
-    public CyclopsPawn Pawn { get; set; }
-
-    public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
-    {
-        PlayerContext = playerContext;
-        this.playerModelManager = playerModelManager;
-        this.playerVitalsManager = playerVitalsManager;
-        this.fmodWhitelist = fmodWhitelist;
-    }
+    public CyclopsPawn? Pawn { get; set; }
 
     public void InitializeGameObject(GameObject playerBody)
     {

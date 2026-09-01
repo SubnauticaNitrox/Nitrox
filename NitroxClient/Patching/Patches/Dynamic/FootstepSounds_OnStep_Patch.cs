@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
+using FMOD.Studio;
+using HarmonyLib;
+using Nitrox.Model.Core;
+using Nitrox.Model.GameLogic.FMOD;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.FMOD;
+using UnityEngine;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicPatch
+{
+    private const string PRECURSOR_STEP_SOUND_PATH = "event:/player/footstep_precursor_base";
+    private const string METAL_STEP_SOUND_PATH = "event:/player/footstep_metal";
+    private const string LAND_STEP_SOUND_PATH = "event:/player/footstep_dirt";
+    private const string EXOSUIT_STEP_SOUND_PATH = "event:/sub/exo/step";
+
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((FootstepSounds t) => t.OnStep(default));
+
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        /*
+        From:
+            evt.setVolume(volume);
+
+        To:
+            evt.setVolume(CalculateVolume(volume, this, asset, xform));
+
+
+        From:
+            event.release();
+
+        To:
+            event.release();
+            SendFootstepPacket(asset);
+         */
+
+        return new CodeMatcher(instructions)
+               .MatchEndForward(
+                   new CodeMatch(OpCodes.Ldloc_1),
+                   new CodeMatch(OpCodes.Call, Reflect.Method((EventInstance evt) => evt.setVolume(default)))
+               )
+               .Insert(
+                   new CodeInstruction(OpCodes.Ldarg_0),
+                   new CodeInstruction(OpCodes.Ldloc_0),
+                   new CodeInstruction(OpCodes.Ldarg_1),
+                   new CodeInstruction(OpCodes.Call, Reflect.Method(() => CalculateVolume(default, default, default, default)))
+               )
+               .MatchEndForward(
+                   new CodeMatch(OpCodes.Call, Reflect.Method((EventInstance evt) => evt.release())),
+                   new CodeMatch(OpCodes.Pop)
+               )
+               .Advance(1)
+               .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
+               .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => SendFootstepPacket(default))))
+               .InstructionEnumeration();
+    }
+
+    // This method is called very often and should therefore be performant
+    private static float CalculateVolume(float originalVolume, FootstepSounds instance, FMODAsset asset, Transform xform)
+    {
+        // Handle Exosuit footsteps for remote Exosuits
+        if (asset.path.Equals(EXOSUIT_STEP_SOUND_PATH, StringComparison.Ordinal))
+        {
+            // If local player is not in any vehicle, or is in a different vehicle than the one making footsteps
+            if (!Player.main.currentMountedVehicle || Player.main.currentMountedVehicle.gameObject != instance.gameObject)
+            {
+                return FMODSystem.CalculateVolume(xform.position, Player.main.transform.position, exosuitStepSoundRadius.Value, originalVolume);
+            }
+        }
+
+        return originalVolume;
+    }
+
+    private static readonly Lazy<float> exosuitStepSoundRadius = new(() =>
+    {
+        Resolve<FMODWhitelist>().TryGetSoundData(EXOSUIT_STEP_SOUND_PATH, out SoundData soundData);
+        return soundData.Radius;
+    });
+
+    private static void SendFootstepPacket(FMODAsset asset)
+    {
+        SessionId? sessionId = Resolve<LocalPlayer>().SessionId;
+        if (!sessionId.HasValue)
+        {
+            return;
+        }
+
+        FootstepPacket.StepSounds assetIndex;
+        switch (asset.path)
+        {
+            case PRECURSOR_STEP_SOUND_PATH:
+                assetIndex = FootstepPacket.StepSounds.PRECURSOR;
+                break;
+            case METAL_STEP_SOUND_PATH:
+                assetIndex = FootstepPacket.StepSounds.METAL;
+                break;
+            case LAND_STEP_SOUND_PATH:
+                assetIndex = FootstepPacket.StepSounds.LAND;
+                break;
+            default:
+                return;
+        }
+
+        FootstepPacket footstepPacket = new(sessionId.Value, assetIndex);
+        Resolve<IPacketSender>().Send(footstepPacket);
+    }
+}

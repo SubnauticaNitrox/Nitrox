@@ -9,7 +9,7 @@ using Story;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
+internal sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly TimeManager timeManager;
 

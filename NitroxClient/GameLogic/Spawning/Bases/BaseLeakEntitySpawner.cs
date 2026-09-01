@@ -7,14 +7,9 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
-public class BaseLeakEntitySpawner : SyncEntitySpawner<BaseLeakEntity>
+internal sealed class BaseLeakEntitySpawner(LiveMixinManager liveMixinManager) : SyncEntitySpawner<BaseLeakEntity>
 {
-    private readonly LiveMixinManager liveMixinManager;
-
-    public BaseLeakEntitySpawner(LiveMixinManager liveMixinManager)
-    {
-        this.liveMixinManager = liveMixinManager;
-    }
+    private readonly LiveMixinManager liveMixinManager = liveMixinManager;
 
     protected override IEnumerator SpawnAsync(BaseLeakEntity entity, TaskResult<Optional<GameObject>> result)
     {
@@ -33,7 +28,7 @@ public class BaseLeakEntitySpawner : SyncEntitySpawner<BaseLeakEntity>
         }
 
         BaseLeakManager baseLeakManager = baseHullStrength.gameObject.EnsureComponent<BaseLeakManager>();
-        baseLeakManager.EnsureLeak(entity.RelativeCell.ToUnity(), entity.Id, entity.Health);
+        baseLeakManager.EnsureLeak(entity.RelativeCell.ToUnity(), entity.Id, entity.Health, liveMixinManager);
         return true;
     }
 }

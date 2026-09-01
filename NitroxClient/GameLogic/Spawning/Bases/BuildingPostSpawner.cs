@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic.Spawning.Bases;
 
 public static class BuildingPostSpawner
 {
-    public static IEnumerator ApplyPostSpawner(GameObject gameObject, NitroxId objectId)
+    public static IEnumerator? ApplyPostSpawner(GameObject gameObject, NitroxId objectId)
     {
         // If we end up having more than 2-3 ifs in here in the future, create a PostSpawner generic class with detection of the required components from gameObject
         if (gameObject.TryGetComponent(out Constructable constructable) && constructable.techType.Equals(TechType.Bench))

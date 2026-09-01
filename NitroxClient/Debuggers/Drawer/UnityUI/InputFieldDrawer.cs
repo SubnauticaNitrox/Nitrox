@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class InputFieldDrawer : IDrawer<InputField>
+internal sealed class InputFieldDrawer : IDrawer<InputField>
 {
     private readonly SceneDebugger sceneDebugger;
     private readonly SelectableDrawer selectableDrawer;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
 
-public class ExosuitMovementReplicator : VehicleMovementReplicator
+internal sealed class ExosuitMovementReplicator : VehicleMovementReplicator
 {
     private const string DRILL_LOOP_SOUND_PATH = "event:/sub/exo/drill_loop";
 

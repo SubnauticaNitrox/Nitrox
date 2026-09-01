@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.HUD;
 
-public class PlayerVitalsManager
+internal sealed class PlayerVitalsManager
 {
     private readonly Dictionary<SessionId, RemotePlayerVitals> vitalsBySessionId = new();
 

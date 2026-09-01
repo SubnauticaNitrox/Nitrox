@@ -1,0 +1,43 @@
+using System;
+using System.Reflection;
+using NitroxClient.GameLogic;
+
+namespace NitroxClient.Patching.Patches.Dynamic;
+
+/// <summary>
+/// Replaces the bed exit behavior when sleeping to use our SleepManager.
+/// Uses Prefix instead of Transpiler because we completely replace the sleeping branch logic
+/// rather than modifying individual lines.
+/// </summary>
+internal sealed partial class Bed_Update_Patch : NitroxPatch, IDynamicPatch
+{
+    private static SleepManager sleepManager;
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bed t) => t.Update());
+
+    public Bed_Update_Patch(SleepManager sm)
+    {
+        sleepManager = sm ?? throw new ArgumentNullException(nameof(sm));
+    }
+
+    public static bool Prefix(Bed __instance)
+    {
+        // Let original code run for non-sleeping states
+        if (__instance.inUseMode != Bed.InUseMode.Sleeping)
+        {
+            return true;
+        }
+
+        if (sleepManager.CanExitBed)
+        {
+            HandReticle.main.SetText(HandReticle.TextType.Hand, "Nitrox_BedGetUp", true, GameInput.Button.Exit);
+            HandReticle.main.SetIcon(HandReticle.IconType.None, 1f);
+
+            if (GameInput.GetButtonDown(GameInput.Button.Exit))
+            {
+                sleepManager.ExitBed();
+            }
+        }
+
+        return false;
+    }
+}

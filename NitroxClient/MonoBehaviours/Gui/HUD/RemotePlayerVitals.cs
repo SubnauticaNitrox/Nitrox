@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.HUD;
 
-public class RemotePlayerVitals : MonoBehaviour
+internal sealed class RemotePlayerVitals : MonoBehaviour
 {
     private static readonly Color OXYGEN_BAR_COLOR = new(0.168f, 0.666f, 0.60f, 1.0f);
     private static readonly Color OXYGEN_BAR_BORDER_COLOR = new(0.227f, 0.949f, 0.969f, 1.0f);

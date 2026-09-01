@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic.PlayerLogic;
 /// <remarks>
 /// The EntityRoot of an object is defined as the top most GameObject as when an object hierarchy first was spawned in. Either from a prefab, or in Nitrox' case, a cloned root game object.
 /// </remarks>
-public class RemotePlayerIdentifier : MonoBehaviour, IObstacle
+internal sealed class RemotePlayerIdentifier : MonoBehaviour, IObstacle
 {
     public RemotePlayer RemotePlayer;
 

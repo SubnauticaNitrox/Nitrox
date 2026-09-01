@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public sealed class MaterialDrawer : IEditorDrawer<Material>, IEditorDrawer<PhysicMaterial>
+internal sealed class MaterialDrawer : IEditorDrawer<Material>, IEditorDrawer<PhysicMaterial>
 {
     public Material Draw(Material material)
     {

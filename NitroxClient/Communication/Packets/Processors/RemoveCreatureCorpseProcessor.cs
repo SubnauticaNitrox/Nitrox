@@ -3,6 +3,8 @@ using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -23,7 +25,7 @@ internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixin
         simulationOwnership.StopSimulatingEntity(creatureId);
 
         // Remove the position broadcasting stuff from it
-        EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+        EntityPositionBroadcastService.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
 
         // To avoid SpawnRespawner to be called
         creatureDeath.respawn = false;

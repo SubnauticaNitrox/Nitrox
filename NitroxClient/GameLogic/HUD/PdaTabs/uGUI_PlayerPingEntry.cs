@@ -5,7 +5,6 @@ using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.Gui.Modals;
-using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
@@ -17,7 +16,7 @@ namespace NitroxClient.GameLogic.HUD.PdaTabs;
 public class uGUI_PlayerPingEntry : uGUI_PingEntry
 {
     private uGUI_PlayerListTab parent;
-    private INitroxPlayer player;
+    private INitroxPlayer? player;
 
     public string PlayerName => player?.PlayerName ?? string.Empty;
     public bool IsLocalPlayer => player is LocalPlayer;
@@ -27,7 +26,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     {
         get
         {
-            if (player is RemotePlayer remotePlayer && remotePlayer.PlayerContext != null)
+            if (player is RemotePlayer remotePlayer)
             {
                 return remotePlayer.PlayerContext.IsMuted;
             }

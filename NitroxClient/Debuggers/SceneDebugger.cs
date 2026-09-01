@@ -14,32 +14,50 @@ using UnityEngine.SceneManagement;
 namespace NitroxClient.Debuggers;
 
 [ExcludeFromCodeCoverage]
-public class SceneDebugger : AbstractDebugger
+internal sealed class SceneDebugger : AbstractDebugger
 {
     private const int WINDOW_ID = 423;
+    private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = [];
+    private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = [];
+
+    private readonly Dictionary<int, bool> componentsVisibilityByID = [];
 
     private readonly DrawerManager drawerManager;
-    public GameObject SelectedObject { get; private set; }
-    private int selectedComponentID;
-    private Scene selectedScene;
-
-    private bool showUnityMethods;
-    private bool showSystemMethods;
+    private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = [];
 
     private Vector2 gameObjectScrollPos;
     private Vector2 hierarchyScrollPos;
+    private int selectedComponentID;
+    private Scene selectedScene;
+    private bool showSystemMethods;
 
-    private readonly Dictionary<int, bool> componentsVisibilityByID = [];
-    private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = [];
-    private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = [];
-    private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = [];
+    private bool showUnityMethods;
+    public GameObject SelectedObject { get; private set; }
 
-    public SceneDebugger() : base(WINDOW_ID, 650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SceneDebugger(DrawerManager drawerManager) : base(WINDOW_ID, 650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
-        drawerManager = new DrawerManager(this);
+        this.drawerManager = drawerManager;
         ActiveTab = AddTab("Scenes", RenderTabScenes);
         AddTab("Hierarchy", RenderTabHierarchy);
         AddTab("GameObject", RenderTabGameObject);
+    }
+
+    public void UpdateSelectedObject(GameObject item)
+    {
+        if (SelectedObject == item)
+        {
+            return;
+        }
+
+        SelectedObject = item;
+        selectedComponentID = 0;
+    }
+
+    public void JumpToComponent(Component item)
+    {
+        UpdateSelectedObject(item.gameObject);
+        RenderTabGameObject();
+        selectedComponentID = item.GetInstanceID();
     }
 
     protected override void OnSetSkin(GUISkin skin)
@@ -111,11 +129,11 @@ public class SceneDebugger : AbstractDebugger
 
                 bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
                 bool isLoaded = currentScene.isLoaded;
-                bool isDDOLScene = currentScene.name == "DontDestroyOnLoad";
+                bool isDontDestroyScene = currentScene.name == "DontDestroyOnLoad";
 
                 using (new GUILayout.HorizontalScope("box"))
                 {
-                    if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(isDDOLScene ? currentScene.name : currentScene.path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
+                    if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(isDontDestroyScene ? currentScene.name : currentScene.path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
                     {
                         selectedScene = currentScene;
                         ActiveTab = GetTab("Hierarchy").Value;
@@ -123,14 +141,14 @@ public class SceneDebugger : AbstractDebugger
 
                     if (isLoaded)
                     {
-                        if (!isDDOLScene && GUILayout.Button("Unload", "loadScene"))
+                        if (!isDontDestroyScene && GUILayout.Button("Unload", "loadScene"))
                         {
                             SceneManager.UnloadSceneAsync(i);
                         }
                     }
                     else
                     {
-                        if (!isDDOLScene && GUILayout.Button("Load", "loadScene"))
+                        if (!isDontDestroyScene && GUILayout.Button("Load", "loadScene"))
                         {
                             SceneManager.LoadSceneAsync(i);
                         }
@@ -316,7 +334,7 @@ public class SceneDebugger : AbstractDebugger
                     IList list = (IList)field.GetValue(target);
                     GUILayout.Box($"Length: {list.Count}", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
                 }
-                else if (fieldValue != null && (typeof(IDictionary).IsAssignableFrom(field.FieldType)))
+                else if (fieldValue != null && typeof(IDictionary).IsAssignableFrom(field.FieldType))
                 {
                     IDictionary dict = (IDictionary)field.GetValue(target);
                     GUILayout.Box($"Length: {dict.Count}", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
@@ -378,7 +396,7 @@ public class SceneDebugger : AbstractDebugger
     }
 
     /// <summary>
-    /// Draws an enum field on a component.
+    ///     Draws an enum field on a component.
     /// </summary>
     /// <param name="target">The target containing the field.</param>
     /// <param name="field">The enum field</param>
@@ -467,23 +485,5 @@ public class SceneDebugger : AbstractDebugger
                 }
             }
         }
-    }
-
-    public void UpdateSelectedObject(GameObject item)
-    {
-        if (SelectedObject == item)
-        {
-            return;
-        }
-
-        SelectedObject = item;
-        selectedComponentID = 0;
-    }
-
-    public void JumpToComponent(Component item)
-    {
-        UpdateSelectedObject(item.gameObject);
-        RenderTabGameObject();
-        selectedComponentID = item.GetInstanceID();
     }
 }

@@ -16,16 +16,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
-public class BuildEntitySpawner : EntitySpawner<BuildEntity>
+internal sealed class BuildEntitySpawner(Entities entities, BaseLeakEntitySpawner baseLeakEntitySpawner) : EntitySpawner<BuildEntity>
 {
-    private readonly Entities entities;
-    private readonly BaseLeakEntitySpawner baseLeakEntitySpawner;
-
-    public BuildEntitySpawner(Entities entities, BaseLeakEntitySpawner baseLeakEntitySpawner)
-    {
-        this.entities = entities;
-        this.baseLeakEntitySpawner = baseLeakEntitySpawner;
-    }
+    private readonly Entities entities = entities;
+    private readonly BaseLeakEntitySpawner baseLeakEntitySpawner = baseLeakEntitySpawner;
 
     protected override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
     {

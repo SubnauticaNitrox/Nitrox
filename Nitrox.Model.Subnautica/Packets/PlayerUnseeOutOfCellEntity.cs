@@ -5,12 +5,7 @@ using Nitrox.Model.Packets;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class PlayerUnseeOutOfCellEntity : Packet
+public class PlayerUnseeOutOfCellEntity(NitroxId entityId) : Packet
 {
-    public NitroxId EntityId { get; set; }
-
-    public PlayerUnseeOutOfCellEntity(NitroxId entityId)
-    {
-        EntityId = entityId;
-    }
+    public NitroxId EntityId { get; set; } = entityId;
 }

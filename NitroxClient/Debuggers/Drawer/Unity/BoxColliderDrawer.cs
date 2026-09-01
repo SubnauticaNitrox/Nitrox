@@ -1,10 +1,8 @@
-using Nitrox.Model.Helper;
 using UnityEngine;
-using UWE;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public sealed class BoxColliderDrawer : IDrawer<BoxCollider>
+internal sealed class BoxColliderDrawer : IDrawer<BoxCollider>
 {
     private readonly RigidbodyDrawer rigidbodyDrawer;
     private readonly VectorDrawer vectorDrawer;

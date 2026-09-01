@@ -3,19 +3,13 @@ using static NitroxClient.Debuggers.Drawer.NitroxGUILayout;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class VFXControllerDrawer : IDrawer<VFXController>
+internal sealed class VFXControllerDrawer(VectorDrawer vectorDrawer, SceneDebugger sceneDebugger) : IDrawer<VFXController>
 {
-    private readonly VectorDrawer vectorDrawer;
-    private readonly SceneDebugger sceneDebugger;
+    private readonly VectorDrawer vectorDrawer = vectorDrawer;
+    private readonly SceneDebugger sceneDebugger = sceneDebugger;
     private const float LABEL_WIDTH = 120;
     private const float VALUE_MAX_WIDTH = 405;
     private const float VECTOR_MAX_WIDTH = 405;
-
-    public VFXControllerDrawer(VectorDrawer vectorDrawer, SceneDebugger sceneDebugger)
-    {
-        this.vectorDrawer = vectorDrawer;
-        this.sceneDebugger = sceneDebugger;
-    }
 
     public void Draw(VFXController vfxController)
     {

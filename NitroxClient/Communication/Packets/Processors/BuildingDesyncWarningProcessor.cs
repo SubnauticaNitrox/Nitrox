@@ -4,21 +4,20 @@ using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Settings;
+using NitroxClient.Services;
+using NitroxClient.Services.Multiplayer;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal sealed class BuildingDesyncWarningProcessor : IClientPacketProcessor<BuildingDesyncWarning>
+internal sealed class BuildingDesyncWarningProcessor(BuildingService buildingService) : IClientPacketProcessor<BuildingDesyncWarning>
 {
+    private readonly BuildingService buildingService = buildingService;
+
     public Task Process(ClientProcessorContext context, BuildingDesyncWarning packet)
     {
-        if (!BuildingHandler.Main)
-        {
-            return Task.CompletedTask;
-        }
-
         foreach (KeyValuePair<NitroxId, int> operation in packet.Operations)
         {
-            OperationTracker tracker = BuildingHandler.Main.EnsureTracker(operation.Key);
+            OperationTracker tracker = buildingService.EnsureTracker(operation.Key);
             tracker.LastOperationId = operation.Value;
             tracker.LocalOperations = 0;  // discard locally-queued ops, server's value is now authoritative
             tracker.FailedOperations++;

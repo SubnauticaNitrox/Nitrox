@@ -3,21 +3,22 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FMODUnity;
 using Nitrox.Model.Constants;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
-using UWE;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 
-public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver, uGUI_IScrollReceiver, uGUI_IAdjustReceiver
+internal sealed class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver, uGUI_IScrollReceiver, uGUI_IAdjustReceiver
 {
     public const string NAME = "MultiplayerJoinServer";
 
     public static MainMenuJoinServerPanel Instance { get; private set; }
+    private JoinServerBackend joinServerBackend;
 
     private GameObject playerSettingsPanel;
     private TextMeshProUGUI header;
@@ -29,14 +30,16 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     private GameObject selectedItem;
     private GameObject[] selectableItems;
 
-    public void Setup(GameObject savedGamesRef)
+    public void Setup(GameObject savedGamesRef, JoinServerBackend joinServerBackend)
     {
         Instance = this;
+        this.joinServerBackend = joinServerBackend;
+
         Destroy(transform.RequireGameObject("Scroll View"));
         Destroy(GetComponentInChildren<TranslationLiveUpdate>());
         header = GetComponentInChildren<TextMeshProUGUI>();
 
-        CoroutineHost.StartCoroutine(AsyncSetup(savedGamesRef)); // As JoinServer waits for AsyncSetup to be completed we can't use normal Unity IEnumerator Start()
+        StartCoroutineDetached(AsyncSetup(savedGamesRef)); // As JoinServer waits for AsyncSetup to be completed we can't use normal Unity IEnumerator Start()
     }
 
     private IEnumerator AsyncSetup(GameObject savedGamesRef)
@@ -118,12 +121,12 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             return;
         }
 
-        JoinServerBackend.RequestSessionReservation(playerName, colorPicker.currentColor);
+        joinServerBackend.RequestSessionReservation(playerName, colorPicker.currentColor);
     }
 
-    private static void OnCancelClick()
+    private void OnCancelClick()
     {
-        JoinServerBackend.StopMultiplayerClient();
+        joinServerBackend.StopMultiplayerClient();
         MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
     }
 

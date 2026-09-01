@@ -6,10 +6,8 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
-public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata>
+internal sealed class ExosuitMetadataProcessor(LiveMixinManager liveMixinManager) : VehicleMetadataProcessor<ExosuitMetadata>(liveMixinManager)
 {
-    public ExosuitMetadataProcessor(LiveMixinManager liveMixinManager) : base(liveMixinManager) { }
-
     public override void ProcessMetadata(GameObject gameObject, ExosuitMetadata metadata)
     {
         if (!gameObject.TryGetComponent(out Exosuit exosuit))

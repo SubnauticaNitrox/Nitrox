@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.Packets;
+﻿using Nitrox.Model.Packets;
 
 namespace NitroxClient.Communication.Abstract
 {
@@ -14,7 +12,6 @@ namespace NitroxClient.Communication.Abstract
         bool IsConnected { get; }
         Task StartAsync(string ipAddress, int serverPort);
         void Stop();
-        void PollEvents();
         void Send(Packet packet);
     }
 }

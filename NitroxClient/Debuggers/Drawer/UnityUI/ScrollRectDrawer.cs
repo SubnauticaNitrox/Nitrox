@@ -3,14 +3,9 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ScrollRectDrawer : IDrawer<ScrollRect>
+internal sealed class ScrollRectDrawer(SceneDebugger sceneDebugger) : IDrawer<ScrollRect>
 {
-    private readonly SceneDebugger sceneDebugger;
-
-    public ScrollRectDrawer(SceneDebugger sceneDebugger)
-    {
-        this.sceneDebugger = sceneDebugger;
-    }
+    private readonly SceneDebugger sceneDebugger = sceneDebugger;
 
     public void Draw(ScrollRect scrollRect)
     {

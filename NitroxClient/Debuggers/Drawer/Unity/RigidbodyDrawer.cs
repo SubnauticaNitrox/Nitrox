@@ -1,9 +1,8 @@
-using Nitrox.Model.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public sealed class RigidbodyDrawer : IDrawer<Rigidbody>
+internal sealed class RigidbodyDrawer : IDrawer<Rigidbody>
 {
     private readonly VectorDrawer vectorDrawer;
     private const float LABEL_WIDTH = 120;

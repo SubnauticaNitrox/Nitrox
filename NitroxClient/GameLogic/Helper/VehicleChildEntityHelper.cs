@@ -8,9 +8,11 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper;
 
-public static class VehicleChildEntityHelper
+internal sealed class VehicleChildEntityHelper(BatteryChildEntities batteryChildEntities)
 {
-    private static readonly HashSet<Type> interactiveChildTypes = new HashSet<Type> // we must sync ids of these types when creating vehicles (mainly cyclops)
+    private readonly BatteryChildEntities batteryChildEntities = batteryChildEntities;
+
+    private static readonly HashSet<Type> interactiveChildTypes = new() // we must sync ids of these types when creating vehicles (mainly cyclops)
     {
         typeof(Openable),
         typeof(CyclopsLocker),
@@ -31,13 +33,13 @@ public static class VehicleChildEntityHelper
     };
 
     // The seamoth and exosuit both have an EnergyMixin at the top level, the exosuit has a second one under BatterySlot2
-    private static readonly HashSet<string> batteryRelativePaths = new HashSet<string>
+    private static readonly HashSet<string> batteryRelativePaths = new()
     {
         "",
         "BatterySlot2"
     };
 
-    public static void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)
+    public void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)
     {
         string currentPath = current.GetFullHierarchyPath();
         string relativePathName = currentPath.Replace(vehiclePath, string.Empty).TrimStart('/');
@@ -57,7 +59,7 @@ public static class VehicleChildEntityHelper
 
                     if (mono is BatterySource batterySource) // cyclops has a battery source as a deeply-nested child
                     {
-                        BatteryChildEntityHelper.PopulateInstalledBattery(batterySource, pathBasedChildEntity.ChildEntities, id);
+                        batteryChildEntities.PopulateInstalledBattery(batterySource, pathBasedChildEntity.ChildEntities, id);
                     }
                 }
             }
@@ -65,7 +67,7 @@ public static class VehicleChildEntityHelper
 
         if (batteryRelativePaths.Contains(relativePathName))
         {
-            BatteryChildEntityHelper.TryPopulateInstalledBattery(current, toPopulate, vehicleId);
+            batteryChildEntities.TryPopulateInstalledBattery(current, toPopulate, vehicleId);
         }
 
         foreach (Transform child in current.transform)

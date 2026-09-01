@@ -6,7 +6,7 @@ namespace NitroxClient.Debuggers.Drawer.Unity;
 /// <summary>
 /// Draws a <see cref="CharacterController"/> component on the gameobjects in the <see cref="SceneDebugger"/>
 /// </summary>
-public class CharacterControllerDrawer : IDrawer<CharacterController>
+internal sealed class CharacterControllerDrawer : IDrawer<CharacterController>
 {
     private readonly VectorDrawer vectorDrawer;
     private const float LABEL_WIDTH = 120;
