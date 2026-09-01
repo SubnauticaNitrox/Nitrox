@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal sealed class CyclopsDamagePointHealthChangedProcessor : IClientPacketProcessor<CyclopsDamagePointRepaired>
+internal sealed class CyclopsDamagePointRepairedProcessor : IClientPacketProcessor<CyclopsDamagePointRepaired>
 {
     public Task Process(ClientProcessorContext context, CyclopsDamagePointRepaired packet)
     {
