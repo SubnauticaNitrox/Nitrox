@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
 
@@ -20,5 +21,6 @@ public sealed class FireDoused : Packet
 
     public NitroxId Id { get; }
     public float Health { get; }
+    [IgnoredMember]
     public bool IsExtinguished => Health <= 0;
 }
