@@ -79,6 +79,12 @@ public class RemotelyControlled : MonoBehaviour
 
     public void UpdateOrientation(Vector3 position, Quaternion rotation)
     {
+        // ensures the object has fully spawned
+        if (!gameObject.activeSelf)
+        {
+            return;
+        }
+
         float velocity = rigidbody ? rigidbody.velocity.magnitude : 0f;
         bool teleported = TeleportIfTooFar(position, rotation, GetTeleportThreshold(velocity));
 
@@ -102,6 +108,12 @@ public class RemotelyControlled : MonoBehaviour
 
     public void UpdateKnownSplineUser(Vector3 currentPosition, Quaternion currentRotation, Vector3 destination, Vector3 destinationDirection, float velocity)
     {
+        // ensures the object has fully spawned
+        if (!gameObject.activeSelf)
+        {
+            return;
+        }
+
         bool teleported = TeleportIfTooFar(currentPosition, currentRotation, GetTeleportThreshold(velocity));
 
         // SwimBehaviour and WalkBehaviour will act the exact same
