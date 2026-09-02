@@ -6,6 +6,7 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -160,7 +161,8 @@ public class Items
             droppedItem = new(gameObject.transform.ToWorldDto(), level, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
         }
 
-        simulationOwnership.TakeOwnership(id, SimulationLockType.TRANSIENT, true);
+        bool changesPosition = SimulationWhitelist.ShouldSimulateEntityMovement(droppedItem);
+        simulationOwnership.TakeOwnership(id, SimulationLockType.TRANSIENT, changesPosition);
         if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true, true)))
         {
             Log.Debug($"Dropping item: {droppedItem}");
