@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 
-namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+namespace Nitrox.Model.Subnautica.Helper;
 
-internal static class SimulationWhitelist
+public static class SimulationWhitelist
 {
     /// <summary>
     ///     We don't want to give out simulation to all entities that the server sent out because there is a lot of stationary items and junk (TechType.None).
     ///     It is easier to maintain a list of items we should simulate than try to blacklist items. This list should not be checked for non-server spawned items
     ///     as they were probably dropped by the player and are mostly guaranteed to move.
     /// </summary>
-    public static readonly HashSet<NitroxTechType> MovementWhitelist =
+    private static readonly HashSet<NitroxTechType> movementWhitelist =
     [
         TechType.Shocker.ToDto(),
         TechType.Biter.ToDto(),
@@ -77,8 +78,18 @@ internal static class SimulationWhitelist
     ///     We differentiate the entities which should be simulated because of one of their behaviour (ie for utility)
     ///     from those are simulated for their movements.
     /// </summary>
-    public static readonly HashSet<NitroxTechType> UtilityWhitelist = new()
+    private static readonly HashSet<NitroxTechType> utilityWhitelist = new()
     {
         TechType.CrashHome.ToDto()
     };
+
+    public static bool ShouldSimulateEntity(WorldEntity entity)
+    {
+        return utilityWhitelist.Contains(entity.TechType) || ShouldSimulateEntityMovement(entity);
+    }
+
+    public static bool ShouldSimulateEntityMovement(WorldEntity entity)
+    {
+        return !entity.SpawnedByServer || movementWhitelist.Contains(entity.TechType);
+    }
 }

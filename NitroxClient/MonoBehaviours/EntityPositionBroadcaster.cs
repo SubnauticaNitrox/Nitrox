@@ -12,7 +12,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
 {
     public static EntityPositionBroadcaster Instance;
 
-    public static readonly float BROADCAST_INTERVAL = 0.25f;
+    public static readonly float BROADCAST_INTERVAL = 0.1f;
 
     /// <summary>
     /// Dictionary of watched entities that don't follow spline movements.
