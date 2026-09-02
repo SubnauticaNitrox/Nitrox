@@ -28,7 +28,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
         }
         if (options.IsOmittedOnCapture)
         {
-            yield return new BreakLoggerMiddleware { BreakCondition = static (ref context) => context.Entry.TryGetProperty(out CaptureScope _) };
+            yield return new BreakLoggerMiddleware { BreakCondition = static (ref context) => context.Entry.TryGetFirstProperty(out CaptureScope _) };
         }
         if (options.RequiredPropertyTypes.Length > 0)
         {
@@ -38,7 +38,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
         {
             Writer = static (ref context) =>
             {
-                if (context.Entry.TryGetProperty(out PrefixScope scope))
+                if (context.Entry.TryGetFirstProperty(out PrefixScope scope))
                 {
                     context.Writer.Write(scope.Prefix);
                 }
@@ -48,7 +48,7 @@ internal sealed class NitroxZLoggerFormatter : MiddlewareZLoggerFormatter
         {
             yield return new ConditionalGroupLoggerMiddleware
             {
-                Condition = static context => !context.Entry.TryGetProperty(out PlainScope _),
+                Condition = static context => !context.Entry.TryGetFirstProperty(out PlainScope _),
                 TrueGroup =
                 [
                     new WriteTimeLoggerMiddleware { Format = options.TimestampFormat ?? "" },
