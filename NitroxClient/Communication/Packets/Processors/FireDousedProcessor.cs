@@ -13,7 +13,7 @@ internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProc
     /// <summary>
     ///     Finds and executes <see cref="Fire.Douse(float)" />. If the fire is extinguished, it will pass a large float to
     ///     trigger the private
-    ///     <see cref="Fire.Extinguish()" /> method.
+    ///     <see cref="Fire.Extinguished()" /> method.
     /// </summary>
     public Task Process(ClientProcessorContext context, FireDoused packet)
     {
@@ -21,7 +21,7 @@ internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProc
         Fire fire = fireGameObject.RequireComponentInChildren<Fire>();
 
         float douseAmount = fire.livemixin.health - packet.Health;
-        if (!packet.Extinguished)
+        if (!packet.IsExtinguished)
         {
             // Prevents a desync where the fire could extinguish for one player but not another
             douseAmount = Mathf.Max(douseAmount, 0.1f);
@@ -39,7 +39,7 @@ internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProc
             fire.livemixin.health = packet.Health;
         }
 
-        if (packet.Extinguished)
+        if (packet.IsExtinguished)
         {
             entities.RemoveEntity(packet.Id);
             fire.Extinguished();

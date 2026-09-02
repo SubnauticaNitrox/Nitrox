@@ -57,13 +57,11 @@ namespace NitroxClient.GameLogic
             }
 
             bool extinguished = !fire.livemixin.IsAlive() || fire.isExtinguished;
-
             if (extinguished)
             {
                 entities.RemoveEntity(fireId);
             }
-
-            FireDoused packet = new(fireId, fire.livemixin.health, extinguished);
+            FireDoused packet = new(fireId, extinguished ? 0 : fire.livemixin.health);
             throttledPacketSender.SendThrottled(packet, x => x.Id);
         }
 
