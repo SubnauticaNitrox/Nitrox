@@ -6,23 +6,44 @@ namespace NitroxClient.MonoBehaviours;
 
 public class RemotelyControlled : MonoBehaviour
 {
-    private readonly SmoothVector smoothPosition = new SmoothVector();
-    private readonly SmoothRotation smoothRotation = new SmoothRotation();
+    protected SmoothVector smoothPosition;
+    protected SmoothRotation smoothRotation;
 
     private SwimBehaviour swimBehaviour;
-    private WalkBehaviour walkBehaviour;
-    private Rigidbody rigidbody;
+    protected Rigidbody rigidbody;
+    private WorldForces worldForces;
+
+    private bool disabledWorldForces;
 
     public void Awake()
     {
         swimBehaviour = gameObject.GetComponent<SwimBehaviour>();
-        walkBehaviour = gameObject.GetComponent<WalkBehaviour>();
         rigidbody = gameObject.GetComponent<Rigidbody>();
+        worldForces = gameObject.GetComponent<WorldForces>();
+
+        bool followsSpline = swimBehaviour && swimBehaviour.enabled;
+        if (rigidbody)
+        {
+            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            if (followsSpline)
+            {
+                rigidbody.isKinematic = false;
+            }
+        }
+
+        if (worldForces && !followsSpline)
+        {
+            disabledWorldForces = worldForces.enabled;
+            worldForces.enabled = false;
+        }
+
+        smoothPosition = new(transform.position);
+        smoothRotation = new(transform.rotation);
     }
 
     public void FixedUpdate()
     {
-        if (swimBehaviour || walkBehaviour || !rigidbody)
+        if (swimBehaviour && swimBehaviour.enabled)
         {
             return;
         }
@@ -30,58 +51,126 @@ public class RemotelyControlled : MonoBehaviour
         smoothPosition.FixedUpdate();
         smoothRotation.FixedUpdate();
 
-        rigidbody.isKinematic = false;
-        rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
-        rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+        if (rigidbody)
+        {
+            if (rigidbody.isKinematic)
+            {
+                rigidbody.isKinematic = false;
+            }
+            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+        }
+        else
+        {
+            transform.position = smoothPosition.Current;
+            transform.rotation = smoothRotation.Current;
+        }
+    }
+
+    public void OnDestroy()
+    {
+        // there might be other instances calling worldForces.enabled = false during its lifetime but we can't really detect those easily
+        // so we just hope nothing major breaks
+        if (worldForces && disabledWorldForces)
+        {
+            worldForces.enabled = true;
+        }
     }
 
     public void UpdateOrientation(Vector3 position, Quaternion rotation)
     {
-        TeleportIfTooFar(position, rotation);
-
-        if (swimBehaviour)
+        // ensures the object has fully spawned
+        if (!gameObject.activeSelf)
         {
-            swimBehaviour.SwimTo(position, 3f);
+            return;
         }
 
-        Transform selfTransform = transform;
+        float velocity = rigidbody ? rigidbody.velocity.magnitude : 0f;
+        bool teleported = TeleportIfTooFar(position, rotation, GetTeleportThreshold(velocity));
+
+        if (swimBehaviour && swimBehaviour.enabled)
+        {
+            swimBehaviour.SwimTo(position, 3f);
+
+            smoothPosition.Current = transform.position;
+            smoothRotation.Current = transform.rotation;
+        }
+        else if (teleported)
+        {
+            smoothPosition.Current = position;
+            smoothRotation.Current = rotation;
+        }
 
         // Entities can lose their swimBehavior (such as if they get killed).  Keep these up-to-date incase that happens.
-        smoothPosition.Current = selfTransform.position;
-        smoothRotation.Current = selfTransform.rotation;
         smoothPosition.Target = position;
         smoothRotation.Target = rotation;
     }
 
     public void UpdateKnownSplineUser(Vector3 currentPosition, Quaternion currentRotation, Vector3 destination, Vector3 destinationDirection, float velocity)
     {
-        TeleportIfTooFar(currentPosition, currentRotation);
-
-        if (swimBehaviour)
+        // ensures the object has fully spawned
+        if (!gameObject.activeSelf)
         {
-            // First lines of SwimBehaviour.SwimToInternal
-            swimBehaviour.originalTargetPosition = destination;
-            swimBehaviour.originalTargetDirection = destinationDirection;
-            swimBehaviour.originalVelocity = velocity;
-            // Only the useful part of the methods called in SwimBehaviour.SwimToInternal
-            swimBehaviour.splineFollowing.GoTo(destination, destinationDirection, velocity);
+            return;
         }
 
-        if (walkBehaviour)
+        bool teleported = TeleportIfTooFar(currentPosition, currentRotation, GetTeleportThreshold(velocity));
+
+        // SwimBehaviour and WalkBehaviour will act the exact same
+        if (swimBehaviour && swimBehaviour.enabled)
         {
-            walkBehaviour.GoToInternal(destination, destinationDirection, velocity);
+            float adjustedVelocity = velocity;
+
+            if (!teleported)
+            {
+                float distance = Vector3.Distance(currentPosition, destination);
+
+                // avoid too short paths
+                if (distance > 0.1f)
+                {
+                    float localDistance = Vector3.Distance(transform.position, destination);
+
+                    adjustedVelocity *= localDistance / distance;
+
+                    adjustedVelocity = Mathf.Clamp(adjustedVelocity, velocity * 0.5f, velocity * 1.5f);
+                }
+            }
+
+            // Adjust the target data and velocity
+            swimBehaviour.originalTargetPosition = destination;
+            swimBehaviour.originalTargetDirection = destinationDirection;
+            swimBehaviour.originalVelocity = adjustedVelocity;
+
+            // Trigger either SwimBehaviour.GoToInternal or WalkBehaviour.GoToInternal so they use their own way to pass the data to the SplineFollowing
+            swimBehaviour.GoToInternal(destination, destinationDirection, adjustedVelocity);
         }
     }
 
-    private void TeleportIfTooFar(Vector3 position, Quaternion rotation)
+    private bool TeleportIfTooFar(Vector3 position, Quaternion rotation, float teleportThreshold)
     {
-        Transform selfTransform = transform;
-
-        if ((selfTransform.position - position).sqrMagnitude > 25) // Optimized 5m distance test
+        if ((transform.position - position).sqrMagnitude <= teleportThreshold * teleportThreshold)
         {
-            selfTransform.position = position;
-            selfTransform.rotation = rotation;
+            return false;
         }
+
+        if (rigidbody)
+        {
+            rigidbody.position = position;
+            rigidbody.rotation = rotation;
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+        }
+        else
+        {
+            transform.position = position;
+            transform.rotation = rotation;
+        }
+        return true;
+    }
+
+    private static float GetTeleportThreshold(float velocity)
+    {
+        return Mathf.Max(5f, velocity * 1.5f);
     }
 
     public static RemotelyControlled Ensure(GameObject gameObject)
