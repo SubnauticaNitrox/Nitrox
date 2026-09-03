@@ -17,15 +17,15 @@ internal sealed class TimeCommand(TimeService timeService) : ICommandHandler<Sto
         switch (time)
         {
             case StoryManager.TimeModification.DAY:
-                await timeService.ChangeTime(StoryManager.TimeModification.DAY);
+                await timeService.ChangeTimeAsync(StoryManager.TimeModification.DAY);
                 await context.SendToAllAsync("Time set to day");
                 break;
             case StoryManager.TimeModification.NIGHT:
-                await timeService.ChangeTime(StoryManager.TimeModification.NIGHT);
+                await timeService.ChangeTimeAsync(StoryManager.TimeModification.NIGHT);
                 await context.SendToAllAsync("Time set to night");
                 break;
             default:
-                await timeService.ChangeTime(StoryManager.TimeModification.SKIP);
+                await timeService.ChangeTimeAsync(StoryManager.TimeModification.SKIP);
                 await context.SendToAllAsync("Skipped time");
                 break;
         }

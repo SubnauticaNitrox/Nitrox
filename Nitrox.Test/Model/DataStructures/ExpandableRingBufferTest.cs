@@ -1,12 +1,12 @@
 namespace Nitrox.Model.DataStructures;
 
 [TestClass]
-public class RingBufferTest
+public class ExpandableRingBufferTest
 {
     [TestMethod]
     public void ShouldAddItemsAndIncreaseCount()
     {
-        RingBuffer<string> buffer = new(5);
+        ExpandableRingBuffer<string> buffer = new(5);
 
         buffer.Count.Should().Be(0);
         buffer.Add("1");
@@ -21,9 +21,7 @@ public class RingBufferTest
     [TestMethod]
     public void ShouldExpandAutomaticallyWhenCapacityReached()
     {
-        RingBuffer<string> buffer = new(2);
-        buffer.Add("1");
-        buffer.Add("2");
+        ExpandableRingBuffer<string> buffer = new(2) { "1", "2" };
         buffer.Count.Should().Be(2);
 
         // should trigger Expand()
@@ -37,14 +35,11 @@ public class RingBufferTest
     [TestMethod]
     public void ShouldPreserveOrderWhenExpandingAfterWrapAround()
     {
-        RingBuffer<int> buffer = new(3);
-        buffer.Add(1);
-        buffer.Add(2);
-        buffer.Add(3);
+        ExpandableRingBuffer<int> buffer = new(3) { 1, 2, 3 };
         buffer.RemoveFirst();
 
         buffer.Add(4);
-        // buffer is [4, 2, 3]
+        // buffer is [4, 2, 3] internally
         buffer.Add(5);
         // buffer is [2, 3, 4, 5] (after expansion)
 
@@ -56,26 +51,19 @@ public class RingBufferTest
     [TestMethod]
     public void ShouldRemoveFirstCorrectly()
     {
-        RingBuffer<string> buffer = new(3);
-        buffer.Add("1");
-        buffer.Add("2");
-        buffer.Add("3");
+        ExpandableRingBuffer<string> buffer = new(3) { "1", "2", "3" };
 
         buffer.RemoveFirst();
 
         buffer.Count.Should().Be(2);
         buffer.First.Should().Be("2");
         buffer.Last.Should().Be("3");
-        buffer.Head.Should().Be(1);
     }
 
     [TestMethod]
     public void ShouldRemoveLastCorrectly()
     {
-        RingBuffer<string> buffer = new(3);
-        buffer.Add("1");
-        buffer.Add("2");
-        buffer.Add("3");
+        ExpandableRingBuffer<string> buffer = new(3) { "1", "2", "3" };
 
         buffer.RemoveLast();
 
@@ -87,24 +75,20 @@ public class RingBufferTest
     [TestMethod]
     public void ShouldBeEmptyWhenCleared()
     {
-        RingBuffer<string> buffer = new(10);
-        buffer.Add("1");
-        buffer.Add("2");
-        buffer.Add("3");
+        ExpandableRingBuffer<string> buffer = new(10) { "1", "2", "3" };
 
         buffer.Count.Should().Be(3);
 
         buffer.Clear();
 
         buffer.Count.Should().Be(0);
-        buffer.Head.Should().Be(0);
-        buffer.Tail.Should().Be(0);
+        buffer.IsEmpty().Should().BeTrue();
     }
 
     [TestMethod]
     public void ShouldThrowWhenRemovingFromEmptyBuffer()
     {
-        RingBuffer<int> buffer = new();
+        ExpandableRingBuffer<int> buffer = [];
 
         Action actRemoveFirst = buffer.RemoveFirst;
         actRemoveFirst.Should().Throw<InvalidOperationException>()
@@ -118,7 +102,7 @@ public class RingBufferTest
     [TestMethod]
     public void ShouldThrowWhenAccessingFirstOrLastOnEmptyBuffer()
     {
-        RingBuffer<int> buffer = new();
+        ExpandableRingBuffer<int> buffer = [];
 
         Action actFirst = () => { int _ = buffer.First; };
         actFirst.Should().Throw<InvalidOperationException>()
@@ -130,20 +114,35 @@ public class RingBufferTest
     }
 
     [TestMethod]
-    public void ShouldAccessItemsByWrappedIndex()
+    public void ShouldAccessItemsByLogicalIndexAndWrapInternally()
     {
-        RingBuffer<int> buffer = new(4);
-        buffer.Add(10);
-        buffer.Add(20);
-        buffer.Add(30);
+        // Tests that logical indices 0-Count work perfectly even when the underlying array is wrapped
+        ExpandableRingBuffer<int> buffer = new(4) { 10, 20, 30, 40 };
 
-        // regular indexer
-        buffer[0].Should().Be(10);
-        buffer[1].Should().Be(20);
-        buffer[2].Should().Be(30);
+        buffer.RemoveFirst();
+        buffer.RemoveFirst();
+        // Internal array has empty slots at index 0 and 1. Head is at 2.
 
-        // indexer wraps index with capacity
-        buffer[4].Should().Be(10);
-        buffer[5].Should().Be(20);
+        buffer.Add(50);
+        buffer.Add(60);
+        // Internal array physically wraps: [50, 60, 30, 40]
+
+        // Logical indexer should seamlessly abstract this away
+        buffer.Should().HaveElementAt(0, 30);
+        buffer.Should().HaveElementAt(1, 40);
+        buffer.Should().HaveElementAt(2, 50);
+        buffer.Should().HaveElementAt(3, 60);
+    }
+
+    [TestMethod]
+    public void ShouldThrowWhenAccessingOutOfBoundsIndex()
+    {
+        ExpandableRingBuffer<int> buffer = new(4) { 10, 20, 30 };
+
+        Action actNegative = () => { int _ = buffer[-1]; };
+        actNegative.Should().Throw<ArgumentOutOfRangeException>();
+
+        Action actTooLarge = () => { int _ = buffer[3]; };
+        actTooLarge.Should().Throw<ArgumentOutOfRangeException>();
     }
 }

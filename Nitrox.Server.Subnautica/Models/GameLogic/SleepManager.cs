@@ -63,7 +63,7 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         try
         {
             await Task.Delay(TimeSpan.FromSeconds(SLEEP_DURATION));
-            await timeService.SkipTime(TimeSpan.FromSeconds(SLEEP_TIME_SKIP_SECONDS));
+            await timeService.SkipTimeAsync(TimeSpan.FromSeconds(SLEEP_TIME_SKIP_SECONDS));
             await packetSender.SendPacketToAllAsync(new SleepComplete());
         } finally
         {

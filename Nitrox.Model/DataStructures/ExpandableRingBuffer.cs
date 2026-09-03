@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Nitrox.Model.DataStructures;
 
@@ -6,28 +8,34 @@ namespace Nitrox.Model.DataStructures;
 /// A dynamically expanding, circular first-in, first-out array that reduces memory allocations by reusing slots.
 /// Automatically doubles its capacity when full.
 /// </summary>
-public class RingBuffer<T>
+public class ExpandableRingBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
 {
     private T[] buffer;
     private int capacity;
-    public int Head { get; private set; }
-    public int Tail => (Head + Count) % capacity;
+    private int Head { get; set; }
+    private int Tail => (Head + Count) % capacity;
     public int Count { get; private set; }
 
     /// <summary>
-    /// Gets or sets the element at the wrapped index.
+    /// Gets or sets the element at the index of the buffer (0 is first element).
     /// </summary>
     public T this[int index]
     {
-        get => buffer[index % capacity];
-        private set => buffer[index % capacity] = value;
+        get
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            return buffer[(Head + index) % capacity];
+        }
     }
 
     public T First => Count > 0 ? buffer[Head] : throw new InvalidOperationException("Buffer is empty");
 
     public T Last => Count > 0 ? buffer[(Head + Count - 1) % capacity] : throw new InvalidOperationException("Buffer is empty");
 
-    public RingBuffer(int initialCapacity = 64)
+    public ExpandableRingBuffer(int initialCapacity = 64)
     {
         if (initialCapacity <= 0)
         {
@@ -40,11 +48,23 @@ public class RingBuffer<T>
 
     public void Expand()
     {
-        int newCapacity = capacity * 2;
+        int newCapacity = checked(capacity * 2);
         T[] newBuffer = new T[newCapacity];
-        for (int i = 0; i < Count; i++)
+
+        // example: [val, val, default, default, default, val, val, val]
+        //          left chunk                             right chunk
+        // NB: Head is at the beginning of the right chunk, Tail is at the end of the left chunk
+
+        // elements from Head to the end of the array
+        int rightChunkLength = Math.Min(Count, capacity - Head);
+
+        Array.Copy(buffer, Head, newBuffer, 0, rightChunkLength);
+
+        // in case there are elements from the beginning of the array to some extent
+        int leftChunkLength = Count - rightChunkLength;
+        if (leftChunkLength > 0)
         {
-            newBuffer[i] = buffer[(Head + i) % capacity];
+            Array.Copy(buffer, 0, newBuffer, rightChunkLength, leftChunkLength);
         }
 
         capacity = newCapacity;
@@ -89,7 +109,22 @@ public class RingBuffer<T>
             throw new InvalidOperationException("Can't remove an element from an empty ring buffer");
         }
 
+        buffer[(Head + Count - 1) % capacity] = default; // avoid memory leaks
         Count--;
-        buffer[Tail] = default; // avoid memory leaks
     }
+
+    public bool IsEmpty()
+    {
+        return Count == 0;
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            yield return buffer[(Head + i) % capacity];
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

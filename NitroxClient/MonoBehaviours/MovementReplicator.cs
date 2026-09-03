@@ -15,7 +15,7 @@ public abstract class MovementReplicator : MonoBehaviour
 
     private TimeManager timeManager;
 
-    private readonly RingBuffer<Snapshot> buffer = new();
+    private readonly ExpandableRingBuffer<Snapshot> buffer = [];
     /// <summary>
     /// To ensure a smooth experience, we need a max allowed latency value which should top the incoming latencies at all times.
     /// Big increments and any decrements of this value will likely cause stutter, so we try to avoid changing this value too much.
@@ -59,7 +59,7 @@ public abstract class MovementReplicator : MonoBehaviour
         float occurrenceTime = snapshotRealTime + INTERPOLATION_TIME + MaxAllowedLatency;
 
         // Cleaning any previous value change that would occur later than the newly received snapshot
-        while (buffer.Count > 0)
+        while (!buffer.IsEmpty())
         {
             if (buffer.Last.IsSnapshotNewer(occurrenceTime))
             {
@@ -147,7 +147,7 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public void Update()
     {
-        if (buffer.Count == 0)
+        if (buffer.IsEmpty())
         {
             return;
         }
@@ -155,13 +155,13 @@ public abstract class MovementReplicator : MonoBehaviour
         float realTime = RealTime;
 
         // Sorting out expired nodes
-        while (buffer.Count > 0 && buffer.First.IsExpired(realTime))
+        while (!buffer.IsEmpty() && buffer.First.IsExpired(realTime))
         {
             buffer.RemoveFirst();
         }
 
         // No usable nodes left
-        if (buffer.Count == 0)
+        if (buffer.IsEmpty())
         {
             return;
         }
@@ -175,7 +175,7 @@ public abstract class MovementReplicator : MonoBehaviour
         // Purging the next nodes if they should have already happened
         while (buffer.Count > 1)
         {
-            if (!buffer[buffer.Head + 1].IsSnapshotNewer(realTime))
+            if (!buffer[1].IsSnapshotNewer(realTime))
             {
                 buffer.RemoveFirst();
             }
@@ -193,7 +193,7 @@ public abstract class MovementReplicator : MonoBehaviour
 
         // Interpolation
         Snapshot previousSnapshot = buffer.First;
-        Snapshot nextSnapshot = buffer[buffer.Head + 1];
+        Snapshot nextSnapshot = buffer[1];
 
         float t = (realTime - previousSnapshot.Time) / (nextSnapshot.Time - previousSnapshot.Time);
 
