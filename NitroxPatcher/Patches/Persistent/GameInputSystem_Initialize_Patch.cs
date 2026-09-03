@@ -27,8 +27,10 @@ public partial class GameInputSystem_Initialize_Patch : NitroxPatch, IPersistent
 
             if (!string.IsNullOrEmpty(keyBinding.DefaultKeyboardKey))
             {
+                // A bare key name is resolved against the keyboard, a "<Device>/..." path (e.g. mouse buttons) is used as-is.
                 // See GameInputSystem.bindingsKeyboard definition
-                GameInputSystem.bindingsKeyboard.Add(button, $"<Keyboard>/{keyBinding.DefaultKeyboardKey}");
+                string bindingPath = keyBinding.DefaultKeyboardKey[0] == '<' ? keyBinding.DefaultKeyboardKey : $"<Keyboard>/{keyBinding.DefaultKeyboardKey}";
+                GameInputSystem.bindingsKeyboard.Add(button, bindingPath);
             }
             if (!string.IsNullOrEmpty(keyBinding.DefaultControllerKey))
             {
