@@ -14,7 +14,6 @@ using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
-using Nitrox.Server.Subnautica.Models.GameLogic.Players.Bans;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
@@ -159,7 +158,7 @@ internal static partial class ServiceCollectionExtensions
             services.AddHostedSingletonService<WorldService>()
                     .AddHostedSingletonService<TimeService>()
                     .AddHostedSingletonService<FmodService>()
-                    .AddHostedSingletonService<BanManager>()
+                    .AddHostedSingletonService<BanService>()
                     .AddSingleton<Func<WorldService>>(provider => provider.GetRequiredService<WorldService>)
                     .AddSingleton<JoiningManager>()
                     .AddSingleton<BuildingManager>()

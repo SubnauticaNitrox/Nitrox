@@ -14,12 +14,12 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Communication;
-using Nitrox.Server.Subnautica.Models.GameLogic.Players.Bans;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 // TODO: This manager should only handle player data. Move connection related state to other managers.
-internal sealed partial class PlayerManager(SessionManager sessionManager, BanManager banManager, IOptions<SubnauticaServerOptions> options, ILogger<PlayerManager> logger) : ISessionCleaner
+internal sealed partial class PlayerManager(SessionManager sessionManager, BanService banService, IOptions<SubnauticaServerOptions> options, ILogger<PlayerManager> logger) : ISessionCleaner
 {
     [GeneratedRegex(NitroxConstants.PLAYER_NAME_VALID_REGEX, RegexOptions.NonBacktracking)]
     private static partial Regex PlayerNameRegex();
@@ -30,7 +30,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, BanMa
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
     private readonly SessionManager sessionManager = sessionManager;
-    private readonly BanManager banManager = banManager;
+    private readonly BanService banService = banService;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<PlayerManager> logger = logger;
     private PeerId currentPlayerId;
@@ -72,7 +72,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, BanMa
         PlayerSettings playerSettings,
         AuthenticationContext authenticationContext)
     {
-        if (banManager.TryGetBan(endPoint.Address, out _))
+        if (banService.IsBanned(endPoint.Address))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.PLAYER_BANNED;
             return new MultiplayerSessionReservation(sessionId, rejectedState);
@@ -167,8 +167,6 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, BanMa
         }
 
         connectedPlayersBySessionId.Add(playerContext.SessionId, player);
-
-        player.LastKnownIp = sessionManager.GetEndPoint(sessionId)?.Address.ToString();
 
         // TODO: make a ConnectedPlayer wrapper so this is not stateful
         player.PlayerContext = playerContext;

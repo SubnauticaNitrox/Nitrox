@@ -47,8 +47,6 @@ internal sealed class PersistedPlayerData
 
     public bool DisplaySurfaceWater { get; set; }
 
-    public string LastKnownIp { get; set; }
-
     public Player ToPlayer()
     {
         return new Player(Id,
@@ -70,8 +68,7 @@ internal sealed class PersistedPlayerData
                           PlayerPreferences.PingPreferences,
                           PlayerPreferences.PinnedTechTypes,
                           InPrecursor,
-                          DisplaySurfaceWater,
-                          LastKnownIp);
+                          DisplaySurfaceWater);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)
@@ -94,8 +91,7 @@ internal sealed class PersistedPlayerData
             PersonalCompletedGoalsWithTimestamp = new(player.PersonalCompletedGoalsWithTimestamp),
             PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList()),
             InPrecursor = player.InPrecursor,
-            DisplaySurfaceWater = player.DisplaySurfaceWater,
-            LastKnownIp = player.LastKnownIp
+            DisplaySurfaceWater = player.DisplaySurfaceWater
         };
     }
 }

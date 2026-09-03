@@ -4,16 +4,17 @@ using System.Text;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Players.Bans;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.MODERATOR)]
-internal sealed class BanListCommand(BanManager banManager) : ICommandHandler
+internal sealed class BanListCommand(BanService banService) : ICommandHandler
 {
     [Description("Lists all active bans")]
     public async Task Execute(ICommandContext context)
     {
-        IReadOnlyList<BanEntry> bans = banManager.GetActiveBans();
+        IReadOnlyList<BanEntry> bans = await banService.GetActiveBansAsync();
         if (bans.Count == 0)
         {
             await context.ReplyAsync("No active bans");
