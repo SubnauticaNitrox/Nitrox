@@ -43,7 +43,7 @@ public class EquipmentSlots
             NitroxTechType techType = pickupable.GetTechType().ToDto();
             EntityMetadata metadata = entityMetadataManager.Extract(pickupable.gameObject).OrNull();
 
-            InstalledModuleEntity moduleEntity = new(slot, classId, itemId, techType, metadata, ownerId, []);
+            InstalledModuleEntity moduleEntity = new(slot, classId, itemId, techType, metadata != null ? [metadata] : null, ownerId, []);
             entities.MarkAsSpawned(moduleEntity);
 
             if (packetSender.Send(new EntitySpawnedByClient(moduleEntity, true)))

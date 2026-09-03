@@ -21,7 +21,7 @@ public class PathBasedChildEntity : Entity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public PathBasedChildEntity(string path, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public PathBasedChildEntity(string path, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Path = path;
         Id = id;

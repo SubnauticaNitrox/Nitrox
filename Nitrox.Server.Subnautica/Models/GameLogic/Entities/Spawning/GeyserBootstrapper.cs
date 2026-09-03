@@ -9,10 +9,12 @@ internal sealed class GeyserBootstrapper(XorRandom random) : IEntityBootstrapper
 
     public void Prepare(ref WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {
-        entity = new GeyserWorldEntity(entity.Transform, entity.Level, entity.ClassId,
+        GeyserWorldEntity geyserEntity = new(entity.Transform, entity.Level, entity.ClassId,
                                   entity.SpawnedByServer, entity.Id, entity.TechType,
-                                  entity.Metadata, entity.ParentId, entity.ChildEntities,
+                                  null, entity.ParentId, entity.ChildEntities,
                                   random.NextFloat(), 15 * random.NextFloat());
         // The value 15 doesn't mean anything in particular, it's just an initial eruption time window so geysers don't all erupt at the same time at first
+        geyserEntity.Metadata = entity.Metadata;
+        entity = geyserEntity;
     }
 }

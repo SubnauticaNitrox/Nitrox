@@ -22,7 +22,7 @@ public class EscapePodEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public EscapePodEntity(NitroxVector3 position, NitroxId id, EntityMetadata metadata)
+    public EscapePodEntity(NitroxVector3 position, NitroxId id, List<EntityMetadata>? metadata)
     {
         Transform = new NitroxTransform(position, NitroxQuaternion.Identity, NitroxVector3.One);
         Id = id;
@@ -35,7 +35,7 @@ public class EscapePodEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public EscapePodEntity(List<PeerId> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public EscapePodEntity(List<PeerId> players, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         Players = players;

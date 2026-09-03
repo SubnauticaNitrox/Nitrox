@@ -27,7 +27,7 @@ public class CreatureRespawnEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public CreatureRespawnEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, float spawnTime, NitroxTechType respawnTechType, List<string> addComponents) :
+    public CreatureRespawnEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities, float spawnTime, NitroxTechType respawnTechType, List<string> addComponents) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         SpawnTime = spawnTime;

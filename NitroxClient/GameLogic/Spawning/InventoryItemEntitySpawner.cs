@@ -119,7 +119,7 @@ public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataMana
         {
             planter.Subscribe(subscribedValue);
 
-            if (entity.Metadata is PlantableMetadata metadata)
+            if (entity.TryGetMetadata(out PlantableMetadata metadata))
             {
                 PostponeAddNotification(() => planter.subscribed, () => planter, true, () =>
                 {

@@ -24,7 +24,7 @@ public class VehicleEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public VehicleEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata) :
+    public VehicleEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata) :
         base(transform, GLOBAL_ROOT_LEVEL, classId, spawnedByServer, id, techType, metadata, null, new List<Entity>())
     {
         SpawnerId = spawnerId;
@@ -32,7 +32,7 @@ public class VehicleEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public VehicleEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public VehicleEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         SpawnerId = spawnerId;

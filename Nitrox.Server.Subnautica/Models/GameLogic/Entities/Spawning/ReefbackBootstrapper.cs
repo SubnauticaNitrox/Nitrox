@@ -37,10 +37,12 @@ internal sealed class ReefbackBootstrapper : IEntityBootstrapper
         // In case the grassIndex is chosen randomly
         int grassIndex = random.NextIntRange(1, GRASS_VARIANTS_COUNT);
 
-        entity = new ReefbackEntity(entity.Transform, entity.Level, entity.ClassId,
+        ReefbackEntity reefbackEntity = new(entity.Transform, entity.Level, entity.ClassId,
                                     entity.SpawnedByServer, entity.Id, entity.TechType,
-                                    entity.Metadata, entity.ParentId, entity.ChildEntities,
+                                    null, entity.ParentId, entity.ChildEntities,
                                     grassIndex, entity.Transform.Position);
+        reefbackEntity.Metadata = entity.Metadata;
+        entity = reefbackEntity;
 
         NitroxTransform plantSlotsRootTransform = DuplicateTransform(PlantSlotsRootTransform);
         plantSlotsRootTransform.SetParent(entity.Transform, false);

@@ -30,7 +30,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public PrefabChildEntity(NitroxId id, string classId, NitroxTechType techType, int componentIndex, EntityMetadata metadata, NitroxId parentId)
+        public PrefabChildEntity(NitroxId id, string classId, NitroxTechType techType, int componentIndex, List<EntityMetadata>? metadata, NitroxId parentId)
         {
             Id = id;
             TechType = techType;
@@ -41,7 +41,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public PrefabChildEntity(int componentIndex, string classId, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+        public PrefabChildEntity(int componentIndex, string classId, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities)
         {
             ComponentIndex = componentIndex;
             ClassId = classId;

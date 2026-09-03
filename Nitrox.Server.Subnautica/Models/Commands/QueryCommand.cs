@@ -33,7 +33,7 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
         builder.AppendLine($" └ Id: {entity.Id}");
         builder.AppendLine($" └ TechType: {entity.TechType}");
         builder.AppendLine($" └ ParentId: {entity.ParentId?.ToString() ?? "<null>"}");
-        builder.AppendLine($" └ Metadata: {entity.Metadata?.ToString() ?? "<null>"}");
+        builder.AppendLine($" └ Metadata: {(entity.Metadata != null ? string.Join(", ", entity.Metadata) : "<null>")}");
         builder.AppendLine($" └ Children: {entity.ChildEntities.Count}");
         if (entity.ChildEntities.Count > 0)
         {
@@ -43,7 +43,7 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
                 builder.AppendLine($"     └ Type: {childEntity.GetType().Name}");
                 builder.AppendLine($"     └ Id: {childEntity.Id}");
                 builder.AppendLine($"     └ TechType: {childEntity.TechType}");
-                builder.AppendLine($"     └ Metadata: {childEntity.Metadata?.ToString() ?? "<null>"}");
+                builder.AppendLine($"     └ Metadata: {(childEntity.Metadata != null ? string.Join(", ", childEntity.Metadata) : "<null>")}");
                 builder.AppendLine($"     └ Children: {childEntity.ChildEntities.Count}");
             }
         }

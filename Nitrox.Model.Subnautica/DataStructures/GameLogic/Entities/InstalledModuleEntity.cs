@@ -24,7 +24,7 @@ public class InstalledModuleEntity : Entity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InstalledModuleEntity(string slot, string classId, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InstalledModuleEntity(string slot, string classId, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Slot = slot;
         ClassId = classId;

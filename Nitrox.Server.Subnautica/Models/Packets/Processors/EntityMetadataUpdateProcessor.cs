@@ -22,7 +22,7 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager,
 
         if (TryProcessMetadata(context.Sender, entity, packet.NewValue))
         {
-            entity.Metadata = packet.NewValue;
+            entity.SetMetadata(packet.NewValue);
             await SendUpdateToVisiblePlayersAsync(context, packet, entity);
         }
     }

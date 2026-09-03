@@ -6,6 +6,7 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata.Bases;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -48,7 +49,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
 
         if (constructableBase.TryGetComponentInChildren(out BaseGhost baseGhost, true))
         {
-            ghost.Metadata = GhostMetadataRetriever.GetMetadataForGhost(baseGhost);
+            ghost.SetMetadata(GhostMetadataRetriever.GetMetadataForGhost(baseGhost));
         }
 
         return ghost;
@@ -106,7 +107,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
         ghostBase.FinishDeserialization();
 
         // Apply the right metadata accordingly
-        IEnumerator baseDeconstructableInstructions = GhostMetadataApplier.ApplyMetadataToGhost(baseGhost, ghostEntity.Metadata, @base);
+        IEnumerator baseDeconstructableInstructions = GhostMetadataApplier.ApplyMetadataToGhost(baseGhost, ghostEntity.GetMetadata<GhostMetadata>(), @base);
         if (baseDeconstructableInstructions != null)
         {
             yield return baseDeconstructableInstructions;

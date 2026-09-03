@@ -59,7 +59,7 @@ public class SerializedWorldEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public SerializedWorldEntity(List<SerializedComponent> components, int layer, NitroxInt3 batchId, NitroxInt3 cellId, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public SerializedWorldEntity(List<SerializedComponent> components, int layer, NitroxInt3 batchId, NitroxInt3 cellId, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         Components = components;

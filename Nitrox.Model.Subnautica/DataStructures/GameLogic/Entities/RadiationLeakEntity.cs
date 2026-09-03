@@ -24,12 +24,12 @@ public class RadiationLeakEntity : GlobalRootEntity
     {
         Id = id;
         ObjectIndex = objectIndex;
-        Metadata = metadata;
+        Metadata = [metadata];
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public RadiationLeakEntity(int objectIndex, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+    public RadiationLeakEntity(int objectIndex, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         ObjectIndex = objectIndex;

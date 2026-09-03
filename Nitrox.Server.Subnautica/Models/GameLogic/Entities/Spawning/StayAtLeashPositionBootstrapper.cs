@@ -8,6 +8,6 @@ internal sealed class StayAtLeashPositionBootstrapper : IEntityBootstrapper
 {
     public void Prepare(ref WorldEntity spawnedEntity, DeterministicGenerator generator)
     {
-        spawnedEntity.Metadata = new StayAtLeashPositionMetadata(spawnedEntity.Transform.Position);
+        spawnedEntity.SetMetadata(new StayAtLeashPositionMetadata(spawnedEntity.Transform.Position));
     }
 }

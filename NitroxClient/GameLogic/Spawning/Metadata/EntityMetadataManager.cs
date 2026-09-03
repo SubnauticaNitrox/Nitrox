@@ -4,6 +4,7 @@ using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
@@ -72,9 +73,10 @@ public class EntityMetadataManager
 
     public void ApplyMetadata(GameObject gameObject, EntityMetadata metadata)
     {
-        // In case a metadata update was received while this entity was in the spawn queue
+        // In case a same-typed metadata update was received while this entity was in the spawn queue
         if (gameObject.TryGetNitroxId(out NitroxId objectId) &&
-            newerMetadataById.TryGetValue(objectId, out EntityMetadata newMetadata))
+            newerMetadataById.TryGetValue(objectId, out EntityMetadata newMetadata) &&
+            newMetadata.GetType() == metadata.GetType())
         {
             metadata = newMetadata;
             newerMetadataById.Remove(objectId);
@@ -84,6 +86,18 @@ public class EntityMetadataManager
         if (metadataProcessor.HasValue)
         {
             metadataProcessor.Value.ProcessMetadata(gameObject, metadata);
+        }
+    }
+    
+    public void ApplyMetadata(GameObject gameObject, Entity entity)
+    {
+        if (entity.Metadata == null)
+        {
+            return;
+        }
+        foreach (EntityMetadata metadata in entity.Metadata)
+        {
+            ApplyMetadata(gameObject, metadata);
         }
     }
 

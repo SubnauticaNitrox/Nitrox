@@ -106,7 +106,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         {
             NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
             yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
-            entityMetadataManager.ApplyMetadata(moduleObject, interiorPiece.Metadata);
+            entityMetadataManager.ApplyMetadata(moduleObject, interiorPiece);
             result.Set(moduleObject);
         }
     }

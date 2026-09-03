@@ -24,7 +24,7 @@ public class ReefbackEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public ReefbackEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, int grassIndex, NitroxVector3 originalPosition) :
+    public ReefbackEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, List<EntityMetadata>? metadata, NitroxId parentId, List<Entity> childEntities, int grassIndex, NitroxVector3 originalPosition) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         GrassIndex = grassIndex;

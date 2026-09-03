@@ -220,7 +220,7 @@ namespace NitroxClient.GameLogic
                     continue;
                 }
 
-                entityMetadataManager.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
+                entityMetadataManager.ApplyMetadata(entityResult.Get().Value, entity);
                 simulationOwnership.ApplyNewerSimulation(entity.Id);
 
                 MarkAsSpawned(entity);
@@ -302,7 +302,7 @@ namespace NitroxClient.GameLogic
 #endif
                 return;
             }
-            entityMetadataManager.ApplyMetadata(gameObject, entity.Metadata);
+            entityMetadataManager.ApplyMetadata(gameObject, entity);
         }
 
         private void AddPendingParentEntity(Entity entity)

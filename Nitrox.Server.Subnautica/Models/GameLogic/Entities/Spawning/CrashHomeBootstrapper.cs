@@ -9,6 +9,6 @@ internal sealed class CrashHomeBootstrapper : IEntityBootstrapper
     public void Prepare(ref WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {
         // Set 0 for spawnTime so that CrashHome.Update can spawn a Crash if Start() couldn't
-        entity.Metadata = new CrashHomeMetadata(0);
+        entity.SetMetadata(new CrashHomeMetadata(0));
     }
 }

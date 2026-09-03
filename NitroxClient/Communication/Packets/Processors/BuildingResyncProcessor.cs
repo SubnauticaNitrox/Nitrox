@@ -170,7 +170,7 @@ internal sealed class BuildingResyncProcessor(Entities entities, EntityMetadataM
     {
         Log.Info($"[Module RESYNC] Overwriting module with id {moduleEntity.Id}");
         ModuleEntitySpawner.ApplyModuleData(moduleEntity, constructable.gameObject);
-        entityMetadataManager.ApplyMetadata(constructable.gameObject, moduleEntity.Metadata);
+        entityMetadataManager.ApplyMetadata(constructable.gameObject, moduleEntity);
         yield break;
     }
 }
