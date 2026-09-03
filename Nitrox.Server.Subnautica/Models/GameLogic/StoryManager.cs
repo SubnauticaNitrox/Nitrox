@@ -4,6 +4,7 @@ using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
@@ -65,7 +66,7 @@ internal sealed class StoryManager : ISummarize
     }
 
     /// <param name="instantaneous">Whether we should make Aurora explode instantly or after a short countdown</param>
-    public void BroadcastExplodeAurora(bool instantaneous)
+    public async Task BroadcastExplodeAurora(bool instantaneous)
     {
         // Calculations from CrashedShipExploder.OnConsoleCommand_countdownship()
         // We add 3 seconds to the cooldown (Subnautica adds only 1) so that players have enough time to receive the packet and process it
@@ -88,10 +89,10 @@ internal sealed class StoryManager : ISummarize
             logger.ZLogInformation($"Aurora's explosion countdown will start in 3 seconds");
         }
 
-        packetSender.SendPacketToAllAsync(new AuroraAndTimeUpdate(GetTimeData(), false));
+        await packetSender.SendPacketToAllAsync(new AuroraAndTimeUpdate(GetTimeData(), false));
     }
 
-    public void BroadcastRestoreAurora()
+    public async Task BroadcastRestoreAurora()
     {
         AuroraWarningTimeMs = timeService.GameTime.TotalMilliseconds;
         AuroraCountdownTimeMs = GenerateDeterministicAuroraTime(options.Value.Seed);
@@ -105,7 +106,7 @@ internal sealed class StoryManager : ISummarize
             StoryGoalData.CompletedGoals.Remove(eventKey);
         }
 
-        packetSender.SendPacketToAllAsync(new AuroraAndTimeUpdate(GetTimeData(), true));
+        await packetSender.SendPacketToAllAsync(new AuroraAndTimeUpdate(GetTimeData(), true));
         logger.ZLogInformation($"Restored Aurora, will explode again in {GetMinutesBeforeAuroraExplosion():@minutes} minutes");
     }
 
@@ -126,7 +127,7 @@ internal sealed class StoryManager : ISummarize
     ///     Clears the already completed sunbeam events to come and broadcasts it to all players along with the rescheduling of
     ///     the specified sunbeam event.
     /// </summary>
-    public void StartSunbeamEvent(string sunbeamEventKey)
+    public async Task StartSunbeamEvent(string sunbeamEventKey)
     {
         int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(sunbeamEventKey);
         if (beginIndex == -1)
@@ -138,7 +139,7 @@ internal sealed class StoryManager : ISummarize
         {
             StoryGoalData.CompletedGoals.Remove(PlaySunbeamEvent.SunbeamGoals[i]);
         }
-        packetSender.SendPacketToAllAsync(new PlaySunbeamEvent(sunbeamEventKey));
+        await packetSender.SendPacketToAllAsync(new PlaySunbeamEvent(sunbeamEventKey));
     }
 
     public AuroraEventData MakeAuroraData()

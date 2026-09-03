@@ -1,8 +1,7 @@
 using FMOD.Studio;
-using NitroxClient.GameLogic;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
@@ -21,8 +20,9 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
     private bool throttleApplied;
     private float steeringWheelYaw;
 
-    public void Awake()
+    public new void Awake()
     {
+        base.Awake();
         subControl = GetComponent<SubControl>();
         SetupSound();
     }
