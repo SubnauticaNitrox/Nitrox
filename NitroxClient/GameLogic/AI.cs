@@ -23,7 +23,7 @@ public sealed class AI
     /// </summary>
     private readonly HashSet<Type> creatureActionWhitelist =
     [
-        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops), typeof(Poop)
+        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops), typeof(Poop), typeof(ProtectCrashHome)
     ];
 
     /// <summary>
@@ -32,7 +32,7 @@ public sealed class AI
     /// </summary>
     private readonly HashSet<Type> syncedCreatureWhitelist =
     [
-        typeof(ReaperLeviathan), typeof(SeaDragon), typeof(SeaTreader), typeof(GhostLeviathan)
+        typeof(ReaperLeviathan), typeof(SeaDragon), typeof(SeaTreader), typeof(GhostLeviathan), typeof(Crash)
     ];
 
     public AI(IPacketSender packetSender)
@@ -93,6 +93,22 @@ public sealed class AI
         {
             attackLastTarget.currentTarget = targetObject;
         }
+    }
+
+    /// <summary>
+    /// Replicates the attack triggered by grabbing a <see cref="Crash"/> with the Propulsion Cannon and releasing it
+    /// TODO: We have a lot of single-entity behaviours here like AttackCyclopsTargetChanged etc. Should we refactor this? 
+    /// </summary>
+    public static void CrashAttackLastTarget(NitroxId creatureId, NitroxId targetId)
+    {
+        if (!NitroxEntity.TryGetComponentFrom(creatureId, out Crash crash) ||
+            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject))
+        {
+            return;
+        }
+
+        crash.lastTarget.SetTarget(targetObject);
+        crash.AttackLastTarget();
     }
 
     public static void AttackCyclopsTargetChanged(NitroxId creatureId, NitroxId targetId, float aggressiveToNoiseAmount)
