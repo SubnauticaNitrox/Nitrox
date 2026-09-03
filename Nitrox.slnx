@@ -8,6 +8,7 @@
     <File Path="Nitrox.Shared.props" />
     <File Path="Nitrox.Shared.targets" />
     <File Path="Nitrox.slnx.DotSettings" />
+    <File Path="NuGet.config" />
   </Folder>
   <Project Path="Nitrox.Launcher/Nitrox.Launcher.csproj" />
   <Project Path="Nitrox.Assets.Subnautica/Nitrox.Assets.Subnautica.shproj" />
