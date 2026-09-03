@@ -75,7 +75,7 @@ internal sealed class ZLoggerAtomicConsoleLoggerProvider : ILoggerProvider, ISup
 
         public void Post(IZLoggerEntry log)
         {
-            if (log.TryGetProperty(out AtomicScope scope))
+            if (log.TryGetFirstProperty(out AtomicScope scope))
             {
                 scope.Locker = postLocker;
                 scope.AddLogEntry(log, Processor);
