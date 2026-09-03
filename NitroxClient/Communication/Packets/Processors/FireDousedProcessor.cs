@@ -6,8 +6,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProcessor<FireDoused>
+internal sealed class FireDousedProcessor(Fires fires, Entities entities) : IClientPacketProcessor<FireDoused>
 {
+    private readonly Fires fires = fires;
     private readonly Entities entities = entities;
 
     /// <summary>
@@ -21,6 +22,14 @@ internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProc
         Fire fire = fireGameObject.RequireComponentInChildren<Fire>();
 
         float douseAmount = fire.livemixin.health - packet.Health;
+
+        if (fires.WasDousedRecently(packet.Id))
+        {
+            // Both players are dousing the fire at the same time.
+            // Use DouseAmount instead of Health so the effects stack.
+            douseAmount = packet.DouseAmount;
+        }
+
         if (!packet.IsExtinguished)
         {
             // Prevents a desync where the fire could extinguish for one player but not another
@@ -36,6 +45,7 @@ internal sealed class FireDousedProcessor(Entities entities) : IClientPacketProc
         }
         else
         {
+            // Fire health went up
             fire.livemixin.health = packet.Health;
         }
 
