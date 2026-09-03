@@ -158,6 +158,7 @@ internal static partial class ServiceCollectionExtensions
             services.AddHostedSingletonService<WorldService>()
                     .AddHostedSingletonService<TimeService>()
                     .AddHostedSingletonService<FmodService>()
+                    .AddHostedSingletonService<BanService>()
                     .AddSingleton<Func<WorldService>>(provider => provider.GetRequiredService<WorldService>)
                     .AddSingleton<JoiningManager>()
                     .AddSingleton<BuildingManager>()

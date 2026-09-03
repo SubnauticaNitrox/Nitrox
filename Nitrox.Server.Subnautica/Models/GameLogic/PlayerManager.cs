@@ -14,11 +14,12 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Communication;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 // TODO: This manager should only handle player data. Move connection related state to other managers.
-internal sealed partial class PlayerManager(SessionManager sessionManager, IOptions<SubnauticaServerOptions> options, ILogger<PlayerManager> logger) : ISessionCleaner
+internal sealed partial class PlayerManager(SessionManager sessionManager, BanService banService, IOptions<SubnauticaServerOptions> options, ILogger<PlayerManager> logger) : ISessionCleaner
 {
     [GeneratedRegex(NitroxConstants.PLAYER_NAME_VALID_REGEX, RegexOptions.NonBacktracking)]
     private static partial Regex PlayerNameRegex();
@@ -29,6 +30,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
     private readonly SessionManager sessionManager = sessionManager;
+    private readonly BanService banService = banService;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ILogger<PlayerManager> logger = logger;
     private PeerId currentPlayerId;
@@ -70,6 +72,12 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
         PlayerSettings playerSettings,
         AuthenticationContext authenticationContext)
     {
+        if (banService.IsBanned(endPoint.Address))
+        {
+            MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.PLAYER_BANNED;
+            return new MultiplayerSessionReservation(sessionId, rejectedState);
+        }
+
         if (Math.Min(reservedPlayerNames.Count - 1, 0) >= options.Value.MaxConnections)
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
