@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
 namespace Nitrox.Test.Model.Platforms;
 
 /// <summary>
@@ -5,25 +8,28 @@ namespace Nitrox.Test.Model.Platforms;
 /// </summary>
 /// <param name="platform">case-insensitive platform, i.e: linux, windows, osx</param>
 [AttributeUsage(AttributeTargets.Method)]
-internal sealed class OSTestMethodAttribute(OperatingSystems platform) : TestMethodAttribute
+internal sealed class OSTestMethodAttribute(
+    OperatingSystems platform,
+    [CallerFilePath] string callerFilePath = "",
+    [CallerLineNumber] int callerLineNumber = -1
+) : TestMethodAttribute(callerFilePath, callerLineNumber)
 {
     private readonly OperatingSystems platform = platform;
 
-    public override TestResult[] Execute(ITestMethod testMethod)
+    public override Task<TestResult[]> ExecuteAsync(ITestMethod testMethod)
     {
         if (!OperatingSystem.IsOSPlatform(GetPlatformString()))
         {
-            return
-            [
+            return Task.FromResult(new TestResult[]
+            {
                 new TestResult
                 {
                     Outcome = UnitTestOutcome.Inconclusive,
                     TestContextMessages = $"This test can only be run on {GetPlatformString()}"
                 }
-            ];
+            });
         }
-
-        return base.Execute(testMethod);
+        return base.ExecuteAsync(testMethod);
     }
 
     private string GetPlatformString() =>
