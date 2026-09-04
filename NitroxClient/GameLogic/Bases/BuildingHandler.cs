@@ -423,8 +423,5 @@ public partial class BuildingHandler
         {
             Main = null;
         }
-        BuildQueue?.Clear();
-        BasesCooldown?.Clear();
-        Operations?.Clear();
     }
 }
