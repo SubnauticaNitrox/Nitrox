@@ -149,7 +149,8 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, IOpti
                                 new Dictionary<string, PingInstancePreference>(),
                                 [],
                                 false,
-                                true
+                                true,
+                                false
             );
             allPlayersByName[playerContext.PlayerName] = player;
         }

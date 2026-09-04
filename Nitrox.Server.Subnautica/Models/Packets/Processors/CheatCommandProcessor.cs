@@ -14,5 +14,6 @@ internal sealed class CheatCommandProcessor(ILogger<CheatCommandProcessor> logge
         }
 
         logger.ZLogInformation($"{context.Sender.Name} used cheat command: '{packet.Command}'");
+        context.Sender.HasUsedConsole = true;
     }
 }

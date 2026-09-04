@@ -42,6 +42,8 @@ public class NitroxSettingsManager
             MainMenuServerListPanel.Main.RefreshServerEntries();
         }));
 
+        AddSetting("Nitrox_Settings_Gameplay", new Setting("Nitrox_WantAchievements", NitroxPrefs.WantAchievements, want => NitroxPrefs.WantAchievements.Value = want));
+
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_ResyncBuildings", () =>

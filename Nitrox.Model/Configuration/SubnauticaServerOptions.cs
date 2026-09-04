@@ -40,6 +40,9 @@ public sealed partial class SubnauticaServerOptions
     [PropertyDescription("Possible values:", typeof(Perms))]
     public Perms DefaultPlayerPerm { get; set; } = Perms.DEFAULT;
 
+    [PropertyDescription("Possible values:", typeof(AchievementsMode))]
+    public AchievementsMode AchievementsMode { get; set; } = AchievementsMode.ACHIEVEMENTS_UNLESS_CHEATING;
+
     [PropertyDescription("If true, players using localhost get admin by default - disable if you're using a proxy server")]
     public bool LocalhostIsAdmin { get; set; } = true;
 

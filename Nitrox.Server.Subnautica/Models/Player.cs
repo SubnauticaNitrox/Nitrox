@@ -61,6 +61,7 @@ namespace Nitrox.Server.Subnautica.Models
         public ThreadSafeSet<NitroxId> OutOfCellVisibleEntities { get; set; } = [];
         public bool InPrecursor { get; set; }
         public bool DisplaySurfaceWater { get; set; }
+        public bool HasUsedConsole { get; set; }
 
         public PlayerEntity Entity { get; set; }
 
@@ -68,7 +69,7 @@ namespace Nitrox.Server.Subnautica.Models
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor,
-                      bool displaySurfaceWater)
+                      bool displaySurfaceWater, bool hasUsedConsole)
         {
             Id = id;
             SessionId = sessionId;
@@ -93,6 +94,7 @@ namespace Nitrox.Server.Subnautica.Models
             PinnedRecipePreferences = new(pinnedRecipePreferences);
             InPrecursor = inPrecursor;
             DisplaySurfaceWater = displaySurfaceWater;
+            HasUsedConsole = hasUsedConsole;
         }
 
         public static bool operator ==(Player? left, Player? right)
