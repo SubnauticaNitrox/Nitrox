@@ -118,6 +118,12 @@
                                                     </StackPanel>
                                                 </Panel>
                                                 <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
+                                                <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding AchievementsMode, Converter={converters:ToStringConverter}}">
+                                                    <Ellipse Fill="{DynamicResource BrandOnColor}" IsVisible="{Binding AchievementsEnabled}" Margin="0,0,6,0" />
+                                                    <Ellipse Fill="{DynamicResource BrandOffColor}" IsVisible="{Binding !AchievementsEnabled}" Margin="0,0,6,0" />
+                                                    <TextBlock IsVisible="{Binding AchievementsEnabled}" Text="Achievements enabled" />
+                                                    <TextBlock IsVisible="{Binding !AchievementsEnabled}" Text="Achievements disabled" />
+                                                </StackPanel>
                                                 <TextBlock TextWrapping="NoWrap" Background="Transparent"
                                                            Classes.online="{Binding IsOnline}"
                                                            ToolTip.Tip="{Binding PlayerNamesTooltip}">

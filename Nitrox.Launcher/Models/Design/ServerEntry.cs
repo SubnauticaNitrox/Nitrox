@@ -38,6 +38,10 @@ internal sealed partial class ServerEntry : ObservableObject
     private static readonly SubnauticaServerOptions serverDefaults = new();
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AchievementsEnabled))]
+    public partial AchievementsMode AchievementsMode { get; set; } = serverDefaults.AchievementsMode;
+
+    [ObservableProperty]
     public partial bool AllowCommands { get; set; } = !serverDefaults.DisableConsole;
 
     [ObservableProperty]
@@ -118,6 +122,7 @@ internal sealed partial class ServerEntry : ObservableObject
     internal ServerProcess? Process { get; private set; }
     public AvaloniaList<OutputLine> Output { get; } = [];
     public string? PlayerNamesTooltip => PlayerNames.Count == 0 ? null : string.Join(Environment.NewLine, PlayerNames);
+    public bool AchievementsEnabled => AchievementsMode != AchievementsMode.NO_ACHIEVEMENTS;
 
     /// <summary>
     ///     Gets the last process id known by this server entry.
@@ -246,6 +251,7 @@ internal sealed partial class ServerEntry : ObservableObject
         Password = config.ServerPassword;
         Seed = config.Seed;
         GameMode = config.GameMode;
+        AchievementsMode = config.AchievementsMode;
         PlayerPermissions = config.DefaultPlayerPerm;
         AutoSaveInterval = config.SaveInterval / 1000;
         MaxPlayers = config.MaxConnections;
