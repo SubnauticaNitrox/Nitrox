@@ -11,8 +11,6 @@ namespace NitroxClient.GameLogic.InitialSync;
 
 public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 {
-    private static bool storyGoalHandlerRegistered;
-
     private readonly TimeManager timeManager;
 
     public StoryGoalInitialSyncProcessor(TimeManager timeManager)
@@ -153,12 +151,7 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
         // We don't want any scheduled goal we add now to be executed before initial sync has finished, else they might not get broadcasted
         StoryGoalScheduler.main.paused = true;
-        if (!storyGoalHandlerRegistered)
-        {
-            Multiplayer.OnLoadingComplete += OnLoadingCompleteUnpauseStoryGoals;
-            Multiplayer.OnAfterMultiplayerEnd += CleanupStoryGoalHandler;
-            storyGoalHandlerRegistered = true;
-        }
+        Multiplayer.OnLoadingComplete += OnLoadingCompleteUnpauseStoryGoals;
 
         foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
         {
@@ -205,12 +198,5 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     private static void OnLoadingCompleteUnpauseStoryGoals()
     {
         StoryGoalScheduler.main.paused = false;
-    }
-
-    private static void CleanupStoryGoalHandler()
-    {
-        Multiplayer.OnLoadingComplete -= OnLoadingCompleteUnpauseStoryGoals;
-        Multiplayer.OnAfterMultiplayerEnd -= CleanupStoryGoalHandler;
-        storyGoalHandlerRegistered = false;
     }
 }

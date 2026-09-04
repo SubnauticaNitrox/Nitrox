@@ -84,13 +84,30 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public static event Action OnLoadingComplete;
-        public static event Action OnBeforeMultiplayerStart;
-        public static event Action OnAfterMultiplayerEnd;
+        private static readonly SessionScopedEvent onLoadingCompleteEvent = new();
+        private static readonly SessionScopedEvent onBeforeMultiplayerStartEvent = new();
+        private static readonly SessionScopedEvent onAfterMultiplayerEndEvent = new();
+
+        public static event Action OnLoadingComplete
+        {
+            add => onLoadingCompleteEvent.Add(value);
+            remove => onLoadingCompleteEvent.Remove(value);
+        }
+        public static event Action OnBeforeMultiplayerStart
+        {
+            add => onBeforeMultiplayerStartEvent.Add(value);
+            remove => onBeforeMultiplayerStartEvent.Remove(value);
+        }
+        public static event Action OnAfterMultiplayerEnd
+        {
+            add => onAfterMultiplayerEndEvent.Add(value);
+            remove => onAfterMultiplayerEndEvent.Remove(value);
+        }
 
         public static void SubnauticaLoadingStarted()
         {
-            OnBeforeMultiplayerStart?.Invoke();
+            onBeforeMultiplayerStartEvent.Invoke();
+            onBeforeMultiplayerStartEvent.Clear();
         }
 
         public static void SubnauticaLoadingCompleted()
@@ -103,7 +120,8 @@ namespace NitroxClient.MonoBehaviours
             else
             {
                 SetLoadingComplete();
-                OnLoadingComplete?.Invoke();
+                onLoadingCompleteEvent.Invoke();
+                onLoadingCompleteEvent.Clear();
             }
         }
 
@@ -128,7 +146,8 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Remove(waitingItem);
 
             SetLoadingComplete();
-            OnLoadingComplete?.Invoke();
+            onLoadingCompleteEvent.Invoke();
+            onLoadingCompleteEvent.Clear();
         }
 
         public void ProcessPackets()
@@ -191,7 +210,10 @@ namespace NitroxClient.MonoBehaviours
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             remotePlayerManager.RemoveAllPlayers();
 
-            OnAfterMultiplayerEnd?.Invoke();
+            onAfterMultiplayerEndEvent.Invoke();
+            onAfterMultiplayerEndEvent.Clear();
+            // In case a session ends mid-load, before SubnauticaLoadingCompleted/LoadAsync ever fired this.
+            onLoadingCompleteEvent.Clear();
 
             UnregisterConnectedDelegates();
 

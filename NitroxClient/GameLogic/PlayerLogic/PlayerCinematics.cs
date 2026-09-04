@@ -14,7 +14,6 @@ public class PlayerCinematics
     private readonly LocalPlayer localPlayer;
 
     private IntroCinematicMode lastModeToSend = IntroCinematicMode.NONE;
-    private bool cinematicsHandlerRegistered;
 
     public SessionId? IntroCinematicPartnerId = null;
 
@@ -27,9 +26,6 @@ public class PlayerCinematics
     {
         this.packetSender = packetSender;
         this.localPlayer = localPlayer;
-
-        // Register for cleanup when session ends
-        Multiplayer.OnAfterMultiplayerEnd += CleanupCinematicsHandler;
     }
 
     public void StartCinematicMode(SessionId sessionId, NitroxId controllerID, int controllerNameHash, string key)
@@ -70,10 +66,9 @@ public class PlayerCinematics
             return;
         }
 
-        if (lastModeToSend == IntroCinematicMode.NONE && !cinematicsHandlerRegistered)
+        if (lastModeToSend == IntroCinematicMode.NONE)
         {
             Multiplayer.OnLoadingComplete += OnLoadingCompleteSendCinematicMode;
-            cinematicsHandlerRegistered = true;
         }
 
         lastModeToSend = introCinematicMode;
@@ -82,16 +77,5 @@ public class PlayerCinematics
     private void OnLoadingCompleteSendCinematicMode()
     {
         SetLocalIntroCinematicMode(lastModeToSend);
-    }
-
-    private void CleanupCinematicsHandler()
-    {
-        if (cinematicsHandlerRegistered)
-        {
-            Multiplayer.OnLoadingComplete -= OnLoadingCompleteSendCinematicMode;
-            cinematicsHandlerRegistered = false;
-        }
-        Multiplayer.OnAfterMultiplayerEnd -= CleanupCinematicsHandler;
-        lastModeToSend = IntroCinematicMode.NONE;
     }
 }
