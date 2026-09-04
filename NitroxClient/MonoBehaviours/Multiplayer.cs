@@ -211,9 +211,7 @@ namespace NitroxClient.MonoBehaviours
             remotePlayerManager.RemoveAllPlayers();
 
             onAfterMultiplayerEndEvent.Invoke();
-            onAfterMultiplayerEndEvent.Clear();
-            // In case a session ends mid-load, before SubnauticaLoadingCompleted/LoadAsync ever fired this.
-            onLoadingCompleteEvent.Clear();
+            SessionScopedEvents.ClearAll();
 
             UnregisterConnectedDelegates();
 
