@@ -15,6 +15,7 @@ using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using UnityEngine;
+using LiteNetLib;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 
@@ -121,8 +122,17 @@ public static class JoinServerBackend
         }
         catch (ClientConnectionFailedException ex)
         {
-            Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
-            string msg = $"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}";
+            string reason = ex.DisconnectReason switch
+            {
+                DisconnectReason.ConnectionFailed     => Language.main.Get("Nitrox_ConnectionRefused"),
+                DisconnectReason.Timeout              => Language.main.Get("Nitrox_NoResponse"),
+                DisconnectReason.RemoteConnectionClose => Language.main.Get("Nitrox_ServerClosedConnection"),
+                DisconnectReason.ConnectionRejected   => Language.main.Get("Nitrox_ConnectionRejected"),
+                _                                     => ex.Message
+            };
+
+            Log.ErrorSensitive("Unable to contact remote server: {ip}:{port}. {reason}", serverIp, serverPort, ex.Message);
+            string msg = $"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}.\n{reason}";
 
             if (ip.IsLocalhost())
             {
