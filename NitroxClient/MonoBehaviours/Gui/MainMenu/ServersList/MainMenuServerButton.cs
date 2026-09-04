@@ -2,9 +2,10 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
+using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Serialization;
 using TMPro;
 using UnityEngine;
@@ -56,6 +57,7 @@ public class MainMenuServerButton : MonoBehaviour
             buttonText.Append(ip[^Math.Min(ip.Length, 25)..]).Append(':').Append(port);
         }
         tmp.text = buttonText.ToString();
+        _ = UpdateAchievementsIndicatorAsync(tmp, ip, port);
 
         Button multiplayerJoinButton = newGameButtonTransform.GetComponent<Button>();
         multiplayerJoinButton.onClick = new Button.ButtonClickedEvent();
@@ -181,6 +183,29 @@ public class MainMenuServerButton : MonoBehaviour
 
         MainMenuNotificationPanel.ShowLoading();
         await JoinServerBackend.StartMultiplayerClientAsync(endpoint.Address, endpoint.Port);
+    }
+
+    private async Task UpdateAchievementsIndicatorAsync(TextMeshProUGUI tmp, string ip, int port)
+    {
+        // DNS resolution can block, so keep it off the main thread.
+        IPEndPoint endpoint = await Task.Run(() => ResolveIPEndPoint(ip, port));
+        if (endpoint == null || !this || !tmp)
+        {
+            return;
+        }
+
+        AchievementsMode? achievementsMode = await ServerInfoClient.QueryAchievementsModeAsync(endpoint);
+        if (!this || !tmp)
+        {
+            return;
+        }
+
+        tmp.text += achievementsMode switch
+        {
+            null => $"\n<size=80%><color=#DDDEDEFF>{Language.main.Get("Nitrox_ServerAchievementsUnknown")}</color></size>",
+            AchievementsMode.NO_ACHIEVEMENTS => $"\n<size=80%><color=#DF4026FF>{Language.main.Get("Nitrox_ServerAchievementsDisabled")}</color></size>",
+            _ => $"\n<size=80%><color=#94DE00FF>{Language.main.Get("Nitrox_ServerAchievementsEnabled")}</color></size>"
+        };
     }
 
     private static IPEndPoint ResolveIPEndPoint(string serverIp, int serverPort)
