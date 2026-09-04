@@ -1,4 +1,6 @@
 {
+    "Nitrox_AchievementUnknown": "Unknown achievement '{ACHIEVEMENT}'. Valid options: {LIST}",
+    "Nitrox_AchievementUnlocked": "Achievement unlocked: {ACHIEVEMENT}",
     "Nitrox_AddServer": "Add Server",
     "Nitrox_AddServer_AddressDescription": "Host:",
     "Nitrox_AddServer_AddressPlaceholder": "Enter the IP or address of the server",
