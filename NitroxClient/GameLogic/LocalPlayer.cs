@@ -41,6 +41,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     public IntroCinematicMode IntroCinematicMode { get; set; }
     public bool KeepInventoryOnDeath { get; set; }
     public bool MarkDeathPointsWithBeacon { get; set; }
+    public AchievementsMode AchievementsMode { get; set; }
 
     public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
     {
@@ -54,6 +55,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         IntroCinematicMode = IntroCinematicMode.NONE;
         KeepInventoryOnDeath = false;
         MarkDeathPointsWithBeacon = false;
+        AchievementsMode = AchievementsMode.ACHIEVEMENTS_UNLESS_CHEATING;
     }
 
     public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)

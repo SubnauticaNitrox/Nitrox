@@ -19,6 +19,7 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> ChatUsed = new("Nitrox.chatUsed");
         public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
         public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);
+        public static readonly NitroxPref<bool> WantAchievements = new("Nitrox.wantAchievements", true);
         /// <summary>
         /// In seconds. <see cref="MovementReplicator"/>
         /// </summary>

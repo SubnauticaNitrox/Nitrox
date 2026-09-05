@@ -38,6 +38,7 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => SetUsedItems(sync.UsedItems));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
         AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow, sync.MarkDeathPointsWithBeacon));
+        AddStep(sync => ApplyAchievementsState(sync.AchievementsMode, sync.HasUsedConsole));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -175,5 +176,14 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
     private void SetPlayerMarkDeathPointsWithBeacon(bool markDeathPointsWithBeacon)
     {
         localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
+    }
+
+    private void ApplyAchievementsState(AchievementsMode achievementsMode, bool hasUsedConsole)
+    {
+        localPlayer.AchievementsMode = achievementsMode;
+        if (hasUsedConsole)
+        {
+            DevConsole.SetUsedConsole(true);
+        }
     }
 }

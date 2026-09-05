@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Threading.Channels;
 using LiteNetLib;
 using LiteNetLib.Layers;
 using LiteNetLib.Utils;
+using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets.Core;
@@ -22,8 +24,13 @@ namespace Nitrox.Server.Subnautica.Models.Communication;
 
 internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
 {
+    // Bounds memory if flooded with distinct source addresses, as may come from spoofed source addresses
+    private const int MAX_TRACKED_INFO_QUERY_ADDRESSES = 10_000;
+    private const long INFO_QUERY_COOLDOWN_MS = 2_000;
+
     private readonly Dictionary<int, PeerContext> contextByPeerId = [];
     private readonly Dictionary<SessionId, PeerContext> contextBySessionId = [];
+    private readonly ConcurrentDictionary<IPAddress, long> lastInfoQueryTicksByAddress = new();
     private readonly Lock contextLock = new();
     private readonly NetDataWriter dataWriter = new();
     private readonly EventBasedNetListener listener;
@@ -57,6 +64,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         listener.PeerDisconnectedEvent += PeerDisconnected;
         listener.NetworkReceiveEvent += NetworkDataReceived;
         listener.ConnectionRequestEvent += OnConnectionRequest;
+        listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
 
         server.ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length;
         server.BroadcastReceiveEnabled = true;
@@ -335,6 +343,33 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             }
             return ProcessorTarget.INVALID;
         }
+    }
+
+    /// <summary>
+    /// Message sender for messages sent by clients not yet authenticated
+    /// </summary>
+    private void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
+    {
+        if (!options.Value.AnswerServerInfoQueries || messageType != UnconnectedMessageType.BasicMessage || reader.GetString() != ServerInfoConstants.INFO_REQUEST_STRING)
+        {
+            return;
+        }
+
+        long now = Environment.TickCount64;
+        if (lastInfoQueryTicksByAddress.TryGetValue(remoteEndPoint.Address, out long lastTicks) && now - lastTicks < INFO_QUERY_COOLDOWN_MS)
+        {
+            return;
+        }
+        if (lastInfoQueryTicksByAddress.Count >= MAX_TRACKED_INFO_QUERY_ADDRESSES)
+        {
+            lastInfoQueryTicksByAddress.Clear();
+        }
+        lastInfoQueryTicksByAddress[remoteEndPoint.Address] = now;
+
+        NetDataWriter writer = new();
+        writer.Put(ServerInfoConstants.INFO_RESPONSE_STRING);
+        writer.Put((byte)options.Value.AchievementsMode);
+        server.SendUnconnectedMessage(writer, remoteEndPoint);
     }
 
     private void SendPacket(Packet packet, NetPeer peer)

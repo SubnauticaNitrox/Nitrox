@@ -17,6 +17,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const int LINE_CHAR_LIMIT = 255;
         private const int MESSAGES_LIMIT = 64;
         private const float TOGGLED_TRANSPARENCY = 0.4f;
+        // Matches Nitrox.Server.Subnautica.Models.Commands.UnlockAchievementCommand's derived command name (class name minus "Command", lowercased).
+        private const string UNLOCK_ACHIEVEMENT_COMMAND_NAME = "unlockachievement";
 
         private static readonly Queue<ChatLogEntry> entries = [];
         private Image[] backgroundImages;
@@ -77,6 +79,15 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 {
                     string commandName = InputText.Substring(1);
                     this.Resolve<IPacketSender>().Send(new TextAutoComplete(commandName, TextAutoComplete.AutoCompleteContext.COMMAND_NAME));
+                }
+                // Achievement names only exist in the game, so this is completed locally instead of via the server.
+                else if (hasInputChanged && Regex.IsMatch(InputText, $@"^/{UNLOCK_ACHIEVEMENT_COMMAND_NAME}\s+\w*$", RegexOptions.IgnoreCase))
+                {
+                    string partialName = InputText.Substring(InputText.LastIndexOf(' ') + 1);
+                    string match = Enum.GetNames(typeof(GameAchievements.Id))
+                                        .Where(name => name != nameof(GameAchievements.Id.None))
+                                        .FirstOrDefault(name => name.StartsWith(partialName, StringComparison.OrdinalIgnoreCase));
+                    AutoCompleteText = match != null ? $"/{UNLOCK_ACHIEVEMENT_COMMAND_NAME} {match}" : "";
                 }
                 if (!string.IsNullOrWhiteSpace(AutoCompleteText))
                 {
