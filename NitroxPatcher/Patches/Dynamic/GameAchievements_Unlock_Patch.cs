@@ -14,15 +14,17 @@ public sealed partial class GameAchievements_Unlock_Patch : NitroxPatch, IDynami
 
     public static bool Prefix(GameAchievements.Id id)
     {
-        if (!NitroxPrefs.WantAchievements.Value || !GameModeUtils.AllowsAchievements())
+        if (!NitroxPrefs.WantAchievements.Value)
         {
             return false;
         }
 
+        // TODO: check during review - Do we allow creative here? It's basically cheating, so we could allow in creative with this bypass
+        bool hasCheated = !GameModeUtils.AllowsAchievements() || DevConsole.HasUsedConsole();
         bool allowed = Resolve<LocalPlayer>().AchievementsMode switch
         {
             AchievementsMode.NO_ACHIEVEMENTS => false,
-            AchievementsMode.ACHIEVEMENTS_UNLESS_CHEATING => !DevConsole.HasUsedConsole(),
+            AchievementsMode.ACHIEVEMENTS_UNLESS_CHEATING => !hasCheated,
             AchievementsMode.ACHIEVEMENTS_WITH_CHEATING => true,
             _ => true
         };
