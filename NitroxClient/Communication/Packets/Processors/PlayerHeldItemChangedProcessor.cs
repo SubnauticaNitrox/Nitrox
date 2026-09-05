@@ -42,11 +42,6 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
         Pickupable pickupable = item.GetComponent<Pickupable>();
         Validate.IsTrue(pickupable);
 
-        // NB: Do NOT assert pickupable.inventoryItem here. It is null for items like the
-        // Mobile Vehicle Bay (Constructor), which is a Pickupable+PlayerTool without an
-        // inventory wrapper (see issue #2460). All uses below go through Pickupable directly,
-        // which is equivalent for normal items (inventoryItem.item is the same Pickupable).
-
         ItemsContainer inventory = player.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
 
@@ -94,7 +89,6 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 {
                     floater.collider.enabled = true;
                 }
-                // inventoryItem can be null for items like the Mobile Vehicle Bay (Constructor, #2460)
                 pickupable.Reparent(inventory.tr);
                 foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
                 {
@@ -111,14 +105,12 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 break;
 
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
-                // inventoryItem can be null for items like the Mobile Vehicle Bay (Constructor, #2460)
                 pickupable.Reparent(player.ItemAttachPoint);
                 pickupable.SetVisible(true);
                 Utils.SetLayerRecursively(item, viewModelLayer);
                 break;
 
             case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM:
-                // inventoryItem can be null for items like the Mobile Vehicle Bay (Constructor, #2460)
                 pickupable.Reparent(inventory.tr);
                 pickupable.SetVisible(false);
                 Utils.SetLayerRecursively(item, defaultLayer);
