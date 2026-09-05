@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:models="clr-namespace:Nitrox.Launcher.Models.Design"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Nitrox.Launcher.Models.Controls.ServerStatusControl"
+             x:DataType="models:ServerEntry">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="StatusElementSpacing">12</x:Double>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+        <Style Selector="Ellipse">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="Width" Value="6" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="TextBlock.online:pointerover">
+            <Setter Property="TextDecorations" Value="Underline" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel Spacing="{StaticResource StatusElementSpacing}">
+        <!-- Loading state -->
+        <StackPanel IsVisible="{Binding IsLoading}" Orientation="Horizontal">
+            <Ellipse Fill="{DynamicResource SystemAccentColor}" />
+            <TextBlock Text="{Binding LoadingStage, FallbackValue='Loading...'}" />
+        </StackPanel>
+
+        <!-- Ready state -->
+        <StackPanel IsVisible="{Binding !IsLoading}"
+                    Spacing="{StaticResource StatusElementSpacing}">
+            <!-- Online state -->
+            <StackPanel IsVisible="{Binding IsOnline}">
+                <Ellipse Fill="{DynamicResource BrandOnColor}" />
+                <TextBlock Text="Online" />
+            </StackPanel>
+
+            <!-- Offline state -->
+            <StackPanel IsVisible="{Binding !IsOnline}">
+                <Ellipse Fill="{DynamicResource BrandOffColor}" />
+                <TextBlock Text="Offline" />
+            </StackPanel>
+
+            <!-- Game mode -->
+            <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}, FallbackValue=Survival}" />
+
+            <!-- Player count -->
+            <TextBlock TextWrapping="NoWrap" Background="Transparent"
+                       Classes.online="{Binding IsOnline, FallbackValue=False}"
+                       ToolTip.Tip="{Binding PlayerNamesTooltip, FallbackValue=''}">
+                <Run Text="{Binding PlayerCount, FallbackValue=0}" />
+                <Run Text=" / " />
+                <Run Text="{Binding MaxPlayers, FallbackValue=100}" />
+                <Run Text=" playing" />
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

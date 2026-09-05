@@ -107,30 +107,7 @@
                                                 Classes="description"
                                                 HorizontalAlignment="Left"
                                                 Orientation="Horizontal">
-                                                <Panel>
-                                                    <StackPanel IsVisible="{Binding IsOnline}" Orientation="Horizontal">
-                                                        <Ellipse Fill="{DynamicResource BrandOnColor}" Margin="0,0,6,0" />
-                                                        <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
-                                                    </StackPanel>
-                                                    <StackPanel IsVisible="{Binding !IsOnline}" Orientation="Horizontal">
-                                                        <Ellipse Fill="{DynamicResource BrandOffColor}" Margin="0,0,6,0" />
-                                                        <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
-                                                    </StackPanel>
-                                                </Panel>
-                                                <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
-                                                <TextBlock TextWrapping="NoWrap" Background="Transparent"
-                                                           Classes.online="{Binding IsOnline}"
-                                                           ToolTip.Tip="{Binding PlayerNamesTooltip}">
-                                                    <Run Text="{Binding PlayerCount}" />
-                                                    <Run Text=" / " />
-                                                    <Run Text="{Binding MaxPlayers}" />
-                                                    <Run Text=" playing" />
-                                                    <TextBlock.Styles>
-                                                        <Style Selector="TextBlock.online:pointerover">
-                                                            <Setter Property="TextDecorations" Value="Underline" />
-                                                        </Style>
-                                                    </TextBlock.Styles>
-                                                </TextBlock>
+                                                <controls:ServerStatusControl />
                                             </WrapPanel>
                                         </StackPanel>
                                         <StackPanel
