@@ -1,6 +1,5 @@
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using LiteNetLib;
@@ -295,11 +294,11 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
                         ref AuthProcessorContext context = ref lease.GetRef();
                         if (context == null)
                         {
-                            context = new AuthProcessorContext(player, this);
+                            context = new AuthProcessorContext(player!, this); // ! operator: Player can't be null if AUTHENTICATED.
                         }
                         else
                         {
-                            context.Sender = player;
+                            context.Sender = player!; // ! operator: Player can't be null if AUTHENTICATED.
                         }
                         await processor.Execute(context, packet);
                     }
@@ -314,7 +313,7 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
             logger.ZLogError(ex, $"Error in packet processor {processor.GetType().Name:@TypeName}");
         }
 
-        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, [NotNullIfNotNull(nameof(player))] out Models.Player? player)
+        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, out Models.Player? player)
         {
             player = null;
             if (processor == null)
