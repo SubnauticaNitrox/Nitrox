@@ -18,7 +18,7 @@ public sealed class FireDoused : Packet
     public bool IsExtinguished => Health <= 0;
 
     /// <param name="id">The Fire id</param>
-    /// <param name="health">The new health of the fire. If less than zero, fire is extinguished.</param>
+    /// <param name="health">The new health of the fire. If less than or equal to zero, fire is extinguished.</param>
     /// <param name="douseAmount">The decrease in health from the old health.</param>
     public FireDoused(NitroxId id, float health, float douseAmount)
     {

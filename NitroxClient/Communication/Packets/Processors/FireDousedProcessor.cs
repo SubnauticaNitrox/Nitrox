@@ -12,8 +12,7 @@ internal sealed class FireDousedProcessor(Fires fires, Entities entities) : ICli
     private readonly Entities entities = entities;
 
     /// <summary>
-    ///     Finds and executes <see cref="Fire.Douse(float)" />. If the fire is extinguished, it will pass a large float to
-    ///     trigger the private
+    ///     Finds and executes <see cref="Fire.Douse(float)" />. If the fire is extinguished, it will invoke the
     ///     <see cref="Fire.Extinguished()" /> method.
     /// </summary>
     public Task Process(ClientProcessorContext context, FireDoused packet)

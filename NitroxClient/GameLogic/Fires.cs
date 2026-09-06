@@ -92,9 +92,9 @@ namespace NitroxClient.GameLogic
 
                 if (existingFire.TryGetNitroxId(out NitroxId existingFireId) && existingFireId != fireData.FireId)
                 {
-                    Log.Warn($"Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {existingFireId} with Id {fireData.CyclopsId}");
+                    Log.Warn($"Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {existingFireId} with Id {fireData.FireId}");
 
-                    NitroxEntity.SetNewId(existingFire.gameObject, fireData.CyclopsId);
+                    NitroxEntity.SetNewId(existingFire.gameObject, fireData.FireId);
                 }
 
                 return;
