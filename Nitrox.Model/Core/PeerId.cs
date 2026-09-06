@@ -1,27 +1,32 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace Nitrox.Model.Core;
 
 /// <summary>
 ///     Globally unique ID of the networked entity. Is 0 for server. Starts from 1 if player.
 /// </summary>
-[DebuggerDisplay($"{{{nameof(id)}}}")]
+[DebuggerDisplay($"{{{nameof(Id)}}}")]
+[DataContract]
+[Serializable]
 public readonly record struct PeerId : IComparable<PeerId>
 {
     public const uint SERVER_ID = 0;
 
-    private readonly uint id;
+    [DataMember(Order = 1)]
+    public readonly uint Id;
 
-    public bool IsServer => id == SERVER_ID;
+    public bool IsServer => Id == SERVER_ID;
 
-    private PeerId(uint id)
+    public PeerId(uint id)
     {
-        this.id = id;
+        Id = id;
     }
 
-    public static implicit operator uint(PeerId id) => id.id;
+    public static implicit operator uint(PeerId id) => id.Id;
 
     public static implicit operator PeerId(uint id) => new(id);
-    public int CompareTo(PeerId other) => id.CompareTo(other.id);
+
+    public int CompareTo(PeerId other) => Id.CompareTo(other.Id);
 }
