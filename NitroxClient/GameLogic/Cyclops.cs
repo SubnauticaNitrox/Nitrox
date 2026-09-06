@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic
                 decoyManager.Invoke(nameof(CyclopsDecoyManager.LaunchWithDelay), 3f);
                 decoyManager.decoyLaunchButton.UpdateText();
                 decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
-                decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
+                decoyManager.subRoot.BroadcastMessage(nameof(CyclopsDecoyManager.UpdateTotalDecoys), decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
                 CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponentInChildren<CyclopsDecoyLaunchButton>();
                 decoyLaunchButton.StartCooldown();
             }
@@ -107,6 +107,10 @@ namespace NitroxClient.GameLogic
             }
 
             int index = Array.IndexOf(subRoot.damageManager.damagePoints, damagePoint);
+            if (index == -1)
+            {
+                return;
+            }
 
             CyclopsDamagePointRepaired packet = new(subId, index, repairAmount);
             packetSender.Send(packet);
@@ -121,10 +125,10 @@ namespace NitroxClient.GameLogic
             yield return Yielders.WaitFor3Seconds;
             fire.fireSuppressionActive = true;
             fire.subRoot.fireSuppressionState = true;
-            fire.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
+            fire.subRoot.BroadcastMessage(nameof(SubFloodAlarm.NewAlarmState), null, SendMessageOptions.DontRequireReceiver);
             fire.Invoke(nameof(SubFire.CancelFireSuppression), fire.fireSuppressionSystemDuration);
             float doorCloseDuration = 30f;
-            fire.gameObject.BroadcastMessage("TemporaryLock", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
+            fire.gameObject.BroadcastMessage(nameof(Openable.TemporaryLock), doorCloseDuration, SendMessageOptions.DontRequireReceiver);
         }
     }
 }

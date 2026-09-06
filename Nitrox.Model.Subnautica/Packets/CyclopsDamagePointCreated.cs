@@ -7,6 +7,9 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class CyclopsDamagePointCreated : Packet
 {
+    public NitroxId Id { get; }
+    public int DamagePointIndex { get; }
+
     /// <param name="id">The Cyclops id</param>
     /// <param name="damagePointIndex">
     ///     The created point's index in <see cref="CyclopsExternalDamageManager.damagePoints" />
@@ -15,13 +18,5 @@ public class CyclopsDamagePointCreated : Packet
     {
         Id = id;
         DamagePointIndex = damagePointIndex;
-    }
-
-    public NitroxId Id { get; }
-    public int DamagePointIndex { get; }
-
-    public override string ToString()
-    {
-        return $"[CyclopsDamagePointCreated Id: {Id} DamagePointIndex: {DamagePointIndex}]";
     }
 }
