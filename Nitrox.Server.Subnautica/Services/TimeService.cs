@@ -2,11 +2,11 @@ using System.Diagnostics;
 using Nitrox.Model.Networking;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Nitrox.Server.Subnautica.Services;
 using Timer = System.Timers.Timer;
 
-namespace Nitrox.Server.Subnautica.Models.GameLogic;
+namespace Nitrox.Server.Subnautica.Services;
 
 internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSyncer, ILoggerFactory loggerFactory, ILogger<TimeService> logger)
     : BackgroundService, ISummarize, IHibernate
@@ -41,28 +41,28 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     private readonly Stopwatch stopWatch = new();
 
     private double activeRealTimeSeconds;
+    private double gameTimeSeconds;
 
     public TimeSkippedEventHandler? TimeSkipped;
 
     /// <summary>
-    ///     Gets the total game time the server was actively simulating the game. See
-    ///     <see cref="HibernateService.IsSleeping" /> for more information.
+    ///     Gets the total game time. Includes time skips but excludes time during <see cref="HibernateService.IsSleeping" />.
     /// </summary>
     /// <remarks>
     ///     Initial value is <see cref="DEFAULT_STARTING_GAME_TIME_SECONDS" /> for fresh worlds.
     /// </remarks>
     public TimeSpan GameTime
     {
-        get => ActiveTime + TimeSpan.FromSeconds(DEFAULT_STARTING_GAME_TIME_SECONDS);
+        get => TimeSpan.FromSeconds(stopWatch.Elapsed.TotalSeconds + gameTimeSeconds + DEFAULT_STARTING_GAME_TIME_SECONDS);
         internal set
         {
             value -= TimeSpan.FromSeconds(DEFAULT_STARTING_GAME_TIME_SECONDS);
-            activeRealTimeSeconds = double.Max(0, value.TotalSeconds - stopWatch.Elapsed.TotalSeconds);
+            gameTimeSeconds = double.Max(0, value.TotalSeconds - stopWatch.Elapsed.TotalSeconds);
         }
     }
 
     /// <summary>
-    ///     Gets the total time the server was actively simulating the game. This excludes time during
+    ///     Gets the total time the server was actively simulating the game. Excludes game time skips and time during
     ///     <see cref="HibernateService.IsSleeping" />.
     /// </summary>
     /// <remarks>
@@ -82,17 +82,12 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     /// </remarks>
     public int GameDay => (int)Math.Ceiling(GameTime / TimeSpan.FromMinutes(20));
 
-    public void ResetCount()
-    {
-        stopWatch.Reset();
-    }
-
     /// <summary>
     ///     Set current time depending on the current time in the day (replication of SN's system, see DayNightCycle.cs
     ///     commands for more information).
     /// </summary>
     /// <param name="type">Time to which you want to get to.</param>
-    public void ChangeTime(StoryManager.TimeModification type)
+    public async Task ChangeTimeAsync(StoryManager.TimeModification type)
     {
         TimeSpan skippedTime = TimeSpan.Zero;
         switch (type)
@@ -113,7 +108,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
             GameTime += skippedTime;
             TimeSkipped?.Invoke(skippedTime);
 
-            packetSender.SendPacketToAllAsync(MakeTimePacket());
+            await packetSender.SendPacketToAllAsync(MakeTimePacket());
         }
     }
 
@@ -125,7 +120,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     /// <summary>
     ///     Skips time by the specified amount and broadcasts the update to all players.
     /// </summary>
-    public void SkipTime(TimeSpan skipAmount)
+    public async Task SkipTimeAsync(TimeSpan skipAmount)
     {
         if (skipAmount <= TimeSpan.Zero)
         {
@@ -134,7 +129,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
         GameTime += skipAmount;
         TimeSkipped?.Invoke(skipAmount);
-        packetSender.SendPacketToAllAsync(MakeTimePacket());
+        await packetSender.SendPacketToAllAsync(MakeTimePacket());
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -160,7 +155,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
     Task IEvent<IHibernate.SleepArgs>.OnEventAsync(IHibernate.SleepArgs args)
     {
         stopWatch.Stop();
-        resyncTimer.Period = TimeSpan.FromMicroseconds(uint.MaxValue); // uint.MaxValue removes internal .NET timer from ever ticking.
+        resyncTimer.Period = Timeout.InfiniteTimeSpan;
         return Task.CompletedTask;
     }
 
@@ -173,6 +168,7 @@ internal sealed class TimeService(IPacketSender packetSender, NtpSyncer ntpSynce
 
     Task IEvent<ISummarize.Args>.OnEventAsync(ISummarize.Args args)
     {
+        logger.ZLogInformation($"Play time: {ActiveTime.ToString(@"h\h\ m\m\ s\s")}");
         logger.ZLogInformation($"Current time: day {GameDay} ({Math.Floor(GameTime.TotalSeconds)}s)");
         return Task.CompletedTask;
     }

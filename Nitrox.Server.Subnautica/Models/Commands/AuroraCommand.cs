@@ -13,23 +13,22 @@ internal sealed class AuroraCommand(StoryManager storyManager) : ICommandHandler
     private readonly StoryManager storyManager = storyManager;
 
     [Description("Which action to apply to Aurora")]
-    public Task Execute(ICommandContext context, AuroraAction action)
+    public async Task Execute(ICommandContext context, AuroraAction action)
     {
         switch (action)
         {
             case AuroraAction.COUNTDOWN:
-                storyManager.BroadcastExplodeAurora(false);
+                await storyManager.BroadcastExplodeAurora(false);
                 break;
             case AuroraAction.RESTORE:
-                storyManager.BroadcastRestoreAurora();
+                await storyManager.BroadcastRestoreAurora();
                 break;
             case AuroraAction.EXPLODE:
-                storyManager.BroadcastExplodeAurora(true);
+                await storyManager.BroadcastExplodeAurora(true);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(action), action, null);
         }
-        return Task.CompletedTask;
     }
 
     public enum AuroraAction
