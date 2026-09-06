@@ -117,7 +117,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         Transform introFireHolder = EscapePod.main.transform.Find("Intro");
         if (introFireHolder) // Can be null if called very early
         {
-            if (introFireHolder.TryGetComponentInChildren(out NitroxEntity fireEntity))
+            if (introFireHolder.TryGetComponentInChildren(out NitroxEntity? fireEntity))
             {
                 Resolve<Entities>().RemoveEntity(fireEntity.Id);
             }
