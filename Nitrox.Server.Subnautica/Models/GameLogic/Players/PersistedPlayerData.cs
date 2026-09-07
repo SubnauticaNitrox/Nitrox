@@ -79,7 +79,7 @@ internal sealed class PersistedPlayerData
             UsedItems = player.UsedItems?.ToList(),
             QuickSlotsBindingIds = player.QuickSlotsBindingIds,
             EquippedItems = new(player.EquippedItems),
-            Id = player.Id,
+            Id = player.PeerId,
             SpawnPosition = player.Position,
             SpawnRotation = player.Rotation,
             CurrentStats = player.Stats,
