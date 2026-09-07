@@ -31,6 +31,12 @@ public class RemotelyControlled : MonoBehaviour
             }
         }
 
+        // - non spline entities generally are dropped items/utility (like a flare or a pipe surface floater)
+        // we don't want the environment to interfere with their movement since the simulating player is already broadcasting movement
+        // that was affected by those interactions
+        // - spline entities (Creatures) follow movements based on the local game's calculations so they need to be affected by gravity
+        // to not stay blocked in the air (for leviathans and other fishes jumping out of the water)
+        // NB: WorldForces is responsible for applying gravity, currents, explosions
         if (worldForces && !followsSpline)
         {
             disabledWorldForces = worldForces.enabled;
@@ -57,8 +63,8 @@ public class RemotelyControlled : MonoBehaviour
             {
                 rigidbody.isKinematic = false;
             }
-            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
-            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, gameObject, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.Current, Vector3.zero, transform.position, EntityPositionBroadcaster.BROADCAST_INTERVAL);
+            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.Current, Vector3.zero, transform.rotation, EntityPositionBroadcaster.BROADCAST_INTERVAL);
         }
         else
         {
@@ -86,7 +92,8 @@ public class RemotelyControlled : MonoBehaviour
         }
 
         float velocity = rigidbody ? rigidbody.velocity.magnitude : 0f;
-        bool teleported = TeleportIfTooFar(position, rotation, GetTeleportThreshold(velocity));
+        float teleportThreshold = MovementHelper.GetTeleportThreshold(velocity);
+        bool teleported = MovementHelper.TeleportIfTooFar(transform, rigidbody, position, rotation, teleportThreshold);
 
         if (swimBehaviour && swimBehaviour.enabled)
         {
@@ -106,7 +113,7 @@ public class RemotelyControlled : MonoBehaviour
         smoothRotation.Target = rotation;
     }
 
-    public void UpdateKnownSplineUser(Vector3 currentPosition, Quaternion currentRotation, Vector3 destination, Vector3 destinationDirection, float velocity)
+    public void UpdateKnownSplineUser(Vector3 remotePosition, Quaternion remoteRotation, Vector3 destinationPosition, Vector3 destinationDirection, float velocity)
     {
         // ensures the object has fully spawned
         if (!gameObject.activeSelf)
@@ -114,7 +121,8 @@ public class RemotelyControlled : MonoBehaviour
             return;
         }
 
-        bool teleported = TeleportIfTooFar(currentPosition, currentRotation, GetTeleportThreshold(velocity));
+        float teleportThreshold = MovementHelper.GetTeleportThreshold(velocity);
+        bool teleported = MovementHelper.TeleportIfTooFar(transform, rigidbody, remotePosition, remoteRotation, teleportThreshold);
 
         // SwimBehaviour and WalkBehaviour will act the exact same
         if (swimBehaviour && swimBehaviour.enabled)
@@ -123,12 +131,12 @@ public class RemotelyControlled : MonoBehaviour
 
             if (!teleported)
             {
-                float distance = Vector3.Distance(currentPosition, destination);
+                float distance = Vector3.Distance(remotePosition, destinationPosition);
 
                 // avoid too short paths
                 if (distance > 0.1f)
                 {
-                    float localDistance = Vector3.Distance(transform.position, destination);
+                    float localDistance = Vector3.Distance(transform.position, destinationPosition);
 
                     adjustedVelocity *= localDistance / distance;
 
@@ -137,40 +145,13 @@ public class RemotelyControlled : MonoBehaviour
             }
 
             // Adjust the target data and velocity
-            swimBehaviour.originalTargetPosition = destination;
+            swimBehaviour.originalTargetPosition = destinationPosition;
             swimBehaviour.originalTargetDirection = destinationDirection;
             swimBehaviour.originalVelocity = adjustedVelocity;
 
             // Trigger either SwimBehaviour.GoToInternal or WalkBehaviour.GoToInternal so they use their own way to pass the data to the SplineFollowing
-            swimBehaviour.GoToInternal(destination, destinationDirection, adjustedVelocity);
+            swimBehaviour.GoToInternal(destinationPosition, destinationDirection, adjustedVelocity);
         }
-    }
-
-    private bool TeleportIfTooFar(Vector3 position, Quaternion rotation, float teleportThreshold)
-    {
-        if ((transform.position - position).sqrMagnitude <= teleportThreshold * teleportThreshold)
-        {
-            return false;
-        }
-
-        if (rigidbody)
-        {
-            rigidbody.position = position;
-            rigidbody.rotation = rotation;
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.angularVelocity = Vector3.zero;
-        }
-        else
-        {
-            transform.position = position;
-            transform.rotation = rotation;
-        }
-        return true;
-    }
-
-    private static float GetTeleportThreshold(float velocity)
-    {
-        return Mathf.Max(5f, velocity * 1.5f);
     }
 
     public static RemotelyControlled Ensure(GameObject gameObject)

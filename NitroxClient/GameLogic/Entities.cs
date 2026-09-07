@@ -137,6 +137,7 @@ namespace NitroxClient.GameLogic
             entityMetadataManager.ClearNewerMetadata();
             deletedEntitiesIds.Clear();
             simulationOwnership.ClearNewerSimulations();
+            EntityPositionBroadcaster.Instance.ClearNotSpawnedEntities();
 
             foreach (AbsoluteEntityCell absoluteEntityCell in CellsToSpawn)
             {
