@@ -151,7 +151,7 @@ public partial class BuildingHandler : MonoBehaviour
             if (modifyConstructedAmount.ConstructedAmount >= 1f)
             {
                 constructable.SetState(true, true);
-                yield return BuildingPostSpawner.ApplyPostSpawner(gameObject, modifyConstructedAmount.GhostId);
+                yield return BuildingPostSpawner.ApplyPostSpawner(constructable.gameObject, modifyConstructedAmount.GhostId);
                 yield break;
             }
             constructable.SetState(false, false);
