@@ -12,6 +12,9 @@ public class EntityPositionBroadcaster : MonoBehaviour
 {
     public static EntityPositionBroadcaster Instance;
 
+    /// <summary>
+    /// The time between two broadcasts in seconds.
+    /// </summary>
     public static readonly float BROADCAST_INTERVAL = 0.1f;
 
     /// <summary>
@@ -132,6 +135,11 @@ public class EntityPositionBroadcaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// For each tracked entity, ensures it stays in the right HashSet/Dictionary depending on its state.
+    /// Either the entity has not spawned (<see cref="notSpawnedEntityIds"/>) or it follows a spline (<see cref="splineEntities"/>)
+    /// or in the default case (<see cref="regularEntities"/>).
+    /// </summary>
     private void CheckEntities()
     {
         // when fishes die, they're only a corpse and their swim behaviour stops functioning
@@ -181,6 +189,11 @@ public class EntityPositionBroadcaster : MonoBehaviour
         splineEntities.Remove(id);
         regularEntities.Remove(id);
         notSpawnedEntityIds.Remove(id);
+    }
+
+    public void ClearNotSpawnedEntities()
+    {
+        notSpawnedEntityIds.Clear();
     }
 
     public void RegisterSplineMovementChange(NitroxId id, GameObject gameObject, Vector3 targetPos, Vector3 targetDir, float velocity)
