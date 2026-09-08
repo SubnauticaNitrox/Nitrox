@@ -68,9 +68,14 @@ public class PlayerCinematics
 
         if (lastModeToSend == IntroCinematicMode.NONE)
         {
-            Multiplayer.OnLoadingComplete += () => SetLocalIntroCinematicMode(lastModeToSend);
+            Multiplayer.OnLoadingComplete += OnLoadingCompleteSendCinematicMode;
         }
 
         lastModeToSend = introCinematicMode;
+    }
+
+    private void OnLoadingCompleteSendCinematicMode()
+    {
+        SetLocalIntroCinematicMode(lastModeToSend);
     }
 }
