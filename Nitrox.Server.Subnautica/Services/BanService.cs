@@ -47,6 +47,29 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     }
 
     /// <summary>
+    ///     Returns extra detail to show a banned player (the ban reason and, for a temporary ban, when it expires),
+    ///     or <see langword="null" /> when the IP has no active ban.
+    /// </summary>
+    public string? GetBanRejectionDetail(IPAddress ip)
+    {
+        loaded.Task.GetAwaiter().GetResult();
+        if (!bansByIp.TryGetValue(ip, out BanEntry entry) || entry.IsExpired)
+        {
+            return null;
+        }
+
+        List<string> lines = [];
+        if (!string.IsNullOrWhiteSpace(entry.Reason))
+        {
+            lines.Add($"Reason: {entry.Reason}");
+        }
+        lines.Add(entry.ExpiresAtUtc.HasValue
+                      ? $"Ban expires {entry.ExpiresAtUtc.Value.UtcDateTime:yyyy-MM-dd HH:mm} UTC"
+                      : "This ban is permanent.");
+        return string.Join("\n", lines);
+    }
+
+    /// <summary>
     ///     Bans an IP address. The player name (if any) is only kept as a label for <c>banlist</c>; enforcement is purely
     ///     by IP so a rename or a different account behind the same IP stays banned.
     /// </summary>
