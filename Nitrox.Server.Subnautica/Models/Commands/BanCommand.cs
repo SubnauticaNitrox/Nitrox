@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Administration;
@@ -13,15 +12,15 @@ using Nitrox.Server.Subnautica.Services;
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.MODERATOR)]
-internal sealed partial class BanCommand(PlayerManager playerManager, SessionManager sessionManager, BanService banService, IKickPlayer playerKicker)
-    : ICommandHandler<Player, string, string>, ICommandHandler<IPAddress, string, string>
+internal sealed class BanCommand(PlayerManager playerManager, SessionManager sessionManager, BanService banService, IKickPlayer playerKicker)
+    : ICommandHandler<Player, string, TimeSpan>, ICommandHandler<IPAddress, string, TimeSpan>
 {
     [Description("Bans an online player by their current IP address, kicking them")]
     public async Task Execute(ICommandContext context,
                               [Description("Player to ban")] Player target,
                               [Description("Ban reason")] string reason = "",
                               [Description("Duration like 30m/12h/7d/2w, omit for permanent")]
-                              string duration = "")
+                              TimeSpan duration = default)
     {
         IPEndPoint endPoint = sessionManager.GetEndPoint(target.SessionId);
         if (endPoint is null)
@@ -38,52 +37,15 @@ internal sealed partial class BanCommand(PlayerManager playerManager, SessionMan
                               [Description("IP address to ban")] IPAddress target,
                               [Description("Ban reason")] string reason = "",
                               [Description("Duration like 30m/12h/7d/2w, omit for permanent")]
-                              string duration = "") =>
+                              TimeSpan duration = default) =>
         await BanAddressAsync(context, target, null, reason, duration);
-
-    [GeneratedRegex(@"^(\d+)(s|m|h|d|w)$", RegexOptions.IgnoreCase)]
-    private static partial Regex DurationRegex();
-
-    private static bool TryParseDuration(string duration, out TimeSpan? parsed)
-    {
-        if (string.IsNullOrWhiteSpace(duration))
-        {
-            parsed = null;
-            return true;
-        }
-
-        Match match = DurationRegex().Match(duration);
-        if (!match.Success)
-        {
-            parsed = null;
-            return false;
-        }
-
-        int amount = int.Parse(match.Groups[1].Value);
-        parsed = match.Groups[2].Value.ToLowerInvariant() switch
-        {
-            "s" => TimeSpan.FromSeconds(amount),
-            "m" => TimeSpan.FromMinutes(amount),
-            "h" => TimeSpan.FromHours(amount),
-            "d" => TimeSpan.FromDays(amount),
-            "w" => TimeSpan.FromDays(amount * 7),
-            _ => null
-        };
-        return true;
-    }
 
     /// <summary>
     ///     Bans an IP address. Every player currently connected from that IP is kicked; the ban itself is purely
     ///     IP-based so reconnecting under a different name stays blocked.
     /// </summary>
-    private async Task BanAddressAsync(ICommandContext context, IPAddress ip, string? label, string? reason, string duration)
+    private async Task BanAddressAsync(ICommandContext context, IPAddress ip, string? label, string? reason, TimeSpan duration)
     {
-        if (!TryParseDuration(duration, out TimeSpan? parsedDuration))
-        {
-            await context.ReplyAsync($"Invalid duration '{duration}'. Use a number followed by s/m/h/d/w (e.g. 7d), or omit for a permanent ban");
-            return;
-        }
-
         Player[] connectedFromIp = playerManager.GetConnectedPlayers()
                                                 .Where(player => ip.Equals(sessionManager.GetEndPoint(player.SessionId)?.Address))
                                                 .ToArray();
@@ -114,13 +76,13 @@ internal sealed partial class BanCommand(PlayerManager playerManager, SessionMan
 
         label ??= connectedFromIp.Length == 1 ? connectedFromIp[0].Name : null;
         reason = reason?.Trim();
-        await banService.BanAsync(ip, label, reason, context.OriginName, parsedDuration);
+        await banService.BanAsync(ip, label, reason, context.OriginName, duration);
         foreach (Player player in connectedFromIp.Where(player => player.IsOnline))
         {
             await playerKicker.KickPlayer(player.SessionId, string.IsNullOrEmpty(reason) ? "Banned" : $"Banned: {reason}");
         }
 
-        string durationText = parsedDuration.HasValue ? $"for {duration}" : "permanently";
+        string durationText = duration != TimeSpan.Zero ? $"for {duration}" : "permanently";
         string reasonText = string.IsNullOrEmpty(reason) ? "" : $" - {reason}";
         string targetText = string.IsNullOrEmpty(label) ? ip.ToString() : $"{label} ({ip})";
         await context.ReplyAsync($"Banned {targetText} {durationText}{reasonText}");
