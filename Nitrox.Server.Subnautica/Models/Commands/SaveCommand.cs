@@ -15,6 +15,6 @@ internal sealed class SaveCommand(SaveService saveService, ILogger<SaveCommand> 
     public async Task Execute(ICommandContext context)
     {
         logger.LogSaveRequest(context.OriginName, context.OriginId);
-        await saveService.QueueActionAsync(SaveService.ServiceAction.SAVE);
+        await saveService.QueueSaveAsync(CancellationToken.None);
     }
 }
