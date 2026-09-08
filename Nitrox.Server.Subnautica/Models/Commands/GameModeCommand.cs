@@ -30,9 +30,9 @@ internal sealed class GameModeCommand : ICommandHandler<SubnauticaGameMode, Play
                 await context.SendAsync(targetPlayer.SessionId, $"GameMode changed to {gameMode}");
                 if (context.Origin == CommandOrigin.SERVER)
                 {
-                    await context.ReplyAsync($"Changed {targetPlayer.Name} [{targetPlayer.Id}]'s gamemode to {gameMode}");
+                    await context.ReplyAsync($"Changed gamemode of {targetPlayer.Name} #{targetPlayer.SessionId} to {gameMode}");
                 }
-                else if (targetPlayer.Id != context.OriginId)
+                else if (targetPlayer.SessionId != context.OriginId)
                 {
                     await context.ReplyAsync($"GameMode of {targetPlayer.Name} changed to {gameMode}");
                 }
