@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
 
@@ -19,14 +20,14 @@ internal sealed partial class StringToTimeSpanArgConverter : IArgConverter<strin
         if (!match.Success)
         {
             // If an int/float, we require a unit postfix like (d for days or s for seconds).
-            if (!float.TryParse(value, out _) && TimeSpan.TryParse(value, out TimeSpan parsed))
+            if (!float.TryParse(value, NumberFormatInfo.InvariantInfo, out _) && TimeSpan.TryParse(value, NumberFormatInfo.InvariantInfo, out TimeSpan parsed))
             {
                 return Task.FromResult(ConvertResult.Ok(parsed));
             }
         }
         else
         {
-            float amount = float.Parse(match.Groups[1].Value);
+            float amount = float.Parse(match.Groups[1].Value, NumberFormatInfo.InvariantInfo);
             result = match.Groups[2].Value.ToLowerInvariant() switch
             {
                 "s" => TimeSpan.FromSeconds(amount),

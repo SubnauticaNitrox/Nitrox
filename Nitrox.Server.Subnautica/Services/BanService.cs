@@ -73,7 +73,7 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     ///     Bans an IP address. The player name (if any) is only kept as a label for <c>banlist</c>; enforcement is purely
     ///     by IP so a rename or a different account behind the same IP stays banned.
     /// </summary>
-    public async Task BanAsync(IPAddress ip, string? playerName, string? reason, string bannedBy, TimeSpan? duration)
+    public async Task BanAsync(IPAddress ip, string? playerName, string? reason, string bannedBy, TimeSpan duration)
     {
         await loaded.Task;
 
@@ -83,9 +83,9 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
             IP = ip,
             PlayerName = playerName,
             Reason = reason ?? "",
-            BannedBy = bannedBy ?? "",
+            BannedBy = bannedBy,
             BannedAtUtc = bannedAtTime,
-            ExpiresAtUtc = duration.HasValue ? bannedAtTime + duration.Value : null
+            ExpiresAtUtc = duration == TimeSpan.Zero ? null : bannedAtTime + duration
         };
         bansByIp[entry.IP] = entry;
         SignalExpiryReschedule();
@@ -208,13 +208,13 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     internal sealed record BanEntry
     {
         [IgnoreDataMember]
-        public IPAddress IP { get; init; } = IPAddress.None;
+        public IPAddress IP { get; set; } = IPAddress.None;
 
         [JsonProperty(nameof(IP))]
-        private string InternalIp
+        private string JsonIP
         {
             get => IP.ToString();
-            set => IPAddress.Parse(value);
+            set => IP = IPAddress.Parse(value);
         }
 
         public string? PlayerName { get; init; }
@@ -226,6 +226,6 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
         [IgnoreDataMember]
         public bool IsExpired => ExpiresAtUtc.HasValue && ExpiresAtUtc.Value <= DateTimeOffset.UtcNow;
 
-        public override string ToString() => $"[{nameof(PlayerName)}: {(string.IsNullOrEmpty(PlayerName) ? "<empty>" : "")}, {nameof(IP)}: {IP}, {nameof(BannedBy)}: {BannedBy}, {nameof(BannedAtUtc)}: {BannedAtUtc}, {nameof(Reason)}: {Reason}]";
+        public override string ToString() => $"[{nameof(PlayerName)}: {(string.IsNullOrEmpty(PlayerName) ? "<empty>" : PlayerName)}, {nameof(IP)}: {IP}, {nameof(BannedBy)}: {BannedBy}, {nameof(BannedAtUtc)}: {BannedAtUtc}, {nameof(Reason)}: {Reason}]";
     }
 }

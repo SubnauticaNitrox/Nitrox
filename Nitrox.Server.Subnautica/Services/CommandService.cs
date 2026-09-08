@@ -147,6 +147,7 @@ internal sealed partial class CommandService(CommandRegistryService registry, IL
         logger.ZLogTrace($"Waiting for commands to finish processing...");
         await EnsureCommandsAreProcessedAsync(cancellationToken);
         logger.ZLogTrace($"Done waiting for commands");
+        await base.StopAsync(cancellationToken);
     }
 
     public Task StartingAsync(CancellationToken cancellationToken) => Task.CompletedTask;

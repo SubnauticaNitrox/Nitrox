@@ -9,7 +9,7 @@ namespace Nitrox.Model.Subnautica.Packets;
 public sealed class MultiplayerSessionReservation(
     SessionId sessionId,
     MultiplayerSessionReservationState reservationState = MultiplayerSessionReservationState.RESERVED,
-    string rejectionReason = null)
+    string? rejectionReason = null)
     : Packet
 {
     /// <summary>
@@ -23,5 +23,5 @@ public sealed class MultiplayerSessionReservation(
     ///     Optional human-readable detail shown to the player on top of the generic <see cref="ReservationState" />
     ///     description, e.g. the reason and expiry of a ban. <see langword="null" /> when there is nothing to add.
     /// </summary>
-    public string RejectionReason { get; } = rejectionReason;
+    public string? RejectionReason { get; } = rejectionReason;
 }

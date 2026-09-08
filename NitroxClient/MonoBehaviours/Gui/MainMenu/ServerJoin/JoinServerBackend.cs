@@ -83,7 +83,7 @@ public static class JoinServerBackend
                 MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 
                 string reservationRejectionNotification = reservationState.Describe();
-                string rejectionReason = multiplayerSession.Reservation.RejectionReason;
+                string? rejectionReason = multiplayerSession.Reservation.RejectionReason;
                 if (!string.IsNullOrEmpty(rejectionReason))
                 {
                     reservationRejectionNotification += $"\n{rejectionReason}";
