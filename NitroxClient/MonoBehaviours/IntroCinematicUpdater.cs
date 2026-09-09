@@ -7,7 +7,7 @@ namespace NitroxClient.MonoBehaviours;
 
 public class IntroCinematicUpdater : MonoBehaviour
 {
-    public static RemotePlayer Partner;
+    public static RemotePlayer? Partner;
     private static Transform modelRoot;
 
     private static readonly Transform playerTransform = Player.main.transform;

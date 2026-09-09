@@ -25,7 +25,7 @@ internal static class ZLoggerFormattableExtensions
         return false;
     }
 
-    public static bool TryGetProperty<T>(this IZLoggerEntry entry, [NotNullWhen(true)] out T? result) where T : class
+    public static bool TryGetFirstProperty<T>(this IZLoggerEntry entry, [NotNullWhen(true)] out T? result) where T : class
     {
         if (entry.LogInfo.ScopeState is { } scope)
         {
@@ -41,5 +41,23 @@ internal static class ZLoggerFormattableExtensions
         }
         result = null;
         return false;
+    }
+
+    public static IReadOnlyList<T> TryGetAllProperties<T>(this IZLoggerEntry entry) where T : class
+    {
+        List<T>? result = null;
+        if (entry.LogInfo.ScopeState is { } scope)
+        {
+            foreach (KeyValuePair<string, object?> keyValuePair in scope.Properties)
+            {
+                object value = keyValuePair.Value;
+                if (value is T matchedValue)
+                {
+                    result ??= [];
+                    result.Add(matchedValue);
+                }
+            }
+        }
+        return result ?? [];
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using Nitrox.Model.Constants;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Serialization;
-using Nitrox.Model.Server;
 
 namespace Nitrox.Model.Configuration;
 

@@ -153,7 +153,7 @@ internal sealed class JoiningManager(
     private async Task SendInitialSyncAsync(SessionId sessionId)
     {
         Player player = playerManager.CreatePlayerData(sessionId, out bool wasBrandNewPlayer);
-        (NitroxId assignedEscapePodId, EscapePodEntity? newlyCreatedEscapePod) = await escapePodManager.AssignPlayerToEscapePodAsync(player.Id);
+        (NitroxId assignedEscapePodId, EscapePodEntity? newlyCreatedEscapePod) = await escapePodManager.AssignPlayerToEscapePodAsync(player.PeerId);
 
         if (wasBrandNewPlayer)
         {

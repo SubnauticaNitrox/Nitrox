@@ -107,6 +107,7 @@ internal sealed class Program
                .AddAppEvents()
                .AddAdminFeatures()
                .AddKeyedSingleton("startup", serverStartStopWatch)
+               .AddHostedSingletonService<TaskQueueService>()
                .AddHostedSingletonService<HibernateService>()
                .AddHostedSingletonService<StatusService>()
                .AddHostedSingletonService<PortForwardService>()

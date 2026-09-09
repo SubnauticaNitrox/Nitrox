@@ -1,9 +1,7 @@
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
-using System.Threading.Channels;
 using LiteNetLib;
 using LiteNetLib.Layers;
 using LiteNetLib.Utils;
@@ -13,42 +11,44 @@ using Nitrox.Model.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Administration;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
+using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Nitrox.Server.Subnautica.Services;
 
-namespace Nitrox.Server.Subnautica.Models.Communication;
+namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
+internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
 {
     private readonly Dictionary<int, PeerContext> contextByPeerId = [];
     private readonly Dictionary<SessionId, PeerContext> contextBySessionId = [];
     private readonly Lock contextLock = new();
     private readonly NetDataWriter dataWriter = new();
     private readonly EventBasedNetListener listener;
-    private readonly ILogger<LiteNetLibServer> logger;
+    private readonly ILogger<LiteNetLibServerService> logger;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly PacketRegistryService packetRegistryService;
     private readonly PacketSerializationService packetSerializationService;
     private readonly PlayerManager playerManager;
     private readonly NetManager server;
     private readonly SessionManager sessionManager;
-    private readonly Channel<Task> taskChannel = Channel.CreateUnbounded<Task>();
+    private readonly TaskQueueService taskQueueService;
 
-    public LiteNetLibServer(PlayerManager playerManager, SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, IOptions<SubnauticaServerOptions> options,
-                            ILogger<LiteNetLibServer> logger)
+    public LiteNetLibServerService(PlayerManager playerManager, SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, IOptions<SubnauticaServerOptions> options,
+                                   TaskQueueService taskQueueService, ILogger<LiteNetLibServerService> logger)
     {
         this.playerManager = playerManager;
         this.sessionManager = sessionManager;
         this.packetSerializationService = packetSerializationService;
         this.packetRegistryService = packetRegistryService;
         this.options = options;
+        this.taskQueueService = taskQueueService;
         this.logger = logger;
         listener = new EventBasedNetListener();
         server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
         {
-            UseNativeSockets = true, IPv6Enabled = true
+            UseNativeSockets = true,
+            IPv6Enabled = true
         };
     }
 
@@ -82,12 +82,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
         await SendPacketToAllAsync(new ServerStopped());
         try
         {
-            await Task.Delay(100, CancellationToken.None); // Gives some time for the last few tasks to be queued up.
-            taskChannel.Writer.TryComplete();
-            await foreach (Task task in taskChannel.Reader.ReadAllAsync(cancellationToken))
-            {
-                await task;
-            }
+            await Task.Delay(100, CancellationToken.None); // Gives some time for the last few packets to send out.
         }
         finally
         {
@@ -230,7 +225,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             return;
         }
 
-        if (!taskChannel.Writer.TryWrite(sessionManager.RemoveSessionAsync(context.SessionId)))
+        if (!taskQueueService.TryQueue(sessionManager.RemoveSessionAsync(context.SessionId)))
         {
             logger.ZLogWarning($"Failed to queue client disconnect task for {peer as EndPoint:@EndPoint}");
         }
@@ -258,7 +253,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
                 return;
             }
 
-            if (!taskChannel.Writer.TryWrite(ProcessPacket(context, packet)))
+            if (!taskQueueService.TryQueue(ProcessPacket(context, packet)))
             {
                 logger.ZLogError($"Failed to queue packet processor task for packet type {packet.GetType().Name:@TypeName} from {peer.Address:@Address}:{peer.Port:@Port}");
             }
@@ -276,7 +271,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
 
         try
         {
-            switch (GetProcessorTarget(processor, peerContext.SessionId, playerManager, out Player? player))
+            switch (GetProcessorTarget(processor, peerContext.SessionId, playerManager, out Models.Player? player))
             {
                 case ProcessorTarget.ANONYMOUS:
                     using (EasyPool<AnonProcessorContext>.Lease lease = EasyPool<AnonProcessorContext>.Rent())
@@ -299,11 +294,11 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
                         ref AuthProcessorContext context = ref lease.GetRef();
                         if (context == null)
                         {
-                            context = new AuthProcessorContext(player, this);
+                            context = new AuthProcessorContext(player!, this); // ! operator: Player can't be null if AUTHENTICATED.
                         }
                         else
                         {
-                            context.Sender = player;
+                            context.Sender = player!; // ! operator: Player can't be null if AUTHENTICATED.
                         }
                         await processor.Execute(context, packet);
                     }
@@ -318,7 +313,7 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             logger.ZLogError(ex, $"Error in packet processor {processor.GetType().Name:@TypeName}");
         }
 
-        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, [NotNullIfNotNull(nameof(player))] out Player? player)
+        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, out Models.Player? player)
         {
             player = null;
             if (processor == null)

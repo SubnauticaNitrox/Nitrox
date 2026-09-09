@@ -156,7 +156,7 @@ namespace Nitrox.Model.DataStructures
         {
             lock (locker)
             {
-                if (index <= list.Count || index < 0)
+                if (index >= list.Count || index < 0)
                 {
                     item = default;
                     return false;

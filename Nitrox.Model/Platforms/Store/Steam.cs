@@ -319,13 +319,7 @@ public sealed class Steam : IGamePlatform
                 }
             }
 
-            string sniperAppId = "1628350";
             SteamLibrariesVdf steamLibraries = SteamLibrariesVdf.Load(steamPath);
-            if (!steamLibraries.TryGetSteamAppLibraryPath(sniperAppId, out string steamRuntimeLibraryPath) || !Directory.Exists(steamRuntimeLibraryPath))
-            {
-                throw new Exception("Could not find or access the Steam compatibility runtime 'sniper'");
-            }
-            string steamRuntimePath = Path.Combine(steamRuntimeLibraryPath, "steamapps", "common", "SteamLinuxRuntime_sniper");
 
             string? protonVersion = GetProtonVersionOfSteamApp(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
             string? protonPath = null;
@@ -343,6 +337,13 @@ public sealed class Steam : IGamePlatform
                 throw new Exception("Steam Proton is unavailable. Please try change game properties in Steam to use the Proton compatibility layer.");
             }
             Log.Debug($"Starting game with proton: {protonPath}");
+
+            // Each Proton build declares which Steam Linux Runtime container it needs to run inside
+            string? steamRuntimePath = steamLibraries.GetRuntimePathForProton(protonPath);
+            if (steamRuntimePath == null)
+            {
+                throw new Exception($"""Could not find or access the Steam Linux Runtime container required by proton "{Path.GetFileName(protonPath)}".""");
+            }
 
             result.FileName = Path.Combine(steamRuntimePath, "_v2-entry-point");
             result.Arguments = $" --verb=run -- \"{Path.Combine(protonPath, "proton")}\" run \"{gameFilePath}\" {args}";
@@ -414,13 +415,31 @@ public sealed class Steam : IGamePlatform
     /// <summary>
     ///     Helper class for extracting information based on Steam Libraries VDF file.
     /// </summary>
-    private class SteamLibrariesVdf
+    internal class SteamLibrariesVdf
     {
         private readonly string steamRootPath;
         private readonly string vdfContent;
         private List<string>? allLibraryPathsCache;
 
-        private string ProtonRootPath => Path.Combine(steamRootPath, "compatibilitytools.d");
+        private IEnumerable<string> ProtonRootPaths
+        {
+            get
+            {
+                yield return Path.Combine(steamRootPath, "compatibilitytools.d");
+
+                // Distro-packaged Proton builds register under a system-wide dir instead of the user's Steam folder,
+                // mirroring what Steam itself scans for compat tools.
+                string xdgDataDirs = Environment.GetEnvironmentVariable("XDG_DATA_DIRS");
+                if (string.IsNullOrWhiteSpace(xdgDataDirs))
+                {
+                    xdgDataDirs = "/usr/local/share:/usr/share";
+                }
+                foreach (string dataDir in xdgDataDirs.Split([Path.PathSeparator], StringSplitOptions.RemoveEmptyEntries))
+                {
+                    yield return Path.Combine(dataDir, "steam", "compatibilitytools.d");
+                }
+            }
+        }
 
         private SteamLibrariesVdf(string steamRootPath, string vdfContent)
         {
@@ -493,9 +512,9 @@ public sealed class Steam : IGamePlatform
                 return null;
             }
 
-            // If custom Proton (non-Steam), try path directly.
-            string customProtonPath = Path.Combine(ProtonRootPath, protonVersion);
-            return HasProtonExecutable(customProtonPath) ? customProtonPath : null;
+            // If custom Proton, try each known compatibility tool root directly.
+            return ProtonRootPaths.Select(rootPath => Path.Combine(rootPath, protonVersion))
+                                   .FirstOrDefault(HasProtonExecutable);
 
             static string? GetProtonPathFast(IEnumerable<string> steamLibraries, string protonVersion)
             {
@@ -553,7 +572,67 @@ public sealed class Steam : IGamePlatform
                                   .ThenByDescending(candidate => candidate.FolderName.Contains("Experimental", StringComparison.OrdinalIgnoreCase))
                                   .Select(candidate => candidate.Path)
                                   .FirstOrDefault();
-            return valveProton ?? EnumerateDirectories(ProtonRootPath).FirstOrDefault(HasProtonExecutable);
+            return valveProton ?? ProtonRootPaths.SelectMany(EnumerateDirectories).FirstOrDefault(HasProtonExecutable);
+        }
+
+        /// <summary>
+        /// Resolves the Steam Linux Runtime container a Proton build needs to run inside, per its tool manifest
+        /// Builds without one default to Steam Linux Runtime 3.0 (sniper)
+        /// This should pretty closely match how steam handles this.
+        /// </summary>
+        public string? GetRuntimePathForProton(string protonPath)
+        {
+            const string SNIPER_RUNTIME_APP_ID = "1628350";
+
+            string requiredRuntimeAppId = SNIPER_RUNTIME_APP_ID;
+            string toolManifestPath = Path.Combine(protonPath, "toolmanifest.vdf");
+            if (File.Exists(toolManifestPath))
+            {
+                try
+                {
+                    Match match = Regex.Match(File.ReadAllText(toolManifestPath), @"""require_tool_appid""\s*""(\d+)""");
+                    if (match.Success)
+                    {
+                        requiredRuntimeAppId = match.Groups[1].Value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Failed to read toolmanifest.vdf for proton at '{protonPath}'");
+                    return null;
+                }
+            }
+
+            if (!TryGetSteamAppLibraryPath(requiredRuntimeAppId, out string libraryPath) || !Directory.Exists(libraryPath))
+            {
+                return null;
+            }
+            string steamAppsPath = Path.Combine(libraryPath, "steamapps");
+            if (GetAppInstallDirFromManifest(steamAppsPath, requiredRuntimeAppId) is not { } installDir)
+            {
+                return null;
+            }
+            string runtimePath = Path.Combine(steamAppsPath, "common", installDir);
+            return Directory.Exists(runtimePath) ? runtimePath : null;
+
+            static string? GetAppInstallDirFromManifest(string steamAppsPath, string appId)
+            {
+                string manifestPath = Path.Combine(steamAppsPath, $"appmanifest_{appId}.acf");
+                if (!File.Exists(manifestPath))
+                {
+                    return null;
+                }
+                try
+                {
+                    Match match = Regex.Match(File.ReadAllText(manifestPath), @"""installdir""\s*""([^""]+)""");
+                    return match.Success ? match.Groups[1].Value : null;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Failed to read '{manifestPath}'");
+                    return null;
+                }
+            }
         }
 
         public IReadOnlyCollection<string> GetAllLibraryPaths()

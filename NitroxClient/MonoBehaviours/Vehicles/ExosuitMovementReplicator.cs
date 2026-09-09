@@ -1,7 +1,7 @@
 using FMOD.Studio;
-using NitroxClient.GameLogic;
 using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Vehicles;
@@ -24,8 +24,9 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     private RemotePlayer? drivingPlayer;
 
-    public void Awake()
+    public new void Awake()
     {
+        base.Awake();
         exosuit = GetComponent<Exosuit>();
         SetupSound();
     }
@@ -106,7 +107,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         float steeringWheelPitch = exosuitMovementData.SteeringWheelPitch;
 
         // See Vehicle.Update (reverse operation for vehicle.steeringWheel... = ...)
-        exosuit.steeringWheelYaw = steeringWheelPitch / 70f;
+        exosuit.steeringWheelYaw = steeringWheelYaw / 70f;
         exosuit.steeringWheelPitch = steeringWheelPitch / 45f;
 
         if (exosuit.mainAnimator)
