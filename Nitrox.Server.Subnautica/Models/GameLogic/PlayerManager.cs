@@ -78,7 +78,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, BanSe
             return new MultiplayerSessionReservation(sessionId, rejectedState, banService.GetBanRejectionDetail(endPoint.Address));
         }
 
-        if (int.Max(reservedPlayerNames.Count - 1, 0) >= options.Value.MaxConnections)
+        if (sessionManager.GetSessionCount() > options.Value.MaxConnections)
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
             return new MultiplayerSessionReservation(sessionId, rejectedState);

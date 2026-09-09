@@ -198,11 +198,12 @@ internal sealed class LiteNetLibServer : IHostedService, IPacketSender, IKickPla
             request.Reject();
             return;
         }
-        if (server.ConnectedPeersCount >= options.Value.MaxConnections)
-        {
-            request.Reject();
-            return;
-        }
+        // TODO: Enable this check when client can report LiteNetLib rejection message. Then remove check done in PlayerManager.ReservePlayerContext
+        // if (server.ConnectedPeersCount >= options.Value.MaxConnections)
+        // {
+        //     request.Reject();
+        //     return;
+        // }
 
         SessionManager.Session session = sessionManager.GetOrCreateSession(request.RemoteEndPoint);
         NetPeer peer = request.Accept();
