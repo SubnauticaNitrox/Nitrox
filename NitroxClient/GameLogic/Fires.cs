@@ -22,9 +22,6 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly ThrottledPacketSender throttledPacketSender;
 
-        // Tracks the last time this client doused a fire
-        private readonly Dictionary<NitroxId, float> lastDousedTime = [];
-
         public Fires(Entities entities, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
         {
             this.entities = entities;
@@ -63,15 +60,10 @@ namespace NitroxClient.GameLogic
             bool extinguished = !fire.livemixin.IsAlive() || fire.isExtinguished;
             if (extinguished)
             {
-                lastDousedTime.Remove(fireId);
                 entities.RemoveEntity(fireId);
             }
-            else
-            {
-                lastDousedTime[fireId] = Time.realtimeSinceStartup;
-            }
 
-            FireDoused packet = new(fireId, extinguished ? 0 : fire.livemixin.health, douseAmount);
+            FireDoused packet = new(fireId, extinguished ? 0 : fire.livemixin.health);
             throttledPacketSender.SendThrottled(packet, x => x.Id);
         }
 
@@ -119,16 +111,6 @@ namespace NitroxClient.GameLogic
                     NitroxEntity.SetNewId(fire.transform.parent.gameObject, fireData.FireId);
                 }
             });
-        }
-
-        public bool WasDousedRecently(NitroxId id)
-        {
-            if (lastDousedTime.TryGetValue(id, out float time))
-            {
-                return Time.realtimeSinceStartup - time < 1f;
-            }
-
-            return false;
         }
     }
 }
