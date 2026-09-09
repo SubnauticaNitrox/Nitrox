@@ -19,7 +19,7 @@ internal sealed partial class StringToTimeSpanArgConverter : IArgConverter<strin
         Match match = DurationRegex().Match(value);
         if (!match.Success)
         {
-            // If an int/float, we require a unit postfix like (d for days or s for seconds).
+            // If an int/float, we require a unit postfix (like d for days or s for seconds).
             if (!float.TryParse(value, NumberFormatInfo.InvariantInfo, out _) && TimeSpan.TryParse(value, NumberFormatInfo.InvariantInfo, out TimeSpan parsed))
             {
                 return Task.FromResult(ConvertResult.Ok(parsed));

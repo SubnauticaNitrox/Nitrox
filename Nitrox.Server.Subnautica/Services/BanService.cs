@@ -43,7 +43,7 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     public bool IsBanned(IPAddress ip)
     {
         loaded.Task.GetAwaiter().GetResult();
-        return bansByIp.TryGetValue(ip, out BanEntry entry) && !entry.IsExpired;
+        return bansByIp.TryGetValue(ip, out BanEntry? entry) && !entry.IsExpired;
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     public string? GetBanRejectionDetail(IPAddress ip)
     {
         loaded.Task.GetAwaiter().GetResult();
-        if (!bansByIp.TryGetValue(ip, out BanEntry entry) || entry.IsExpired)
+        if (!bansByIp.TryGetValue(ip, out BanEntry? entry) || entry.IsExpired)
         {
             return null;
         }
@@ -184,7 +184,7 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     {
         try
         {
-            BanData data = serializer.Deserialize<BanData>(FilePath);
+            BanData? data = serializer.Deserialize<BanData>(FilePath);
             foreach (BanEntry entry in data?.Bans ?? [])
             {
                 bansByIp[entry.IP] = entry;

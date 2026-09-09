@@ -22,7 +22,7 @@ internal sealed class BanCommand(PlayerManager playerManager, SessionManager ses
                               [Description("Duration like 30m/12h/7d/2w, omit for permanent")]
                               TimeSpan duration = default)
     {
-        IPEndPoint endPoint = sessionManager.GetEndPoint(target.SessionId);
+        IPEndPoint? endPoint = sessionManager.GetEndPoint(target.SessionId);
         if (endPoint is null)
         {
             await context.ReplyAsync($"Could not determine the IP address of '{target.Name}'");

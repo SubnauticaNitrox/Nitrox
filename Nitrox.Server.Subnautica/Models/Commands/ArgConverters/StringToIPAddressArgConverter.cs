@@ -10,7 +10,7 @@ internal sealed class StringToIPAddressArgConverter : IArgConverter<string, IPAd
 {
     public Task<ConvertResult> ConvertAsync(string value)
     {
-        if (!IPAddress.TryParse(value, out IPAddress address))
+        if (!IPAddress.TryParse(value, out IPAddress? address))
         {
             return Task.FromResult(ConvertResult.Fail($"'{value}' is not a valid IP address"));
         }
