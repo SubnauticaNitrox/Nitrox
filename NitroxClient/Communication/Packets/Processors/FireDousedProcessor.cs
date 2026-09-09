@@ -1,4 +1,5 @@
-﻿using Nitrox.Model.Subnautica.Packets;
+﻿using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -17,8 +18,19 @@ internal sealed class FireDousedProcessor(Fires fires, Entities entities) : ICli
     /// </summary>
     public Task Process(ClientProcessorContext context, FireDoused packet)
     {
-        GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-        Fire fire = fireGameObject.RequireComponentInChildren<Fire>();
+        Optional<GameObject> fireGameObject = NitroxEntity.GetObjectFrom(packet.Id);
+        if (!fireGameObject.HasValue)
+        {
+            Log.Warn($"Can't find fire entity with id {packet.Id}");
+            return Task.CompletedTask;
+        }
+
+        Fire fire = fireGameObject.Value.GetComponent<Fire>();
+        if (!fire)
+        {
+            Log.Error($"Fire object with id {packet.Id} missing component");
+            return Task.CompletedTask;
+        }
 
         float douseAmount = fire.livemixin.health - packet.Health;
 
