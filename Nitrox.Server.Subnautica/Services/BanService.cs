@@ -94,12 +94,7 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     public async Task<bool> UnbanAsync(IPAddress ip)
     {
         await loaded.Task;
-
-        if (!bansByIp.Remove(ip))
-        {
-            return false;
-        }
-        return true;
+        return bansByIp.Remove(ip);
     }
 
     public async Task<IReadOnlyList<BanEntry>> GetActiveBansAsync()
