@@ -22,8 +22,10 @@ namespace Nitrox.Server.Subnautica.Models
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; }
 
         public PlayerContext? PlayerContext { get; set; }
-        public PeerId Id { get; init; }
+        /// <inheritdoc cref="Nitrox.Model.Core.PeerId" />
+        public PeerId PeerId { get; init; }
 
+        /// <inheritdoc cref="Nitrox.Model.Core.SessionId" />
         public SessionId SessionId
         {
             get => Interlocked.CompareExchange(ref sessionId, OFFLINE_SESSION_ID, OFFLINE_SESSION_ID);
@@ -64,13 +66,13 @@ namespace Nitrox.Server.Subnautica.Models
 
         public PlayerEntity Entity { get; set; }
 
-        public Player(PeerId id, SessionId sessionId, string name, bool isPermaDeath, PlayerContext? playerContext,
+        public Player(PeerId peerId, SessionId sessionId, string name, bool isPermaDeath, PlayerContext? playerContext,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, SubnauticaGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences, bool inPrecursor,
                       bool displaySurfaceWater)
         {
-            Id = id;
+            PeerId = peerId;
             SessionId = sessionId;
             Name = name;
             IsPermaDeath = isPermaDeath;
@@ -124,7 +126,7 @@ namespace Nitrox.Server.Subnautica.Models
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return PeerId.GetHashCode();
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
@@ -176,7 +178,7 @@ namespace Nitrox.Server.Subnautica.Models
 
         public override string ToString()
         {
-            return $"[Player - SessionId: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
+            return $"[{nameof(Player)} - {nameof(PeerId)}: {PeerId}, {nameof(Name)}: {Name}, Perms: {Permissions}, {nameof(Position)}: {Position}]";
         }
 
         /// <summary>
@@ -190,7 +192,7 @@ namespace Nitrox.Server.Subnautica.Models
 
         private bool Equals(Player other)
         {
-            return Id == other.Id;
+            return PeerId == other.PeerId;
         }
     }
 }

@@ -186,13 +186,13 @@ internal static partial class ServiceCollectionExtensions
         /// </summary>
         public IServiceCollection AddPackets()
         {
-            services.AddHostedSingletonService<LiteNetLibServer>()
+            services.AddHostedSingletonService<LiteNetLibServerService>()
                     .AddHostedSingletonService<PacketSerializationService>()
                     .AddHostedSingletonService<PacketRegistryService>()
                     .AddPacketProcessors()
                     .TryAddSingletonLazyArrayProvider<IPacketProcessor>()
                     .AddSingleton<DefaultServerPacketProcessor>()
-                    .AddSingleton<IPacketSender>(provider => provider.GetRequiredService<LiteNetLibServer>());
+                    .AddSingleton<IPacketSender>(provider => provider.GetRequiredService<LiteNetLibServerService>());
             return services;
         }
 

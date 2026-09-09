@@ -1,4 +1,4 @@
-﻿namespace Nitrox.Model;
+namespace Nitrox.Model;
 
 [TestClass]
 public class ExtensionsTest
@@ -24,7 +24,7 @@ public class ExtensionsTest
     public void RemoveAllFast_ThrowsErrorIfFixedSizeList()
     {
         string[] list = ["one", "two", "three"];
-        Assert.ThrowsException<NotSupportedException>(() => list.RemoveAllFast((object)null, static (item, _) => item == "one"));
+        Assert.Throws<NotSupportedException>(() => list.RemoveAllFast((object)null, static (item, _) => item == "one"));
     }
 
     [TestMethod]

@@ -63,7 +63,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, BanSe
     public void AddSavedPlayer(Player player)
     {
         allPlayersByName.Add(player.Name, player);
-        currentPlayerId = allPlayersByName.Values.Max(x => x.Id);
+        currentPlayerId = allPlayersByName.Values.Max(x => x.PeerId);
     }
 
     public MultiplayerSessionReservation ReservePlayerContext(

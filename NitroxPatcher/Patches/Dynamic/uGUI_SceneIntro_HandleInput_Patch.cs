@@ -5,6 +5,7 @@ using HarmonyLib;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -61,22 +62,10 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
     // Partial copied from GameInput.GetInputStateForButton()
     private static void ResetTimeDownForButton(GameInput.Button button)
     {
-        // TODO: rewrite this for new input system
-        /*
-        for (int index1 = 0; index1 < GameInput.numDevices; ++index1)
+        // There are multiple implementations of IGameInput, but GameInputSystem is the only one used
+        if (GameInput.input is GameInputSystem input)
         {
-            for (int index2 = 0; index2 < GameInput.numBindingSets; ++index2)
-            {
-                int bindingInternal = GameInput.GetBindingInternal((GameInput.Device)index1, button, (GameInput.BindingSet)index2);
-                if (bindingInternal != -1)
-                {
-                    GameInput.InputState inputState = GameInput.inputStates[bindingInternal];
-                    inputState.flags = GameInput.InputStateFlags.Up;
-                    inputState.timeDown = Time.unscaledTime + 1f; // 1 sec cooldown
-                    GameInput.inputStates[bindingInternal] = inputState;
-                }
-            }
+            input.startTimes[input.actions[button].id] = Time.unscaledTime + 1f; // Add 1 second before the button is considered held again
         }
-        */
     }
 }

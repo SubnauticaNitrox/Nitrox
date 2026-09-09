@@ -45,7 +45,7 @@ internal sealed class VehicleDockingProcessor(Vehicles vehicles) : IClientPacket
         if (vehicleMovementReplicator)
         {
             // NB: We don't have a lifetime ahead of us
-            float waitTime = Mathf.Clamp(vehicleMovementReplicator.maxAllowedLatency, 0f, 2f);
+            float waitTime = Mathf.Clamp(vehicleMovementReplicator.MaxAllowedLatency, 0f, 2f);
             yield return new WaitForSeconds(waitTime);
         }
         else

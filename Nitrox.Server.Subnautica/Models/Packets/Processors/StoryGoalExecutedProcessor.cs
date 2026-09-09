@@ -32,7 +32,7 @@ internal sealed class StoryGoalExecutedProcessor(IPacketSender packetSender, Sto
                 }
                 break;
         }
-        storyScheduler.UnscheduleStory(packet.Key);
+        await storyScheduler.UnscheduleStory(packet.Key);
         await context.SendToOthersAsync(packet);
     }
 }
