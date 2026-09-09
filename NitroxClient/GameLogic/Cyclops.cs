@@ -1,13 +1,11 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 using static NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor;
 
@@ -15,33 +13,31 @@ namespace NitroxClient.GameLogic
 {
     public class Cyclops
     {
-        private readonly IPacketSender packetSender;
-        private readonly Vehicles vehicles;
         private readonly Entities entities;
+        private readonly IPacketSender packetSender;
 
-        public Cyclops(IPacketSender packetSender, Vehicles vehicles, Entities entities)
+        public Cyclops(IPacketSender packetSender, Entities entities)
         {
             this.packetSender = packetSender;
-            this.vehicles = vehicles;
             this.entities = entities;
         }
 
         public void BroadcastMetadataChange(NitroxId id)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(id);
-            CyclopsGameObject cyclops = new CyclopsGameObject() { GameObject = gameObject };
+            CyclopsGameObject cyclops = new() { GameObject = gameObject };
             entities.EntityMetadataChanged(cyclops, id);
         }
 
         public void BroadcastLaunchDecoy(NitroxId id)
         {
-            CyclopsDecoyLaunch packet = new CyclopsDecoyLaunch(id);
+            CyclopsDecoyLaunch packet = new(id);
             packetSender.Send(packet);
         }
 
         public void BroadcastActivateFireSuppression(NitroxId id)
         {
-            CyclopsFireSuppression packet = new CyclopsFireSuppression(id);
+            CyclopsFireSuppression packet = new(id);
             packetSender.Send(packet);
         }
 
@@ -54,7 +50,7 @@ namespace NitroxClient.GameLogic
                 decoyManager.Invoke(nameof(CyclopsDecoyManager.LaunchWithDelay), 3f);
                 decoyManager.decoyLaunchButton.UpdateText();
                 decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
-                decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
+                decoyManager.subRoot.BroadcastMessage(nameof(CyclopsDecoyManager.UpdateTotalDecoys), decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
                 CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponentInChildren<CyclopsDecoyLaunchButton>();
                 decoyLaunchButton.StartCooldown();
             }
@@ -72,59 +68,10 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        // Remake of the StartSystem Coroutine from original player. Some Methods are not used from the original coroutine
-        // For example no temporaryClose as this will be initiated anyway from the originating Player
-        // Also the fire extiguishing will not start cause the initial player is already extiguishing the fires. Else this could double/triple/... the extinguishing
-        private IEnumerator StartFireSuppressionSystem(SubFire fire)
-        {
-            fire.subRoot.voiceNotificationManager.PlayVoiceNotification(fire.subRoot.fireSupressionNotification, false, true);
-            yield return Yielders.WaitFor3Seconds;
-            fire.fireSuppressionActive = true;
-            fire.subRoot.fireSuppressionState = true;
-            fire.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
-            fire.Invoke(nameof(SubFire.CancelFireSuppression), fire.fireSuppressionSystemDuration);
-            float doorCloseDuration = 30f;
-            fire.gameObject.BroadcastMessage("TemporaryLock", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
-        }
-
         /// <summary>
-        /// Triggers a <see cref="CyclopsDamage"/> packet
+        ///     Triggers a <see cref="CyclopsDamagePointCreated" /> packet
         /// </summary>
-        public void OnCreateDamagePoint(SubRoot subRoot)
-        {
-            BroadcastDamageState(subRoot, Optional.Empty);
-        }
-
-        /// <summary>
-        /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. Right now it's not possible to partially repair because it would be difficult to implement.
-        /// <see cref="CyclopsDamagePoint"/>s are coupled with <see cref="LiveMixin"/>, which is used with just about anything that has health.
-        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't
-        /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending
-        /// <see cref="CyclopsDamagePointRepaired"/> and <see cref="CyclopsDamage"/> packets
-        /// </summary>
-        public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
-        {
-            if (!subRoot.TryGetIdOrWarn(out NitroxId subId))
-            {
-                return;
-            }
-
-            for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
-            {
-                if (subRoot.damageManager.damagePoints[i] == damagePoint)
-                {
-                    CyclopsDamagePointRepaired packet = new(subId, i, repairAmount);
-                    packetSender.Send(packet);
-
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Send out a <see cref="CyclopsDamage"/> packet
-        /// </summary>
-        private void BroadcastDamageState(SubRoot subRoot, Optional<DamageInfo> info)
+        public void OnCreateDamagePoint(SubRoot subRoot, int damagePointIndex)
         {
             if (!subRoot.TryGetIdOrWarn(out NitroxId subId))
             {
@@ -136,63 +83,52 @@ namespace NitroxClient.GameLogic
             {
                 return;
             }
-            CyclopsDamageInfoData damageInfo = null;
-            if (info.HasValue)
-            {
-                DamageInfo damage = info.Value;
-                Optional<NitroxId> dealerId = damage.dealer.GetId();
-                // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
-                // visual effects should be used.
-                damageInfo = new CyclopsDamageInfoData(subId, dealerId, damage.originalDamage, damage.damage, damage.position.ToDto(), damage.type);
-            }
 
-            int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
-            CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
-
-            CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
+            CyclopsDamagePointCreated packet = new(subId, damagePointIndex);
             packetSender.Send(packet);
         }
 
         /// <summary>
-        /// Get all of the index locations of <see cref="CyclopsDamagePoint"/>s in <see cref="CyclopsExternalDamageManager.damagePoints"/>.
+        ///     Called when the player repairs a <see cref="CyclopsDamagePoint" />. Right now it's not possible to partially repair
+        ///     because it would be difficult to implement.
+        ///     <see cref="CyclopsDamagePoint" />s are coupled with <see cref="LiveMixin" />, which is used with just about
+        ///     anything that has health.
+        ///     I would need to hook onto <see cref="LiveMixin.AddHealth(float)" />, or maybe the repair gun event to catch when
+        ///     something repairs a damage point, which I don't
+        ///     believe is worth the effort. A <see cref="CyclopsDamagePoint" /> is already fully repaired in a little over a
+        ///     second. This can trigger sending
+        ///     <see cref="CyclopsDamagePointRepaired" /> and <see cref="CyclopsDamagePointCreated" /> packets
         /// </summary>
-        private IEnumerable<int> GetActiveDamagePoints(SubRoot subRoot)
+        public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
-            for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
+            if (!subRoot.TryGetIdOrWarn(out NitroxId subId))
             {
-                if (subRoot.damageManager.damagePoints[i].gameObject.activeSelf)
-                {
-                    yield return i;
-                }
+                return;
             }
+
+            int index = Array.IndexOf(subRoot.damageManager.damagePoints, damagePoint);
+            if (index == -1)
+            {
+                return;
+            }
+
+            CyclopsDamagePointRepaired packet = new(subId, index, repairAmount);
+            packetSender.Send(packet);
         }
 
-        /// <summary>
-        /// Get all of the index locations of all the fires on the <see cref="SubRoot"/>. <see cref="SubFire.RoomFire.spawnNodes"/> contains
-        /// a static list of all possible fire nodes.
-        /// </summary>
-        private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
+        // Remake of the StartSystem Coroutine from original player. Some Methods are not used from the original coroutine
+        // For example no temporaryClose as this will be initiated anyway from the originating Player
+        // Also the fire extiguishing will not start cause the initial player is already extiguishing the fires. Else this could double/triple/... the extinguishing
+        private IEnumerator StartFireSuppressionSystem(SubFire fire)
         {
-            if (!subFire.subRoot.TryGetIdOrWarn(out NitroxId subRootId))
-            {
-                yield break;
-            }
-
-            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in subFire.roomFires)
-            {
-                for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
-                {
-                    if (roomFire.Value.spawnNodes[i].childCount > 0)
-                    {
-                        if (!roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().TryGetIdOrWarn(out NitroxId fireId))
-                        {
-                            yield break;
-                        }
-
-                        yield return new CyclopsFireData(fireId, subRootId, roomFire.Key, i);
-                    }
-                }
-            }
+            fire.subRoot.voiceNotificationManager.PlayVoiceNotification(fire.subRoot.fireSupressionNotification, false, true);
+            yield return Yielders.WaitFor3Seconds;
+            fire.fireSuppressionActive = true;
+            fire.subRoot.fireSuppressionState = true;
+            fire.subRoot.BroadcastMessage(nameof(SubFloodAlarm.NewAlarmState), null, SendMessageOptions.DontRequireReceiver);
+            fire.Invoke(nameof(SubFire.CancelFireSuppression), fire.fireSuppressionSystemDuration);
+            float doorCloseDuration = 30f;
+            fire.gameObject.BroadcastMessage(nameof(Openable.TemporaryLock), doorCloseDuration, SendMessageOptions.DontRequireReceiver);
         }
     }
 }
