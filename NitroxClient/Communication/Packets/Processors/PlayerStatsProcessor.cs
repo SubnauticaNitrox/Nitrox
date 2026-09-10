@@ -13,7 +13,7 @@ internal sealed class PlayerStatsProcessor(PlayerManager playerManager) : IClien
     {
         if (playerManager.TryFind(playerStats.SessionId, out RemotePlayer remotePlayer))
         {
-            RemotePlayerVitals vitals = remotePlayer.vitals;
+            RemotePlayerVitals vitals = remotePlayer.Vitals;
             if (vitals)
             {
                 vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
