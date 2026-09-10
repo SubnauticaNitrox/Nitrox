@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 using Nitrox.Model.DataStructures;
 using Nitrox.Server.Subnautica.Models.AppEvents;
@@ -58,15 +59,26 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
             return null;
         }
 
-        List<string> lines = [];
+        StringBuilder sb = new();
+        using StringWriter writer = new(sb);
+        writer.NewLine = "\n";
+
         if (!string.IsNullOrWhiteSpace(entry.Reason))
         {
-            lines.Add($"Reason: {entry.Reason}");
+            writer.Write("Reason: ");
+            writer.WriteLine(entry.Reason);
         }
-        lines.Add(entry.ExpiresAtUtc.HasValue
-                      ? $"Ban expires {entry.ExpiresAtUtc.Value.UtcDateTime:yyyy-MM-dd HH:mm} UTC"
-                      : "This ban is permanent.");
-        return string.Join("\n", lines);
+        if (entry.ExpiresAtUtc.HasValue)
+        {
+            writer.Write("Ban expires ");
+            writer.Write(entry.ExpiresAtUtc.Value.UtcDateTime.ToString("yyyy-MM-dd HH:mm"));
+            writer.WriteLine(" UTC");
+        }
+        else
+        {
+            writer.WriteLine("This ban is permanent");
+        }
+        return writer.ToString();
     }
 
     /// <summary>
