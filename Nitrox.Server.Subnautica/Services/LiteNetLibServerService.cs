@@ -193,11 +193,7 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
             request.Reject();
             return;
         }
-        if (server.ConnectedPeersCount >= options.Value.MaxConnections)
-        {
-            request.Reject();
-            return;
-        }
+        // TODO: Check max connection limit here instead of in PlayerManager.ReservePlayerContext. Once join process is simplified.
 
         SessionManager.Session session = sessionManager.GetOrCreateSession(request.RemoteEndPoint);
         NetPeer peer = request.Accept();

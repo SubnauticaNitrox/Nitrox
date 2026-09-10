@@ -83,6 +83,20 @@ public static class JoinServerBackend
                 MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 
                 string reservationRejectionNotification = reservationState.Describe();
+                string? rejectionReason = multiplayerSession.Reservation.RejectionReason;
+                if (!string.IsNullOrEmpty(rejectionReason))
+                {
+                    reservationRejectionNotification += $"\n{rejectionReason}";
+                }
+
+                if (reservationState.HasStateFlag(MultiplayerSessionReservationState.PLAYER_BANNED))
+                {
+                    // Reconnecting can't clear a ban, so send the player back to the server list instead of
+                    // retrying the reservation (which would just re-show this same message).
+                    StopMultiplayerClient();
+                    MainMenuNotificationPanel.ShowMessage(reservationRejectionNotification, MainMenuServerListPanel.NAME);
+                    break;
+                }
 
                 MainMenuNotificationPanel.ShowMessage(reservationRejectionNotification, null, () =>
                 {

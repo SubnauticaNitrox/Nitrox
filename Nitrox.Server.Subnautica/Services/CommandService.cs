@@ -12,7 +12,7 @@ namespace Nitrox.Server.Subnautica.Services;
 /// <summary>
 ///     Enables processing of commands from a string.
 /// </summary>
-internal sealed partial class CommandService(CommandRegistryService registry, ILogger<CommandService> logger, ILoggerFactory loggerFactory) : IHostedLifecycleService, ICommandSubmit
+internal sealed partial class CommandService(CommandRegistryService registry, ILogger<CommandService> logger, ILoggerFactory loggerFactory) : BackgroundService, IHostedLifecycleService, ICommandSubmit
 {
     private const int MAX_ARGS = 8;
     private readonly ILogger<CommandService> logger = logger;
@@ -20,7 +20,6 @@ internal sealed partial class CommandService(CommandRegistryService registry, IL
 
     private readonly CommandRegistryService registry = registry;
     private readonly Channel<Task> runningCommands = Channel.CreateUnbounded<Task>();
-    private Task commandWaiterTask;
 
     [GeneratedRegex(@"""(?:[^""\\]|\\.)*""|\S+", RegexOptions.NonBacktracking | RegexOptions.ExplicitCapture)]
     private static partial Regex ArgumentsRegex { get; }
@@ -142,17 +141,13 @@ internal sealed partial class CommandService(CommandRegistryService registry, IL
         return true;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public override async Task StopAsync(CancellationToken cancellationToken)
     {
-        commandWaiterTask = Task.Factory.StartNew(() => EnsureCommandsAreProcessedAsync(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-        return Task.CompletedTask;
-    }
-
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
+        runningCommands.Writer.TryComplete();
         logger.ZLogTrace($"Waiting for commands to finish processing...");
-        await commandWaiterTask;
+        await EnsureCommandsAreProcessedAsync(cancellationToken);
         logger.ZLogTrace($"Done waiting for commands");
+        await base.StopAsync(cancellationToken);
     }
 
     public Task StartingAsync(CancellationToken cancellationToken) => Task.CompletedTask;
@@ -166,6 +161,8 @@ internal sealed partial class CommandService(CommandRegistryService registry, IL
     public Task StoppingAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     public Task StoppedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken) => await EnsureCommandsAreProcessedAsync(stoppingToken);
 
     private async Task EnsureCommandsAreProcessedAsync(CancellationToken cancellationToken = default)
     {
