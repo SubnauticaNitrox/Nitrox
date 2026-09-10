@@ -10,7 +10,7 @@ internal sealed class ChangeServerPasswordCommand(ILogger<ChangeServerPasswordCo
     private readonly IOptions<SubnauticaServerOptions> serverConfig = serverConfig;
     private readonly ILogger<ChangeServerPasswordCommand> logger = logger;
 
-    [Description("Changes server password. Clear it without argument")]
+    [Description("Changes server password. Clears if without argument")]
     public async Task Execute(ICommandContext context, [Description("The new server password")] string newPassword) => await SetPasswordAsync(context, newPassword);
 
     [Description("Clears server password")]

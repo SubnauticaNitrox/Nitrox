@@ -7,6 +7,7 @@ using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
+[Alias("bans")]
 [RequiresPermission(Perms.MODERATOR)]
 internal sealed class BanListCommand(BanService banService) : ICommandHandler
 {
