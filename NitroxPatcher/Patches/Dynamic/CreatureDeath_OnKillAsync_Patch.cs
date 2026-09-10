@@ -88,7 +88,7 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
         }
 
         Resolve<SimulationOwnership>().StopSimulatingEntity(creatureId);
-        EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+        EntityPositionBroadcaster.Instance.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
 
         if (!IsRemotelyCalled)
         {

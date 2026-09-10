@@ -35,13 +35,10 @@ sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, W
             entitySimulation.FillWithRemovedCells(context.Sender, removedCell, totalSimulationChanges);
         }
 
-        // Simulation update must be broadcasted before the entities are spawned
-        if (totalSimulationChanges.Count > 0)
-        {
-            entitySimulation.BroadcastSimulationChanges(new(totalSimulationChanges));
-        }
+        // no need to broadcast simulation changes because a player loading part of the world can only be given transient lock
+        // on entities which aren't already simulated
 
-        // We send this data whether it's empty because the client needs to know about it (see Terrain)
-        await context.ReplyAsync(new SpawnEntities(totalEntities, packet.Added, true));
+        // We send this data whether it's empty or not because the client needs to know about it (see Terrain)
+        await context.ReplyAsync(new SpawnEntities(totalEntities, totalSimulationChanges, packet.Added, true));
     }
 }

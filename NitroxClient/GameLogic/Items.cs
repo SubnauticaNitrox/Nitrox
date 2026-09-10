@@ -6,6 +6,7 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -21,6 +22,7 @@ public class Items
     private readonly Entities entities;
     public static GameObject? PickingUpObject { get; private set; }
     private readonly EntityMetadataManager entityMetadataManager;
+    private readonly SimulationOwnership simulationOwnership;
 
     /// <summary>
     /// Whether or not <see cref="Inventory.Pickup"/> or a similar method is running (if greater than 0).
@@ -29,11 +31,12 @@ public class Items
 
     public int PickingUpCount;
 
-    public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
+    public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager, SimulationOwnership simulationOwnership)
     {
         this.packetSender = packetSender;
         this.entities = entities;
         this.entityMetadataManager = entityMetadataManager;
+        this.simulationOwnership = simulationOwnership;
     }
 
     public void PickedUpByPlayer(GameObject gameObject, TechType techType)
@@ -158,7 +161,9 @@ public class Items
             droppedItem = new(gameObject.transform.ToWorldDto(), level, classId, false, id, techType.Value.ToDto(), metadata.OrNull(), null, childrenEntities);
         }
 
-        if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true)))
+        bool changesPosition = SimulationWhitelist.ShouldSimulateEntityMovement(droppedItem);
+        simulationOwnership.TakeOwnership(id, SimulationLockType.TRANSIENT, changesPosition);
+        if (packetSender.Send(new EntitySpawnedByClient(droppedItem, true, true)))
         {
             Log.Debug($"Dropping item: {droppedItem}");
         }
@@ -246,7 +251,7 @@ public class Items
 
         // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
         RemoveAnyRemoteControl(gameObject);
-        EntityPositionBroadcaster.StopWatchingEntity(inventoryItemEntity.Id);
+        EntityPositionBroadcaster.Instance.StopWatchingEntity(inventoryItemEntity.Id);
 
         return inventoryItemEntity;
     }

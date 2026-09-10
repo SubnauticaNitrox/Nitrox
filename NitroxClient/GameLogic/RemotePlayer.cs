@@ -157,9 +157,12 @@ public class RemotePlayer : INitroxPlayer
         SetVehicle(null);
         SetPilotingChair(null);
 
+        float teleportThreshold = MovementHelper.GetTeleportThreshold(velocity.magnitude);
+        MovementHelper.TeleportIfTooFar(Body.transform, RigidBody, position, bodyRotation, teleportThreshold);
+
         AnimationController.AimingRotation = aimingRotation;
         AnimationController.UpdatePlayerAnimations = true;
-        AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
+        AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body.transform.position, Time.fixedDeltaTime);
 
         // If in a subroot the position will be relative to the subroot
         if (SubRoot && SubRoot.isBase)
@@ -172,7 +175,7 @@ public class RemotePlayer : INitroxPlayer
         }
 
         RigidBody.velocity = AnimationController.Velocity;
-        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime);
+        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body.transform.rotation, Time.fixedDeltaTime);
     }
 
     public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)

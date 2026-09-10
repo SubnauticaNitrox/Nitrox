@@ -5,6 +5,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
@@ -35,7 +36,7 @@ internal sealed class EntitySimulation : ISessionCleaner
     {
         foreach (WorldEntity entity in GetPlayerSimulatedEntities(player, cell))
         {
-            bool doesEntityMove = ShouldSimulateEntityMovement(entity);
+            bool doesEntityMove = SimulationWhitelist.ShouldSimulateEntityMovement(entity);
             yield return new SimulatedEntity(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
         }
     }
@@ -77,7 +78,7 @@ internal sealed class EntitySimulation : ISessionCleaner
 
     private IEnumerable<WorldEntity> GetSimulatableChildren(WorldEntity entity)
     {
-        return entity.ChildEntities.OfType<WorldEntity>().Where(ShouldSimulateEntity);
+        return entity.ChildEntities.OfType<WorldEntity>().Where(SimulationWhitelist.ShouldSimulateEntity);
     }
 
     private IEnumerable<WorldEntity> GetPlayerSimulatedEntities(Player simulatingPlayer, AbsoluteEntityCell cell)
@@ -88,7 +89,7 @@ internal sealed class EntitySimulation : ISessionCleaner
             {
                 continue;
             }
-            if (!ShouldSimulateEntity(entity))
+            if (!SimulationWhitelist.ShouldSimulateEntity(entity))
             {
                 continue;
             }
@@ -121,13 +122,24 @@ internal sealed class EntitySimulation : ISessionCleaner
     {
         if (simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
         {
-            bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
+            bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
             simulatedEntity = new(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
             return true;
         }
 
         simulatedEntity = null;
         return false;
+    }
+
+    /// <summary>
+    /// Forcefully assign an entity to a player, revoking any previous ownership.
+    /// </summary>
+    public SimulatedEntity AssignEntityToPlayer(Entity entity, Player player, bool shouldEntityMove)
+    {
+        simulationOwnershipData.RevokeOwnerOfId(entity.Id);
+        simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+        bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
+        return new(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
     }
 
     public List<SimulatedEntity> AssignGlobalRootEntitiesAndGetData(Player player)
@@ -140,7 +152,7 @@ internal sealed class EntitySimulation : ISessionCleaner
             {
                 continue;
             }
-            bool doesEntityMove = ShouldSimulateEntityMovement(entity);
+            bool doesEntityMove = SimulationWhitelist.ShouldSimulateEntityMovement(entity);
             SimulatedEntity simulatedEntity = new(entity.Id, playerLock.Player.SessionId, doesEntityMove, playerLock.LockType);
             simulatedEntities.Add(simulatedEntity);
         }
@@ -155,7 +167,7 @@ internal sealed class EntitySimulation : ISessionCleaner
         {
             if (player.CanSee(entity) && simulationOwnershipData.TryToAcquire(id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
             {
-                bool doesEntityMove = entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
+                bool doesEntityMove = entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
 
                 logger.ZLogTrace($"Player {player.Name} has taken over simulating {id}");
                 simulatedEntity = new(id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
@@ -167,19 +179,9 @@ internal sealed class EntitySimulation : ISessionCleaner
         return false;
     }
 
-    public bool ShouldSimulateEntity(WorldEntity entity)
-    {
-        return SimulationWhitelist.UtilityWhitelist.Contains(entity.TechType) || ShouldSimulateEntityMovement(entity);
-    }
-
-    public bool ShouldSimulateEntityMovement(WorldEntity entity)
-    {
-        return !entity.SpawnedByServer || SimulationWhitelist.MovementWhitelist.Contains(entity.TechType);
-    }
-
     public bool ShouldSimulateEntityMovement(NitroxId entityId)
     {
-        return entityRegistry.TryGetEntityById(entityId, out WorldEntity worldEntity) && ShouldSimulateEntityMovement(worldEntity);
+        return entityRegistry.TryGetEntityById(entityId, out WorldEntity worldEntity) && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
     }
 
     public void EntityDestroyed(NitroxId id)

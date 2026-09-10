@@ -30,6 +30,30 @@ public static class DictionaryExtensions
         }
     }
 
+    public static void RemoveWhere<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, Func<KeyValuePair<TKey, TValue>, bool> predicate)
+    {
+        int toRemoveIndex = 0;
+        TKey[] toRemove = ArrayPool<TKey>.Shared.Rent(dictionary.Count);
+        try
+        {
+            foreach (KeyValuePair<TKey, TValue> item in dictionary)
+            {
+                if (predicate.Invoke(item))
+                {
+                    toRemove[toRemoveIndex++] = item.Key;
+                }
+            }
+            for (int i = 0; i < toRemoveIndex; i++)
+            {
+                dictionary.Remove(toRemove[i]);
+            }
+        }
+        finally
+        {
+            ArrayPool<TKey>.Shared.Return(toRemove, true);
+        }
+    }
+
 #if NETFRAMEWORK
     public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
     {
