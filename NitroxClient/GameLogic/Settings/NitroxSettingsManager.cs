@@ -41,6 +41,7 @@ public class NitroxSettingsManager
             NitroxPrefs.HideIp.Value = hide;
             MainMenuServerListPanel.Main.RefreshServerEntries();
         }));
+        AddSetting("Nitrox_Settings_Privacy", new Setting("Nitrox_Settings_PictureFrameSyncDisabled", NitroxPrefs.PictureFrameSyncDisabled, disabled => NitroxPrefs.PictureFrameSyncDisabled.Value = disabled));
 
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
@@ -55,6 +56,7 @@ public class NitroxSettingsManager
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_LatencyUpdatePeriod", NitroxPrefs.LatencyUpdatePeriod, latencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value = (int)latencyUpdatePeriod, 1, 60, NitroxPrefs.LatencyUpdatePeriod.DefaultValue, 1, SliderLabelMode.Int, tooltip: "Nitrox_Settings_HigherForUnstable_Tooltip"));
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_SafetyLatencyMargin", NitroxPrefs.SafetyLatencyMargin, safetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value = safetyLatencyMargin, 0.01f, 0.5f, NitroxPrefs.SafetyLatencyMargin.DefaultValue, 0.01f, SliderLabelMode.Float, "0.00", "Nitrox_Settings_HigherForUnstable_Tooltip"));
         AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_OfflineClockSyncDuration", NitroxPrefs.OfflineClockSyncDuration, offlineClockSyncDuration => NitroxPrefs.OfflineClockSyncDuration.Value = (int)offlineClockSyncDuration, 3, 15, NitroxPrefs.OfflineClockSyncDuration.DefaultValue, 1, SliderLabelMode.Int, tooltip: "Nitrox_Settings_HigherForUnstable_Tooltip"));
+        AddSetting("Nitrox_Settings_Bandwidth", new Setting("Nitrox_Settings_PictureFrameSessionCap", NitroxPrefs.PictureFrameSessionDownloadCapMb, cap => NitroxPrefs.PictureFrameSessionDownloadCapMb.Value = (int)cap, 32, 1024, NitroxPrefs.PictureFrameSessionDownloadCapMb.DefaultValue, 32, SliderLabelMode.Int, tooltip: "Nitrox_Settings_PictureFrameSessionCap_Tooltip"));
     }
 
     /// <summary>Adds a setting to the list under a certain heading</summary>

@@ -146,6 +146,7 @@ namespace Nitrox.Model.Packets
         {
             DEFAULT = 0,
             MOVEMENTS = 1,
+            PICTURE_FRAMES = 2,
         }
     }
 }
