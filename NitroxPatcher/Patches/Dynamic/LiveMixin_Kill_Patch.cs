@@ -18,17 +18,20 @@ public sealed partial class LiveMixin_Kill_Patch : NitroxPatch, IDynamicPatch
             return;
         }
 
-        // We don't broadcast if we don't have objectId or if the object is whitelisted,
-        // in which case kill broadcast is managed differently
-        if (!__instance.TryGetNitroxId(out NitroxId objectId) ||
-            Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
+        if (!__instance.TryGetNitroxId(out NitroxId objectId))
         {
             return;
         }
-        
-        // Some objects don't have destroyOnDeath but we still need to broadcast the death
-        // (because the destruction is managed by another script)
-        if (__instance.destroyOnDeath || Resolve<LiveMixinManager>().ShouldBroadcastDeath(__instance))
+
+        if (Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
+        {
+            return;
+        }
+
+        if (__instance.destroyOnDeath || 
+            __instance.broadcastKillOnDeath || 
+            __instance.passDamageDataOnDeath || 
+            Resolve<LiveMixinManager>().ShouldBroadcastDeath(__instance))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(objectId));
         }
