@@ -1,29 +1,32 @@
 using System.Collections.Generic;
+using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityTransformUpdatesProcessor(PlayerManager playerManager, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData) : IAuthPacketProcessor<EntityTransformUpdates>
+internal sealed class EntityTransformUpdatesProcessor(PlayerService playerService, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData) : IAuthPacketProcessor<EntityTransformUpdates>
 {
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
     public async Task Process(AuthProcessorContext context, EntityTransformUpdates packet)
     {
-        Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = InitializeVisibleUpdateMapWithOtherPlayers(context.Sender);
+        Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = InitializeVisibleUpdateMapWithOtherPlayers(context.Sender);
         AssignVisibleUpdatesToPlayers(context.Sender, packet.Updates, visibleUpdatesByPlayer);
         await SendUpdatesToPlayersAsync(context, visibleUpdatesByPlayer);
     }
 
-    private Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(Player simulatingPlayer)
+    private Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(SessionId simulatingPlayer)
     {
-        Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = [];
-        foreach (Player player in playerManager.GetConnectedPlayers())
+        Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = [];
+        foreach (SessionId player in playerService.GetSessionIds())
         {
             if (!player.Equals(simulatingPlayer))
             {
@@ -33,11 +36,11 @@ internal sealed class EntityTransformUpdatesProcessor(PlayerManager playerManage
         return visibleUpdatesByPlayer;
     }
 
-    private void AssignVisibleUpdatesToPlayers(Player sendingPlayer, List<EntityTransformUpdates.EntityTransformUpdate> updates, Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
+    private void AssignVisibleUpdatesToPlayers(SessionId sendingPlayer, List<EntityTransformUpdates.EntityTransformUpdate> updates, Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
     {
         foreach (EntityTransformUpdates.EntityTransformUpdate update in updates)
         {
-            if (!simulationOwnershipData.TryGetLock(update.Id, out SimulationOwnershipData.PlayerLock playerLock) || playerLock.Player != sendingPlayer)
+            if (!simulationOwnershipData.TryGetLock(update.Id, out SimulationOwnershipData.PlayerLock playerLock) || playerLock.SessionId != sendingPlayer)
             {
                 // This will happen pretty frequently when a player moves very fast (swimfast or maybe some more edge cases) so we can just ignore this
                 continue;
@@ -50,9 +53,9 @@ internal sealed class EntityTransformUpdatesProcessor(PlayerManager playerManage
                 continue;
             }
 
-            foreach (KeyValuePair<Player, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
+            foreach (KeyValuePair<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
             {
-                if (playerUpdates.Key.CanSee(worldEntity))
+                if (playerService.GetProperty<VisibleCellsProperty>(playerUpdates.Key).CanSee(worldEntity))
                 {
                     playerUpdates.Value.Add(update);
                 }
@@ -60,16 +63,16 @@ internal sealed class EntityTransformUpdatesProcessor(PlayerManager playerManage
         }
     }
 
-    private async Task SendUpdatesToPlayersAsync(AuthProcessorContext context, Dictionary<Player, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
+    private async Task SendUpdatesToPlayersAsync(AuthProcessorContext context, Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer)
     {
-        foreach (KeyValuePair<Player, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
+        foreach (KeyValuePair<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
         {
-            Player player = playerUpdates.Key;
+            SessionId player = playerUpdates.Key;
             List<EntityTransformUpdates.EntityTransformUpdate> updates = playerUpdates.Value;
 
             if (updates.Count > 0)
             {
-                await context.SendAsync(new EntityTransformUpdates(updates), player.SessionId);
+                await context.SendAsync(new EntityTransformUpdates(updates), player);
             }
         }
     }

@@ -5,13 +5,12 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Serialization;
-using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
-using Nitrox.Server.Subnautica.Models.GameLogic.Players;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 using Nitrox.Server.Subnautica.Services;
@@ -26,7 +25,6 @@ internal sealed class WorldService : IHostedService
     private readonly ILogger<WorldService> logger;
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly PdaManager pdaManager;
-    private readonly PlayerManager playerManager;
 
     private readonly TaskCompletionSource<bool> hasFinishedLoadingTcs = new();
     private readonly SaveService saveService;
@@ -45,7 +43,6 @@ internal sealed class WorldService : IHostedService
         IEnumerable<SaveDataUpgrade> upgrades,
         BatchEntitySpawner batchEntitySpawner,
         EntityRegistry entityRegistry,
-        PlayerManager playerManager,
         StoryScheduler storyScheduler,
         StoryManager storyManager,
         WorldEntityManager worldEntityManager,
@@ -60,7 +57,6 @@ internal sealed class WorldService : IHostedService
         this.upgrades = upgrades.ToArray();
         this.batchEntitySpawner = batchEntitySpawner;
         this.entityRegistry = entityRegistry;
-        this.playerManager = playerManager;
         this.storyScheduler = storyScheduler;
         this.storyManager = storyManager;
         this.worldEntityManager = worldEntityManager;
@@ -93,7 +89,6 @@ internal sealed class WorldService : IHostedService
                 ParsedBatchCells = batchEntitySpawner.SerializableParsedBatches,
                 GameData = GameData.From(pdaManager, storyManager.StoryGoalData, storyScheduler, storyManager, timeService)
             },
-            PlayerData = PlayerData.From(playerManager.GetAllPlayers()),
             GlobalRootData = GlobalRootData.From(worldEntityManager.GetPersistentGlobalRootEntities()),
             EntityData = EntityData.From(entityRegistry.GetAllEntities(true))
         };
@@ -149,7 +144,6 @@ internal sealed class WorldService : IHostedService
             Directory.CreateDirectory(saveDir);
 
             Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-            Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
             Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
             Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
             Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
@@ -170,7 +164,6 @@ internal sealed class WorldService : IHostedService
         {
             PersistedWorldData persistedData = new()
             {
-                PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}")),
                 WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}")),
                 GlobalRootData = Serializer.Deserialize<GlobalRootData>(Path.Combine(saveDir, $"GlobalRootData{FileEnding}")),
                 EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"))
@@ -326,11 +319,6 @@ internal sealed class WorldService : IHostedService
             worldEntityManager.worldEntitiesByCell = worldEntities.Where(entity => entity is not GlobalRootEntity)
                                                                   .GroupBy(entity => entity.AbsoluteEntityCell)
                                                                   .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
-
-            foreach (Player player in pWorldData.PlayerData.GetPlayers())
-            {
-                playerManager.AddSavedPlayer(player);
-            }
             batchEntitySpawner.SerializableParsedBatches = pWorldData.WorldData.ParsedBatchCells;
             // Pda
             pdaManager.PdaState = pWorldData.WorldData.GameData.PDAState;
@@ -351,17 +339,17 @@ internal sealed class WorldService : IHostedService
         logger.ZLogInformation($"World finished loading");
     }
 
-    private async Task<bool> LoadWorldFromSavePathAsync(string saveDir)
+    private async Task<bool> LoadWorldFromSavePathAsync(string savePath)
     {
-        if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
+        if (!Directory.Exists(savePath) || !File.Exists(Path.Combine(savePath, $"Version{FileEnding}")))
         {
             logger.ZLogWarning($"No previous save file found, creating a new one");
             return false;
         }
 
-        UpgradeSave(saveDir);
+        UpgradeSave(savePath);
 
-        PersistedWorldData persistedData = LoadPersistedWorld(saveDir);
+        PersistedWorldData persistedData = LoadPersistedWorld(savePath);
         if (persistedData == null)
         {
             return false;
@@ -375,7 +363,6 @@ internal sealed class WorldService : IHostedService
         PersistedWorldData pWorldData = new()
         {
             EntityData = EntityData.From([]),
-            PlayerData = PlayerData.From([]),
             WorldData = new WorldData
             {
                 GameData = new GameData

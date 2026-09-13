@@ -27,7 +27,7 @@ internal sealed class RestartService(IPacketSender packetSender, ILogger<Restart
     {
         if (RestartOnStop)
         {
-            await packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, "Server is restarting..."));
+            await packetSender.SendPacketToAllAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, "Server is restarting..."));
         }
     }
 

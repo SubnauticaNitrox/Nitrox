@@ -45,7 +45,7 @@ internal sealed class PacketSerializationService : BackgroundService
             }
             if (!initTcs.TrySetResult())
             {
-                throw new Exception("Failed to set init result");
+                throw new Exception("Failed to set init result", initTcs.Task.Exception);
             }
         }, stoppingToken).ContinueWithHandleError(exception => logger.ZLogCritical(exception, $"Failed to initialize packet serializer"));
     }

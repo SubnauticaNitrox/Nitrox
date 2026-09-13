@@ -25,7 +25,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
         public NitroxId Id { get; set; }
 
         [DataMember(Order = 2)]
-        public NitroxTechType TechType { get; set; }
+        public NitroxTechType? TechType { get; set; }
 
         [DataMember(Order = 3)]
         public EntityMetadata? Metadata { get; set; }

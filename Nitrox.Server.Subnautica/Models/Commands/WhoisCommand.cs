@@ -1,30 +1,19 @@
 ﻿using System.ComponentModel;
 using System.Text;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.DataStructures.Unity;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.PLAYER)]
-internal sealed class WhoisCommand : ICommandHandler, ICommandHandler<Player>
+internal sealed class WhoisCommand(PlayerService playerService) : ICommandHandler, ICommandHandler<SessionId>
 {
-    [Description("Shows information about a player")]
-    public async Task Execute(ICommandContext context, Player targetPlayer)
-    {
-        StringBuilder builder = new($"==== {targetPlayer.Name} ====\n");
-        builder.AppendLine($"Id: {targetPlayer.Entity.Id}");
-        builder.AppendLine($"SessionId: {targetPlayer.SessionId}");
-        builder.AppendLine($"Role: {targetPlayer.Permissions}");
-        builder.AppendLine($"Gamemode: {targetPlayer.GameMode}");
-        builder.AppendLine($"Position: {targetPlayer.Position.X}, {targetPlayer.Position.Y}, {targetPlayer.Position.Z}");
-        builder.AppendLine($"Oxygen: {targetPlayer.Stats.Oxygen}/{targetPlayer.Stats.MaxOxygen}");
-        builder.AppendLine($"Food: {targetPlayer.Stats.Food}");
-        builder.AppendLine($"Water: {targetPlayer.Stats.Water}");
-        builder.AppendLine($"Infection: {targetPlayer.Stats.InfectionAmount}");
-        builder.AppendLine($"In precursor: {targetPlayer.InPrecursor}");
-
-        await context.ReplyAsync(builder.ToString());
-    }
+    private readonly PlayerService playerService = playerService;
 
     [RequiresOrigin(CommandOrigin.PLAYER)]
     [Description("Shows information about the current player")]
@@ -34,6 +23,26 @@ internal sealed class WhoisCommand : ICommandHandler, ICommandHandler<Player>
         {
             throw new Exception("Player context is required to run this command");
         }
-        await Execute(context, playerContext.Player);
+        await Execute(context, playerContext.OriginId);
+    }
+
+    [Description("Shows information about a player")]
+    public async Task Execute(ICommandContext context, SessionId targetPlayer)
+    {
+        StringBuilder builder = new($"==== {playerService.GetProperty<NameProperty>(targetPlayer).Value} ====\n");
+        builder.AppendLine($"Id: {playerService.GetProperty<GameObjectIdProperty>(targetPlayer).Value}");
+        builder.AppendLine($"SessionId: {targetPlayer}");
+        builder.AppendLine($"Role: {playerService.GetProperty<PermissionsProperty>(targetPlayer).Value}");
+        builder.AppendLine($"Gamemode: {playerService.GetProperty<GameModeProperty>(targetPlayer).Value}");
+        NitroxVector3 position = playerService.GetProperty<PositionProperty>(targetPlayer).Value;
+        builder.AppendLine($"Position: {position.X}, {position.Y}, {position.Z}");
+        PlayerStatsData stats = playerService.GetProperty<StatsProperty>(targetPlayer).Value;
+        builder.AppendLine($"Oxygen: {stats.Oxygen}/{stats.MaxOxygen}");
+        builder.AppendLine($"Food: {stats.Food}");
+        builder.AppendLine($"Water: {stats.Water}");
+        builder.AppendLine($"Infection: {stats.InfectionAmount}");
+        builder.AppendLine($"In precursor: {playerService.GetProperty<InPrecursorProperty>(targetPlayer).Value}");
+
+        await context.ReplyAsync(builder.ToString());
     }
 }

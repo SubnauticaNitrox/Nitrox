@@ -10,26 +10,27 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using MagicOnion.Client;
 using Nitrox.Model.Constants;
+using Nitrox.Model.Core;
 using Nitrox.Model.MagicOnion;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Logging.ZLogger;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
 
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
 ///     Connects to a locally running app that might want to track this server. Nitrox.Launcher is expected.
 /// </summary>
-internal sealed class ServersManagementService(PlayerManager playerManager, IPacketSender packetSender, CommandService commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
+internal sealed class ServersManagementService(PlayerService playerService, IPacketSender packetSender, CommandService commandProcessor, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
 {
     public static readonly Channel<LogEntry> LogQueue = Channel.CreateBounded<LogEntry>(new BoundedChannelOptions(1000) { FullMode = BoundedChannelFullMode.DropOldest });
     
     private readonly CommandService commandProcessor = commandProcessor;
     private readonly ILogger<ServersManagementService> logger = logger;
     private readonly IOptions<ServerStartOptions> options = options;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     
     private GrpcChannel? channel;
     private ConnectionInfo? currentConnectionInfo;
@@ -156,7 +157,23 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
 
     private async Task PushPollDataAsync(IServersManagement api)
     {
-        await api.SetPlayers(playerManager.ConnectedPlayers().Select(player => player.Name).ToArray());
+        SessionId[] sessions = playerService.GetSessionIds().ToArray();
+        string[] names = new string[sessions.Length];
+        int skipped = 0;
+        for (int i = 0; i < sessions.Length; i++)
+        {
+            try
+            {
+                names[i] = playerService.GetProperty<NameProperty>(sessions[i]).Value;
+            }
+            catch (Exception)
+            {
+                // Session might disconnect during lookup, so we skip it.
+                skipped++;
+            }
+        }
+        Array.Sort(names); // Nulls will be sorted before non-null values.
+        await api.SetPlayers(names[skipped..]); // Sends names that aren't null.
     }
 
     private async Task PushLogsAsync(IServersManagement api, CancellationToken cancellationToken)

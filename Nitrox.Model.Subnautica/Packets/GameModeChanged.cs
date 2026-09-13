@@ -26,6 +26,6 @@ public sealed class GameModeChanged : Packet
 
     public static GameModeChanged ForAllPlayers(SubnauticaGameMode gameMode)
     {
-        return new(0, true, gameMode);
+        return new((SessionId)SessionId.SERVER_ID, true, gameMode);
     }
 }

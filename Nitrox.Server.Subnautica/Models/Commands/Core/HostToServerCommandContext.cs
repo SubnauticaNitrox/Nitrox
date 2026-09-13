@@ -12,7 +12,7 @@ internal sealed record HostToServerCommandContext : ICommandContext
     public ILogger Logger { get; set; } = NullLogger.Instance;
     public CommandOrigin Origin { get; init; } = CommandOrigin.SERVER;
     public string OriginName => "SERVER";
-    public SessionId OriginId { get; init; } = SessionId.SERVER_ID;
+    public SessionId OriginId { get; init; } = (SessionId)SessionId.SERVER_ID;
     public Perms Permissions { get; init; } = Perms.HOST;
 
     public HostToServerCommandContext(IPacketSender packetSender)
@@ -60,7 +60,7 @@ internal sealed record HostToServerCommandContext : ICommandContext
             case string message:
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    await packetSender.SendPacketToOthersAsync(new ChatMessage(SessionId.SERVER_ID, message), OriginId);
+                    await packetSender.SendPacketToOthersAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, message), OriginId);
                 }
                 break;
             default:
@@ -79,7 +79,7 @@ internal sealed record HostToServerCommandContext : ICommandContext
             case string message:
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    await packetSender.SendPacketAsync(new ChatMessage(SessionId.SERVER_ID, message), sessionId);
+                    await packetSender.SendPacketAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, message), sessionId);
                 }
                 break;
             default:

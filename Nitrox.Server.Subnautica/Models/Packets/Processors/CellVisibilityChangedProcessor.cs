@@ -4,18 +4,22 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<CellVisibilityChanged>
+sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, WorldEntityManager worldEntityManager, PlayerService playerService) : IAuthPacketProcessor<CellVisibilityChanged>
 {
     private readonly EntitySimulation entitySimulation = entitySimulation;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly PlayerService playerService = playerService;
 
     public async Task Process(AuthProcessorContext context, CellVisibilityChanged packet)
     {
-        context.Sender.AddCells(packet.Added);
-        context.Sender.RemoveCells(packet.Removed);
+        VisibleCellsProperty visibleCellsProperty = playerService.GetProperty<VisibleCellsProperty>(context.Sender);
+        visibleCellsProperty.AddCells(packet.Added);
+        visibleCellsProperty.RemoveCells(packet.Removed);
 
         List<Entity> totalEntities = [];
         List<SimulatedEntity> totalSimulationChanges = [];

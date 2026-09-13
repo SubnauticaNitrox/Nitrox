@@ -6,24 +6,24 @@ namespace Nitrox.Server.Subnautica.Models.Packets.Core;
 /// <summary>
 ///     Context used by <see cref="IAuthPacketProcessor{TPacket}" />.
 /// </summary>
-internal record AuthProcessorContext : IPacketProcessContext<Player>
+internal record AuthProcessorContext : IPacketProcessContext<SessionId>
 {
     private readonly IPacketSender packetSender;
-    public Player Sender { get; set; }
+    public SessionId Sender { get; set; }
 
-    public AuthProcessorContext(Player sender, IPacketSender packetSender)
+    public AuthProcessorContext(SessionId senderId, IPacketSender packetSender)
     {
         this.packetSender = packetSender;
-        Sender = sender;
+        Sender = senderId;
     }
 
     public async Task SendAsync<T>(T packet, SessionId sessionId) where T : Packet => await packetSender.SendPacketAsync(packet, sessionId);
 
-    public async Task ReplyAsync<T>(T packet) where T : Packet => await packetSender.SendPacketAsync(packet, Sender.SessionId);
+    public async Task ReplyAsync<T>(T packet) where T : Packet => await packetSender.SendPacketAsync(packet, Sender);
 
     public async Task SendToAllAsync<T>(T packet) where T : Packet => await packetSender.SendPacketToAllAsync(packet);
 
-    public async Task SendToOthersAsync<T>(T packet) where T : Packet => await packetSender.SendPacketToOthersAsync(packet, Sender.SessionId);
+    public async Task SendToOthersAsync<T>(T packet) where T : Packet => await packetSender.SendPacketToOthersAsync(packet, Sender);
 
-    public override string ToString() => $"'{Sender.Name}' #{Sender.SessionId}";
+    public override string ToString() => $"#{Sender}";
 }

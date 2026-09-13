@@ -13,6 +13,7 @@ using Nitrox.Server.Subnautica.Models.Serialization;
 
 namespace Nitrox.Server.Subnautica.Services;
 
+// TODO: Add version number to Bans.json
 /// <summary>
 ///     Enables persisted IP bans.
 /// </summary>
@@ -31,7 +32,19 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
     {
         try
         {
-            await Task.Run(Load, cancellationToken);
+            BanData? data = serializer.Deserialize<BanData>(FilePath);
+            foreach (BanEntry entry in data?.Bans ?? [])
+            {
+                bansByIp[entry.IP] = entry;
+            }
+        }
+        catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
+        {
+            // No ban file yet (fresh save, or a save from before this feature existed).
+        }
+        catch (Exception ex)
+        {
+            logger.ZLogError(ex, $"Could not load ban list, starting with an empty one");
         }
         finally
         {
@@ -175,26 +188,6 @@ internal sealed class BanService(ServerJsonSerializer serializer, IOptions<Serve
         {
             bansByIp.Remove(entry.IP);
             logger.ZLogDebug($"A ban expired: {entry}");
-        }
-    }
-
-    private void Load()
-    {
-        try
-        {
-            BanData? data = serializer.Deserialize<BanData>(FilePath);
-            foreach (BanEntry entry in data?.Bans ?? [])
-            {
-                bansByIp[entry.IP] = entry;
-            }
-        }
-        catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
-        {
-            // No ban file yet (fresh save, or a save from before this feature existed).
-        }
-        catch (Exception ex)
-        {
-            logger.ZLogError(ex, $"Could not load ban list, starting with an empty one");
         }
     }
 

@@ -1,36 +1,36 @@
 ﻿using System.ComponentModel;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.ADMIN)]
-internal sealed class DeopCommand(PlayerManager playerManager) : ICommandHandler<Player>
+internal sealed class DeopCommand(PlayerService playerService) : ICommandHandler<SessionId>
 {
     private const Perms DEOP_PERMS_DEFAULT = Perms.PLAYER;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
 
     [Description("Removes admin rights from user")]
-    public async Task Execute(ICommandContext context, [Description("Username to remove admin rights from")] Player targetPlayer)
+    public async Task Execute(ICommandContext context, [Description("Username to remove admin rights from")] SessionId targetPlayer)
     {
+        PermissionsProperty targetPerms = playerService.GetProperty<PermissionsProperty>(targetPlayer);
+        NameProperty targetName = playerService.GetProperty<NameProperty>(targetPlayer);
         switch (context)
         {
-            case not null when targetPlayer.SessionId == context.OriginId:
+            case not null when targetPlayer == context.OriginId:
                 await context.ReplyAsync("You can't deop yourself!");
                 break;
-            case not null when targetPlayer.Permissions >= context.Permissions:
-                await context.ReplyAsync($"You're not allowed to remove admin permissions of {targetPlayer.Name}");
+            case not null when targetPerms.Value >= context.Permissions:
+                await context.ReplyAsync($"You're not allowed to remove admin permissions of {targetName.Value}");
                 break;
             default:
-                if (!playerManager.SetPlayerProperty(targetPlayer.SessionId, DEOP_PERMS_DEFAULT, (player, perms) => player.Permissions = perms))
-                {
-                    await context.ReplyAsync($"Failed to change permissions to {DEOP_PERMS_DEFAULT}");
-                    break;
-                }
-                await context.SendAsync(targetPlayer.SessionId, new PermsChanged(DEOP_PERMS_DEFAULT)); // Notify so they no longer get admin stuff on client (which would in any way stop working)
-                await context.SendAsync(targetPlayer.SessionId, $"You were demoted to {DEOP_PERMS_DEFAULT}");
-                await context.ReplyAsync($"Updated {targetPlayer.Name}'s permissions to {DEOP_PERMS_DEFAULT}");
+                targetPerms.Value = DEOP_PERMS_DEFAULT;
+                await context.SendAsync(targetPlayer, new PermsChanged(DEOP_PERMS_DEFAULT)); // Notify so they no longer get admin stuff on client (which would in any way stop working)
+                await context.SendAsync(targetPlayer, $"You were demoted to {DEOP_PERMS_DEFAULT}");
+                await context.ReplyAsync($"Updated {targetName.Value}'s permissions to {DEOP_PERMS_DEFAULT}");
                 break;
         }
     }

@@ -11,7 +11,7 @@ internal sealed class CyclopsDamageProcessor(ILogger<CyclopsDamageProcessor> log
 
     public async Task Process(AuthProcessorContext context, CyclopsDamage packet)
     {
-        logger.ZLogDebug($"New cyclops damage from player #{context.Sender.SessionId}: {packet}");
+        logger.ZLogDebug($"New cyclops damage from player #{context.Sender}: {packet}");
 
         await context.SendToOthersAsync(packet);
     }

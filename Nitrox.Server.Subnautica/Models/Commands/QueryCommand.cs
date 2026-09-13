@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -8,14 +9,17 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.ADMIN)]
-internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager) : ICommandHandler<NitroxId>
+internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData, PlayerService playerService) : ICommandHandler<NitroxId>, ICommandHandler<SessionId>
 {
     private readonly EntityRegistry entityRegistry = entityRegistry;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
 
     [Description("Query the entity associated with the given NitroxId")]
@@ -27,6 +31,22 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
             return;
         }
 
+        await SendEntityOverview(context, entity);
+    }
+
+    public async Task Execute(ICommandContext context, SessionId sessionId)
+    {
+        if (!entityRegistry.TryGetEntityById(playerService.GetProperty<GameObjectIdProperty>(sessionId).Value, out Entity entity))
+        {
+            await context.ReplyAsync($"No entity attached to player session #{sessionId}");
+            return;
+        }
+
+        await SendEntityOverview(context, entity);
+    }
+
+    private async Task SendEntityOverview(ICommandContext context, Entity entity)
+    {
         StringBuilder builder = new();
         builder.AppendLine("Entity");
         builder.AppendLine($" └ Type: {entity.GetType().Name}");
@@ -60,23 +80,23 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
 
         if (entity is PlayerEntity)
         {
-            Player? serverPlayer = playerManager.GetAllPlayers().FirstOrDefault(p => p.GameObjectId == entityId);
-            if (serverPlayer is not null)
+            (SessionId? serverPlayerId, GameObjectIdProperty? _) = playerService.GetProperties<GameObjectIdProperty>().FirstOrDefault(p => p.Item2.Value == entity.Id);
+            if (serverPlayerId.HasValue)
             {
                 builder.AppendLine("Player");
-                builder.AppendLine($" └ Name: {serverPlayer.Name}");
-                builder.AppendLine($" └ Online: {serverPlayer.IsOnline}");
-                builder.AppendLine($" └ Perms: {serverPlayer.Permissions}");
-                builder.AppendLine($" └ GameMode: {serverPlayer.GameMode}");
-                builder.AppendLine($" └ InPrecursor: {serverPlayer.InPrecursor}");
-                builder.AppendLine($" └ Stats: {serverPlayer.Stats}");
-                builder.AppendLine($" └ DisplaySurfaceWater: {serverPlayer.DisplaySurfaceWater}");
-                builder.AppendLine($" └ Position: {serverPlayer.Position}");
-                builder.AppendLine($" └ LastStoredPosition: {serverPlayer.LastStoredPosition?.ToString() ?? "<null>"}");
-                builder.AppendLine($" └ SubRootId: {serverPlayer.SubRootId.OrNull()?.ToString() ?? "<null>"}");
-                builder.AppendLine($" └ LastStoredSubRootID: {serverPlayer.LastStoredSubRootID.OrNull()?.ToString() ?? "<null>"}");
+                builder.AppendLine($" └ Name: {playerService.GetProperty<NameProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Online: {playerService.GetProperty<IsOnlineProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Perms: {playerService.GetProperty<PermissionsProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ GameMode: {playerService.GetProperty<GameModeProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ InPrecursor: {playerService.GetProperty<InPrecursorProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Stats: {playerService.GetProperty<StatsProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ DisplaySurfaceWater: {playerService.GetProperty<DisplaySurfaceWaterProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Position: {playerService.GetProperty<PositionProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ LastStoredPosition: {playerService.GetProperty<CheckpointPositionProperty>(serverPlayerId.Value).Value.ToString()}");
+                builder.AppendLine($" └ SubRootId: {playerService.GetProperty<SubRootIdProperty>(serverPlayerId.Value).Value?.ToString() ?? "<null>"}");
+                builder.AppendLine($" └ LastStoredSubRootID: {playerService.GetProperty<CheckpointSubRootIdProperty>(serverPlayerId.Value).Value?.ToString() ?? "<null>"}");
 
-                if (entity.ParentId != serverPlayer.SubRootId.OrNull())
+                if (entity.ParentId != playerService.GetProperty<SubRootIdProperty>(serverPlayerId.Value).Value)
                 {
                     builder.AppendLine("⚠ ParentId doesn't match SubRootId");
                 }
@@ -88,11 +108,11 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
             }
         }
 
-        bool isLocked = simulationOwnershipData.TryGetLock(entityId, out SimulationOwnershipData.PlayerLock playerLock);
+        bool isLocked = simulationOwnershipData.TryGetLock(entity.Id, out SimulationOwnershipData.PlayerLock playerLock);
 
         builder.AppendLine("Lock status");
         builder.AppendLine($" └ Locked: {isLocked}");
-        builder.AppendLine($" └ Owner: {(isLocked ? $"{playerLock.Player.Name} #{playerLock.Player.SessionId}" : "<null>")}");
+        builder.AppendLine($" └ Owner: {(isLocked ? $"{playerService.GetProperty<NameProperty>(playerLock.SessionId).Value} #{playerLock.SessionId}" : "<null>")}");
 
         builder.AppendLine("Raw Data");
         builder.AppendLine(entity.ToString());

@@ -1,16 +1,17 @@
-﻿using Nitrox.Model.DataStructures.Unity;
+﻿using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.GameLogic.FMOD;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
 using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class FMODEventInstanceProcessor(PlayerManager playerManager, FmodService fmodService, ILogger<FMODEventInstanceProcessor> logger) : IAuthPacketProcessor<FMODEventInstancePacket>
+internal sealed class FMODEventInstanceProcessor(PlayerService playerService, FmodService fmodService, ILogger<FMODEventInstanceProcessor> logger) : IAuthPacketProcessor<FMODEventInstancePacket>
 {
-    private readonly PlayerManager playerManager = playerManager;
     private readonly FmodService fmodService = fmodService;
     private readonly ILogger<FMODEventInstanceProcessor> logger = logger;
+    private readonly PlayerService playerService = playerService;
 
     public async Task Process(AuthProcessorContext context, FMODEventInstancePacket packet)
     {
@@ -20,15 +21,21 @@ internal sealed class FMODEventInstanceProcessor(PlayerManager playerManager, Fm
             return;
         }
 
-        foreach (Player player in playerManager.GetConnectedPlayers())
+        foreach (SessionId player in playerService.GetSessionIds())
         {
-            float distance = NitroxVector3.Distance(player.Position, packet.Position);
-            if (player != context.Sender &&
-                (soundData.IsGlobal || player.SubRootId.Equals(context.Sender.SubRootId)) &&
-                distance < soundData.Radius)
+            float distance = NitroxVector3.Distance(playerService.GetProperty<PositionProperty>(player).Value, packet.Position);
+            if (player == context.Sender)
+            {
+                continue;
+            }
+            if (distance >= soundData.Radius)
+            {
+                continue;
+            }
+            if (soundData.IsGlobal || playerService.GetProperty<SubRootIdProperty>(player).Value == playerService.GetProperty<SubRootIdProperty>(context.Sender).Value)
             {
                 packet.Volume = SoundHelper.CalculateVolume(distance, soundData.Radius, packet.Volume);
-                await context.SendAsync(packet, player.SessionId);
+                await context.SendAsync(packet, player);
             }
         }
     }

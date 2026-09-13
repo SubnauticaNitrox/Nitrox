@@ -1,17 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
-namespace Nitrox.Server.Subnautica.Models.Serialization.Json
+namespace Nitrox.Server.Subnautica.Models.Serialization.Json;
+
+internal sealed class TechTypeConverter : JsonConverter<NitroxTechType>
 {
-    public class TechTypeConverter : JsonConverter<NitroxTechType>
+    public override NitroxTechType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override void WriteJson(JsonWriter writer, NitroxTechType value, JsonSerializer serializer)
+        string? value = reader.GetString();
+        if (string.IsNullOrWhiteSpace(value))
         {
-            writer.WriteValue(value.Name);
+            return null;
         }
-        public override NitroxTechType ReadJson(JsonReader reader, Type objectType, NitroxTechType existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            return reader.Value == null ? null : new NitroxTechType((string)reader.Value);
-        }
+        return new NitroxTechType(value);
+    }
+
+    public override void Write(Utf8JsonWriter writer, NitroxTechType value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToString());
     }
 }

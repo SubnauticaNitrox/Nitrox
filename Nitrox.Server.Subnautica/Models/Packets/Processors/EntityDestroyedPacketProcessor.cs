@@ -1,14 +1,16 @@
+using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityDestroyedPacketProcessor(PlayerManager playerManager, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<EntityDestroyed>
+internal sealed class EntityDestroyedPacketProcessor(PlayerService playerService, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<EntityDestroyed>
 {
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     private readonly EntitySimulation entitySimulation = entitySimulation;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
 
@@ -23,12 +25,12 @@ internal sealed class EntityDestroyedPacketProcessor(PlayerManager playerManager
                 worldEntityManager.MovePlayerChildrenToRoot(vehicleEntity);
             }
 
-            foreach (Player player in playerManager.GetConnectedPlayers())
+            foreach (SessionId player in playerService.GetSessionIds())
             {
                 bool isOtherPlayer = player != context.Sender;
-                if (isOtherPlayer && player.CanSee(entity))
+                if (isOtherPlayer && playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity))
                 {
-                    await context.SendAsync(packet, player.SessionId);
+                    await context.SendAsync(packet, player);
                 }
             }
         }

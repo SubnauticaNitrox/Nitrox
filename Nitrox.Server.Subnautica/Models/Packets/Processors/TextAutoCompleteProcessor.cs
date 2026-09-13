@@ -1,15 +1,18 @@
 using System.Text.RegularExpressions;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
 /// <summary>
 ///     Provides contextual auto completion to clients upon request.
 /// </summary>
-internal sealed class TextAutoCompleteProcessor(CommandRegistryService commandRegistry) : IAuthPacketProcessor<TextAutoComplete>
+internal sealed class TextAutoCompleteProcessor(CommandRegistryService commandRegistry, PlayerService playerService) : IAuthPacketProcessor<TextAutoComplete>
 {
     private readonly CommandRegistryService commandRegistry = commandRegistry;
+    private readonly PlayerService playerService = playerService;
 
     public async Task Process(AuthProcessorContext context, TextAutoComplete packet)
     {
@@ -17,7 +20,7 @@ internal sealed class TextAutoCompleteProcessor(CommandRegistryService commandRe
         {
             case TextAutoComplete.AutoCompleteContext.COMMAND_NAME:
                 Regex matchCommandNameRegex = new($@"^{packet.Text}\w+$", RegexOptions.NonBacktracking | RegexOptions.ExplicitCapture | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
-                string? commandName = commandRegistry.FindCommandName(matchCommandNameRegex, context.Sender.Permissions, true);
+                string? commandName = commandRegistry.FindCommandName(matchCommandNameRegex, playerService.GetProperty<PermissionsProperty>(context.Sender).Value, true);
                 if (string.IsNullOrWhiteSpace(commandName))
                 {
                     break;
