@@ -34,14 +34,26 @@ public sealed class ParticleSystemDrawer : IDrawer<ParticleSystem>
         {
             GUILayout.Label("Start Lifetime", NitroxGUILayout.DrawerLabel);
             NitroxGUILayout.Separator();
-            main.startLifetime = new ParticleSystem.MinMaxCurve(NitroxGUILayout.FloatField(main.startLifetime.constant, NitroxGUILayout.VALUE_WIDTH));
+            ParticleSystem.MinMaxCurve startLifetime = main.startLifetime;
+            float startLifetimeConstant = NitroxGUILayout.FloatField(startLifetime.constant, NitroxGUILayout.VALUE_WIDTH);
+            if (startLifetimeConstant != startLifetime.constant)
+            {
+                startLifetime.constant = startLifetimeConstant;
+                main.startLifetime = startLifetime;
+            }
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Start Speed", NitroxGUILayout.DrawerLabel);
             NitroxGUILayout.Separator();
-            main.startSpeed = new ParticleSystem.MinMaxCurve(NitroxGUILayout.FloatField(main.startSpeed.constant, NitroxGUILayout.VALUE_WIDTH));
+            ParticleSystem.MinMaxCurve startSpeed = main.startSpeed;
+            float startSpeedConstant = NitroxGUILayout.FloatField(startSpeed.constant, NitroxGUILayout.VALUE_WIDTH);
+            if (startSpeedConstant != startSpeed.constant)
+            {
+                startSpeed.constant = startSpeedConstant;
+                main.startSpeed = startSpeed;
+            }
         }
 
         using (new GUILayout.HorizontalScope())

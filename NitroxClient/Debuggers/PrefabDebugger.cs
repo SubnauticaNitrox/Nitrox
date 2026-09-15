@@ -20,6 +20,9 @@ public sealed class PrefabDebugger : AbstractDebugger
     private const float PREFAB_ROW_HEIGHT = 42f;
     private const float PREFAB_LIST_HEIGHT = 720f;
     private const float PREVIEW_HEIGHT = 540f;
+    private const float WINDOW_CHROME_HEIGHT = 60f;
+    private const float PREFAB_LIST_CONTROLS_HEIGHT = 70f;
+    private const float PREVIEW_CONTROLS_HEIGHT = 300f;
     private const float AXIS_GIZMO_SIZE = 54f;
     private const float MAX_PREVIEW_DISTANCE = 100f;
     private const float MIN_PREVIEW_DISTANCE = 0.05f;
@@ -32,6 +35,7 @@ public sealed class PrefabDebugger : AbstractDebugger
     private readonly List<GameObject> spawnedObjects = [];
     private readonly Dictionary<string, string> prefabNameByClassId = [];
     private readonly Dictionary<string, string> techTypeByClassId = [];
+    private Vector2 debuggerScrollPosition;
     private Vector2 prefabScrollPosition;
     private string searchText = string.Empty;
     private string selectedClassId;
@@ -62,6 +66,15 @@ public sealed class PrefabDebugger : AbstractDebugger
         this.sceneDebugger = sceneDebugger;
         ActiveTab = AddTab("Prefab explorer", RenderPrefabExplorer);
         AddTab("Instantiated prefabs", RenderInstantiatedPrefabs);
+    }
+
+    protected override void Render()
+    {
+        float windowHeight = Mathf.Min(Screen.height * 0.8f, MaxHeight);
+        float contentHeight = Mathf.Max(1f, windowHeight - WINDOW_CHROME_HEIGHT);
+        using GUILayout.ScrollViewScope scroll = new(debuggerScrollPosition, GUILayout.Height(contentHeight));
+        debuggerScrollPosition = scroll.scrollPosition;
+        base.Render();
     }
 
     protected override void OnSetSkin(GUISkin skin)
@@ -171,6 +184,7 @@ public sealed class PrefabDebugger : AbstractDebugger
 
     private void RenderPrefabList()
     {
+        float listHeight = GetResponsiveHeight(PREFAB_LIST_HEIGHT, PREFAB_LIST_CONTROLS_HEIGHT);
         using (new GUILayout.VerticalScope("Box", GUILayout.Width(360f)))
         {
             using (new GUILayout.HorizontalScope())
@@ -184,6 +198,14 @@ public sealed class PrefabDebugger : AbstractDebugger
             GUILayout.Space(8f);
             using (new GUILayout.HorizontalScope())
             {
+                GUI.SetNextControlName("PrefabSearch");
+                if (Event.current.type == EventType.KeyDown &&
+                    (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) &&
+                    GUI.GetNameOfFocusedControl() == "PrefabSearch")
+                {
+                    FilterPrefabList();
+                    Event.current.Use();
+                }
                 searchText = GUILayout.TextField(searchText, GUILayout.ExpandWidth(true));
                 if (GUILayout.Button("Clear", GUILayout.Width(60f)))
                 {
@@ -198,10 +220,10 @@ public sealed class PrefabDebugger : AbstractDebugger
 
             // Only create controls for visible rows. This prevents a large prefab database
             // from rebuilding hundreds of IMGUI controls every frame.
-            using GUILayout.ScrollViewScope scroll = new(prefabScrollPosition, GUILayout.Height(PREFAB_LIST_HEIGHT));
+            using GUILayout.ScrollViewScope scroll = new(prefabScrollPosition, GUILayout.Height(listHeight));
             prefabScrollPosition = scroll.scrollPosition;
             int firstVisibleIndex = Mathf.Max(0, Mathf.FloorToInt(prefabScrollPosition.y / PREFAB_ROW_HEIGHT) - 1);
-            int visibleRowCount = Mathf.CeilToInt(PREFAB_LIST_HEIGHT / PREFAB_ROW_HEIGHT) + 2;
+            int visibleRowCount = Mathf.CeilToInt(listHeight / PREFAB_ROW_HEIGHT) + 2;
             int lastVisibleIndex = Mathf.Min(filteredClassIds.Count, firstVisibleIndex + visibleRowCount);
 
             GUILayout.Space(firstVisibleIndex * PREFAB_ROW_HEIGHT);
@@ -228,6 +250,7 @@ public sealed class PrefabDebugger : AbstractDebugger
 
     private void RenderPrefabPreview()
     {
+        float previewHeight = GetResponsiveHeight(PREVIEW_HEIGHT, PREVIEW_CONTROLS_HEIGHT);
         using (new GUILayout.VerticalScope("Box", GUILayout.ExpandHeight(true)))
         {
             RenderReadOnlyField("Name", selectedClassId == null ? string.Empty : GetPrefabName(selectedClassId));
@@ -242,15 +265,15 @@ public sealed class PrefabDebugger : AbstractDebugger
                 }
                 GUI.SetNextControlName("PrefabPreview");
                 // Keep the preview height fixed so metadata changes do not shift the render area.
-                GUILayout.Box(GUIContent.none, "preview", GUILayout.ExpandWidth(true), GUILayout.Height(PREVIEW_HEIGHT));
+                GUILayout.Box(GUIContent.none, "preview", GUILayout.ExpandWidth(true), GUILayout.Height(previewHeight));
                 Rect previewRect = GUILayoutUtility.GetLastRect();
-                GUI.DrawTexture(previewRect, previewTexture, ScaleMode.StretchToFill, false);
-                DrawAxisGizmo(previewRect);
+                GUI.DrawTexture(previewRect, previewTexture, ScaleMode.ScaleToFit, false);
+                DrawAxisGizmo(previewRect, Quaternion.Euler(previewPitch, previewYaw, 0f));
                 HandlePreviewMouseInput(previewRect);
             }
             else
             {
-                GUILayout.Label(statusMessage ?? "No preview loaded.", "preview", GUILayout.ExpandWidth(true), GUILayout.Height(PREVIEW_HEIGHT));
+                GUILayout.Label(statusMessage ?? "No preview loaded.", "preview", GUILayout.ExpandWidth(true), GUILayout.Height(previewHeight));
             }
 
             using (new GUILayout.HorizontalScope())
@@ -358,7 +381,7 @@ public sealed class PrefabDebugger : AbstractDebugger
         DestroyPreview();
         statusMessage = "Loading prefab...";
         int requestVersion = ++previewRequestVersion;
-        NitroxBootstrapper.Instance.StartCoroutine(LoadPreview(classId, requestVersion));
+        CoroutineHost.StartCoroutine(LoadPreview(classId, requestVersion));
     }
 
     private static void RenderReadOnlyField(string label, string value)
@@ -400,6 +423,12 @@ public sealed class PrefabDebugger : AbstractDebugger
             }
         }
         prefabScrollPosition = Vector2.zero;
+    }
+
+    private float GetResponsiveHeight(float preferredHeight, float controlsHeight)
+    {
+        float windowHeight = Mathf.Min(Screen.height * 0.8f, MaxHeight);
+        return Mathf.Max(180f, Mathf.Min(preferredHeight, windowHeight - WINDOW_CHROME_HEIGHT - controlsHeight));
     }
 
     private IEnumerator LoadPreview(string classId, int requestVersion)
@@ -566,7 +595,7 @@ public sealed class PrefabDebugger : AbstractDebugger
         // control pair is required to keep drag events inside the preview.
         if (currentEvent.type == EventType.ScrollWheel && previewRect.Contains(currentEvent.mousePosition))
         {
-            previewDistance = Mathf.Clamp(previewDistance - currentEvent.delta.y * 0.25f, MIN_PREVIEW_DISTANCE, MAX_PREVIEW_DISTANCE);
+            previewDistance = Mathf.Clamp(previewDistance + currentEvent.delta.y * 0.25f, MIN_PREVIEW_DISTANCE, MAX_PREVIEW_DISTANCE);
             previewNeedsRender = true;
             currentEvent.Use();
         }
@@ -619,7 +648,7 @@ public sealed class PrefabDebugger : AbstractDebugger
         }
     }
 
-    private static void DrawAxisGizmo(Rect previewRect)
+    private static void DrawAxisGizmo(Rect previewRect, Quaternion rotation)
     {
         const float PADDING = 8f;
         const float ORIGIN_OFFSET = AXIS_GIZMO_SIZE * 0.5f;
@@ -627,13 +656,20 @@ public sealed class PrefabDebugger : AbstractDebugger
         GUI.Box(gizmoRect, GUIContent.none);
 
         Vector2 origin = new(gizmoRect.x + ORIGIN_OFFSET, gizmoRect.y + ORIGIN_OFFSET + 4f);
-        DrawAxisLine(origin, new Vector2(22f, 8f), Color.red);
-        DrawAxisLine(origin, new Vector2(0f, -24f), Color.green);
-        DrawAxisLine(origin, new Vector2(-16f, 10f), Color.blue);
+        DrawAxis(origin, rotation * Vector3.right, Color.red, "X", "axisLabelX");
+        DrawAxis(origin, rotation * Vector3.up, Color.green, "Y", "axisLabelY");
+        DrawAxis(origin, rotation * Vector3.forward, Color.blue, "Z", "axisLabelZ");
+    }
 
-        GUI.Label(new Rect(origin.x + 22f, origin.y - 1f, 16f, 18f), "X", "axisLabelX");
-        GUI.Label(new Rect(origin.x + 4f, origin.y - 39f, 16f, 18f), "Y", "axisLabelY");
-        GUI.Label(new Rect(origin.x - 25f, origin.y + 7f, 16f, 18f), "Z", "axisLabelZ");
+    private static void DrawAxis(Vector2 origin, Vector3 direction, Color color, string label, string style)
+    {
+        const float AXIS_LENGTH = 24f;
+        Vector2 screenDirection = new(direction.x, -direction.y);
+        Vector2 projectedDirection = screenDirection * AXIS_LENGTH;
+        DrawAxisLine(origin, projectedDirection, color);
+
+        Vector2 labelPosition = origin + screenDirection * (AXIS_LENGTH + 4f);
+        GUI.Label(new Rect(labelPosition.x - 8f, labelPosition.y - 9f, 16f, 18f), label, style);
     }
 
     private static void DrawAxisLine(Vector2 origin, Vector2 direction, Color color)
@@ -675,7 +711,7 @@ public sealed class PrefabDebugger : AbstractDebugger
         }
         forward.Normalize();
         Vector3 position = Player.main.transform.position + forward * 4f;
-        GameObject spawnedObject = GameObjectExtensions.InstantiateWithId(loadedPrefab, new NitroxId(), position, Quaternion.LookRotation(forward, Vector3.up));
+        GameObject spawnedObject = UnityEngine.Object.Instantiate(loadedPrefab, position, Quaternion.LookRotation(forward, Vector3.up), true);
         spawnedObject.name = selectedClassId;
         spawnedObjects.Add(spawnedObject);
         statusMessage = $"Instantiated {selectedClassId}.";
