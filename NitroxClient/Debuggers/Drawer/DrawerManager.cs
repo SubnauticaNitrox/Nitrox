@@ -77,6 +77,10 @@ public class DrawerManager
         AddDrawer<AnimatorDrawer, Animator>();
         AddDrawer<CharacterControllerDrawer, CharacterController>(new(vectorDrawer));
         AddDrawer<BoxColliderDrawer, BoxCollider>(new(vectorDrawer, rigidbodyDrawer));
+        AddDrawer<MeshFilterDrawer, MeshFilter>();
+        AddDrawer<RendererDrawer, MeshRenderer>();
+        AddDrawer<ParticleSystemDrawer, ParticleSystem>();
+        AddDrawer<RendererDrawer, ParticleSystemRenderer>();
 
         AddEditor<VectorDrawer, Vector2>(vectorDrawer);
         AddEditor<VectorDrawer, Vector3>(vectorDrawer);
