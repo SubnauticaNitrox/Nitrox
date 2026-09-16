@@ -1,7 +1,6 @@
 #if DEBUG
 using System.Collections.Generic;
 using System.ComponentModel;
-using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -36,7 +35,7 @@ internal sealed class PlayerCommand(SimulationOwnershipData simulationOwnership,
         foreach (AbsoluteEntityCell visibleCell in visibleCells)
         {
             string simulatedEntities = "";
-            foreach (WorldEntity worldEntity in entityManager.GetEntities(visibleCell))
+            foreach (WorldEntity worldEntity in entityManager.EnumerateCellEntities(visibleCell))
             {
                 if (simulationOwnership.TryGetLock(worldEntity.Id, out SimulationOwnershipData.PlayerLock playerLock) &&
                     playerLock.Player.PeerId == player.PeerId)

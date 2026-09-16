@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -87,17 +88,49 @@ internal sealed class WorldEntityManager
         }).ToList();
     }
 
-    public List<WorldEntity> GetEntities(AbsoluteEntityCell cell)
+    public IEnumerable<WorldEntity> EnumerateCellEntities(AbsoluteEntityCell cell)
+    {
+        WorldEntity[] array = null;
+        int count = 0;
+
+        lock (worldEntitiesLock)
+        {
+            if (worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> batchEntites))
+            {
+                count = batchEntites.Count;
+                array = ArrayPool<WorldEntity>.Shared.Rent(count);
+                batchEntites.Values.CopyTo(array, 0);
+            }
+        }
+
+        if (array == null)
+        {
+            yield break;
+        }
+
+        // never yield while having the lock or it will never be released before the end of this method
+        try
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return array[i];
+            }
+        }
+        finally
+        {
+            ArrayPool<WorldEntity>.Shared.Return(array, true);
+        }
+    }
+
+    public void FillEntitiesNonAlloc(AbsoluteEntityCell cell, List<Entity> targetList)
     {
         lock (worldEntitiesLock)
         {
             if (worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> batchEntities))
             {
-                return batchEntities.Values.ToList();
+                targetList.AddRange(batchEntities.Values);
             }
         }
-
-        return [];
     }
 
     public bool TryUpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell? newCell, out WorldEntity worldEntity)
@@ -192,15 +225,23 @@ internal sealed class WorldEntityManager
         RegisterWorldEntityInCell(entity, entity.AbsoluteEntityCell);
     }
 
-    public void RegisterWorldEntityInCell(WorldEntity entity, AbsoluteEntityCell cell)
+    public bool RegisterWorldEntityInCell(WorldEntity entity, AbsoluteEntityCell cell)
     {
         lock (worldEntitiesLock)
         {
+            if (entity.ParentId != null)
+            {
+                // entities parented to a WorldEntity most likely have their LargeWorldEntity component disabled, which means they
+                // will only disappear once their parent disappears, thus we do not need to hold them in a cell
+                return false;
+            }
+
             if (!worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> worldEntitiesInCell))
             {
                 worldEntitiesInCell = worldEntitiesByCell[cell] = [];
             }
             worldEntitiesInCell[entity.Id] = entity;
+            return true;
         }
     }
 
@@ -357,7 +398,11 @@ internal sealed class WorldEntityManager
                 UnregisterWorldEntityFromCell(entity.Id, oldCell);
 
                 // Automatically add entity to its new cell
-                RegisterWorldEntityInCell(entity, newCell);
+                if (!RegisterWorldEntityInCell(entity, newCell))
+                {
+                    // in case it wasn't moved to a new cell (because it depends on a parent for example) we don't need to broadcast it
+                    return;
+                }
 
                 // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
                 foreach (Player player in playerManager.ConnectedPlayers())
