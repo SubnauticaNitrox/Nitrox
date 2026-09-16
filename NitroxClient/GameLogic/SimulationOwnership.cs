@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -116,6 +116,8 @@ public class SimulationOwnership
         {
             Object.Destroy(remotelyControlled);
         }
+
+        TreatReefback(simulatedEntity.Id, isLocalPlayerNewOwner);
     }
 
     /// <summary>
@@ -150,6 +152,34 @@ public class SimulationOwnership
     public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
     {
         return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
+    }
+
+    /// <summary>
+    /// Reefbacks host creatures as children. These creatures have their LargeWorldEntity disabled, which means they only dispawn when the parent Reefback dispawns.
+    /// Thus they're are so connected to it that we can assume taking ownership on a Reefback is equivalent to taking it on its children.
+    /// </summary>
+    private void TreatReefback(NitroxId entityId, bool isSimulating)
+    {
+        if (!NitroxEntity.TryGetComponentFrom(entityId, out ReefbackLife reefbackLife))
+        {
+            return;
+        }
+
+        // Any creatureSlot's parent is the CreatureSlots Transform
+        foreach (Transform reefbackChildTransform in reefbackLife.creatureSlots[0].parent)
+        {
+            if (reefbackChildTransform.TryGetNitroxId(out NitroxId reefbackChildId))
+            {
+                if (isSimulating)
+                {
+                    TakeOwnership(reefbackChildId, SimulationLockType.TRANSIENT, true);
+                }
+                else
+                {
+                    DropSimulationFrom(reefbackChildId);
+                }
+            }
+        }
     }
 
     public bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)

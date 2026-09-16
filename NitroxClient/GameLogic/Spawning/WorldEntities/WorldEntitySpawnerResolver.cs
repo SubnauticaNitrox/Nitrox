@@ -28,7 +28,7 @@ internal sealed class WorldEntitySpawnerResolver
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
         geyserWorldEntitySpawner = new GeyserWorldEntitySpawner(entities);
         reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();
-        reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner);
+        reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner, defaultEntitySpawner, entities);
         creatureRespawnEntitySpawner = new CreatureRespawnEntitySpawner(simulationOwnership);
     }
 

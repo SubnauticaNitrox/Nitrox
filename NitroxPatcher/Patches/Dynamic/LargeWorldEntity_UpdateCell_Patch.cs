@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -45,21 +45,24 @@ public sealed partial class LargeWorldEntity_UpdateCell_Patch : NitroxPatch, IDy
         {
             return;
         }
+        GameObject entityObject = largeWorldEntity.gameObject;
         
         // The entity has left the regular loaded zone
         // NB: Very important to check for selfActive because it's false when the entity is unloaded by EntityCell.AddEntity
 
-        if (largeWorldEntity.gameObject.activeSelf)
+        if (entityObject.activeSelf)
         {
             if (largeWorldEntity.TryGetNitroxId(out NitroxId nitroxId))
             {
-                largeWorldEntity.gameObject.EnsureComponent<OutOfCellEntity>().Init(nitroxId);
+                entityObject.EnsureComponent<OutOfCellEntity>().Init(nitroxId);
             }
+            return;
         }
-        // Entity was added to a sleeping cell so it'll be just like it's 
-        else if (largeWorldEntity.TryGetComponent(out OutOfCellEntity outOfCellEntity))
-        {
-            Object.Destroy(outOfCellEntity);
-        }
+
+        // We need to send a last position update in case we're simulating the entity so that at least the server knows where we left it
+        EntityPositionBroadcaster.Instance.BroadcastLastUpdate(entityObject);
+
+        // Entity was added to a sleeping cell so it's as if it was removed
+        GameObject.Destroy(entityObject);
     }
 }

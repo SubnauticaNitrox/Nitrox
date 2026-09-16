@@ -23,12 +23,12 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
         yield return CreateGameObject(techType, entity.ClassId, entity.Id, gameObjectResult);
 
         GameObject gameObject = gameObjectResult.Get();
-        SetupObject(entity, parent, gameObject, cellRoot, techType);
+        SetupObject(entity, parent, gameObject, cellRoot, techType, true);
 
         result.Set(Optional.Of(gameObject));
     }
 
-    private void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, EntityCell cellRoot, TechType techType)
+    public void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, EntityCell cellRoot, TechType techType, bool setupLargeWorldEntity)
     {
         gameObject.transform.position = entity.Transform.Position.ToUnity();
         gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
@@ -48,7 +48,7 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
             largeWorldEntity.cellLevel = (LargeWorldEntity.CellLevel)entity.Level;
         }
 
-        if (!parentWaterPark)
+        if (!parentWaterPark && setupLargeWorldEntity)
         {
             if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
             {
@@ -89,13 +89,28 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
         // If we've never even once issued a request prefab for the class id we need to do it because multiple prefabs
         // can have the same TechType so it's not good enough to find the right prefab
-        if (!classIdsWithoutPrefab.Contains(classId) || techType == TechType.None)
+        if ((classId != null && !classIdsWithoutPrefab.Contains(classId)) || techType == TechType.None)
         {
             prefab = null;
             return false;
         }
         
         return prefabCacheByTechType.TryGetValue(techType, out prefab);
+    }
+
+    public static IEnumerator CachePrefab(string classId, TechType techType)
+    {
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(classId);
+        yield return request;
+        if (request.TryGetPrefab(out GameObject prefabObject))
+        {
+            prefabCacheByClassId[classId] = prefabObject;
+            prefabCacheByTechType[techType] = prefabObject;
+        }
+        else
+        {
+            prefabNotFound.Add((classId, techType));
+        }
     }
 
     /// <summary>
@@ -190,7 +205,7 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
         if (TryCreateGameObjectSync(techType, entity.ClassId, entity.Id, out GameObject gameObject))
         {
-            SetupObject(entity, parent, gameObject, cellRoot, techType);
+            SetupObject(entity, parent, gameObject, cellRoot, techType, true);
             result.Set(gameObject);
             return true;
         }

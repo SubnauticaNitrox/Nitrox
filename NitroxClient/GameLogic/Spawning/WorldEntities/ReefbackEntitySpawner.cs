@@ -6,89 +6,62 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class ReefbackEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
+public class ReefbackEntitySpawner(ReefbackChildEntitySpawner reefbackChildEntitySpawner, DefaultWorldEntitySpawner defaultWorldEntitySpawner, Entities entities) : IWorldEntitySpawner
 {
-    private readonly ReefbackChildEntitySpawner reefbackChildEntitySpawner;
-
-    public ReefbackEntitySpawner(ReefbackChildEntitySpawner reefbackChildEntitySpawner)
-    {
-        this.reefbackChildEntitySpawner = reefbackChildEntitySpawner;
-    }
+    private readonly ReefbackChildEntitySpawner reefbackChildEntitySpawner = reefbackChildEntitySpawner;
+    private readonly DefaultWorldEntitySpawner defaultWorldEntitySpawner = defaultWorldEntitySpawner;
+    private readonly Entities entities = entities;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
         if (entity is not ReefbackEntity reefbackEntity)
         {
+            Log.Error($"[{nameof(ReefbackEntitySpawner)}] Can't spawn {entity.Id} of type {entity.GetType()} because it is not a {nameof(ReefbackEntity)}");
             yield break;
         }
 
-        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: entity.ClassId))
+        if (!DefaultWorldEntitySpawner.TryCreateGameObjectSync(entity.TechType.ToUnity(), entity.ClassId, entity.Id, out GameObject reefbackObject))
         {
-            TaskResult<GameObject> prefabResult = new();
-            yield return DefaultWorldEntitySpawner.RequestPrefab(entity.ClassId, prefabResult);
-            if (!prefabResult.Get())
+            Log.ErrorOnce($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Could not find a prefab for {entity.Id} [classId: {entity.ClassId}, TechType: {entity.TechType}]");
+            yield break;
+        }
+        ReefbackLife reefbackLife = reefbackObject.GetComponent<ReefbackLife>();
+        LargeWorldEntity largeWorldEntity = reefbackObject.GetComponent<LargeWorldEntity>();
+
+
+        // Prevent the entity from disappearing because of parent cell going to sleep until it's fully spawned
+        largeWorldEntity.enabled = false;
+
+        SetupObject(reefbackEntity, reefbackObject, cellRoot, reefbackLife);
+
+        TaskResult<Optional<GameObject>> childTaskResult = new();
+        foreach (ReefbackChildEntity reefbackChildEntity in entity.ChildEntities)
+        {
+            reefbackChildEntitySpawner.SpawnSync(reefbackChildEntity, reefbackObject, cellRoot, childTaskResult);
+
+            if (childTaskResult.Get().HasValue)
             {
-                Log.Error($"Couldn't find a prefab for {nameof(OxygenPipeEntity)} of ClassId {entity.ClassId}");
-                yield break;
+                entities.OnEntitySpawned(reefbackChildEntity, childTaskResult.Get().Value);
             }
-            prefab = prefabResult.Get();
+
+            if (entities.ShouldSkipFrame)
+            {
+                yield return null;
+                entities.RefreshTimeUntilNextYield();
+            }
         }
 
-        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
-        if (!VerifyCanSpawnOrError(reefbackEntity, gameObject, out ReefbackLife reefbackLife))
-        {
-            yield break;
-        }
+        largeWorldEntity.enabled = true;
+        LargeWorldEntity.Register(reefbackObject);
 
-        SetupObject(reefbackEntity, gameObject, cellRoot, reefbackLife);
-
-        result.Set(gameObject);
+        result.Set(reefbackObject);
     }
 
-    public bool SpawnSync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+    public bool SpawnsOwnChildren() => true;
+
+    private void SetupObject(ReefbackEntity entity, GameObject gameObject, EntityCell cellRoot, ReefbackLife reefbackLife)
     {
-        if (entity is not ReefbackEntity reefbackEntity)
-        {
-            return true;
-        }
-
-        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: entity.ClassId))
-        {
-            return false;
-        }
-
-        GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefab, entity.Id);
-        if (!VerifyCanSpawnOrError(reefbackEntity, gameObject, out ReefbackLife reefbackLife))
-        {
-            return true;
-        }
-
-        SetupObject(reefbackEntity, gameObject, cellRoot, reefbackLife);
-
-        result.Set(gameObject);
-        return true;
-    }
-
-    public bool SpawnsOwnChildren() => false;
-
-    private static bool VerifyCanSpawnOrError(ReefbackEntity entity, GameObject prefabObject, out ReefbackLife reefbackLife)
-    {
-        if (prefabObject.TryGetComponent(out reefbackLife))
-        {
-            return true;
-        }
-        Log.Error($"Could not find component {nameof(ReefbackLife)} on prefab with ClassId: {entity.ClassId}");
-        return false;
-    }
-
-    private static void SetupObject(ReefbackEntity entity, GameObject gameObject, EntityCell entityCell, ReefbackLife reefbackLife)
-    {
-        Transform transform = gameObject.transform;
-        transform.localPosition = entity.Transform.Position.ToUnity();
-        transform.localRotation = entity.Transform.Rotation.ToUnity();
-        transform.localScale = entity.Transform.LocalScale.ToUnity();
-        entityCell.EnsureRoot();
-        transform.SetParent(entityCell.liveRoot.transform);
+        defaultWorldEntitySpawner.SetupObject(entity, Optional.Empty, gameObject, cellRoot, entity.TechType.ToUnity(), false);
 
         // Replicate only the useful parts of ReefbackLife.Initialize
         reefbackLife.initialized = true;

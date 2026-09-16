@@ -37,7 +37,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
     /// Reusable list of <see cref="EntityTransformUpdate"/>s to avoid reallocating a new list at each broadcast.
     /// </summary>
     /// <remarks>
-    /// This only works because <see cref="LiteNetLibClient.Send"/> immediately serialiazes the list.
+    /// This only works because <see cref="LiteNetLibClient.Send"/> immediately serializes the list.
     /// </remarks>
     private readonly List<EntityTransformUpdate> updates = new(50);
 
@@ -93,8 +93,11 @@ public class EntityPositionBroadcaster : MonoBehaviour
         // Only send data for entities still simulated by the local player
         foreach (SplineTransformUpdate splineUpdate in splineUpdatesById.Values)
         {
-            if (simulationOwnership.HasAnyLockType(splineUpdate.Id))
+            if (simulationOwnership.HasAnyLockType(splineUpdate.Id) && splineEntities.TryGetValue(splineUpdate.Id, out SwimBehaviour swimBehaviour))
             {
+                Transform entityTransform = swimBehaviour.transform;
+                splineUpdate.Position = entityTransform.position.ToDto();
+                splineUpdate.Rotation = entityTransform.rotation.ToDto();
                 updates.Add(splineUpdate);
             }
         }
@@ -211,5 +214,37 @@ public class EntityPositionBroadcaster : MonoBehaviour
             Destroy(remotelyControlled);
         }
         StopWatchingEntity(entityId);
+    }
+
+    /// <summary>
+    /// Notifies the server of the latest known position of this entity if the local player is simulating it.
+    /// </summary>
+    public void BroadcastLastUpdate(GameObject gameObject)
+    {
+        if (!gameObject.TryGetNitroxId(out NitroxId entityId) || !simulationOwnership.HasAnyLockType(entityId))
+        {
+            return;
+        }
+
+        Transform entityTransform = gameObject.transform;
+        EntityTransformUpdate entityTransformUpdate = null;
+
+        if (splineEntities.ContainsKey(entityId) && gameObject.TryGetComponent(out SplineFollowing splineFollowing))
+        {
+            // Clean up in case there remains an update that wasn't sent yet
+            splineUpdatesById.Remove(entityId);
+            entityTransformUpdate = new SplineTransformUpdate(entityId, entityTransform.position.ToDto(), entityTransform.rotation.ToDto(), splineFollowing.targetPosition.ToDto(), splineFollowing.targetDirection.ToDto(), splineFollowing.medianSpeed);
+        } else if (regularEntities.ContainsKey(entityId))
+        {
+            entityTransformUpdate = new RawTransformUpdate(entityId, entityTransform.position.ToDto(), entityTransform.rotation.ToDto());
+        }
+
+        if (entityTransformUpdate != null)
+        {
+            packetSender.Send(new LastEntityTransformUpdate(entityTransformUpdate));
+        }
+
+        // locally drop simulation
+        simulationOwnership.DropSimulationFrom(entityId);
     }
 }
