@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -28,6 +28,9 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         this.item = item;
         this.itemContainers = itemContainers;
         this.localPlayer = localPlayer;
+
+        AddDependency<ClockSyncInitialSyncProcessor>();
+        AddDependency<PrefabLoadInitialSyncProcessor>();
 
         AddStep(sync => SetupEscapePod(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerPermissions(sync.Permissions));
