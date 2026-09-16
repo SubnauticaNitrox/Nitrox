@@ -388,7 +388,7 @@ internal sealed class BatchEntitySpawner(
                 if (spawnedEntity != null)
                 {
                     // Spawned child will not be of the same type as the current prefabAsset
-                    if (prefabPlaceholderGroupsResource.PlaceholdersByClassId.ContainsKey(spawnedEntity.ClassId))
+                    if (prefabPlaceholderGroupsResource.GroupsByClassId.ContainsKey(spawnedEntity.ClassId))
                     {
                         spawnedEntity = new PlaceholderGroupWorldEntity(spawnedEntity, i);
                     }

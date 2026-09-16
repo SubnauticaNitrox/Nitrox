@@ -20,7 +20,6 @@ internal sealed class WorldEntitySpawnerResolver
 
     public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership)
     {
-        customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
         prefabPlaceholderEntitySpawner = new PrefabPlaceholderEntitySpawner(defaultEntitySpawner);

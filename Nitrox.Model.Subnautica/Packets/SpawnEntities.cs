@@ -10,7 +10,7 @@ namespace Nitrox.Model.Subnautica.Packets;
 public class SpawnEntities : Packet
 {
     public List<Entity> Entities { get; }
-    public List<SimulatedEntity> Simulations { get; }
+    public List<SimulatedEntity> SimulatedEntities { get; }
 
     public List<AbsoluteEntityCell> SpawnedCells { get; }
 
@@ -19,21 +19,21 @@ public class SpawnEntities : Packet
     public SpawnEntities(Entity entity, SimulatedEntity? simulatedEntity = null, bool forceRespawn = false)
     {
         Entities = [entity];
-        Simulations = [];
+        SimulatedEntities = [];
         SpawnedCells = [];
         if (simulatedEntity != null)
         {
-            Simulations.Add(simulatedEntity);
+            SimulatedEntities.Add(simulatedEntity);
         }
 
         ForceRespawn = forceRespawn;
     }
 
     // Constructor for serialization. 
-    public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulations, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn)
+    public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulatedEntities, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn)
     {
         Entities = entities;
-        Simulations = simulations;
+        SimulatedEntities = simulatedEntities;
         SpawnedCells = spawnedCells;
         ForceRespawn = forceRespawn;
     }
