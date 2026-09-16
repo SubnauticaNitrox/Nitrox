@@ -29,7 +29,7 @@ public class PatchesTranspilerTest
         [typeof(Constructable_DeconstructAsync_Patch), Constructable_DeconstructAsync_Patch.InstructionsToAdd.Count],
         [typeof(ConstructableBase_SetState_Patch), ConstructableBase_SetState_Patch.InstructionsToAdd.Count],
         [typeof(ConstructorInput_OnCraftingBegin_Patch), 7],
-        [typeof(CrashHome_Spawn_Patch), 2],
+        [typeof(CrashHome_Spawn_Patch), -5],
         [typeof(CrashHome_Update_Patch), -5],
         [typeof(CreatureDeath_OnKillAsync_Patch), 5],
         [typeof(CreatureDeath_SpawnRespawner_Patch), 2],
