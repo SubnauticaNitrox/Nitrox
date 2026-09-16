@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.Spawning.Metadata;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -12,22 +12,13 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 /// This spawner can't hold a SpawnSync function because it is also responsible for spawning its children
 /// so the <see cref="SpawnAsync"/> function will still use sync spawning when possible and fall back to async when required.
 /// </remarks>
-internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
+internal sealed class PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultWorldEntitySpawner, EntityMetadataManager entityMetadataManager, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner) : IWorldEntitySpawner
 {
-    private readonly Entities entities;
-    private readonly WorldEntitySpawnerResolver spawnerResolver;
-    private readonly DefaultWorldEntitySpawner defaultSpawner;
-    private readonly EntityMetadataManager entityMetadataManager;
-    private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner;
-
-    public PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner, EntityMetadataManager entityMetadataManager, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner)
-    {
-        this.entities = entities;
-        this.spawnerResolver = spawnerResolver;
-        this.defaultSpawner = defaultSpawner;
-        this.entityMetadataManager = entityMetadataManager;
-        this.prefabPlaceholderEntitySpawner = prefabPlaceholderEntitySpawner;
-    }
+    private readonly Entities entities = entities;
+    private readonly WorldEntitySpawnerResolver spawnerResolver = spawnerResolver;
+    private readonly DefaultWorldEntitySpawner defaultWorldEntitySpawner = defaultWorldEntitySpawner;
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
+    private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner = prefabPlaceholderEntitySpawner;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
@@ -38,21 +29,23 @@ internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         }
 
         TaskResult<Optional<GameObject>> prefabPlaceholderGroupTaskResult = new();
-        if (!defaultSpawner.SpawnSync(entity, parent, cellRoot, prefabPlaceholderGroupTaskResult))
-        {
-            yield return defaultSpawner.SpawnAsync(entity, parent, cellRoot, prefabPlaceholderGroupTaskResult);
-        }
 
-        Optional<GameObject> prefabPlaceholderGroupGameObject = prefabPlaceholderGroupTaskResult.Get();
-
-        if (!prefabPlaceholderGroupGameObject.HasValue)
+        if (!DefaultWorldEntitySpawner.TryCreateGameObjectSync(entity.TechType.ToUnity(), entity.ClassId, entity.Id, out GameObject groupObject))
         {
+            Log.ErrorOnce($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Could not find a prefab for {entity.Id} [classId: {entity.ClassId}, TechType: {entity.TechType}]");
             yield break;
         }
-
-        GameObject groupObject = prefabPlaceholderGroupGameObject.Value;
-        // Spawning PrefabPlaceholders as siblings to the group
+        LargeWorldEntity largeWorldEntity = groupObject.GetComponent<LargeWorldEntity>();
         PrefabPlaceholdersGroup prefabPlaceholderGroup = groupObject.GetComponent<PrefabPlaceholdersGroup>();
+
+        defaultWorldEntitySpawner.SetupObject(entity, parent, groupObject, cellRoot, entity.TechType.ToUnity(), false);
+
+
+        // Prevent the entity from disappearing because of parent cell going to sleep until it's fully spawned
+        if (!parent.HasValue)
+        {
+            largeWorldEntity.enabled = false;
+        }
 
         // Spawning all children iteratively
         Stack<Entity> stack = new(placeholderGroupEntity.ChildEntities);
@@ -62,13 +55,9 @@ internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         {
             { entity.Id, groupObject }
         };
+
         while (stack.Count > 0)
         {
-            // It may happen that the chunk is unloaded, and the group along so we just cancel this spawn behaviour
-            if (!groupObject)
-            {
-                yield break;
-            }
             childResult.Set(Optional.Empty);
             Entity current = stack.Pop();
             switch (current)
@@ -76,19 +65,21 @@ internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                 case PrefabPlaceholderEntity prefabEntity:
                     if (!prefabPlaceholderEntitySpawner.SpawnSync(prefabEntity, groupObject, cellRoot, childResult))
                     {
-                        yield return prefabPlaceholderEntitySpawner.SpawnAsync(prefabEntity, groupObject, cellRoot, childResult);
+                        Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Could not spawn child entity {prefabEntity}");
                     }
                     break;
 
                 case PlaceholderGroupWorldEntity groupEntity:
                     PrefabPlaceholder placeholder = prefabPlaceholderGroup.prefabPlaceholders[groupEntity.ComponentIndex];
                     yield return SpawnAsync(groupEntity, placeholder.transform.parent.gameObject, cellRoot, childResult);
+                    entities.RefreshTimeUntilNextYield();
                     break;
 
                 case WorldEntity worldEntity:
                     if (!SpawnWorldEntityChildSync(worldEntity, cellRoot, parentById.GetOrDefault(current.ParentId, null), childResult, out IEnumerator asyncInstructions))
                     {
                         yield return asyncInstructions;
+                        entities.RefreshTimeUntilNextYield();
                     }
                     break;
 
@@ -117,12 +108,24 @@ internal sealed class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                     stack.Push(slotEntityChild);
                 }
             }
+
+            if (entities.ShouldSkipFrame)
+            {
+                yield return null;
+                entities.RefreshTimeUntilNextYield();
+            }
         }
 
         // Handle setting isKinematic on Floating Stones
         prefabPlaceholderGroup.OnPrefabGroupSpawned?.Invoke();
 
-        result.Set(prefabPlaceholderGroupGameObject);
+        if (!parent.HasValue)
+        {
+            largeWorldEntity.enabled = true;
+            LargeWorldEntity.Register(groupObject);
+        }
+
+        result.Set(groupObject);
     }
 
     public bool SpawnsOwnChildren() => true;
