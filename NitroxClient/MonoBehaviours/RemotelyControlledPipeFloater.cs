@@ -10,7 +10,9 @@ public class RemotelyControlledPipeFloater : RemotelyControlled
     public void SetPositioned()
     {
         positioned = true;
+        // We set the floater to kinematic so it's unaffected by the local world
         rigidbody.isKinematic = true;
+        // interpolation to none prevents some little jittering
         rigidbody.interpolation = UnityEngine.RigidbodyInterpolation.None;
     }
 
