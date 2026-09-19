@@ -95,11 +95,11 @@ internal sealed class WorldEntityManager
 
         lock (worldEntitiesLock)
         {
-            if (worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> batchEntites))
+            if (worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> batchEntities))
             {
-                count = batchEntites.Count;
+                count = batchEntities.Count;
                 array = ArrayPool<WorldEntity>.Shared.Rent(count);
-                batchEntites.Values.CopyTo(array, 0);
+                batchEntities.Values.CopyTo(array, 0);
             }
         }
 
@@ -122,7 +122,7 @@ internal sealed class WorldEntityManager
         }
     }
 
-    public void FillEntitiesNonAlloc(AbsoluteEntityCell cell, List<Entity> targetList)
+    public void GetCellEntitiesNonAlloc(AbsoluteEntityCell cell, List<Entity> targetList)
     {
         lock (worldEntitiesLock)
         {
@@ -227,15 +227,15 @@ internal sealed class WorldEntityManager
 
     public bool RegisterWorldEntityInCell(WorldEntity entity, AbsoluteEntityCell cell)
     {
+        if (entity.ParentId != null)
+        {
+            // entities parented to a WorldEntity most likely have their LargeWorldEntity component disabled, which means they
+            // will only disappear once their parent disappears, thus we do not need to hold them in a cell
+            return false;
+        }
+
         lock (worldEntitiesLock)
         {
-            if (entity.ParentId != null)
-            {
-                // entities parented to a WorldEntity most likely have their LargeWorldEntity component disabled, which means they
-                // will only disappear once their parent disappears, thus we do not need to hold them in a cell
-                return false;
-            }
-
             if (!worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> worldEntitiesInCell))
             {
                 worldEntitiesInCell = worldEntitiesByCell[cell] = [];
@@ -303,11 +303,10 @@ internal sealed class WorldEntityManager
     {
         List<Entity> spawnedEntities = await batchEntitySpawner.LoadUnspawnedEntitiesAsync(batchId, suppressLogs);
 
-        List<WorldEntity> entitiesInCells = spawnedEntities.Where(entity => typeof(WorldEntity).IsAssignableFrom(entity.GetType()) &&
+        List<WorldEntity> entitiesInCells = [.. spawnedEntities.Where(entity => typeof(WorldEntity).IsAssignableFrom(entity.GetType()) &&
                                                                             entity.GetType() != typeof(CellRootEntity) &&
                                                                             entity.GetType() != typeof(GlobalRootEntity))
-                                                           .Cast<WorldEntity>()
-                                                           .ToList();
+                                                           .Cast<WorldEntity>()];
 
         // UWE stores entities serialized with a handful of parent cell roots.  These only represent a small fraction of all possible cell
         // roots that could exist.  There is no reason for the server to know about these and much easier to consider top-level world entities
@@ -321,12 +320,12 @@ internal sealed class WorldEntityManager
                 entitiesInCells.Add(worldEntity);
             }
 
-            cellRoot.ChildEntities = new List<Entity>();
+            cellRoot.ChildEntities.Clear();
         }
         // Specific type of entities which is not parented to a CellRootEntity
         entitiesInCells.AddRange(spawnedEntities.OfType<SerializedWorldEntity>());
 
-        entityRegistry.AddEntitiesIgnoringDuplicate(entitiesInCells.OfType<Entity>().ToList());
+        entityRegistry.AddEntitiesIgnoringDuplicate(entitiesInCells.OfType<Entity>());
 
         foreach (WorldEntity entity in entitiesInCells)
         {

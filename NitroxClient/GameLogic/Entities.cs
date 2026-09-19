@@ -41,12 +41,11 @@ namespace NitroxClient.GameLogic
         /// <remarks>
         /// We divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time).
         /// </remarks>
-        private static float allottedTimePerFrame => 0.4f / Application.targetFrameRate;
+        private static float allottedTimePerFrameSeconds => 0.4f / Application.targetFrameRate;
         private readonly TaskResult<Optional<GameObject>> entityResult = new();
         private readonly TaskResult<Exception> exception = new();
-        private float timeUntilNextYield;
-        public bool ShouldSkipFrame => Time.realtimeSinceStartup >= timeUntilNextYield;
-
+        private float timeUntilNextYieldSeconds;
+        public bool ShouldSkipFrame => Time.realtimeSinceStartup >= timeUntilNextYieldSeconds;
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership, Terrain terrain)
         {
@@ -167,7 +166,7 @@ namespace NitroxClient.GameLogic
 
         public void RefreshTimeUntilNextYield()
         {
-            timeUntilNextYield = Time.realtimeSinceStartup + allottedTimePerFrame;
+            timeUntilNextYieldSeconds = Time.realtimeSinceStartup + allottedTimePerFrameSeconds;
         }
 
         /// <remarks>

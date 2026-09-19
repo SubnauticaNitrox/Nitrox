@@ -219,7 +219,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
     /// <summary>
     /// Notifies the server of the latest known position of this entity if the local player is simulating it.
     /// </summary>
-    public void BroadcastLastUpdate(GameObject gameObject)
+    public void SendLastUpdateAndDropOwnership(GameObject gameObject)
     {
         if (!gameObject.TryGetNitroxId(out NitroxId entityId) || !simulationOwnership.HasAnyLockType(entityId))
         {

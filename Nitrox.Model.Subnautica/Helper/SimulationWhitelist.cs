@@ -83,10 +83,9 @@ public static class SimulationWhitelist
     ///     We differentiate the entities which should be simulated because of one of their behaviour (ie for utility)
     ///     from those are simulated for their movements.
     /// </summary>
-    private static readonly HashSet<NitroxTechType> utilityWhitelist = new()
-    {
-        TechType.CrashHome.ToDto()
-    };
+    private static readonly HashSet<NitroxTechType> utilityWhitelist = [
+        TechType.CrashHome.ToDto(),
+    ];
 
     public static bool ShouldSimulateEntity(WorldEntity entity)
     {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -176,6 +177,12 @@ internal sealed class EntitySimulation : ISessionCleaner
 
     public void AssignEntitiesToOtherPlayers(SessionId oldSessionId, IEnumerable<Entity> entities, List<SimulatedEntity> ownershipChanges)
     {
+        // In case the enumerator can be counted (e.g. a list)
+        if (entities.TryGetNonEnumeratedCount(out int count))
+        {
+            ownershipChanges.EnsureCapacity(ownershipChanges.Count + count);
+        }
+
         // TODO: (optional) Find out if ordering the otherPlayers by distance to the previous simulator improves performance (ascending)
         List<Player> otherPlayers = playerManager.GetConnectedPlayersExcept(oldSessionId);
         foreach (Entity entity in entities)

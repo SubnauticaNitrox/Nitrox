@@ -60,7 +60,7 @@ public sealed partial class LargeWorldEntity_UpdateCell_Patch : NitroxPatch, IDy
         }
 
         // We need to send a last position update in case we're simulating the entity so that at least the server knows where we left it
-        EntityPositionBroadcaster.Instance.BroadcastLastUpdate(entityObject);
+        EntityPositionBroadcaster.Instance.SendLastUpdateAndDropOwnership(entityObject);
 
         // Entity was added to a sleeping cell so it's as if it was removed
         GameObject.Destroy(entityObject);

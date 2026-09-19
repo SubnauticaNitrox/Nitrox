@@ -16,8 +16,8 @@ sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, W
         context.Sender.AddCells(packet.Added);
         context.Sender.RemoveCells(packet.Removed);
 
-        List<Entity> totalEntities = new(32);
-        List<SimulatedEntity> simulationChanges = new(32);
+        List<Entity> totalEntities = [];
+        List<SimulatedEntity> simulationChanges = [];
 
         foreach (AbsoluteEntityCell removedCell in packet.Removed)
         {
@@ -38,7 +38,7 @@ sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, W
 
             simulationChanges.AddRange(entitySimulation.TryAcquireCellEntities(context.Sender, addedCell));
 
-            worldEntityManager.FillEntitiesNonAlloc(addedCell, totalEntities);
+            worldEntityManager.GetCellEntitiesNonAlloc(addedCell, totalEntities);
         }
 
         // no need to broadcast other simulation changes because a player loading part of the world can only be given transient lock
