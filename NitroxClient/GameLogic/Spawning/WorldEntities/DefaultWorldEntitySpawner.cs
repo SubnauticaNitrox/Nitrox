@@ -23,12 +23,12 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
         yield return CreateGameObject(techType, entity.ClassId, entity.Id, gameObjectResult);
 
         GameObject gameObject = gameObjectResult.Get();
-        SetupObject(entity, parent, gameObject, cellRoot, techType, true);
+        SetupObject(entity, parent, gameObject, techType, true);
 
         result.Set(Optional.Of(gameObject));
     }
 
-    public void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, EntityCell cellRoot, TechType techType, bool setupLargeWorldEntity)
+    public static void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, TechType techType, bool registerLargeWorldEntity)
     {
         gameObject.transform.position = entity.Transform.Position.ToUnity();
         gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
@@ -46,37 +46,24 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
         if (largeWorldEntity)
         {
             largeWorldEntity.cellLevel = (LargeWorldEntity.CellLevel)entity.Level;
-        }
 
-        if (!parentWaterPark && setupLargeWorldEntity)
-        {
-            if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
+            // LargeWorldEntity.Start unregisters itself if there is a parent which has a LargeWorldEntity
+            // thus we detect the opposite case to call Register
+            if (registerLargeWorldEntity && (!parent.HasValue || !parent.Value.GetComponentInParent<LargeWorldEntity>()))
             {
-                LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
-            }
-            else if (largeWorldEntity && !gameObject.transform.parent && cellRoot.liveRoot)
-            {
-                gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
                 LargeWorldEntity.Register(gameObject);
             }
-            else
-            {
-                gameObject.SetActive(true);
-            }
         }
 
-        if (parent.HasValue)
+        if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
         {
-            if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
-            {
-                pickupable.SetVisible(false);
-                pickupable.Activate(false);
-                parentWaterPark.AddItem(pickupable);
-            }
-            else
-            {
-                gameObject.transform.SetParent(parent.Value.transform, true);
-            }
+            pickupable.SetVisible(false);
+            pickupable.Activate(false);
+            parentWaterPark.AddItem(pickupable);
+        }
+        else if (parent.HasValue)
+        {
+            gameObject.transform.SetParent(parent.Value.transform, true);
         }
     }
 
@@ -205,7 +192,7 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
         if (TryCreateGameObjectSync(techType, entity.ClassId, entity.Id, out GameObject gameObject))
         {
-            SetupObject(entity, parent, gameObject, cellRoot, techType, true);
+            SetupObject(entity, parent, gameObject, techType, true);
             result.Set(gameObject);
             return true;
         }

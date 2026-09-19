@@ -1,15 +1,15 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class ReefbackEntitySpawner(ReefbackChildEntitySpawner reefbackChildEntitySpawner, DefaultWorldEntitySpawner defaultWorldEntitySpawner, Entities entities) : IWorldEntitySpawner
+public class ReefbackEntitySpawner(ReefbackChildEntitySpawner reefbackChildEntitySpawner, Entities entities) : IWorldEntitySpawner
 {
     private readonly ReefbackChildEntitySpawner reefbackChildEntitySpawner = reefbackChildEntitySpawner;
-    private readonly DefaultWorldEntitySpawner defaultWorldEntitySpawner = defaultWorldEntitySpawner;
     private readonly Entities entities = entities;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
@@ -32,10 +32,10 @@ public class ReefbackEntitySpawner(ReefbackChildEntitySpawner reefbackChildEntit
         // Prevent the entity from disappearing because of parent cell going to sleep until it's fully spawned
         largeWorldEntity.enabled = false;
 
-        SetupObject(reefbackEntity, reefbackObject, cellRoot, reefbackLife);
+        SetupObject(reefbackEntity, reefbackObject, reefbackLife);
 
         TaskResult<Optional<GameObject>> childTaskResult = new();
-        foreach (ReefbackChildEntity reefbackChildEntity in entity.ChildEntities)
+        foreach (ReefbackChildEntity reefbackChildEntity in entity.ChildEntities.Cast<ReefbackChildEntity>())
         {
             reefbackChildEntitySpawner.SpawnSync(reefbackChildEntity, reefbackObject, cellRoot, childTaskResult);
 
@@ -59,9 +59,9 @@ public class ReefbackEntitySpawner(ReefbackChildEntitySpawner reefbackChildEntit
 
     public bool SpawnsOwnChildren() => true;
 
-    private void SetupObject(ReefbackEntity entity, GameObject gameObject, EntityCell cellRoot, ReefbackLife reefbackLife)
+    private static void SetupObject(ReefbackEntity entity, GameObject gameObject, ReefbackLife reefbackLife)
     {
-        defaultWorldEntitySpawner.SetupObject(entity, Optional.Empty, gameObject, cellRoot, entity.TechType.ToUnity(), false);
+        DefaultWorldEntitySpawner.SetupObject(entity, Optional.Empty, gameObject, entity.TechType.ToUnity(), false);
 
         // Replicate only the useful parts of ReefbackLife.Initialize
         reefbackLife.initialized = true;

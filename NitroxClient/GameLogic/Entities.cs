@@ -247,7 +247,7 @@ namespace NitroxClient.GameLogic
 
         public void OnEntitySpawned(Entity entity, GameObject gameObject)
         {
-            entityMetadataManager.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
+            entityMetadataManager.ApplyMetadata(gameObject, entity.Metadata);
             MarkAsSpawned(entity);
         }
 

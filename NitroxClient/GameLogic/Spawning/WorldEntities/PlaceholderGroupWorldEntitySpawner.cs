@@ -38,8 +38,7 @@ internal sealed class PlaceholderGroupWorldEntitySpawner(Entities entities, Worl
         LargeWorldEntity largeWorldEntity = groupObject.GetComponent<LargeWorldEntity>();
         PrefabPlaceholdersGroup prefabPlaceholderGroup = groupObject.GetComponent<PrefabPlaceholdersGroup>();
 
-        defaultWorldEntitySpawner.SetupObject(entity, parent, groupObject, cellRoot, entity.TechType.ToUnity(), false);
-
+        DefaultWorldEntitySpawner.SetupObject(entity, parent, groupObject, entity.TechType.ToUnity(), false);
 
         // Prevent the entity from disappearing because of parent cell going to sleep until it's fully spawned
         if (!parent.HasValue)
@@ -95,9 +94,8 @@ internal sealed class PlaceholderGroupWorldEntitySpawner(Entities entities, Worl
             }
 
             GameObject childObject = childResult.value.Value;
-            entities.MarkAsSpawned(current);
+            entities.OnEntitySpawned(current, childObject);
             parentById[current.Id] = childObject;
-            entityMetadataManager.ApplyMetadata(childObject, current.Metadata);
 
             // PlaceholderGroupWorldEntity's children spawning is already handled by this function which is called recursively
             if (current is not PlaceholderGroupWorldEntity)
