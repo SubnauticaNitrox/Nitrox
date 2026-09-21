@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.InitialSync;
 /// Ensures all prefabs are loaded before any spawning happens in-game. This allows to spawn prefabs without yielding which is a
 /// huge plus when spawning an object that is related to a critical code path (in batteries code for example).
 /// </summary>
-internal sealed class PrefabLoadInitialSyncProcessor : InitialSyncProcessor
+public sealed class PrefabLoadInitialSyncProcessor : InitialSyncProcessor
 {
     private static bool loadStarted;
     private static readonly Queue<(string, TechType)> loadQueue = new(PrefabDatabase.prefabFiles.Keys.Count);
