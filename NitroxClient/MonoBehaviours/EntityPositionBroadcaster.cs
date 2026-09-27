@@ -2,42 +2,47 @@ using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic;
 using UnityEngine;
 using static Nitrox.Model.Subnautica.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class EntityPositionBroadcaster : MonoBehaviour
+public sealed class EntityPositionBroadcaster : MonoBehaviour
 {
     public static EntityPositionBroadcaster Instance;
 
     /// <summary>
-    /// The time between two broadcasts in seconds.
+    ///     The time between two broadcasts in seconds.
     /// </summary>
     public static readonly float BROADCAST_INTERVAL = 0.1f;
 
     /// <summary>
-    /// Dictionary of watched entities that don't follow spline movements.
-    /// </summary>
-    private readonly Dictionary<NitroxId, GameObject> regularEntities = [];
-    /// <summary>
-    /// Dictionary of watched entities that follow spline movements.
-    /// </summary>
-    private readonly Dictionary<NitroxId, SwimBehaviour> splineEntities = [];
-    /// <summary>
-    /// Set of watched entities that weren't spawned yet.
+    ///     Set of watched entities that weren't spawned yet.
     /// </summary>
     private readonly HashSet<NitroxId> notSpawnedEntityIds = [];
+
     /// <summary>
-    /// Latest registered spline updates from SplineFollowing.GoTo
+    ///     Dictionary of watched entities that don't follow spline movements.
+    /// </summary>
+    private readonly Dictionary<NitroxId, GameObject> regularEntities = [];
+
+    /// <summary>
+    ///     Dictionary of watched entities that follow spline movements.
+    /// </summary>
+    private readonly Dictionary<NitroxId, SwimBehaviour> splineEntities = [];
+
+    /// <summary>
+    ///     Latest registered spline updates from SplineFollowing.GoTo
     /// </summary>
     private readonly Dictionary<NitroxId, SplineTransformUpdate> splineUpdatesById = [];
+
     /// <summary>
-    /// Reusable list of <see cref="EntityTransformUpdate"/>s to avoid reallocating a new list at each broadcast.
+    ///     Reusable list of <see cref="EntityTransformUpdate" />s to avoid reallocating a new list at each broadcast.
     /// </summary>
     /// <remarks>
-    /// This only works because <see cref="LiteNetLibClient.Send"/> immediately serializes the list.
+    ///     This only works because <see cref="LiteNetLibClient.Send" /> immediately serializes the list.
     /// </remarks>
     private readonly List<EntityTransformUpdate> updates = new(50);
 
@@ -69,7 +74,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
         {
             time = 0;
 
-            CheckEntities();
+            ReassignEntitiesToLookups();
             BuildUpdates();
 
             if (updates.Count > 0)
@@ -101,7 +106,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
                 updates.Add(splineUpdate);
             }
         }
-        
+
         splineUpdatesById.Clear();
     }
 
@@ -110,10 +115,10 @@ public class EntityPositionBroadcaster : MonoBehaviour
         // The game object may not exist at this very moment (due to being spawned in async). This is OK as we will
         // automatically start sending updates when we finally get it in the world. This behavior will also allow us
         // to resync or respawn entities while still have broadcasting enabled without doing anything extra.
-     
+
         if (NitroxEntity.TryGetObjectFrom(id, out GameObject entityObject))
         {
-            SortEntity(id, entityObject);
+            AddEntityToLookup(id, entityObject);
         }
         else
         {
@@ -121,7 +126,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
         }
     }
 
-    private void SortEntity(NitroxId nitroxId, GameObject entityObject)
+    private void AddEntityToLookup(NitroxId nitroxId, GameObject entityObject)
     {
         if (entityObject.TryGetComponent(out SwimBehaviour swimBehaviour) && swimBehaviour.enabled)
         {
@@ -134,41 +139,40 @@ public class EntityPositionBroadcaster : MonoBehaviour
 
         if (entityObject.TryGetComponent(out RemotelyControlled remotelyControlled))
         {
-            Object.Destroy(remotelyControlled);
+            Destroy(remotelyControlled);
         }
     }
 
     /// <summary>
-    /// For each tracked entity, ensures it stays in the right HashSet/Dictionary depending on its state.
-    /// Either the entity has not spawned (<see cref="notSpawnedEntityIds"/>) or it follows a spline (<see cref="splineEntities"/>)
-    /// or in the default case (<see cref="regularEntities"/>).
+    ///     For each tracked entity, ensures it stays in the right HashSet/Dictionary depending on its state.
+    ///     Either the entity has not spawned (<see cref="notSpawnedEntityIds" />) or it follows a spline (
+    ///     <see cref="splineEntities" />)
+    ///     or in the default case (<see cref="regularEntities" />).
     /// </summary>
-    private void CheckEntities()
+    private void ReassignEntitiesToLookups()
     {
         // when fishes die, they're only a corpse and their swim behaviour stops functioning
-        splineEntities.RemoveWhere(pair =>
+        splineEntities.RemoveWhere(this, static (self, pair) =>
         {
             SwimBehaviour swimBehaviour = pair.Value;
-
             if (!swimBehaviour)
             {
-                notSpawnedEntityIds.Add(pair.Key);
+                self.notSpawnedEntityIds.Add(pair.Key);
                 return true;
             }
-
             if (!swimBehaviour.enabled)
             {
-                regularEntities[pair.Key] = swimBehaviour.gameObject;
+                self.regularEntities[pair.Key] = swimBehaviour.gameObject;
                 return true;
             }
             return false;
         });
 
-        regularEntities.RemoveWhere(pair =>
+        regularEntities.RemoveWhere(this, static (self, pair) =>
         {
             if (!pair.Value)
             {
-                notSpawnedEntityIds.Add(pair.Key);
+                self.notSpawnedEntityIds.Add(pair.Key);
                 return true;
             }
             return false;
@@ -176,11 +180,11 @@ public class EntityPositionBroadcaster : MonoBehaviour
 
         // in case a fish was removed from splineEntities (from the above loop), it can be added back in here as a regular entity if required
         // NB: keep this section below the other RemoveWhere sections so it can eventually collect fresh references from the NitroxIds
-        notSpawnedEntityIds.RemoveWhere(id =>
+        notSpawnedEntityIds.RemoveWhere(this, static (self, id) =>
         {
             if (NitroxEntity.TryGetObjectFrom(id, out GameObject entityObject))
             {
-                SortEntity(id, entityObject);
+                self.AddEntityToLookup(id, entityObject);
                 return true;
             }
             return false;
@@ -217,7 +221,7 @@ public class EntityPositionBroadcaster : MonoBehaviour
     }
 
     /// <summary>
-    /// Notifies the server of the latest known position of this entity if the local player is simulating it.
+    ///     Notifies the server of the latest known position of this entity if the local player is simulating it.
     /// </summary>
     public void SendLastUpdateAndDropOwnership(GameObject gameObject)
     {
@@ -234,7 +238,8 @@ public class EntityPositionBroadcaster : MonoBehaviour
             // Clean up in case there remains an update that wasn't sent yet
             splineUpdatesById.Remove(entityId);
             entityTransformUpdate = new SplineTransformUpdate(entityId, entityTransform.position.ToDto(), entityTransform.rotation.ToDto(), splineFollowing.targetPosition.ToDto(), splineFollowing.targetDirection.ToDto(), splineFollowing.medianSpeed);
-        } else if (regularEntities.ContainsKey(entityId))
+        }
+        else if (regularEntities.ContainsKey(entityId))
         {
             entityTransformUpdate = new RawTransformUpdate(entityId, entityTransform.position.ToDto(), entityTransform.rotation.ToDto());
         }
