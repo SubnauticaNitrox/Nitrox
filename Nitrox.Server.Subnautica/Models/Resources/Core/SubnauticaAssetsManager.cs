@@ -91,33 +91,53 @@ internal sealed class SubnauticaAssetsManager : AssetsManager, IDisposable
         return monoBehaviourInf;
     }
 
-    public NitroxTransform GetTransformFromGameObject(AssetsFileInstance assetFileInst, AssetTypeValueField rootGameObject, string parentName, bool isEntitySlotAsset)
+    public NitroxTransform GetTransformFromGameObject(AssetsFileInstance assetFileInst, AssetTypeValueField rootGameObject, string rootName, bool isEntitySlotAsset)
     {
         AssetTypeValueField componentArray = rootGameObject["m_Component"]["Array"];
 
-        AssetTypeValueField transformRef = componentArray[0]["component"];
-        AssetTypeValueField transformField = GetExtAsset(assetFileInst, transformRef).baseField;
+        AssetTypeValueField transformPtr = componentArray[0]["component"];
+        AssetTypeValueField transformField = GetExtAsset(assetFileInst, transformPtr).baseField;
+
+        NitroxTransform objectNitroxTransform = new(transformField["m_LocalPosition"].ToNitroxVector3(), transformField["m_LocalRotation"].ToNitroxQuaternion(), transformField["m_LocalScale"].ToNitroxVector3());
 
         // We only target entity slots because they spawn entities which aren't directly reparented to the slot's parent, but instead they are put in a CellRoot.
         // So we need to account for position offsets from the PrefabPlaceholderGroup other than LocalPosition
         if (isEntitySlotAsset)
         {
-            AssetTypeValueField parentTransformPtr = transformField["m_Father"];
-            AssetTypeValueField parentTransformField = GetExtAsset(assetFileInst, parentTransformPtr).baseField;
+            AssetTypeValueField currentTransformField = transformField;
+            NitroxTransform currentNitroxTransform = objectNitroxTransform;
 
-            AssetTypeValueField parentGameObjectPtr = parentTransformField["m_GameObject"];
-            AssetTypeValueField parentGameObjectField = GetExtAsset(assetFileInst, parentGameObjectPtr).baseField;
-
-            string gameObjectName = parentGameObjectField["m_Name"].AsString;
-            // We only add the parent's position offset if the entity slot is not directly under the PrefabPlaceholderGroup
-            // because the potential source of position offset is an intermediary parent in between
-            if (!string.Equals(gameObjectName, parentName, StringComparison.OrdinalIgnoreCase))
+            // The PrefabPlaceholder can be under multiple layers after the root placeholder group so we go up setp by step
+            while (true)
             {
-                return new(transformField["m_LocalPosition"].ToNitroxVector3() + parentTransformField["m_LocalPosition"].ToNitroxVector3(), transformField["m_LocalRotation"].ToNitroxQuaternion(), transformField["m_LocalScale"].ToNitroxVector3());
+                AssetTypeValueField parentTransformPtr = currentTransformField["m_Father"];
+                // Stop when we reach scene root
+                if (parentTransformPtr["m_PathID"].AsLong == 0)
+                {
+                    break;
+                }
+
+                AssetTypeValueField parentTransformField = GetExtAsset(assetFileInst, parentTransformPtr).baseField;
+                AssetTypeValueField parentGameObjectPtr = parentTransformField["m_GameObject"];
+                AssetTypeValueField parentGameObjectField = GetExtAsset(assetFileInst, parentGameObjectPtr).baseField;
+                string gameObjectName = parentGameObjectField["m_Name"].AsString;
+
+                // We only add the parent's position offset if the entity slot is not directly under the PrefabPlaceholderGroup
+                // because the potential source of position offset is an intermediary parent in between
+                if (string.Equals(gameObjectName, rootName, StringComparison.OrdinalIgnoreCase))
+                {
+                    break;
+                }
+
+                NitroxTransform parentTransform = new(parentTransformField["m_LocalPosition"].ToNitroxVector3(), parentTransformField["m_LocalRotation"].ToNitroxQuaternion(), parentTransformField["m_LocalScale"].ToNitroxVector3());
+                currentNitroxTransform.SetParent(parentTransform, false);
+                
+                currentTransformField = parentTransformField;
+                currentNitroxTransform = parentTransform;
             }
         }
 
-        return new(transformField["m_LocalPosition"].ToNitroxVector3(), transformField["m_LocalRotation"].ToNitroxQuaternion(), transformField["m_LocalScale"].ToNitroxVector3());
+        return objectNitroxTransform;
     }
 
     private new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator? generator)
