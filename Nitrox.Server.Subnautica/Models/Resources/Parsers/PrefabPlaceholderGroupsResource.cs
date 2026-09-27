@@ -26,7 +26,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
     ///         the cache is rebuilt
     ///     </para>
     /// </summary>
-    private const int CACHE_VERSION = 4;
+    private const int CACHE_VERSION = 5;
 
     private const string CACHE_FILENAME = "PrefabPlaceholdersGroupAssetsCache.json";
 
