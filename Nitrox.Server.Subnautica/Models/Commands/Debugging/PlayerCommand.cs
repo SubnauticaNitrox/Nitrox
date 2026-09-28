@@ -39,7 +39,7 @@ internal sealed class PlayerCommand(SimulationOwnershipData simulationOwnership,
             foreach (WorldEntity worldEntity in entityManager.GetEntities(visibleCell))
             {
                 if (simulationOwnership.TryGetLock(worldEntity.Id, out SimulationOwnershipData.PlayerLock playerLock) &&
-                    playerLock.Player.Id == player.Id)
+                    playerLock.Player.PeerId == player.PeerId)
                 {
                     simulatedEntities += $"[{worldEntity.Id}; {worldEntity.TechType?.ToString() ?? worldEntity.ClassId}], ";
                 }

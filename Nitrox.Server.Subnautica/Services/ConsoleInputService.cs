@@ -44,6 +44,10 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
     private async Task HandleInputAsync(CancellationToken cancellationToken)
     {
         StringBuilder inputLineBuilder = new();
+        // Tracks the caret position ourselves instead of reading it back from Console.CursorLeft: on Unix, that getter
+        // round-trips an ANSI cursor-position query through the same stdin stream that key presses are read from, which
+        // some non-native terminal front-ends (e.g. PufferPanel's console) don't relay correctly, corrupting input.
+        int caretIndex = 0;
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -88,51 +92,58 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
             {
                 switch (keyInfo.Key)
                 {
-                    case ConsoleKey.LeftArrow when Console.CursorLeft > 0:
-                        Console.CursorLeft--;
+                    case ConsoleKey.LeftArrow when caretIndex > 0:
+                        caretIndex--;
+                        Console.CursorLeft = caretIndex;
                         continue;
-                    case ConsoleKey.RightArrow when Console.CursorLeft < inputLineBuilder.Length:
-                        Console.CursorLeft++;
+                    case ConsoleKey.RightArrow when caretIndex < inputLineBuilder.Length:
+                        caretIndex++;
+                        Console.CursorLeft = caretIndex;
                         continue;
                     case ConsoleKey.Backspace:
-                        if (inputLineBuilder.Length > Console.CursorLeft - 1 && Console.CursorLeft > 0)
+                        if (inputLineBuilder.Length > caretIndex - 1 && caretIndex > 0)
                         {
-                            inputLineBuilder.Remove(Console.CursorLeft - 1, 1);
-                            Console.CursorLeft--;
+                            inputLineBuilder.Remove(caretIndex - 1, 1);
+                            caretIndex--;
+                            Console.CursorLeft = caretIndex;
                             Console.Write(' ');
-                            Console.CursorLeft--;
+                            Console.CursorLeft = caretIndex;
                             RedrawInput();
                         }
                         continue;
                     case ConsoleKey.Delete:
-                        if (inputLineBuilder.Length > 0 && Console.CursorLeft < inputLineBuilder.Length)
+                        if (inputLineBuilder.Length > 0 && caretIndex < inputLineBuilder.Length)
                         {
-                            inputLineBuilder.Remove(Console.CursorLeft, 1);
-                            RedrawInput(Console.CursorLeft, inputLineBuilder.Length - Console.CursorLeft);
+                            inputLineBuilder.Remove(caretIndex, 1);
+                            RedrawInput(caretIndex, inputLineBuilder.Length - caretIndex);
                         }
                         continue;
                     case ConsoleKey.Home:
-                        Console.CursorLeft = 0;
+                        caretIndex = 0;
+                        Console.CursorLeft = caretIndex;
                         continue;
                     case ConsoleKey.End:
-                        Console.CursorLeft = inputLineBuilder.Length;
+                        caretIndex = inputLineBuilder.Length;
+                        Console.CursorLeft = caretIndex;
                         continue;
                     case ConsoleKey.Escape:
                         ClearInputLine();
                         continue;
                     case ConsoleKey.Tab:
-                        if (Console.CursorLeft + 4 < GetConsoleWidth())
+                        if (caretIndex + 4 < GetConsoleWidth())
                         {
-                            inputLineBuilder.Insert(Console.CursorLeft, "    ");
-                            RedrawInput(Console.CursorLeft, -1);
-                            Console.CursorLeft += 4;
+                            inputLineBuilder.Insert(caretIndex, "    ");
+                            RedrawInput(caretIndex, -1);
+                            caretIndex += 4;
+                            Console.CursorLeft = caretIndex;
                         }
                         continue;
                     case ConsoleKey.UpArrow when inputHistory.Count > 0 && currentHistoryIndex > -inputHistory.Count:
                         inputLineBuilder.Clear();
                         inputLineBuilder.Append(inputHistory[--currentHistoryIndex]);
                         RedrawInput();
-                        Console.CursorLeft = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
+                        caretIndex = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
+                        Console.CursorLeft = caretIndex;
                         continue;
                     case ConsoleKey.DownArrow when inputHistory.Count > 0 && currentHistoryIndex < 0:
                         if (currentHistoryIndex == -1)
@@ -143,7 +154,8 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
                         inputLineBuilder.Clear();
                         inputLineBuilder.Append(inputHistory[++currentHistoryIndex]);
                         RedrawInput();
-                        Console.CursorLeft = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
+                        caretIndex = Math.Min(inputLineBuilder.Length, GetConsoleWidth());
+                        Console.CursorLeft = caretIndex;
                         continue;
                 }
             }
@@ -162,6 +174,7 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
                 }
                 currentHistoryIndex = 0;
                 inputLineBuilder.Clear();
+                caretIndex = 0;
                 Console.WriteLine();
                 SubmitInput(submit);
                 continue;
@@ -171,17 +184,18 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
             if (keyInfo.KeyChar != 0)
             {
                 Console.Write(keyInfo.KeyChar);
-                if (Console.CursorLeft - 1 < inputLineBuilder.Length)
+                caretIndex++;
+                if (caretIndex - 1 < inputLineBuilder.Length)
                 {
                     try
                     {
-                        inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
+                        inputLineBuilder.Insert(caretIndex - 1, keyInfo.KeyChar);
                     }
                     catch (Exception ex) when (ex is IndexOutOfRangeException or ArgumentOutOfRangeException)
                     {
                         // ignored
                     }
-                    RedrawInput(Console.CursorLeft, -1);
+                    RedrawInput(caretIndex, -1);
                 }
                 else
                 {
@@ -196,12 +210,13 @@ internal sealed class ConsoleInputService(CommandService commandService, IPacket
         {
             currentHistoryIndex = 0;
             inputLineBuilder.Clear();
+            caretIndex = 0;
             Console.Write($"\r{new string(' ', GetConsoleWidth(-1))}\r");
         }
 
         void RedrawInput(int start = 0, int end = 0)
         {
-            int lastPosition = Console.CursorLeft;
+            int lastPosition = caretIndex;
             // Expand range to end if end value is -1
             if (start > -1 && end == -1)
             {

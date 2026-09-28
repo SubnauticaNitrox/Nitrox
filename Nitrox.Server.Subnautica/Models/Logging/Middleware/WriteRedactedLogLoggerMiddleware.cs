@@ -46,7 +46,7 @@ internal sealed partial record WriteRedactedLogLoggerMiddleware : ILoggerMiddlew
         // Get the original format which has the parameters as "{tag}".
         redactionBufferWriter.Clear();
         context.Entry.WriteOriginalFormat(redactionBufferWriter);
-        int bufferSize = Encoding.Default.GetCharCount(redactionBufferWriter.WrittenSpan);
+        int bufferSize = Encoding.UTF8.GetCharCount(redactionBufferWriter.WrittenSpan);
         Span<char> originalFormat = bufferSize <= 64 ? stackalloc char[bufferSize] : new char[bufferSize];
         Encoding.UTF8.TryGetChars(redactionBufferWriter.WrittenSpan, originalFormat, out _);
 

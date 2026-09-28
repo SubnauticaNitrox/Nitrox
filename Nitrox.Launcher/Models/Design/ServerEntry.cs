@@ -423,7 +423,7 @@ internal sealed partial class ServerEntry : ObservableObject
                 // Assist server with finding launcher location.
                 if (Directory.Exists(launcherPath))
                 {
-                    startInfo.EnvironmentVariables.Add(NitroxUser.LAUNCHER_PATH_ENV_KEY, launcherPath);
+                    startInfo.EnvironmentVariables[NitroxUser.LAUNCHER_PATH_ENV_KEY] = launcherPath;
                 }
                 if (isEmbeddedMode)
                 {

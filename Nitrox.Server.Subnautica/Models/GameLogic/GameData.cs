@@ -1,4 +1,5 @@
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 

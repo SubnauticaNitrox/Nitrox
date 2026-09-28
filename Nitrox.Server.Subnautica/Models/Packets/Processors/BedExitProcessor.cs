@@ -7,9 +7,8 @@ internal sealed class BedExitProcessor(SleepManager sleepManager) : IAuthPacketP
 {
     private readonly SleepManager sleepManager = sleepManager;
 
-    public Task Process(AuthProcessorContext context, BedExit packet)
+    public async Task Process(AuthProcessorContext context, BedExit packet)
     {
-        sleepManager.PlayerExitedBed(context.Sender);
-        return Task.CompletedTask;
+        await sleepManager.PlayerExitedBed(context.Sender);
     }
 }

@@ -2,7 +2,7 @@ using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
-using Timer = System.Timers.Timer;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
@@ -17,31 +17,30 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
     private readonly TimeService timeService = timeService;
     private readonly ThreadSafeSet<SessionId> sessionIdsInBed = [];
     private bool isSleepInProgress;
-    private Timer? sleepTimer;
     private readonly PlayerManager playerManager = playerManager;
 
-    public void PlayerEnteredBed(Player player)
+    public async Task PlayerEnteredBed(Player player)
     {
         if (!sessionIdsInBed.Add(player.SessionId))
         {
             return;
         }
 
-        BroadcastStatus();
+        await BroadcastStatus();
         if (!isSleepInProgress && AreAllPlayersInBed())
         {
-            StartSleep();
+            await StartSleep();
         }
     }
 
-    public void PlayerExitedBed(Player player)
+    public async Task PlayerExitedBed(Player player)
     {
         if (!sessionIdsInBed.Remove(player.SessionId))
         {
             return;
         }
 
-        BroadcastStatus();
+        await BroadcastStatus();
     }
 
     private bool AreAllPlayersInBed()
@@ -50,31 +49,26 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         return totalPlayers > 0 && sessionIdsInBed.Count >= totalPlayers;
     }
 
-    private void BroadcastStatus()
+    private async Task BroadcastStatus()
     {
         int totalPlayers = playerManager.GetConnectedPlayers().Count;
-        packetSender.SendPacketToAllAsync(new SleepStatusUpdate(sessionIdsInBed.Count, totalPlayers));
+        await packetSender.SendPacketToAllAsync(new SleepStatusUpdate(sessionIdsInBed.Count, totalPlayers));
     }
 
-    private void StartSleep()
+    private async Task StartSleep()
     {
         isSleepInProgress = true;
-
-        sleepTimer = new Timer(TimeSpan.FromSeconds(SLEEP_DURATION).TotalMilliseconds)
-        {
-            AutoReset = false
-        };
-        sleepTimer.Elapsed += delegate
-        {
-            timeService.SkipTime(TimeSpan.FromSeconds(SLEEP_TIME_SKIP_SECONDS));
-            packetSender.SendPacketToAllAsync(new SleepComplete());
-            isSleepInProgress = false;
-            sleepTimer.Dispose();
-            sleepTimer = null;
-        };
-        sleepTimer?.Start();
-
         sessionIdsInBed.Clear();
+
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(SLEEP_DURATION));
+            await timeService.SkipTimeAsync(TimeSpan.FromSeconds(SLEEP_TIME_SKIP_SECONDS));
+            await packetSender.SendPacketToAllAsync(new SleepComplete());
+        } finally
+        {
+            isSleepInProgress = false;
+        }
     }
 
     public async Task OnEventAsync(ISessionCleaner.Args args)
@@ -97,7 +91,7 @@ internal sealed class SleepManager(IPacketSender packetSender, PlayerManager pla
         // Check if remaining players are now all sleeping (disconnected player was the only one awake)
         if (args.NewSessionTotal > 0 && sessionIdsInBed.Count >= args.NewSessionTotal)
         {
-            StartSleep();
+            await StartSleep();
         }
     }
 }

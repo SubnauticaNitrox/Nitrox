@@ -173,7 +173,7 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
                 LogLevel.Error => 3,
                 _ => 0
             };
-            bool isPlain = log.Entry.TryGetProperty(out PlainScope _);
+            bool isPlain = log.Entry.TryGetFirstProperty(out PlainScope _);
             string? message = log.Generator(log.Entry, log.Formatter, log.Writer); // Generator will dispose of the log data, so this needs to be called "last".
             if (message is "")
             {

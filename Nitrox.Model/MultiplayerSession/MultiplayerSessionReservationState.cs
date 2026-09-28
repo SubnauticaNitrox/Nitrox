@@ -24,7 +24,10 @@ namespace Nitrox.Model.MultiplayerSession
         HARDCORE_PLAYER_DEAD = 1 << 4,
 
         [Description("The player name is invalid, It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]")]
-        INCORRECT_USERNAME = 1 << 5
+        INCORRECT_USERNAME = 1 << 5,
+
+        [Description("You have been banned from this server.")]
+        PLAYER_BANNED = 1 << 6
     }
 
     public static class MultiplayerSessionReservationStateExtensions
