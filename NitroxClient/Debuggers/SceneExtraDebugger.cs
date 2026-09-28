@@ -104,7 +104,7 @@ public sealed class SceneExtraDebugger : AbstractDebugger
                             {
                                 if (GUILayout.Button(child.GetFullHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
                                 {
-                                    sceneDebugger.UpdateSelectedObject(child);
+                                    sceneDebugger.InspectGameObject(child);
                                 }
                             }
                         }
