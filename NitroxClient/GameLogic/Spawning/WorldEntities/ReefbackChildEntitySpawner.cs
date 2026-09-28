@@ -95,5 +95,9 @@ public class ReefbackChildEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncS
                 gameObject.AddComponent<ReefbackCreature>();
                 break;
         }
+
+        // Reefback children have a global position that gives them AbsoluteCellEntity that might differ from
+        // their parent's, so just in case we mark them as OutOfCellEntity so server-side Player.CanSee returns true for them
+        gameObject.EnsureComponent<OutOfCellEntity>().Init(entity.Id);
     }
 }

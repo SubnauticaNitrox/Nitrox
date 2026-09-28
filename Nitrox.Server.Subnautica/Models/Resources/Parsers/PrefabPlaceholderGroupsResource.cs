@@ -11,8 +11,8 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Resources.AddressablesTools.Catalog;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
-using ClassIdByRuntimeKeyDictionary = System.Collections.Generic.Dictionary<string, string>;
 using AddressableCatalogDictionary = System.Collections.Generic.Dictionary<string, string[]>;
+using ClassIdByRuntimeKeyDictionary = System.Collections.Generic.Dictionary<string, string>;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
@@ -26,7 +26,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
     ///         the cache is rebuilt
     ///     </para>
     /// </summary>
-    private const int CACHE_VERSION = 4;
+    private const int CACHE_VERSION = 5;
 
     private const string CACHE_FILENAME = "PrefabPlaceholdersGroupAssetsCache.json";
 
@@ -457,9 +457,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
             AssetTypeValueField databoxSpawner = am.GetBaseField(assetFileInst, databoxSpawnerInfo);
             string runtimeKey = databoxSpawner["databoxPrefabReference"]["m_AssetGUID"].AsString;
 
-            PrefabPlaceholderAsset databoxAsset = new(classIdByRuntimeKey[runtimeKey]);
-            placeholdersByClassId[classId] = databoxAsset;
-            return databoxAsset;
+            return GetAndCacheAsset(am, classIdByRuntimeKey[runtimeKey], addressableCatalog, classIdByRuntimeKey);
         }
 
         AssetFileInfo entitySlotInfo = am.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "EntitySlot");

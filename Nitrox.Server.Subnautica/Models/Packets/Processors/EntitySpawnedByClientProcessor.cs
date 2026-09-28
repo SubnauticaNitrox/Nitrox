@@ -29,10 +29,11 @@ internal sealed class EntitySpawnedByClientProcessor(PlayerManager playerManager
             worldEntityManager.TrackEntityInTheWorld(worldEntity);
         }
 
-        if (packet.RequireSimulation && entitySimulation.TryAssignEntityToPlayer(entity, context.Sender, true, out simulatedEntity))
+        if (packet.RequireSimulation)
         {
+            simulatedEntity = entitySimulation.AssignEntityToPlayer(entity, context.Sender, true);
             SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
-            await context.SendToAllAsync(ownershipChangePacket);
+            await context.SendToOthersAsync(ownershipChangePacket);
         }
 
         SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);

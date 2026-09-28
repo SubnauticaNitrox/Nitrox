@@ -5,18 +5,24 @@ using HarmonyLib;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.MultiplayerSession;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.GameLogic.InitialSync;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxPatcher.Patches.Dynamic;
 using UnityEngine;
+using UWE;
 
 namespace NitroxPatcher.Patches.Persistent;
 
 // TODO: Rework this to be less ad hoc and more robust with command line arguments
+/// <summary>
+/// Adds Nitrox's thanks for playing to end credits.
+/// Starts the loading of all prefabs as soon as the main menu loads.
+/// </summary>
 public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistentPatch
 {
     private static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((uGUI_MainMenu t) => t.Start()));
@@ -32,6 +38,8 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
         {
             SpawnThankDialog();
         }
+
+        CoroutineHost.StartCoroutine(PrefabLoadInitialSyncProcessor.StartAllPrefabLoad());
 
 #if DEBUG
         if (applied)

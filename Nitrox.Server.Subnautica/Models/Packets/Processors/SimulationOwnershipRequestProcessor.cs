@@ -11,7 +11,7 @@ internal sealed class SimulationOwnershipRequestProcessor(SimulationOwnershipDat
 
     public async Task Process(AuthProcessorContext context, SimulationOwnershipRequest ownershipRequest)
     {
-        bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Id, context.Sender, ownershipRequest.LockType);
+        bool aquiredLock = simulationOwnershipData.TryAcquire(ownershipRequest.Id, context.Sender, ownershipRequest.LockType);
 
         if (aquiredLock)
         {

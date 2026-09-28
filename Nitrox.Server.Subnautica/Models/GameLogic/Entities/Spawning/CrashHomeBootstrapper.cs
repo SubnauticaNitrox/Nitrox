@@ -1,3 +1,4 @@
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.Helper;
@@ -9,6 +10,6 @@ internal sealed class CrashHomeBootstrapper : IEntityBootstrapper
     public void Prepare(ref WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {
         // Set 0 for spawnTime so that CrashHome.Update can spawn a Crash if Start() couldn't
-        entity.Metadata = new CrashHomeMetadata(0);
+        entity.Metadata = new CrashHomeMetadata(0, Optional.Empty);
     }
 }

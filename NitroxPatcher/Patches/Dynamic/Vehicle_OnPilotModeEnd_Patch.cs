@@ -1,7 +1,6 @@
 using System.Reflection;
-using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
+using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -12,11 +11,6 @@ public sealed partial class Vehicle_OnPilotModeEnd_Patch : NitroxPatch, IDynamic
     public static void Prefix(Vehicle __instance)
     {
         Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance.gameObject, false);
-        // Fixes instances of vehicles stuck on nothing by forcing the workaround (let another player enter and leave the vehicle)
-        if (__instance.TryGetComponent(out MultiplayerVehicleControl mvc))
-        {
-            mvc.Exit();
-        }
 
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {

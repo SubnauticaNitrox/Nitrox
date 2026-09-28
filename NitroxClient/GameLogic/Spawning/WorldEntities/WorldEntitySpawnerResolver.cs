@@ -20,7 +20,6 @@ internal sealed class WorldEntitySpawnerResolver
 
     public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, Entities entities, SimulationOwnership simulationOwnership)
     {
-        customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
         prefabPlaceholderEntitySpawner = new PrefabPlaceholderEntitySpawner(defaultEntitySpawner);
@@ -28,7 +27,7 @@ internal sealed class WorldEntitySpawnerResolver
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
         geyserWorldEntitySpawner = new GeyserWorldEntitySpawner(entities);
         reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();
-        reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner);
+        reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner, entities);
         creatureRespawnEntitySpawner = new CreatureRespawnEntitySpawner(simulationOwnership);
     }
 

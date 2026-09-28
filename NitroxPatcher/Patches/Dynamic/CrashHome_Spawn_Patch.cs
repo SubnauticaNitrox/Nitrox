@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.MonoBehaviours;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -30,7 +29,7 @@ public sealed partial class CrashHome_Spawn_Patch : NitroxPatch, IDynamicPatch
     /*
      * this.spawnTime = -1f;
      * BroadcastFishCreated(gameObject);            [INSERTED LINE]
-     * if (LargeWorldStreamer.main != null)
+     * [RETURN EQUIVALENT]
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -38,6 +37,7 @@ public sealed partial class CrashHome_Spawn_Patch : NitroxPatch, IDynamicPatch
                                             .Advance(1)
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastFishCreated(default))))
+                                            .RemoveInstructions(7)
                                             .InstructionEnumeration();
     }
 
@@ -52,15 +52,19 @@ public sealed partial class CrashHome_Spawn_Patch : NitroxPatch, IDynamicPatch
         LargeWorldEntity largeWorldEntity = crashFishObject.GetComponent<LargeWorldEntity>();
         UniqueIdentifier uniqueIdentifier = crashFishObject.GetComponent<UniqueIdentifier>();
 
-        // Broadcast the new CrashHome's metadata (spawnTime = -1)
-        Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(crashHome);
-        if (metadata.HasValue)
+        // Create the entity
+        WorldEntity crashFishEntity = new(crashFishObject.transform.ToWorldDto(), (int)largeWorldEntity.cellLevel, uniqueIdentifier.classId, false, crashFishId, TechType.Crash.ToDto(), null, null, []);
+        Resolve<Entities>().BroadcastEntitySpawnedByClient(crashFishEntity);
+
+        // Forcefully unparents it from the CrashHome and puts it under its parent cell
+        if (LargeWorldStreamer.main)
         {
-            Resolve<Entities>().BroadcastMetadataUpdate(crashHomeId, metadata.Value);
+            LargeWorldStreamer.main.cellManager.RegisterEntity(largeWorldEntity);
         }
 
-        // Create the entity
-        WorldEntity crashFishEntity = new(crashFishObject.transform.ToWorldDto(), (int)largeWorldEntity.cellLevel, uniqueIdentifier.classId, false, crashFishId, TechType.Crash.ToDto(), null, crashHomeId, new List<Entity>());
-        Resolve<Entities>().BroadcastEntitySpawnedByClient(crashFishEntity);
+        // Broadcast the new CrashHome's metadata ONLY after sending the entity spawn packet so that the processor always tries finding the Crash
+        // after the spawning process has at least begun
+        CrashHomeMetadata crashHomeMetadata = Resolve<CrashHomeMetadataExtractor>().Extract(crashHome);
+        Resolve<Entities>().BroadcastMetadataUpdate(crashHomeId, crashHomeMetadata);
     }
 }

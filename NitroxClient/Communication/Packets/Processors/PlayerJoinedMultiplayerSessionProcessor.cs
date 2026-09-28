@@ -2,6 +2,8 @@ using System.Collections;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using UnityEngine;
 using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -19,6 +21,8 @@ internal sealed class PlayerJoinedMultiplayerSessionProcessor(PlayerManager play
 
     private IEnumerator SpawnRemotePlayer(PlayerJoinedMultiplayerSession packet)
     {
+        yield return new WaitUntil(() => Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted);
+
         playerManager.Create(packet.PlayerContext);
         yield return entities.SpawnEntityAsync(packet.PlayerEntity, true, true);
 
