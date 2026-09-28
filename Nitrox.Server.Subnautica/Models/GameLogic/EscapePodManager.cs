@@ -13,11 +13,12 @@ using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
+internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
 {
     private const int PLAYERS_PER_ESCAPEPOD = 50;
 
     private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
     private readonly RandomStartResource randomStartResource = randomStartResource;
     private readonly IOptions<SubnauticaServerOptions> options = options;
     private readonly ThreadSafeDictionary<PeerId, EscapePodEntity> escapePodsByPlayerId = [];
@@ -51,7 +52,7 @@ internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry enti
         escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "9f16d82b-11f4-4eeb-aedf-f2fa2bfca8e3", new NitroxTechType("Fabricator"), 0, null, escapePod.Id));
         escapePod.ChildEntities.Add(new InventoryEntity(0, new NitroxId(), new NitroxTechType("SmallStorage"), null, escapePod.Id, []));
 
-        entityRegistry.AddOrUpdate(escapePod);
+        worldEntityManager.AddOrUpdateGlobalRootEntity(escapePod);
 
         return escapePod;
     }
