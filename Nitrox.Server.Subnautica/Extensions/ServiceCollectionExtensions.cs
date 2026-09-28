@@ -103,6 +103,9 @@ internal static partial class ServiceCollectionExtensions
         }
 
         public IServiceCollection AddHostedSingletonService<T>() where T : class, IHostedService => services.AddSingleton<T>().AddHostedService(provider => provider.GetRequiredService<T>());
+        public IServiceCollection AddHostedSingletonService<TService, TImplementation>()
+            where TImplementation : class, TService, IHostedService
+            where TService : class => services.AddSingleton<TService, TImplementation>().AddHostedService(provider => (TImplementation)provider.GetRequiredService(typeof(TService)));
 
         public IServiceCollection AddNitroxOptions(ServerStartOptions startOptions)
         {
