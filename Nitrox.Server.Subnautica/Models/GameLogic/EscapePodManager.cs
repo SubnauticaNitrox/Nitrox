@@ -9,17 +9,19 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
+using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
-internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options)
+internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry entityRegistry, RandomStartResource randomStartResource, IOptions<SubnauticaServerOptions> options, IPacketSender packetSender)
 {
     private const int PLAYERS_PER_ESCAPEPOD = 50;
 
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly RandomStartResource randomStartResource = randomStartResource;
     private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly IPacketSender packetSender = packetSender;
     private readonly ThreadSafeDictionary<PeerId, EscapePodEntity> escapePodsByPlayerId = [];
     private EscapePodEntity? podForNextPlayer;
     private readonly Random random = randomFactory.GetDotnetRandom();
@@ -144,6 +146,26 @@ internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry enti
                 }
             }
         }
+    }
+
+    public async Task SetupIntroSequenceAsync(Player playerA, Player playerB)
+    {
+        EscapePodEntity escapePod = escapePodsByPlayerId[playerA.Id];
+
+        if (escapePodsByPlayerId[playerB.Id] != escapePod)
+        {
+            // The two players are in different escape pods, so don't sync the escape pod fire.
+            // In this case the fire can just exist locally for each client, with no sync
+            return;
+        }
+
+        // This entity only needs to exist for the players in the escape pod for a moment, so we forget it,
+        // both on the server-side and on the client-side when the intro sequence finishes.
+        Entity fireEntity = new PathBasedChildEntity("Intro", new NitroxId(), NitroxTechType.None, null, escapePod.Id, []);
+
+        SpawnEntities spawnEntities = new(fireEntity);
+        await packetSender.SendPacketAsync(spawnEntities, playerA.SessionId);
+        await packetSender.SendPacketAsync(spawnEntities, playerB.SessionId);
     }
 
     private static bool HasEmptySlot([NotNullWhen(true)] EscapePodEntity? pod)

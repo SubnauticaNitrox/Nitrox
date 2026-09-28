@@ -1,16 +1,16 @@
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
 {
-    private readonly IPacketSender packetSender;
     private readonly LiveMixinManager liveMixinManager;
+    private readonly IPacketSender packetSender;
 
     public CyclopsMetadataProcessor(IPacketSender packetSender, LiveMixinManager liveMixinManager)
     {
@@ -152,8 +152,21 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
 
     private void SetHealth(GameObject gameObject, float health)
     {
-        LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>(true);
+        SubRoot subRoot = gameObject.RequireComponent<SubRoot>();
+        LiveMixin liveMixin = gameObject.RequireComponent<LiveMixin>();
+        float oldHealthPercent = liveMixin.GetHealthFraction();
+        float healthPercent = health / liveMixin.maxHealth;
+
         liveMixinManager.SyncRemoteHealth(liveMixin, health);
+
+        if (healthPercent < 0.5f && oldHealthPercent >= 0.5f)
+        {
+            subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullLowNotification);
+        }
+        else if (healthPercent < 0.25f && oldHealthPercent >= 0.25f)
+        {
+            subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullCriticalNotification);
+        }
     }
 
     private void SetDestroyed(GameObject gameObject, bool isDestroyed)

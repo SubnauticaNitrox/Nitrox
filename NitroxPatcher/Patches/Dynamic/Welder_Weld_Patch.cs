@@ -58,10 +58,8 @@ public sealed partial class Welder_Weld_Patch : NitroxPatch, IDynamicPatch
             float newHealth = Math.Min(live.health + addHealth, live.maxHealth);
             result = newHealth - num;
 
-            // For now, we only control the LiveMixin for vehicles (not even repair nodes at a cyclops)
-            // If we change that, this if should be removed!
-            Vehicle vehicle = live.GetComponent<Vehicle>();
-            if (vehicle && live.TryGetIdOrWarn(out NitroxId id))
+            // Currently we only handle vehicle repairs
+            if (live.TryGetIdOrWarn(out NitroxId id) && (live.GetComponent<Vehicle>()))
             {
                 if (Resolve<SimulationOwnership>().HasAnyLockType(id))
                 {
