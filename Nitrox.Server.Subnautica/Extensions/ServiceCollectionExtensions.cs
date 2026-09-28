@@ -27,6 +27,7 @@ using Nitrox.Server.Subnautica.Models.Serialization.Json;
 using Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 using Nitrox.Server.Subnautica.Services;
+using Nitrox.Server.Subnautica.Services.Core;
 using ServiceScan.SourceGenerator;
 
 namespace Nitrox.Server.Subnautica.Extensions;
@@ -214,7 +215,8 @@ internal static partial class ServiceCollectionExtensions
         /// </summary>
         public IServiceCollection AddLocalServerManagement() =>
             services
-                .AddHostedSingletonService<ServersManagementService>();
+                .AddHostedSingletonService<ServersManagementService>()
+                .AddHostedSingletonService<IProgressReporter, ServerLoadingProgressService>();
 
         public IServiceCollection AddSubnauticaResources() =>
             services
