@@ -16,6 +16,11 @@ public class EntitySignMetadataProcessor : EntityMetadataProcessor<EntitySignMet
             sign.elementsState = metadata.Elements;
             sign.scaleIndex = metadata.ScaleIndex;
             sign.SetBackground(metadata.Background);
+
+            // TMP_InputField.text (set above via sign.text) doesn't force its visible mesh to redraw
+            // when set from script instead of by typing. ForceLabelUpdate() is TextMeshPro's own
+            // escape hatch for exactly this "set from code, doesn't redraw" case.
+            sign.inputField.ForceLabelUpdate();
         }
     }
 }
