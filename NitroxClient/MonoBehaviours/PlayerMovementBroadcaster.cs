@@ -1,8 +1,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Cyclops;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
@@ -22,6 +20,12 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         // TODO: Replace this temporary fix. Mostly prevents server console being spammed with warnings when a client is in the queue.
         // There should be a way to block all packets from being sent when in the join queue or during initial sync.
         if (!Multiplayer.Main.InitialSyncCompleted)
+        {
+            return;
+        }
+
+        // Don't broadcast movement during cinematics - the cinematic controller handles positioning
+        if (Player.main.cinematicModeActive)
         {
             return;
         }
