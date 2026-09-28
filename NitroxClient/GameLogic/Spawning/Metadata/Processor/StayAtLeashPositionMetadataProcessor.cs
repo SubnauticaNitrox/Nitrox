@@ -20,6 +20,7 @@ public class StayAtLeashPositionMetadataProcessor : EntityMetadataProcessor<Stay
             creature.InitializeOnce();
             creature.isInitialized = true;
         }
+
         creature.leashPosition = metadata.LeashPosition.ToUnity();
     }
 }
