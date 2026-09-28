@@ -28,6 +28,7 @@ internal sealed class HelpCommand(Func<CommandRegistryService> registryProvider)
                                                 .Handlers
                                                 .OrderBy(h => h.Owner is HelpCommand ? 0 : 1)
                                                 .ThenBy(h => h.Name)
+                                                .ThenBy(h => string.Join("", h.ParameterTypes.Select(p => p.Name)))
                                                 .ThenBy(h => h.ParameterTypes.Length))
         {
             if (!registry.IsValidHandlerForContext(handler, context))
@@ -74,7 +75,7 @@ internal sealed class HelpCommand(Func<CommandRegistryService> registryProvider)
         }
         sb.AppendLine();
         bool first = true;
-        foreach (CommandHandlerEntry handler in handlers.OrderBy(h => h.Parameters.Length))
+        foreach (CommandHandlerEntry handler in handlers.OrderBy(h => string.Join("", h.ParameterTypes.Select(p => p.Name))).ThenBy(h => h.Parameters.Length))
         {
             if (!first)
             {

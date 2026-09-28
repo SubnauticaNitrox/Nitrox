@@ -1,12 +1,9 @@
-using System.Collections.Generic;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Vehicles;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
-using Nitrox.Model.Subnautica.DataStructures;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -16,19 +13,21 @@ public abstract class MovementReplicator : MonoBehaviour
     public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.BROADCAST_PERIOD;
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
 
-    private readonly LinkedList<Snapshot> buffer = new();
+    private TimeManager timeManager;
+
+    private readonly ExpandableRingBuffer<Snapshot> buffer = [];
     /// <summary>
     /// To ensure a smooth experience, we need a max allowed latency value which should top the incoming latencies at all times.
     /// Big increments and any decrements of this value will likely cause stutter, so we try to avoid changing this value too much.
     /// But it is required that after a lag spike, we eventually lower down that value, which is done periodically <see cref="NitroxPrefs.LatencyUpdatePeriod"/>.
     /// </summary>
-    public float maxAllowedLatency;
+    public float MaxAllowedLatency;
 
     private float latestLatencyBumpTime;
     private float maxLatencyDetectedRecently;
 
     /// <summary>
-    /// When encountering a latency bump, we must expect worse happening right after, so we add this margin to our new <see cref="maxAllowedLatency"/>.
+    /// When encountering a latency bump, we must expect worse happening right after, so we add this margin to our new <see cref="MaxAllowedLatency"/>.
     /// After each periodical latency update (<see cref="LatencyUpdatePeriod"/>), we only want to lower the latency if it's way smaller than the current variable latency.
     /// The safety threshold is defined by this value.
     /// </summary>
@@ -40,45 +39,64 @@ public abstract class MovementReplicator : MonoBehaviour
     public NitroxId objectId { get; private set; }
 
     /// <summary>
-    /// Current time must be based on real time to avoid effects from time changes/speed.
+    /// Used time must be based on real time to avoid effects from time changes/speed.
     /// </summary>
-    private float CurrentTime => (float)this.Resolve<TimeManager>().RealTimeElapsed;
+    private float RealTime => (float)timeManager.RealTimeElapsed;
 
-    public void AddSnapshot(MovementData movementData, float time)
+    public void Awake()
     {
-        float currentTime = CurrentTime;
-        float latency = currentTime - time;
+        timeManager = this.Resolve<TimeManager>();
+    }
 
-        if (latency > maxAllowedLatency)
-        {
-            maxAllowedLatency = latency + SafetyLatencyMargin;
-            latestLatencyBumpTime = currentTime;
-            maxLatencyDetectedRecently = 0;
-        }
-        else
-        {
-            maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
+    public void AddSnapshot(MovementData movementData, float snapshotRealTime)
+    {
+        float realTime = RealTime;
+        float latency = realTime - snapshotRealTime;
 
-            if (currentTime - latestLatencyBumpTime >= LatencyUpdatePeriod)
+
+        RecalculateMaxAllowedLatency(latency, realTime);
+
+        float occurrenceTime = snapshotRealTime + INTERPOLATION_TIME + MaxAllowedLatency;
+
+        // Cleaning any previous value change that would occur later than the newly received snapshot
+        while (!buffer.IsEmpty())
+        {
+            if (buffer.Last.IsSnapshotNewer(occurrenceTime))
             {
-                if (maxLatencyDetectedRecently < maxAllowedLatency - 2 * SafetyLatencyMargin)
-                {
-                    maxAllowedLatency = maxLatencyDetectedRecently + SafetyLatencyMargin; // regular gameplay latency variation
-                }
-                latestLatencyBumpTime = currentTime;
-                maxLatencyDetectedRecently = 0;
+                buffer.RemoveLast();
+            }
+            else
+            {
+                break;
             }
         }
 
-        float occurrenceTime = time + INTERPOLATION_TIME + maxAllowedLatency;
+        buffer.Add(new Snapshot(movementData, occurrenceTime));
+    }
 
-        // Cleaning any previous value change that would occur later than the newly received snapshot
-        while (buffer.Last != null && buffer.Last.Value.IsSnapshotNewer(occurrenceTime))
+    private void RecalculateMaxAllowedLatency(float latency, float realTime)
+    {
+        if (latency > MaxAllowedLatency)
         {
-            buffer.RemoveLast();
+            MaxAllowedLatency = latency + SafetyLatencyMargin;
+            latestLatencyBumpTime = realTime;
+            maxLatencyDetectedRecently = 0;
+            return;
         }
 
-        buffer.AddLast(new Snapshot(movementData, occurrenceTime));
+        maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
+
+        if (realTime - latestLatencyBumpTime < LatencyUpdatePeriod)
+        {
+            return;
+        }
+
+        if (maxLatencyDetectedRecently < MaxAllowedLatency - 2 * SafetyLatencyMargin)
+        {
+            MaxAllowedLatency = maxLatencyDetectedRecently + SafetyLatencyMargin; // regular gameplay latency variation
+        }
+        latestLatencyBumpTime = realTime;
+        maxLatencyDetectedRecently = 0;
     }
 
     public void ClearBuffer() => buffer.Clear();
@@ -129,58 +147,61 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public void Update()
     {
-        if (buffer.Count == 0)
+        if (buffer.IsEmpty())
         {
             return;
         }
 
-        float currentTime = CurrentTime;
+        float realTime = RealTime;
 
         // Sorting out expired nodes
-        while (buffer.First != null && buffer.First.Value.IsExpired(currentTime))
+        while (!buffer.IsEmpty() && buffer.First.IsExpired(realTime))
         {
             buffer.RemoveFirst();
         }
 
-        LinkedListNode<Snapshot> firstNode = buffer.First;
-        if (firstNode == null)
+        // No usable nodes left
+        if (buffer.IsEmpty())
         {
             return;
         }
 
         // Current node is not useable yet
-        if (firstNode.Value.IsSnapshotNewer(currentTime))
+        if (buffer.First.IsSnapshotNewer(realTime))
         {
             return;
         }
 
-        // Purging the next nodes if they should have already happened (we still have an expiration margin for the first node so it's fine)
-        while (firstNode.Next != null && !firstNode.Next.Value.IsSnapshotNewer(currentTime))
+        // Purging the next nodes if they should have already happened
+        while (buffer.Count > 1)
         {
-            firstNode = firstNode.Next;
-            buffer.RemoveFirst();
+            if (!buffer[1].IsSnapshotNewer(realTime))
+            {
+                buffer.RemoveFirst();
+            }
+            else
+            {
+                break;
+            }
         }
 
-        LinkedListNode<Snapshot> nextNode = firstNode.Next;
-
-        // Current node is fine but there's no next node (waiting for it without dropping current)
-        if (nextNode == null)
+        // Need at least two snapshots to interpolate
+        if (buffer.Count < 2)
         {
             return;
         }
 
         // Interpolation
+        Snapshot previousSnapshot = buffer.First;
+        Snapshot nextSnapshot = buffer[1];
 
-        MovementData prevData = firstNode.Value.Data;
-        MovementData nextData = nextNode.Value.Data;
+        float t = (realTime - previousSnapshot.Time) / (nextSnapshot.Time - previousSnapshot.Time);
 
-        float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
+        transform.position = Vector3.Lerp(previousSnapshot.Data.Position.ToUnity(), nextSnapshot.Data.Position.ToUnity(), t);
+        
+        transform.rotation = Quaternion.Lerp(previousSnapshot.Data.Rotation.ToUnity(), nextSnapshot.Data.Rotation.ToUnity(), t);
 
-        transform.position = Vector3.Lerp(prevData.Position.ToUnity(), nextData.Position.ToUnity(), t);
-
-        transform.rotation = Quaternion.Lerp(prevData.Rotation.ToUnity(), nextData.Rotation.ToUnity(), t);
-
-        ApplyNewMovementData(nextData);
+        ApplyNewMovementData(nextSnapshot.Data);
 
         // TODO: fix remote players being able to go through the object (ex: cyclops)
     }
@@ -189,9 +210,9 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public record struct Snapshot(MovementData Data, float Time)
     {
-        public bool IsSnapshotNewer(float currentTime) => currentTime < Time;
+        public bool IsSnapshotNewer(float comparedTime) => comparedTime < Time;
 
-        public bool IsExpired(float currentTime) => currentTime > Time + SNAPSHOT_EXPIRATION_TIME;
+        public bool IsExpired(float comparedTime) => comparedTime > Time + SNAPSHOT_EXPIRATION_TIME;
     }
 
     public static MovementReplicator AddReplicatorToObject(GameObject gameObject)

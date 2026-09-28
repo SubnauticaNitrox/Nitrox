@@ -5,7 +5,7 @@ using Nitrox.Model.Logger;
 namespace Nitrox.Test;
 
 [TestClass]
-public class SetupAssemblyInitializer
+public static class SetupAssemblyInitializer
 {
     [AssemblyInitialize]
     public static void AssemblyInit(TestContext context)

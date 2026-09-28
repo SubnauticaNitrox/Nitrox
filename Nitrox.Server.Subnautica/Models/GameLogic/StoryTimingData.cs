@@ -1,3 +1,5 @@
+using Nitrox.Server.Subnautica.Services;
+
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
 
 internal sealed class StoryTimingData

@@ -50,9 +50,13 @@ internal static class LoggingBuilderExtensions
                            o.Redactors = provider.GetRequiredService<IEnumerable<IRedactor>>()?.ToArray() ?? [];
                        }).OutputFunc = (entry, formatter, generator, writer) =>
                        {
-                           if (entry.TryGetProperty(out CaptureScope scope))
+                           if (entry.TryGetAllProperties<CaptureScope>() is [_, ..] scopes)
                            {
-                               scope.Capture(generator(entry, formatter, writer));
+                               string log = generator(entry, formatter, writer);
+                               foreach (CaptureScope captureScope in scopes)
+                               {
+                                   captureScope.Capture(log);
+                               }
                            }
                            return Task.CompletedTask;
                        };

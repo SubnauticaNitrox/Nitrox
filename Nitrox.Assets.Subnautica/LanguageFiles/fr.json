@@ -79,6 +79,7 @@
     "Nitrox_ServerEntry_DeleteWarning": "Êtes-vous sûr(e) de vouloir supprimer ce serveur ?",
     "Nitrox_ServerStopped": "Le serveur a été arrêté",
     "Nitrox_Settings_Bandwidth": "Paramètres de la bande passante",
+    "Nitrox_Settings_ChatAutoOpen": "Ouvrir le Chat quand il y a de l'activité",
     "Nitrox_Settings_ChatVisibilityDuration": "Durée de visibilité du chat (s)",
     "Nitrox_Settings_ChatVisibilityDuration_Tooltip": "Durée durant laquelle la fenêtre de chat reste visible. Réglez sur 0 pour désactiver les fenêtres de chat.",
     "Nitrox_Settings_HigherForUnstable_Tooltip": "Donner une valeur plus élevée pour les connexions instables",

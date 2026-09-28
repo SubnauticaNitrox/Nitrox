@@ -16,7 +16,7 @@ internal sealed class DeopCommand(PlayerManager playerManager) : ICommandHandler
     {
         switch (context)
         {
-            case not null when targetPlayer.Id == context.OriginId:
+            case not null when targetPlayer.SessionId == context.OriginId:
                 await context.ReplyAsync("You can't deop yourself!");
                 break;
             case not null when targetPlayer.Permissions >= context.Permissions:

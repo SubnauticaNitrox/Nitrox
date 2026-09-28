@@ -75,6 +75,13 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
         {
             PlacedWorldEntitySpawner.AdditionalSpawningSteps(gameObject);
         }
+
+        // Any spawned PipeSurfaceFloater should be set as "deployed" per PipeSurfaceFloater.FixedUpdate
+        // the kinematic state will be restored by PipeSurfaceFloater.UpdateRigidBody if it's already surfaced
+        if (gameObject.TryGetComponent(out PipeSurfaceFloater pipeSurfaceFloater))
+        {
+            pipeSurfaceFloater.deployed = true;
+        }
     }
 
     public static void SetupObjectInWaterPark(GameObject gameObject, LargeWorldEntity largeWorldEntity, WaterPark waterPark)
