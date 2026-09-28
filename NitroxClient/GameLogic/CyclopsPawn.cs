@@ -87,9 +87,21 @@ public class CyclopsPawn
     {
         foreach (CharacterController controller in controllers)
         {
-            Physics.IgnoreCollision(controller, Controller);
+            // Just-in-case check if ClearController hasn't been called, or some stale controllers exist
+            if (controller && controller.GetComponent<Collider>())
+            {
+                Physics.IgnoreCollision(controller, Controller);
+            }
         }
         controllers.Add(Controller);
+    }
+
+    /// <summary>
+    /// Clears the static controllers list
+    /// </summary>
+    public static void ClearControllers()
+    {
+        controllers.Clear();
     }
 
     public void SetReference()
