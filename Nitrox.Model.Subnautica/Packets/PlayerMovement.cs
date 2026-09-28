@@ -15,7 +15,7 @@ public class PlayerMovement : Movement
         Velocity = velocity;
         BodyRotation = bodyRotation;
         AimingRotation = aimingRotation;
-        DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
+        DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED_LAST;
         UdpChannel = UdpChannelId.MOVEMENTS;
     }
 
