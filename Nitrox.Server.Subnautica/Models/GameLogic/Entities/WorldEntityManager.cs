@@ -24,21 +24,21 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 internal sealed class WorldEntityManager
 {
     private readonly BatchEntitySpawner batchEntitySpawner;
-    private readonly IPacketSender packetSender;
+    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
     private readonly EntityRegistry entityRegistry;
+
+    private readonly Lock globalRootEntitiesLock = new();
+    private readonly ILogger<WorldEntityManager> logger;
+    private readonly IPacketSender packetSender;
+    private readonly PlayerManager playerManager;
     private readonly IProgressReporter progressReporter;
+
+    private readonly Lock worldEntitiesLock = new();
 
     /// <summary>
     ///     Global root entities that are always visible.
     /// </summary>
     internal Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById = [];
-
-    private readonly Lock globalRootEntitiesLock = new();
-    private readonly ILogger<WorldEntityManager> logger;
-    private readonly PlayerManager playerManager;
-
-    private readonly Lock worldEntitiesLock = new();
-    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
 
     /// <summary>
     ///     World entities can disappear if you go out of range.
@@ -237,7 +237,7 @@ internal sealed class WorldEntityManager
                 {
                     int spawned = await LoadUnspawnedEntitiesAsync(new(x, y, z), true);
 
-                    logger.ZLogDebug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
+                    logger.LogEntitiesLoadedFromBatch(spawned, x, y, z);
 
                     batchesLoaded++;
                 }
