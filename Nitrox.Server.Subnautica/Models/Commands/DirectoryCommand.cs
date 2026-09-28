@@ -23,7 +23,7 @@ internal sealed class DirectoryCommand(IOptions<ServerStartOptions> optionsProvi
             return Task.CompletedTask;
         }
 
-        logger.ZLogInformation($"Opening directory {path:@Path}");
+        logger.LogOpenDirectory(path);
         ProcessEx.OpenPath(path);
         return Task.CompletedTask;
     }

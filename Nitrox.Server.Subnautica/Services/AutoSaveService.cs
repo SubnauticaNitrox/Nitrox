@@ -42,7 +42,7 @@ internal sealed class AutoSaveService(SaveService saveService, HibernateService 
             }
 
             logger.ZLogTrace($"Requesting to save...");
-            await saveService.QueueActionAsync(SaveService.ServiceAction.SAVE, stoppingToken);
+            await saveService.QueueSaveAsync(stoppingToken);
         }
     }
 }

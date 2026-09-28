@@ -11,6 +11,7 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Services.Core;
 using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
 using Nitrox.Server.Subnautica.Services;
 
@@ -26,33 +27,35 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 internal sealed class WorldEntityManager
 {
     private readonly BatchEntitySpawner batchEntitySpawner;
-    private readonly IPacketSender packetSender;
+    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
     private readonly EntityRegistry entityRegistry;
+
+    private readonly Lock globalRootEntitiesLock = new();
+    private readonly ILogger<WorldEntityManager> logger;
+    private readonly IPacketSender packetSender;
+    private readonly IProgressReporter progressReporter;
+    private readonly PlayerService playerService;
+
+    private readonly Lock worldEntitiesLock = new();
 
     /// <summary>
     ///     Global root entities that are always visible.
     /// </summary>
     internal Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById = [];
 
-    private readonly Lock globalRootEntitiesLock = new();
-    private readonly ILogger<WorldEntityManager> logger;
-    private readonly PlayerService playerService;
-
-    private readonly Lock worldEntitiesLock = new();
-    private readonly ConcurrentDictionary<NitroxInt3, Lazy<Task<int>>> batchRegistrationTasks = new();
-
     /// <summary>
     ///     World entities can disappear if you go out of range.
     /// </summary>
     internal Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell = [];
 
-    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerService playerService, ILogger<WorldEntityManager> logger)
+    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerService playerService, IProgressReporter progressReporter, ILogger<WorldEntityManager> logger)
     {
         this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
         this.playerService = playerService;
         this.logger = logger;
+        this.progressReporter = progressReporter;
     }
 
     public List<GlobalRootEntity> GetGlobalRootEntities(bool rootOnly = false)
@@ -237,7 +240,7 @@ internal sealed class WorldEntityManager
                 {
                     int spawned = await LoadUnspawnedEntitiesAsync(new(x, y, z), true);
 
-                    logger.ZLogDebug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
+                    logger.LogEntitiesLoadedFromBatch(spawned, x, y, z);
 
                     batchesLoaded++;
                 }
@@ -245,7 +248,10 @@ internal sealed class WorldEntityManager
 
             if (batchesLoaded > 0)
             {
-                logger.ZLogInformation($"Loading : {(int)(100f * batchesLoaded / totalBatches)}%");
+                float progress = (float)batchesLoaded / totalBatches;
+                int percentage = (int)(100f * progress);
+                logger.ZLogInformation($"Loading : {percentage}%");
+                await progressReporter.ReportProgressAsync($"Loading entities: {percentage}%", progress);
             }
         }
     }
