@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Nitrox.Model.DataStructures;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -22,12 +23,16 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
             result.Set(Optional.Empty);
             yield break;
         }
+        // Record this battery as known before waiting on its (potentially multi-frame) prefab spawn, so a pickup
+        // happening in that window doesn't wrongly conclude the tool has no battery.
+        BatteryChildEntityHelper.RegisterPendingInstalledBattery(entity);
 
         TaskResult<GameObject> prefabResult = new();
         yield return DefaultWorldEntitySpawner.RequestPrefab(entity.TechType.ToUnity(), prefabResult);
         GameObject gameObject = GameObjectExtensions.InstantiateWithId(prefabResult.Get(), entity.Id);
 
         SetupObject(gameObject, energyMixin);
+        BatteryChildEntityHelper.ForgetPendingInstalledBattery(entity.ParentId, entity.ComponentIndex);
 
         result.Set(gameObject);
     }
@@ -43,10 +48,12 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
             Log.Error(errorLog);
             return true;
         }
+        BatteryChildEntityHelper.RegisterPendingInstalledBattery(entity);
 
         GameObject gameObject = GameObjectExtensions.SpawnFromPrefab(prefab, entity.Id);
 
         SetupObject(gameObject, energyMixin);
+        BatteryChildEntityHelper.ForgetPendingInstalledBattery(entity.ParentId, entity.ComponentIndex);
 
         result.Set(gameObject);
         return true;
