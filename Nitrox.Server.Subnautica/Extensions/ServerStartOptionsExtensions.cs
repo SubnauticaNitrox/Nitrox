@@ -66,6 +66,10 @@ internal static class ServerStartOptionsExtensions
 
     public static string GetServerSaveBackupsPath(this ServerStartOptions options) => Path.Combine(options.GetServerSavePath(), "backups");
 
+    public static string GetServerPictureFramesPath(this ServerStartOptions options) => Path.Combine(options.GetServerSavePath(), "PictureFrames");
+
+    public static string GetServerPictureFrameKeyPath(this ServerStartOptions options) => Path.Combine(options.GetServerSavePath(), "pictureframes.key");
+
     public static string GetServerCachePath(this ServerStartOptions options) => NitroxDirectory.CachePath;
 
     public static string GetServerLogsPath(this ServerStartOptions options) => NitroxDirectory.LogsPath;
