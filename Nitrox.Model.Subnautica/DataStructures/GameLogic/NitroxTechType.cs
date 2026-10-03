@@ -11,7 +11,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic;
 /// <remarks>
 ///     Shim tech type model to bridge the gap between original subnautica and BZ.
 /// </remarks>
-public class NitroxTechType : IEquatable<NitroxTechType>
+public class NitroxTechType : IEquatable<NitroxTechType>, IComparable<NitroxTechType>
 {
     [DataMember(Order = 1)]
     public string Name { get; }
@@ -72,5 +72,18 @@ public class NitroxTechType : IEquatable<NitroxTechType>
     public override int GetHashCode()
     {
         return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+    }
+
+    public int CompareTo(NitroxTechType? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+        if (other is null)
+        {
+            return 1;
+        }
+        return string.Compare(Name, other.Name, StringComparison.Ordinal);
     }
 }

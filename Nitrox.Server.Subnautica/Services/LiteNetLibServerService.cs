@@ -6,19 +6,22 @@ using LiteNetLib;
 using LiteNetLib.Layers;
 using LiteNetLib.Utils;
 using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Administration;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.Communication;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
 
 namespace Nitrox.Server.Subnautica.Services;
 
-internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, IKickPlayer, ISessionCleaner
+internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, IKickPlayer, ITeleport, ISessionCleaner
 {
     private readonly Dictionary<int, PeerContext> contextByPeerId = [];
     private readonly Dictionary<SessionId, PeerContext> contextBySessionId = [];
@@ -29,20 +32,20 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
     private readonly IOptions<SubnauticaServerOptions> options;
     private readonly PacketRegistryService packetRegistryService;
     private readonly PacketSerializationService packetSerializationService;
-    private readonly PlayerManager playerManager;
+    private readonly PlayerService playerService;
     private readonly NetManager server;
     private readonly SessionManager sessionManager;
-    private readonly TaskQueueService taskQueueService;
+    private readonly TaskTrackingService taskTrackingService;
 
-    public LiteNetLibServerService(PlayerManager playerManager, SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, IOptions<SubnauticaServerOptions> options,
-                                   TaskQueueService taskQueueService, ILogger<LiteNetLibServerService> logger)
+    public LiteNetLibServerService(SessionManager sessionManager, PacketSerializationService packetSerializationService, PacketRegistryService packetRegistryService, TaskTrackingService taskTrackingService, PlayerService playerService,
+                                   IOptions<SubnauticaServerOptions> options, ILogger<LiteNetLibServerService> logger)
     {
-        this.playerManager = playerManager;
         this.sessionManager = sessionManager;
         this.packetSerializationService = packetSerializationService;
         this.packetRegistryService = packetRegistryService;
         this.options = options;
-        this.taskQueueService = taskQueueService;
+        this.taskTrackingService = taskTrackingService;
+        this.playerService = playerService;
         this.logger = logger;
         listener = new EventBasedNetListener();
         server = new NetManager(listener, NitroxEnvironment.IsReleaseMode ? new Crc32cLayer() : null)
@@ -180,12 +183,6 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
         return true;
     }
 
-    async Task IEvent<ISessionCleaner.Args>.OnEventAsync(ISessionCleaner.Args args)
-    {
-        Disconnect disconnect = new(args.Session.Id);
-        await SendPacketToAllAsync(disconnect);
-    }
-
     private void OnConnectionRequest(ConnectionRequest request)
     {
         if (request.Data.GetString() != "nitrox")
@@ -221,7 +218,7 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
             return;
         }
 
-        if (!taskQueueService.TryQueue(sessionManager.RemoveSessionAsync(context.SessionId)))
+        if (!taskTrackingService.TryTrack(sessionManager.RemoveSessionAsync(context.SessionId)))
         {
             logger.ZLogWarning($"Failed to queue client disconnect task for {peer as EndPoint:@EndPoint}");
         }
@@ -249,7 +246,7 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
                 return;
             }
 
-            if (!taskQueueService.TryQueue(ProcessPacket(context, packet)))
+            if (!taskTrackingService.TryTrack(ProcessPacket(context, packet)))
             {
                 logger.ZLogError($"Failed to queue packet processor task for packet type {packet.GetType().Name:@TypeName} from {peer.Address:@Address}:{peer.Port:@Port}");
             }
@@ -267,7 +264,7 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
 
         try
         {
-            switch (GetProcessorTarget(processor, peerContext.SessionId, playerManager, out Models.Player? player))
+            switch (GetProcessorTarget(processor, peerContext.SessionId, playerService))
             {
                 case ProcessorTarget.ANONYMOUS:
                     using (EasyPool<AnonProcessorContext>.Lease lease = EasyPool<AnonProcessorContext>.Rent())
@@ -290,11 +287,11 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
                         ref AuthProcessorContext context = ref lease.GetRef();
                         if (context == null)
                         {
-                            context = new AuthProcessorContext(player!, this); // ! operator: Player can't be null if AUTHENTICATED.
+                            context = new AuthProcessorContext(peerContext.SessionId, this);
                         }
                         else
                         {
-                            context.Sender = player!; // ! operator: Player can't be null if AUTHENTICATED.
+                            context.Sender = peerContext.SessionId;
                         }
                         await processor.Execute(context, packet);
                     }
@@ -309,14 +306,13 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
             logger.ZLogError(ex, $"Error in packet processor {processor.GetType().Name:@TypeName}");
         }
 
-        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerManager playerManager, out Models.Player? player)
+        static ProcessorTarget GetProcessorTarget(PacketProcessorsInvoker.Entry? processor, SessionId sessionId, PlayerService playerService)
         {
-            player = null;
             if (processor == null)
             {
                 return ProcessorTarget.INVALID;
             }
-            if (typeof(IAuthPacketProcessor).IsAssignableFrom(processor.InterfaceType) && sessionId is { IsPlayer: true } && playerManager.TryGetPlayerBySessionId(sessionId, out player))
+            if (typeof(IAuthPacketProcessor).IsAssignableFrom(processor.InterfaceType) && sessionId is { IsPlayer: true } && playerService.GetPlayerReservation(sessionId) != null)
             {
                 return ProcessorTarget.AUTHENTICATED;
             }
@@ -351,6 +347,28 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
 
         // Cleanup pooled data.
         stream.Position = 0;
+    }
+
+    async Task IEvent<ISessionCleaner.Args>.OnEventAsync(ISessionCleaner.Args args)
+    {
+        Disconnect disconnect = new(args.Session.Id);
+        await SendPacketToAllAsync(disconnect);
+    }
+
+    async Task ITeleport.TeleportAsync(SessionId sessionId, NitroxVector3 destination, Optional<NitroxId> subRootId)
+    {
+        PositionProperty positionProperty = playerService.GetProperty<PositionProperty>(sessionId);
+        SubRootIdProperty subRootIdProperty = playerService.GetProperty<SubRootIdProperty>(sessionId);
+
+        // Remember previous location.
+        NitroxVector3 positionFrom = positionProperty.Value;
+        playerService.GetProperty<CheckpointPositionProperty>(sessionId).Value = positionFrom;
+        playerService.GetProperty<CheckpointSubRootIdProperty>(sessionId).Value = subRootIdProperty.Value;
+
+        // Set new location.
+        positionProperty.Value = destination;
+        subRootIdProperty.Value = subRootId.HasValue ? subRootId.Value : null;
+        await SendPacketAsync(new PlayerTeleported(sessionId, positionFrom, destination, subRootId), sessionId);
     }
 
     private enum ProcessorTarget

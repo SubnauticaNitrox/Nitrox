@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
+using Nitrox.Model.Helper;
 
 namespace Nitrox.Model.DataStructures
 {
@@ -113,6 +115,25 @@ namespace Nitrox.Model.DataStructures
             }
         }
 
+        /// <summary>
+        ///     Clears the dictionary and fills it with the given items.
+        /// </summary>
+        /// <param name="items">The items to fill the dictionary with.</param>
+        /// <param name="keyExtractor">Function to get the dictionary key from the item.</param>
+        /// <param name="valueExtractor">Function to get the dictionary value from the item.</param>
+        /// <typeparam name="T">The type of the items.</typeparam>
+        public void ClearAndSet<T>(IEnumerable<T> items, Func<T, TKey> keyExtractor, Func<T, TValue> valueExtractor)
+        {
+            lock (locker)
+            {
+                dictionary.Clear();
+                foreach (T item in items)
+                {
+                    dictionary.Add(keyExtractor(item), valueExtractor(item));
+                }
+            }
+        }
+
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
             lock (locker)
@@ -166,6 +187,16 @@ namespace Nitrox.Model.DataStructures
             lock (locker)
             {
                 return dictionary.TryGetValue(key, out value);
+            }
+        }
+
+        public RentedArray<TKey> GetKeysNoAlloc()
+        {
+            lock (locker)
+            {
+                RentedArray<TKey> result = new(dictionary.Count);
+                dictionary.Keys.CopyTo(result.Value, 0);
+                return result;
             }
         }
 

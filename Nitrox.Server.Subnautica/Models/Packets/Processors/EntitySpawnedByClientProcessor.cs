@@ -1,16 +1,18 @@
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntitySpawnedByClientProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
+internal sealed class EntitySpawnedByClientProcessor(PlayerService playerService, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
     : IAuthPacketProcessor<EntitySpawnedByClient>
 {
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
     private readonly EntitySimulation entitySimulation = entitySimulation;
@@ -36,12 +38,11 @@ internal sealed class EntitySpawnedByClientProcessor(PlayerManager playerManager
         }
 
         SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);
-        foreach (Player player in playerManager.GetConnectedPlayers())
+        foreach (SessionId player in playerService.GetSessionsExcept(context.Sender))
         {
-            bool isOtherPlayer = player != context.Sender;
-            if (isOtherPlayer && player.CanSee(entity))
+            if (playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity))
             {
-                await context.SendAsync(spawnEntities, player.SessionId);
+                await context.SendAsync(spawnEntities, player);
             }
         }
     }

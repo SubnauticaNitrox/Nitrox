@@ -1,18 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Nitrox.Model.DataStructures;
 
-namespace Nitrox.Server.Subnautica.Models.Serialization.Json
-{
-    public class NitroxIdConverter : JsonConverter<NitroxId>
-    {
-        public override void WriteJson(JsonWriter writer, NitroxId value, JsonSerializer serializer)
-        {
-            writer.WriteValue(value.ToString());
-        }
+namespace Nitrox.Server.Subnautica.Models.Serialization.Json;
 
-        public override NitroxId ReadJson(JsonReader reader, Type objectType, NitroxId existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            return reader.Value == null ? null : new NitroxId((string)reader.Value);
-        }
+internal sealed class NitroxIdConverter : JsonConverter<NitroxId>
+{
+    public override NitroxId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        string value = reader.GetString();
+        return value == null ? null : new NitroxId(value);
+    }
+
+    public override void Write(Utf8JsonWriter writer, NitroxId? value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value?.ToString());
     }
 }

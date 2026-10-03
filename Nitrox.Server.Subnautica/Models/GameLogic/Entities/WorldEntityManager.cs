@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
@@ -11,6 +12,8 @@ using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Services.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 
@@ -30,8 +33,8 @@ internal sealed class WorldEntityManager
     private readonly Lock globalRootEntitiesLock = new();
     private readonly ILogger<WorldEntityManager> logger;
     private readonly IPacketSender packetSender;
-    private readonly PlayerManager playerManager;
     private readonly IProgressReporter progressReporter;
+    private readonly PlayerService playerService;
 
     private readonly Lock worldEntitiesLock = new();
 
@@ -45,12 +48,12 @@ internal sealed class WorldEntityManager
     /// </summary>
     internal Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell = [];
 
-    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager, IProgressReporter progressReporter, ILogger<WorldEntityManager> logger)
+    public WorldEntityManager(IPacketSender packetSender, EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerService playerService, IProgressReporter progressReporter, ILogger<WorldEntityManager> logger)
     {
         this.packetSender = packetSender;
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
-        this.playerManager = playerManager;
+        this.playerService = playerService;
         this.logger = logger;
         this.progressReporter = progressReporter;
     }
@@ -360,11 +363,12 @@ internal sealed class WorldEntityManager
                 RegisterWorldEntityInCell(entity, newCell);
 
                 // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
-                foreach (Player player in playerManager.ConnectedPlayers())
+                foreach (SessionId player in playerService.EnumerateSessionIds())
                 {
-                    if (player.HasCellLoaded(newCell) && !player.HasCellLoaded(oldCell))
+                    VisibleCellsProperty visibleCellsProperty = playerService.GetProperty<VisibleCellsProperty>(player);
+                    if (visibleCellsProperty.HasCellLoaded(newCell) && !visibleCellsProperty.HasCellLoaded(oldCell))
                     {
-                        packetSender.SendPacketAsync(new SpawnEntities(entity), player.SessionId);
+                        packetSender.SendPacketAsync(new SpawnEntities(entity), player);
                     }
                 }
             }

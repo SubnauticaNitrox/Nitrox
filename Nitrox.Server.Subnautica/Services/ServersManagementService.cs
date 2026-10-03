@@ -10,12 +10,13 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using MagicOnion.Client;
 using Nitrox.Model.Constants;
+using Nitrox.Model.Core;
 using Nitrox.Model.MagicOnion;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Logging.Scopes;
 using Nitrox.Server.Subnautica.Models.Logging.ZLogger;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
 using Nitrox.Server.Subnautica.Services.Core;
 
 namespace Nitrox.Server.Subnautica.Services;
@@ -23,15 +24,16 @@ namespace Nitrox.Server.Subnautica.Services;
 /// <summary>
 ///     Connects to a locally running app that might want to track this server. Nitrox.Launcher is expected.
 /// </summary>
-internal sealed class ServersManagementService(PlayerManager playerManager, IPacketSender packetSender, CommandService commandProcessor, IProgressReporter progressReporter, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
+internal sealed class ServersManagementService(PlayerService playerService, IPacketSender packetSender, CommandService commandProcessor, IProgressReporter progressReporter, IOptions<ServerStartOptions> options, ILogger<ServersManagementService> logger) : BackgroundService
 {
     public static readonly Channel<LogEntry> LogQueue = Channel.CreateBounded<LogEntry>(new BoundedChannelOptions(1000) { FullMode = BoundedChannelFullMode.DropOldest });
 
     private readonly CommandService commandProcessor = commandProcessor;
     private readonly ILogger<ServersManagementService> logger = logger;
     private readonly IOptions<ServerStartOptions> options = options;
-    private readonly PlayerManager playerManager = playerManager;
     private readonly IProgressReporter progressReporter = progressReporter;
+    private readonly PlayerService playerService = playerService;
+
     private GrpcChannel? channel;
     private ConnectionInfo? currentConnectionInfo;
     private Task? pushLogsTask;
@@ -162,7 +164,9 @@ internal sealed class ServersManagementService(PlayerManager playerManager, IPac
 
     private async Task PushPollDataAsync(IServersManagement api)
     {
-        await api.SetPlayers(playerManager.ConnectedPlayers().Select(player => player.Name).ToArray());
+        string[] names = playerService.GetProperties<NameProperty>().Select(p => p.Item2.Value).ToArray();
+        Array.Sort(names); // Nulls will be sorted before non-null values.
+        await api.SetPlayers(names); // Sends names that aren't null.
     }
 
     private async Task PushLogsAsync(IServersManagement api, CancellationToken cancellationToken)

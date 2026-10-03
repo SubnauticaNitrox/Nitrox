@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Bases;
@@ -8,25 +9,19 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 
-internal sealed class BuildingManager
+internal sealed class BuildingManager(PlayerService playerService, IPacketSender packetSender, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
 {
-    private readonly IPacketSender packetSender;
-    private readonly EntityRegistry entityRegistry;
-    private readonly WorldEntityManager worldEntityManager;
-    private readonly IOptions<SubnauticaServerOptions> options;
-    private readonly ILogger<BuildingManager> logger;
-
-    public BuildingManager(IPacketSender packetSender, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, IOptions<SubnauticaServerOptions> options, ILogger<BuildingManager> logger)
-    {
-        this.packetSender = packetSender;
-        this.entityRegistry = entityRegistry;
-        this.worldEntityManager = worldEntityManager;
-        this.options = options;
-        this.logger = logger;
-    }
+    private readonly IPacketSender packetSender = packetSender;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
+    private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly IOptions<SubnauticaServerOptions> options = options;
+    private readonly ILogger<BuildingManager> logger = logger;
+    private readonly PlayerService playerService = playerService;
 
     public bool AddGhost(PlaceGhost placeGhost)
     {
@@ -162,27 +157,27 @@ internal sealed class BuildingManager
         return true;
     }
 
-    public bool UpdateBase(Player player, UpdateBase updateBase, out int operationId)
+    public bool UpdateBase(SessionId sessionId, UpdateBase updateBase, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
             logger.ZLogError($"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
-            NotifyPlayerDesync(player);
+            NotifyPlayerDesync(sessionId);
             operationId = -1;
             return false;
         }
         if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out BuildEntity buildEntity))
         {
             logger.ZLogError($"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
-            NotifyPlayerDesync(player);
+            NotifyPlayerDesync(sessionId);
             operationId = -1;
             return false;
         }
         int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
         if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
-            logger.ZLogWarning($"Ignoring an {nameof(UpdateBase)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
-            NotifyPlayerDesync(player);
+            logger.ZLogWarning($"Ignoring an {nameof(UpdateBase)} packet from [{playerService.GetProperty<NameProperty>(sessionId).Value}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            NotifyPlayerDesync(sessionId);
             operationId = -1;
             return false;
         }
@@ -283,7 +278,7 @@ internal sealed class BuildingManager
         return true;
     }
 
-    public bool ReplacePieceByGhost(Player player, PieceDeconstructed pieceDeconstructed, [NotNullWhen(true)] out Entity? removedEntity, out int operationId)
+    public bool ReplacePieceByGhost(SessionId playerSessionId, PieceDeconstructed pieceDeconstructed, [NotNullWhen(true)] out Entity? removedEntity, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
@@ -303,8 +298,8 @@ internal sealed class BuildingManager
         int deltaOperations = buildEntity.OperationId + 1 - pieceDeconstructed.OperationId;
         if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
-            logger.ZLogWarning($"Ignoring a {nameof(PieceDeconstructed)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
-            NotifyPlayerDesync(player);
+            logger.ZLogWarning($"Ignoring a {nameof(PieceDeconstructed)} packet from [{playerService.GetProperty<NameProperty>(playerSessionId).Value}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            NotifyPlayerDesync(playerSessionId);
             removedEntity = null;
             operationId = -1;
             return false;
@@ -394,10 +389,10 @@ internal sealed class BuildingManager
         return true;
     }
 
-    private void NotifyPlayerDesync(Player player)
+    private void NotifyPlayerDesync(SessionId sessionId)
     {
         Dictionary<NitroxId, int> operations = GetEntitiesOperations(worldEntityManager.GetGlobalRootEntities(true));
-        packetSender.SendPacketAsync(new BuildingDesyncWarning(operations), player.SessionId);
+        packetSender.SendPacketAsync(new BuildingDesyncWarning(operations), sessionId);
     }
 
     public static Dictionary<NitroxId, int> GetEntitiesOperations(List<GlobalRootEntity> entities)

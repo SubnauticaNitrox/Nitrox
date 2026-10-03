@@ -1,18 +1,19 @@
+using Nitrox.Model.Core;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands.ArgConverters;
 
 /// <summary>
-///     Converts a player name to a player object, if known.
+///     Converts a player name to a player session id, if known.
 /// </summary>
-internal sealed class PlayerNameToPlayerArgConverter(PlayerManager playerManager) : IArgConverter<string, Player>
+internal sealed class PlayerNameToSessionIdArgConverter(PlayerService playerService) : IArgConverter<string, SessionId>
 {
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
 
     public Task<ConvertResult> ConvertAsync(string playerName)
     {
-        if (!playerManager.TryGetPlayerByName(playerName, out Player? player))
+        if (!playerService.TryGetPlayerByName(playerName, out SessionId? player))
         {
             return Task.FromResult(ConvertResult.Fail($"No player found by name '{playerName}'"));
         }

@@ -7,10 +7,10 @@ using Nitrox.Model.Core;
 using Nitrox.Model.Networking;
 using Nitrox.Model.Platforms.Discovery;
 using Nitrox.Server.Subnautica.Models;
+using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.Factories;
 using Nitrox.Server.Subnautica.Models.Serialization;
 using Nitrox.Server.Subnautica.Services;
-using Nitrox.Server.Subnautica.Services.Core;
 
 namespace Nitrox.Server.Subnautica;
 
@@ -108,7 +108,7 @@ internal sealed class Program
                .AddAppEvents()
                .AddAdminFeatures()
                .AddKeyedSingleton("startup", serverStartStopWatch)
-               .AddHostedSingletonService<TaskQueueService>()
+               .AddHostedSingletonService<TaskTrackingService>()
                .AddHostedSingletonService<HibernateService>()
                .AddHostedSingletonService<StatusService>()
                .AddHostedSingletonService<PortForwardService>()
@@ -116,7 +116,7 @@ internal sealed class Program
                .AddHostedSingletonService<MemoryService>()
                .AddHostedSingletonService<RestartService>()
                .AddHostedSingletonService<BanService>()
-               .AddHostedSingletonService<IProgressReporter, ServerLoadingProgressService>()
+               .AddSingleton<SessionManager>()
                .AddSingleton<RandomFactory>()
                .AddSingleton<NtpSyncer>()
                .AddSingleton<SubnauticaServerProtoBufSerializer>()

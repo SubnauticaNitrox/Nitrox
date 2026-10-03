@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
-using Nitrox.Server.Subnautica.Models.GameLogic;
-using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.ADMIN)]
-internal sealed class ChangeServerGamemodeCommand(PlayerManager playerManager, IOptions<SubnauticaServerOptions> serverConfig) : ICommandHandler<SubnauticaGameMode>
+internal sealed class ChangeServerGamemodeCommand(PlayerService playerService, IOptions<SubnauticaServerOptions> serverConfig) : ICommandHandler<SubnauticaGameMode>
 {
     private readonly IOptions<SubnauticaServerOptions> serverConfig = serverConfig;
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
 
     [Description("Changes server gamemode")]
     public async Task Execute(ICommandContext context, [Description("Gamemode to change to")] SubnauticaGameMode newGameMode)
@@ -22,9 +23,9 @@ internal sealed class ChangeServerGamemodeCommand(PlayerManager playerManager, I
         }
 
         serverConfig.Value.GameMode = newGameMode;
-        foreach (Player player in playerManager.GetAllPlayers())
+        foreach ((SessionId _, GameModeProperty property) in playerService.GetProperties<GameModeProperty>())
         {
-            player.GameMode = newGameMode;
+            property.Value = newGameMode;
         }
         await context.SendToAllAsync(GameModeChanged.ForAllPlayers(newGameMode));
         await context.SendToAllAsync($"Server gamemode changed to \"{newGameMode}\" by {context.OriginName}");

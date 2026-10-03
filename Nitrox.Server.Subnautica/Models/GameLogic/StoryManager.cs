@@ -1,9 +1,11 @@
+using Nitrox.Model.Core;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.AppEvents;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.GameLogic.Unlockables;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
 using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic;
@@ -18,6 +20,7 @@ internal sealed class StoryManager : ISummarize
     private readonly PdaManager pdaManager;
     private readonly IPacketSender packetSender;
     private readonly TimeService timeService;
+    private readonly PlayerService playerService;
 
     /// <summary>
     ///     Time at which the Aurora explosion countdown will start (last warning is sent).
@@ -37,11 +40,12 @@ internal sealed class StoryManager : ISummarize
 
     public StoryGoalData StoryGoalData { get; set; } = new();
 
-    public StoryManager(IPacketSender packetSender, PdaManager pdaManager, TimeService timeService, IOptions<SubnauticaServerOptions> options, ILogger<StoryManager> logger)
+    public StoryManager(IPacketSender packetSender, PdaManager pdaManager, TimeService timeService, PlayerService playerService, IOptions<SubnauticaServerOptions> options, ILogger<StoryManager> logger)
     {
         this.packetSender = packetSender;
         this.pdaManager = pdaManager;
         this.timeService = timeService;
+        this.playerService = playerService;
         this.options = options;
         this.logger = logger;
 
@@ -166,9 +170,9 @@ internal sealed class StoryManager : ISummarize
         return true;
     }
 
-    public InitialStoryGoalData GetInitialStoryGoalData(StoryScheduler storyScheduler, Player player)
+    public InitialStoryGoalData GetInitialStoryGoalData(StoryScheduler storyScheduler, SessionId player)
     {
-        return new InitialStoryGoalData([..StoryGoalData.CompletedGoals], [..StoryGoalData.RadioQueue], storyScheduler.GetScheduledStories(), new(player.PersonalCompletedGoalsWithTimestamp));
+        return new InitialStoryGoalData([..StoryGoalData.CompletedGoals], [..StoryGoalData.RadioQueue], storyScheduler.GetScheduledStories(), new(playerService.GetProperty<CompletedGoalsWithTimestampProperty>(player).Value));
     }
 
     public bool ContainsCompletedStory(string storyGoalKey) => StoryGoalData.CompletedGoals.Contains(storyGoalKey);

@@ -1,15 +1,20 @@
 ﻿using System.ComponentModel;
+using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
-internal sealed class PromoteCommand : ICommandHandler<Player, Perms>
+internal sealed class PromoteCommand(PlayerService playerService) : ICommandHandler<SessionId, Perms>
 {
+    private readonly PlayerService playerService = playerService;
+
     [Description("Sets specific permissions to a user")]
-    public async Task Execute(ICommandContext context, [Description("The username to change the permissions of")] Player targetPlayer, [Description("Permission level")] Perms newPerms)
+    public async Task Execute(ICommandContext context, [Description("The username to change the permissions of")] SessionId targetPlayer, [Description("Permission level")] Perms newPerms)
     {
-        if (context.OriginId == targetPlayer.SessionId)
+        if (context.OriginId == targetPlayer)
         {
             await context.ReplyAsync("You can't promote yourself");
             return;
@@ -19,15 +24,16 @@ internal sealed class PromoteCommand : ICommandHandler<Player, Perms>
             await context.ReplyAsync($"Your permissions ({context.Permissions}) must be higher than the perms you want to assign ({newPerms})");
             return;
         }
-        if (context.Permissions < targetPlayer.Permissions)
+        PermissionsProperty targetPermsProperty = playerService.GetProperty<PermissionsProperty>(targetPlayer);
+        if (context.Permissions < targetPermsProperty.Value)
         {
-            await context.ReplyAsync($"You're not allowed to update {targetPlayer.Name}\'s permissions");
+            await context.ReplyAsync($"You're not allowed to update {playerService.GetProperty<NameProperty>(targetPlayer).Value}\'s permissions");
             return;
         }
 
-        targetPlayer.Permissions = newPerms;
-        await context.SendAsync(targetPlayer.SessionId, new PermsChanged(newPerms));
-        await context.ReplyAsync($"Updated {targetPlayer.Name}\'s permissions to {newPerms}");
-        await context.SendAsync(targetPlayer.SessionId, $"You've been promoted to {newPerms}");
+        targetPermsProperty.Value = newPerms;
+        await context.SendAsync(targetPlayer, new PermsChanged(newPerms));
+        await context.ReplyAsync($"Updated {playerService.GetProperty<NameProperty>(targetPlayer).Value}\'s permissions to {newPerms}");
+        await context.SendAsync(targetPlayer, $"You've been promoted to {newPerms}");
     }
 }

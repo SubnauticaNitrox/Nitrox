@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using AssetsTools.NET.Extra;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,7 +13,6 @@ using Nitrox.Server.Subnautica.Models.Administration.Core;
 using Nitrox.Server.Subnautica.Models.AppEvents.Core;
 using Nitrox.Server.Subnautica.Models.Commands.ArgConverters.Core;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
-using Nitrox.Server.Subnautica.Models.Communication;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
@@ -19,11 +20,14 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 using Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Processors;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Core;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
 using Nitrox.Server.Subnautica.Models.Serialization;
+using Nitrox.Server.Subnautica.Models.Serialization.Json;
 using Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 using Nitrox.Server.Subnautica.Models.Serialization.World;
 using Nitrox.Server.Subnautica.Services;
+using Nitrox.Server.Subnautica.Services.Core;
 using ServiceScan.SourceGenerator;
 
 namespace Nitrox.Server.Subnautica.Extensions;
@@ -36,7 +40,7 @@ internal static partial class ServiceCollectionExtensions
     internal static partial IServiceCollection AddRedactors(this IServiceCollection services);
 
     /// <summary>
-    ///     Adds an interface -> service mapping that for handling administrative actions.
+    ///     Adds an interface -> service mapping for handling administrative actions.
     /// </summary>
     /// <remarks>
     ///     If multiple instances of the same interface type are registered, then the last registered implementation will be used.
@@ -64,6 +68,13 @@ internal static partial class ServiceCollectionExtensions
 
     [GenerateServiceRegistrations(AssignableTo = typeof(IArgConverter), Lifetime = ServiceLifetime.Singleton, AsSelf = true, AsImplementedInterfaces = true)]
     private static partial IServiceCollection AddCommandArgConverters(this IServiceCollection services);
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(IPlayerProperty), Lifetime = ServiceLifetime.Scoped, AsSelf = true, AsImplementedInterfaces = true)]
+    private static partial IServiceCollection AddPlayerProperties(this IServiceCollection services);
+
+    [GenerateServiceRegistrations(AssignableTo = typeof(JsonConverter), Lifetime = ServiceLifetime.Singleton)]
+    [GenerateServiceRegistrations(AssignableTo = typeof(JsonConverterFactory), Lifetime = ServiceLifetime.Singleton)]
+    private static partial IServiceCollection AddSystemTextJsonConverters(this IServiceCollection services);
 
     private static void AddOpenGenericAsExistingSingleton<TImplementation, TInterface>(this IServiceCollection services) where TImplementation : class, TInterface =>
         services
@@ -161,11 +172,11 @@ internal static partial class ServiceCollectionExtensions
             services.AddHostedSingletonService<WorldService>()
                     .AddHostedSingletonService<TimeService>()
                     .AddHostedSingletonService<FmodService>()
+                    .AddHostedSingletonService<PlayerService>()
+                    .AddPlayerProperties()
                     .AddSingleton<Func<WorldService>>(provider => provider.GetRequiredService<WorldService>)
                     .AddSingleton<JoiningManager>()
                     .AddSingleton<BuildingManager>()
-                    .AddSingleton<PlayerManager>()
-                    .AddSingleton<SessionManager>()
                     .AddSingleton<SleepManager>()
                     .AddSingleton<StoryManager>()
                     .AddSingleton<StoryScheduler>()
@@ -204,7 +215,8 @@ internal static partial class ServiceCollectionExtensions
         /// </summary>
         public IServiceCollection AddLocalServerManagement() =>
             services
-                .AddHostedSingletonService<ServersManagementService>();
+                .AddHostedSingletonService<ServersManagementService>()
+                .AddHostedSingletonService<IProgressReporter, ServerLoadingProgressService>();
 
         public IServiceCollection AddSubnauticaResources() =>
             services
@@ -219,7 +231,34 @@ internal static partial class ServiceCollectionExtensions
             services
                 .AddSaveUpgraders()
                 .AddHostedSingletonService<SaveService>()
-                .AddHostedSingletonService<AutoSaveService>();
+                .AddHostedSingletonService<AutoSaveService>()
+                .AddSystemTextJsonConverters()
+                .AddSingleton(provider =>
+                {
+                    JsonSerializerOptions options = new()
+                    {
+                        IgnoreReadOnlyProperties = true,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                        WriteIndented = false
+                    };
+                    options.Converters.Insert(0, new JsonStringEnumConverter());
+                    bool atLeastOneConverter = false;
+                    foreach (JsonConverter jsonConverter in provider.GetRequiredService<IEnumerable<JsonConverter>>())
+                    {
+                        atLeastOneConverter = true;
+                        options.Converters.Insert(0, jsonConverter);
+                    }
+                    if (!atLeastOneConverter)
+                    {
+                        throw new InvalidOperationException("No json converters are registered!");
+                    }
+                    foreach (JsonConverterFactory jsonFactory in provider.GetRequiredService<IEnumerable<JsonConverterFactory>>())
+                    {
+                        options.Converters.Insert(0, jsonFactory);
+                    }
+                    options.TypeInfoResolver = new NitroxJsonTypeInfoResolver();
+                    return options;
+                });
 
         public IServiceCollection AddAppEvents() =>
             services
