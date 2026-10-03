@@ -20,7 +20,7 @@ internal sealed class FootstepPacketProcessor(PlayerService playerService, FmodS
             footstepAudioRange = soundData.Radius;
         }
 
-        foreach (SessionId player in playerService.GetSessionIds())
+        foreach (SessionId player in playerService.EnumerateSessionIds())
         {
             if (NitroxVector3.Distance(playerService.GetProperty<PositionProperty>(player).Value, playerService.GetProperty<PositionProperty>(context.Sender).Value) >= footstepAudioRange ||
                 player == context.Sender)

@@ -250,7 +250,7 @@ internal static partial class ServiceCollectionExtensions
                     }
                     if (!atLeastOneConverter)
                     {
-                        throw new Exception("No json converters are registered!");
+                        throw new InvalidOperationException("No json converters are registered!");
                     }
                     foreach (JsonConverterFactory jsonFactory in provider.GetRequiredService<IEnumerable<JsonConverterFactory>>())
                     {

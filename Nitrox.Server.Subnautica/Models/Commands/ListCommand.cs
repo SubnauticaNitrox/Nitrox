@@ -26,7 +26,7 @@ internal sealed class ListCommand(IOptions<SubnauticaServerOptions> options, Pla
 
     private IEnumerable<string> GetPlayerListText()
     {
-        foreach (SessionId sessionId in playerService.GetSessionIds())
+        foreach (SessionId sessionId in playerService.EnumerateSessionIds())
         {
             yield return $"{playerService.GetProperty<NameProperty>(sessionId).Value} #{sessionId}";
         }

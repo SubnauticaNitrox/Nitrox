@@ -68,7 +68,7 @@ internal static class ConfigurationBuilderExtensions
         string? baseDirectory = Path.GetDirectoryName(parentAppSettingsFile);
         if (baseDirectory == null)
         {
-            return optional ? builder : throw new Exception($"Failed to get parent directory from JSON file: {fileName}");
+            return optional ? builder : throw new InvalidOperationException($"Failed to get parent directory from JSON file: {fileName}");
         }
 
         // On Linux, polling is needed to detect file changes.
@@ -106,7 +106,7 @@ internal static class ConfigurationBuilderExtensions
         string? baseDirectory = Path.GetDirectoryName(parentAppSettingsFilePath);
         if (baseDirectory == null)
         {
-            return optional ? builder : throw new Exception($"Failed to get parent directory from JSON file: {fileName}");
+            return optional ? builder : throw new InvalidOperationException($"Failed to get parent directory from JSON file: {fileName}");
         }
 
         builder.AddJsonFile(new PhysicalFileProvider(baseDirectory)

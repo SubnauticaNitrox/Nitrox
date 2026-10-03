@@ -26,7 +26,7 @@ internal sealed class EntityTransformUpdatesProcessor(PlayerService playerServic
     private Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(SessionId simulatingPlayer)
     {
         Dictionary<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> visibleUpdatesByPlayer = [];
-        foreach (SessionId player in playerService.GetSessionIds())
+        foreach (SessionId player in playerService.EnumerateSessionIds())
         {
             if (!player.Equals(simulatingPlayer))
             {

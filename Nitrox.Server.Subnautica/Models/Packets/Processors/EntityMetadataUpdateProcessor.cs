@@ -33,7 +33,7 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerService playerService,
 
     private async Task SendUpdateToVisiblePlayersAsync(AuthProcessorContext context, EntityMetadataUpdate packet, Entity entity)
     {
-        foreach (SessionId player in playerService.GetSessionIds())
+        foreach (SessionId player in playerService.EnumerateSessionIds())
         {
             bool updateVisibleToPlayer = playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity);
             if (player != context.Sender && updateVisibleToPlayer)

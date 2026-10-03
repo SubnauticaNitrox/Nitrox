@@ -21,7 +21,7 @@ internal sealed class FMODEventInstanceProcessor(PlayerService playerService, Fm
             return;
         }
 
-        foreach (SessionId player in playerService.GetSessionIds())
+        foreach (SessionId player in playerService.EnumerateSessionIds())
         {
             float distance = NitroxVector3.Distance(playerService.GetProperty<PositionProperty>(player).Value, packet.Position);
             if (player == context.Sender)

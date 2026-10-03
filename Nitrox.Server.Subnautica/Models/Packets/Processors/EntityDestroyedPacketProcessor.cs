@@ -25,7 +25,7 @@ internal sealed class EntityDestroyedPacketProcessor(PlayerService playerService
                 worldEntityManager.MovePlayerChildrenToRoot(vehicleEntity);
             }
 
-            foreach (SessionId player in playerService.GetSessionIds())
+            foreach (SessionId player in playerService.EnumerateSessionIds())
             {
                 bool isOtherPlayer = player != context.Sender;
                 if (isOtherPlayer && playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity))

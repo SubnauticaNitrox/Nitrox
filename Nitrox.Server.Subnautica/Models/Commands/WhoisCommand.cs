@@ -21,7 +21,7 @@ internal sealed class WhoisCommand(PlayerService playerService) : ICommandHandle
     {
         if (context is not PlayerToServerCommandContext playerContext)
         {
-            throw new Exception("Player context is required to run this command");
+            throw new InvalidOperationException("Player context is required to run this command");
         }
         await Execute(context, playerContext.OriginId);
     }

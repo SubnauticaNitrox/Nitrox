@@ -164,23 +164,9 @@ internal sealed class ServersManagementService(PlayerService playerService, IPac
 
     private async Task PushPollDataAsync(IServersManagement api)
     {
-        SessionId[] sessions = playerService.GetSessionIds().ToArray();
-        string[] names = new string[sessions.Length];
-        int skipped = 0;
-        for (int i = 0; i < sessions.Length; i++)
-        {
-            try
-            {
-                names[i] = playerService.GetProperty<NameProperty>(sessions[i]).Value;
-            }
-            catch (Exception)
-            {
-                // Session might disconnect during lookup, so we skip it.
-                skipped++;
-            }
-        }
+        string[] names = playerService.GetProperties<NameProperty>().Select(p => p.Item2.Value).ToArray();
         Array.Sort(names); // Nulls will be sorted before non-null values.
-        await api.SetPlayers(names[skipped..]); // Sends names that aren't null.
+        await api.SetPlayers(names); // Sends names that aren't null.
     }
 
     private async Task PushLogsAsync(IServersManagement api, CancellationToken cancellationToken)

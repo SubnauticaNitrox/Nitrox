@@ -76,13 +76,10 @@ internal sealed partial class PlayerService(
     /// <summary>
     ///     Returns the sessions that have been reserved as a valid player.
     /// </summary>
-    public IEnumerable<SessionId> GetSessionIds()
+    public StructEnumerator<SessionId, RentedArray<SessionId>> EnumerateSessionIds()
     {
-        using RentedArray<SessionId> sessions = reservations.GetKeysNoAlloc();
-        foreach (SessionId session in sessions)
-        {
-            yield return session;
-        }
+        RentedArray<SessionId> sessions = reservations.GetKeysNoAlloc();
+        return new StructEnumerator<SessionId, RentedArray<SessionId>>(sessions.Value, sessions.RequiredSize, sessions);
     }
 
     public IEnumerable<SessionId> GetSessionsWhereProperty<T>(Func<T, bool> predicate) where T : IPlayerProperty
@@ -90,10 +87,39 @@ internal sealed partial class PlayerService(
         using RentedArray<SessionId> sessions = reservations.GetKeysNoAlloc();
         foreach (SessionId sessionId in sessions)
         {
-            if (predicate(GetProperty<T>(sessionId)))
+            T property;
+            try
+            {
+                property = GetProperty<T>(sessionId);
+            }
+            catch
+            {
+                continue;
+            }
+            if (predicate(property))
             {
                 yield return sessionId;
             }
+        }
+    }
+
+    /// <summary>
+    ///     Gets all the properties of the given type from all connected players.
+    /// </summary>
+    public IEnumerable<(SessionId, T)> GetProperties<T>() where T : IPlayerProperty
+    {
+        foreach (SessionId sessionId in EnumerateSessionIds())
+        {
+            T property;
+            try
+            {
+                property = GetProperty<T>(sessionId);
+            }
+            catch
+            {
+                continue;
+            }
+            yield return (sessionId, property);
         }
     }
 
@@ -275,18 +301,6 @@ internal sealed partial class PlayerService(
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-    /// <summary>
-    ///     Gets all the properties of the given type from all connected players.
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public IEnumerable<(SessionId, T)> GetProperties<T>() where T : IPlayerProperty
-    {
-        foreach (SessionId sessionId in GetSessionIds())
-        {
-            yield return (sessionId, GetProperty<T>(sessionId));
-        }
-    }
 
     [GeneratedRegex(NitroxConstants.PLAYER_NAME_VALID_REGEX, RegexOptions.NonBacktracking)]
     private static partial Regex PlayerNameRegex();

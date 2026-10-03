@@ -50,7 +50,7 @@ internal sealed class BanCommand(PlayerService playerService, SessionManager ses
     private async Task BanAddressAsync(ICommandContext context, IPAddress ip, TimeSpan duration, string? reason, string? playerName = null)
     {
         List<SessionId> sessionsOnTargetIp = [];
-        foreach (SessionId sessionId in playerService.GetSessionIds())
+        foreach (SessionId sessionId in playerService.EnumerateSessionIds())
         {
             if (ip.Equals(sessionManager.GetEndPoint(sessionId)?.Address))
             {
