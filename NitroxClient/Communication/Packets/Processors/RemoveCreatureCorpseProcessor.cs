@@ -85,6 +85,10 @@ internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixin
         }
 
         SafeOnKillAsync(creatureDeath, packet.CreatureId, simulationOwnership, liveMixinManager);
+
+        // SafeOnKillAsync only replicates CreatureDeath's part of the death, the creature's other components must also be notified.
+        // Like in LiveMixin.Kill, this happens once the health is 0 (and we don't simulate the creature anymore)
+        liveMixinManager.ReplayRemoteKill(creatureDeath.liveMixin);
         return Task.CompletedTask;
     }
 }

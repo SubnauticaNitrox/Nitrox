@@ -6,7 +6,7 @@ using Nitrox.Model.DataStructures;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Prevents <see cref="CreatureDeath.OnKill"/> from happening on entities without an id, and on non-simulated entities
+/// Prevents <see cref="CreatureDeath.OnKill"/> from happening on entities without an id, while replaying a remote death, and on non-simulated entities
 /// during initial sync or when replicating a remote health change.
 /// </summary>
 /// <remarks>
@@ -20,6 +20,12 @@ public sealed partial class CreatureDeath_OnKill_Patch : NitroxPatch, IDynamicPa
 
     public static bool Prefix(CreatureDeath __instance)
     {
+        // CreatureDeath's part of a death which happened for another player is replicated separately (see RemoveCreatureCorpseProcessor)
+        if (Resolve<LiveMixinManager>().IsReplayingRemoteKill)
+        {
+            return false;
+        }
+
         if (!__instance.TryGetNitroxId(out NitroxId creatureId))
         {
             return false;
