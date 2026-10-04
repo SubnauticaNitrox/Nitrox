@@ -72,7 +72,7 @@ public class CreatureHealthManager
             return true;
         }
 
-        HitSource source = GetHitSource(dealer);
+        HitSource source = GetHitSource(dealer, type);
 
         if (simulationOwnership.HasAnyLockType(creatureId))
         {
@@ -161,6 +161,11 @@ public class CreatureHealthManager
 
         // Written directly so that no damage receiver, effect or death runs. Never 0, otherwise RemoveCreatureCorpseProcessor would skip the death replay
         liveMixin.health = Mathf.Min(packet.Health, liveMixin.maxHealth);
+        // Cold and poison damage heal back over time on the simulating player's side, whose health is what we just received
+        if (liveMixin.tempDamage > 0f)
+        {
+            liveMixin.tempDamage = 0f;
+        }
     }
 
     /// <summary>
@@ -173,7 +178,7 @@ public class CreatureHealthManager
         RetryPendingHits(now);
     }
 
-    private HitSource GetHitSource(GameObject dealer)
+    private HitSource GetHitSource(GameObject dealer, DamageType type)
     {
         // Prawn suit claw and drill, punching a bleeder: no dealer (see the *_OnHit_Patch scopes)
         if (LocalAttackCount > 0)
@@ -202,11 +207,17 @@ public class CreatureHealthManager
             {
                 return IsSimulatedLocally(dealer) ? HitSource.Local : HitSource.RemoteCopy;
             }
-            // A creature thrown with a propulsion cannon deals impact damage like any thrown object
-            if (!dealer.GetComponent<PropulseCannonAmmoHandler>())
+            // A creature thrown with a propulsion cannon deals impact damage (always Collide) like any thrown object, its other attacks don't change
+            if (type != DamageType.Collide || !dealer.GetComponent<PropulseCannonAmmoHandler>())
             {
                 return HitSource.World;
             }
+        }
+        // Only the local player's repulsion cannon throws an object which we don't simulate (propulsion cannon grabs take the lock),
+        // and this throw isn't replicated to the other players
+        if (type == DamageType.Collide && dealer.GetComponent<PropulseCannonAmmoHandler>() && !IsSimulatedLocally(dealer))
+        {
+            return HitSource.Local;
         }
         // Impacts of vehicles, the Cyclops and thrown objects: DealDamageOnImpact passes its own game object
         if (dealer.GetComponent<DealDamageOnImpact>())
