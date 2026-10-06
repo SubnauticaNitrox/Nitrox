@@ -92,7 +92,8 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
 
         if (!IsRemotelyCalled)
         {
-            Resolve<IPacketSender>().Send(new RemoveCreatureCorpse(creatureId, creatureDeath.transform.localPosition.ToDto(), creatureDeath.transform.localRotation.ToDto()));
+            // World space is used because the creature isn't necessarily in the same cell for the other players
+            Resolve<IPacketSender>().Send(new RemoveCreatureCorpse(creatureId, creatureDeath.transform.position.ToDto(), creatureDeath.transform.rotation.ToDto()));
         }
     }
 }

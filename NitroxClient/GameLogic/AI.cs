@@ -70,7 +70,8 @@ public sealed class AI
     public static void AggressiveWhenSeeTargetChanged(NitroxId creatureId, NitroxId targetId, bool locked, float aggressionAmount)
     {
         if (!NitroxEntity.TryGetComponentFrom(creatureId, out AggressiveWhenSeeTarget aggressiveWhenSeeTarget) ||
-            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject))
+            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject) ||
+            IsDead(aggressiveWhenSeeTarget))
         {
             return;
         }
@@ -98,7 +99,8 @@ public sealed class AI
     public static void AttackCyclopsTargetChanged(NitroxId creatureId, NitroxId targetId, float aggressiveToNoiseAmount)
     {
         if (!NitroxEntity.TryGetComponentFrom(creatureId, out AttackCyclops attackCyclops) ||
-            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject))
+            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject) ||
+            IsDead(attackCyclops))
         {
             return;
         }
@@ -113,7 +115,8 @@ public sealed class AI
     public static void RangedAttackLastTargetUpdate(NitroxId creatureId, NitroxId targetId, int attackTypeIndex, ActionState state)
     {
         if (!NitroxEntity.TryGetComponentFrom(creatureId, out RangedAttackLastTarget rangedAttackLastTarget) ||
-            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject))
+            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject) ||
+            IsDead(rangedAttackLastTarget))
         {
             return;
         }
@@ -145,7 +148,19 @@ public sealed class AI
 
     public bool TryGetActionForCreature(Creature creature, out CreatureAction action)
     {
-        return actions.TryGetValue(creature, out action);
+        if (!actions.TryGetValue(creature, out action))
+        {
+            return false;
+        }
+
+        // The simulating player can send actions before learning that the creature died, they'd make its corpse act as if it was alive
+        if (IsDead(creature))
+        {
+            actions.Remove(creature);
+            action = null;
+            return false;
+        }
+        return true;
     }
 
     public bool IsCreatureActionWhitelisted(CreatureAction creatureAction)
@@ -156,5 +171,14 @@ public sealed class AI
     public bool IsCreatureWhitelisted(Creature creature)
     {
         return syncedCreatureWhitelist.Contains(creature.GetType());
+    }
+
+    /// <summary>
+    /// Remote AI updates can still arrive for a creature which already died for us (sent by its simulating player before it learned about the death)
+    /// </summary>
+    private static bool IsDead(Component creatureComponent)
+    {
+        LiveMixin liveMixin = creatureComponent.GetComponentInParent<LiveMixin>();
+        return liveMixin && !liveMixin.IsAlive();
     }
 }

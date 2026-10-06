@@ -19,11 +19,7 @@ internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixin
     /// </summary>
     public static void SafeOnKillAsync(CreatureDeath creatureDeath, NitroxId creatureId, SimulationOwnership simulationOwnership, LiveMixinManager liveMixinManager)
     {
-        // Ensure we don't broadcast anything from this kill event
-        simulationOwnership.StopSimulatingEntity(creatureId);
-
-        // Remove the position broadcasting stuff from it
-        EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+        StopReplicatingCreature(creatureDeath, creatureId, simulationOwnership);
 
         // To avoid SpawnRespawner to be called
         creatureDeath.respawn = false;
@@ -47,6 +43,15 @@ internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixin
         }
     }
 
+    private static void StopReplicatingCreature(CreatureDeath creatureDeath, NitroxId creatureId, SimulationOwnership simulationOwnership)
+    {
+        // Ensure we don't broadcast anything from this kill event
+        simulationOwnership.StopSimulatingEntity(creatureId);
+
+        // Remove the position broadcasting stuff from it
+        EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+    }
+
     public Task Process(ClientProcessorContext context, RemoveCreatureCorpse packet)
     {
         entities.RemoveEntity(packet.CreatureId);
@@ -56,16 +61,34 @@ internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixin
             entities.MarkForDeletion(packet.CreatureId);
         }
 
+        // This packet is sent to every player, including the ones which don't have the creature loaded
         if (!NitroxEntity.TryGetComponentFrom(packet.CreatureId, out CreatureDeath creatureDeath))
         {
-            Log.Warn($"[{nameof(RemoveCreatureCorpseProcessor)}] Could not find entity with id: {packet.CreatureId} to remove corpse from.");
+            Log.Debug($"[{nameof(RemoveCreatureCorpseProcessor)}] Could not find entity with id: {packet.CreatureId} to remove corpse from.");
             return Task.CompletedTask;
         }
 
-        creatureDeath.transform.localPosition = packet.DeathPosition.ToUnity();
-        creatureDeath.transform.localRotation = packet.DeathRotation.ToUnity();
+        // The creature can already be dead if we killed it at the same time, in which case its death was already processed
+        if (!creatureDeath.liveMixin.IsAlive())
+        {
+            StopReplicatingCreature(creatureDeath, packet.CreatureId, simulationOwnership);
+            return Task.CompletedTask;
+        }
+
+        creatureDeath.transform.SetPositionAndRotation(packet.DeathPosition.ToUnity(), packet.DeathRotation.ToUnity());
+
+        // Only the simulating player spawns respawners so that a creature dying on several clients at once only gets one.
+        // When another player killed it, we still hold the lock at this point because the server revokes it without notifying us
+        if (simulationOwnership.HasAnyLockType(packet.CreatureId) && creatureDeath.respawn && !creatureDeath.hasSpawnedRespawner)
+        {
+            creatureDeath.SpawnRespawner();
+        }
 
         SafeOnKillAsync(creatureDeath, packet.CreatureId, simulationOwnership, liveMixinManager);
+
+        // SafeOnKillAsync only replicates CreatureDeath's part of the death, the creature's other components must also be notified.
+        // Like in LiveMixin.Kill, this happens once the health is 0 (and we don't simulate the creature anymore)
+        liveMixinManager.ReplayRemoteKill(creatureDeath.liveMixin);
         return Task.CompletedTask;
     }
 }
