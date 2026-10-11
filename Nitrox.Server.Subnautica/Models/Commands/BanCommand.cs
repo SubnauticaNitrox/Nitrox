@@ -24,7 +24,7 @@ internal sealed class BanCommand(PlayerService playerService, SessionManager ses
                               [Description("Duration like 30m/12h/7d/2w, omit for permanent")]
                               TimeSpan duration = default)
     {
-        string playerName = playerService.GetProperty<NameProperty>(target).Value;
+        string playerName = playerService.Get<NameProperty>(target).Value;
         IPEndPoint? endPoint = sessionManager.GetEndPoint(target);
         if (endPoint is null)
         {
@@ -69,7 +69,7 @@ internal sealed class BanCommand(PlayerService playerService, SessionManager ses
         SessionId? outranking = null;
         foreach (SessionId sessionId in sessionsOnTargetIp)
         {
-            if (context.Permissions <= playerService.GetProperty<PermissionsProperty>(sessionId).Value)
+            if (context.Permissions <= playerService.Get<PermissionsProperty>(sessionId).Value)
             {
                 outranking = sessionId;
                 break;
@@ -77,7 +77,7 @@ internal sealed class BanCommand(PlayerService playerService, SessionManager ses
         }
         if (outranking.HasValue)
         {
-            await context.ReplyAsync($"You're not allowed to ban {playerService.GetProperty<NameProperty>(outranking.Value).Value} #{outranking.Value}");
+            await context.ReplyAsync($"You're not allowed to ban {playerService.Get<NameProperty>(outranking.Value).Value} #{outranking.Value}");
             return;
         }
 
@@ -91,7 +91,7 @@ internal sealed class BanCommand(PlayerService playerService, SessionManager ses
             }
             if (player.HasValue)
             {
-                await context.ReplyAsync($"Player '{playerService.GetProperty<NameProperty>(player.Value).Value}' connected with a private IP address and can't be banned");
+                await context.ReplyAsync($"Player '{playerService.Get<NameProperty>(player.Value).Value}' connected with a private IP address and can't be banned");
             }
             else
             {
@@ -100,7 +100,7 @@ internal sealed class BanCommand(PlayerService playerService, SessionManager ses
             return;
         }
 
-        playerName ??= sessionsOnTargetIp.Count == 1 ? playerService.GetProperty<NameProperty>(sessionsOnTargetIp[0]).Value : null;
+        playerName ??= sessionsOnTargetIp.Count == 1 ? playerService.Get<NameProperty>(sessionsOnTargetIp[0]).Value : null;
         reason = reason?.Trim();
         await ban.BanAsync(ip, duration, context.OriginName, reason, playerName);
         foreach (SessionId player in sessionsOnTargetIp)

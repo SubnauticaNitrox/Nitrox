@@ -17,7 +17,7 @@ internal sealed class PlayerStatsProcessor(PlayerService playerService, ILogger<
             logger.ZLogWarningOnce($"Player ID mismatch (received: {packet.SessionId}, real: {context.Sender})");
             packet.SessionId = context.Sender;
         }
-        playerService.GetProperty<StatsProperty>(context.Sender).Value = new PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
+        playerService.Get<StatsProperty>(context.Sender).Value = new PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
         await context.SendToOthersAsync(packet);
     }
 }

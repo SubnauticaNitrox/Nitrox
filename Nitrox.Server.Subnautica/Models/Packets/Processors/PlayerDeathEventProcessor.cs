@@ -16,12 +16,12 @@ internal sealed class PlayerDeathEventProcessor(PlayerService playerService, IOp
     {
         if (options.Value.IsHardcore())
         {
-            playerService.GetProperty<IsPermaDeathProperty>(context.Sender).Value = true;
+            playerService.Get<IsPermaDeathProperty>(context.Sender).Value = true;
             await context.ReplyAsync(new PlayerKicked("Permanent death from hardcore mode"));
         }
-        playerService.GetProperty<CheckpointPositionProperty>(context.Sender).Value = packet.DeathPosition;
-        playerService.GetProperty<CheckpointSubRootIdProperty>(context.Sender).Value = playerService.GetProperty<SubRootIdProperty>(context.Sender).Value;
-        if (playerService.GetProperty<PermissionsProperty>(context.Sender).Value > Perms.MODERATOR)
+        playerService.Get<CheckpointPositionProperty>(context.Sender).Value = packet.DeathPosition;
+        playerService.Get<CheckpointSubRootIdProperty>(context.Sender).Value = playerService.Get<SubRootIdProperty>(context.Sender).Value;
+        if (playerService.Get<PermissionsProperty>(context.Sender).Value > Perms.MODERATOR)
         {
             await context.ReplyAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, "You can use /back to go to your death location"));
         }

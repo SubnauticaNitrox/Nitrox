@@ -30,10 +30,10 @@ internal sealed class GameModeCommand(PlayerService playerService) : ICommandHan
                     throw new ArgumentException("Target player must not be null");
                 }
 
-                playerService.GetProperty<GameModeProperty>(targetSessionId.Value).Value = gameMode;
+                playerService.Get<GameModeProperty>(targetSessionId.Value).Value = gameMode;
                 await context.SendToAllAsync(GameModeChanged.ForPlayer(targetSessionId.Value, gameMode));
                 await context.SendAsync(targetSessionId.Value, $"GameMode changed to {gameMode}");
-                string targetPlayerName = playerService.GetProperty<NameProperty>(targetSessionId.Value).Value;
+                string targetPlayerName = playerService.Get<NameProperty>(targetSessionId.Value).Value;
                 if (targetSessionId.Value != context.OriginId)
                 {
                     await context.ReplyAsync($"GameMode of {targetPlayerName} #{targetSessionId.Value} changed to {gameMode}");

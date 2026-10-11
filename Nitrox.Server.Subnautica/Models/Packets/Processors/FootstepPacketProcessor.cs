@@ -22,12 +22,12 @@ internal sealed class FootstepPacketProcessor(PlayerService playerService, FmodS
 
         foreach (SessionId player in playerService.EnumerateSessionIds())
         {
-            if (NitroxVector3.Distance(playerService.GetProperty<PositionProperty>(player).Value, playerService.GetProperty<PositionProperty>(context.Sender).Value) >= footstepAudioRange ||
+            if (NitroxVector3.Distance(playerService.Get<PositionProperty>(player).Value, playerService.Get<PositionProperty>(context.Sender).Value) >= footstepAudioRange ||
                 player == context.Sender)
             {
                 continue;
             }
-            if (playerService.GetProperty<SubRootIdProperty>(player).Value == playerService.GetProperty<SubRootIdProperty>(context.Sender).Value)
+            if (playerService.Get<SubRootIdProperty>(player).Value == playerService.Get<SubRootIdProperty>(context.Sender).Value)
             {
                 await context.SendAsync(footstepPacket, player);
             }

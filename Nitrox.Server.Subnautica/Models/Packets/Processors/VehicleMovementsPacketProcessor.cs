@@ -26,7 +26,7 @@ internal sealed class VehicleMovementsPacketProcessor(EntityRegistry entityRegis
             MovementData movementData = packet.Data[i];
             if (simulationOwnershipData.GetSessionIdForLock(movementData.Id) != context.Sender)
             {
-                logger.ZLogErrorOnce($"Player {playerService.GetProperty<NameProperty>(context.Sender).Value} tried updating {movementData.Id}'s position but they don't have the lock on it");
+                logger.ZLogErrorOnce($"Player {playerService.Get<NameProperty>(context.Sender).Value} tried updating {movementData.Id}'s position but they don't have the lock on it");
                 // TODO: In the future, add "packet.Data.RemoveAt(i);" and "continue;" to prevent those abnormal situations
             }
 
@@ -40,14 +40,14 @@ internal sealed class VehicleMovementsPacketProcessor(EntityRegistry entityRegis
                     // Cyclops' driving wheel is at a known position so we need to adapt the position of the player accordingly
                     if (worldEntity.TechType.Name.Equals("Cyclops"))
                     {
-                        PlayerEntity senderEntity = playerService.GetProperty<EntityProperty>(context.Sender).Value;
+                        PlayerEntity senderEntity = playerService.Get<EntityProperty>(context.Sender).Value;
                         senderEntity.Transform.LocalPosition = CyclopsSteeringWheelRelativePosition;
-                        playerService.GetProperty<PositionProperty>(context.Sender).Value = senderEntity.Transform.Position;
+                        playerService.Get<PositionProperty>(context.Sender).Value = senderEntity.Transform.Position;
                     }
                     else
                     {
-                        playerService.GetProperty<PositionProperty>(context.Sender).Value = movementData.Position;
-                        playerService.GetProperty<RotationProperty>(context.Sender).Value = movementData.Rotation;
+                        playerService.Get<PositionProperty>(context.Sender).Value = movementData.Position;
+                        playerService.Get<RotationProperty>(context.Sender).Value = movementData.Rotation;
                     }
                 }
             }

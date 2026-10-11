@@ -17,7 +17,7 @@ internal sealed class WeldActionProcessor(SimulationOwnershipData simulationOwne
         SessionId? simulatingPlayer = simulationOwnershipData.GetSessionIdForLock(packet.Id);
         if (simulatingPlayer.HasValue)
         {
-            logger.ZLogDebug($"Send {nameof(WeldAction)} to simulating player {playerService.GetProperty<NameProperty>(simulatingPlayer.Value).Value} for entity {packet.Id}");
+            logger.ZLogDebug($"Send {nameof(WeldAction)} to simulating player {playerService.Get<NameProperty>(simulatingPlayer.Value).Value} for entity {packet.Id}");
             await context.SendAsync(packet, simulatingPlayer.Value);
         }
     }

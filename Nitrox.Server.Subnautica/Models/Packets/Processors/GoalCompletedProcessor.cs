@@ -10,6 +10,6 @@ internal sealed class GoalCompletedProcessor(PlayerService playerService) : IAut
 
     public async Task Process(AuthProcessorContext context, GoalCompleted packet)
     {
-        playerService.GetProperty<CompletedGoalsWithTimestampProperty>(context.Sender).Value.Add(packet.CompletedGoal, packet.CompletionTime);
+        playerService.Get<CompletedGoalsWithTimestampProperty>(context.Sender).Value.Add(packet.CompletedGoal, packet.CompletionTime);
     }
 }

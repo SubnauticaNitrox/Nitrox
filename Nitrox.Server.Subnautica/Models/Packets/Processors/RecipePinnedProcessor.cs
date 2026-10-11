@@ -10,7 +10,7 @@ internal sealed class PinnedRecipeProcessor(PlayerService playerService) : IAuth
 
     public Task Process(AuthProcessorContext context, RecipePinned packet)
     {
-        PinnedRecipesProperty senderPinnedRecipes = playerService.GetProperty<PinnedRecipesProperty>(context.Sender);
+        PinnedRecipesProperty senderPinnedRecipes = playerService.Get<PinnedRecipesProperty>(context.Sender);
         if (packet.Pinned)
         {
             senderPinnedRecipes.Value.Add(packet.TechType);

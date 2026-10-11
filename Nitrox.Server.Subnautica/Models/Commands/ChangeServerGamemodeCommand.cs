@@ -23,7 +23,7 @@ internal sealed class ChangeServerGamemodeCommand(PlayerService playerService, I
         }
 
         serverConfig.Value.GameMode = newGameMode;
-        foreach ((SessionId _, GameModeProperty property) in playerService.GetProperties<GameModeProperty>())
+        foreach ((SessionId _, GameModeProperty property) in playerService.GetAll<GameModeProperty>())
         {
             property.Value = newGameMode;
         }

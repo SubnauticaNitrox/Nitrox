@@ -176,7 +176,7 @@ internal sealed class BuildingManager(PlayerService playerService, IPacketSender
         int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
         if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
-            logger.ZLogWarning($"Ignoring an {nameof(UpdateBase)} packet from [{playerService.GetProperty<NameProperty>(sessionId).Value}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            logger.ZLogWarning($"Ignoring an {nameof(UpdateBase)} packet from [{playerService.Get<NameProperty>(sessionId).Value}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(sessionId);
             operationId = -1;
             return false;
@@ -298,7 +298,7 @@ internal sealed class BuildingManager(PlayerService playerService, IPacketSender
         int deltaOperations = buildEntity.OperationId + 1 - pieceDeconstructed.OperationId;
         if (deltaOperations != 0 && options.Value.SafeBuilding)
         {
-            logger.ZLogWarning($"Ignoring a {nameof(PieceDeconstructed)} packet from [{playerService.GetProperty<NameProperty>(playerSessionId).Value}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            logger.ZLogWarning($"Ignoring a {nameof(PieceDeconstructed)} packet from [{playerService.Get<NameProperty>(playerSessionId).Value}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(playerSessionId);
             removedEntity = null;
             operationId = -1;

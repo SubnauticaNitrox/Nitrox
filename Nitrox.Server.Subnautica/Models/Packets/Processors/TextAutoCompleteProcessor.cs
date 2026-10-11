@@ -20,7 +20,7 @@ internal sealed class TextAutoCompleteProcessor(CommandRegistryService commandRe
         {
             case TextAutoComplete.AutoCompleteContext.COMMAND_NAME:
                 Regex matchCommandNameRegex = new($@"^{packet.Text}\w+$", RegexOptions.NonBacktracking | RegexOptions.ExplicitCapture | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
-                string? commandName = commandRegistry.FindCommandName(matchCommandNameRegex, playerService.GetProperty<PermissionsProperty>(context.Sender).Value, true);
+                string? commandName = commandRegistry.FindCommandName(matchCommandNameRegex, playerService.Get<PermissionsProperty>(context.Sender).Value, true);
                 if (string.IsNullOrWhiteSpace(commandName))
                 {
                     break;

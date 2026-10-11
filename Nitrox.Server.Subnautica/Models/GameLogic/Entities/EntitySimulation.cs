@@ -55,7 +55,7 @@ internal sealed class EntitySimulation(IPacketSender packetSender, EntityRegistr
         {
             foreach (WorldEntity entity in GetEntitiesOfCell(cell))
             {
-                if (playerService.GetProperty<VisibleCellsProperty>(sessionId).CanSee(entity))
+                if (playerService.Get<VisibleCellsProperty>(sessionId).CanSee(entity))
                 {
                     continue;
                 }
@@ -78,7 +78,7 @@ internal sealed class EntitySimulation(IPacketSender packetSender, EntityRegistr
     {
         foreach (WorldEntity entity in worldEntityManager.GetEntities(cell))
         {
-            if (!playerService.GetProperty<VisibleCellsProperty>(simulatingPlayer).CanSee(entity))
+            if (!playerService.Get<VisibleCellsProperty>(simulatingPlayer).CanSee(entity))
             {
                 continue;
             }
@@ -147,11 +147,11 @@ internal sealed class EntitySimulation(IPacketSender packetSender, EntityRegistr
 
         foreach (SessionId sessionId in sessions)
         {
-            if (playerService.GetProperty<VisibleCellsProperty>(sessionId).CanSee(entity) && simulationOwnershipData.TryToAcquire(id, sessionId, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
+            if (playerService.Get<VisibleCellsProperty>(sessionId).CanSee(entity) && simulationOwnershipData.TryToAcquire(id, sessionId, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
             {
                 bool doesEntityMove = entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
 
-                logger.ZLogTrace($"Player {playerService.GetProperty<NameProperty>(sessionId).Value} has taken over simulating {id}");
+                logger.ZLogTrace($"Player {playerService.Get<NameProperty>(sessionId).Value} has taken over simulating {id}");
                 simulatedEntity = new(id, sessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
                 return true;
             }

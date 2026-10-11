@@ -36,7 +36,7 @@ internal abstract class TransmitIfCanSeePacketProcessor<T>(PlayerService playerS
 
         foreach (SessionId player in playerService.GetSessionsExcept(context.Sender))
         {
-            VisibleCellsProperty visibleCellsProperty = playerService.GetProperty<VisibleCellsProperty>(player);
+            VisibleCellsProperty visibleCellsProperty = playerService.Get<VisibleCellsProperty>(player);
             bool all = true;
             foreach (Entity entity in entities)
             {

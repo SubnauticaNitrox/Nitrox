@@ -23,7 +23,7 @@ internal sealed class FMODEventInstanceProcessor(PlayerService playerService, Fm
 
         foreach (SessionId player in playerService.EnumerateSessionIds())
         {
-            float distance = NitroxVector3.Distance(playerService.GetProperty<PositionProperty>(player).Value, packet.Position);
+            float distance = NitroxVector3.Distance(playerService.Get<PositionProperty>(player).Value, packet.Position);
             if (player == context.Sender)
             {
                 continue;
@@ -32,7 +32,7 @@ internal sealed class FMODEventInstanceProcessor(PlayerService playerService, Fm
             {
                 continue;
             }
-            if (soundData.IsGlobal || playerService.GetProperty<SubRootIdProperty>(player).Value == playerService.GetProperty<SubRootIdProperty>(context.Sender).Value)
+            if (soundData.IsGlobal || playerService.Get<SubRootIdProperty>(player).Value == playerService.Get<SubRootIdProperty>(context.Sender).Value)
             {
                 packet.Volume = SoundHelper.CalculateVolume(distance, soundData.Radius, packet.Volume);
                 await context.SendAsync(packet, player);

@@ -58,6 +58,6 @@ internal sealed class DefaultServerPacketProcessor(PlayerService playerService, 
 
     private string GetPlayerInfo(AuthProcessorContext context)
     {
-        return $"'{playerService.GetProperty<NameProperty>(context.Sender).Value}' #{context.Sender}";
+        return $"'{playerService.Get<NameProperty>(context.Sender).Value}' #{context.Sender}";
     }
 }

@@ -10,7 +10,7 @@ internal sealed class VehicleOnPilotModeChangedProcessor(PlayerService playerSer
 
     public async Task Process(AuthProcessorContext context, VehicleOnPilotModeChanged packet)
     {
-        playerService.GetProperty<DrivingVehicleProperty>(context.Sender).Value = packet.IsPiloting ? packet.VehicleId : null;
+        playerService.Get<DrivingVehicleProperty>(context.Sender).Value = packet.IsPiloting ? packet.VehicleId : null;
         await context.SendToOthersAsync(packet);
     }
 }

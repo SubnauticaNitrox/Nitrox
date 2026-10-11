@@ -26,7 +26,7 @@ internal sealed class PlayerCommand(SimulationOwnershipData simulationOwnership,
     [Description("Lists all visible cells of a player, their simulated entities per cell and the player's visible out of cell entities")]
     public Task Execute(ICommandContext context, [Description("name of the target player")] SessionId selectedPlayer)
     {
-        List<AbsoluteEntityCell> visibleCells = playerService.GetProperty<VisibleCellsProperty>(selectedPlayer).GetVisibleCells();
+        List<AbsoluteEntityCell> visibleCells = playerService.Get<VisibleCellsProperty>(selectedPlayer).GetVisibleCells();
 
         logger.ZLogInformation($"{selectedPlayer}");
         logger.ZLogInformation($"Visible cells [{visibleCells.Count}]:");
@@ -41,14 +41,14 @@ internal sealed class PlayerCommand(SimulationOwnershipData simulationOwnership,
                     simulatedEntities += $"[{worldEntity.Id}; {worldEntity.TechType?.ToString() ?? worldEntity.ClassId}], ";
                 }
             }
-            logger.ZLogInformation($"{visibleCell}; {NitroxVector3.Distance(visibleCell.Position, playerService.GetProperty<PositionProperty>(selectedPlayer).Value)}");
+            logger.ZLogInformation($"{visibleCell}; {NitroxVector3.Distance(visibleCell.Position, playerService.Get<PositionProperty>(selectedPlayer).Value)}");
             if (simulatedEntities.Length > 0)
             {
                 // Get everything but the last ", " of the string
                 logger.ZLogInformation($"{simulatedEntities[..^2]}");
             }
         }
-        logger.ZLogInformation($"\nOut of cell entities:\n{string.Join(", ", playerService.GetProperty<OutOfCellVisibleEntitiesProperty>(selectedPlayer).Value)}");
+        logger.ZLogInformation($"\nOut of cell entities:\n{string.Join(", ", playerService.Get<OutOfCellVisibleEntitiesProperty>(selectedPlayer).Value)}");
 
         return Task.CompletedTask;
     }

@@ -10,7 +10,7 @@ internal sealed class PinnedRecipeMovedProcessor(PlayerService playerService) : 
 
     public Task Process(AuthProcessorContext context, PinnedRecipeMoved packet)
     {
-        playerService.GetProperty<PinnedRecipesProperty>(context.Sender).Value.ClearAndSet(packet.RecipePins);
+        playerService.Get<PinnedRecipesProperty>(context.Sender).Value.ClearAndSet(packet.RecipePins);
         return Task.CompletedTask;
     }
 }

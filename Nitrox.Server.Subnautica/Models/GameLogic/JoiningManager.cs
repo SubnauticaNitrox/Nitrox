@@ -151,12 +151,12 @@ internal sealed class JoiningManager(
 
     private async Task SendInitialSyncAsync(SessionId sessionId)
     {
-        bool isBrandNewPlayer = playerService.GetProperty<IsNewPlayerProperty>(sessionId).Value;
+        bool isBrandNewPlayer = playerService.Get<IsNewPlayerProperty>(sessionId).Value;
         (NitroxId assignedEscapePodId, EscapePodEntity? newlyCreatedEscapePod) = await escapePodManager.AssignPlayerToEscapePodAsync(playerService.GetPeerId(sessionId));
 
         if (isBrandNewPlayer)
         {
-            playerService.GetProperty<SubRootIdProperty>(sessionId).Value = assignedEscapePodId;
+            playerService.Get<SubRootIdProperty>(sessionId).Value = assignedEscapePodId;
         }
         if (newlyCreatedEscapePod is { } validEscapePod)
         {
@@ -167,56 +167,56 @@ internal sealed class JoiningManager(
         // Make players on localhost admin by default.
         if (options.Value.LocalhostIsAdmin && sessionManager.GetEndPoint(sessionId)?.Address.IsLocalhost() == true)
         {
-            logger.ZLogInformation($"Granted admin to '{playerService.GetProperty<NameProperty>(sessionId).Value}' because they're playing on the host machine");
-            playerService.GetProperty<PermissionsProperty>(sessionId).Value = Perms.ADMIN;
+            logger.ZLogInformation($"Granted admin to '{playerService.Get<NameProperty>(sessionId).Value}' because they're playing on the host machine");
+            playerService.Get<PermissionsProperty>(sessionId).Value = Perms.ADMIN;
         }
 
         List<SimulatedEntity> simulations = entitySimulation.AssignGlobalRootEntitiesAndGetData(sessionId);
 
-        playerService.GetProperty<EntityProperty>(sessionId).Value = isBrandNewPlayer ? SetupNewPlayerEntity(sessionId) : RespawnExistingEntity(sessionId);
+        playerService.Get<EntityProperty>(sessionId).Value = isBrandNewPlayer ? SetupNewPlayerEntity(sessionId) : RespawnExistingEntity(sessionId);
 
         List<GlobalRootEntity> globalRootEntities = worldEntityManager.GetGlobalRootEntities(true);
         bool isFirstPlayer = sessionManager.GetSessionCount() == 1;
 
         InitialPlayerSync initialPlayerSync = new(
-            playerService.GetProperty<GameObjectIdProperty>(sessionId).Value,
+            playerService.Get<GameObjectIdProperty>(sessionId).Value,
             isBrandNewPlayer,
             assignedEscapePodId,
-            playerService.GetProperty<EquippedItemsProperty>(sessionId).Value,
-            playerService.GetProperty<UsedItemsProperty>(sessionId).Value,
-            playerService.GetProperty<QuickSlotsProperty>(sessionId).Value.ToList(),
+            playerService.Get<EquippedItemsProperty>(sessionId).Value,
+            playerService.Get<UsedItemsProperty>(sessionId).Value,
+            playerService.Get<QuickSlotsProperty>(sessionId).Value.ToList(),
             pdaManager.GetInitialPDAData(),
             storyManager.GetInitialStoryGoalData(storyScheduler, sessionId),
-            playerService.GetProperty<PositionProperty>(sessionId).Value,
-            playerService.GetProperty<RotationProperty>(sessionId).Value,
-            playerService.GetProperty<SubRootIdProperty>(sessionId).Value,
-            playerService.GetProperty<StatsProperty>(sessionId).Value,
+            playerService.Get<PositionProperty>(sessionId).Value,
+            playerService.Get<RotationProperty>(sessionId).Value,
+            playerService.Get<SubRootIdProperty>(sessionId).Value,
+            playerService.Get<StatsProperty>(sessionId).Value,
             GetOtherPlayers(sessionId),
             globalRootEntities,
             simulations,
-            playerService.GetProperty<GameModeProperty>(sessionId).Value,
-            playerService.GetProperty<PermissionsProperty>(sessionId).Value,
+            playerService.Get<GameModeProperty>(sessionId).Value,
+            playerService.Get<PermissionsProperty>(sessionId).Value,
             isBrandNewPlayer ? IntroCinematicMode.LOADING : IntroCinematicMode.COMPLETED,
-            new(new(playerService.GetProperty<PingsProperty>(sessionId).Value), playerService.GetProperty<PinnedRecipesProperty>(sessionId).Value.ToList()),
+            new(new(playerService.Get<PingsProperty>(sessionId).Value), playerService.Get<PinnedRecipesProperty>(sessionId).Value.ToList()),
             storyManager.GetTimeData(),
             isFirstPlayer,
             BuildingManager.GetEntitiesOperations(globalRootEntities),
             options.Value.KeepInventoryOnDeath,
             sessionSettings,
-            playerService.GetProperty<InPrecursorProperty>(sessionId).Value,
-            playerService.GetProperty<DisplaySurfaceWaterProperty>(sessionId).Value,
+            playerService.Get<InPrecursorProperty>(sessionId).Value,
+            playerService.Get<DisplaySurfaceWaterProperty>(sessionId).Value,
             options.Value.MarkDeathPointsWithBeacon
         );
 
         await packetSender.SendPacketAsync(initialPlayerSync, sessionId);
 
-        IEnumerable<PlayerContext> GetOtherPlayers(SessionId player) => playerService.GetSessionsExcept(player).Select(p => playerService.GetProperty<ContextProperty>(p).Value);
+        IEnumerable<PlayerContext> GetOtherPlayers(SessionId player) => playerService.GetSessionsExcept(player).Select(p => playerService.Get<ContextProperty>(p).Value);
 
         PlayerEntity SetupNewPlayerEntity(SessionId player)
         {
-            NitroxTransform transform = new(playerService.GetProperty<PositionProperty>(player).Value, playerService.GetProperty<RotationProperty>(player).Value, NitroxVector3.One);
+            NitroxTransform transform = new(playerService.Get<PositionProperty>(player).Value, playerService.Get<RotationProperty>(player).Value, NitroxVector3.One);
 
-            PlayerEntity playerEntity = new(transform, 0, null, false, playerService.GetProperty<GameObjectIdProperty>(player).Value, NitroxTechType.None, null, playerService.GetProperty<SubRootIdProperty>(player).Value, []);
+            PlayerEntity playerEntity = new(transform, 0, null, false, playerService.Get<GameObjectIdProperty>(player).Value, NitroxTechType.None, null, playerService.Get<SubRootIdProperty>(player).Value, []);
             entityRegistry.AddOrUpdate(playerEntity);
             worldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
@@ -224,18 +224,18 @@ internal sealed class JoiningManager(
 
         PlayerEntity RespawnExistingEntity(SessionId player)
         {
-            if (entityRegistry.TryGetEntityById(playerService.GetProperty<GameObjectIdProperty>(player).Value, out PlayerEntity playerWorldEntity))
+            if (entityRegistry.TryGetEntityById(playerService.Get<GameObjectIdProperty>(player).Value, out PlayerEntity playerWorldEntity))
             {
                 return playerWorldEntity;
             }
-            logger.ZLogError($"Unable to find player entity for {playerService.GetProperty<NameProperty>(player).Value}. Re-creating one");
+            logger.ZLogError($"Unable to find player entity for {playerService.Get<NameProperty>(player).Value}. Re-creating one");
             return SetupNewPlayerEntity(player);
         }
     }
 
     private void BroadcastPlayerJoined(SessionId sessionId)
     {
-        PlayerJoinedMultiplayerSession playerJoinedPacket = new(playerService.GetProperty<ContextProperty>(sessionId).Value, playerService.GetProperty<SubRootIdProperty>(sessionId).Value, playerService.GetProperty<EntityProperty>(sessionId).Value);
+        PlayerJoinedMultiplayerSession playerJoinedPacket = new(playerService.Get<ContextProperty>(sessionId).Value, playerService.Get<SubRootIdProperty>(sessionId).Value, playerService.Get<EntityProperty>(sessionId).Value);
         taskTrackingService.TryTrack(packetSender.SendPacketToOthersAsync(playerJoinedPacket, sessionId).AsTask());
     }
 

@@ -40,7 +40,7 @@ internal sealed class EntitySpawnedByClientProcessor(PlayerService playerService
         SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);
         foreach (SessionId player in playerService.GetSessionsExcept(context.Sender))
         {
-            if (playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity))
+            if (playerService.Get<VisibleCellsProperty>(player).CanSee(entity))
             {
                 await context.SendAsync(spawnEntities, player);
             }

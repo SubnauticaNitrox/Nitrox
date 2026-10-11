@@ -19,13 +19,13 @@ internal sealed class PlayerUnseeOutOfCellEntityProcessor(SimulationOwnershipDat
     public async Task Process(AuthProcessorContext context, PlayerUnseeOutOfCellEntity packet)
     {
         // Most of this packet's utility is in the below Remove
-        if (!playerService.GetProperty<OutOfCellVisibleEntitiesProperty>(context.Sender).Value.Remove(packet.EntityId) ||
+        if (!playerService.Get<OutOfCellVisibleEntitiesProperty>(context.Sender).Value.Remove(packet.EntityId) ||
             !entityRegistry.TryGetEntityById(packet.EntityId, out Entity entity))
         {
             return;
         }
         // If player can still see the entity even after removing it from the OutOfCellVisibleEntities, then we don't need to change anything
-        if (playerService.GetProperty<VisibleCellsProperty>(context.Sender).CanSee(entity))
+        if (playerService.Get<VisibleCellsProperty>(context.Sender).CanSee(entity))
         {
             return;
         }

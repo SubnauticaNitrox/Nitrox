@@ -14,7 +14,7 @@ internal sealed class PlayerMovementProcessor(EntityRegistry entityRegistry, Pla
 
     public async Task Process(AuthProcessorContext context, PlayerMovement packet)
     {
-        Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(playerService.GetProperty<GameObjectIdProperty>(context.Sender).Value);
+        Optional<PlayerEntity> playerEntity = entityRegistry.GetEntityById<PlayerEntity>(playerService.Get<GameObjectIdProperty>(context.Sender).Value);
 
         if (playerEntity.HasValue)
         {
@@ -22,8 +22,8 @@ internal sealed class PlayerMovementProcessor(EntityRegistry entityRegistry, Pla
             playerEntity.Value.Transform.Rotation = packet.BodyRotation;
         }
 
-        playerService.GetProperty<PositionProperty>(context.Sender).Value = packet.Position;
-        playerService.GetProperty<RotationProperty>(context.Sender).Value = packet.BodyRotation;
+        playerService.Get<PositionProperty>(context.Sender).Value = packet.Position;
+        playerService.Get<RotationProperty>(context.Sender).Value = packet.BodyRotation;
         await context.SendToOthersAsync(packet);
     }
 }

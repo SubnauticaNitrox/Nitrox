@@ -6,14 +6,14 @@ using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Commands.Core;
 using Nitrox.Server.Subnautica.Models.PlayerProperties;
-using Nitrox.Server.Subnautica.Services;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Commands;
 
 [RequiresPermission(Perms.PLAYER)]
-internal sealed class WhoisCommand(PlayerService playerService) : ICommandHandler, ICommandHandler<SessionId>
+internal sealed class WhoisCommand(IPlayerPropProvider playerPropProvider) : ICommandHandler, ICommandHandler<SessionId>
 {
-    private readonly PlayerService playerService = playerService;
+    private readonly IPlayerPropProvider playerPropProvider = playerPropProvider;
 
     [RequiresOrigin(CommandOrigin.PLAYER)]
     [Description("Shows information about the current player")]
@@ -29,19 +29,19 @@ internal sealed class WhoisCommand(PlayerService playerService) : ICommandHandle
     [Description("Shows information about a player")]
     public async Task Execute(ICommandContext context, SessionId targetPlayer)
     {
-        StringBuilder builder = new($"==== {playerService.GetProperty<NameProperty>(targetPlayer).Value} ====\n");
-        builder.AppendLine($"Id: {playerService.GetProperty<GameObjectIdProperty>(targetPlayer).Value}");
+        StringBuilder builder = new($"==== {playerPropProvider.Get<NameProperty>(targetPlayer).Value} ====\n");
+        builder.AppendLine($"Id: {playerPropProvider.Get<GameObjectIdProperty>(targetPlayer).Value}");
         builder.AppendLine($"SessionId: {targetPlayer}");
-        builder.AppendLine($"Role: {playerService.GetProperty<PermissionsProperty>(targetPlayer).Value}");
-        builder.AppendLine($"Gamemode: {playerService.GetProperty<GameModeProperty>(targetPlayer).Value}");
-        NitroxVector3 position = playerService.GetProperty<PositionProperty>(targetPlayer).Value;
+        builder.AppendLine($"Role: {playerPropProvider.Get<PermissionsProperty>(targetPlayer).Value}");
+        builder.AppendLine($"Gamemode: {playerPropProvider.Get<GameModeProperty>(targetPlayer).Value}");
+        NitroxVector3 position = playerPropProvider.Get<PositionProperty>(targetPlayer).Value;
         builder.AppendLine($"Position: {position.X}, {position.Y}, {position.Z}");
-        PlayerStatsData stats = playerService.GetProperty<StatsProperty>(targetPlayer).Value;
+        PlayerStatsData stats = playerPropProvider.Get<StatsProperty>(targetPlayer).Value;
         builder.AppendLine($"Oxygen: {stats.Oxygen}/{stats.MaxOxygen}");
         builder.AppendLine($"Food: {stats.Food}");
         builder.AppendLine($"Water: {stats.Water}");
         builder.AppendLine($"Infection: {stats.InfectionAmount}");
-        builder.AppendLine($"In precursor: {playerService.GetProperty<InPrecursorProperty>(targetPlayer).Value}");
+        builder.AppendLine($"In precursor: {playerPropProvider.Get<InPrecursorProperty>(targetPlayer).Value}");
 
         await context.ReplyAsync(builder.ToString());
     }

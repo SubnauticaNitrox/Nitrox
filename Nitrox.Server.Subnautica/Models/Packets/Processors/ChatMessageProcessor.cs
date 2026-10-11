@@ -13,12 +13,12 @@ internal sealed class ChatMessageProcessor(PlayerService playerService, ILogger<
 
     public async Task Process(AuthProcessorContext context, ChatMessage packet)
     {
-        if (playerService.GetProperty<IsMutedProperty>(context.Sender).Value)
+        if (playerService.Get<IsMutedProperty>(context.Sender).Value)
         {
             await context.ReplyAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, "You're currently muted"));
             return;
         }
-        logger.ZLogInformation($"<{playerService.GetProperty<NameProperty>(context.Sender).Value}>: {packet.Text}");
+        logger.ZLogInformation($"<{playerService.Get<NameProperty>(context.Sender).Value}>: {packet.Text}");
         await context.SendToAllAsync(packet);
     }
 }

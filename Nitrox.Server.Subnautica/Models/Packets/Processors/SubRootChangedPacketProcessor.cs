@@ -12,8 +12,8 @@ internal sealed class SubRootChangedPacketProcessor(EntityRegistry entityRegistr
 
     public async Task Process(AuthProcessorContext context, SubRootChanged packet)
     {
-        entityRegistry.ReparentEntity(playerService.GetProperty<GameObjectIdProperty>(context.Sender).Value, packet.SubRootId.OrNull());
-        playerService.GetProperty<SubRootIdProperty>(context.Sender).Value = packet.SubRootId.HasValue ? packet.SubRootId.Value : null;
+        entityRegistry.ReparentEntity(playerService.Get<GameObjectIdProperty>(context.Sender).Value, packet.SubRootId.OrNull());
+        playerService.Get<SubRootIdProperty>(context.Sender).Value = packet.SubRootId.HasValue ? packet.SubRootId.Value : null;
         await context.SendToOthersAsync(packet);
     }
 }

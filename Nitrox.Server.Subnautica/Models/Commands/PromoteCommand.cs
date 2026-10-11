@@ -24,16 +24,16 @@ internal sealed class PromoteCommand(PlayerService playerService) : ICommandHand
             await context.ReplyAsync($"Your permissions ({context.Permissions}) must be higher than the perms you want to assign ({newPerms})");
             return;
         }
-        PermissionsProperty targetPermsProperty = playerService.GetProperty<PermissionsProperty>(targetPlayer);
+        PermissionsProperty targetPermsProperty = playerService.Get<PermissionsProperty>(targetPlayer);
         if (context.Permissions < targetPermsProperty.Value)
         {
-            await context.ReplyAsync($"You're not allowed to update {playerService.GetProperty<NameProperty>(targetPlayer).Value}\'s permissions");
+            await context.ReplyAsync($"You're not allowed to update {playerService.Get<NameProperty>(targetPlayer).Value}\'s permissions");
             return;
         }
 
         targetPermsProperty.Value = newPerms;
         await context.SendAsync(targetPlayer, new PermsChanged(newPerms));
-        await context.ReplyAsync($"Updated {playerService.GetProperty<NameProperty>(targetPlayer).Value}\'s permissions to {newPerms}");
+        await context.ReplyAsync($"Updated {playerService.Get<NameProperty>(targetPlayer).Value}\'s permissions to {newPerms}");
         await context.SendAsync(targetPlayer, $"You've been promoted to {newPerms}");
     }
 }

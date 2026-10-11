@@ -25,12 +25,12 @@ internal sealed class EntityDestroyedPacketProcessor(PlayerService playerService
                 worldEntityManager.MovePlayerChildrenToRoot(vehicleEntity);
             }
 
-            foreach (SessionId player in playerService.EnumerateSessionIds())
+            foreach ((SessionId SessionId, VisibleCellsProperty Property) visibleCells in playerService.GetAll<VisibleCellsProperty>())
             {
-                bool isOtherPlayer = player != context.Sender;
-                if (isOtherPlayer && playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity))
+                bool isOtherPlayer = visibleCells.SessionId != context.Sender;
+                if (isOtherPlayer && visibleCells.Property.CanSee(entity))
                 {
-                    await context.SendAsync(packet, player);
+                    await context.SendAsync(packet, visibleCells.SessionId);
                 }
             }
         }

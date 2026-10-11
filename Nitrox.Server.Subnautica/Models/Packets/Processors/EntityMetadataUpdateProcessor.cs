@@ -33,14 +33,15 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerService playerService,
 
     private async Task SendUpdateToVisiblePlayersAsync(AuthProcessorContext context, EntityMetadataUpdate packet, Entity entity)
     {
-        foreach (SessionId player in playerService.EnumerateSessionIds())
+        foreach ((SessionId SessionId, VisibleCellsProperty Property) visibleCells in playerService.GetAll<VisibleCellsProperty>())
         {
-            bool updateVisibleToPlayer = playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity);
-            if (player != context.Sender && updateVisibleToPlayer)
+            if (visibleCells.SessionId != context.Sender && ShouldUpdateVisibility(visibleCells.Property, entity))
             {
-                await context.SendAsync(packet, player);
+                await context.SendAsync(packet, visibleCells.SessionId);
             }
         }
+
+        static bool ShouldUpdateVisibility(VisibleCellsProperty property, Entity entity) => property.CanSee(entity);
     }
 
     private bool TryProcessMetadata(SessionId sendingPlayer, Entity entity, EntityMetadata metadata)
@@ -60,14 +61,14 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerService playerService,
 
     private bool ProcessPlayerMetadata(SessionId sendingPlayer, Entity entity, PlayerMetadata metadata)
     {
-        if (playerService.GetProperty<GameObjectIdProperty>(sendingPlayer).Value == entity.Id)
+        if (playerService.Get<GameObjectIdProperty>(sendingPlayer).Value == entity.Id)
         {
-            playerService.GetProperty<EquippedItemsProperty>(sendingPlayer).Value
+            playerService.Get<EquippedItemsProperty>(sendingPlayer).Value
                          .ClearAndSet(metadata.EquippedItems, item => item.Slot, item => item.Id);
             return true;
         }
 
-        logger.ZLogWarningOnce($"Player {playerService.GetProperty<NameProperty>(sendingPlayer).Value} tried updating metadata of another player's entity {entity.Id}");
+        logger.ZLogWarningOnce($"Player {playerService.Get<NameProperty>(sendingPlayer).Value} tried updating metadata of another player's entity {entity.Id}");
         return false;
     }
 }

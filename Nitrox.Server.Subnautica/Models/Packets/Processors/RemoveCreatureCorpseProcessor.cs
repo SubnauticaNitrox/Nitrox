@@ -7,11 +7,12 @@ using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class RemoveCreatureCorpseProcessor(PlayerService playerService, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager) : IAuthPacketProcessor<RemoveCreatureCorpse>
+internal sealed class RemoveCreatureCorpseProcessor(PlayerService playerService, EntitySimulation entitySimulation, WorldEntityManager worldEntityManager, ILogger<RemoveCreatureCorpseProcessor> logger) : IAuthPacketProcessor<RemoveCreatureCorpse>
 {
     private readonly PlayerService playerService = playerService;
     private readonly EntitySimulation entitySimulation = entitySimulation;
     private readonly WorldEntityManager worldEntityManager = worldEntityManager;
+    private readonly ILogger<RemoveCreatureCorpseProcessor> logger = logger;
 
     public async Task Process(AuthProcessorContext context, RemoveCreatureCorpse packet)
     {
@@ -21,11 +22,18 @@ internal sealed class RemoveCreatureCorpseProcessor(PlayerService playerService,
         {
             foreach (SessionId player in playerService.EnumerateSessionIds())
             {
-                bool isOtherPlayer = player != context.Sender;
-                if (isOtherPlayer && playerService.GetProperty<VisibleCellsProperty>(player).CanSee(entity))
+                try
                 {
-                    playerService.GetProperty<OutOfCellVisibleEntitiesProperty>(player).Value.Remove(entity.Id);
-                    await context.SendAsync(packet, player);
+                    bool isOtherPlayer = player != context.Sender;
+                    if (isOtherPlayer && playerService.Get<VisibleCellsProperty>(player).CanSee(entity))
+                    {
+                        playerService.Get<OutOfCellVisibleEntitiesProperty>(player).Value.Remove(entity.Id);
+                        await context.SendAsync(packet, player);
+                    }
+                }
+                catch (Exception)
+                {
+                    logger.ZLogWarning($"Failed to notify player #{player} that a creature corpse with id {packet.CreatureId} at position {packet.DeathPosition} should be removed");
                 }
             }
         }

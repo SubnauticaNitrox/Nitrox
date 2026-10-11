@@ -25,13 +25,13 @@ internal sealed class KickCommand(IKickPlayer playerKicker, PlayerService player
 
         switch (context.Origin)
         {
-            case CommandOrigin.PLAYER when playerService.GetProperty<PermissionsProperty>(playerToKick).Value >= context.Permissions:
-                await context.ReplyAsync($"You're not allowed to kick {playerService.GetProperty<NameProperty>(playerToKick).Value} #{playerToKick}");
+            case CommandOrigin.PLAYER when playerService.Get<PermissionsProperty>(playerToKick).Value >= context.Permissions:
+                await context.ReplyAsync($"You're not allowed to kick {playerService.Get<NameProperty>(playerToKick).Value} #{playerToKick}");
                 break;
             default:
                 if (!await playerKicker.KickPlayer(playerToKick, reason))
                 {
-                    await context.ReplyAsync($"Failed to kick '{playerService.GetProperty<NameProperty>(playerToKick).Value}'");
+                    await context.ReplyAsync($"Failed to kick '{playerService.Get<NameProperty>(playerToKick).Value}'");
                 }
                 break;
         }

@@ -28,7 +28,7 @@ internal sealed class LoginCommand(PlayerService playerService, IOptions<Subnaut
             case PlayerToServerCommandContext { Permissions: < LOGIN_GRANTED_PERMS }:
                 if (activePassword == adminPassword)
                 {
-                    playerService.GetProperty<PermissionsProperty>(context.OriginId).Value = LOGIN_GRANTED_PERMS;
+                    playerService.Get<PermissionsProperty>(context.OriginId).Value = LOGIN_GRANTED_PERMS;
                     await context.ReplyAsync(new PermsChanged(LOGIN_GRANTED_PERMS));
                     await context.ReplyAsync($"You've been made {LOGIN_GRANTED_PERMS} on this server!");
                 }

@@ -363,12 +363,11 @@ internal sealed class WorldEntityManager
                 RegisterWorldEntityInCell(entity, newCell);
 
                 // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
-                foreach (SessionId player in playerService.EnumerateSessionIds())
+                foreach ((SessionId SessionId, VisibleCellsProperty Property) visibleCells in playerService.GetAll<VisibleCellsProperty>())
                 {
-                    VisibleCellsProperty visibleCellsProperty = playerService.GetProperty<VisibleCellsProperty>(player);
-                    if (visibleCellsProperty.HasCellLoaded(newCell) && !visibleCellsProperty.HasCellLoaded(oldCell))
+                    if (visibleCells.Property.HasCellLoaded(newCell) && !visibleCells.Property.HasCellLoaded(oldCell))
                     {
-                        packetSender.SendPacketAsync(new SpawnEntities(entity), player);
+                        packetSender.SendPacketAsync(new SpawnEntities(entity), visibleCells.SessionId);
                     }
                 }
             }

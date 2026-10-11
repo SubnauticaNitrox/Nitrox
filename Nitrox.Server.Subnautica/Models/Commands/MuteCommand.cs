@@ -20,13 +20,13 @@ internal sealed class MuteCommand(PlayerService playerService) : ICommandHandler
             await context.ReplyAsync("You can't mute yourself");
             return;
         }
-        string targetName = playerService.GetProperty<NameProperty>(targetSessionId).Value;
-        if (context.Permissions <= playerService.GetProperty<PermissionsProperty>(targetSessionId).Value)
+        string targetName = playerService.Get<NameProperty>(targetSessionId).Value;
+        if (context.Permissions <= playerService.Get<PermissionsProperty>(targetSessionId).Value)
         {
             await context.ReplyAsync($"You're not allowed to mute {targetName}");
             return;
         }
-        IsMutedProperty targetMutedProperty = playerService.GetProperty<IsMutedProperty>(targetSessionId);
+        IsMutedProperty targetMutedProperty = playerService.Get<IsMutedProperty>(targetSessionId);
         if (targetMutedProperty.Value)
         {
             await context.ReplyAsync($"{targetName} is already muted");

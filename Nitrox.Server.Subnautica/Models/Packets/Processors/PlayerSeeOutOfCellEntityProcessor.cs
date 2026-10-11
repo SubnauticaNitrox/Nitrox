@@ -14,7 +14,7 @@ internal sealed class PlayerSeeOutOfCellEntityProcessor(EntityRegistry entityReg
     {
         if (entityRegistry.GetEntityById(packet.EntityId).HasValue)
         {
-            playerService.GetProperty<OutOfCellVisibleEntitiesProperty>(context.Sender).Value.Add(packet.EntityId);
+            playerService.Get<OutOfCellVisibleEntitiesProperty>(context.Sender).Value.Add(packet.EntityId);
         }
         return Task.CompletedTask;
     }

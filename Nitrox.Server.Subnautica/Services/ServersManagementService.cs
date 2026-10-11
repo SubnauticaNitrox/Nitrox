@@ -164,9 +164,9 @@ internal sealed class ServersManagementService(PlayerService playerService, IPac
 
     private async Task PushPollDataAsync(IServersManagement api)
     {
-        string[] names = playerService.GetProperties<NameProperty>().Select(p => p.Item2.Value).ToArray();
+        string[] names = playerService.GetAll<NameProperty>().Select(p => p.Property.Value).ToArray();
         Array.Sort(names); // Nulls will be sorted before non-null values.
-        await api.SetPlayers(names); // Sends names that aren't null.
+        await api.SetPlayers(names);
     }
 
     private async Task PushLogsAsync(IServersManagement api, CancellationToken cancellationToken)

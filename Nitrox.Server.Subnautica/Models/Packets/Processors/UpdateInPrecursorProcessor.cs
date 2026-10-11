@@ -13,7 +13,7 @@ internal sealed class UpdateInPrecursorProcessor(PlayerService playerService) : 
 
     public Task Process(AuthProcessorContext context, UpdateInPrecursor packet)
     {
-        playerService.GetProperty<InPrecursorProperty>(context.Sender).Value = packet.InPrecursor;
+        playerService.Get<InPrecursorProperty>(context.Sender).Value = packet.InPrecursor;
         return Task.CompletedTask;
     }
 }

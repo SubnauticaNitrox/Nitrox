@@ -15,11 +15,11 @@ internal sealed class OpCommand(PlayerService playerService) : ICommandHandler<S
     public async Task Execute(ICommandContext context, [Description("The players name to make an admin")] SessionId targetPlayer)
     {
         Perms newPerms = Perms.ADMIN;
-        playerService.GetProperty<PermissionsProperty>(targetPlayer).Value = newPerms;
+        playerService.Get<PermissionsProperty>(targetPlayer).Value = newPerms;
 
         // We need to notify this player that he can show all the admin-related stuff
         await context.SendAsync(targetPlayer, new PermsChanged(newPerms));
         await context.SendAsync(targetPlayer, $"You were promoted to {newPerms}");
-        await context.ReplyAsync($"Updated {playerService.GetProperty<NameProperty>(targetPlayer).Value}\'s permissions to {newPerms}");
+        await context.ReplyAsync($"Updated {playerService.Get<NameProperty>(targetPlayer).Value}\'s permissions to {newPerms}");
     }
 }

@@ -17,7 +17,7 @@ sealed class CellVisibilityChangedProcessor(EntitySimulation entitySimulation, W
 
     public async Task Process(AuthProcessorContext context, CellVisibilityChanged packet)
     {
-        VisibleCellsProperty visibleCellsProperty = playerService.GetProperty<VisibleCellsProperty>(context.Sender);
+        VisibleCellsProperty visibleCellsProperty = playerService.Get<VisibleCellsProperty>(context.Sender);
         visibleCellsProperty.AddCells(packet.Added);
         visibleCellsProperty.RemoveCells(packet.Removed);
 

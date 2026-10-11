@@ -12,7 +12,7 @@ internal sealed class PlayerHeldItemChangedProcessor(PlayerService playerService
     {
         if (packet.IsFirstTime != null)
         {
-            playerService.GetProperty<UsedItemsProperty>(context.Sender).Value.Add(packet.IsFirstTime);
+            playerService.Get<UsedItemsProperty>(context.Sender).Value.Add(packet.IsFirstTime);
         }
 
         await context.SendToOthersAsync(packet);

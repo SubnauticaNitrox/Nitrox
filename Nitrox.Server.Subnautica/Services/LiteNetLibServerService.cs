@@ -357,13 +357,13 @@ internal sealed class LiteNetLibServerService : IHostedService, IPacketSender, I
 
     async Task ITeleport.TeleportAsync(SessionId sessionId, NitroxVector3 destination, Optional<NitroxId> subRootId)
     {
-        PositionProperty positionProperty = playerService.GetProperty<PositionProperty>(sessionId);
-        SubRootIdProperty subRootIdProperty = playerService.GetProperty<SubRootIdProperty>(sessionId);
+        PositionProperty positionProperty = playerService.Get<PositionProperty>(sessionId);
+        SubRootIdProperty subRootIdProperty = playerService.Get<SubRootIdProperty>(sessionId);
 
         // Remember previous location.
         NitroxVector3 positionFrom = positionProperty.Value;
-        playerService.GetProperty<CheckpointPositionProperty>(sessionId).Value = positionFrom;
-        playerService.GetProperty<CheckpointSubRootIdProperty>(sessionId).Value = subRootIdProperty.Value;
+        playerService.Get<CheckpointPositionProperty>(sessionId).Value = positionFrom;
+        playerService.Get<CheckpointSubRootIdProperty>(sessionId).Value = subRootIdProperty.Value;
 
         // Set new location.
         positionProperty.Value = destination;

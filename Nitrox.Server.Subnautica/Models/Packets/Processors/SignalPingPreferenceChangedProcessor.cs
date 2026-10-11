@@ -10,7 +10,7 @@ internal sealed class SignalPingPreferenceChangedProcessor(PlayerService playerS
 
     public Task Process(AuthProcessorContext context, SignalPingPreferenceChanged packet)
     {
-        playerService.GetProperty<PingsProperty>(context.Sender).Value[packet.PingKey] = new(packet.Color, packet.Visible);
+        playerService.Get<PingsProperty>(context.Sender).Value[packet.PingKey] = new(packet.Color, packet.Visible);
         return Task.CompletedTask;
     }
 }

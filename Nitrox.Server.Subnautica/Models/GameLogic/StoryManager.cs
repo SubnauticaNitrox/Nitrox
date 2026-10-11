@@ -172,7 +172,7 @@ internal sealed class StoryManager : ISummarize
 
     public InitialStoryGoalData GetInitialStoryGoalData(StoryScheduler storyScheduler, SessionId player)
     {
-        return new InitialStoryGoalData([..StoryGoalData.CompletedGoals], [..StoryGoalData.RadioQueue], storyScheduler.GetScheduledStories(), new(playerService.GetProperty<CompletedGoalsWithTimestampProperty>(player).Value));
+        return new InitialStoryGoalData([..StoryGoalData.CompletedGoals], [..StoryGoalData.RadioQueue], storyScheduler.GetScheduledStories(), new(playerService.Get<CompletedGoalsWithTimestampProperty>(player).Value));
     }
 
     public bool ContainsCompletedStory(string storyGoalKey) => StoryGoalData.CompletedGoals.Contains(storyGoalKey);

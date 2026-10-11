@@ -10,14 +10,15 @@ internal sealed class CheatCommandProcessor(PlayerService playerService, ILogger
     private readonly PlayerService playerService = playerService;
     private readonly ILogger<CheatCommandProcessor> logger = logger;
 
-    public async Task Process(AuthProcessorContext context, CheatCommand packet)
+    public Task Process(AuthProcessorContext context, CheatCommand packet)
     {
-        if (playerService.GetProperty<PermissionsProperty>(context.Sender).Value < Perms.MODERATOR)
+        if (playerService.Get<PermissionsProperty>(context.Sender).Value < Perms.MODERATOR)
         {
-            logger.ZLogWarning($"{playerService.GetProperty<NameProperty>(context.Sender).Value} #{context.Sender} used cheat command: '{packet.Command}' without sufficient permissions.");
-            return;
+            logger.ZLogWarning($"{playerService.Get<NameProperty>(context.Sender).Value} #{context.Sender} used cheat command: '{packet.Command}' without sufficient permissions.");
+            return Task.CompletedTask;
         }
 
-        logger.ZLogInformation($"{playerService.GetProperty<NameProperty>(context.Sender).Value} #{context.Sender} used cheat command: '{packet.Command}'");
+        logger.ZLogInformation($"{playerService.Get<NameProperty>(context.Sender).Value} #{context.Sender} used cheat command: '{packet.Command}'");
+        return Task.CompletedTask;
     }
 }

@@ -36,7 +36,7 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
 
     public async Task Execute(ICommandContext context, SessionId sessionId)
     {
-        if (!entityRegistry.TryGetEntityById(playerService.GetProperty<GameObjectIdProperty>(sessionId).Value, out Entity entity))
+        if (!entityRegistry.TryGetEntityById(playerService.Get<GameObjectIdProperty>(sessionId).Value, out Entity entity))
         {
             await context.ReplyAsync($"No entity attached to player session #{sessionId}");
             return;
@@ -80,23 +80,23 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
 
         if (entity is PlayerEntity)
         {
-            (SessionId? serverPlayerId, GameObjectIdProperty? _) = playerService.GetProperties<GameObjectIdProperty>().FirstOrDefault(p => p.Item2.Value == entity.Id);
+            (SessionId? serverPlayerId, GameObjectIdProperty? _) = playerService.GetAll<GameObjectIdProperty>().FirstOrDefault(p => p.Item2.Value == entity.Id);
             if (serverPlayerId.HasValue)
             {
                 builder.AppendLine("Player");
-                builder.AppendLine($" └ Name: {playerService.GetProperty<NameProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ Online: {playerService.GetProperty<IsOnlineProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ Perms: {playerService.GetProperty<PermissionsProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ GameMode: {playerService.GetProperty<GameModeProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ InPrecursor: {playerService.GetProperty<InPrecursorProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ Stats: {playerService.GetProperty<StatsProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ DisplaySurfaceWater: {playerService.GetProperty<DisplaySurfaceWaterProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ Position: {playerService.GetProperty<PositionProperty>(serverPlayerId.Value).Value}");
-                builder.AppendLine($" └ LastStoredPosition: {playerService.GetProperty<CheckpointPositionProperty>(serverPlayerId.Value).Value.ToString()}");
-                builder.AppendLine($" └ SubRootId: {playerService.GetProperty<SubRootIdProperty>(serverPlayerId.Value).Value?.ToString() ?? "<null>"}");
-                builder.AppendLine($" └ LastStoredSubRootID: {playerService.GetProperty<CheckpointSubRootIdProperty>(serverPlayerId.Value).Value?.ToString() ?? "<null>"}");
+                builder.AppendLine($" └ Name: {playerService.Get<NameProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Online: {playerService.Get<IsOnlineProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Perms: {playerService.Get<PermissionsProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ GameMode: {playerService.Get<GameModeProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ InPrecursor: {playerService.Get<InPrecursorProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Stats: {playerService.Get<StatsProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ DisplaySurfaceWater: {playerService.Get<DisplaySurfaceWaterProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ Position: {playerService.Get<PositionProperty>(serverPlayerId.Value).Value}");
+                builder.AppendLine($" └ LastStoredPosition: {playerService.Get<CheckpointPositionProperty>(serverPlayerId.Value).Value.ToString()}");
+                builder.AppendLine($" └ SubRootId: {playerService.Get<SubRootIdProperty>(serverPlayerId.Value).Value?.ToString() ?? "<null>"}");
+                builder.AppendLine($" └ LastStoredSubRootID: {playerService.Get<CheckpointSubRootIdProperty>(serverPlayerId.Value).Value?.ToString() ?? "<null>"}");
 
-                if (entity.ParentId != playerService.GetProperty<SubRootIdProperty>(serverPlayerId.Value).Value)
+                if (entity.ParentId != playerService.Get<SubRootIdProperty>(serverPlayerId.Value).Value)
                 {
                     builder.AppendLine("⚠ ParentId doesn't match SubRootId");
                 }
@@ -112,7 +112,7 @@ internal sealed class QueryCommand(EntityRegistry entityRegistry, SimulationOwne
 
         builder.AppendLine("Lock status");
         builder.AppendLine($" └ Locked: {isLocked}");
-        builder.AppendLine($" └ Owner: {(isLocked ? $"{playerService.GetProperty<NameProperty>(playerLock.SessionId).Value} #{playerLock.SessionId}" : "<null>")}");
+        builder.AppendLine($" └ Owner: {(isLocked ? $"{playerService.Get<NameProperty>(playerLock.SessionId).Value} #{playerLock.SessionId}" : "<null>")}");
 
         builder.AppendLine("Raw Data");
         builder.AppendLine(entity.ToString());

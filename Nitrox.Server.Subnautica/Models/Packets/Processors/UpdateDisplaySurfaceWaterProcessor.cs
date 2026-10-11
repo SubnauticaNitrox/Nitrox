@@ -13,7 +13,7 @@ internal sealed class UpdateDisplaySurfaceWaterProcessor(PlayerService playerSer
 
     public Task Process(AuthProcessorContext context, UpdateDisplaySurfaceWater packet)
     {
-        playerService.GetProperty<DisplaySurfaceWaterProperty>(context.Sender).Value = packet.DisplaySurfaceWater;
+        playerService.Get<DisplaySurfaceWaterProperty>(context.Sender).Value = packet.DisplaySurfaceWater;
         return Task.CompletedTask;
     }
 }

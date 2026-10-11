@@ -11,7 +11,7 @@ internal sealed class PlayerQuickSlotsBindingChangedProcessor(PlayerService play
 
     public Task Process(AuthProcessorContext context, PlayerQuickSlotsBindingChanged packet)
     {
-        playerService.GetProperty<QuickSlotsProperty>(context.Sender).Value.ClearAndSet(packet.SlotItemIds.Select(id => id.HasValue ? id.Value : null));
+        playerService.Get<QuickSlotsProperty>(context.Sender).Value.ClearAndSet(packet.SlotItemIds.Select(id => id.HasValue ? id.Value : null));
         return Task.CompletedTask;
     }
 }

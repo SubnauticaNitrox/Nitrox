@@ -173,6 +173,7 @@ internal static partial class ServiceCollectionExtensions
                     .AddHostedSingletonService<TimeService>()
                     .AddHostedSingletonService<FmodService>()
                     .AddHostedSingletonService<PlayerService>()
+                    .AddSingleton<IPlayerPropProvider>(provider => provider.GetRequiredService<PlayerService>())
                     .AddPlayerProperties()
                     .AddSingleton<Func<WorldService>>(provider => provider.GetRequiredService<WorldService>)
                     .AddSingleton<JoiningManager>()

@@ -18,13 +18,13 @@ internal sealed class BackCommand(PlayerService playerService, ITeleport telepor
     [Description("Teleports you back on your last location")]
     public async Task Execute(ICommandContext context)
     {
-        NitroxVector3 checkpointPosition = playerService.GetProperty<CheckpointPositionProperty>(context.OriginId).Value;
+        NitroxVector3 checkpointPosition = playerService.Get<CheckpointPositionProperty>(context.OriginId).Value;
         if (checkpointPosition == new CheckpointPositionProperty().Value)
         {
             await context.ReplyAsync("No previous location...");
         }
 
-        await teleporter.TeleportAsync(context.OriginId, checkpointPosition, playerService.GetProperty<CheckpointSubRootIdProperty>(context.OriginId).Value);
+        await teleporter.TeleportAsync(context.OriginId, checkpointPosition, playerService.Get<CheckpointSubRootIdProperty>(context.OriginId).Value);
         await context.ReplyAsync($"Teleported back to {checkpointPosition}");
     }
 }

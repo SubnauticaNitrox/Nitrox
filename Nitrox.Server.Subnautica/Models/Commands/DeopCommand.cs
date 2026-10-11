@@ -16,8 +16,8 @@ internal sealed class DeopCommand(PlayerService playerService) : ICommandHandler
     [Description("Removes admin rights from user")]
     public async Task Execute(ICommandContext context, [Description("Username to remove admin rights from")] SessionId targetPlayer)
     {
-        PermissionsProperty targetPerms = playerService.GetProperty<PermissionsProperty>(targetPlayer);
-        NameProperty targetName = playerService.GetProperty<NameProperty>(targetPlayer);
+        PermissionsProperty targetPerms = playerService.Get<PermissionsProperty>(targetPlayer);
+        NameProperty targetName = playerService.Get<NameProperty>(targetPlayer);
         switch (context)
         {
             case not null when targetPlayer == context.OriginId:

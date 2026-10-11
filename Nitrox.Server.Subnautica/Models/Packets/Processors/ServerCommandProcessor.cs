@@ -16,13 +16,13 @@ internal sealed class ServerCommandProcessor(CommandService cmdProcessor, IPacke
 
     public async Task Process(AuthProcessorContext context, ServerCommand packet)
     {
-        logger.ZLogInformation($"{playerService.GetProperty<NameProperty>(context.Sender).Value} issued command '/{packet.Cmd}'");
+        logger.ZLogInformation($"{playerService.Get<NameProperty>(context.Sender).Value} issued command '/{packet.Cmd}'");
         string commandOutput = "";
         bool success;
         using (logger.BeginPlainScope())
         using (CaptureScope scope = logger.BeginCaptureScope())
         {
-            success = cmdProcessor.ExecuteCommand(packet.Cmd, new PlayerToServerCommandContext(packetSender, context.Sender, playerService.GetProperty<NameProperty>(context.Sender).Value, playerService.GetProperty<PermissionsProperty>(context.Sender).Value), out Task<bool>? task);
+            success = cmdProcessor.ExecuteCommand(packet.Cmd, new PlayerToServerCommandContext(packetSender, context.Sender, playerService.Get<NameProperty>(context.Sender).Value, playerService.Get<PermissionsProperty>(context.Sender).Value), out Task<bool>? task);
             if (task != null)
             {
                 success = success && await task;

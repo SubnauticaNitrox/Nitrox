@@ -22,16 +22,16 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerService playerService
         }
 
         packet.PartnerId = null; // Resetting incoming packets just to be safe we don't relay any PartnerId. Server has only authority.
-        playerService.GetProperty<IntroCinematicModeProperty>(context.Sender).Value = packet.Mode;
+        playerService.Get<IntroCinematicModeProperty>(context.Sender).Value = packet.Mode;
         await context.SendToOthersAsync(packet);
-        logger.ZLogDebug($"IntroCinematicMode set to {packet.Mode} for {playerService.GetProperty<NameProperty>(context.Sender).Value}");
+        logger.ZLogDebug($"IntroCinematicMode set to {packet.Mode} for {playerService.Get<NameProperty>(context.Sender).Value}");
 
         SessionId[] allWaitingPlayers = playerService.GetSessionsWhereProperty<IntroCinematicModeProperty>(property => property.Value == IntroCinematicMode.WAITING).ToArray();
         if (allWaitingPlayers.Length >= 2)
         {
-            logger.ZLogInformation($"Starting IntroCinematic for {playerService.GetProperty<NameProperty>(allWaitingPlayers[0]).Value} and {playerService.GetProperty<NameProperty>(allWaitingPlayers[1]).Value}");
+            logger.ZLogInformation($"Starting IntroCinematic for {playerService.Get<NameProperty>(allWaitingPlayers[0]).Value} and {playerService.Get<NameProperty>(allWaitingPlayers[1]).Value}");
 
-            playerService.GetProperty<IntroCinematicModeProperty>(allWaitingPlayers[0]).Value = playerService.GetProperty<IntroCinematicModeProperty>(allWaitingPlayers[1]).Value = IntroCinematicMode.START;
+            playerService.Get<IntroCinematicModeProperty>(allWaitingPlayers[0]).Value = playerService.Get<IntroCinematicModeProperty>(allWaitingPlayers[1]).Value = IntroCinematicMode.START;
 
             await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[0], IntroCinematicMode.START, allWaitingPlayers[1]));
             await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[1], IntroCinematicMode.START, allWaitingPlayers[0]));

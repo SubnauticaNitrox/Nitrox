@@ -12,8 +12,8 @@ internal sealed class EscapePodChangedPacketProcessor(EntityRegistry entityRegis
 
     public async Task Process(AuthProcessorContext context, EscapePodChanged packet)
     {
-        entityRegistry.ReparentEntity(playerService.GetProperty<GameObjectIdProperty>(context.Sender).Value, packet.EscapePodId.OrNull());
-        playerService.GetProperty<SubRootIdProperty>(context.Sender).Value = packet.EscapePodId.HasValue ? packet.EscapePodId.Value : null;
+        entityRegistry.ReparentEntity(playerService.Get<GameObjectIdProperty>(context.Sender).Value, packet.EscapePodId.OrNull());
+        playerService.Get<SubRootIdProperty>(context.Sender).Value = packet.EscapePodId.HasValue ? packet.EscapePodId.Value : null;
         await context.SendToOthersAsync(packet);
     }
 }

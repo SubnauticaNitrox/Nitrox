@@ -33,7 +33,7 @@ internal sealed partial class PlayerService(
     IOptions<ServerStartOptions> startOptions,
     IOptions<SubnauticaServerOptions> options,
     ILogger<PlayerService> logger)
-    : IHostedService, ISessionCleaner, ISaveState
+    : IHostedService, ISessionCleaner, ISaveState, IPlayerPropProvider
 {
     public const string PLAYER_PREFERENCES_GROUP_NAME = "PlayerPreferences";
     private readonly IBan ban = ban;
@@ -65,6 +65,9 @@ internal sealed partial class PlayerService(
 
     private string FilePath => Path.Combine(startOptions.Value.GetServerSavePath(), "PlayerData.json");
 
+    [GeneratedRegex(NitroxConstants.PLAYER_NAME_VALID_REGEX, RegexOptions.NonBacktracking)]
+    private static partial Regex PlayerNameRegex { get; }
+
     /// <summary>
     ///     True if the player is reserved and authenticated by the server as a valid player.
     /// </summary>
@@ -82,7 +85,7 @@ internal sealed partial class PlayerService(
         return new StructEnumerator<SessionId, RentedArray<SessionId>>(sessions.Value, sessions.RequiredSize, sessions);
     }
 
-    public IEnumerable<SessionId> GetSessionsWhereProperty<T>(Func<T, bool> predicate) where T : IPlayerProperty
+    public IEnumerable<SessionId> GetSessionsWhereProperty<T>(Func<T, bool> predicate) where T : class, IPlayerProperty
     {
         using RentedArray<SessionId> sessions = reservations.GetKeysNoAlloc();
         foreach (SessionId sessionId in sessions)
@@ -90,7 +93,7 @@ internal sealed partial class PlayerService(
             T property;
             try
             {
-                property = GetProperty<T>(sessionId);
+                property = Get<T>(sessionId);
             }
             catch
             {
@@ -100,26 +103,6 @@ internal sealed partial class PlayerService(
             {
                 yield return sessionId;
             }
-        }
-    }
-
-    /// <summary>
-    ///     Gets all the properties of the given type from all connected players.
-    /// </summary>
-    public IEnumerable<(SessionId, T)> GetProperties<T>() where T : IPlayerProperty
-    {
-        foreach (SessionId sessionId in EnumerateSessionIds())
-        {
-            T property;
-            try
-            {
-                property = GetProperty<T>(sessionId);
-            }
-            catch
-            {
-                continue;
-            }
-            yield return (sessionId, property);
         }
     }
 
@@ -163,7 +146,7 @@ internal sealed partial class PlayerService(
             return new MultiplayerSessionReservation(sessionId, rejectedState);
         }
 
-        if (!PlayerNameRegex().IsMatch(authenticationContext.Username))
+        if (!PlayerNameRegex.IsMatch(authenticationContext.Username))
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
             return new MultiplayerSessionReservation(sessionId, rejectedState);
@@ -181,7 +164,7 @@ internal sealed partial class PlayerService(
 
         PlayerContext playerContext = await CreateOrResetPlayerDataAsync(sessionId, assignedPlayerIdForSession, playerName, playerSettings);
 
-        if (GetProperty<IsPermaDeathProperty>(sessionId).Value && options.Value.IsHardcore())
+        if (Get<IsPermaDeathProperty>(sessionId).Value && options.Value.IsHardcore())
         {
             MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
             return new MultiplayerSessionReservation(sessionId, rejectedState);
@@ -201,45 +184,6 @@ internal sealed partial class PlayerService(
         }
         foundPlayer = null;
         return false;
-    }
-
-    /// <summary>
-    ///     Gets a player property for the peer id, if the player exists.
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    ///     If <see cref="peerId" /> is less than 1.
-    /// </exception>
-    public T? GetProperty<T>(PeerId peerId) where T : IPlayerProperty
-    {
-        loaded.Task.GetAwaiter().GetResult();
-        if ((uint)peerId < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(peerId), "Value must be more than zero");
-        }
-        if (!playerProperties.TryGetValue(peerId, out Dictionary<Type, IPlayerProperty>? properties))
-        {
-            throw new InvalidOperationException($"Player properties are not yet initialized for {nameof(PeerId)} #{peerId}");
-        }
-        return (T)properties[typeof(T)];
-    }
-
-    /// <summary>
-    ///     Gets a player property for the session id, if the player exists.
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    ///     If <see cref="sessionId" /> is less than 1.
-    /// </exception>
-    public T? GetProperty<T>(SessionId sessionId) where T : IPlayerProperty
-    {
-        if ((uint)sessionId < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sessionId), "Value must be more than zero");
-        }
-        if (!peerIdBySessionId.TryGetValue(sessionId, out PeerId peerId))
-        {
-            throw new InvalidOperationException($"Player properties are not yet initialized for {nameof(SessionId)} #{sessionId}");
-        }
-        return GetProperty<T>(peerId);
     }
 
     public PeerId GetPeerId(SessionId sessionId) => peerIdBySessionId[sessionId];
@@ -302,8 +246,50 @@ internal sealed partial class PlayerService(
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    [GeneratedRegex(NitroxConstants.PLAYER_NAME_VALID_REGEX, RegexOptions.NonBacktracking)]
-    private static partial Regex PlayerNameRegex();
+    public T Get<T>(PeerId peerId) where T : class, IPlayerProperty
+    {
+        loaded.Task.GetAwaiter().GetResult();
+        if ((uint)peerId < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(peerId), "Value must be more than zero");
+        }
+        if (!playerProperties.TryGetValue(peerId, out Dictionary<Type, IPlayerProperty>? properties))
+        {
+            throw new InvalidOperationException($"Player properties are not yet initialized for {nameof(PeerId)} #{peerId}");
+        }
+        return (T)properties[typeof(T)];
+    }
+
+    public T Get<T>(SessionId sessionId) where T : class, IPlayerProperty
+    {
+        if ((uint)sessionId < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sessionId), "Value must be more than zero");
+        }
+        if (!peerIdBySessionId.TryGetValue(sessionId, out PeerId peerId))
+        {
+            throw new InvalidOperationException($"Player properties are not yet initialized for {nameof(SessionId)} #{sessionId}");
+        }
+        return Get<T>(peerId);
+    }
+
+    public IEnumerable<(SessionId SessionId, T Property)> GetAll<T>() where T : class, IPlayerProperty
+    {
+        loaded.Task.GetAwaiter().GetResult();
+        foreach (SessionId sessionId in EnumerateSessionIds())
+        {
+            T property;
+            try
+            {
+                property = Get<T>(sessionId);
+            }
+            catch
+            {
+                continue;
+            }
+            yield return (sessionId, property);
+        }
+    }
 
     private async Task<PlayerContext> CreateOrResetPlayerDataAsync(SessionId sessionId, PeerId? existingPeerId, string playerName, PlayerSettings playerSettings)
     {
@@ -342,29 +328,29 @@ internal sealed partial class PlayerService(
         }
 
         // These properties are set on connect, so we do that here. Other properties are set later during gameplay, or have a proper default value.
-        GetProperty<IsNewPlayerProperty>(sessionId).Value = !existingPeerId.HasValue;
-        GetProperty<VisitCountProperty>(sessionId).Increment();
-        GetProperty<SessionIdProperty>(sessionId).Value = sessionId;
-        GetProperty<NameProperty>(sessionId).Value = playerName;
+        Get<IsNewPlayerProperty>(sessionId).Value = !existingPeerId.HasValue;
+        Get<VisitCountProperty>(sessionId).Increment();
+        Get<SessionIdProperty>(sessionId).Value = sessionId;
+        Get<NameProperty>(sessionId).Value = playerName;
         IntroCinematicMode introCinematicMode = existingPeerId.HasValue ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
-        GetProperty<IntroCinematicModeProperty>(sessionId).Value = introCinematicMode;
-        return GetProperty<ContextProperty>(sessionId).Value = new(playerName,
-                                                                   sessionId,
-                                                                   GetProperty<GameObjectIdProperty>(sessionId).Value,
-                                                                   !existingPeerId.HasValue,
-                                                                   playerSettings,
-                                                                   false,
-                                                                   GetProperty<GameModeProperty>(sessionId).Value,
-                                                                   null,
-                                                                   introCinematicMode,
-                                                                   GetProperty<AnimationProperty>(sessionId).Value);
+        Get<IntroCinematicModeProperty>(sessionId).Value = introCinematicMode;
+        return Get<ContextProperty>(sessionId).Value = new(playerName,
+                                                           sessionId,
+                                                           Get<GameObjectIdProperty>(sessionId).Value,
+                                                           !existingPeerId.HasValue,
+                                                           playerSettings,
+                                                           false,
+                                                           Get<GameModeProperty>(sessionId).Value,
+                                                           null,
+                                                           introCinematicMode,
+                                                           Get<AnimationProperty>(sessionId).Value);
     }
 
     private PeerId? TryGetPeerId(string playerName)
     {
         foreach (PeerId peerId in playerProperties.Keys)
         {
-            if (GetProperty<NameProperty>(peerId).Value == playerName)
+            if (Get<NameProperty>(peerId).Value == playerName)
             {
                 return peerId;
             }

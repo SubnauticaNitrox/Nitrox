@@ -55,7 +55,7 @@ internal sealed class EntityTransformUpdatesProcessor(PlayerService playerServic
 
             foreach (KeyValuePair<SessionId, List<EntityTransformUpdates.EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
             {
-                if (playerService.GetProperty<VisibleCellsProperty>(playerUpdates.Key).CanSee(worldEntity))
+                if (playerService.Get<VisibleCellsProperty>(playerUpdates.Key).CanSee(worldEntity))
                 {
                     playerUpdates.Value.Add(update);
                 }
