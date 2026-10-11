@@ -137,6 +137,8 @@ internal sealed class SubnauticaAssetsManager : AssetsManager, IDisposable
             }
         }
 
+        // To never lose any data we overwrite local data with "global" data
+        objectNitroxTransform.SetParent(null, true);
         return objectNitroxTransform;
     }
 

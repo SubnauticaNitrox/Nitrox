@@ -382,10 +382,10 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
 
             AssetTypeValueField gameObjectPtr = prefabPlaceholder["m_GameObject"];
             AssetTypeValueField gameObjectField = amInst.GetExtAsset(assetFileInst, gameObjectPtr).baseField;
-            IPrefabAsset asset = GetAndCacheAsset(amInst, prefabPlaceholder["prefabClassId"].AsString, addressableCatalog, classIdByRuntimeKey);
+            string prefabAssetClassId = prefabPlaceholder["prefabClassId"].AsString;
+            IPrefabAsset asset = GetAndCacheAsset(amInst, prefabAssetClassId, addressableCatalog, classIdByRuntimeKey);
             bool isEntitySlotAsset = asset is PrefabPlaceholderAsset prefabPlaceholderAsset && prefabPlaceholderAsset.EntitySlot.HasValue;
             NitroxTransform transform = amInst.GetTransformFromGameObject(assetFileInst, gameObjectField, rootGameObjectName, isEntitySlotAsset);
-            string prefabAssetClassId = prefabPlaceholder["prefabClassId"].AsString;
             if (asset == null)
             {
                 throw new InvalidOperationException($"Prefab asset with id '{prefabAssetClassId}' must not be null");
@@ -457,7 +457,17 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
             AssetTypeValueField databoxSpawner = am.GetBaseField(assetFileInst, databoxSpawnerInfo);
             string runtimeKey = databoxSpawner["databoxPrefabReference"]["m_AssetGUID"].AsString;
 
-            return GetAndCacheAsset(am, classIdByRuntimeKey[runtimeKey], addressableCatalog, classIdByRuntimeKey);
+            IPrefabAsset asset = GetAndCacheAsset(am, classIdByRuntimeKey[runtimeKey], addressableCatalog, classIdByRuntimeKey);
+            // Cache the asset with its original classId
+            if (asset is PrefabPlaceholdersGroupAsset groupAsset)
+            {
+                groupsByClassId[classId] = groupAsset;
+            }
+            else if (asset is PrefabPlaceholderAsset placeholderAsset)
+            {
+                placeholdersByClassId[classId] = placeholderAsset;
+            }
+            return asset;
         }
 
         AssetFileInfo entitySlotInfo = am.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "EntitySlot");
