@@ -23,7 +23,7 @@ internal sealed class WorldEntitySpawnerResolver
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
         prefabPlaceholderEntitySpawner = new PrefabPlaceholderEntitySpawner(defaultEntitySpawner);
-        placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, entityMetadataManager, prefabPlaceholderEntitySpawner);
+        placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, prefabPlaceholderEntitySpawner);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
         geyserWorldEntitySpawner = new GeyserWorldEntitySpawner(entities);
         reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();

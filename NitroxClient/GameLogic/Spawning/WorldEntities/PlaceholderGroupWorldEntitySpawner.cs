@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
-using NitroxClient.GameLogic.Spawning.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -12,12 +11,10 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 /// This spawner can't hold a SpawnSync function because it is also responsible for spawning its children
 /// so the <see cref="SpawnAsync"/> function will still use sync spawning when possible and fall back to async when required.
 /// </remarks>
-internal sealed class PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultWorldEntitySpawner, EntityMetadataManager entityMetadataManager, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner) : IWorldEntitySpawner
+internal sealed class PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner) : IWorldEntitySpawner
 {
     private readonly Entities entities = entities;
     private readonly WorldEntitySpawnerResolver spawnerResolver = spawnerResolver;
-    private readonly DefaultWorldEntitySpawner defaultWorldEntitySpawner = defaultWorldEntitySpawner;
-    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
     private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner = prefabPlaceholderEntitySpawner;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)

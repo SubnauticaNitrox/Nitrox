@@ -30,18 +30,32 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
     public static void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, TechType techType, bool registerLargeWorldEntity)
     {
-        gameObject.transform.position = entity.Transform.Position.ToUnity();
-        gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
+        // PlaceholderGroups have children that aren't directly under them (ParentEntity/Slots/Entity), but their local transform takes that into account so we can reliably use the local transform
+        // to position them under their actual parent
+        gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
+        gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
         gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
         CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
+        // Parenting process
         WaterPark parentWaterPark = null;
         if (parent.HasValue)
         {
             Items.TryGetParentWaterPark(parent.Value.transform.parent, out parentWaterPark);
         }
+        if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
+        {
+            pickupable.SetVisible(false);
+            pickupable.Activate(false);
+            parentWaterPark.AddItem(pickupable);
+        }
+        else if (parent.HasValue)
+        {
+            gameObject.transform.SetParent(parent.Value.transform, false);
+        }
 
+        // Registering the entity in the world
         LargeWorldEntity largeWorldEntity = gameObject.GetComponent<LargeWorldEntity>();
         if (largeWorldEntity)
         {
@@ -53,17 +67,6 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
             {
                 LargeWorldEntity.Register(gameObject);
             }
-        }
-
-        if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
-        {
-            pickupable.SetVisible(false);
-            pickupable.Activate(false);
-            parentWaterPark.AddItem(pickupable);
-        }
-        else if (parent.HasValue)
-        {
-            gameObject.transform.SetParent(parent.Value.transform, true);
         }
     }
 
