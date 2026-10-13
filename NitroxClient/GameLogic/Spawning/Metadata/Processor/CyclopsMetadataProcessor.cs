@@ -167,6 +167,8 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
         {
             subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullCriticalNotification);
         }
+
+        subRoot.oldHPPercent = liveMixin.GetHealthFraction();
     }
 
     private void SetDestroyed(GameObject gameObject, bool isDestroyed)
