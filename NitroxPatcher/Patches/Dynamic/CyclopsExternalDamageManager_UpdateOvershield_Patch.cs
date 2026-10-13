@@ -11,5 +11,10 @@ public sealed partial class CyclopsExternalDamageManager_UpdateOvershield_Patch 
     public static void Postfix(CyclopsExternalDamageManager __instance)
     {
         __instance.ToggleLeakPointsBasedOnDamage();
+
+        if (__instance.EvaluatePlaceNewPoint())
+        {
+            __instance.CreatePoint();
+        }
     }
 }

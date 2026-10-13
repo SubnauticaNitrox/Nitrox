@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
@@ -131,9 +132,19 @@ namespace NitroxClient.GameLogic
                 float douseAmount = rates.Values.Sum() * Time.deltaTime;
                 if (douseAmount > 0f)
                 {
-                    using (PacketSuppressor<FireDoused>.Suppress())
+                    if (fire.livemixin.health - douseAmount > 0.1f)
                     {
-                        fire.Douse(douseAmount);
+                        using (PacketSuppressor<FireDoused>.Suppress())
+                        {
+                            fire.Douse(douseAmount);
+                        }
+                    }
+                    else
+                    {
+                        // We should be about to receive an extinguish packet. If not,
+                        // something has gone wrong (e.g. player left while dousing),
+                        // so reset everything in case the rates are now invalid
+                        rates.Clear();
                     }
                 }
             }
@@ -157,8 +168,10 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            // Prevents a desync where the fire could extinguish for one player but not another
-            float douseAmount = Mathf.Max(fire.livemixin.health - health, 0.1f);
+            // Prevents a desync where the fire could extinguish for one player but not another:
+            // this way we can never bring the fire to below 0.1 health without an explicit extinguish
+            float newHealth = Math.Max(health, 0.1f);
+            float douseAmount = fire.livemixin.health - newHealth;
 
             if (douseAmount > 0f)
             {
@@ -167,11 +180,14 @@ namespace NitroxClient.GameLogic
                     fire.Douse(douseAmount);
                 }
             }
-            else
+            else if (!fire.IsExtinguished())
             {
                 // Fire health went up
                 fire.livemixin.health = health;
-                fire.Douse(0f);
+                using (PacketSuppressor<FireDoused>.Suppress())
+                {
+                    fire.Douse(0f);
+                }
             }
 
             if (health <= 0f)
