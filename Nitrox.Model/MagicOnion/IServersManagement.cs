@@ -11,6 +11,7 @@ public interface IServersManagement : IStreamingHub<IServersManagement, IServerM
 {
     ValueTask SetPlayers(string[] players);
     ValueTask AddOutputLine(string category, DateTimeOffset? localTime, int level, string message);
+    ValueTask SetLoadingProgress(string stage, float progress);
 }
 
 /// <summary>
