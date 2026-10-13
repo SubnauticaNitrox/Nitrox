@@ -150,9 +150,9 @@ internal class EscapePodManager(RandomFactory randomFactory, EntityRegistry enti
 
     public async Task SetupIntroSequenceAsync(Player playerA, Player playerB)
     {
-        EscapePodEntity escapePod = escapePodsByPlayerId[playerA.Id];
+        EscapePodEntity escapePod = escapePodsByPlayerId[playerA.PeerId];
 
-        if (escapePodsByPlayerId[playerB.Id] != escapePod)
+        if (escapePodsByPlayerId[playerB.PeerId] != escapePod)
         {
             // The two players are in different escape pods, so don't sync the escape pod fire.
             // In this case the fire can just exist locally for each client, with no sync
