@@ -12,7 +12,7 @@ internal sealed class RestartService(IPacketSender packetSender, ILogger<Restart
     public bool RestartOnStop
     {
         get => Interlocked.CompareExchange(ref field, false, false);
-        set => Interlocked.CompareExchange(ref field, value, !value);
+        set => Interlocked.Exchange(ref field, value);
     }
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
