@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using FMOD.Studio;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.GameLogic.FMOD;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -12,13 +14,17 @@ namespace NitroxClient.GameLogic;
 public class FireExtinguishers
 {
     private readonly IPacketSender packetSender;
+    private readonly float loopSoundRadius;
 
     private readonly Dictionary<NitroxId, FireExtinguisher> remotelyUsedExtinguishers = [];
     private readonly Dictionary<NitroxId, bool> localUsingState = [];
 
-    public FireExtinguishers(IPacketSender packetSender)
+    public FireExtinguishers(IPacketSender packetSender, FMODWhitelist whitelist)
     {
         this.packetSender = packetSender;
+
+        whitelist.TryGetSoundData("event:/tools/extinguisher/use_loop", out SoundData soundData);
+        loopSoundRadius = soundData.Radius;
 
         // When a player stops holding a fire extinguisher, we'll stop it.
         // Even if we didn't receive a packet to notice that he's no longer using it,
@@ -79,7 +85,7 @@ public class FireExtinguishers
         GameObject gameObject = null;
 
         // Set fireTarget for use in UpdateImpactFX()
-        TraceRemotePlayerTargetPosition(identifier.transform.position, playerRotation, identifier.gameObject, 8f, ref gameObject, ref vector, true);
+        TraceRemotePlayerTargetPosition(identifier.transform.position, playerRotation, identifier.gameObject, 8f, ref gameObject, ref vector);
         if (gameObject)
         {
             Fire componentInHierarchy = UWE.Utils.GetComponentInHierarchy<Fire>(gameObject);
@@ -99,11 +105,9 @@ public class FireExtinguishers
                 fireExtinguisher.fxIsPlaying = true;
             }
 
-            // TODO: Update to use 2D sound
-            if (Vector3.Distance(Player.main.transform.position, fireExtinguisher.transform.position) < 30)
-            {
-                fireExtinguisher.soundEmitter.Play();
-            }
+            float volume = FMODSystem.CalculateVolume(Player.mainObject.transform.position, fireExtinguisher.transform.position, loopSoundRadius, 1f);
+            fireExtinguisher.soundEmitter.GetEventInstance().setVolume(volume);
+            fireExtinguisher.soundEmitter.Play();
         }
         else
         {
@@ -135,7 +139,8 @@ public class FireExtinguishers
         for (int i = 0; i < num; i++)
         {
             RaycastHit raycastHit = UWE.Utils.sharedHitBuffer[i];
-            if ((!(ignoreObj != null) || !UWE.Utils.IsAncestorOf(ignoreObj, raycastHit.collider.gameObject)) && (!raycastHit.collider || !raycastHit.collider.isTrigger || (includeUseableTriggers && raycastHit.collider.gameObject.layer == LayerMask.NameToLayer("Useable"))) && (closestObj == null || raycastHit.distance < num2))
+            if ((!(ignoreObj != null) || !UWE.Utils.IsAncestorOf(ignoreObj, raycastHit.collider.gameObject)) &&
+                (!raycastHit.collider || !raycastHit.collider.isTrigger || (includeUseableTriggers && raycastHit.collider.gameObject.layer == LayerMask.NameToLayer("Useable"))) && (closestObj == null || raycastHit.distance < num2))
             {
                 closestObj = raycastHit.collider.gameObject;
                 num2 = raycastHit.distance;
