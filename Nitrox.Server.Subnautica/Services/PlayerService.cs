@@ -228,6 +228,10 @@ internal sealed partial class PlayerService(
                 Interlocked.Exchange(ref latestPeerId, (uint)playerProperties.Keys.Max());
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Ignored - server was requested to stop.
+        }
         catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
         {
             // No player file yet.
