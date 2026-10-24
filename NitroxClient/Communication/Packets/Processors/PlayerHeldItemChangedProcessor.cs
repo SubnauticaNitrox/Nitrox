@@ -15,6 +15,10 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
     private readonly PlayerManager playerManager;
     private int defaultLayer;
     private int viewModelLayer;
+    private Optional<NitroxId> previousHeldItemId = Optional.Empty;
+
+    public delegate void HeldItemChanged(Optional<NitroxId> previousId);
+    public static event HeldItemChanged? OnHeldItemChanged;
 
     public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
@@ -46,6 +50,9 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
 
         ItemsContainer inventory = player.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
+
+        OnHeldItemChanged?.Invoke(previousHeldItemId);
+        previousHeldItemId = Optional.Of(packet.ItemId);
 
         // Copied from QuickSlots
         switch (packet.Type)
