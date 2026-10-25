@@ -96,7 +96,10 @@ public class FMODWhitelist : IDisposable
 
     public void Dispose()
     {
-        ThrowIfDisposed();
+        if (isDisposed)
+        {
+            return;
+        }
         isDisposed = true;
         soundsWhitelist.Clear();
         whitelistedPaths.Clear();
