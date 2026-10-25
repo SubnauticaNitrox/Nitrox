@@ -17,7 +17,7 @@
         <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsNotAsErrors>$(WarningsNotAsErrors);DIMA001;nullable</WarningsNotAsErrors>
+        <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904;DIMA001;nullable</WarningsNotAsErrors>
         <!-- Disable CET because not everyone running Nitrox uses an up-to-date Windows. See for more info: https://github.com/SubnauticaNitrox/Nitrox/issues/2637 -->
         <CETCompat Condition="'$(_IsWindowsTarget)' == 'true'">false</CETCompat>
     </PropertyGroup>
