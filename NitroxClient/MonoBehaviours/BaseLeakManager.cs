@@ -35,14 +35,20 @@ public class BaseLeakManager : MonoBehaviour
     /// </summary>
     public void EnsureLeak(Int3 relativeCell, NitroxId cellId, float health)
     {
+        // Always register the id first so that RemoveLeakByAbsoluteCell can produce a
+        // LeakRepaired packet even when the cell object is temporarily unavailable (e.g.
+        // during initial sync before base geometry is fully built). Without this, every
+        // tick of BroadcastChange would generate a brand-new NitroxId, leaving orphan
+        // BaseLeakEntity entries on the server that are never cleaned up.
+        idByRelativeCell[relativeCell] = cellId;
+
         Int3 absoluteCell = Absolute(relativeCell);
         Transform cellObject = @base.GetCellObject(absoluteCell);
         if (!cellObject)
         {
+            Log.Warn($"[{nameof(BaseLeakManager)}] Cell object not found for absolute cell {absoluteCell} (relative: {relativeCell}). Leak {cellId} is tracked but its health cannot be applied yet.");
             return;
         }
-
-        idByRelativeCell[relativeCell] = cellId;
 
         if (cellObject.TryGetComponent(out LiveMixin cellLiveMixin))
         {
@@ -86,11 +92,13 @@ public class BaseLeakManager : MonoBehaviour
 
     public void HealLeakToMax(Int3 relativeCell)
     {
+        // The server already confirmed the repair, so unconditionally drop the tracking
+        // entry regardless of whether the cell object is currently reachable.
+        idByRelativeCell.Remove(relativeCell);
         Transform cellObject = @base.GetCellObject(Absolute(relativeCell));
         if (cellObject && cellObject.TryGetComponent(out LiveMixin liveMixin))
         {
             this.Resolve<LiveMixinManager>().SyncRemoteHealth(liveMixin, liveMixin.maxHealth);
-            idByRelativeCell.Remove(relativeCell);
         }
     }
 
