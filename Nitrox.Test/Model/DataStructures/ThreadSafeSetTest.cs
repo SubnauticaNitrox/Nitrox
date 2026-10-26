@@ -54,7 +54,8 @@
                 },
                 i =>
                 {
-                    comeGetMe.Add(new string(Enumerable.Repeat(' ', 10).Select(c => (char)r.Next('A', 'Z')).ToArray()));
+                    string randomSuffix = new(Enumerable.Repeat(' ', 10).Select(c => (char)r.Next('A', 'Z')).ToArray());
+                    comeGetMe.Add($"{i}-{randomSuffix}");
                     Interlocked.Increment(ref addCount);
                 },
                 iterations);
