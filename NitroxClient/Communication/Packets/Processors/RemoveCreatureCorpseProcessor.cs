@@ -23,7 +23,7 @@ internal sealed class RemoveCreatureCorpseProcessor(Entities entities, LiveMixin
         simulationOwnership.StopSimulatingEntity(creatureId);
 
         // Remove the position broadcasting stuff from it
-        EntityPositionBroadcaster.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
+        EntityPositionBroadcaster.Instance.RemoveEntityMovementControl(creatureDeath.gameObject, creatureId);
 
         // To avoid SpawnRespawner to be called
         creatureDeath.respawn = false;
