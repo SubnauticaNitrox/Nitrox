@@ -20,7 +20,9 @@ internal sealed class SubnauticaAssetsManager : AssetsManager, IDisposable
         this.logger = logger;
         if (loadClasses)
         {
-            LoadClassPackage(Path.Combine(options.Value.NitroxAssetsPath ?? throw new Exception("Nitrox assets path must not be null"), "Resources", "classdata.tpk"));
+            string nitroxAssetsPath = options.Value.NitroxAssetsPath;
+            ArgumentNullException.ThrowIfNull(nitroxAssetsPath);
+            LoadClassPackage(Path.Combine(nitroxAssetsPath, "Resources", "classdata.tpk"));
             LoadClassDatabaseFromPackage("2019.4.36f1");
         }
         SetMonoTempGenerator(monoTempGenerator);

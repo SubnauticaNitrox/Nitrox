@@ -16,7 +16,7 @@ namespace Nitrox.Model.DataStructures
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [IgnoreDataMember]
-        private readonly object locker = new();
+        private readonly LockObject locker = new();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [DataMember(Order = 1)]
@@ -170,7 +170,7 @@ namespace Nitrox.Model.DataStructures
         {
             lock (locker)
             {
-                return new List<T>(list);
+                return [..list];
             }
         }
 
@@ -234,6 +234,18 @@ namespace Nitrox.Model.DataStructures
                     }
                 }
                 return default;
+            }
+        }
+
+        /// <summary>
+        ///     Clears and then fills the list with the given values as an atomic operation.
+        /// </summary>
+        public void ClearAndSet(IEnumerable<T> items)
+        {
+            lock (locker)
+            {
+                list.Clear();
+                list.AddRange(items);
             }
         }
 

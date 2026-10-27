@@ -3,16 +3,16 @@ using System.Threading.Channels;
 namespace Nitrox.Server.Subnautica.Services;
 
 /// <summary>
-///     Tasks can be queued here to be awaited before the server stops. Any critical work will then have a chance to finish processing or throw errors.
+///     Tracked tasks will be awaited before the server stops. Any critical work will then have a chance to finish processing or throw errors, instead of ignored.
 /// </summary>
-internal sealed class TaskQueueService : BackgroundService, IHostedLifecycleService
+internal sealed class TaskTrackingService : BackgroundService, IHostedLifecycleService
 {
     private readonly Channel<Task> taskChannel = Channel.CreateUnbounded<Task>(new UnboundedChannelOptions
     {
         SingleReader = true
     });
 
-    public bool TryQueue(Task task) => taskChannel.Writer.TryWrite(task);
+    public bool TryTrack(Task task) => taskChannel.Writer.TryWrite(task);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

@@ -6,14 +6,8 @@ using Nitrox.Model.Packets;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class SubRootChanged : Packet
+public sealed class SubRootChanged(SessionId sessionId, Optional<NitroxId> subRootId) : Packet
 {
-    public SessionId SessionId { get; }
-    public Optional<NitroxId> SubRootId { get; }
-
-    public SubRootChanged(SessionId sessionId, Optional<NitroxId> subRootId)
-    {
-        SessionId = sessionId;
-        SubRootId = subRootId;
-    }
+    public SessionId SessionId { get; } = sessionId;
+    public Optional<NitroxId> SubRootId { get; } = subRootId;
 }

@@ -8,12 +8,6 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic;
 [DataContract]
 public class PingInstancePreference
 {
-    [DataMember(Order = 1)]
-    public int Color { get; set; }
-
-    [DataMember(Order = 2)]
-    public bool Visible { get; set; }
-
     [IgnoreConstructor]
     protected PingInstancePreference()
     {
@@ -25,4 +19,10 @@ public class PingInstancePreference
         Color = color;
         Visible = visible;
     }
+
+    [DataMember(Order = 1)]
+    public int Color { get; set; }
+
+    [DataMember(Order = 2)]
+    public bool Visible { get; set; }
 }

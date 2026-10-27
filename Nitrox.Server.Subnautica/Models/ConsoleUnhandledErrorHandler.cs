@@ -5,7 +5,7 @@ using Nitrox.Model.Platforms.OS.Shared;
 
 namespace Nitrox.Server.Subnautica.Models;
 
-static class ConsoleUnhandledErrorHandler
+internal static class ConsoleUnhandledErrorHandler
 {
     public static void Attach()
     {
@@ -74,7 +74,7 @@ static class ConsoleUnhandledErrorHandler
 
             if (loadedAssembly != null && loadedAssembly.GetName() is { } asmName)
             {
-                Log.Error($"Error originates from '{asmName.Name}' v{asmName.Version}, file: {loadedAssembly.Location}");
+                Console.WriteLine($"Error originates from '{asmName.Name}' v{asmName.Version}, file: {loadedAssembly.Location}");
             }
         }
         catch

@@ -16,7 +16,7 @@ namespace Nitrox.Test.Client.Communication.MultiplayerSession
         public const ushort TEST_PLAYER_ID = 1;
         public const string TEST_PLAYER_NAME = "TEST";
         public const string TEST_RESERVATION_KEY = "@#*(&";
-        public static readonly SessionId TestSessionId = 3;
+        public static readonly SessionId TestSessionId = (SessionId)3;
         public const int TEST_MAX_PLAYER_CONNECTIONS = 100;
         public const MultiplayerSessionReservationState TEST_REJECTION_STATE = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED;
         public static readonly AuthenticationContext TEST_AUTHENTICATION_CONTEXT = new AuthenticationContext(TEST_PLAYER_NAME, Optional.Empty);
