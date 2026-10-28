@@ -2,7 +2,6 @@
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Helper;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
@@ -14,8 +13,6 @@ namespace NitroxClient.Communication.Packets.Processors;
 internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<PlayerHeldItemChanged>
 {
     private readonly PlayerManager playerManager;
-    private readonly Entities entities;
-
     private int defaultLayer;
     private int viewModelLayer;
     private Optional<NitroxId> previousHeldItemId = Optional.Empty;
@@ -23,10 +20,9 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
     public delegate void HeldItemChanged(Optional<NitroxId> previousId);
     public static event HeldItemChanged? OnHeldItemChanged;
 
-    public PlayerHeldItemChangedProcessor(PlayerManager playerManager, Entities entities)
+    public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
         this.playerManager = playerManager;
-        this.entities = entities;
 
         if (NitroxEnvironment.IsNormal)
         {
@@ -41,102 +37,98 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
             Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find player with session id: {packet.SessionId}.");
             return Task.CompletedTask;
         }
-
-        if (!entities.InvokeWhenSpawned(packet.ItemId, typeof(InventoryItemEntity), OnSpawned))
+        if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
             Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find entity with id: {packet.ItemId}.");
+            return Task.CompletedTask;
         }
 
-        return Task.CompletedTask;
+        Pickupable pickupable = item.GetComponent<Pickupable>();
+        Validate.IsTrue(pickupable);
 
-        void OnSpawned(GameObject item)
+        Validate.NotNull(pickupable.inventoryItem);
+
+        ItemsContainer inventory = player.Inventory;
+        PlayerTool tool = item.GetComponent<PlayerTool>();
+
+        OnHeldItemChanged?.Invoke(previousHeldItemId);
+        previousHeldItemId = Optional.Of(packet.ItemId);
+
+        // Copied from QuickSlots
+        switch (packet.Type)
         {
-            Pickupable pickupable = item.GetComponent<Pickupable>();
-            Validate.IsTrue(pickupable);
+            case PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL:
+                Validate.IsTrue(tool);
+                ModelPlug.PlugIntoSocket(tool, player.ItemAttachPoint);
+                Utils.SetLayerRecursively(item, viewModelLayer);
+                foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
+                {
+                    componentsInChild.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                }
+                if (tool.mainCollider)
+                {
+                    tool.mainCollider.enabled = false;
+                }
+                tool.GetComponent<Rigidbody>().isKinematic = true;
+                if (tool.TryGetComponent(out Floater floater))
+                {
+                    floater.collider.enabled = false;
+                }
+                item.SetActive(true);
+                tool.SetHandIKTargetsEnabled(true);
+                SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
+                player.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
 
-            Validate.NotNull(pickupable.inventoryItem);
+                if (item.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated
+                {
+                    fpModelDraw.OnEquip(null, null);
+                }
+                break;
 
-            ItemsContainer inventory = player.Inventory;
-            PlayerTool tool = item.GetComponent<PlayerTool>();
+            case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_TOOL:
+                Validate.IsTrue(tool);
+                item.SetActive(false);
+                Utils.SetLayerRecursively(item, defaultLayer);
+                if (tool.mainCollider)
+                {
+                    tool.mainCollider.enabled = true;
+                }
+                tool.GetComponent<Rigidbody>().isKinematic = false;
+                if (tool.TryGetComponent(out floater))
+                {
+                    floater.collider.enabled = true;
+                }
+                pickupable.inventoryItem.item.Reparent(inventory.tr);
+                foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
+                {
+                    componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
+                }
+                SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
+                player.AnimationController["using_tool_first"] = false;
 
-            OnHeldItemChanged?.Invoke(previousHeldItemId);
-            previousHeldItemId = Optional.Of(packet.ItemId);
+                if (item.TryGetComponent(out FPModel fpModelHolster)) //FPModel needs to be updated
+                {
+                    fpModelHolster.OnUnequip(null, null);
+                }
 
-            // Copied from QuickSlots
-            switch (packet.Type)
-            {
-                case PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL:
-                    Validate.IsTrue(tool);
-                    ModelPlug.PlugIntoSocket(tool, player.ItemAttachPoint);
-                    Utils.SetLayerRecursively(item, viewModelLayer);
-                    foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
-                    {
-                        componentsInChild.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-                    }
-                    if (tool.mainCollider)
-                    {
-                        tool.mainCollider.enabled = false;
-                    }
-                    tool.GetComponent<Rigidbody>().isKinematic = true;
-                    if (tool.TryGetComponent(out Floater floater))
-                    {
-                        floater.collider.enabled = false;
-                    }
-                    item.SetActive(true);
-                    tool.SetHandIKTargetsEnabled(true);
-                    SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
-                    player.AnimationController["using_tool_first"] = packet.IsFirstTime != null;
+                break;
 
-                    if (item.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated
-                    {
-                        fpModelDraw.OnEquip(null, null);
-                    }
-                    break;
+            case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
+                pickupable.inventoryItem.item.Reparent(player.ItemAttachPoint);
+                pickupable.inventoryItem.item.SetVisible(true);
+                Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
+                break;
 
-                case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_TOOL:
-                    Validate.IsTrue(tool);
-                    item.SetActive(false);
-                    Utils.SetLayerRecursively(item, defaultLayer);
-                    if (tool.mainCollider)
-                    {
-                        tool.mainCollider.enabled = true;
-                    }
-                    tool.GetComponent<Rigidbody>().isKinematic = false;
-                    if (tool.TryGetComponent(out floater))
-                    {
-                        floater.collider.enabled = true;
-                    }
-                    pickupable.inventoryItem.item.Reparent(inventory.tr);
-                    foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
-                    {
-                        componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
-                    }
-                    SafeAnimator.SetBool(player.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
-                    player.AnimationController["using_tool_first"] = false;
+            case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM:
+                pickupable.inventoryItem.item.Reparent(inventory.tr);
+                pickupable.inventoryItem.item.SetVisible(false);
+                Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, defaultLayer);
+                break;
 
-                    if (item.TryGetComponent(out FPModel fpModelHolster)) //FPModel needs to be updated
-                    {
-                        fpModelHolster.OnUnequip(null, null);
-                    }
-
-                    break;
-
-                case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
-                    pickupable.inventoryItem.item.Reparent(player.ItemAttachPoint);
-                    pickupable.inventoryItem.item.SetVisible(true);
-                    Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
-                    break;
-
-                case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM:
-                    pickupable.inventoryItem.item.Reparent(inventory.tr);
-                    pickupable.inventoryItem.item.SetVisible(false);
-                    Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, defaultLayer);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(packet.Type));
-            }
+            default:
+                throw new ArgumentOutOfRangeException(nameof(packet.Type));
         }
+        return Task.CompletedTask;
     }
 
     private void SetupLayers()

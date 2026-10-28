@@ -31,7 +31,6 @@ namespace NitroxClient.GameLogic
 
         private readonly Dictionary<NitroxId, Type> spawnedAsType = [];
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = [];
-        private readonly Dictionary<NitroxId, Action<GameObject>> pendingSpawnCallbacks = [];
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = [];
 
@@ -243,21 +242,6 @@ namespace NitroxClient.GameLogic
                     }
                 }
 
-                // Run any code that needed to wait for this entity to spawn
-                if (pendingSpawnCallbacks.TryGetValue(entity.Id, out Action<GameObject> callback))
-                {
-                    try
-                    {
-                        callback.Invoke(entityResult.Get().Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex);
-                    }
-
-                    pendingSpawnCallbacks.Remove(entity.Id);
-                }
-
                 // Skip a frame to maintain FPS
                 if (Time.realtimeSinceStartup >= timeLimit && skipFrames)
                 {
@@ -334,38 +318,6 @@ namespace NitroxClient.GameLogic
             pendingEntities.Add(entity);
         }
 
-        // Sometimes we have an entity that needs to be used, but that may not have been spawned yet.
-        // This registers a callback that runs when the entity is spawned, or immediately if it already spawned.
-        // Returns false if the entity is completely unknown to the client.
-        public bool InvokeWhenSpawned(NitroxId id, Type entityType, Action<GameObject> callback)
-        {
-            if (IsKnownEntity(id, entityType) && NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
-            {
-                callback.Invoke(gameObject);
-                return true;
-            }
-
-            if (EntitiesToSpawn.Any(entity => entity.Id == id))
-            {
-                if (pendingSpawnCallbacks.TryGetValue(id, out Action<GameObject> oldCallback))
-                {
-                    pendingSpawnCallbacks[id] = go =>
-                    {
-                        oldCallback.Invoke(go);
-                        callback.Invoke(go);
-                    };
-                }
-                else
-                {
-                    pendingSpawnCallbacks[id] = callback;
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
         // Entites can sometimes be spawned as one thing but need to be respawned later as another.  For example, a flare
         // spawned inside an Inventory as an InventoryItemEntity can later be dropped in the world as a WorldEntity. Another
         // example would be a base ghost that needs to be respawned a completed piece.
@@ -382,11 +334,6 @@ namespace NitroxClient.GameLogic
         public bool IsKnownEntity(NitroxId id)
         {
             return spawnedAsType.ContainsKey(id);
-        }
-
-        public bool IsKnownEntity(NitroxId id, Type entityType)
-        {
-            return spawnedAsType.TryGetValue(id, out Type type) && type == entityType;
         }
 
         public Type RequireEntityType(NitroxId id)
