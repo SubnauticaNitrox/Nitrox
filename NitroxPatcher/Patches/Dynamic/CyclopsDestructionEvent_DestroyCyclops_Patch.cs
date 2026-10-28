@@ -39,7 +39,7 @@ public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : Nitro
     {
         if (__instance.TryGetNitroxId(out NitroxId nitroxId))
         {
-            Resolve<Vehicles>().BroadcastDestroyedCyclops(__instance.gameObject, nitroxId);
+            Resolve<Vehicles>().BroadcastDestroyedCyclops(__instance.RequireComponent<SubRoot>(), nitroxId);
         }
     }
 

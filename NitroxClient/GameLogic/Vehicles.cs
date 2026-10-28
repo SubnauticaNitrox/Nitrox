@@ -66,13 +66,14 @@ public class Vehicles
         }
     }
 
-    public void BroadcastDestroyedCyclops(GameObject cyclops, NitroxId id)
+    public void BroadcastDestroyedCyclops(SubRoot subRoot, NitroxId id)
     {
-        CyclopsMetadataExtractor.CyclopsGameObject cyclopsGameObject = new() { GameObject = cyclops };
-        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(cyclopsGameObject);
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(subRoot);
 
         if (metadata.HasValue && metadata.Value is CyclopsMetadata cyclopsMetadata)
         {
+            // The flag the metadata extractor uses to check for this isn't set until 2.5s
+            // after the Cyclops is destroyed, so set it manually instead
             cyclopsMetadata.IsDestroyed = true;
             entities.BroadcastMetadataUpdate(id, cyclopsMetadata);
         }
