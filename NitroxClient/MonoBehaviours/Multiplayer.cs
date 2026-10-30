@@ -207,9 +207,11 @@ namespace NitroxClient.MonoBehaviours
             GameObject body = localPlayer.BodyPrototype;
             Log.Info($"Init body prototype {body.name}");
 
-            ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(localPlayer, colorSwapManagers).BeginColorSwap();
-            yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
-            swapOperation.ApplySwappedColors();
+            yield return GpuRecolorer.EnsureInitialized();
+            foreach (IColorSwapManager manager in colorSwapManagers)
+            {
+                manager.ApplyPlayerColor(localPlayer);
+            }
 
             // UWE developers added noisy logging for non-whitelisted components during serialization.
             // We add NitroxEntiy in here to avoid a large amount of log spam.
