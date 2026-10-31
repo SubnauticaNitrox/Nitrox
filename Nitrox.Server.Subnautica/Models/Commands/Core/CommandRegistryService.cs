@@ -180,9 +180,9 @@ internal sealed class CommandRegistryService(IEnumerable<CommandHandlerEntry> di
                 {
                     if (existingHandlers.Count < 1)
                     {
-                        throw new Exception($"Alias {ownerAlias} from {handler.Owner.GetType().FullName} conflicts with its own name");
+                        throw new InvalidOperationException($"Alias {ownerAlias} from {handler.Owner.GetType().FullName} conflicts with its own name");
                     }
-                    throw new Exception($"Alias {ownerAlias} from {handler.Owner.GetType().FullName} conflicts with {existingHandlers.First().Owner.GetType().FullName}");
+                    throw new InvalidOperationException($"Alias {ownerAlias} from {handler.Owner.GetType().FullName} conflicts with {existingHandlers.First().Owner.GetType().FullName}");
                 }
                 HandlerLookup[ownerAlias] = handlers;
             }
@@ -193,7 +193,7 @@ internal sealed class CommandRegistryService(IEnumerable<CommandHandlerEntry> di
             CommandHandlerEntry otherHandler = handlers.First();
             if (otherHandler.Owner != handler.Owner)
             {
-                throw new Exception($"Handler {otherHandler.Name} on type {otherHandler.Owner.GetType().FullName} conflicts with command name {handler.Owner.GetType().FullName}");
+                throw new InvalidOperationException($"Handler {otherHandler.Name} on type {otherHandler.Owner.GetType().FullName} conflicts with command name {handler.Owner.GetType().FullName}");
             }
         }
         handlers.Add(handler);

@@ -16,7 +16,7 @@ internal sealed class SimulationOwnershipRequestProcessor(SimulationOwnershipDat
         if (aquiredLock)
         {
             bool shouldEntityMove = entitySimulation.ShouldSimulateEntityMovement(ownershipRequest.Id);
-            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, context.Sender.SessionId, ownershipRequest.LockType, shouldEntityMove);
+            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, context.Sender, ownershipRequest.LockType, shouldEntityMove);
             await context.SendToOthersAsync(simulationOwnershipChange);
         }
 

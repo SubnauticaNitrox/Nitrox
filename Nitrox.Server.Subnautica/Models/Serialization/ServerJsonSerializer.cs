@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Platforms.OS.Shared;
-using Nitrox.Server.Subnautica.Models.Serialization.Json;
+using Nitrox.Server.Subnautica.Models.Serialization.Json.NewtonSoft;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization;
 

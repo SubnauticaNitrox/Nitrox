@@ -17,6 +17,7 @@ public readonly record struct PeerId : IComparable<PeerId>
     [DataMember(Order = 1)]
     public readonly uint Id;
 
+    [IgnoreDataMember]
     public bool IsServer => Id == SERVER_ID;
 
     public PeerId(uint id)
@@ -24,9 +25,11 @@ public readonly record struct PeerId : IComparable<PeerId>
         Id = id;
     }
 
-    public static implicit operator uint(PeerId id) => id.Id;
+    public static explicit operator uint(PeerId id) => id.Id;
 
-    public static implicit operator PeerId(uint id) => new(id);
+    public static explicit operator PeerId(uint id) => new(id);
 
     public int CompareTo(PeerId other) => Id.CompareTo(other.Id);
+
+    public override string ToString() => Id.ToString();
 }

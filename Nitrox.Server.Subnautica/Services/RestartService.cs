@@ -12,7 +12,7 @@ internal sealed class RestartService(IPacketSender packetSender, ILogger<Restart
     public bool RestartOnStop
     {
         get => Interlocked.CompareExchange(ref field, false, false);
-        set => Interlocked.CompareExchange(ref field, value, !value);
+        set => Interlocked.Exchange(ref field, value);
     }
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
@@ -27,7 +27,7 @@ internal sealed class RestartService(IPacketSender packetSender, ILogger<Restart
     {
         if (RestartOnStop)
         {
-            await packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, "Server is restarting..."));
+            await packetSender.SendPacketToAllAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, "Server is restarting..."));
         }
     }
 

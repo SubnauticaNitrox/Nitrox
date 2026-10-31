@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using Nitrox.Server.Subnautica.Models.Serialization.Json;
+using Nitrox.Server.Subnautica.Models.Serialization.Json.NewtonSoft;
 
 namespace Nitrox.Server.Subnautica.Models.Serialization.SaveDataUpgrades;
 

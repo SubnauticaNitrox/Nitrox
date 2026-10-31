@@ -5,12 +5,7 @@ using Nitrox.Model.Packets;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class PlayerQuickSlotsBindingChanged : Packet
+public sealed class PlayerQuickSlotsBindingChanged(Optional<NitroxId>[] slotItemIds) : Packet
 {
-    public Optional<NitroxId>[] SlotItemIds { get; }
-
-    public PlayerQuickSlotsBindingChanged(Optional<NitroxId>[] slotItemIds)
-    {
-        SlotItemIds = slotItemIds;
-    }
+    public Optional<NitroxId>[] SlotItemIds { get; } = slotItemIds;
 }
