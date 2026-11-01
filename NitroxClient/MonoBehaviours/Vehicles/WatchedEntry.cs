@@ -22,7 +22,7 @@ public class WatchedEntry
     /// <inheritdoc cref="MAX_TIME_WITHOUT_BROADCAST"/>
     private const float SAFETY_BROADCAST_WINDOW = 0.2f;
 
-    private readonly NitroxId Id;
+    private readonly NitroxId id;
     private readonly Transform transform;
     private readonly Vehicle vehicle;
     private readonly SubControl subControl;
@@ -31,9 +31,9 @@ public class WatchedEntry
     private Vector3 latestLocalPositionSent;
     private Quaternion latestLocalRotationSent;
 
-    public WatchedEntry(NitroxId Id, Transform transform)
+    public WatchedEntry(NitroxId id, Transform transform)
     {
-        this.Id = Id;
+        this.id = id;
         this.transform = transform;
         vehicle = transform.GetComponent<Vehicle>();
         subControl = transform.GetComponent<SubControl>();
@@ -124,7 +124,7 @@ public class WatchedEntry
         // Watched entry validity check (e.g. for vehicle death)
         if (!transform)
         {
-            MovementBroadcaster.UnregisterWatched(Id);
+            MovementBroadcaster.UnregisterWatched(id);
             return false;
         }
 
