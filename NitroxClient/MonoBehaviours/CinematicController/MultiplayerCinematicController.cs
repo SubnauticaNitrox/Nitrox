@@ -17,20 +17,17 @@ public class MultiplayerCinematicController : MonoBehaviour
     private CinematicControllerPrefab controllerPrefab;
     private PlayerCinematicController playerController;
 
+    internal PlayerCinematicController PlayerController => playerController;
+
     public void CallStartCinematicMode(RemotePlayer player)
     {
-        if (!playerController.cinematicModeActive) // Check if local player is occupying the animator.
-        {
-            GetController(player).StartCinematicMode(player);
-        }
+        GetController(player).StartCinematicMode(player);
     }
 
     public void CallCinematicModeEnd(RemotePlayer player)
     {
-        if (!playerController.cinematicModeActive) // Check if local player is occupying the animator.
-        {
-            GetController(player).OnPlayerCinematicModeEnd();
-        }
+        // Allow remote players to end cinematics independently
+        GetController(player).OnPlayerCinematicModeEnd();
     }
 
     public void CallAllCinematicModeEnd()

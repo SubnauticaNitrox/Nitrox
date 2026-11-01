@@ -76,13 +76,13 @@ public class EscapePodEntitySpawner : SyncEntitySpawner<EscapePodEntity>
         pod.escapePodCinematicControl.StopAll();
 
         // Player is not new and has completed the intro cinematic. If not EscapePod repair status is handled by the intro cinematic.
-        if (escapePodEntity.Metadata is EscapePodMetadata metadata && localPlayer.IntroCinematicMode == IntroCinematicMode.COMPLETED)
+        if (escapePodEntity.Metadata is EscapePodMetadata metadata && localPlayer.IntroCinematicMode == IntroCinematicMode.COMPLETED && localPlayer.SessionId.HasValue)
         {
             using FMODSoundSuppressor soundSuppressor = FMODSystem.SuppressSubnauticaSounds();
             using PacketSuppressor<EntityMetadataUpdate> packetSuppressor = PacketSuppressor<EntityMetadataUpdate>.Suppress();
 
             Radio radio = pod.radioSpawner.spawnedObj.GetComponent<Radio>();
-            EscapePodMetadataProcessor.ProcessInitialSyncMetadata(pod, radio, metadata);
+            EscapePodMetadataProcessor.ProcessInitialSyncMetadata(pod, radio, metadata, localPlayer.SessionId.Value);
             // NB: Entities.SpawnBatchAsync (which is the function calling the current spawner)
             // will still apply the metadata another time but we don't care as it's not destructive
         }
