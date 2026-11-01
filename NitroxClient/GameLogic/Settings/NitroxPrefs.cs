@@ -31,6 +31,14 @@ namespace NitroxClient.GameLogic.Settings
         /// In seconds.
         /// </summary>
         public static readonly NitroxPref<float> OfflineClockSyncDuration = new("Nitrox.offlineClockSyncDuration", 5);
+        /// <summary>
+        /// Overrides the server's picture frame sync mode to OFF for this client only. <see cref="NitroxClient.GameLogic.LocalPlayer.PictureFrameSyncActive"/>
+        /// </summary>
+        public static readonly NitroxPref<bool> PictureFrameSyncDisabled = new("Nitrox.pictureFrameSyncDisabled");
+        /// <summary>
+        /// <see cref="NitroxClient.GameLogic.PictureFrames.PictureFrameCache"/>
+        /// </summary>
+        public static readonly NitroxPref<float> PictureFrameSessionDownloadCapMb = new("Nitrox.pictureFrameSessionDownloadCapMb", 256);
     }
 
     public abstract class NitroxPref { }

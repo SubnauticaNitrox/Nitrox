@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.GameLogic.PictureFrames;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Server;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -37,7 +42,8 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
         AddStep(sync => SetUsedItems(sync.UsedItems));
         AddStep(sync => SetPlayerGameMode(sync.GameMode));
-        AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow, sync.MarkDeathPointsWithBeacon));
+        AddStep(sync => ApplySettings(sync.KeepInventoryOnDeath, sync.SessionSettings.FastHatch, sync.SessionSettings.FastGrow, sync.MarkDeathPointsWithBeacon, sync.PictureFrameSync, sync.PictureFrameMaxDimension, sync.PictureFrameMaxBytes, sync.PictureFrameJpegQuality));
+        AddStep(sync => CheckPictureFrameBudget(sync.PictureFrameTotalBytes));
     }
 
     private void SetPlayerPermissions(Perms permissions)
@@ -149,10 +155,14 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
     }
 
-    private void ApplySettings(bool keepInventoryOnDeath, bool fastHatch, bool fastGrow, bool markDeathPointsWithBeacon)
+    private void ApplySettings(bool keepInventoryOnDeath, bool fastHatch, bool fastGrow, bool markDeathPointsWithBeacon, PictureFrameSyncMode pictureFrameSync, int pictureFrameMaxDimension, int pictureFrameMaxBytes, int pictureFrameJpegQuality)
     {
         localPlayer.KeepInventoryOnDeath = keepInventoryOnDeath;
         localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
+        localPlayer.PictureFrameSync = pictureFrameSync;
+        localPlayer.PictureFrameMaxDimension = pictureFrameMaxDimension;
+        localPlayer.PictureFrameMaxBytes = pictureFrameMaxBytes;
+        localPlayer.PictureFrameJpegQuality = pictureFrameJpegQuality;
         NoCostConsoleCommand.main.fastHatchCheat = fastHatch;
         NoCostConsoleCommand.main.fastGrowCheat = fastGrow;
         if (!fastHatch && !fastGrow)
@@ -175,5 +185,36 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
     private void SetPlayerMarkDeathPointsWithBeacon(bool markDeathPointsWithBeacon)
     {
         localPlayer.MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
+    }
+
+    private IEnumerator CheckPictureFrameBudget(long totalBytes)
+    {
+        if (!localPlayer.PictureFrameSyncActive)
+        {
+            yield break;
+        }
+
+        long capBytes = SessionByteBudget.MbToBytes(NitroxPrefs.PictureFrameSessionDownloadCapMb.Value);
+        if (totalBytes <= capBytes)
+        {
+            yield break;
+        }
+
+        PictureFrameBudgetModal modal = Modal.Get<PictureFrameBudgetModal>();
+        string message = Language.main.Get("Nitrox_PictureFrameBudgetWarning")
+            .Replace("{TOTAL}", $"{totalBytes / 1024f / 1024f:F2}")
+            .Replace("{CAP}", $"{NitroxPrefs.PictureFrameSessionDownloadCapMb.Value:F2}");
+        modal.Show(message);
+        yield return new WaitUntil(() => modal.Choice.HasValue);
+
+        switch (modal.Choice)
+        {
+            case PictureFrameBudgetChoice.RaiseCapForSession:
+                localPlayer.PictureFrameSessionDownloadCapMbOverride = Mathf.CeilToInt(totalBytes / 1024f / 1024f);
+                break;
+            case PictureFrameBudgetChoice.Disable:
+                NitroxPrefs.PictureFrameSyncDisabled.Value = true;
+                break;
+        }
     }
 }
