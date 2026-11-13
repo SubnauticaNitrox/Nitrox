@@ -18,4 +18,5 @@
   <Project Path="Nitrox.Test/Nitrox.Test.csproj" />
   <Project Path="NitroxClient/NitroxClient.csproj" />
   <Project Path="NitroxPatcher/NitroxPatcher.csproj" />
+  <Project Path="Tools/Pdb2Mdb/Pdb2Mdb.csproj" />
 </Solution>

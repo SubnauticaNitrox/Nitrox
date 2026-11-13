@@ -42,6 +42,7 @@
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Http" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
+        <PackageVersion Include="Mono.Cecil" Version="0.11.6" />
         <PackageVersion Include="Mono.Nat" Version="3.0.4" />
         <PackageVersion Include="MSTest" Version="4.4.0" />
         <PackageVersion Include="Newtonsoft.Json" Version="12.0.3" />

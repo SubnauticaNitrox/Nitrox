@@ -135,11 +135,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                         return false;
                     }
 
-                    File.Copy(
-                        patcherDllPath,
-                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
-                        true
-                    );
+                    string patcherTargetPath = Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME);
+                    File.Copy(patcherDllPath, patcherTargetPath, true);
+                    CopyDebugSymbols(patcherDllPath, patcherTargetPath);
                 }
                 catch (IOException ex)
                 {
@@ -184,6 +182,32 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     /// <summary>
     ///     Launches the server and Subnautica immediately if instant launch is active.
     /// </summary>
+    /// <summary>
+    ///     Keeps the .mdb symbols (read by the game's Mono debugger) next to the copied dll so breakpoints bind.
+    ///     A missing source mdb removes a stale one, as a mdb from another build is silently ignored by Mono.
+    /// </summary>
+    [Conditional("DEBUG")]
+    private static void CopyDebugSymbols(string sourceDllPath, string targetDllPath)
+    {
+        try
+        {
+            string sourceMdb = $"{sourceDllPath}.mdb";
+            string targetMdb = $"{targetDllPath}.mdb";
+            if (File.Exists(sourceMdb))
+            {
+                File.Copy(sourceMdb, targetMdb, true);
+            }
+            else if (File.Exists(targetMdb))
+            {
+                File.Delete(targetMdb);
+            }
+        }
+        catch (IOException ex)
+        {
+            Log.Error(ex, "Unable to copy debug symbols next to the patcher dll");
+        }
+    }
+
     [Conditional("DEBUG")]
     private void HandleInstantLaunchForDevelopment()
     {

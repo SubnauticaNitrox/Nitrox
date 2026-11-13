@@ -12,7 +12,7 @@
         <DebugType>embedded</DebugType>
         <Nullable>annotations</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
-        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+        <PathMap Condition="'$(Configuration)' != 'Debug'">$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
