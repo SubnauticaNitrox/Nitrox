@@ -77,6 +77,7 @@
                             </Grid>
                             <!-- Update available green dot -->
                             <Border
+                                Classes="update-badge"
                                 Height="10"
                                 Width="10"
                                 CornerRadius="5"
@@ -89,6 +90,7 @@
                                 ToolTip.Tip="New Nitrox update available" />
                             <!-- Unread notifications badge -->
                             <Border
+                                Classes="notification-badge"
                                 Height="10"
                                 Width="10"
                                 CornerRadius="5"
@@ -103,11 +105,11 @@
                     </ControlTemplate>
                 </Setter>
 
-                <Style Selector="^.updates Border">
+                <Style Selector="^.updates /template/ Border.update-badge">
                     <Setter Property="IsVisible" Value="{Binding UpdateAvailableOrUnofficial}" />
                 </Style>
 
-                <Style Selector="^.notifications Border">
+                <Style Selector="^.notifications /template/ Border.notification-badge">
                     <Setter Property="IsVisible" Value="{Binding Notifications.Count}" />
                 </Style>
 
@@ -122,7 +124,7 @@
             </Style>
         </Style>
 
-        <Style Selector=".notifications Border">
+        <Style Selector=".notification-popup Border">
             <Setter Property="Transitions">
                 <Transitions>
                     <DoubleTransition Duration="0:0:.2" Property="Opacity" />
@@ -347,7 +349,7 @@
         </Grid>
 
         <!--  Notifications  -->
-        <Grid Classes="notifications" ColumnDefinitions="*,280">
+        <Grid Classes="notification-popup" ColumnDefinitions="*,280">
             <ItemsControl
                 Grid.Column="1"
                 ItemsSource="{Binding Notifications}"

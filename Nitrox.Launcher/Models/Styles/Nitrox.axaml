@@ -126,6 +126,10 @@
             </Transitions>
         </Setter>
     </Style>
+    <!-- Avoid transitioning from PopupRoot's default white background to transparent. -->
+    <Style Selector="PopupRoot">
+        <Setter Property="Transitions" Value="{x:Null}" />
+    </Style>
     <Style Selector=":is(Button)">
         <Setter Property="Transitions">
             <Transitions>
