@@ -83,7 +83,7 @@ public static class StringExtensions
                     previous = '\0';
                 }
             }
-            return Regex.Replace(new string(chars), "(?!^)([A-Z])", " $1");;
+            return Regex.Replace(new string(chars), "(?!^)([A-Z])", " $1");
         }
     }
 }
