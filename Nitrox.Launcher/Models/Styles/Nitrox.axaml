@@ -96,13 +96,6 @@
     </Style>
     
     <!-- Global Transition Styles -->
-    <Style Selector=":is(Window)">
-        <Setter Property="Transitions">
-            <Transitions>
-                <BrushTransition Duration="0:0:0.075" Property="Background" />
-            </Transitions>
-        </Setter>
-    </Style>
     <Style Selector=":is(Panel)">
         <Setter Property="Transitions">
             <Transitions>
@@ -118,17 +111,13 @@
             </Transitions>
         </Setter>
     </Style>
-    <Style Selector=":is(TemplatedControl)">
+    <Style Selector=":is(TemplatedControl):not(:is(TopLevel))">
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Duration="0:0:0.005" Property="Foreground" />
                 <BrushTransition Duration="0:0:0.075" Property="Background" />
             </Transitions>
         </Setter>
-    </Style>
-    <!-- Avoid transitioning from PopupRoot's default white background to transparent. -->
-    <Style Selector="PopupRoot">
-        <Setter Property="Transitions" Value="{x:Null}" />
     </Style>
     <Style Selector=":is(Button)">
         <Setter Property="Transitions">
