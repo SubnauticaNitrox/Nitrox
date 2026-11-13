@@ -180,9 +180,6 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     }
 
     /// <summary>
-    ///     Launches the server and Subnautica immediately if instant launch is active.
-    /// </summary>
-    /// <summary>
     ///     Keeps the .mdb symbols (read by the game's Mono debugger) next to the copied dll so breakpoints bind.
     ///     A missing source mdb removes a stale one, as a mdb from another build is silently ignored by Mono.
     /// </summary>
@@ -208,6 +205,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         }
     }
 
+    /// <summary>
+    ///     Launches the server and Subnautica immediately if instant launch is active.
+    /// </summary>
     [Conditional("DEBUG")]
     private void HandleInstantLaunchForDevelopment()
     {
