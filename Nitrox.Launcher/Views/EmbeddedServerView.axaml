@@ -148,6 +148,7 @@
                     ToolTip.Tip="Send command"
                     IsEnabled="{Binding !ServerEntry.IsServerClosing}">
                     <Svg
+                        Classes="theme"
                         Height="20"
                         Path="/Assets/Icons/send.svg" />
                 </Button>
