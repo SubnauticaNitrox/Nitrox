@@ -8,9 +8,9 @@ namespace Nitrox.Launcher.Models.Converters;
 /// <summary>
 ///     Removes duplicates by non-unique ToString values of the given list.
 /// </summary>
-public class DeduplicateConverter : Converter<DeduplicateConverter>
+internal sealed class DeduplicateConverter : Converter<DeduplicateConverter>
 {
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not IEnumerable<object> list)
         {
