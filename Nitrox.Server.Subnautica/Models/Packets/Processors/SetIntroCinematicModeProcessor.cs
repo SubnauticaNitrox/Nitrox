@@ -5,9 +5,10 @@ using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager, ILogger<SetIntroCinematicModeProcessor> logger) : IAuthPacketProcessor<SetIntroCinematicMode>
+internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager, EscapePodManager escapePodManager, ILogger<SetIntroCinematicModeProcessor> logger) : IAuthPacketProcessor<SetIntroCinematicMode>
 {
     private readonly PlayerManager playerManager = playerManager;
+    private readonly EscapePodManager escapePodManager = escapePodManager;
     private readonly ILogger<SetIntroCinematicModeProcessor> logger = logger;
 
     public async Task Process(AuthProcessorContext context, SetIntroCinematicMode packet)
@@ -26,12 +27,17 @@ internal sealed class SetIntroCinematicModeProcessor(PlayerManager playerManager
         Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
         if (allWaitingPlayers.Length >= 2)
         {
-            logger.ZLogInformation($"Starting IntroCinematic for {allWaitingPlayers[0].PlayerContext.PlayerName} and {allWaitingPlayers[1].PlayerContext.PlayerName}");
+            Player playerA = allWaitingPlayers[0];
+            Player playerB = allWaitingPlayers[1];
 
-            allWaitingPlayers[0].PlayerContext.IntroCinematicMode = allWaitingPlayers[1].PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
+            logger.ZLogInformation($"Starting IntroCinematic for {playerA.PlayerContext.PlayerName} and {playerB.PlayerContext.PlayerName}");
 
-            await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[0].SessionId, IntroCinematicMode.START, allWaitingPlayers[1].SessionId));
-            await context.SendToAllAsync(new SetIntroCinematicMode(allWaitingPlayers[1].SessionId, IntroCinematicMode.START, allWaitingPlayers[0].SessionId));
+            playerA.PlayerContext.IntroCinematicMode = playerB.PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
+
+            await context.SendToAllAsync(new SetIntroCinematicMode(playerA.SessionId, IntroCinematicMode.START, playerB.SessionId));
+            await context.SendToAllAsync(new SetIntroCinematicMode(playerB.SessionId, IntroCinematicMode.START, playerA.SessionId));
+
+            await escapePodManager.SetupIntroSequenceAsync(playerA, playerB);
         }
     }
 }

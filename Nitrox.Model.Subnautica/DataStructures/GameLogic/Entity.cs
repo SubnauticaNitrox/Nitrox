@@ -19,8 +19,16 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
     [ProtoInclude(55, typeof(InstalledModuleEntity))]
     [ProtoInclude(56, typeof(WorldEntity))]
     [ProtoInclude(57, typeof(BaseLeakEntity))]
+    [ProtoInclude(58, typeof(CyclopsFireEntity))]
+    [ProtoInclude(59, typeof(CyclopsDamagePointEntity))]
     public abstract class Entity
     {
+        [IgnoreConstructor]
+        protected Entity()
+        {
+            // Constructor for serialization. Has to be "protected" for json serialization.
+        }
+
         [DataMember(Order = 1)]
         public NitroxId Id { get; set; }
 
@@ -35,12 +43,6 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic
 
         [DataMember(Order = 5)]
         public List<Entity> ChildEntities { get; set; } = [];
-
-        [IgnoreConstructor]
-        protected Entity()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
 
         public override string ToString()
         {

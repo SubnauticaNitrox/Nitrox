@@ -77,6 +77,8 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(ReefbackEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(ReefbackChildEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(CreatureRespawnEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(CyclopsFireEntity)] = new CyclopsFireEntitySpawner();
+            entitySpawnersByType[typeof(CyclopsDamagePointEntity)] = new CyclopsDamagePointEntitySpawner();
         }
 
         public void EntityMetadataChanged(object o, NitroxId id)
