@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Globalization;
 using Avalonia.Media.Imaging;
 using Nitrox.Launcher.Models.Utils;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>
+internal sealed class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>
 {
-    public override object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         value = value switch
         {

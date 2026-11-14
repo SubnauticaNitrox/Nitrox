@@ -13,7 +13,7 @@
                             HorizontalAlignment="Center"
                             Padding="10">
                             <StackPanel Spacing="10" Width="200">
-                                <TextBox HorizontalAlignment="Stretch" Watermark="Watermark" />
+                                <TextBox HorizontalAlignment="Stretch" PlaceholderText="Watermark" />
                                 <TextBox HorizontalAlignment="Stretch" Text="Light" />
                                 <TextBox
                                     Classes="revealPasswordButton"
@@ -28,7 +28,7 @@
                             HorizontalAlignment="Center"
                             Padding="10">
                             <StackPanel Spacing="10" Width="200">
-                                <TextBox HorizontalAlignment="Stretch" Watermark="Watermark" />
+                                <TextBox HorizontalAlignment="Stretch" PlaceholderText="Watermark" />
                                 <TextBox HorizontalAlignment="Stretch" Text="Dark" />
                                 <TextBox
                                     Classes="revealPasswordButton"
@@ -80,7 +80,7 @@
         <Style Selector="^ /template/ Panel > Border > Grid"> <!-- Most senior grid with negative margin to counteract InnerDockPanel -->
             <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}, ConverterParameter=True}" />
         </Style>
-        <Style Selector="^ /template/ TextBlock#PART_Watermark"> <!-- Watermark text -->
+        <Style Selector="^ /template/ TextBlock#PART_Placeholder"> <!-- Placeholder text -->
             <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}}" />
         </Style>
         <Style Selector="^ /template/ TextPresenter#PART_TextPresenter"> <!-- Text -->
@@ -90,8 +90,8 @@
             <Setter Property="Margin" Value="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}, Converter={converters:TextBoxPaddingToMarginConverter}}" />
         </Style>
 
-        <!--  Watermark foreground dimming  -->
-        <Style Selector="^ /template/ TextBlock#PART_Watermark">
+        <!--  Placeholder foreground dimming  -->
+        <Style Selector="^ /template/ TextBlock#PART_Placeholder">
             <Setter Property="Transitions">
                 <Transitions>
                     <BrushTransition Duration="0:0:0.15" Property="Foreground" />
