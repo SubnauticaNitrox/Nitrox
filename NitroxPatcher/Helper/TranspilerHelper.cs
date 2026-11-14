@@ -27,9 +27,6 @@ internal static class TranspilerHelper
     {
         return new CodeInstruction(OpCodes.Call, serviceLocator.MakeGenericMethod(typeof(T)));
     }
-
-    private static readonly MethodInfo BREAK_HERE_METHOD = typeof(TranspilerHelper).GetMethod(nameof(BreakHere), BindingFlags.Static | BindingFlags.NonPublic);
-
     /// <summary>
     /// Returns an instruction that breaks into the debugger (if attached) at this spot of the patched method.
     /// Breakpoints can't be set in IL emitted by a transpiler, so insert this where execution should stop.
