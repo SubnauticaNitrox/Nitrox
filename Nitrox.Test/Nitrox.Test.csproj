@@ -5,6 +5,7 @@
         <IsTestProject>true</IsTestProject>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
+        <IsTrimmable>false</IsTrimmable>
         <!-- TODO: Do not use DI in tests, create objects in-line or use mocks for externalities -->
         <NoWarn>$(NoWarn);DIMA001</NoWarn>
     </PropertyGroup>

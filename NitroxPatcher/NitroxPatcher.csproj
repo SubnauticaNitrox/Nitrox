@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net472;net10.0</TargetFrameworks>
+        <IsTrimmable>false</IsTrimmable>
     </PropertyGroup>
 
     <ItemGroup>

@@ -16,6 +16,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
+using Nitrox.Launcher.Models.Serialization;
 using Nitrox.Model.Configuration;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
@@ -237,7 +238,7 @@ internal sealed partial class ServerEntry : ObservableObject
             SaveFileVersion versionModel;
             try
             {
-                versionModel = JsonSerializer.Deserialize<SaveFileVersion>(stream);
+                versionModel = JsonSerializer.Deserialize(stream, LauncherJsonSerializerContext.Default.SaveFileVersion);
             }
             catch (Exception)
             {
