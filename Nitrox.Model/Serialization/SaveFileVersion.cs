@@ -9,20 +9,16 @@ namespace Nitrox.Model.Serialization;
 public class SaveFileVersion
 {
     [DataMember(Order = 1)]
-    [JsonInclude]
-    public readonly int Major;
+    public int Major { get; }
 
     [DataMember(Order = 2)]
-    [JsonInclude]
-    public readonly int Minor;
+    public int Minor { get; }
 
     [DataMember(Order = 3)]
-    [JsonInclude]
-    public readonly int Build;
+    public int Build { get; }
 
     [DataMember(Order = 4)]
-    [JsonInclude]
-    public readonly int Revision;
+    public int Revision { get; }
 
     [JsonIgnore]
     public Version Version => new(Major, Minor, Build, Revision);
