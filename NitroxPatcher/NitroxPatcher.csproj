@@ -13,29 +13,6 @@
         <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
 
-    <!-- Debug only: Unity's Mono reads .mdb symbols (not PDBs). Generate them next to the net472 dlls so breakpoints bind in the patcher & client code. -->
-    <ItemGroup Condition="'$(Configuration)' == 'Debug' And '$(TargetFramework)' == 'net472'">
-        <ProjectReference Include="..\Tools\Pdb2Mdb\Pdb2Mdb.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-            <Private>false</Private>
-            <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-            <!-- Don't inherit net472 / lib output folder when NitroxPatcher is built by the Launcher -->
-            <GlobalPropertiesToRemove>TargetFramework;OutDir</GlobalPropertiesToRemove>
-        </ProjectReference>
-    </ItemGroup>
-
-    <Target Name="_NitroxGenerateMdbSymbols" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And '$(TargetFramework)' == 'net472'">
-        <PropertyGroup>
-            <_Pdb2MdbDll>$(MSBuildThisFileDirectory)..\Tools\Pdb2Mdb\bin\$(Configuration)\net10.0\Pdb2Mdb.dll</_Pdb2MdbDll>
-            <_Pdb2MdbOutDir>$([MSBuild]::EnsureTrailingSlash('$(OutDir)'))</_Pdb2MdbOutDir>
-        </PropertyGroup>
-
-        <Exec Command="dotnet &quot;$(_Pdb2MdbDll)&quot; &quot;$(_Pdb2MdbOutDir)NitroxPatcher.dll&quot; &quot;$(_Pdb2MdbOutDir)NitroxClient.dll&quot; &quot;$(_Pdb2MdbOutDir)Nitrox.Model.dll&quot; &quot;$(_Pdb2MdbOutDir)Nitrox.Model.Subnautica.dll&quot;"
-              EnvironmentVariables="PDB2MDB_EXTRA_DIRS=$(GameManagedDir)"
-              Condition="Exists('$(_Pdb2MdbDll)')"
-              ContinueOnError="WarnAndContinue" />
-    </Target>
-
     <Target Name="IncludeGameReferences" AfterTargets="FindGameAndIncludeReferences">
         <ItemGroup>
             <Reference Include="FMODUnity">

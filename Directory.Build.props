@@ -46,6 +46,10 @@
     <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Nitrox.Test'">
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
+    <!-- Debug only: ship real portable .pdb files (instead of embedded) next to the game-loaded net472 dlls so the game's Mono debugger can bind breakpoints -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'net472' and ('$(UnityModLibrary)' == 'true' or '$(MSBuildProjectName)' == 'Nitrox.Model')">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
     <PropertyGroup>
         <NotTestLibrary>false</NotTestLibrary>
         <NotTestLibrary Condition="'$(TestLibrary)' == 'false'">true</NotTestLibrary>

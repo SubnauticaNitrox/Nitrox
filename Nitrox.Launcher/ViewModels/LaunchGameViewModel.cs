@@ -180,23 +180,23 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
     }
 
     /// <summary>
-    ///     Keeps the .mdb symbols (read by the game's Mono debugger) next to the copied dll so breakpoints bind.
-    ///     A missing source mdb removes a stale one, as a mdb from another build is silently ignored by Mono.
+    ///     Keeps the .pdb symbols (read by the game's Mono debugger) next to the copied dll so breakpoints bind.
+    ///     A missing source pdb removes a stale one, as a pdb from another build is silently ignored by Mono.
     /// </summary>
     [Conditional("DEBUG")]
     private static void CopyDebugSymbols(string sourceDllPath, string targetDllPath)
     {
         try
         {
-            string sourceMdb = $"{sourceDllPath}.mdb";
-            string targetMdb = $"{targetDllPath}.mdb";
-            if (File.Exists(sourceMdb))
+            string sourcePdb = Path.ChangeExtension(sourceDllPath, ".pdb");
+            string targetPdb = Path.ChangeExtension(targetDllPath, ".pdb");
+            if (File.Exists(sourcePdb))
             {
-                File.Copy(sourceMdb, targetMdb, true);
+                File.Copy(sourcePdb, targetPdb, true);
             }
-            else if (File.Exists(targetMdb))
+            else if (File.Exists(targetPdb))
             {
-                File.Delete(targetMdb);
+                File.Delete(targetPdb);
             }
         }
         catch (IOException ex)
