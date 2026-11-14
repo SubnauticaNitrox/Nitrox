@@ -151,7 +151,7 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
         // We don't want any scheduled goal we add now to be executed before initial sync has finished, else they might not get broadcasted
         StoryGoalScheduler.main.paused = true;
-        Multiplayer.OnLoadingComplete += () => StoryGoalScheduler.main.paused = false;
+        Multiplayer.OnLoadingComplete += OnLoadingCompleteUnpauseStoryGoals;
 
         foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
         {
@@ -193,5 +193,10 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         timeManager.ProcessUpdate(packet.TimeData.TimePacket);
         timeManager.InitRealTimeElapsed(packet.TimeData.TimePacket.RealTimeElapsed, packet.TimeData.TimePacket.UpdateTime, packet.IsFirstPlayer);
         timeManager.AuroraRealExplosionTime = packet.TimeData.AuroraEventData.AuroraRealExplosionTime;
+    }
+
+    private static void OnLoadingCompleteUnpauseStoryGoals()
+    {
+        StoryGoalScheduler.main.paused = false;
     }
 }
