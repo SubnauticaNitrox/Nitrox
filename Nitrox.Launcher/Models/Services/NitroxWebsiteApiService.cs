@@ -79,6 +79,7 @@ internal sealed class NitroxWebsiteApiService
         /// <summary>
         ///     Gets the download info for the current platform and architecture.
         /// </summary>
+        [JsonIgnore]
         public ArchitectureInfo? CurrentPlatformInfo
         {
             get
@@ -120,6 +121,7 @@ internal sealed class NitroxWebsiteApiService
         [JsonPropertyName("filesize")]
         public required string FileSize { get; init; }
 
+        [JsonIgnore]
         public float FileSizeMegaBytes => float.TryParse(FileSize, out float size) ? size : 0;
     }
 }

@@ -27,7 +27,7 @@ internal sealed class NitroxBlogService
 
     public async IAsyncEnumerable<NitroxBlog> GetBlogPostsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        BlogPost[] blogs = await httpClient("posts?per_page=8&page=1", LauncherJsonSerializerContext.Default.BlogPostArray, cancellationToken);
+        BlogPost[] blogs = await httpClient.GetFromJsonAsync("posts?per_page=8&page=1", LauncherJsonSerializerContext.Default.BlogPostArray, cancellationToken);
         foreach (BlogPost blog in blogs)
         {
             cancellationToken.ThrowIfCancellationRequested();

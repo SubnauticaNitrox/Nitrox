@@ -29,6 +29,7 @@
         <NitroxProject>false</NitroxProject>
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
+        <NitroxExecutable>false</NitroxExecutable>
         <UnityModLibrary>false</UnityModLibrary>
         <GameName>Subnautica</GameName>
         <GameMinimumVersion>82304</GameMinimumVersion>
@@ -36,6 +37,9 @@
 
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxProject>true</NitroxProject>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Nitrox.Launcher' or '$(MSBuildProjectName)' == 'Nitrox.Server.Subnautica'">
+        <NitroxExecutable>true</NitroxExecutable>
     </PropertyGroup>
     <PropertyGroup Condition="'$(NitroxProject)' == 'true' and '$(MSBuildProjectName)' != 'Nitrox.Test'">
         <NitroxLibrary>true</NitroxLibrary>
@@ -91,7 +95,7 @@
 
     <!-- Set internals visible for all projects for Nitrox.Test (excluding Nitrox.Test itself) -->
     <Choose>
-        <When Condition="'$(NitroxLibrary)' == 'true'">
+        <When Condition="'$(NitroxLibrary)' == 'true' OR '$(NitroxExecutable)' == 'true'">
             <ItemGroup>
                 <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
                     <_Parameter1>Nitrox.Test</_Parameter1>
