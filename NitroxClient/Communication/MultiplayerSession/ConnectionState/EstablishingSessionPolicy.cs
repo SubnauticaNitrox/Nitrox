@@ -1,4 +1,5 @@
 ﻿using System;
+using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using Nitrox.Model.Helper;
 using Nitrox.Model.Packets.Exceptions;
@@ -44,7 +45,7 @@ public sealed class EstablishingSessionPolicy : ConnectionNegotiatingState
 
     private void SessionPolicyPacketCorrelation(IMultiplayerSessionConnectionContext sessionConnectionContext)
     {
-        if (sessionConnectionContext.SessionPolicy.SessionId < 1)
+        if ((ushort)sessionConnectionContext.SessionPolicy.SessionId < 1)
         {
             throw new UncorrelatedPacketException(sessionConnectionContext.SessionPolicy, sessionConnectionContext.SessionPolicy.SessionId);
         }

@@ -15,10 +15,8 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
     [IgnoredMember]
     private static readonly int[] byteOrder = [15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3];
 
-
-    [DataMember(Order = 1)]
-    [SerializableMember]
-    private Guid guid { get; init; }
+    [IgnoredMember]
+    public static readonly NitroxId Empty = new() { guid = Guid.Empty };
 
     [IgnoreConstructor]
     public NitroxId()
@@ -45,6 +43,25 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
     {
         byte[] bytes = (byte[])info.GetValue("id", typeof(byte[]));
         guid = new Guid(bytes);
+    }
+
+    [DataMember(Order = 1)]
+    [SerializableMember]
+    private Guid guid { get; init; }
+
+    public int CompareTo(NitroxId? other)
+    {
+        if (Equals(this, other))
+        {
+            return 0;
+        }
+
+        return other is null ? 1 : guid.CompareTo(other.guid);
+    }
+
+    public bool Equals(NitroxId? other)
+    {
+        return other is not null && guid.Equals(other.guid);
     }
 
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
@@ -79,11 +96,6 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
 
     public override bool Equals(object? obj) => Equals(obj as NitroxId);
 
-    public bool Equals(NitroxId? other)
-    {
-        return other is not null && guid.Equals(other.guid);
-    }
-
     public override int GetHashCode() => guid.GetHashCode();
 
     public override string ToString() => guid.ToString();
@@ -95,15 +107,5 @@ public sealed class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<
         Guid nextGuid = new(canIncrement ? bytes : new byte[16]);
 
         return new NitroxId(nextGuid);
-    }
-
-    public int CompareTo(NitroxId? other)
-    {
-        if (Equals(this, other))
-        {
-            return 0;
-        }
-
-        return other is null ? 1 : guid.CompareTo(other.guid);
     }
 }

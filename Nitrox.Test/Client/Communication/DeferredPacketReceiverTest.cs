@@ -1,3 +1,4 @@
+using Nitrox.Model.Core;
 using Nitrox.Test.Client.Communication;
 using Nitrox.Model.Packets;
 
@@ -11,7 +12,7 @@ public class DeferredPacketReceiverTest
     {
         // Arrange
         const ushort PLAYER_ID = 1;
-        TestNonActionPacket packet = new(PLAYER_ID);
+        TestNonActionPacket packet = new((SessionId)PLAYER_ID);
         PacketReceiver packetReceiver = new();
 
         // Act
@@ -22,6 +23,6 @@ public class DeferredPacketReceiverTest
         storedPacket.Should().NotBeNull();
         packetReceiver.GetNextPacket().Should().BeNull();
         storedPacket.Should().Be(packet);
-        packet.SessionId.Should().Be(PLAYER_ID);
+        packet.SessionId.Should().Be((SessionId)PLAYER_ID);
     }
 }

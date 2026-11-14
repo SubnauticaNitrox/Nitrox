@@ -142,10 +142,6 @@ internal sealed record CommandHandlerEntry
                 {
                     return "object";
                 }
-                if (type == typeof(Player))
-                {
-                    return "sessionIdOrName";
-                }
                 return type.Name;
             }
         }

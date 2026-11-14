@@ -222,11 +222,11 @@ internal sealed partial class CommandService(CommandRegistryService registry, IL
                 }
                 else
                 {
-                    conversions = [ConvertResult.Fail($"Failed to parse {args[i]} to a {parameterTypes[i].Name}")];
-                }
-                if (conversions is [] || !conversions[0].Success)
-                {
-                    conversions = [..conversions, ..await registry.TryConvertToType(args[i], parameterTypes[i])];
+                    conversions = [..await registry.TryConvertToType(args[i], parameterTypes[i])];
+                    if (conversions is [])
+                    {
+                        conversions = [ConvertResult.Fail($"Failed to parse {args[i]} to a {parameterTypes[i].Name}")];
+                    }
                 }
 
                 result ??= [];

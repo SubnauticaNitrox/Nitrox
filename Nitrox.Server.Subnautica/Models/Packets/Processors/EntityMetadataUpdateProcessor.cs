@@ -1,14 +1,18 @@
+using Nitrox.Model.Core;
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Models.PlayerProperties;
+using Nitrox.Server.Subnautica.Models.PlayerProperties.Connected;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger) : IAuthPacketProcessor<EntityMetadataUpdate>
+internal sealed class EntityMetadataUpdateProcessor(PlayerService playerService, EntityRegistry entityRegistry, ILogger<EntityMetadataUpdateProcessor> logger) : IAuthPacketProcessor<EntityMetadataUpdate>
 {
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     private readonly EntityRegistry entityRegistry = entityRegistry;
     private readonly ILogger<EntityMetadataUpdateProcessor> logger = logger;
 
@@ -29,17 +33,18 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager,
 
     private async Task SendUpdateToVisiblePlayersAsync(AuthProcessorContext context, EntityMetadataUpdate packet, Entity entity)
     {
-        foreach (Player player in playerManager.GetConnectedPlayers())
+        foreach ((SessionId SessionId, VisibleCellsProperty Property) visibleCells in playerService.GetAll<VisibleCellsProperty>())
         {
-            bool updateVisibleToPlayer = player.CanSee(entity);
-            if (player != context.Sender && updateVisibleToPlayer)
+            if (visibleCells.SessionId != context.Sender && ShouldUpdateVisibility(visibleCells.Property, entity))
             {
-                await context.SendAsync(packet, player.SessionId);
+                await context.SendAsync(packet, visibleCells.SessionId);
             }
         }
+
+        static bool ShouldUpdateVisibility(VisibleCellsProperty property, Entity entity) => property.CanSee(entity);
     }
 
-    private bool TryProcessMetadata(Player sendingPlayer, Entity entity, EntityMetadata metadata)
+    private bool TryProcessMetadata(SessionId sendingPlayer, Entity entity, EntityMetadata metadata)
     {
         return metadata switch
         {
@@ -54,20 +59,16 @@ internal sealed class EntityMetadataUpdateProcessor(PlayerManager playerManager,
         };
     }
 
-    private bool ProcessPlayerMetadata(Player sendingPlayer, Entity entity, PlayerMetadata metadata)
+    private bool ProcessPlayerMetadata(SessionId sendingPlayer, Entity entity, PlayerMetadata metadata)
     {
-        if (sendingPlayer.GameObjectId == entity.Id)
+        if (playerService.Get<GameObjectIdProperty>(sendingPlayer).Value == entity.Id)
         {
-            sendingPlayer.EquippedItems.Clear();
-            foreach (PlayerMetadata.EquippedItem item in metadata.EquippedItems)
-            {
-                sendingPlayer.EquippedItems.Add(item.Slot, item.Id);
-            }
-
+            playerService.Get<EquippedItemsProperty>(sendingPlayer).Value
+                         .ClearAndSet(metadata.EquippedItems, item => item.Slot, item => item.Id);
             return true;
         }
 
-        logger.ZLogWarningOnce($"Player {sendingPlayer.Name} tried updating metadata of another player's entity {entity.Id}");
+        logger.ZLogWarningOnce($"Player {playerService.Get<NameProperty>(sendingPlayer).Value} tried updating metadata of another player's entity {entity.Id}");
         return false;
     }
 }
