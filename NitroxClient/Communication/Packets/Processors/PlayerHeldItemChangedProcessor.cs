@@ -42,8 +42,6 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
         Pickupable pickupable = item.GetComponent<Pickupable>();
         Validate.IsTrue(pickupable);
 
-        Validate.NotNull(pickupable.inventoryItem);
-
         ItemsContainer inventory = player.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
 
@@ -91,7 +89,7 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 {
                     floater.collider.enabled = true;
                 }
-                pickupable.inventoryItem.item.Reparent(inventory.tr);
+                pickupable.Reparent(inventory.tr);
                 foreach (Animator componentsInChild in tool.GetComponentsInChildren<Animator>())
                 {
                     componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
@@ -107,15 +105,15 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
                 break;
 
             case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
-                pickupable.inventoryItem.item.Reparent(player.ItemAttachPoint);
-                pickupable.inventoryItem.item.SetVisible(true);
-                Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, viewModelLayer);
+                pickupable.Reparent(player.ItemAttachPoint);
+                pickupable.SetVisible(true);
+                Utils.SetLayerRecursively(item, viewModelLayer);
                 break;
 
             case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM:
-                pickupable.inventoryItem.item.Reparent(inventory.tr);
-                pickupable.inventoryItem.item.SetVisible(false);
-                Utils.SetLayerRecursively(pickupable.inventoryItem.item.gameObject, defaultLayer);
+                pickupable.Reparent(inventory.tr);
+                pickupable.SetVisible(false);
+                Utils.SetLayerRecursively(item, defaultLayer);
                 break;
 
             default:
