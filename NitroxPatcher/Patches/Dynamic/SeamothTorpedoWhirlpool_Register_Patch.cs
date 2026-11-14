@@ -1,5 +1,4 @@
 using System.Reflection;
-using NitroxClient.GameLogic.PlayerLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -13,6 +12,6 @@ public sealed partial class SeamothTorpedoWhirlpool_Register_Patch : NitroxPatch
 
     public static bool Prefix(Collider other)
     {
-        return !other.GetComponentInParent<RemotePlayerIdentifier>(true);
+        return !other.IsRemotePlayer;
     }
 }
