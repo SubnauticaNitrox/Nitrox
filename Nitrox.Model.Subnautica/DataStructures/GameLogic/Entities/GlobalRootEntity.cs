@@ -20,6 +20,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 [ProtoInclude(57, typeof(PlayerEntity))]
 [ProtoInclude(58, typeof(VehicleEntity))]
 [ProtoInclude(59, typeof(RadiationLeakEntity))]
+[ProtoInclude(60, typeof(BulkheadDoorEntity))]
 public class GlobalRootEntity : WorldEntity
 {
     [IgnoreDataMember]
