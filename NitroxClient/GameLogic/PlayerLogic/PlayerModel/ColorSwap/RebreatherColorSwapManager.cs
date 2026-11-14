@@ -1,7 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy;
 using UnityEngine;
 using static NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants;
 
@@ -9,37 +7,22 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 {
     public class RebreatherColorSwapManager : IColorSwapManager
     {
-        public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
+        public void ApplyPlayerColor(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
             Color playerColor = nitroxPlayer.PlayerSettings.PlayerColor.ToUnity();
-            IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
+            PlayerColorRenderTextures renderTextures = PlayerColorRenderTextures.GetOrAdd(playerModel);
 
             SkinnedMeshRenderer rebreatherRenderer = playerModel.GetRenderer(REBREATHER_GAME_OBJECT_NAME);
-            rebreatherRenderer.material.ApplyClonedTexture();
-
             FixRebreatherMaterials(playerModel, rebreatherRenderer);
 
-            Color[] texturePixels = rebreatherRenderer.material.GetMainTexturePixels();
+            RenderTexture texture = GpuRecolorer.Recolor(
+                (Texture2D)rebreatherRenderer.material.mainTexture,
+                playerColor,
+                RecolorRegion.FullTexture(ColorSwapMode.Hue).WithHueRange(0f, 25f));
+            renderTextures.Track(texture);
 
-            return operation =>
-            {
-                HsvSwapper rebreatherFilter = new HsvSwapper(colorSwapStrategy);
-                rebreatherFilter.SetHueRange(0f, 25f);
-
-                rebreatherFilter.SwapColors(texturePixels);
-
-                operation.UpdateIndex(REBREATHER_INDEX_KEY, texturePixels);
-            };
-        }
-
-        public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)
-        {
-            Color[] rebreatherPixelIndexes = pixelIndex[REBREATHER_INDEX_KEY];
-
-            GameObject playerModel = nitroxPlayer.PlayerModel;
-            SkinnedMeshRenderer rebreatherRenderer = playerModel.GetRenderer(REBREATHER_GAME_OBJECT_NAME);
-            rebreatherRenderer.material.UpdateMainTextureColors(rebreatherPixelIndexes);
+            rebreatherRenderer.material.mainTexture = texture;
         }
 
         //Clean up of UWE's tech debt from when they gave up on rendering player equipment on the avatar during normal play. Probably best not to read too much into it...
