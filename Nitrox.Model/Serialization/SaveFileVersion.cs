@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using Nitrox.Model.Core;
 
 namespace Nitrox.Model.Serialization;
@@ -8,17 +9,18 @@ namespace Nitrox.Model.Serialization;
 public class SaveFileVersion
 {
     [DataMember(Order = 1)]
-    public readonly int Major;
+    public int Major { get; }
 
     [DataMember(Order = 2)]
-    public readonly int Minor;
+    public int Minor { get; }
 
     [DataMember(Order = 3)]
-    public readonly int Build;
+    public int Build { get; }
 
     [DataMember(Order = 4)]
-    public readonly int Revision;
+    public int Revision { get; }
 
+    [JsonIgnore]
     public Version Version => new(Major, Minor, Build, Revision);
 
     public SaveFileVersion()
@@ -35,6 +37,15 @@ public class SaveFileVersion
         Minor = version.Minor;
         Build = version.Build;
         Revision = version.Revision;
+    }
+
+    [JsonConstructor]
+    public SaveFileVersion(int major, int minor, int build, int revision)
+    {
+        Major = major;
+        Minor = minor;
+        Build = build;
+        Revision = revision;
     }
 
     public override string ToString()

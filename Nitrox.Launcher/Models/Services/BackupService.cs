@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Nitrox.Launcher.Models.Serialization;
 using Nitrox.Model.Constants;
 using Nitrox.Model.Core;
 using Nitrox.Model.Helper;
@@ -76,7 +77,7 @@ public class BackupService(IKeyValueStore keyValueStore)
                     InstallationPath = launcherPath,
                     SavesPath = keyValueStore.GetSavesPath()
                 };
-                await JsonSerializer.SerializeAsync(entryStream, metadata, JsonSerializerOptions.Default, cancellationToken);
+                await JsonSerializer.SerializeAsync(entryStream, metadata, LauncherJsonSerializerContext.Default.BackupMetadata, cancellationToken);
             }
 
             progress?.Report((100, "Backup complete"));
@@ -139,7 +140,7 @@ public class BackupService(IKeyValueStore keyValueStore)
                 if (metadataEntry != null)
                 {
                     using Stream stream = metadataEntry.Open();
-                    BackupMetadata? metadata = JsonSerializer.Deserialize<BackupMetadata>(stream);
+                    BackupMetadata? metadata = JsonSerializer.Deserialize(stream, LauncherJsonSerializerContext.Default.BackupMetadata);
                     if (metadata != null)
                     {
                         version = metadata.NitroxVersion;
