@@ -20,13 +20,12 @@ internal sealed class RemoveCreatureCorpseProcessor(IPacketSender packetSender, 
         {
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
-                bool isOtherPlayer = player != context.Sender;
-                if (isOtherPlayer && player.CanSee(entity))
-                {
-                    player.OutOfCellVisibleEntities.Remove(entity.Id);
-                    await context.SendAsync(packet, player.SessionId);
-                }
+                player.OutOfCellVisibleEntities.Remove(entity.Id);
             }
+
+            // Not filtered by visibility because the server position of a creature can be outdated
+            // and a player who still has it loaded would then keep it alive
+            await context.SendToOthersAsync(packet);
         }
     }
 }
