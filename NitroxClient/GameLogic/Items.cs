@@ -117,6 +117,8 @@ public class Items
 
         WorldEntity droppedItem;
         List<Entity> childrenEntities = GetPrefabChildren(gameObject, id, entityMetadataManager).ToList();
+        // Reflects the tool's actual current battery state (if any); never assumes a default one, since a dropped item always already exists.
+        BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, childrenEntities, id, entityMetadataManager, allowDefaultBattery: false);
 
         // If the item is dropped in a WaterPark we need to handle it differently
         NitroxId parentId = null;
@@ -236,7 +238,10 @@ public class Items
     /// </summary>
     private InventoryItemEntity ConvertToInventoryEntityUntracked(GameObject gameObject, NitroxId parentId)
     {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, parentId, entityMetadataManager);
+        // Entities that are already known by the server were already spawned before (e.g. dropped and picked back up), so their
+        // actual current battery state (which can be empty) must be preserved instead of assuming a freshly filled default battery.
+        bool isExistingEntity = gameObject.TryGetNitroxId(out NitroxId existingId) && entities.IsKnownEntity(existingId);
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, parentId, entityMetadataManager, !isExistingEntity);
 
         // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
         // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
@@ -251,7 +256,7 @@ public class Items
         return inventoryItemEntity;
     }
 
-    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, NitroxId parentId, EntityMetadataManager entityMetadataManager)
+    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, NitroxId parentId, EntityMetadataManager entityMetadataManager, bool allowDefaultBattery = true)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
@@ -260,7 +265,7 @@ public class Items
         List<Entity> children = GetPrefabChildren(gameObject, itemId, entityMetadataManager).ToList();
 
         InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), parentId, children);
-        BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
+        BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId, entityMetadataManager, allowDefaultBattery);
 
         return inventoryItemEntity;
     }
