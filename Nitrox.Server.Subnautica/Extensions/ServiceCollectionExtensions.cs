@@ -16,6 +16,7 @@ using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
+using Nitrox.Server.Subnautica.Models.GameLogic.PictureFrames;
 using Nitrox.Server.Subnautica.Models.Logging.Redaction.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 using Nitrox.Server.Subnautica.Models.Packets.Processors;
@@ -177,6 +178,8 @@ internal static partial class ServiceCollectionExtensions
                     .AddSingleton<BatchEntitySpawner>()
                     .AddSingleton<EntityRegistry>()
                     .AddSingleton<SessionSettings>()
+                    .AddSingleton<PictureFrameKeyProvider>()
+                    .AddSingleton<PictureFrameStorageService>()
                     .AddSingleton<SubnauticaUweWorldEntityFactory>()
                     .AddSingleton<IEntityBootstrapperManager, SubnauticaEntityBootstrapperManager>()
                     .AddSingleton<EntitySpawnPointFactory, SubnauticaEntitySpawnPointFactory>();
