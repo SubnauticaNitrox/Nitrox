@@ -23,7 +23,6 @@ internal sealed class EntityTransformUpdatesProcessor(SimulationOwnership simula
             }
 
             RemotelyControlled remotelyControlled = RemotelyControlled.Ensure(gameObject);
-            ;
 
             Vector3 position = update.Position.ToUnity();
             Quaternion rotation = update.Rotation.ToUnity();

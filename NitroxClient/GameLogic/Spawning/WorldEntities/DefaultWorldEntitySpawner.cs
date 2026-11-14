@@ -23,59 +23,49 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
         yield return CreateGameObject(techType, entity.ClassId, entity.Id, gameObjectResult);
 
         GameObject gameObject = gameObjectResult.Get();
-        SetupObject(entity, parent, gameObject, cellRoot, techType);
+        SetupObject(entity, parent, gameObject, techType, true);
 
         result.Set(Optional.Of(gameObject));
     }
 
-    private void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, EntityCell cellRoot, TechType techType)
+    public static void SetupObject(WorldEntity entity, Optional<GameObject> parent, GameObject gameObject, TechType techType, bool registerLargeWorldEntity)
     {
-        gameObject.transform.position = entity.Transform.Position.ToUnity();
-        gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
+        // PlaceholderGroups have children that aren't directly under them (ParentEntity/Slots/Entity), but their local transform takes that into account so we can reliably use the local transform
+        // to position them under their actual parent
+        gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
+        gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
         gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
         CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
+        // Parenting process
         WaterPark parentWaterPark = null;
         if (parent.HasValue)
         {
             Items.TryGetParentWaterPark(parent.Value.transform.parent, out parentWaterPark);
         }
+        if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
+        {
+            pickupable.SetVisible(false);
+            pickupable.Activate(false);
+            parentWaterPark.AddItem(pickupable);
+        }
+        else if (parent.HasValue)
+        {
+            gameObject.transform.SetParent(parent.Value.transform, false);
+        }
 
+        // Registering the entity in the world
         LargeWorldEntity largeWorldEntity = gameObject.GetComponent<LargeWorldEntity>();
         if (largeWorldEntity)
         {
             largeWorldEntity.cellLevel = (LargeWorldEntity.CellLevel)entity.Level;
-        }
 
-        if (!parentWaterPark)
-        {
-            if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
+            // LargeWorldEntity.Start unregisters itself if there is a parent which has a LargeWorldEntity
+            // thus we detect the opposite case to call Register
+            if (registerLargeWorldEntity && (!parent.HasValue || !parent.Value.GetComponentInParent<LargeWorldEntity>()))
             {
-                LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
-            }
-            else if (largeWorldEntity && !gameObject.transform.parent && cellRoot.liveRoot)
-            {
-                gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
                 LargeWorldEntity.Register(gameObject);
-            }
-            else
-            {
-                gameObject.SetActive(true);
-            }
-        }
-
-        if (parent.HasValue)
-        {
-            if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
-            {
-                pickupable.SetVisible(false);
-                pickupable.Activate(false);
-                parentWaterPark.AddItem(pickupable);
-            }
-            else
-            {
-                gameObject.transform.SetParent(parent.Value.transform, true);
             }
         }
     }
@@ -89,13 +79,28 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
         // If we've never even once issued a request prefab for the class id we need to do it because multiple prefabs
         // can have the same TechType so it's not good enough to find the right prefab
-        if (!classIdsWithoutPrefab.Contains(classId) || techType == TechType.None)
+        if ((classId != null && !classIdsWithoutPrefab.Contains(classId)) || techType == TechType.None)
         {
             prefab = null;
             return false;
         }
         
         return prefabCacheByTechType.TryGetValue(techType, out prefab);
+    }
+
+    public static IEnumerator CachePrefab(string classId, TechType techType)
+    {
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(classId);
+        yield return request;
+        if (request.TryGetPrefab(out GameObject prefabObject))
+        {
+            prefabCacheByClassId[classId] = prefabObject;
+            prefabCacheByTechType[techType] = prefabObject;
+        }
+        else
+        {
+            prefabNotFound.Add((classId, techType));
+        }
     }
 
     /// <summary>
@@ -190,7 +195,7 @@ public class DefaultWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSp
 
         if (TryCreateGameObjectSync(techType, entity.ClassId, entity.Id, out GameObject gameObject))
         {
-            SetupObject(entity, parent, gameObject, cellRoot, techType);
+            SetupObject(entity, parent, gameObject, techType, true);
             result.Set(gameObject);
             return true;
         }

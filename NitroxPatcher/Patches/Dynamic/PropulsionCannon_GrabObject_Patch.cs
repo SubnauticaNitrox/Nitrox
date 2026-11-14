@@ -53,7 +53,7 @@ public sealed partial class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDy
             // In case what we grabbed wasn't a vehicle, we'll be watching it with the regular entity position broadcast system
             if (!Resolve<SimulationOwnership>().TreatVehicleEntity(id, true, SimulationLockType.EXCLUSIVE))
             {
-                EntityPositionBroadcaster.WatchEntity(id);
+                EntityPositionBroadcaster.Instance.WatchEntity(id);
             }
 
             skipPrefixPatch = true;

@@ -18,15 +18,15 @@ public class EntityTransformUpdates : Packet
 
     public override string ToString()
     {
-        return $"[EntityTransformUpdates: {String.Join(" ", Updates)} ]";
+        return $"[{nameof(EntityTransformUpdates)} [{string.Join(" ", Updates)}]]";
     }
 
     [Serializable]
     public abstract class EntityTransformUpdate
     {
         public NitroxId Id { get; }
-        public NitroxVector3 Position { get; }
-        public NitroxQuaternion Rotation { get; }
+        public NitroxVector3 Position { get; set; }
+        public NitroxQuaternion Rotation { get; set; }
 
         public EntityTransformUpdate(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
         {
@@ -46,7 +46,7 @@ public class EntityTransformUpdates : Packet
 
         public override string ToString()
         {
-            return $"[RawTransformUpdate Id:{Id} Position:{Position} Rotation:{Rotation}]";
+            return $"[{nameof(RawTransformUpdate)} Id: {Id}, Position: {Position}, Rotation: {Rotation}]";
         }
     }
 
@@ -66,7 +66,7 @@ public class EntityTransformUpdates : Packet
 
         public override string ToString()
         {
-            return $"[SplineTransformUpdate Id:{Id} Position:{Position} Rotation:{Rotation} DestinationPosition:{DestinationPosition} DestinationDirection:{DestinationDirection} Velocity:{Velocity} ]";
+            return $"[{nameof(SplineTransformUpdate)} Id: {Id}, Position: {Position}, Rotation: {Rotation}, DestinationPosition: {DestinationPosition}, DestinationDirection: {DestinationDirection}, Velocity: {Velocity}]";
         }
     }
 }

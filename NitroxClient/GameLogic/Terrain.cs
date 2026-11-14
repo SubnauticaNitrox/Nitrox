@@ -33,10 +33,9 @@ public class Terrain
     {
         AbsoluteEntityCell cell = new(batchId.ToDto(), cellId.ToDto(), level);
 
-        if (!visibleCells.Contains(cell))
+        if (visibleCells.Add(cell))
         {
             removedCells.Remove(cell);
-            visibleCells.Add(cell);
             addedCells.Add(cell);
             cellsPendingSync = true;
         }
@@ -46,9 +45,8 @@ public class Terrain
     {
         AbsoluteEntityCell cell = new(batchId.ToDto(), cellId.ToDto(), level);
 
-        if (visibleCells.Contains(cell))
+        if (visibleCells.Remove(cell))
         {
-            visibleCells.Remove(cell);
             removedCells.Add(cell);
             cellsPendingSync = true;
             fullySpawnedCells.Remove((batchId, cellId, level));

@@ -388,7 +388,7 @@ internal sealed class BatchEntitySpawner(
                 if (spawnedEntity != null)
                 {
                     // Spawned child will not be of the same type as the current prefabAsset
-                    if (prefabPlaceholderGroupsResource.PlaceholdersByClassId.ContainsKey(spawnedEntity.ClassId))
+                    if (prefabPlaceholderGroupsResource.GroupsByClassId.ContainsKey(spawnedEntity.ClassId))
                     {
                         spawnedEntity = new PlaceholderGroupWorldEntity(spawnedEntity, i);
                     }
@@ -405,7 +405,7 @@ internal sealed class BatchEntitySpawner(
                     prefabClassId = randomAsset.ClassIds[randomIndex];
                 }
 
-                EntitySpawnPoint esp = new(entity.AbsoluteEntityCell, prefabAsset.Transform.LocalPosition, prefabAsset.Transform.LocalRotation, prefabAsset.Transform.LocalScale, prefabClassId);
+                EntitySpawnPoint esp = new(entity.AbsoluteEntityCell, prefabAsset.Transform.Position, prefabAsset.Transform.Rotation, prefabAsset.Transform.LocalScale, prefabClassId);
                 WorldEntity spawnedEntity = (WorldEntity)(await SpawnEntitiesStaticallyAsync(esp, deterministicBatchGenerator, entity)).First();
                 if (prefabAsset is PrefabPlaceholdersGroupAsset)
                 {
@@ -431,7 +431,7 @@ internal sealed class BatchEntitySpawner(
         }
         List<Entity> entities = [];
 
-        EntitySpawnPoint entitySpawnPoint = new(cell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
+        EntitySpawnPoint entitySpawnPoint = new(cell, transform.Position, transform.Rotation, [.. entitySlot.AllowedTypes], 1f, entitySlot.BiomeType);
         entities.AddRange(await SpawnEntitiesUsingRandomDistributionAsync(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
         if (entities.Count > 0)
         {

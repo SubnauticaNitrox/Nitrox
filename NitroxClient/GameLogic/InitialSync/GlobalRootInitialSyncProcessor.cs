@@ -1,10 +1,10 @@
 using System.Collections;
-using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxClient.MonoBehaviours.Cyclops;
 using Nitrox.Model.GameLogic.PlayerAnimation;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.MonoBehaviours.Cyclops;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -34,6 +34,7 @@ public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
         // As we migrate systems over to entities, we want to ensure the required components are in place to spawn these entities.
         // For example, migrating inventories to the entity system requires players are spawned in the world before we try to add
         // inventory items to them.  Eventually, all of the below processors will become entities on their own
+        AddDependency<PrefabLoadInitialSyncProcessor>();
         AddDependency<PlayerInitialSyncProcessor>();
         AddDependency<RemotePlayerInitialSyncProcessor>();
         AddDependency<StoryGoalInitialSyncProcessor>();

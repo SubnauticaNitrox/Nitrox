@@ -1,3 +1,4 @@
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 
@@ -7,6 +8,11 @@ public class CrashHomeMetadataExtractor : EntityMetadataExtractor<CrashHome, Cra
 {
     public override CrashHomeMetadata Extract(CrashHome crashHome)
     {
-        return new(crashHome.spawnTime);
+        Optional<NitroxId> spawnedCrashId = Optional.Empty;
+        if (crashHome.crash && crashHome.crash.TryGetNitroxId(out NitroxId crashId))
+        {
+            spawnedCrashId = crashId;
+        }
+        return new(crashHome.spawnTime, spawnedCrashId);
     }
 }

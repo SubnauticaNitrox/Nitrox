@@ -1,37 +1,26 @@
 using System.Collections;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
+public class PlayerEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities) : EntitySpawner<PlayerEntity>
 {
-    private readonly PlayerManager playerManager;
-    private readonly ILocalNitroxPlayer localPlayer;
-
-    public PlayerEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
-    {
-        this.playerManager = playerManager;
-        this.localPlayer = localPlayer;
-    }
+    private readonly PlayerManager playerManager = playerManager;
+    private readonly ILocalNitroxPlayer localPlayer = localPlayer;
+    private readonly Entities entities = entities;
 
     protected override IEnumerator SpawnAsync(PlayerEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        SpawnSync(entity, result);
-        return null;
-    }
-
-    protected override bool SpawnSync(PlayerEntity entity, TaskResult<Optional<GameObject>> result)
-    {
         if (Player.main.TryGetNitroxId(out NitroxId localPlayerId) && localPlayerId == entity.Id)
         {
-            // No special setup for the local player.  Simply return saying it is spawned.
+            yield return entities.SpawnBatchAsync(entity.ChildEntities, true, true);
             result.Set(Player.main.gameObject);
-            return true;
+            yield break;
         }
 
         Optional<RemotePlayer> remotePlayer = playerManager.Find(entity.Id);
@@ -42,7 +31,7 @@ public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
         if (!remotePlayer.HasValue || remotePlayer.Value.Body)
         {
             result.Set(Optional.Empty);
-            return true;
+            yield break;
         }
 
         GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
@@ -53,11 +42,12 @@ public class PlayerEntitySpawner : SyncEntitySpawner<PlayerEntity>
             AttachToParent(remotePlayer.Value, parent.Value);
         }
 
+        yield return entities.SpawnBatchAsync(entity.ChildEntities, true, true);
+
         result.Set(Optional.Of(remotePlayerBody));
-        return true;
     }
 
-    protected override bool SpawnsOwnChildren(PlayerEntity entity) => false;
+    protected override bool SpawnsOwnChildren(PlayerEntity entity) => true;
 
     private GameObject CloneLocalPlayerBodyPrototype()
     {

@@ -1,22 +1,29 @@
 namespace NitroxClient.MonoBehaviours;
 
 /// <summary>
-/// Ensures a deployed <see cref="PipeSurfaceFloater"/> is no longer remotely moved (it is supposed to be static).
-/// Also ensures <see cref="RemotelyControlled.FixedUpdate"/> no longer sets isKinematic to false when deployed.
+/// Ensures a surfaced <see cref="PipeSurfaceFloater"/> is no longer movable (it is supposed to be static).
 /// </summary>
 public class RemotelyControlledPipeFloater : RemotelyControlled
 {
-    private PipeSurfaceFloater pipeSurfaceFloater;
-    
-    public new void Awake()
+    private bool positioned;
+
+    public void SetPositioned()
     {
-        base.Awake();
-        pipeSurfaceFloater = gameObject.GetComponent<PipeSurfaceFloater>();
+        positioned = true;
+        // We set the floater to kinematic so it's unaffected by the local world
+        rigidbody.isKinematic = true;
+        // interpolation to none prevents some little jittering
+        rigidbody.interpolation = UnityEngine.RigidbodyInterpolation.None;
     }
 
     public new void FixedUpdate()
     {
-        if (!pipeSurfaceFloater.deployed)
+        if (positioned)
+        {
+            rigidbody.position = smoothPosition.Target;
+            rigidbody.rotation = smoothRotation.Target;
+        }
+        else
         {
             base.FixedUpdate();
         }

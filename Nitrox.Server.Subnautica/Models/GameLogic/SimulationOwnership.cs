@@ -20,7 +20,15 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic
 
         Dictionary<NitroxId, PlayerLock> playerLocksById = new Dictionary<NitroxId, PlayerLock>();
 
-        public bool TryToAcquire(NitroxId id, Player player, SimulationLockType requestedLock)
+        public void ForceAcquire(NitroxId entityId, Player player, SimulationLockType requestedLock)
+        {
+            lock (playerLocksById)
+            {
+                playerLocksById[entityId] = new(player, requestedLock);
+            }
+        }
+
+        public bool TryAcquire(NitroxId id, Player player, SimulationLockType requestedLock)
         {
             lock (playerLocksById)
             {

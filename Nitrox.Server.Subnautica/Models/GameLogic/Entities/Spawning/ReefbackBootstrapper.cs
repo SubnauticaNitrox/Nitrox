@@ -2,6 +2,7 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.Helper;
 using static Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning.ReefbackSpawnData;
 
@@ -28,6 +29,9 @@ internal sealed class ReefbackBootstrapper : IEntityBootstrapper
 
     public void Prepare(ref WorldEntity entity, DeterministicGenerator generator)
     {
+        // See Creature.InitializeOnce
+        entity.Metadata = new StayAtLeashPositionMetadata(entity.Transform.Position);
+
         // From ReefbackLife.Initialize
         if (entity.Transform.LocalScale.X <= 0.8f)
         {

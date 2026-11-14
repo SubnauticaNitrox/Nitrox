@@ -11,8 +11,8 @@ using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Helper;
 using Nitrox.Server.Subnautica.Models.Resources.AddressablesTools.Catalog;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
-using ClassIdByRuntimeKeyDictionary = System.Collections.Generic.Dictionary<string, string>;
 using AddressableCatalogDictionary = System.Collections.Generic.Dictionary<string, string[]>;
+using ClassIdByRuntimeKeyDictionary = System.Collections.Generic.Dictionary<string, string>;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
@@ -26,7 +26,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
     ///         the cache is rebuilt
     ///     </para>
     /// </summary>
-    private const int CACHE_VERSION = 4;
+    private const int CACHE_VERSION = 5;
 
     private const string CACHE_FILENAME = "PrefabPlaceholdersGroupAssetsCache.json";
 
@@ -382,10 +382,10 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
 
             AssetTypeValueField gameObjectPtr = prefabPlaceholder["m_GameObject"];
             AssetTypeValueField gameObjectField = amInst.GetExtAsset(assetFileInst, gameObjectPtr).baseField;
-            IPrefabAsset asset = GetAndCacheAsset(amInst, prefabPlaceholder["prefabClassId"].AsString, addressableCatalog, classIdByRuntimeKey);
+            string prefabAssetClassId = prefabPlaceholder["prefabClassId"].AsString;
+            IPrefabAsset asset = GetAndCacheAsset(amInst, prefabAssetClassId, addressableCatalog, classIdByRuntimeKey);
             bool isEntitySlotAsset = asset is PrefabPlaceholderAsset prefabPlaceholderAsset && prefabPlaceholderAsset.EntitySlot.HasValue;
             NitroxTransform transform = amInst.GetTransformFromGameObject(assetFileInst, gameObjectField, rootGameObjectName, isEntitySlotAsset);
-            string prefabAssetClassId = prefabPlaceholder["prefabClassId"].AsString;
             if (asset == null)
             {
                 throw new InvalidOperationException($"Prefab asset with id '{prefabAssetClassId}' must not be null");
@@ -457,9 +457,17 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
             AssetTypeValueField databoxSpawner = am.GetBaseField(assetFileInst, databoxSpawnerInfo);
             string runtimeKey = databoxSpawner["databoxPrefabReference"]["m_AssetGUID"].AsString;
 
-            PrefabPlaceholderAsset databoxAsset = new(classIdByRuntimeKey[runtimeKey]);
-            placeholdersByClassId[classId] = databoxAsset;
-            return databoxAsset;
+            IPrefabAsset asset = GetAndCacheAsset(am, classIdByRuntimeKey[runtimeKey], addressableCatalog, classIdByRuntimeKey);
+            // Cache the asset with its original classId
+            if (asset is PrefabPlaceholdersGroupAsset groupAsset)
+            {
+                groupsByClassId[classId] = groupAsset;
+            }
+            else if (asset is PrefabPlaceholderAsset placeholderAsset)
+            {
+                placeholdersByClassId[classId] = placeholderAsset;
+            }
+            return asset;
         }
 
         AssetFileInfo entitySlotInfo = am.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "EntitySlot");

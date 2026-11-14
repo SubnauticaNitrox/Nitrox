@@ -1,7 +1,6 @@
-using NitroxClient.Communication.Abstract;
 using Nitrox.Model.DataStructures;
-using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication.Abstract;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
