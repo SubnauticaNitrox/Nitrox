@@ -4,12 +4,14 @@
         <!-- OutputType for Windows, MacOS & Linux -->
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
-        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
         <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
-        <PublishTrimmed>false</PublishTrimmed>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>partial</TrimMode>
+        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+        <ILLinkTreatWarningsAsErrors>false</ILLinkTreatWarningsAsErrors>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
 
@@ -24,6 +26,23 @@
     <ItemGroup>
         <TrimmerRootDescriptor Include="Roots.xml" />
     </ItemGroup>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options#trim-framework-library-features -->
+    <PropertyGroup>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <AutoreleasePoolSupport>false</AutoreleasePoolSupport>
+        <DebuggerSupport>false</DebuggerSupport>
+        <EventSourceSupport>false</EventSourceSupport>
+        <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+        <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <MetricsSupport>false</MetricsSupport>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <UseSizeOptimizedLinq>true</UseSizeOptimizedLinq>
+        <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia" />
@@ -61,7 +80,7 @@
 
     <!-- Project references not to be code-linked with app, but are used by app as content files. See https://github.com/dotnet/msbuild/issues/4795#issuecomment-1443879474  -->
     <ItemGroup>
-        <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" >
+        <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj" GlobalPropertiesToRemove="CreateAppBundle">
             <IsWeakReference>true</IsWeakReference>
         </ProjectReference>
         <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
@@ -119,6 +138,26 @@
               Retries="3"
               RetryDelayMilliseconds="100"
               SkipUnchangedFiles="True" />
+    </Target>
+
+    <Target Name="_NitroxAddLauncherPublishFiles" BeforeTargets="_NitroxMovePublishedDependencies">
+        <ItemGroup>
+            <_LauncherPublishPatcherFiles Include="$(TargetDir)lib\net472\**\*" />
+            <_LauncherPublishServerDependencies Include="$(TargetDir)lib\Microsoft.Extensions.*.dll"
+                                                Exclude="@(RuntimePackAsset->'$(TargetDir)lib\%(DestinationSubDirectory)%(Filename)%(Extension)')" />
+            <_LauncherPublishServerFiles Include="$(TargetDir)Nitrox.Server.Subnautica.deps.json;$(TargetDir)Nitrox.Server.Subnautica.runtimeconfig.json" />
+        </ItemGroup>
+        <Error Condition="!Exists('$(TargetDir)Nitrox.Server.Subnautica.deps.json') Or !Exists('$(TargetDir)Nitrox.Server.Subnautica.runtimeconfig.json')"
+               Text="The server build output is missing; build the launcher before publishing with --no-build." />
+        <Copy SourceFiles="@(_LauncherPublishPatcherFiles)"
+              DestinationFiles="@(_LauncherPublishPatcherFiles->'$(PublishDir)lib\net472\%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(_LauncherPublishServerDependencies)"
+              DestinationFolder="$(PublishDir)lib\"
+              SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(_LauncherPublishServerFiles)"
+              DestinationFolder="$(PublishDir)"
+              SkipUnchangedFiles="true" />
     </Target>
 
     <ItemGroup>

@@ -108,19 +108,19 @@ internal class App : Application
                        .ClearProviders()
                        .Services
                        .AddAppServices();
-            
+
             // Use named pipes on Windows for faster IPC, sockets on Linux
             if (OperatingSystem.IsWindows())
             {
-                hostBuilder.WebHost.ConfigureKestrel(options => 
+                hostBuilder.WebHost.ConfigureKestrel(options =>
                     options.ListenNamedPipe(LauncherConstants.GRPC_NAMED_PIPE_NAME, o => o.Protocols = HttpProtocols.Http2));
             }
             else
             {
-                hostBuilder.WebHost.ConfigureKestrel(options => 
+                hostBuilder.WebHost.ConfigureKestrel(options =>
                     options.Listen(IPAddress.Any, 0, o => o.Protocols = HttpProtocols.Http2));
             }
-            
+
             WebApplication host = hostBuilder.Build();
             host.MapMagicOnionService();
             host.MapGrpcService<ServersManagement>();
@@ -161,10 +161,6 @@ internal class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-
-#if DEBUG
-        this.AttachDeveloperTools();
-#endif
     }
 
     public override void OnFrameworkInitializationCompleted()
