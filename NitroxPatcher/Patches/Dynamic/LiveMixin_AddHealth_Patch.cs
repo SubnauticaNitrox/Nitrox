@@ -1,11 +1,11 @@
 using System.Reflection;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using Nitrox.Model.DataStructures;
-using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
-using Nitrox.Model.Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -15,7 +15,7 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.AddHealth(default));
 
     /// <summary>
-    /// We can broadcast packet update when we aren't processing remote health change
+    ///     We can broadcast packet update when we aren't processing remote health change
     /// </summary>
     private static bool CanBroadcast => !Resolve<LiveMixinManager>().IsRemoteHealthChanging;
 
@@ -47,6 +47,9 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
                 case RadiationLeak radiationLeak:
                     HandleRadiationLeakRepair(radiationLeak);
                     return;
+                case CyclopsDamagePoint cyclopsDamagePoint:
+                    HandleCyclopsDamagePointRepair(__instance, cyclopsDamagePoint);
+                    return;
                 case BaseCell baseCell:
                     HandleBaseLeakRepair(baseCell, __instance);
                     return;
@@ -62,8 +65,28 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
         {
             return;
         }
-        
+
         Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(radiationLeak);
+        if (metadata.HasValue)
+        {
+            Resolve<Entities>().BroadcastMetadataUpdate(leakId, metadata.Value);
+        }
+    }
+
+    private static void HandleCyclopsDamagePointRepair(LiveMixin liveMixin, CyclopsDamagePoint cyclopsDamagePoint)
+    {
+        if (!CanBroadcast || !cyclopsDamagePoint.TryGetNitroxId(out NitroxId leakId))
+        {
+            return;
+        }
+
+        if (liveMixin.IsFullHealth())
+        {
+            // Entity was already destroyed
+            return;
+        }
+
+        Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(cyclopsDamagePoint);
         if (metadata.HasValue)
         {
             Resolve<Entities>().BroadcastMetadataUpdate(leakId, metadata.Value);

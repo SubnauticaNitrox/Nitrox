@@ -987,7 +987,7 @@ event:/tools/dolls/mark;false;false;0
 event:/tools/extinguisher/deploy;false;false;0
 event:/tools/extinguisher/first use;false;false;0
 event:/tools/extinguisher/shoot;false;false;0
-event:/tools/extinguisher/use_loop;false;false;0
+event:/tools/extinguisher/use_loop;false;false;30
 event:/tools/flare/deploy;false;false;20
 event:/tools/flare/first_use;false;false;20
 event:/tools/flare/on_loop;false;false;20
