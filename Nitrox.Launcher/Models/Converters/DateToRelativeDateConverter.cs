@@ -11,7 +11,7 @@ internal sealed class DateToRelativeDateConverter : Converter<DateToRelativeDate
     private const float DAYS_IN_YEAR = 365.2425f;
     private const float MEAN_DAYS_IN_MONTH = DAYS_IN_YEAR / 12f;
 
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         DateTimeOffset date = value switch
         {

@@ -12,18 +12,18 @@ namespace Nitrox.Launcher.Models.Converters;
 ///     This converter is unconventional (inverted converter) in that the value is converted for the backend.
 ///     The user wants to be able to input spaces while they're typing, but we don't want to save those spaces.
 /// </remarks>
-public class TrimConverter : Converter<TrimConverter>
+internal sealed class TrimConverter : Converter<TrimConverter>
 {
     private readonly Lock inOutCacheLock = new();
     /// <summary>
     ///     Cache to remember the last known untrimmed value (here, the value) for trimmed values (here, the key).
     /// </summary>
-    private readonly Dictionary<string, string> inOutCache = new();
+    private readonly Dictionary<string, string> inOutCache = [];
 
     /// <summary>
     ///     Converts trimmed value back to last known untrimmed value.
     /// </summary>
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not string strValue)
         {
@@ -42,7 +42,7 @@ public class TrimConverter : Converter<TrimConverter>
     /// <summary>
     ///     Converts untrimmed value back to trimmed value.
     /// </summary>
-    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not string strValue)
         {

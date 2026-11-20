@@ -14,7 +14,7 @@
                             Orientation="Horizontal"
                             Spacing="10">
                             <TextBlock>Light</TextBlock>
-                            <TextBox Watermark="Enter something here.." />
+                            <TextBox PlaceholderText="Enter something here.." />
                         </StackPanel>
                     </ContentControl>
                 </ThemeVariantScope>
@@ -27,7 +27,7 @@
                             Orientation="Horizontal"
                             Spacing="10">
                             <TextBlock>Dark</TextBlock>
-                            <TextBox Watermark="Enter something here.." />
+                            <TextBox PlaceholderText="Enter something here.." />
                         </StackPanel>
                     </ContentControl>
                 </ThemeVariantScope>
@@ -39,22 +39,7 @@
         <Setter Property="Icon" Value="/Assets/Images/nitrox-icon.ico" />
         <Setter Property="Focusable" Value="True" />
         <Setter Property="WindowStartupLocation" Value="CenterOwner" />
-        <!--  Disables window border but allow resizing  -->
         <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
-        <Setter Property="SystemDecorations">
-            <Setter.Value>
-                <OnPlatform>
-                    <OnPlatform.Default>
-                        <SystemDecorations>None</SystemDecorations>
-                    </OnPlatform.Default>
-                    <On Options="Windows">
-                        <SystemDecorations>Full</SystemDecorations>
-                    </On>
-                </OnPlatform>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-        <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
         <Setter Property="Padding" Value="{Binding $self.OffScreenMargin}" />
     </Style>
 
@@ -111,13 +96,6 @@
     </Style>
     
     <!-- Global Transition Styles -->
-    <Style Selector=":is(Window)">
-        <Setter Property="Transitions">
-            <Transitions>
-                <BrushTransition Duration="0:0:0.075" Property="Background" />
-            </Transitions>
-        </Setter>
-    </Style>
     <Style Selector=":is(Panel)">
         <Setter Property="Transitions">
             <Transitions>
@@ -133,7 +111,7 @@
             </Transitions>
         </Setter>
     </Style>
-    <Style Selector=":is(TemplatedControl)">
+    <Style Selector=":is(TemplatedControl):not(:is(TopLevel))">
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Duration="0:0:0.005" Property="Foreground" />

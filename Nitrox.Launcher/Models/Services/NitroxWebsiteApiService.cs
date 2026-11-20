@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Attributes;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Serialization;
 using Nitrox.Model.Core;
 
 namespace Nitrox.Launcher.Models.Services;
@@ -27,7 +28,7 @@ internal sealed class NitroxWebsiteApiService
 
     public async Task<NitroxChangelog[]?> GetChangeLogsAsync(CancellationToken cancellationToken = default)
     {
-        ChangeLog[] changeLogs = await httpClient.GetFromJsonAsync<ChangeLog[]>("changelog/releases", cancellationToken);
+        ChangeLog[] changeLogs = await httpClient.GetFromJsonAsync("changelog/releases", LauncherJsonSerializerContext.Default.ChangeLogArray, cancellationToken);
         NitroxChangelog[] result = new NitroxChangelog[changeLogs.Length];
         StringBuilder buffer = new();
         for (int i = 0; i < changeLogs.Length; i++)
@@ -37,7 +38,7 @@ internal sealed class NitroxWebsiteApiService
         return result;
     }
 
-    public async Task<NitroxRelease?> GetNitroxLatestVersionAsync() => await httpClient.GetFromJsonAsync<NitroxRelease>("version/latest");
+    public async Task<NitroxRelease?> GetNitroxLatestVersionAsync() => await httpClient.GetFromJsonAsync("version/latest", LauncherJsonSerializerContext.Default.NitroxRelease);
 
     /// <summary>
     ///     Gets the latest Nitrox for the platform of the current machine.
@@ -78,6 +79,7 @@ internal sealed class NitroxWebsiteApiService
         /// <summary>
         ///     Gets the download info for the current platform and architecture.
         /// </summary>
+        [JsonIgnore]
         public ArchitectureInfo? CurrentPlatformInfo
         {
             get
@@ -119,6 +121,7 @@ internal sealed class NitroxWebsiteApiService
         [JsonPropertyName("filesize")]
         public required string FileSize { get; init; }
 
+        [JsonIgnore]
         public float FileSizeMegaBytes => float.TryParse(FileSize, out float size) ? size : 0;
     }
 }

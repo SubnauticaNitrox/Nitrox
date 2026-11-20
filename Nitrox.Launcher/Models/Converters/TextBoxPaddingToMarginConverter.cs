@@ -10,9 +10,9 @@ namespace Nitrox.Launcher.Models.Converters;
 /// <remarks>
 ///     This converter is used to solve a niche issue with the styling of TextBoxes.
 /// </remarks>
-public class TextBoxPaddingToMarginConverter : Converter<TextBoxPaddingToMarginConverter>
+internal class TextBoxPaddingToMarginConverter : Converter<TextBoxPaddingToMarginConverter>
 {
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not Thickness padding)
         {
@@ -24,7 +24,7 @@ public class TextBoxPaddingToMarginConverter : Converter<TextBoxPaddingToMarginC
         return new Thickness(0, top, 0, bottom);
     }
 
-    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

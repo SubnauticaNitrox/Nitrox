@@ -3,9 +3,6 @@ using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.Resources.Core;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Nitrox.Server.Subnautica.Models.Resources.Parsers;
 
@@ -46,28 +43,42 @@ internal sealed class RandomStartResource(SubnauticaAssetsManager assetsManager,
             return null;
         }
 
-        Image<Bgra32> texture = Image.LoadPixelData<Bgra32>(texDat, textureFile.m_Width, textureFile.m_Height);
-        texture.Mutate(x => x.Flip(FlipMode.Vertical));
-        cancellationToken.ThrowIfCancellationRequested();
-        return new RandomStartGenerator(new PixelProvider(texture));
+        return new RandomStartGenerator(new PixelProvider(texDat, textureFile.m_Width, textureFile.m_Height));
     }
 
+    /// <summary>
+    /// Reads pixels from raw BGRA32 texture data. Rows are flipped to make y = 0 the top row, because unity stores textures bottom up.
+    /// </summary>
     private sealed class PixelProvider : RandomStartGenerator.IPixelProvider
     {
-        private readonly Image<Bgra32> texture;
+        private const int BYTES_PER_PIXEL = 4;
+        private readonly byte[] bgraData;
+        private readonly int width;
+        private readonly int height;
 
-        public PixelProvider(Image<Bgra32> texture)
+        public PixelProvider(byte[] bgraData, int width, int height)
         {
-            Validate.NotNull(texture);
-            this.texture = texture;
+            Validate.NotNull(bgraData);
+            if (bgraData.Length < width * height * BYTES_PER_PIXEL)
+            {
+                throw new ArgumentException($"Texture data is too small for a {width}x{height} BGRA32 texture", nameof(bgraData));
+            }
+            this.bgraData = bgraData;
+            this.width = width;
+            this.height = height;
         }
 
-        private Bgra32 GetPixel(int x, int y) => texture[Math.Clamp(x, 0, texture.Width - 1), Math.Clamp(y, 0, texture.Height - 1)];
+        private int GetPixelOffset(int x, int y)
+        {
+            x = Math.Clamp(x, 0, width - 1);
+            y = height - 1 - Math.Clamp(y, 0, height - 1);
+            return (y * width + x) * BYTES_PER_PIXEL;
+        }
 
-        public byte GetRed(int x, int y) => GetPixel(x, y).R;
+        public byte GetRed(int x, int y) => bgraData[GetPixelOffset(x, y) + 2];
 
-        public byte GetGreen(int x, int y) => GetPixel(x, y).G;
+        public byte GetGreen(int x, int y) => bgraData[GetPixelOffset(x, y) + 1];
 
-        public byte GetBlue(int x, int y) => GetPixel(x, y).B;
+        public byte GetBlue(int x, int y) => bgraData[GetPixelOffset(x, y)];
     }
 }

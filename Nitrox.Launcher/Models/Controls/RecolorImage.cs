@@ -9,7 +9,6 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Metadata;
-using Avalonia.Platform;
 using Avalonia.Reactive;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
@@ -104,7 +103,7 @@ public sealed class RecolorImage : Control
     ///     Renders the control.
     /// </summary>
     /// <param name="context">The drawing context.</param>
-    public sealed override void Render(DrawingContext context) => context.Custom(new RecolorImageRender(stream, dstRect, srcRect, Color));
+    public override void Render(DrawingContext context) => context.Custom(new RecolorImageRender(stream, dstRect, srcRect, Color));
 
     /// <summary>
     ///     Measures the control.
@@ -113,7 +112,7 @@ public sealed class RecolorImage : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        IImage source = Source;
+        Bitmap source = Source;
         Size result = new();
 
         if (source != null)
@@ -145,7 +144,7 @@ public sealed class RecolorImage : Control
         if (Source is not null)
         {
             stream.Position = 0;
-            Source.Save(stream);
+            Source.Save(stream, PngBitmapEncoderOptions.Default);
         }
     }
 

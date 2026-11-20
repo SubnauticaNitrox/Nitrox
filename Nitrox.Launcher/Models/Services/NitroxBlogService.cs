@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using Nitrox.Launcher.Models.Attributes;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Serialization;
 
 namespace Nitrox.Launcher.Models.Services;
 
@@ -26,7 +27,7 @@ internal sealed class NitroxBlogService
 
     public async IAsyncEnumerable<NitroxBlog> GetBlogPostsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        BlogPost[] blogs = await httpClient.GetFromJsonAsync<BlogPost[]>("posts?per_page=8&page=1", cancellationToken);
+        BlogPost[] blogs = await httpClient.GetFromJsonAsync("posts?per_page=8&page=1", LauncherJsonSerializerContext.Default.BlogPostArray, cancellationToken);
         foreach (BlogPost blog in blogs)
         {
             cancellationToken.ThrowIfCancellationRequested();
