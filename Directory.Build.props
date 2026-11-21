@@ -9,10 +9,9 @@
         <Version>1.9.0.0</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Prefer32Bit>false</Prefer32Bit>
-        <DebugType>embedded</DebugType>
+        <DebugType>portable</DebugType>
         <Nullable>annotations</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
-        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
@@ -20,6 +19,13 @@
         <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904;DIMA001;nullable</WarningsNotAsErrors>
         <!-- Disable CET because not everyone running Nitrox uses an up-to-date Windows. See for more info: https://github.com/SubnauticaNitrox/Nitrox/issues/2637 -->
         <CETCompat Condition="'$(_IsWindowsTarget)' == 'true'">false</CETCompat>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(_IsRelease)' == 'true'">
+        <!-- Avoid putting real path to avoid leaking local file system structure of the builder -->
+        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+        <!-- In DEBUG we need portable PDB to be able to remote debug with Mono -->
+        <DebugType>embedded</DebugType>
     </PropertyGroup>
 
     <!-- Nitrox specific properties -->

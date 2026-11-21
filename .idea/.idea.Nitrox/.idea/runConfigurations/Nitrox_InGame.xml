@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Nitrox InGame" type="ConnectRemote" factoryName="Mono Remote" show_console_on_std_err="false" show_console_on_std_out="false" port="55555" address="127.0.0.1" useMixedMode="false">
+    <option name="allowRunningInParallel" value="false" />
+    <option name="listenPortForConnections" value="false" />
+    <option name="projectPathOnTarget" />
+    <option name="selectedOptions">
+      <list />
+    </option>
+    <method v="2" />
+  </configuration>
+</component>

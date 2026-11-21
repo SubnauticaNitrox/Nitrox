@@ -135,11 +135,9 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
                         return false;
                     }
 
-                    File.Copy(
-                        patcherDllPath,
-                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
-                        true
-                    );
+                    string patcherTargetPath = Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME);
+                    File.Copy(patcherDllPath, patcherTargetPath, true);
+                    CopyDebugSymbols(patcherDllPath, patcherTargetPath);
                 }
                 catch (IOException ex)
                 {
@@ -179,6 +177,32 @@ internal partial class LaunchGameViewModel(DialogService dialogService, ServerSe
         string fromValue = HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):M/d/yyyy}");
         string toValue = HttpUtility.UrlEncode($"{DateTime.UtcNow:M/d/yyyy}");
         OpenUri($"github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={fromValue}&to={toValue}");
+    }
+
+    /// <summary>
+    ///     Keeps the .pdb symbols (read by the game's Mono debugger) next to the copied dll so breakpoints bind.
+    ///     A missing source pdb removes a stale one, as a pdb from another build is silently ignored by Mono.
+    /// </summary>
+    [Conditional("DEBUG")]
+    private static void CopyDebugSymbols(string sourceDllPath, string targetDllPath)
+    {
+        try
+        {
+            string sourcePdb = Path.ChangeExtension(sourceDllPath, ".pdb");
+            string targetPdb = Path.ChangeExtension(targetDllPath, ".pdb");
+            if (File.Exists(sourcePdb))
+            {
+                File.Copy(sourcePdb, targetPdb, true);
+            }
+            else if (File.Exists(targetPdb))
+            {
+                File.Delete(targetPdb);
+            }
+        }
+        catch (IOException ex)
+        {
+            Log.Error(ex, "Unable to copy debug symbols next to the patcher dll");
+        }
     }
 
     /// <summary>

@@ -27,6 +27,20 @@ internal static class TranspilerHelper
     {
         return new CodeInstruction(OpCodes.Call, serviceLocator.MakeGenericMethod(typeof(T)));
     }
+    /// <summary>
+    /// Returns an instruction that breaks into the debugger (if attached) at this spot of the patched method.
+    /// Breakpoints can't be set in IL emitted by a transpiler, so insert this where execution should stop.
+    /// It calls a method instead of <see cref="System.Diagnostics.Debugger.Break"/> directly so that the debugger stops in a frame with symbols.
+    /// </summary>
+    public static CodeInstruction BreakInstruction() => new(OpCodes.Call, ((Delegate)BreakHere).Method);
+
+    private static void BreakHere()
+    {
+        if (System.Diagnostics.Debugger.IsAttached)
+        {
+            System.Diagnostics.Debugger.Break();
+        }
+    }
 
     private static IEnumerable<LocalVariableInfo> GetMatchingLocalVariables<T>(MethodBase method)
     {
