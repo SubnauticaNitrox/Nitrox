@@ -2,12 +2,14 @@
 
     <PropertyGroup>
         <TargetFrameworks>net472;net10.0</TargetFrameworks>
+        <IsTrimmable>false</IsTrimmable>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Autofac" />
         <PackageReference Include="LiteNetLib" />
         <PackageReference Include="MagicOnion.Abstractions" />
+        <PackageReference Include="MessagePack" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.Win32.Registry" />
         <PackageReference Include="Mono.Nat" />

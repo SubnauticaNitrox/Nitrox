@@ -32,6 +32,7 @@
         <PackageVersion Include="MagicOnion.Abstractions" Version="7.11.0" />
         <PackageVersion Include="MagicOnion.Client" Version="7.11.0" />
         <PackageVersion Include="MagicOnion.Server" Version="7.11.0" />
+        <PackageVersion Include="MessagePack" Version="[3.1.9]" />
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(NetSdkVersion)" />
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="$(NetSdkVersion)" />

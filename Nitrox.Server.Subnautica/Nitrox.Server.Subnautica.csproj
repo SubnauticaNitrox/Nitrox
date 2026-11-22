@@ -3,8 +3,9 @@
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <OutputType>Exe</OutputType>
+        <IsTrimmable>false</IsTrimmable>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj" />
     </ItemGroup>
@@ -25,7 +26,7 @@
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
-    
+
     <ItemGroup>
         <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" Visible="false" />
         <Content Include="..\Nitrox.Assets.Subnautica\**\*.csv" CopyToOutputDirectory="PreserveNewest" Visible="false" />
@@ -34,7 +35,7 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <_ServerDevelopmentJsonFilePath>$(MSBuildThisFileDirectory)\server.Development.json</_ServerDevelopmentJsonFilePath>
     </PropertyGroup>
-    
+
     <!-- Allow NSubstitute to proxy internal types (e.g. IEntityDistributionsAccessor) from Nitrox.Test -->
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

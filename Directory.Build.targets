@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PublishTrimmed">
+
+    <!-- A global publish option must not enable trimming for .NET Framework. -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
+        <PublishTrimmed>false</PublishTrimmed>
+    </PropertyGroup>
 
     <PropertyGroup>
         <_GitShortHashFilePath>$(IntermediateOutputPath)git_short_hash.cache</_GitShortHashFilePath>
