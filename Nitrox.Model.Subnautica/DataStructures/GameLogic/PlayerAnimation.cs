@@ -6,10 +6,10 @@ using Nitrox.Model.GameLogic.PlayerAnimation;
 namespace Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
 [Serializable, DataContract]
-public class PlayerAnimation
+public record PlayerAnimation
 {
     [DataMember(Order = 1)]
-    public AnimChangeType Type { get; set; }
+    public AnimChangeType Type { get; }
 
     [DataMember(Order = 2)]
     public AnimChangeState State { get; }

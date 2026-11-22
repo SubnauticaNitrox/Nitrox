@@ -42,7 +42,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
         ///     <a href="https://docs.unity3d.com/Manual/Prefabs.html">What is a prefab?</a>
         /// </remarks>
         [DataMember(Order = 3)]
-        public string ClassId { get; set; }
+        public string? ClassId { get; set; }
 
         /// <summary>
         ///     Keeps track if an entity was spawned by the server or a player
@@ -78,7 +78,7 @@ namespace Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata? metadata, NitroxId? parentId, List<Entity> childEntities)
+        public WorldEntity(NitroxTransform transform, int level, string? classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata? metadata, NitroxId? parentId, List<Entity> childEntities)
         {
             Id = id;
             TechType = techType;

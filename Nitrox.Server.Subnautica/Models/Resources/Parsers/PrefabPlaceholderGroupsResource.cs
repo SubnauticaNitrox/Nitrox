@@ -500,7 +500,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
 
         public static async Task SerializeAsync(JsonSerializer serializer, Cache cache, string filePath)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new Exception("Failed to get directory path from cache file path"));
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidOperationException("Failed to get directory path from cache file path"));
             await using StreamWriter stream = File.CreateText(filePath);
             serializer.Serialize(stream, cache);
         }
@@ -511,7 +511,7 @@ internal sealed class PrefabPlaceholderGroupsResource(SubnauticaAssetsManager as
             {
                 return Task.FromResult<Cache?>(null);
             }
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new Exception("Failed to get directory path from cache file path"));
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidOperationException("Failed to get directory path from cache file path"));
             using StreamReader reader = File.OpenText(filePath);
             return Task.FromResult((Cache?)serializer.Deserialize(reader, typeof(Cache)));
         }

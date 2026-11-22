@@ -14,6 +14,12 @@ namespace Nitrox.Model.Packets
     [Serializable]
     public abstract class Packet
     {
+        public enum UdpChannelId : byte
+        {
+            DEFAULT = 0,
+            MOVEMENTS = 1,
+        }
+
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
         private static readonly LockObject cachedPropertiesByTypeLocker = new();
 
@@ -30,27 +36,6 @@ namespace Nitrox.Model.Packets
 
         public static void InitSerializer()
         {
-            static IEnumerable<Type> FindTypesInModelAssemblies()
-            {
-                return AppDomain.CurrentDomain.GetAssemblies()
-                                .Where(assembly => new[] { $"{nameof(Nitrox)}.{nameof(Model)}", "Nitrox.Model.Subnautica" }
-                                           .Contains(assembly.GetName().Name))
-                                .SelectMany(assembly =>
-                                {
-                                    try
-                                    {
-                                        return assembly.GetTypes();
-                                    }
-                                    catch (ReflectionTypeLoadException e)
-                                    {
-                                        return e.Types.Where(t => t != null);
-                                    }
-                                });
-            }
-
-            static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
-                .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
-
             lock (lockObject)
             {
                 foreach (Type type in FindUnionBaseTypes())
@@ -77,6 +62,27 @@ namespace Nitrox.Model.Packets
                 // This will initialize the processor for Wrapper which will initialize all the others
                 _ = BinaryConverter.Serialize(new Wrapper());
             }
+
+            static IEnumerable<Type> FindTypesInModelAssemblies()
+            {
+                return AppDomain.CurrentDomain.GetAssemblies()
+                                .Where(assembly => new[] { $"{nameof(Nitrox)}.{nameof(Model)}", "Nitrox.Model.Subnautica" }
+                                           .Contains(assembly.GetName().Name))
+                                .SelectMany(assembly =>
+                                {
+                                    try
+                                    {
+                                        return assembly.GetTypes();
+                                    }
+                                    catch (ReflectionTypeLoadException e)
+                                    {
+                                        return e.Types.Where(t => t != null);
+                                    }
+                                });
+            }
+
+            static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
+                .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
         }
 
         public byte[] Serialize()
@@ -140,12 +146,6 @@ namespace Nitrox.Model.Packets
         public readonly struct Wrapper(Packet packet)
         {
             public Packet? Packet { get; init; } = packet;
-        }
-
-        public enum UdpChannelId : byte
-        {
-            DEFAULT = 0,
-            MOVEMENTS = 1,
         }
     }
 }

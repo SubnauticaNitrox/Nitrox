@@ -10,22 +10,16 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
     private readonly IPacketSender packetSender;
     public ILogger Logger { get; set; } = NullLogger.Instance;
     public CommandOrigin Origin { get; init; } = CommandOrigin.PLAYER;
-    public string OriginName => Player.Name;
+    public string OriginName { get; init; }
     public SessionId OriginId { get; init; }
     public Perms Permissions { get; init; }
 
-    /// <summary>
-    ///     Gets the player which issued the command.
-    /// </summary>
-    public Player Player { get; init; }
-
-    public PlayerToServerCommandContext(IPacketSender packetSender, Player player)
+    public PlayerToServerCommandContext(IPacketSender packetSender, SessionId sessionId, string name, Perms permissions)
     {
-        ArgumentNullException.ThrowIfNull(player);
         this.packetSender = packetSender;
-        Player = player;
-        OriginId = player.SessionId;
-        Permissions = player.Permissions;
+        OriginId = sessionId;
+        OriginName = name;
+        Permissions = permissions;
     }
 
     public async Task ReplyAsync<T>(T data) => await SendAsync(OriginId, data);
@@ -40,7 +34,7 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
             case string message:
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    await packetSender.SendPacketAsync(new ChatMessage(SessionId.SERVER_ID, message), sessionId);
+                    await packetSender.SendPacketAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, message), sessionId);
                 }
                 break;
             default:
@@ -59,7 +53,7 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
             case string message:
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    await packetSender.SendPacketToAllAsync(new ChatMessage(SessionId.SERVER_ID, message));
+                    await packetSender.SendPacketToAllAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, message));
                 }
                 break;
             default:
@@ -78,7 +72,7 @@ internal sealed record PlayerToServerCommandContext : ICommandContext
             case string message:
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    await packetSender.SendPacketToOthersAsync(new ChatMessage(SessionId.SERVER_ID, message), OriginId);
+                    await packetSender.SendPacketToOthersAsync(new ChatMessage((SessionId)SessionId.SERVER_ID, message), OriginId);
                 }
                 break;
             default:

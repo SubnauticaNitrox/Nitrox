@@ -20,9 +20,9 @@ public sealed class QuickSlotInitialSyncProcessor : InitialSyncProcessor
 
         Dictionary<NitroxId, InventoryItem> inventoryItemsById = GetItemsById();
 
-        for (int i = 0; i < packet.QuickSlotsBindingIds.Length; i++)
+        for (int i = 0; i < packet.QuickSlotsBindingIds.Count; i++)
         {
-            waitScreenItem.SetProgress(i, packet.QuickSlotsBindingIds.Length);
+            waitScreenItem.SetProgress(i, packet.QuickSlotsBindingIds.Count);
 
             Optional<NitroxId> opId = packet.QuickSlotsBindingIds[i];
 

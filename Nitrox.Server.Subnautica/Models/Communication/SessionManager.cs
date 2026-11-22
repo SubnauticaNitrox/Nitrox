@@ -28,19 +28,20 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
     {
         get
         {
-            SessionId id = 0;
+            SessionId id = (SessionId)0;
             lock (sessionLock)
             {
                 if (returnedSessionIds.Count > 0 && returnedSessionIds.TryPeek(out (TimeSpan ReturnedTimeStamp, SessionId Id) entry) && (time.Elapsed - entry.ReturnedTimeStamp).TotalMinutes >= SessionId.DELAY_REUSE_MINUTES)
                 {
                     id = returnedSessionIds.Dequeue().Id;
                 }
-                if (id == 0)
+                if (id == (SessionId?)0)
                 {
-                    id = ++field;
+                    field = (SessionId)((ushort)field + 1);
+                    id = field;
                 }
             }
-            Debug.Assert(id > 0);
+            Debug.Assert((ushort)id > 0);
             return id;
         }
     }
@@ -78,6 +79,14 @@ internal sealed class SessionManager(ISessionCleaner.Trigger sessionCleanTrigger
         {
             sessions.TryGetValue(sessionId, out Session session);
             return session?.EndPoint;
+        }
+    }
+
+    public IEnumerable<Session> GetConnections()
+    {
+        lock (sessionLock)
+        {
+            return [..sessions.Values];
         }
     }
 

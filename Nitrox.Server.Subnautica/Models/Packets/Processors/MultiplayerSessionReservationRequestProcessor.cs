@@ -1,14 +1,14 @@
 ﻿using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Subnautica.MultiplayerSession;
-using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
+using Nitrox.Server.Subnautica.Services;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class MultiplayerSessionReservationRequestProcessor(PlayerManager playerManager, ILogger<MultiplayerSessionReservationRequestProcessor> logger)
+internal sealed class MultiplayerSessionReservationRequestProcessor(PlayerService playerService, ILogger<MultiplayerSessionReservationRequestProcessor> logger)
     : IAnonPacketProcessor<MultiplayerSessionReservationRequest>
 {
-    private readonly PlayerManager playerManager = playerManager;
+    private readonly PlayerService playerService = playerService;
     private readonly ILogger<MultiplayerSessionReservationRequestProcessor> logger = logger;
 
     public async Task Process(AnonProcessorContext context, MultiplayerSessionReservationRequest packet)
@@ -17,7 +17,7 @@ internal sealed class MultiplayerSessionReservationRequestProcessor(PlayerManage
 
         PlayerSettings playerSettings = packet.PlayerSettings;
         AuthenticationContext authenticationContext = packet.AuthenticationContext;
-        MultiplayerSessionReservation reservation = playerManager.ReservePlayerContext(
+        MultiplayerSessionReservation reservation = await playerService.ReservePlayerContextAsync(
             context.Sender.SessionId,
             context.Sender.EndPoint,
             playerSettings,

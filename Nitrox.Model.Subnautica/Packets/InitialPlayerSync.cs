@@ -4,10 +4,7 @@ using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets;
-using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 
@@ -19,7 +16,7 @@ namespace Nitrox.Model.Subnautica.Packets
         public NitroxId AssignedEscapePodId { get; }
         public Dictionary<string, NitroxId> EquippedItems { get; }
         public List<NitroxTechType> UsedItems { get; }
-        public Optional<NitroxId>[] QuickSlotsBindingIds { get; }
+        public List<NitroxId> QuickSlotsBindingIds { get; }
         public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
@@ -49,7 +46,7 @@ namespace Nitrox.Model.Subnautica.Packets
             NitroxId assignedEscapePodId,
             IDictionary<string, NitroxId> equipment,
             IEnumerable<NitroxTechType> usedItems,
-            Optional<NitroxId>[] quickSlotsBindingIds,
+            List<NitroxId> quickSlotsBindingIds,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
             NitroxVector3 playerSpawnData,
@@ -106,7 +103,7 @@ namespace Nitrox.Model.Subnautica.Packets
             NitroxId assignedEscapePodId,
             Dictionary<string, NitroxId> equippedItems,
             List<NitroxTechType> usedItems,
-            Optional<NitroxId>[] quickSlotsBindingIds,
+            List<NitroxId> quickSlotsBindingIds,
             NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             InitialPDAData pdaData,

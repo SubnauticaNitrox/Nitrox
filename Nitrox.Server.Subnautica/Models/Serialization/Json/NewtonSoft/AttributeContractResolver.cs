@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace Nitrox.Server.Subnautica.Models.Serialization.Json;
+namespace Nitrox.Server.Subnautica.Models.Serialization.Json.NewtonSoft;
 
 public class AttributeContractResolver : DefaultContractResolver
 {

@@ -7,21 +7,9 @@ using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class PlayerHeldItemChanged : Packet
+public class PlayerHeldItemChanged(SessionId sessionId, NitroxId itemId, PlayerHeldItemChanged.ChangeType type, NitroxTechType? isFirstTime)
+    : Packet
 {
-    public SessionId SessionId { get; }
-    public NitroxId ItemId { get; }
-    public ChangeType Type { get; }
-    public NitroxTechType? IsFirstTime { get; } // If it's the first time the player used that item type it send the techType, if not null.
-
-    public PlayerHeldItemChanged(SessionId sessionId, NitroxId itemId, ChangeType type, NitroxTechType? isFirstTime)
-    {
-        SessionId = sessionId;
-        ItemId = itemId;
-        Type = type;
-        IsFirstTime = isFirstTime;
-    }
-
     public enum ChangeType
     {
         DRAW_AS_TOOL,
@@ -29,4 +17,13 @@ public class PlayerHeldItemChanged : Packet
         HOLSTER_AS_TOOL,
         HOLSTER_AS_ITEM
     }
+
+    public SessionId SessionId { get; } = sessionId;
+    public NitroxId ItemId { get; } = itemId;
+    public ChangeType Type { get; } = type;
+
+    /// <summary>
+    ///     True if it's the first time the player used that item type it sent the techType, if not null.
+    /// </summary>
+    public NitroxTechType? IsFirstTime { get; } = isFirstTime;
 }
