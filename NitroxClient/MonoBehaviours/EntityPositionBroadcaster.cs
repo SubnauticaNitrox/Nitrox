@@ -12,7 +12,7 @@ using static Nitrox.Model.Subnautica.Packets.EntityTransformUpdates;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class EntityPositionBroadcaster : MonoBehaviour
+public class EntityPositionBroadcaster : NitroxSessionBehaviour
 {
     public static readonly float BROADCAST_INTERVAL = 0.25f;
 
@@ -24,9 +24,16 @@ public class EntityPositionBroadcaster : MonoBehaviour
 
     private float time;
 
-    public void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
+    }
+
+    protected override void OnSessionEnd()
+    {
+        watchingEntityIds.Clear();
+        splineUpdatesById.Clear();
     }
 
     public void Update()

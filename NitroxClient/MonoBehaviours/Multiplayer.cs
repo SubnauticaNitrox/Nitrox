@@ -34,6 +34,7 @@ namespace NitroxClient.MonoBehaviours
         private IPacketSender packetSender;
         private ThrottledPacketSender throttledPacketSender;
         private GameLogic.Terrain terrain;
+        private readonly List<MonoBehaviour> sessionMonoBehaviours = new();
 
         public bool InitialSyncCompleted { get; set; }
 
@@ -83,13 +84,30 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public static event Action OnLoadingComplete;
-        public static event Action OnBeforeMultiplayerStart;
-        public static event Action OnAfterMultiplayerEnd;
+        private static readonly SessionScopedEvent onLoadingCompleteEvent = new();
+        private static readonly SessionScopedEvent onBeforeMultiplayerStartEvent = new();
+        private static readonly SessionScopedEvent onAfterMultiplayerEndEvent = new();
+
+        public static event Action OnLoadingComplete
+        {
+            add => onLoadingCompleteEvent.Add(value);
+            remove => onLoadingCompleteEvent.Remove(value);
+        }
+        public static event Action OnBeforeMultiplayerStart
+        {
+            add => onBeforeMultiplayerStartEvent.Add(value);
+            remove => onBeforeMultiplayerStartEvent.Remove(value);
+        }
+        public static event Action OnAfterMultiplayerEnd
+        {
+            add => onAfterMultiplayerEndEvent.Add(value);
+            remove => onAfterMultiplayerEndEvent.Remove(value);
+        }
 
         public static void SubnauticaLoadingStarted()
         {
-            OnBeforeMultiplayerStart?.Invoke();
+            onBeforeMultiplayerStartEvent.Invoke();
+            onBeforeMultiplayerStartEvent.Clear();
         }
 
         public static void SubnauticaLoadingCompleted()
@@ -102,7 +120,8 @@ namespace NitroxClient.MonoBehaviours
             else
             {
                 SetLoadingComplete();
-                OnLoadingComplete?.Invoke();
+                onLoadingCompleteEvent.Invoke();
+                onLoadingCompleteEvent.Clear();
             }
         }
 
@@ -127,7 +146,8 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Remove(waitingItem);
 
             SetLoadingComplete();
-            OnLoadingComplete?.Invoke();
+            onLoadingCompleteEvent.Invoke();
+            onLoadingCompleteEvent.Clear();
         }
 
         public void ProcessPackets()
@@ -164,14 +184,14 @@ namespace NitroxClient.MonoBehaviours
         public void InitMonoBehaviours()
         {
             // Gameplay.
-            gameObject.AddComponent<UnderwaterStateTracker>();
-            gameObject.AddComponent<PrecursorTracker>();
-            gameObject.AddComponent<PlayerMovementBroadcaster>();
-            gameObject.AddComponent<PlayerDeathBroadcaster>();
-            gameObject.AddComponent<PlayerStatsBroadcaster>();
-            gameObject.AddComponent<EntityPositionBroadcaster>();
-            gameObject.AddComponent<BuildingHandler>();
-            gameObject.AddComponent<MovementBroadcaster>();
+            sessionMonoBehaviours.Add(gameObject.AddComponent<UnderwaterStateTracker>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PrecursorTracker>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PlayerMovementBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PlayerDeathBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<PlayerStatsBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<EntityPositionBroadcaster>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<BuildingHandler>());
+            sessionMonoBehaviours.Add(gameObject.AddComponent<MovementBroadcaster>());
             gameObject.AddComponent<PlayerPingManager>();
             VirtualCyclops.Initialize();
         }
@@ -179,9 +199,36 @@ namespace NitroxClient.MonoBehaviours
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-            OnAfterMultiplayerEnd?.Invoke();
+
+            // Destroy session-scoped Mono's before cleanup events
+            DestroySessionMonoBehaviours();
+
+            // Clear entity registry before invoking end event
+            NitroxEntity.ClearAll();
+
+            // Clear remote players
+            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            remotePlayerManager.RemoveAllPlayers();
+
+            onAfterMultiplayerEndEvent.Invoke();
+            SessionScopedEvents.ClearAll();
 
             UnregisterConnectedDelegates();
+
+            // Reset state
+            InitialSyncCompleted = false;
+        }
+
+        /// <summary>
+        /// Destroys session-scoped MonoBehaviours to clean up resources before multiplayer end.
+        /// </summary>
+        private void DestroySessionMonoBehaviours()
+        {
+            foreach (MonoBehaviour behaviour in sessionMonoBehaviours)
+            {
+                Destroy(behaviour);
+            }
+            sessionMonoBehaviours.Clear();
         }
 
         private static void SetLoadingComplete()
@@ -191,7 +238,7 @@ namespace NitroxClient.MonoBehaviours
             FreezeTime.End(FreezeTime.Id.WaitScreen);
             WaitScreen.main.items.Clear();
 
-            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            PlayerManager remotePlayerManager = NitroxServiceLocator.Cache<PlayerManager>.Value;
 
             TopRightWatermarkText.ApplyChangesForInGame();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
