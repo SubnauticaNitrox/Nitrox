@@ -297,6 +297,11 @@ public static class BuildUtils
             nitroxMoonpool.GetSavedMoonpools().ForEach(AddChild);
         }
 
+        if (targetBase.TryGetComponent(out BulkheadDoorManager bulkheadDoorManager))
+        {
+            bulkheadDoorManager.GetSavedDoors().ForEach(AddChild);
+        }
+
         return childEntities;
     }
 

@@ -1,4 +1,6 @@
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using UnityEngine;
 
@@ -19,6 +21,10 @@ public class BulkheadDoorMetadataProcessor : EntityMetadataProcessor<BulkheadDoo
             return;
         }
 
-        bulkheadDoor.SetState(metadata.Opened);
+        // The state is already known by everyone, it must not be sent back
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+        {
+            bulkheadDoor.SetState(metadata.Opened);
+        }
     }
 }

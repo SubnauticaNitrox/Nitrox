@@ -50,6 +50,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 #endif
         yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerEntity>().ToList<Entity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
+        BulkheadDoorManager.RestoreDoors(entity.ChildEntities.OfType<BulkheadDoorEntity>(), @base);
 
         TaskResult<Optional<GameObject>> childResult = new();
         bool atLeastOneLeak = false;
