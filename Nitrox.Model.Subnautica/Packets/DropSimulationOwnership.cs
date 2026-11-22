@@ -1,16 +1,12 @@
 using System;
+using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
 
 namespace Nitrox.Model.Subnautica.Packets;
 
 [Serializable]
-public class DropSimulationOwnership : Packet
+public class DropSimulationOwnership(List<NitroxId> entityIds) : Packet
 {
-    public NitroxId EntityId { get; set; }
-
-    public DropSimulationOwnership(NitroxId entityId)
-    {
-        EntityId = entityId;
-    }
+    public List<NitroxId> EntityIds { get; } = entityIds;
 }

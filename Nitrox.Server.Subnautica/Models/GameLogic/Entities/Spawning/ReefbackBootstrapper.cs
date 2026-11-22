@@ -2,6 +2,7 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.Unity;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities.Metadata;
 using Nitrox.Server.Subnautica.Models.Helper;
 using static Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning.ReefbackSpawnData;
 
@@ -10,12 +11,15 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 internal sealed class ReefbackBootstrapper : IEntityBootstrapper
 {
     private readonly XorRandom random;
+    private readonly SubnauticaUweWorldEntityFactory subnauticaUweWorldEntityFactory;
     private readonly float creatureProbabilitySum = 0;
     private readonly float plantsProbabilitySum = 0;
 
-    public ReefbackBootstrapper(XorRandom random)
+    public ReefbackBootstrapper(XorRandom random, SubnauticaUweWorldEntityFactory subnauticaUweWorldEntityFactory)
     {
         this.random = random;
+        this.subnauticaUweWorldEntityFactory = subnauticaUweWorldEntityFactory;
+
         foreach (ReefbackSlotCreature creature in SpawnableCreatures)
         {
             creatureProbabilitySum += creature.Probability;
@@ -26,12 +30,15 @@ internal sealed class ReefbackBootstrapper : IEntityBootstrapper
         }
     }
 
-    public void Prepare(ref WorldEntity entity, DeterministicGenerator generator)
+    public async Task<WorldEntity> Prepare(WorldEntity entity, DeterministicGenerator generator)
     {
+        // See Creature.InitializeOnce
+        entity.Metadata = new StayAtLeashPositionMetadata(entity.Transform.Position);
+
         // From ReefbackLife.Initialize
         if (entity.Transform.LocalScale.X <= 0.8f)
         {
-            return;
+            return entity;
         }
 
         // In case the grassIndex is chosen randomly
@@ -73,9 +80,12 @@ internal sealed class ReefbackBootstrapper : IEntityBootstrapper
             // It is necessary to set parent to null afterwards so that the entity doesn't accidentally modifies the transform by losing reference to the parent
             plantTransform.SetParent(null, false);
 
-            ReefbackChildEntity plantEntity = new(plantTransform, entity.Level, randomId, true, id, NitroxTechType.None, null, entity.Id, [],
+            UweWorldEntity? worldEntitiesResource = await subnauticaUweWorldEntityFactory.FindAsync(randomId);
+            NitroxTechType nitroxTechType = worldEntitiesResource?.TechType ?? NitroxTechType.None;
+
+            ReefbackChildEntity plantEntity = new(plantTransform, entity.Level, randomId, true, id, nitroxTechType, null, entity.Id, [],
                                                   ReefbackChildEntity.ReefbackChildType.PLANT);
-            
+
             entity.ChildEntities.Add(plantEntity);
         }
 
@@ -110,13 +120,18 @@ internal sealed class ReefbackBootstrapper : IEntityBootstrapper
                 creatureTransform.SetParent(CreatureSlotsRootTransform, false);
                 creatureTransform.SetParent(null, false);
 
-                ReefbackChildEntity creatureEntity = new(creatureTransform, entity.Level, slotCreature.ClassId, true, id, NitroxTechType.None, null, entity.Id, [],
+                UweWorldEntity? worldEntitiesResource = await subnauticaUweWorldEntityFactory.FindAsync(slotCreature.ClassId);
+                NitroxTechType nitroxTechType = worldEntitiesResource?.TechType ?? NitroxTechType.None;
+
+                ReefbackChildEntity creatureEntity = new(creatureTransform, entity.Level, slotCreature.ClassId, true, id, nitroxTechType, null, entity.Id, [],
                                                          ReefbackChildEntity.ReefbackChildType.CREATURE);
 
                 
                 entity.ChildEntities.Add(creatureEntity);
             }
         }
+
+        return entity;
     }
 
     private static NitroxTransform DuplicateTransform(NitroxTransform transform)

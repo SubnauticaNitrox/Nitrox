@@ -1,3 +1,4 @@
+using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Bases;
@@ -31,7 +32,8 @@ internal abstract class BuildingProcessor<T>(BuildingManager buildingManager, En
     protected async Task TryClaimBuildPieceAsync(AuthProcessorContext context, Entity entity)
     {
         ArgumentNullException.ThrowIfNull(entitySimulation);
-        if (entitySimulation.TryAssignEntityToPlayer(entity, context.Sender, false, out SimulatedEntity simulatedEntity))
+        SimulatedEntity? simulatedEntity = entitySimulation.TryAcquireEntity(context.Sender, entity, false).FirstOrDefault();
+        if (simulatedEntity != null)
         {
             SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
             await context.SendToAllAsync(ownershipChangePacket);

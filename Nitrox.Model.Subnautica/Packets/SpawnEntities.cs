@@ -4,46 +4,33 @@ using Nitrox.Model.DataStructures;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 
-namespace Nitrox.Model.Subnautica.Packets
+namespace Nitrox.Model.Subnautica.Packets;
+
+[Serializable]
+public class SpawnEntities : Packet
 {
-    [Serializable]
-    public class SpawnEntities : Packet
+    public List<Entity> Entities { get; }
+    public List<SimulatedEntity> SimulatedEntities { get; }
+
+    public List<AbsoluteEntityCell> SpawnedCells { get; }
+
+    public bool ForceRespawn { get; }
+
+    public SpawnEntities(Entity entity, List<SimulatedEntity>? simulatedEntities = null, bool forceRespawn = false)
     {
-        public List<Entity> Entities { get; }
-        public List<SimulatedEntity> Simulations { get; }
+        Entities = [entity];
+        SimulatedEntities = simulatedEntities ?? [];
+        SpawnedCells = [];
 
-        public List<AbsoluteEntityCell> SpawnedCells { get; }
+        ForceRespawn = forceRespawn;
+    }
 
-        public bool ForceRespawn { get; }
-
-        public SpawnEntities(List<Entity> entities, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn = false)
-        {
-            Entities = entities;
-            Simulations = [];
-            SpawnedCells = spawnedCells;
-            ForceRespawn = forceRespawn;
-        }
-
-        public SpawnEntities(Entity entity, SimulatedEntity? simulatedEntity = null, bool forceRespawn = false)
-        {
-            Entities = [entity];
-            Simulations = [];
-            SpawnedCells = [];
-            if (simulatedEntity != null)
-            {
-                Simulations.Add(simulatedEntity);
-            }
-
-            ForceRespawn = forceRespawn;
-        }
-
-        // Constructor for serialization. 
-        public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulations, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn)
-        {
-            Entities = entities;
-            Simulations = simulations;
-            SpawnedCells = spawnedCells;
-            ForceRespawn = forceRespawn;
-        }
+    // Constructor for serialization. 
+    public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulatedEntities, List<AbsoluteEntityCell> spawnedCells, bool forceRespawn)
+    {
+        Entities = entities;
+        SimulatedEntities = simulatedEntities;
+        SpawnedCells = spawnedCells;
+        ForceRespawn = forceRespawn;
     }
 }

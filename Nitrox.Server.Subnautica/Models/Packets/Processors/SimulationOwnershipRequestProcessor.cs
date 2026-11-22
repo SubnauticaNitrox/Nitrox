@@ -1,26 +1,39 @@
-using Nitrox.Server.Subnautica.Models.GameLogic;
+using System.Collections.Generic;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
 
 namespace Nitrox.Server.Subnautica.Models.Packets.Processors;
 
-internal sealed class SimulationOwnershipRequestProcessor(SimulationOwnershipData simulationOwnershipData, EntitySimulation entitySimulation) : IAuthPacketProcessor<SimulationOwnershipRequest>
+internal sealed class SimulationOwnershipRequestProcessor(EntitySimulation entitySimulation, EntityRegistry entityRegistry) : IAuthPacketProcessor<SimulationOwnershipRequest>
 {
-    private readonly SimulationOwnershipData simulationOwnershipData = simulationOwnershipData;
     private readonly EntitySimulation entitySimulation = entitySimulation;
+    private readonly EntityRegistry entityRegistry = entityRegistry;
 
     public async Task Process(AuthProcessorContext context, SimulationOwnershipRequest ownershipRequest)
     {
-        bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Id, context.Sender, ownershipRequest.LockType);
-
-        if (aquiredLock)
+        SimulationOwnershipResponse responseToPlayer;
+        if (!entityRegistry.TryGetEntityById(ownershipRequest.Id, out WorldEntity worldEntity))
         {
-            bool shouldEntityMove = entitySimulation.ShouldSimulateEntityMovement(ownershipRequest.Id);
-            SimulationOwnershipChange simulationOwnershipChange = new(ownershipRequest.Id, context.Sender.SessionId, ownershipRequest.LockType, shouldEntityMove);
-            await context.SendToOthersAsync(simulationOwnershipChange);
+            responseToPlayer = new(ownershipRequest.Id, false, ownershipRequest.LockType);
+            await context.ReplyAsync(responseToPlayer);
+            return;
         }
 
-        SimulationOwnershipResponse responseToPlayer = new(ownershipRequest.Id, aquiredLock, ownershipRequest.LockType);
+        List<SimulatedEntity> simulatedEntities = [.. entitySimulation.TryAcquireEntity(context.Sender, worldEntity, true, ownershipRequest.LockType)];
+
+        if (simulatedEntities.Count == 0)
+        {
+            responseToPlayer = new(ownershipRequest.Id, false, ownershipRequest.LockType);
+            await context.ReplyAsync(responseToPlayer);
+            return;
+        }
+
+        responseToPlayer = new(ownershipRequest.Id, true, ownershipRequest.LockType);
         await context.ReplyAsync(responseToPlayer);
+
+        SimulationOwnershipChange simulationOwnershipChange = new(simulatedEntities);
+        await context.SendToAllAsync(simulationOwnershipChange);
     }
 }
