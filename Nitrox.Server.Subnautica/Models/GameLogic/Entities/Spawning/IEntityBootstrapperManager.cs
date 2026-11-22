@@ -5,5 +5,5 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
 internal interface IEntityBootstrapperManager
 {
-    public void PrepareEntityIfRequired(ref WorldEntity spawnedEntity, DeterministicGenerator generator);
+    public Task<WorldEntity> PrepareEntityIfRequired(WorldEntity spawnedEntity, DeterministicGenerator generator);
 }

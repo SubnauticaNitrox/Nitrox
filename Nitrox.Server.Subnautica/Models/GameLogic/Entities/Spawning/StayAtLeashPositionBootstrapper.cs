@@ -6,8 +6,9 @@ namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
 internal sealed class StayAtLeashPositionBootstrapper : IEntityBootstrapper
 {
-    public void Prepare(ref WorldEntity spawnedEntity, DeterministicGenerator generator)
+    public Task<WorldEntity> Prepare(WorldEntity spawnedEntity, DeterministicGenerator generator)
     {
         spawnedEntity.Metadata = new StayAtLeashPositionMetadata(spawnedEntity.Transform.Position);
+        return Task.FromResult(spawnedEntity);
     }
 }

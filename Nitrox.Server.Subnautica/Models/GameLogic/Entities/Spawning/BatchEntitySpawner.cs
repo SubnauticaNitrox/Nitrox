@@ -290,7 +290,7 @@ internal sealed class BatchEntitySpawner(
             spawnedEntity.ChildEntities = await SpawnEntitiesAsync(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
         }
 
-        entityBootstrapperManager.PrepareEntityIfRequired(ref spawnedEntity, deterministicBatchGenerator);
+        spawnedEntity = await entityBootstrapperManager.PrepareEntityIfRequired(spawnedEntity, deterministicBatchGenerator);
 
         // Order of addition is important, first, the created entity, then its children and the cell root children it created
         // so that this output can always be used to get the created entity

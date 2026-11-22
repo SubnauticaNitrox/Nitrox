@@ -6,13 +6,13 @@ using Nitrox.Server.Subnautica.Models.Helper;
 
 namespace Nitrox.Server.Subnautica.Models.GameLogic.Entities.Spawning;
 
-internal sealed class SubnauticaEntityBootstrapperManager(RandomFactory randomFactory) : IEntityBootstrapperManager
+internal sealed class SubnauticaEntityBootstrapperManager(RandomFactory randomFactory, SubnauticaUweWorldEntityFactory subnauticaUweWorldEntityFactory) : IEntityBootstrapperManager
 {
     private readonly Dictionary<string, IEntityBootstrapper> entityBootstrappersByClassId = new()
     {
         ["ce0b4131-86e2-444b-a507-45f7b824a286"] = new GeyserBootstrapper(randomFactory.GetUnityLikeRandom(1)), // Geyser.prefab
         ["63462cb4-d177-4551-822f-1904f809ec1f"] = new GeyserBootstrapper(randomFactory.GetUnityLikeRandom(2)), // GeyserShort.prefab
-        ["8d3d3c8b-9290-444a-9fea-8e5493ecd6fe"] = new ReefbackBootstrapper(randomFactory.GetUnityLikeRandom(3))
+        ["8d3d3c8b-9290-444a-9fea-8e5493ecd6fe"] = new ReefbackBootstrapper(randomFactory.GetUnityLikeRandom(3), subnauticaUweWorldEntityFactory)
     };
 
     private readonly Dictionary<NitroxTechType, IEntityBootstrapper> entityBootstrappersByTechType = new()
@@ -23,12 +23,13 @@ internal sealed class SubnauticaEntityBootstrapperManager(RandomFactory randomFa
         [TechType.GhostLeviathan.ToDto()] = new StayAtLeashPositionBootstrapper(),
     };
 
-    public void PrepareEntityIfRequired(ref WorldEntity spawnedEntity, DeterministicGenerator generator)
+    public Task<WorldEntity> PrepareEntityIfRequired(WorldEntity spawnedEntity, DeterministicGenerator generator)
     {
         if (entityBootstrappersByTechType.TryGetValue(spawnedEntity.TechType, out IEntityBootstrapper bootstrapper) ||
             (!string.IsNullOrEmpty(spawnedEntity.ClassId) && entityBootstrappersByClassId.TryGetValue(spawnedEntity.ClassId, out bootstrapper)))
         {
-            bootstrapper.Prepare(ref spawnedEntity, generator);
+            return bootstrapper.Prepare(spawnedEntity, generator);
         }
+        return Task.FromResult(spawnedEntity);
     }
 }
