@@ -15,6 +15,10 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
     private readonly PlayerManager playerManager;
     private int defaultLayer;
     private int viewModelLayer;
+    private Optional<NitroxId> previousHeldItemId = Optional.Empty;
+
+    public delegate void HeldItemChanged(Optional<NitroxId> previousId);
+    public static event HeldItemChanged? OnHeldItemChanged;
 
     public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
@@ -28,24 +32,49 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
 
     public Task Process(ClientProcessorContext context, PlayerHeldItemChanged packet)
     {
-        if (!playerManager.TryFind(packet.SessionId, out RemotePlayer player))
+        LateProcess(packet, 0);
+        return Task.CompletedTask;
+    }
+
+    private void LateProcess(PlayerHeldItemChanged packet, int count)
+    {
+        void Reschedule()
         {
-            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find player with session id: {packet.SessionId}.");
-            return Task.CompletedTask;
+            if (count >= 10)
+            {
+                Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find entity with id: {packet.ItemId}.");
+                return;
+            }
+
+            // The item entity may have just been spawned by another client and may not exist for us.
+            // Wait up to 10 frames for it to spawn, and only then conclude that it doesn't exist.
+            InvokeHelper.InvokeNextFrame(() => LateProcess(packet, count + 1));
         }
+
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
-            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find entity with id: {packet.ItemId}.");
-            return Task.CompletedTask;
+            Reschedule();
+            return;
         }
 
         Pickupable pickupable = item.GetComponent<Pickupable>();
-        Validate.IsTrue(pickupable);
+        if (!pickupable || pickupable.inventoryItem == null)
+        {
+            Reschedule();
+            return;
+        }
 
-        Validate.NotNull(pickupable.inventoryItem);
+        if (!playerManager.TryFind(packet.SessionId, out RemotePlayer player))
+        {
+            Log.Warn($"[{nameof(PlayerHeldItemChangedProcessor)}] Could not find player with session id: {packet.SessionId}.");
+            return;
+        }
 
         ItemsContainer inventory = player.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
+
+        OnHeldItemChanged?.Invoke(previousHeldItemId);
+        previousHeldItemId = Optional.Of(packet.ItemId);
 
         // Copied from QuickSlots
         switch (packet.Type)
@@ -121,7 +150,6 @@ internal sealed class PlayerHeldItemChangedProcessor : IClientPacketProcessor<Pl
             default:
                 throw new ArgumentOutOfRangeException(nameof(packet.Type));
         }
-        return Task.CompletedTask;
     }
 
     private void SetupLayers()

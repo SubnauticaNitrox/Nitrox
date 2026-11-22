@@ -43,6 +43,10 @@ public sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketP
             {
                 DestroyPickupable(pickupable);
             }
+            else if (gameObject.TryGetComponent(out CyclopsDamagePoint cyclopsDamagePoint))
+            {
+                DestroyCyclopsDamagePoint(cyclopsDamagePoint);
+            }
             else
             {
                 Entities.DestroyObject(gameObject);
@@ -106,5 +110,10 @@ public sealed class EntityDestroyedProcessor(Entities entities) : IClientPacketP
 
         pickupable.OnDestroy();
         Object.Destroy(pickupable.gameObject);
+    }
+
+    private void DestroyCyclopsDamagePoint(CyclopsDamagePoint cyclopsDamagePoint)
+    {
+        cyclopsDamagePoint.liveMixin.AddHealth(999);
     }
 }
