@@ -14,10 +14,16 @@ public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPa
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.TakeDamage(default(float), default(Vector3), default(DamageType), default(GameObject)));
 
-    public static bool Prefix(out float __state, LiveMixin __instance, GameObject dealer)
+    public static bool Prefix(out float __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
     {
         // Persist the previous health value
         __state = __instance.health;
+
+        // Only the simulating player changes a creature's health (see CreatureHealthManager)
+        if (CreatureHealthManager.IsHealthSynced(__instance, out NitroxId creatureId))
+        {
+            return Resolve<CreatureHealthManager>().ShouldApplyDamage(__instance, creatureId, originalDamage, position, type, dealer);
+        }
 
         if (!Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
         {
@@ -52,6 +58,7 @@ public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPa
             return;
         }
 
+        Resolve<CreatureHealthManager>().OnHealthChanged(__instance);
         BroadcastDefaultTookDamage(__instance);
     }
 

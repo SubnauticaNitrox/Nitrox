@@ -22,8 +22,14 @@ internal sealed class EntityTransformUpdatesProcessor(SimulationOwnership simula
                 continue;
             }
 
+            // Spline updates are only meant for living creatures, but the simulating player can still send some before learning
+            // that we killed it or that it turned into something else with the same id (e.g. a cooked fish)
+            if (update is SplineTransformUpdate && !CanFollowSpline(gameObject))
+            {
+                continue;
+            }
+
             RemotelyControlled remotelyControlled = RemotelyControlled.Ensure(gameObject);
-            ;
 
             Vector3 position = update.Position.ToUnity();
             Quaternion rotation = update.Rotation.ToUnity();
@@ -38,5 +44,15 @@ internal sealed class EntityTransformUpdatesProcessor(SimulationOwnership simula
             }
         }
         return Task.CompletedTask;
+    }
+
+    private static bool CanFollowSpline(GameObject gameObject)
+    {
+        if (!gameObject.GetComponent<SwimBehaviour>() && !gameObject.GetComponent<WalkBehaviour>())
+        {
+            return false;
+        }
+
+        return !gameObject.TryGetComponent(out CreatureDeath creatureDeath) || !creatureDeath.liveMixin || creatureDeath.liveMixin.IsAlive();
     }
 }

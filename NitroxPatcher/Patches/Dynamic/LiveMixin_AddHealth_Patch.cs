@@ -24,6 +24,12 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
         // Persist the previous health value
         __state = __instance.health;
 
+        // Only the simulating player heals a creature, the others receive its health (see CreatureHealthManager)
+        if (CreatureHealthManager.IsHealthSynced(__instance, out NitroxId creatureId))
+        {
+            return Resolve<CreatureHealthManager>().ShouldApplyHeal(__instance, creatureId);
+        }
+
         if (!Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
         {
             return true; // everyone should process this locally
@@ -91,6 +97,9 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
 
     private static void HandleGenericEntity(LiveMixin victim)
     {
+        // Heals of a simulated creature are shared like its damage
+        Resolve<CreatureHealthManager>().OnHealthChanged(victim);
+
         // Let others know if we have a lock on this entity
         if (!CanBroadcast || !victim.TryGetIdOrWarn(out NitroxId id) || !Resolve<SimulationOwnership>().HasAnyLockType(id))
         {

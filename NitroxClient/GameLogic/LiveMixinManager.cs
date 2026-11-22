@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
+using Nitrox.Model.Subnautica.Packets;
+using NitroxClient.Communication;
+using NitroxClient.GameLogic.FMOD;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -14,6 +17,11 @@ public class LiveMixinManager
     };
 
     public bool IsRemoteHealthChanging { get; private set; }
+
+    /// <summary>
+    ///     True while <see cref="ReplayRemoteKill"/> notifies an object's components of a death which happened for another player.
+    /// </summary>
+    public bool IsReplayingRemoteKill { get; private set; }
 
     public LiveMixinManager(SimulationOwnership simulationOwnership)
     {
@@ -38,6 +46,51 @@ public class LiveMixinManager
         }
         
         return true;
+    }
+
+    /// <summary>
+    ///     Sends the "OnKill" message which <see cref="LiveMixin.Kill"/> sent on the killer's side, for a death of which only
+    ///     <see cref="CreatureDeath"/>'s part was replicated (see RemoveCreatureCorpseProcessor).
+    ///     Without it, the other components (e.g. AI, animations, sounds) keep acting as if the object was alive.
+    /// </summary>
+    public void ReplayRemoteKill(LiveMixin liveMixin)
+    {
+        // Deaths broadcast with EntityDestroyed (see LiveMixin_Kill_Patch) are replicated by destroying the object
+        if (liveMixin.destroyOnDeath || ShouldBroadcastDeath(liveMixin))
+        {
+            return;
+        }
+
+        GameObject gameObject = liveMixin.gameObject;
+        // Entities which didn't die can be attached to the object (e.g. a grabbed vehicle or the local player),
+        // in which case only the object's own components are notified
+        bool notifyChildren = !(Player.main && Player.main.transform.IsChildOf(gameObject.transform)) &&
+                              !gameObject.GetComponentInChildren<Vehicle>(true);
+
+        IsReplayingRemoteKill = true;
+        try
+        {
+            // The consequences of this death were already broadcast by the player for whom it happened
+            using (PacketSuppressor<EntityDestroyed>.Suppress())
+            using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
+            using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+            using (FMODSystem.SuppressSendingSounds())
+            {
+                // The damage type isn't known, receivers without a parameter still get the message
+                if (notifyChildren)
+                {
+                    gameObject.BroadcastMessage("OnKill", DamageType.Normal, SendMessageOptions.DontRequireReceiver);
+                }
+                else
+                {
+                    gameObject.SendMessage("OnKill", DamageType.Normal, SendMessageOptions.DontRequireReceiver);
+                }
+            }
+        }
+        finally
+        {
+            IsReplayingRemoteKill = false;
+        }
     }
 
     public bool ShouldApplyNextHealthUpdate(LiveMixin receiver, GameObject dealer = null)
