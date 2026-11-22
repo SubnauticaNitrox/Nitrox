@@ -4,10 +4,8 @@ using System.Linq;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
 using Nitrox.Model.DataStructures.Unity;
-using Nitrox.Model.MultiplayerSession;
 using Nitrox.Model.Packets;
 using Nitrox.Model.Server;
-using Nitrox.Model.Subnautica.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.MultiplayerSession;
 
@@ -43,6 +41,11 @@ namespace Nitrox.Model.Subnautica.Packets
         public bool InPrecursor { get; }
         public bool DisplaySurfaceWater { get; }
         public bool MarkDeathPointsWithBeacon { get; }
+        public PictureFrameSyncMode PictureFrameSync { get; }
+        public int PictureFrameMaxDimension { get; }
+        public int PictureFrameMaxBytes { get; }
+        public int PictureFrameJpegQuality { get; }
+        public long PictureFrameTotalBytes { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -70,7 +73,12 @@ namespace Nitrox.Model.Subnautica.Packets
             SessionSettings sessionSettings,
             bool inPrecursor,
             bool displaySurfaceWater,
-            bool markDeathPointsWithBeacon)
+            bool markDeathPointsWithBeacon,
+            PictureFrameSyncMode pictureFrameSync,
+            int pictureFrameMaxDimension,
+            int pictureFrameMaxBytes,
+            int pictureFrameJpegQuality,
+            long pictureFrameTotalBytes)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -99,6 +107,11 @@ namespace Nitrox.Model.Subnautica.Packets
             InPrecursor = inPrecursor;
             DisplaySurfaceWater = displaySurfaceWater;
             MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
+            PictureFrameSync = pictureFrameSync;
+            PictureFrameMaxDimension = pictureFrameMaxDimension;
+            PictureFrameMaxBytes = pictureFrameMaxBytes;
+            PictureFrameJpegQuality = pictureFrameJpegQuality;
+            PictureFrameTotalBytes = pictureFrameTotalBytes;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -129,7 +142,12 @@ namespace Nitrox.Model.Subnautica.Packets
             SessionSettings sessionSettings,
             bool inPrecursor,
             bool displaySurfaceWater,
-            bool markDeathPointsWithBeacon)
+            bool markDeathPointsWithBeacon,
+            PictureFrameSyncMode pictureFrameSync,
+            int pictureFrameMaxDimension,
+            int pictureFrameMaxBytes,
+            int pictureFrameJpegQuality,
+            long pictureFrameTotalBytes)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -158,6 +176,11 @@ namespace Nitrox.Model.Subnautica.Packets
             InPrecursor = inPrecursor;
             DisplaySurfaceWater = displaySurfaceWater;
             MarkDeathPointsWithBeacon = markDeathPointsWithBeacon;
+            PictureFrameSync = pictureFrameSync;
+            PictureFrameMaxDimension = pictureFrameMaxDimension;
+            PictureFrameMaxBytes = pictureFrameMaxBytes;
+            PictureFrameJpegQuality = pictureFrameJpegQuality;
+            PictureFrameTotalBytes = pictureFrameTotalBytes;
         }
     }
 }
