@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
@@ -87,13 +88,25 @@ public static class SimulationWhitelist
         TechType.CrashHome.ToDto(),
     ];
 
-    public static bool ShouldSimulateEntity(WorldEntity entity)
+    private static readonly HashSet<Type> propagateSimulationEntityTypes = [
+        // Reefbacks host creatures as children. These creatures have their LargeWorldEntity disabled, which means they only dispawn when the parent Reefback dispawns.
+        // Thus they're are so connected to it that we can assume taking ownership on a Reefback is equivalent to taking it on its children.
+        typeof(ReefbackEntity),
+    ];
+
+    public static bool ShouldSimulateEntity(Entity entity)
     {
-        return utilityWhitelist.Contains(entity.TechType) || ShouldSimulateEntityMovement(entity);
+        return utilityWhitelist.Contains(entity.TechType) ||
+            (entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity));
     }
 
     public static bool ShouldSimulateEntityMovement(WorldEntity entity)
     {
         return !entity.SpawnedByServer || movementTechTypeWhitelist.Contains(entity.TechType) || movementClassIdWhitelist.Contains(entity.ClassId);
+    }
+
+    public static bool ShouldPropagateSimulation(Entity entity)
+    {
+        return propagateSimulationEntityTypes.Contains(entity.GetType());
     }
 }

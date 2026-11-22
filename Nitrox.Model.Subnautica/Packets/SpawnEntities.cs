@@ -16,15 +16,11 @@ public class SpawnEntities : Packet
 
     public bool ForceRespawn { get; }
 
-    public SpawnEntities(Entity entity, SimulatedEntity? simulatedEntity = null, bool forceRespawn = false)
+    public SpawnEntities(Entity entity, List<SimulatedEntity>? simulatedEntities = null, bool forceRespawn = false)
     {
         Entities = [entity];
-        SimulatedEntities = [];
+        SimulatedEntities = simulatedEntities ?? [];
         SpawnedCells = [];
-        if (simulatedEntity != null)
-        {
-            SimulatedEntities.Add(simulatedEntity);
-        }
 
         ForceRespawn = forceRespawn;
     }

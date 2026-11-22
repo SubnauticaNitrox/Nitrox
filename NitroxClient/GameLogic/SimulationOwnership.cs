@@ -116,8 +116,6 @@ public class SimulationOwnership
         {
             Object.Destroy(remotelyControlled);
         }
-
-        PropagateReefbackOwnership(simulatedEntity.Id, isLocalPlayerNewOwner);
     }
 
     /// <summary>
@@ -152,34 +150,6 @@ public class SimulationOwnership
     public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
     {
         return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
-    }
-
-    /// <summary>
-    /// Reefbacks host creatures as children. These creatures have their LargeWorldEntity disabled, which means they only dispawn when the parent Reefback dispawns.
-    /// Thus they're are so connected to it that we can assume taking ownership on a Reefback is equivalent to taking it on its children.
-    /// </summary>
-    private void PropagateReefbackOwnership(NitroxId entityId, bool isSimulating)
-    {
-        if (!NitroxEntity.TryGetComponentFrom(entityId, out ReefbackLife reefbackLife))
-        {
-            return;
-        }
-
-        // Any creatureSlot's parent is the CreatureSlots Transform
-        foreach (Transform reefbackChildTransform in reefbackLife.creatureSlots[0].parent)
-        {
-            if (reefbackChildTransform.TryGetNitroxId(out NitroxId reefbackChildId))
-            {
-                if (isSimulating)
-                {
-                    TakeOwnership(reefbackChildId, SimulationLockType.TRANSIENT, true);
-                }
-                else
-                {
-                    DropSimulationFrom(reefbackChildId);
-                }
-            }
-        }
     }
 
     public bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)

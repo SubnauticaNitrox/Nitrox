@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
+using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
@@ -33,16 +34,27 @@ internal sealed class PlayerUnseeOutOfCellEntityProcessor(SimulationOwnershipDat
         {
             return;
         }
+        List<NitroxId> droppedEntityIds = [packet.EntityId];
+        if (SimulationWhitelist.ShouldPropagateSimulation(entity))
+        {
+            foreach (Entity childEntity in entity.ChildEntities)
+            {
+                if (simulationOwnershipData.RevokeIfOwner(childEntity.Id, context.Sender))
+                {
+                    droppedEntityIds.Add(childEntity.Id);
+                }
+            }
+        }
 
         List<Player> otherPlayers = playerManager.GetConnectedPlayersExcept(context.Sender);
-        if (entitySimulation.TryAssignEntityToPlayers(otherPlayers, entity, out SimulatedEntity simulatedEntity))
+        if (entitySimulation.TryAssignEntityToPlayers(otherPlayers, entity, true, out List<SimulatedEntity> simulatedEntities))
         {
-            entitySimulation.BroadcastSimulationChanges([simulatedEntity]);
+            await entitySimulation.BroadcastSimulationChanges(simulatedEntities);
         }
         else
         {
             // No player has taken simulation on the entity
-            await context.SendToAllAsync(new DropSimulationOwnership(packet.EntityId));
+            await context.SendToAllAsync(new DropSimulationOwnership(droppedEntityIds));
         }
     }
 }

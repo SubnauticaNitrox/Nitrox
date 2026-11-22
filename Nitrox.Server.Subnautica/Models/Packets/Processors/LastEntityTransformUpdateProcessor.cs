@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
+using Nitrox.Model.Subnautica.Helper;
 using Nitrox.Server.Subnautica.Models.GameLogic;
 using Nitrox.Server.Subnautica.Models.GameLogic.Entities;
 using Nitrox.Server.Subnautica.Models.Packets.Core;
@@ -28,6 +29,13 @@ internal sealed class LastEntityTransformUpdateProcessor(WorldEntityManager worl
         {
             return;
         }
+        if (SimulationWhitelist.ShouldPropagateSimulation(worldEntity))
+        {
+            foreach (Entity childEntity in worldEntity.ChildEntities)
+            {
+                simulationOwnershipData.RevokeIfOwner(childEntity.Id, context.Sender);
+            }
+        }
 
         EntityTransformUpdates entityTransformUpdates = new([lastUpdate]);
 
@@ -39,9 +47,9 @@ internal sealed class LastEntityTransformUpdateProcessor(WorldEntityManager worl
             }
         }
 
-        List<SimulatedEntity> simulationChange = [];
-        entitySimulation.AssignEntitiesToOtherPlayers(context.Sender.SessionId, [worldEntity], simulationChange);
+        List<SimulatedEntity> simulationChanges = [];
+        entitySimulation.AssignEntitiesToOtherPlayers(context.Sender.SessionId, [worldEntity], simulationChanges, true);
 
-        await context.SendToAllAsync(new SimulationOwnershipChange(simulationChange));
+        await context.SendToAllAsync(new SimulationOwnershipChange(simulationChanges));
     }
 }

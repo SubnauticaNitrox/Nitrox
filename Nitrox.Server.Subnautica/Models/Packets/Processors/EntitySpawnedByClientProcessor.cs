@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic;
 using Nitrox.Model.Subnautica.DataStructures.GameLogic.Entities;
@@ -23,20 +24,20 @@ internal sealed class EntitySpawnedByClientProcessor(PlayerManager playerManager
         // may have an item in their inventory (that the registry knows about) then wants to spawn it into the world.
         entityRegistry.AddOrUpdate(entity);
 
-        SimulatedEntity simulatedEntity = null;
+        List<SimulatedEntity> simulatedEntities = null;
         if (entity is WorldEntity worldEntity)
         {
             worldEntityManager.TrackEntityInTheWorld(worldEntity);
+
+            if (packet.RequireSimulation)
+            {
+                simulatedEntities = [.. entitySimulation.AssignEntityToPlayer(worldEntity, context.Sender, true)];
+                SimulationOwnershipChange ownershipChangePacket = new(simulatedEntities);
+                await context.SendToOthersAsync(ownershipChangePacket);
+            }
         }
 
-        if (packet.RequireSimulation)
-        {
-            simulatedEntity = entitySimulation.AssignEntityToPlayer(entity, context.Sender, true);
-            SimulationOwnershipChange ownershipChangePacket = new(simulatedEntity);
-            await context.SendToOthersAsync(ownershipChangePacket);
-        }
-
-        SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);
+        SpawnEntities spawnEntities = new(entity, simulatedEntities, packet.RequireRespawn);
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             bool isOtherPlayer = player != context.Sender;

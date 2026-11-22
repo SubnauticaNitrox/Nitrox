@@ -35,17 +35,45 @@ internal sealed class EntitySimulation : ISessionCleaner
     /// <returns>The successfully acquired entities from the provided <paramref name="cell"/>.</returns>
     public IEnumerable<SimulatedEntity> TryAcquireCellEntities(Player player, AbsoluteEntityCell cell)
     {
-        foreach (WorldEntity worldEntity in worldEntityManager.EnumerateCellEntities(cell))
+        return TryAcquireEntities(player, worldEntityManager.EnumerateCellEntities(cell), true, true);
+    }
+
+    private IEnumerable<SimulatedEntity> TryAcquireEntities(Player player, IEnumerable<Entity> entities, bool checkPlayerCanSee, bool propagate)
+    {
+        foreach (Entity entity in entities)
         {
-            if (!player.CanSee(worldEntity) || !SimulationWhitelist.ShouldSimulateEntity(worldEntity))
+            if (!SimulationWhitelist.ShouldSimulateEntity(entity))
             {
                 continue;
             }
 
-            if (simulationOwnershipData.TryAcquire(worldEntity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
+            if (checkPlayerCanSee && !player.CanSee(entity))
             {
-                bool doesEntityMove = SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
-                yield return new SimulatedEntity(worldEntity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+                continue;
+            }
+
+            foreach (SimulatedEntity simulatedEntity in TryAcquireEntity(player, entity, propagate))
+            {
+                yield return simulatedEntity;
+            }
+        }
+    }
+
+    public IEnumerable<SimulatedEntity> TryAcquireEntity(Player player, Entity entity, bool propagate, SimulationLockType simulationLockType = DEFAULT_ENTITY_SIMULATION_LOCKTYPE)
+    {
+        if (!simulationOwnershipData.TryAcquire(entity.Id, player, simulationLockType))
+        {
+            yield break;
+        }
+
+        bool doesEntityMove = entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
+        yield return new SimulatedEntity(entity.Id, player.SessionId, doesEntityMove, simulationLockType);
+
+        if (propagate && SimulationWhitelist.ShouldPropagateSimulation(entity))
+        {
+            foreach (SimulatedEntity simulatedEntity in TryAcquireEntities(player, entity.ChildEntities, false, propagate))
+            {
+                yield return simulatedEntity;
             }
         }
     }
@@ -53,15 +81,31 @@ internal sealed class EntitySimulation : ISessionCleaner
     /// <returns>The successfully revoked simulated entities from the provided <paramref name="cell"/>.</returns>
     public IEnumerable<WorldEntity> RevokeSimulatedCellEntities(Player simulatingPlayer, AbsoluteEntityCell cell)
     {
-        foreach (WorldEntity entity in worldEntityManager.EnumerateCellEntities(cell))
+        return RevokeEntities(simulatingPlayer, worldEntityManager.EnumerateCellEntities(cell), true);
+    }
+
+    private IEnumerable<WorldEntity> RevokeEntities(Player simulatingPlayer, IEnumerable<WorldEntity> entities, bool checkCanPlayerSee)
+    {
+        foreach (WorldEntity worldEntity in entities)
         {
-            if (simulatingPlayer.CanSee(entity))
+            if (checkCanPlayerSee && simulatingPlayer.CanSee(worldEntity))
             {
                 continue;
             }
-            if (simulationOwnershipData.RevokeIfOwner(entity.Id, simulatingPlayer))
+            if (simulationOwnershipData.RevokeIfOwner(worldEntity.Id, simulatingPlayer))
             {
-                yield return entity;
+                yield return worldEntity;
+            }
+
+            if (!SimulationWhitelist.ShouldPropagateSimulation(worldEntity))
+            {
+                continue;
+            }
+
+            // PlayerSeeOutOfCell state might remain in a tiny time frame while player unloads cell, so we propagate without checking CanSee
+            foreach (WorldEntity childWorldEntity in RevokeEntities(simulatingPlayer, worldEntity.ChildEntities.OfType<WorldEntity>(), false))
+            {
+                yield return childWorldEntity;
             }
         }
     }
@@ -71,44 +115,30 @@ internal sealed class EntitySimulation : ISessionCleaner
     /// </summary>
     public void RevokeAndReassignCellEntities(Player player, AbsoluteEntityCell removedCell, List<SimulatedEntity> ownershipChanges)
     {
-        AssignEntitiesToOtherPlayers(player.SessionId, RevokeSimulatedCellEntities(player, removedCell), ownershipChanges);
+        AssignEntitiesToOtherPlayers(player.SessionId, RevokeSimulatedCellEntities(player, removedCell), ownershipChanges, true);
     }
 
-    public void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
+    public async Task BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
     {
         if (ownershipChanges.Count > 0)
         {
             SimulationOwnershipChange ownershipChange = new(ownershipChanges);
-            packetSender.SendPacketToAllAsync(ownershipChange);
+            await packetSender.SendPacketToAllAsync(ownershipChange);
         }
-    }
-
-    public bool TryAssignEntityToPlayer(Entity entity, Player player, bool shouldEntityMove, [NotNullWhen(true)] out SimulatedEntity? simulatedEntity)
-    {
-        if (simulationOwnershipData.TryAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
-        {
-            bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
-            simulatedEntity = new(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
-            return true;
-        }
-
-        simulatedEntity = null;
-        return false;
     }
 
     /// <summary>
     /// Forcefully assign an entity to a player, revoking any previous ownership.
     /// </summary>
-    public SimulatedEntity AssignEntityToPlayer(Entity entity, Player player, bool shouldEntityMove)
+    public IEnumerable<SimulatedEntity> AssignEntityToPlayer(WorldEntity worldEntity, Player player, bool propagate)
     {
-        simulationOwnershipData.ForceAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
-        bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
-        return new(entity.Id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+        simulationOwnershipData.ForceAcquire(worldEntity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+        return TryAcquireEntity(player, worldEntity, propagate);
     }
 
     public List<SimulatedEntity> AssignGlobalRootEntitiesAndGetData(Player player)
     {
-        List<SimulatedEntity> simulatedEntities = new();
+        List<SimulatedEntity> simulatedEntities = [];
         foreach (GlobalRootEntity entity in worldEntityManager.GetGlobalRootEntities())
         {
             simulationOwnershipData.TryAcquire(entity.Id, player, SimulationLockType.TRANSIENT);
@@ -123,23 +153,37 @@ internal sealed class EntitySimulation : ISessionCleaner
         return simulatedEntities;
     }
 
-    public bool TryAssignEntityToPlayers(List<Player> players, Entity entity, [NotNullWhen(true)] out SimulatedEntity? simulatedEntity)
+    public bool TryAssignEntityToPlayers(List<Player> players, Entity entity, bool propagate, [NotNullWhen(true)] out List<SimulatedEntity>? simulatedEntities)
     {
         NitroxId id = entity.Id;
 
         foreach (Player player in players)
         {
-            if (player.CanSee(entity) && simulationOwnershipData.TryAcquire(id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
+            if (!player.CanSee(entity))
             {
-                bool doesEntityMove = entity is WorldEntity worldEntity && SimulationWhitelist.ShouldSimulateEntityMovement(worldEntity);
-
-                logger.ZLogTrace($"Player {player.Name} has taken over simulating {id}");
-                simulatedEntity = new(id, player.SessionId, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
-                return true;
+                continue;
             }
+
+            simulatedEntities = [.. TryAcquireEntity(player, entity, false)];
+            if (simulatedEntities.Count == 0)
+            {
+                continue;
+            }
+
+            if (propagate && SimulationWhitelist.ShouldPropagateSimulation(entity))
+            {
+                foreach (Entity childEntity in entity.ChildEntities)
+                {
+                    simulatedEntities.AddRange(TryAcquireEntity(player, childEntity, false));
+                }
+            }
+
+            logger.ZLogTrace($"Player {player.Name} has taken over simulating {id}");
+            return true;
+
         }
 
-        simulatedEntity = null;
+        simulatedEntities = null;
         return false;
     }
 
@@ -165,17 +209,17 @@ internal sealed class EntitySimulation : ISessionCleaner
 
     private List<SimulatedEntity> CalculateSimulationChangesFromPlayerDisconnect(SessionId sessionId)
     {
-        List<SimulatedEntity> ownershipChanges = new();
+        List<SimulatedEntity> ownershipChanges = [];
 
         List<NitroxId> revokedEntityIds = simulationOwnershipData.RevokeAllForOwner(sessionId);
         List<Entity> revokedEntities = entityRegistry.GetEntities(revokedEntityIds);
 
-        AssignEntitiesToOtherPlayers(sessionId, revokedEntities, ownershipChanges);
+        AssignEntitiesToOtherPlayers(sessionId, revokedEntities, ownershipChanges, false);
 
         return ownershipChanges;
     }
 
-    public void AssignEntitiesToOtherPlayers(SessionId oldSessionId, IEnumerable<Entity> entities, List<SimulatedEntity> ownershipChanges)
+    public void AssignEntitiesToOtherPlayers(SessionId oldSessionId, IEnumerable<Entity> entities, List<SimulatedEntity> ownershipChanges, bool propagate)
     {
         // In case the enumerator can be counted (e.g. a list)
         if (entities.TryGetNonEnumeratedCount(out int count))
@@ -187,13 +231,22 @@ internal sealed class EntitySimulation : ISessionCleaner
         List<Player> otherPlayers = playerManager.GetConnectedPlayersExcept(oldSessionId);
         foreach (Entity entity in entities)
         {
-            if (TryAssignEntityToPlayers(otherPlayers, entity, out SimulatedEntity simulatedEntity))
+            if (TryAssignEntityToPlayers(otherPlayers, entity, propagate, out List<SimulatedEntity> simulatedEntities))
             {
-                ownershipChanges.Add(simulatedEntity);
+                ownershipChanges.AddRange(simulatedEntities);
+                continue;
             }
-            else
+
+            ownershipChanges.Add(new(entity.Id, SessionId.SERVER_ID, false, SimulationLockType.TRANSIENT));
+            if (propagate && SimulationWhitelist.ShouldPropagateSimulation(entity))
             {
-                ownershipChanges.Add(new(entity.Id, SessionId.SERVER_ID, false, SimulationLockType.TRANSIENT));
+                foreach (Entity childEntity in entity.ChildEntities)
+                {
+                    if (simulationOwnershipData.GetPlayerForLock(childEntity.Id) == null)
+                    {
+                        ownershipChanges.Add(new(childEntity.Id, SessionId.SERVER_ID, false, SimulationLockType.TRANSIENT));
+                    }
+                }
             }
         }
     }

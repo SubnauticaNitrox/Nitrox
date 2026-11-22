@@ -42,8 +42,6 @@ namespace NitroxClient.GameLogic
         /// We divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time).
         /// </remarks>
         private static float allottedTimePerFrameSeconds => 0.4f / Application.targetFrameRate;
-        private readonly TaskResult<Optional<GameObject>> entityResult = new();
-        private readonly TaskResult<Exception> exception = new();
         private float timeUntilNextYieldSeconds;
         public bool ShouldSkipFrame => Time.realtimeSinceStartup >= timeUntilNextYieldSeconds;
 
@@ -179,6 +177,9 @@ namespace NitroxClient.GameLogic
         /// <param name="skipFrames"></param>
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
         {
+            TaskResult<Optional<GameObject>> entityResult = new();
+            TaskResult<Exception> exception = new();
+
             RefreshTimeUntilNextYield();
 
             while (batch.Count > 0)
@@ -196,6 +197,7 @@ namespace NitroxClient.GameLogic
                 }
                 if (WasAlreadySpawned(entity) && !forceRespawn)
                 {
+                    simulationOwnership.ApplyNewerSimulation(entity.Id);
                     continue;
                 }
                 else if (entity.ParentId != null && !IsParentReady(entity.ParentId))
@@ -228,7 +230,6 @@ namespace NitroxClient.GameLogic
                 }
 
                 OnEntitySpawned(entity, entityResult.Get().Value);
-                simulationOwnership.ApplyNewerSimulation(entity.Id);
 
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
@@ -247,6 +248,7 @@ namespace NitroxClient.GameLogic
         public void OnEntitySpawned(Entity entity, GameObject gameObject)
         {
             entityMetadataManager.ApplyMetadata(gameObject, entity.Metadata);
+            simulationOwnership.ApplyNewerSimulation(entity.Id);
             MarkAsSpawned(entity);
         }
 

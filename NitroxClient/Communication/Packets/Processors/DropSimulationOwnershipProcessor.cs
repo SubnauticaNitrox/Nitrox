@@ -1,3 +1,4 @@
+using Nitrox.Model.DataStructures;
 using Nitrox.Model.Subnautica.Packets;
 using NitroxClient.Communication.Packets.Processors.Core;
 using NitroxClient.GameLogic;
@@ -10,7 +11,10 @@ internal sealed class DropSimulationOwnershipProcessor(SimulationOwnership simul
 
     public Task Process(ClientProcessorContext context, DropSimulationOwnership packet)
     {
-        simulationOwnershipManager.DropSimulationFrom(packet.EntityId);
+        foreach (NitroxId nitroxId in packet.EntityIds)
+        {
+            simulationOwnershipManager.DropSimulationFrom(nitroxId);
+        }
         return Task.CompletedTask;
     }
 }
