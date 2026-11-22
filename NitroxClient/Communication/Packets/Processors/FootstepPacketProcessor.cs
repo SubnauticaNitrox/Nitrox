@@ -43,6 +43,7 @@ internal sealed class FootstepPacketProcessor : IClientPacketProcessor<FootstepP
 
             if (!asset)
             {
+                Log.Error($"Footstep sound asset not found for packet: {packet.AssetIndex}");
                 return Task.CompletedTask;
             }
 
