@@ -67,11 +67,18 @@ public sealed class PrefabLoadInitialSyncProcessor : InitialSyncProcessor
 
     private static IEnumerator ProcessQueueWorker(Queue<(string classId, TechType techType)> queue)
     {
-        while (queue.Count > 0)
+        try
         {
-            (string classId, TechType techType) = queue.Dequeue();
-            yield return DefaultWorldEntitySpawner.CachePrefab(classId, techType);
+            while (queue.Count > 0)
+            {
+                (string classId, TechType techType) = queue.Dequeue();
+                yield return DefaultWorldEntitySpawner.CachePrefab(classId, techType)
+                    .OnYieldError(exception => Log.Error(exception, $"Failed to cache prefab [classId: {classId}, techType: {techType}]"));
+            }
         }
-        workersRunning--;
+        finally
+        {
+            workersRunning--;
+        }
     }
 }
