@@ -97,10 +97,11 @@ public class PlayerModelManager
 
     private static IEnumerator ApplyPlayerColor(INitroxPlayer player, IEnumerable<IColorSwapManager> colorSwapManagers)
     {
-        ColorSwapAsyncOperation swapOperation = new(player, colorSwapManagers);
+        yield return GpuRecolorer.EnsureInitialized();
 
-        swapOperation.BeginColorSwap();
-        yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
-        swapOperation.ApplySwappedColors();
+        foreach (IColorSwapManager manager in colorSwapManagers)
+        {
+            manager.ApplyPlayerColor(player);
+        }
     }
 }
