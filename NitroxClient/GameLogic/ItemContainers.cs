@@ -30,7 +30,7 @@ public class ItemContainers
     public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform, ItemsContainer container)
     {
         // We don't want to broadcast that event if it's from another player's inventory
-        if (containerTransform.GetComponentInParent<RemotePlayerIdentifier>(true))
+        if (containerTransform.IsRemotePlayer)
         {
             return;
         }
