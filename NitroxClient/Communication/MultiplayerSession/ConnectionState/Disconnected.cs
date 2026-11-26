@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Net.NetworkInformation;
+using System.Linq;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using Nitrox.Model.Helper;
@@ -51,11 +54,22 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!client.IsConnected)
             {
-                await client.StartAsync(ipAddress, port);
+                if (!NetworkInterface.GetAllNetworkInterfaces()
+                    .Any(n => n.OperationalStatus == OperationalStatus.Up
+                        && n.NetworkInterfaceType != NetworkInterfaceType.Loopback
+                        && n.NetworkInterfaceType != NetworkInterfaceType.Tunnel))
+                {
+                    throw new ClientConnectionFailedException(Language.main.Get("Nitrox_NoConnection"));
+                }
 
+                await client.StartAsync(ipAddress, port);
                 if (!client.IsConnected)
                 {
-                    throw new ClientConnectionFailedException("The client failed to connect without providing a reason why.");
+                    if (client is LiteNetLibClient lnlClient && lnlClient.ConnectFailReason.HasValue)
+                    {
+                        throw new ClientConnectionFailedException(lnlClient.ConnectFailReason.Value);
+                    }
+                    throw new ClientConnectionFailedException(Language.main.Get("Nitrox_NoResponse"));
                 }
             }
         }
