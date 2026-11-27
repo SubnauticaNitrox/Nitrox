@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using NitroxClient.GameLogic.ChatUI;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.Helper;
 using NitroxClient.Unity.Helper;
@@ -187,7 +189,25 @@ public abstract class AbstractDebugger
         }
 
         Render();
-        GUI.DragWindow();
+
+        Rect titleBar = new(0f, 0f, windowRect.width, 30f);
+        if (Event.current.type == EventType.MouseDown && titleBar.Contains(Event.current.mousePosition) && PlayerChatManager.Instance.IsChatSelected)
+        {
+            PlayerChatManager.Instance.DeselectChatImmediately();
+            UWE.Utils.alwaysLockCursor = false;
+            UWE.Utils.lockCursor = false;
+            // AvatarInputHandler can lock the cursor during Update before this IMGUI click is handled.
+            UWE.CoroutineHost.StartCoroutine(UnlockCursorAfterInputUpdate());
+        }
+
+        GUI.DragWindow(titleBar);
+    }
+
+    private static IEnumerator UnlockCursorAfterInputUpdate()
+    {
+        yield return null;
+        UWE.Utils.alwaysLockCursor = false;
+        UWE.Utils.lockCursor = false;
     }
 
     private void SetBaseStyle(GUISkin skin)

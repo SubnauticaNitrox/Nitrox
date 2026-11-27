@@ -104,6 +104,14 @@ public sealed class PlayerChatManager
         }
     }
 
+    public void DeselectChatImmediately()
+    {
+        if (PlayerChat.IsReady)
+        {
+            playerChat.Deselect();
+        }
+    }
+
     public void AddMessage(string playerName, string message, Color color)
     {
         CoroutineHost.StartCoroutine(AddMessageAsync(playerName, message, color));
