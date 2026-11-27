@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using HarmonyLib;
-using LitJson;
 
 namespace NitroxPatcher.Patches.Persistent;
 
@@ -46,14 +46,16 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
         using StreamReader streamReader = new(filePath);
         try
         {
-            JsonData json = JsonMapper.ToObject(streamReader);
+            using JsonDocument json = JsonDocument.Parse(streamReader.ReadToEnd());
 
-            foreach (string key in json.Keys)
+            foreach (JsonProperty property in json.RootElement.EnumerateObject())
             {
-                JsonData entry = json[key];
-                if (entry.IsString)
+                if (property.Value.ValueKind == JsonValueKind.String)
                 {
-                    strings[key] = (string)entry;
+                    if (property.Value.GetString() is { } stringValue)
+                    {
+                        strings[property.Name] = stringValue;
+                    }
                 }
             }
 

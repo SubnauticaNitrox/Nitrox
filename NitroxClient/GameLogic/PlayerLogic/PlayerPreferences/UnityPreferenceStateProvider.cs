@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LitJson;
+using System.Text.Json;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
@@ -11,12 +11,10 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
     public class UnityPreferenceStateProvider : IPreferenceStateProvider
     {
         private const string UNITY_PREF_KEY_NAME = "NITROX_PLAYER_PREFS";
+        private static readonly JsonSerializerOptions jsonSerializerOptions = new() { IncludeFields = true };
 
         public PlayerPreferenceState GetPreferenceState()
         {
-            JsonMapper.RegisterImporter((double value) => Convert.ToSingle(value));
-            JsonMapper.RegisterExporter<float>((value, writer) => writer.Write(Convert.ToDouble(value)));
-
             string playerPreferencesJson = PlayerPrefs.GetString(UNITY_PREF_KEY_NAME);
 
             if (string.IsNullOrEmpty(playerPreferencesJson) || playerPreferencesJson == "{}")
@@ -27,15 +25,12 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
                 };
             }
 
-            return JsonMapper.ToObject<PlayerPreferenceState>(playerPreferencesJson);
+            return JsonSerializer.Deserialize<PlayerPreferenceState>(playerPreferencesJson, jsonSerializerOptions);
         }
 
         public void SavePreferenceState(PlayerPreferenceState preferenceState)
         {
-            JsonMapper.RegisterImporter((double value) => Convert.ToSingle(value));
-            JsonMapper.RegisterExporter<float>((value, writer) => writer.Write(Convert.ToDouble(value)));
-
-            string playerPreferencesJson = JsonMapper.ToJson(preferenceState);
+            string playerPreferencesJson = JsonSerializer.Serialize(preferenceState, jsonSerializerOptions);
             PlayerPrefs.SetString(UNITY_PREF_KEY_NAME, playerPreferencesJson);
         }
     }
