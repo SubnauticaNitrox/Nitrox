@@ -38,14 +38,18 @@ public class EscapePodEntitySpawner : SyncEntitySpawner<EscapePodEntity>
 
     protected override bool SpawnSync(EscapePodEntity entity, TaskResult<Optional<GameObject>> result)
     {
+        bool previousSuppressAwakeMethod = SuppressEscapePodAwakeMethod;
         SuppressEscapePodAwakeMethod = true;
-
-        GameObject escapePod = CreateNewEscapePod(entity);
-
-        SuppressEscapePodAwakeMethod = false;
-
-        result.Set(Optional.Of(escapePod));
-        return true;
+        try
+        {
+            GameObject escapePod = CreateNewEscapePod(entity);
+            result.Set(Optional.Of(escapePod));
+            return true;
+        }
+        finally
+        {
+            SuppressEscapePodAwakeMethod = previousSuppressAwakeMethod;
+        }
     }
 
     protected override bool SpawnsOwnChildren(EscapePodEntity entity) => false;
