@@ -8,13 +8,14 @@ namespace Nitrox.Model.Subnautica.Packets;
 [Serializable]
 public class PlayerMovement : Movement
 {
-    public PlayerMovement(SessionId sessionId, NitroxVector3 position, NitroxVector3 velocity, NitroxQuaternion bodyRotation, NitroxQuaternion aimingRotation)
+    public PlayerMovement(SessionId sessionId, NitroxVector3 position, NitroxVector3 velocity, NitroxQuaternion bodyRotation, NitroxQuaternion aimingRotation, float viewTurn)
     {
         SessionId = sessionId;
         Position = position;
         Velocity = velocity;
         BodyRotation = bodyRotation;
         AimingRotation = aimingRotation;
+        ViewTurn = viewTurn;
         DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
         UdpChannel = UdpChannelId.MOVEMENTS;
     }
@@ -24,4 +25,5 @@ public class PlayerMovement : Movement
     public override NitroxVector3 Velocity { get; }
     public override NitroxQuaternion BodyRotation { get; }
     public override NitroxQuaternion AimingRotation { get; }
+    public float ViewTurn { get; }
 }

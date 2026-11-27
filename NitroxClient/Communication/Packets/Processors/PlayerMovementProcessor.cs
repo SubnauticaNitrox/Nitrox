@@ -15,7 +15,8 @@ internal sealed class PlayerMovementProcessor(PlayerManager remotePlayerManager)
             remotePlayer.UpdatePosition(movement.Position.ToUnity(),
                                         movement.Velocity.ToUnity(),
                                         movement.BodyRotation.ToUnity(),
-                                        movement.AimingRotation.ToUnity());
+                                        movement.AimingRotation.ToUnity(),
+                                        movement.ViewTurn);
         }
         return Task.CompletedTask;
     }

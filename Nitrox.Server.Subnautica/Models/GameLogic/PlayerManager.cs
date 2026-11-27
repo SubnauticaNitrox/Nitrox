@@ -122,7 +122,7 @@ internal sealed partial class PlayerManager(SessionManager sessionManager, BanSe
         SessionManager.Session session = sessionManager.GetOrCreateSession(endPoint);
 
         // TODO: At some point, store the muted state of a player
-        PlayerContext playerContext = new(playerName, session.Id, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation);
+        PlayerContext playerContext = new(playerName, session.Id, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode, animation, []);
 
         reservations.Add(session.Id, playerContext);
 

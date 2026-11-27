@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nitrox.Model.Core;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
@@ -63,7 +64,13 @@ public class LocalPlayer : ILocalNitroxPlayer
             return;
         }
 
-        PlayerMovement playerMovement = new(SessionId.Value, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
+        Animator animator = PlayerModel.GetComponent<Animator>();
+        PlayerMovement playerMovement = new(SessionId.Value,
+                                            location.ToDto(),
+                                            velocity.ToDto(),
+                                            bodyRotation.ToDto(),
+                                            aimingRotation.ToDto(),
+                                            animator.GetFloat("view_turn"));
 
         packetSender.Send(playerMovement);
     }
@@ -73,6 +80,14 @@ public class LocalPlayer : ILocalNitroxPlayer
         if (SessionId.HasValue)
         {
             packetSender.Send(new AnimationChangeEvent(SessionId.Value, new(type, state)));
+        }
+    }
+
+    public void BroadcastAnimatorParameters(Dictionary<string, bool> animatorParameters)
+    {
+        if (SessionId.HasValue)
+        {
+            packetSender.Send(new PlayerAnimatorStateUpdate(SessionId.Value, animatorParameters));
         }
     }
 
@@ -105,6 +120,14 @@ public class LocalPlayer : ILocalNitroxPlayer
         if (SessionId.HasValue)
         {
             packetSender.Send(new PlayerDeathEvent(SessionId.Value, deathPosition.ToDto()));
+        }
+    }
+
+    public void BroadcastDeathAnimation(PlayerDeathAnimationType animationType)
+    {
+        if (SessionId.HasValue)
+        {
+            packetSender.Send(new PlayerDeathAnimation(SessionId.Value, animationType));
         }
     }
 

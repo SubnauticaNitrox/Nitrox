@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -22,9 +23,11 @@ public class PlayerContext
     public NitroxId? DrivingVehicle { get; set; }
     public IntroCinematicMode IntroCinematicMode { get; set; }
     public PlayerAnimation Animation { get; set; }
+    public Dictionary<string, bool> AnimatorParameters { get; set; }
 
     public PlayerContext(string playerName, SessionId sessionId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
-                         SubnauticaGameMode gameMode, NitroxId? drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation)
+                         SubnauticaGameMode gameMode, NitroxId? drivingVehicle, IntroCinematicMode introCinematicMode, PlayerAnimation animation,
+                         Dictionary<string, bool> animatorParameters)
     {
         PlayerName = playerName;
         SessionId = sessionId;
@@ -36,6 +39,7 @@ public class PlayerContext
         DrivingVehicle = drivingVehicle;
         IntroCinematicMode = introCinematicMode;
         Animation = animation;
+        AnimatorParameters = animatorParameters;
     }
 
     public override string ToString()
