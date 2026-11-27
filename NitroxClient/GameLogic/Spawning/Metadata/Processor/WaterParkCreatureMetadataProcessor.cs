@@ -22,6 +22,9 @@ public class WaterParkCreatureMetadataProcessor : EntityMetadataProcessor<WaterP
             double startTime = metadata.MatureTime - waterParkCreature.data.growingPeriod;
             waterParkCreature.age = Mathf.InverseLerp((float)startTime, (float)metadata.MatureTime, DayNightCycle.main.timePassedAsFloat);
             waterParkCreature.timeNextBreed = metadata.TimeNextBreed;
+
+            // Scaling according to WaterParkCreature.ManagedUpdate
+            waterParkCreature.transform.localScale = Mathf.Lerp(waterParkCreature.data.initialSize, waterParkCreature.data.maxSize, waterParkCreature.age) * Vector3.one;
         }
         else
         {
@@ -29,10 +32,10 @@ public class WaterParkCreatureMetadataProcessor : EntityMetadataProcessor<WaterP
             waterParkCreature.matureTime = -1;
             waterParkCreature.age = metadata.Age;
             waterParkCreature.timeNextBreed = -1;
-        }
 
-        // Scaling according to WaterParkCreature.ManagedUpdate
-        waterParkCreature.transform.localScale = Mathf.Lerp(waterParkCreature.data.initialSize, waterParkCreature.data.maxSize, waterParkCreature.age) * Vector3.one;
+            // Match WaterParkCreature.OnRemoveFromWP so dropped fish use their outside scale.
+            gameObject.GetComponent<Creature>().SetScale(waterParkCreature.data.outsideSize);
+        }
 
         waterParkCreature.isMature = waterParkCreature.age == 1f;
         waterParkCreature.bornInside = metadata.BornInside;
