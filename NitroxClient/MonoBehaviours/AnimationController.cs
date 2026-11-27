@@ -7,6 +7,9 @@ public class AnimationController : MonoBehaviour
 {
     private const float SMOOTHING_SPEED = 4f;
     private Animator animator;
+    private ArmsController armsController;
+    private float viewTurn;
+    private float lastViewTurnUpdateTime;
 
     public bool UpdatePlayerAnimations { get; set; } = true;
     public Quaternion AimingRotation { get; set; }
@@ -19,6 +22,8 @@ public class AnimationController : MonoBehaviour
     public void Awake()
     {
         animator = GetComponent<Animator>();
+        armsController = GetComponent<ArmsController>();
+        lastViewTurnUpdateTime = -1f;
 
         this["is_underwater"] = true;
     }
@@ -45,6 +50,9 @@ public class AnimationController : MonoBehaviour
             viewPitch = -viewPitch;
             smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.fixedDeltaTime);
             animator.SetFloat("view_pitch", smoothViewPitch);
+
+            float currentViewTurn = Time.time - lastViewTurnUpdateTime <= 0.1f ? viewTurn : 0f;
+            animator.SetFloat("view_turn", currentViewTurn, armsController.turnAnimationDampTime, Time.fixedDeltaTime);
         }
     }
 
@@ -63,6 +71,17 @@ public class AnimationController : MonoBehaviour
 	{
 		animator.SetFloat(id, value);
 	}
+
+    public void SetViewTurn(float value)
+    {
+        viewTurn = value;
+        lastViewTurnUpdateTime = Time.time;
+    }
+
+    public void SetTrigger(string name)
+    {
+        animator.SetTrigger(name);
+    }
 
 	public void Reset()
 	{

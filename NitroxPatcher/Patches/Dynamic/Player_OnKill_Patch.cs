@@ -3,6 +3,9 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using Nitrox.Model.GameLogic.PlayerAnimation;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -11,6 +14,22 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.OnKill(default(DamageType)));
 
     private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeUtils.IsPermadeath());
+
+    public static void Postfix(Player __instance, DamageType damageType)
+    {
+        if (__instance != Player.main || !Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
+        {
+            return;
+        }
+
+        PlayerDeathAnimationType animationType = damageType switch
+        {
+            DamageType.Fire => PlayerDeathAnimationType.FIRE,
+            DamageType.Explosive => PlayerDeathAnimationType.EXPLOSION,
+            _ => PlayerDeathAnimationType.NORMAL
+        };
+        Resolve<LocalPlayer>().BroadcastDeathAnimation(animationType);
+    }
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {

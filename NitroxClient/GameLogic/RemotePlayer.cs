@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Nitrox.Model.Core;
 using Nitrox.Model.DataStructures.GameLogic;
@@ -33,6 +34,8 @@ public class RemotePlayer : INitroxPlayer
     private readonly PlayerVitalsManager playerVitalsManager;
     private readonly FMODWhitelist fmodWhitelist;
     private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers = [];
+    private PDA remotePda;
+    private int pdaVisibilitySequence;
 
     public PlayerContext PlayerContext { get; }
     public GameObject? Body { get; private set; }
@@ -83,6 +86,11 @@ public class RemotePlayer : INitroxPlayer
 
         // Get player
         PlayerModel = Body.RequireGameObject("player_view");
+        remotePda = PlayerModel.GetComponentInChildren<PDA>(true);
+        if (remotePda)
+        {
+            remotePda.gameObject.SetActive(false);
+        }
         // Move variables to keep player animations from mirroring and for identification
         ArmsController = PlayerModel.GetComponent<ArmsController>();
         ArmsController.smoothSpeedUnderWater = 0;
@@ -109,6 +117,7 @@ public class RemotePlayer : INitroxPlayer
 
         PlayerAnimation animation = PlayerContext.Animation;
         UpdateAnimationAndCollider((AnimChangeType)animation.Type, (AnimChangeState)animation.State);
+        UpdateAnimatorParameters(PlayerContext.AnimatorParameters);
 
         vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
@@ -121,7 +130,7 @@ public class RemotePlayer : INitroxPlayer
 
         PlayerDeathEvent.AddHandler(Body, _ =>
         {
-            ResetStates();
+            ResetStates(clearAnimatorParameters: true);
         });
     }
 
@@ -143,7 +152,7 @@ public class RemotePlayer : INitroxPlayer
         SkyEnvironmentChanged.Broadcast(Body, (GameObject)null);
     }
 
-    public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
+    public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, float viewTurn)
     {
         // It might happen that we get movement packets before the body is actually initialized which is not too bad
         if (!Body)
@@ -160,6 +169,7 @@ public class RemotePlayer : INitroxPlayer
         AnimationController.AimingRotation = aimingRotation;
         AnimationController.UpdatePlayerAnimations = true;
         AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
+        AnimationController.SetViewTurn(viewTurn);
 
         // If in a subroot the position will be relative to the subroot
         if (SubRoot && SubRoot.isBase)
@@ -349,12 +359,17 @@ public class RemotePlayer : INitroxPlayer
     /// <summary>
     /// Drops the remote player, swimming where he is. Resets its animator.
     /// </summary>
-    public void ResetStates()
+    public void ResetStates(bool clearAnimatorParameters = false)
     {
         SetPilotingChair(null);
         SetVehicle(null);
         SetSubRoot(null);
         AnimationController.UpdatePlayerAnimations = true;
+        if (clearAnimatorParameters)
+        {
+            PlayerContext.AnimatorParameters.Clear();
+            SetRemotePdaVisible(false);
+        }
         AnimationController.Reset();
         ArmsController.SetWorldIKTarget(null, null);
     }
@@ -380,6 +395,78 @@ public class RemotePlayer : INitroxPlayer
                 break;
         }
 
+        UpdateColliderFromAnimationState();
+    }
+
+    public void UpdateAnimatorParameters(IReadOnlyDictionary<string, bool> animatorParameters)
+    {
+        if (!Body)
+        {
+            return;
+        }
+
+        foreach (KeyValuePair<string, bool> parameter in animatorParameters)
+        {
+            if (!PlayerAnimatorParameter.IsSynchronized(parameter.Key))
+            {
+                continue;
+            }
+            AnimationController[parameter.Key] = parameter.Value;
+            if (parameter.Key == "using_pda")
+            {
+                SetRemotePdaVisible(parameter.Value);
+            }
+        }
+    }
+
+    private void SetRemotePdaVisible(bool visible)
+    {
+        if (!remotePda)
+        {
+            return;
+        }
+
+        int sequence = ++pdaVisibilitySequence;
+        if (visible)
+        {
+            remotePda.gameObject.SetActive(true);
+        }
+        else
+        {
+            CoroutineHost.StartCoroutine(HidePdaAfterClose(sequence));
+        }
+    }
+
+    private IEnumerator HidePdaAfterClose(int sequence)
+    {
+        // PDA.Close deactivates its model after the 0.3 second holster sequence.
+        yield return new WaitForSeconds(0.3f);
+        if (remotePda && sequence == pdaVisibilitySequence)
+        {
+            remotePda.gameObject.SetActive(false);
+        }
+    }
+
+    public void PlayDeathAnimation(PlayerDeathAnimationType animationType)
+    {
+        SetRemotePdaVisible(false);
+        PlayerContext.AnimatorParameters.Clear();
+        foreach (string parameterName in PlayerAnimatorParameter.SynchronizedParameters)
+        {
+            AnimationController[parameterName] = false;
+        }
+
+        string trigger = animationType switch
+        {
+            PlayerDeathAnimationType.FIRE => "player_death_fire",
+            PlayerDeathAnimationType.EXPLOSION => "player_death_explosion",
+            _ => "player_death"
+        };
+        AnimationController.SetTrigger(trigger);
+    }
+
+    private void UpdateColliderFromAnimationState()
+    {
         // Rough estimation for different collider boxes in different animation stages
         if (AnimationController["is_underwater"])
         {
