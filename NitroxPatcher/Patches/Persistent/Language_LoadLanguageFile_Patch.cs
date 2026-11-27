@@ -52,7 +52,10 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
             {
                 if (property.Value.ValueKind == JsonValueKind.String)
                 {
-                    strings[property.Name] = property.Value.GetString()!;
+                    if (property.Value.GetString() is { } stringValue)
+                    {
+                        strings[property.Name] = stringValue;
+                    }
                 }
             }
 
