@@ -1,4 +1,5 @@
-﻿using LitJson;
+using System.Linq;
+using System.Text.Json;
 using Nitrox.Model.Helper;
 
 namespace Nitrox.Test.Patcher.Patches.Persistent;
@@ -18,8 +19,8 @@ public class Language_LoadLanguageFile_PatchTest
         using StreamReader streamReader = new(defaultLanguageFilePath);
         try
         {
-            JsonData defaultLanguage = JsonMapper.ToObject(streamReader);
-            Assert.IsTrue(defaultLanguage.Keys.Count > 0, "The english language file has no entries.");
+            using JsonDocument defaultLanguage = JsonDocument.Parse(streamReader.ReadToEnd());
+            Assert.IsTrue(defaultLanguage.RootElement.EnumerateObject().Any(), "The english language file has no entries.");
         }
         catch (Exception ex)
         {

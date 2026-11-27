@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net472;net10.0</TargetFrameworks>
@@ -7,6 +7,12 @@
 
     <ItemGroup>
         <PackageReference Include="HarmonyX" />
+        <PackageReference Include="System.Text.Json" />
+        <PackageReference Include="System.ValueTuple" GeneratePathProperty="true" />
+        <Content Include="$(PkgSystem_ValueTuple)\lib\net47\System.ValueTuple.dll"
+                 Link="System.ValueTuple.dll"
+                 CopyToOutputDirectory="PreserveNewest"
+                 Condition="'$(TargetFramework)' == 'net472'" />
     </ItemGroup>
 
     <ItemGroup>

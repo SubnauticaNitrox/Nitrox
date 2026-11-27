@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Text.Json.Serialization;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
@@ -6,9 +7,13 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
     [Serializable]
     public class PlayerPreference : IEquatable<PlayerPreference>
     {
+        [JsonInclude]
         public string PlayerName { get; private set; }
+        [JsonInclude]
         public float RedAdditive { get; private set; }
+        [JsonInclude]
         public float GreenAdditive { get; private set; }
+        [JsonInclude]
         public float BlueAdditive { get; private set; }
 
         public PlayerPreference()
@@ -89,7 +94,6 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
         }
     }
 
-    //LitJson does not seem to be capable of ignoring certain properties.
     public static class PlayerPreferenceExtensions
     {
         public static Color PreferredColor(this PlayerPreference playerPreference)
